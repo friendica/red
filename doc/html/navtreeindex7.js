@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"poll_8php.html#a26be9d4f230cb68f5be326198cfc6c77":[6,0,1,82,2],
 "poll_8php.html#a3314c26bd2ac0ed831cebf3315cd3263":[6,0,1,82,0],
 "poll_8php.html#ab9ecd5b71af090a5da9c93f34f7ec930":[6,0,1,82,1],
 "poller_8php.html":[6,0,0,61],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "text_8php.html#a47c1e4a5f3f53027daacd8a9db24f285":[6,0,0,76,44],
 "text_8php.html#a4841df5beabdd1bdd1ed56781a915d61":[6,0,0,76,62],
 "text_8php.html#a4bbb7d00c05cd20b4e043424f322388f":[6,0,0,76,51],
-"text_8php.html#a4e4d42b0a805148d9f9a92bcac89bf91":[6,0,0,76,24],
-"text_8php.html#a4e7698aca48982512594b274543c3b9b":[6,0,0,76,61]
+"text_8php.html#a4e4d42b0a805148d9f9a92bcac89bf91":[6,0,0,76,24]
 };

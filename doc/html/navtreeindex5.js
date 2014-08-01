@@ -71,12 +71,13 @@ var NAVTREEINDEX5 =
 "include_2chanman_8php.html":[6,0,0,14],
 "include_2chanman_8php.html#a21ba9a5c961e866ff27aee3ee67bf99b":[6,0,0,14,0],
 "include_2chat_8php.html":[6,0,0,15],
-"include_2chat_8php.html#a1ee1360f7d2549c7549ae07cb5190f0f":[6,0,0,15,4],
+"include_2chat_8php.html#a1ee1360f7d2549c7549ae07cb5190f0f":[6,0,0,15,5],
 "include_2chat_8php.html#a2ba3af6884ecdce95de69262fe599639":[6,0,0,15,2],
 "include_2chat_8php.html#a2c95b545e46bfee64faa05ecf0afea91":[6,0,0,15,3],
 "include_2chat_8php.html#acdc80dba4eb796c7472b21129b435422":[6,0,0,15,1],
 "include_2chat_8php.html#acea6b176eb7aff44d9ba3ae24ce511d3":[6,0,0,15,0],
-"include_2chat_8php.html#aedcb532a0627b8644001a2fadab4e87a":[6,0,0,15,5],
+"include_2chat_8php.html#aedcb532a0627b8644001a2fadab4e87a":[6,0,0,15,6],
+"include_2chat_8php.html#afffdd0f2c218c392ba28376948624e3f":[6,0,0,15,4],
 "include_2config_8php.html":[6,0,0,19],
 "include_2config_8php.html#a27559f388c9b9af81c94e48d6889d1d1":[6,0,0,19,7],
 "include_2config_8php.html#a549910227348003efc3c05c9105c42da":[6,0,0,19,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "items_8php.html#ac1fcf621dce7370515b420a7753f4726":[6,0,0,45,48],
 "items_8php.html#ac6673627d289ee4f547de0fe3b7acd0a":[6,0,0,45,19],
 "items_8php.html#acf0bf7c9d21ac84f32effb754f7ad484":[6,0,0,45,43],
-"items_8php.html#ad2abb4644ff1f20fefbc80326fe01cf0":[6,0,0,45,50],
-"items_8php.html#ad34827ed330898456783fb14c7b46154":[6,0,0,45,59]
+"items_8php.html#ad2abb4644ff1f20fefbc80326fe01cf0":[6,0,0,45,50]
 };

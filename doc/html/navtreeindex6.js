@@ -1,5 +1,6 @@
 var NAVTREEINDEX6 =
 {
+"items_8php.html#ad34827ed330898456783fb14c7b46154":[6,0,0,45,59],
 "items_8php.html#ad4ee16e3ff1eaf60428c61f82ba25e6a":[6,0,0,45,53],
 "items_8php.html#adf980098b6de9c3993bc3ff26a8dd6f9":[6,0,0,45,24],
 "items_8php.html#ae73794179b62d39bb597ff670ab1c1e5":[6,0,0,45,36],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "poke_8php.html":[6,0,1,81],
 "poke_8php.html#a9725aab97b3983e6a98bd81c4efe7d3b":[6,0,1,81,1],
 "poke_8php.html#ac9190563a8da9c07a16f9dcd71cf6993":[6,0,1,81,0],
-"poll_8php.html":[6,0,1,82],
-"poll_8php.html#a26be9d4f230cb68f5be326198cfc6c77":[6,0,1,82,2]
+"poll_8php.html":[6,0,1,82]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"classphoto__driver.html#a01d28d43b404d6f6de219dc9c5069dc9":[5,0,19,28],
 "classphoto__driver.html#a19e1af2b6af4c63aa6230abe69f83712":[5,0,19,13],
 "classphoto__driver.html#a1a63c4ae17e892a115ab9cf6efb960ce":[5,0,19,20],
 "classphoto__driver.html#a22ecb8c696de65a5a10bd185be9d90c3":[5,0,19,17],
@@ -88,8 +89,7 @@ var NAVTREEINDEX3 =
 "contact__selectors_8php.html":[6,0,0,21],
 "contact__selectors_8php.html#a2c743d2eb526eb758d943a1490162d75":[6,0,0,21,1],
 "contact__selectors_8php.html#a9839e8fdaac7ffb37bf1420493f5c28f":[6,0,0,21,0],
-"contact__selectors_8php.html#ad472e4716426dd1a9dd77b62962454be":[6,0,0,21,3],
-"contact__selectors_8php.html#ae499960d6467bd30c78607b1018baf53":[6,0,0,21,2],
+"contact__selectors_8php.html#ad472e4716426dd1a9dd77b62962454be":[6,0,0,21,2],
 "contact__widgets_8php.html":[6,0,0,22],
 "contact__widgets_8php.html#a165eb021e61c4dcab2a552f28628d353":[6,0,0,22,0],
 "contact__widgets_8php.html#a1eda66319d170f60a8d07c7ece95533b":[6,0,0,22,2],

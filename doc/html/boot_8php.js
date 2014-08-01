@@ -163,6 +163,7 @@ var boot_8php =
     [ "MAIL_RECALLED", "boot_8php.html#ae4861de36017fe399c1839f778bad9f5", null ],
     [ "MAIL_REPLIED", "boot_8php.html#aa3679df31c8dad1b71816b0322d5baff", null ],
     [ "MAIL_SEEN", "boot_8php.html#a1fbb93cf030f07391f22cc2948744869", null ],
+    [ "MAX_CHATROOM_HOURS", "boot_8php.html#ae543d0b69f816b52e91167fc19d3fddc", null ],
     [ "MAX_IMAGE_LENGTH", "boot_8php.html#a525ca93ff35d3535d1a2b8ba57876afa", null ],
     [ "MAX_LIKERS", "boot_8php.html#a35625dacd2158b9f1f1a8e77f9f081fd", null ],
     [ "MENU_BOOKMARK", "boot_8php.html#a458e19af801bc4b0d1f1ce1a6d9e857e", null ],
