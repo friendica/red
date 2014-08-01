@@ -3,13 +3,13 @@ Su {{$sitename}} è appena arrivata una nuova richiesta di registrazione
 che necessita della tua approvazione. 
 
 
-Questi sono i dettagli dell'account:
+Questi sono i dati dell'account:
 
 Sito:	{{$siteurl}}
 Nome utente:	{{$email}}
 Indirizzo IP: {{$details}}
 
-Per approvare la richiesta devi seguire questo link:
+Per approvare la richiesta devi cliccare su questo link:
 
 
 {{$siteurl}}/regmod/allow/{{$hash}} 

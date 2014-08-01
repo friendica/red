@@ -1,7 +1,7 @@
 
 Ciao {{$myname}},
 
-	Grandi notizie... '{{$fn}}' (sul server '{{$dfrn_url}}') ha accettato 
+	Grandi notizie... '{{$fn}}' (sul server {{$dfrn_url}}) ha accettato 
 la tua richiesta di entrare in contatto su '{{$sitename}}'.
 
 Ora siete amici e potete scambiare messaggi di stato, aggiornamenti, foto e messaggi privati

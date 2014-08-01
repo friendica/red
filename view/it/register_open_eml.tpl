@@ -1,6 +1,6 @@
 
-Sul sito {{$sitename}} è stato appena creato un account che corrisponde a questo indirizzo email. 
-Ecco i dettagli per effettuare l'accesso:
+Sul sito {{$sitename}} è stato appena creato un account abbinato a questo indirizzo email.  
+Ecco i dati per effettuare l'accesso:
 
 Sito:	{{$siteurl}}
 Nome utente:	{{$email}}
