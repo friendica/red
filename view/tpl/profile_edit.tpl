@@ -6,6 +6,7 @@
 <ul>
 <li><a href="profile_photo" id="profile-photo_upload-link" title="{{$profpic}}">{{$profpic}}</a></li>
 <li><a href="profile/{{$profile_id}}/view" id="profile-edit-view-link" title="{{$viewprof}}">{{$viewprof}}</a></li>
+{{if ! $default}}<li><a href="profperm/{{$profile_id}}" id="profile-edit-view-link" title="{{$editvis}}">{{$editvis}}</a></li>{{/if}}
 {{if $profile_clone_link}}<li><a href="{{$profile_clone_link}}" id="profile-edit-clone-link" title="{{$cr_prof}}">{{$cl_prof}}</a></li>{{/if}}
 <li></li>
 {{if ! $default}}<li><a href="{{$profile_drop_link}}" id="profile-edit-drop-link" title="{{$del_prof}}" {{$disabled}} >{{$del_prof}}</a></li>{{/if}}

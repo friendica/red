@@ -1,9 +1,9 @@
 
 Ciao {{$myname}},
 
-Su {{$sitename}} hai appena ricevuto una richiesta di entrare in contatto 
+Su {{$sitename}} hai appena ricevuto da  
 
-da parte di '{{$requestor}}'.
+ '{{$requestor}}' una richiesta di entrare in contatto.
 
 Se vuoi, puoi visitare il suo profilo su {{$url}}.
 
