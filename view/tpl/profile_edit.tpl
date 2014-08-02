@@ -125,25 +125,19 @@
 
 <div id="profile-edit-marital-end"></div>
 
-<div id="profile-edit-sexual-wrapper" >
-<label id="profile-edit-sexual-label" for="sexual-select" >{{$lbl_sexual}} </label>
-{{if $advanced}}
-{{$sexual}}
-{{else}}
-{{$sexual_min}}
-{{/if}}
-</div>
-<div id="profile-edit-sexual-end"></div>
-
-
-
 <div id="profile-edit-homepage-wrapper" >
 <label id="profile-edit-homepage-label" for="profile-edit-homepage" >{{$lbl_homepage}} </label>
 <input type="text" size="32" name="homepage" id="profile-edit-homepage" value="{{$homepage}}" />
 </div>
 <div id="profile-edit-homepage-end"></div>
 
+
 {{if $advanced}}
+<div id="profile-edit-sexual-wrapper" >
+<label id="profile-edit-sexual-label" for="sexual-select" >{{$lbl_sexual}} </label>
+{{$sexual}}
+</div>
+<div id="profile-edit-sexual-end"></div>
 
 <div id="profile-edit-politic-wrapper" >
 <label id="profile-edit-politic-label" for="profile-edit-politic" >{{$lbl_politic}} </label>
