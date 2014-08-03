@@ -1312,3 +1312,40 @@ function is_public_profile() {
 		return true;
 	return false;
 }
+
+function get_profile_fields_basic() {
+	$profile_fields_basic = get_config('system','profile_fields_basic');
+	if(! $profile_fields_basic)
+		$profile_fields_basic = array('name','pdesc','gender','dob','address','locality','region','postal_code','country_name','marital','sexual','homepage','hometown','keywords','about','contact');
+
+//	return $profile_fields_basic;
+	$x = array();
+	if($profile_fields_basic)
+		foreach($profile_fields_basic as $f)
+			$x[$f] = 1;
+
+	return $x;
+
+}
+
+
+function get_profile_fields_advanced() {
+	$basic = get_profile_fields_basic();
+	$profile_fields_advanced = get_config('system','profile_fields_advanced');
+	if(! $profile_fields_advanced)
+		$profile_fields_advanced = array('with','howlong','politic','religion','likes','dislikes','interest','channels','music','book','film','tv','romance','work','education');
+
+//	return $profile_fields_advanced;
+
+	$x = array();
+	if($basic)
+		foreach($basic as $f => $v)
+			$x[$f] = $v;
+	if($profile_fields_advanced)
+		foreach($profile_fields_advanced as $f)
+			$x[$f] = 1;
+
+	return $x;
+}
+
+

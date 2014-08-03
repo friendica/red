@@ -458,10 +458,16 @@ function profiles_content(&$a) {
 
 	$o = '';
 
+
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
+
+	require_once('include/identity.php');
+
+	$profile_fields_basic    = get_profile_fields_basic();
+	$profile_fields_advanced = get_profile_fields_advanced();
 
 	if((argc() > 1) && (intval(argv(1)))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -486,6 +492,11 @@ function profiles_content(&$a) {
 		));
 
 		$advanced = ((feature_enabled(local_user(),'advanced_profiles')) ? true : false);
+		if($advanced)
+			$fields = $profile_fields_advanced;
+		else
+			$fields = $profile_fields_basic;
+
 
 		$opt_tpl = get_markup_template("profile-hide_friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array(
@@ -511,11 +522,12 @@ function profiles_content(&$a) {
 			'$profile_drop_link'   => 'profiles/drop/' . $r[0]['id'] . '?t=' 
 				. get_form_security_token("profile_drop"),
 
+			'$fields'       => $fields,
 			'$guid'         => $r[0]['profile_guid'],
 			'$banner'       => t('Edit Profile Details'),
 			'$submit'       => t('Submit'),
 			'$viewprof'     => t('View this profile'),
-			'$editvis' 	=> t('Edit visibility'),
+			'$editvis' 	    => t('Edit visibility'),
 			'$profpic'      => t('Change Profile Photo'),
 			'$cr_prof'      => t('Create a new profile using these settings'),
 			'$cl_prof'      => t('Clone this profile'),
