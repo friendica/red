@@ -276,6 +276,19 @@
 					return false;
 				}
 			}
+			if(event.keyCode == '34') {
+				if((pageHasMoreContent) && (! loadingPage)) {
+					$('#more').hide();
+					$('#no-more').hide();
+
+					next_page++;
+					scroll_next = true;
+					loadingPage = true;
+					liveUpdate();
+					return true;
+				}
+			}
+
 			if(event.keyCode == '19' || (event.ctrlKey && event.which == '32')) {
 				event.preventDefault();
 				if(stopped == false) {
