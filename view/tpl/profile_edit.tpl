@@ -2,23 +2,29 @@
 
 <h1>{{$banner}}</h1>
 
+<form id="profile-edit-form" name="form1" action="profiles/{{$profile_id}}" enctype="multipart/form-data" method="post" >
+
 <div id="profile-edit-links">
 <ul>
 <li><a href="profile_photo" id="profile-photo_upload-link" title="{{$profpic}}">{{$profpic}}</a></li>
 <li><a href="profile/{{$profile_id}}/view" id="profile-edit-view-link" title="{{$viewprof}}">{{$viewprof}}</a></li>
 {{if ! $default}}<li><a href="profperm/{{$profile_id}}" id="profile-edit-view-link" title="{{$editvis}}">{{$editvis}}</a></li>{{/if}}
 {{if $profile_clone_link}}<li><a href="{{$profile_clone_link}}" id="profile-edit-clone-link" title="{{$cr_prof}}">{{$cl_prof}}</a></li>{{/if}}
+{{if $exportable}}<li><a href="profiles/export/{{$profile_id}}" target="_blank">{{$lbl_export}}</a></li>
+<li><b>{{$lbl_import}}</b> <input type="file" name="userfile" ></li> 
+{{/if}}
 <li></li>
 {{if ! $default}}<li><a href="{{$profile_drop_link}}" id="profile-edit-drop-link" title="{{$del_prof}}" {{$disabled}} >{{$del_prof}}</a></li>{{/if}}
 
 </ul>
 </div>
 
+
+
 <div id="profile-edit-links-end"></div>
 
 
 <div id="profile-edit-wrapper" >
-<form id="profile-edit-form" name="form1" action="profiles/{{$profile_id}}" method="post" >
 <input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
 
 <div id="profile-edit-profile-name-wrapper" >

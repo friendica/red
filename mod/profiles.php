@@ -186,6 +186,33 @@ function profiles_post(&$a) {
 
 	call_hooks('profile_post', $_POST);
 
+	// import from json export file.
+ 	// Only import fields that are allowed on this hub
+
+	if(x($_FILES,'userfile')) {
+		$src      = $_FILES['userfile']['tmp_name'];
+		$filesize = intval($_FILES['userfile']['size']);
+		if($filesize) {
+			$j = @json_decode(@file_get_contents($src),true);
+			@unlink($src);
+			if($j) {
+				$fields = get_profile_fields_advanced();
+				if($fields) {
+					foreach($j as $jj => $v) {
+						foreach($fields as $f => $n) {
+							if($jj == $f) {
+								$_POST[$f] = $v;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+
+
 	if((argc() > 1) && (argv(1) !== "new") && intval(argv(1))) {
 		$orig = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
@@ -204,6 +231,12 @@ function profiles_post(&$a) {
 		if(! strlen($profile_name)) {
 			notify( t('Profile Name is required.') . EOL);
 			return;
+		}
+
+		if($_POST['dob']) {
+			$year = substr($_POST['dob'],0,4);
+			$month = substr($_POST['dob'],5,2);
+			$day = substr($_POST['dob'],8,2);
 		}
 	
 		$year = intval($_POST['year']);
@@ -559,6 +592,9 @@ function profiles_content(&$a) {
 			'$cr_prof'      => t('Create a new profile using these settings'),
 			'$cl_prof'      => t('Clone this profile'),
 			'$del_prof'     => t('Delete this profile'),
+			'$exportable'   => feature_enabled(local_user(),'profile_export'),
+			'$lbl_import'   => t('Import profile from file'),
+			'$lbl_export'   => t('Export profile to file'),
 			'$lbl_profname' => t('Profile Name:'),
 			'$lbl_fullname' => t('Your Full Name:'),
 			'$lbl_title'    => t('Title/Description:'),

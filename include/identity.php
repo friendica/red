@@ -1313,12 +1313,12 @@ function is_public_profile() {
 	return false;
 }
 
-function get_profile_fields_basic() {
-	$profile_fields_basic = get_config('system','profile_fields_basic');
-	if(! $profile_fields_basic)
-		$profile_fields_basic = array('name','pdesc','gender','dob','address','locality','region','postal_code','country_name','marital','sexual','homepage','hometown','keywords','about','contact');
+function get_profile_fields_basic($filter = 0) {
 
-//	return $profile_fields_basic;
+	$profile_fields_basic = (($filter == 0) ? get_config('system','profile_fields_basic') : null);
+	if(! $profile_fields_basic)
+		$profile_fields_basic = array('name','pdesc','chandesc','gender','dob','dob_tz','address','locality','region','postal_code','country_name','marital','sexual','homepage','hometown','keywords','about','contact');
+
 	$x = array();
 	if($profile_fields_basic)
 		foreach($profile_fields_basic as $f)
@@ -1329,13 +1329,11 @@ function get_profile_fields_basic() {
 }
 
 
-function get_profile_fields_advanced() {
-	$basic = get_profile_fields_basic();
-	$profile_fields_advanced = get_config('system','profile_fields_advanced');
+function get_profile_fields_advanced($filter = 0) {
+	$basic = get_profile_fields_basic($filter);
+	$profile_fields_advanced = (($filter == 0) ? get_config('system','profile_fields_advanced') : null);
 	if(! $profile_fields_advanced)
 		$profile_fields_advanced = array('with','howlong','politic','religion','likes','dislikes','interest','channels','music','book','film','tv','romance','work','education');
-
-//	return $profile_fields_advanced;
 
 	$x = array();
 	if($basic)
