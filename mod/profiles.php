@@ -126,6 +126,33 @@ function profiles_init(&$a) {
 		return; // NOTREACHED
 	}
 
+	if((argc() > 2) && (argv(1) === 'export')) {
+		
+		$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			intval(local_user()),
+			intval(argv(2))
+		);
+		if(! $r1) {
+			notice( t('Profile unavailable to export.') . EOL);
+			$a->error = 404;
+			return;
+		}
+		header('content-type: application/octet_stream');
+		header('content-disposition: attachment; filename="' . $r1[0]['profile_name'] . '.json"' );
+
+		unset($r1[0]['id']);
+		unset($r1[0]['aid']);
+		unset($r1[0]['uid']);
+		unset($r1[0]['is_default']);
+		unset($r1[0]['publish']);
+		unset($r1[0]['profile_name']);
+		unset($r1[0]['profile_guid']);
+		echo json_encode($r1[0]);
+		killme();
+	}
+
+
+
 
 	// Run profile_load() here to make sure the theme is set before
 	// we start loading content
