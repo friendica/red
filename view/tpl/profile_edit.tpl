@@ -27,13 +27,12 @@
 </div>
 <div id="profile-edit-profile-name-end"></div>
 
-{{if $fields.name}}
 <div id="profile-edit-name-wrapper" >
 <label id="profile-edit-name-label" for="profile-edit-name" >{{$lbl_fullname}} </label>
 <input type="text" size="32" name="name" id="profile-edit-name" value="{{$name}}" />
 </div>
 <div id="profile-edit-name-end"></div>
-{{/if}}
+
 
 {{if $fields.pdesc}}
 <div id="profile-edit-pdesc-wrapper" >
