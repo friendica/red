@@ -502,6 +502,13 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	if (strpos($Text,'[o]') !== false) {	
 		$Text = preg_replace("(\[o\](.*?)\[\/o\])ism",'<span class="overline">$1</span>',$Text);
 	}
+	if (strpos($Text,'[sup]') !== false) {	
+		$Text = preg_replace("(\[sup\](.*?)\[\/sup\])ism",'<sup>$1</sup>',$Text);
+	}
+	if (strpos($Text,'[sub]') !== false) {	
+		$Text = preg_replace("(\[sub\](.*?)\[\/sub\])ism",'<sub>$1</sub>',$Text);
+	}
+	
 	// Check for colored text
 	if (strpos($Text,'[/color]') !== false) {	
 		$Text = preg_replace("(\[color=(.*?)\](.*?)\[\/color\])ism","<span style=\"color: $1;\">$2</span>",$Text);
