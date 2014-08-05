@@ -47,3 +47,9 @@
 	font-size: 1.2em;
 	margin-top: 10px;
 }
+
+.channel-selection-name-link .channel-name {
+	width: 120px;
+	height: 18px;
+	overflow: hidden;
+}
