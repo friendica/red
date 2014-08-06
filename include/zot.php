@@ -2230,6 +2230,21 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 			$clean = array();
 			foreach($arr['abook'] as $abook) {
 
+				if($abook['abook_xchan'] && $abook['entry_deleted']) {
+					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);
+					require_once('include/Contact.php');
+					
+					$r = q("select abook_id from abook where abook_xchan = '%s' and abook_channel = %d and not ( abook_flags & %d ) limit 1",
+						dbesc($abook['abook_xchan']),
+						intval($channel['channel_id']),
+						intval(ABOOK_FLAG_SELF)
+					);
+					if($r)
+						contact_remove($channel['channel_id'],$r[0]['abook_id']);
+
+					continue;
+				}
+
 				// Perform discovery if the referenced xchan hasn't ever been seen on this hub.
 				// This relies on the undocumented behaviour that red sites send xchan info with the abook
 

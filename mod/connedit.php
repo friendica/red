@@ -359,11 +359,21 @@ function connedit_content(&$a) {
 		if($cmd === 'drop') {
 
 			require_once('include/Contact.php');
+
 // FIXME
-//			terminate_friendship($a->get_channel(),$orig_record[0]);
+// We need to send either a purge or a refresh packet to the other side (the channel being unfriended). 
+// The issue is that the abook DB record _may_ get destroyed when we call contact_remove. As the notifier runs
+// in the background there could be a race condition preventing this packet from being sent in all cases.
+// PLACEHOLDER
 
 			contact_remove(local_user(), $orig_record[0]['abook_id']);
-// FIXME - send to clones
+			build_sync_packet(0 /* use the current local_user */, 
+				array('abook' => array(
+					'abook_xchan' => $orig_record[0]['abook_xchan'],
+					'entry_deleted' => true)
+				)
+			);
+
 			info( t('Connection has been removed.') . EOL );
 			if(x($_SESSION,'return_url'))
 				goaway($a->get_baseurl(true) . '/' . $_SESSION['return_url']);
