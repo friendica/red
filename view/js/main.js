@@ -284,7 +284,11 @@
 					next_page++;
 					scroll_next = true;
 					loadingPage = true;
-					liveUpdate();
+
+					if($('.directory-end').length == 0)
+						liveUpdate();
+					else
+						pageUpdate();
 					return true;
 				}
 			}
