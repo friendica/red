@@ -1,17 +1,17 @@
 
-Dear {{$myname}},
+Beste {{$myname}},
 
-You have just received a connection request at {{$sitename}} 
+Je hebt een connectieverzoek ontvangen op  
 
-from '{{$requestor}}'.
+van '{{$requestor}}'.
 
-You may visit their profile at {{$url}}.
+Je kan zijn/haar profiel bezoeken op {{$url}}.
 
-Please login to your site to view the complete introduction 
-and approve or ignore/cancel the request.
+Je dient op jouw hub in te loggen om het complete connectieverzoek te bekijken 
+en om het verzoek te accepteren, het af te wijzen of om het te negeren.
 
 {{$siteurl}}
 
-Regards,
+Vriendelijke groet,
 
-	{{$sitename}} administrator
+	Beheerder {{$sitename}}
