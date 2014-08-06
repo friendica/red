@@ -368,13 +368,33 @@ aside li {
 	clear: both;
 }
 
-
-#profile-edit-links ul {
-	list-style-type: none;
+#profile-edit-links {
+	width: $converse_width;
+	padding-top: 15px;
+	padding-bottom: 15px;
 }
 
-#profile-edit-links li {
-	margin-top: 10px;
+#profile-edit-links .btn {
+	margin: 0 10px 15px 0;
+}
+
+.profile-import {
+	vertical-align: top;
+	text-align: left;
+}
+
+.profile-import b {
+	color: $link_colour;
+}
+
+.profile-import input {
+	color: $font_colour;
+	border: none;
+}
+
+#profile-edit-drop-link {
+	color: #FFF;
+	font-weight: normal;
 }
 
 #profile-like {

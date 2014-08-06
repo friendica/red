@@ -1,32 +1,32 @@
 
-Dear {{$username}},
-	A request was recently received at {{$sitename}} to reset your account 
-password. In order to confirm this request, please select the verification link
-below or paste it into your web browser address bar. 
+Beste {{$username}},
+	Er is recentelijk een verzoek ontvangen op {{$sitename}} om het wachtwoord van je 
+account opnieuw in te stellen. Om dit verzoek te kunnen bevestigen dien je op onderstaande
+verificatielink te klikken of deze in de adresbalk van je webbrowser te plakken. 
 
-If you did NOT request this change, please DO NOT follow the link
-provided and ignore and/or delete this email. 
+Wanneer jij dit verzoek NIET hebt gedaan, KLIK dan NIET op onderstaande link
+en negeer en/of verwijder deze e-mail. 
 
-Your password will not be changed unless we can verify that you
-issued this request. 
+Jouw wachtwoord wordt niet veranderd voordat wij zeker zijn dat
+jij dit verzoek hebt gedaan. 
 
-Follow this link to verify your identity:
+Klik op deze link om jouw identiteit te verifiëren:
 
 {{$reset_link}}
 
-You will then receive a follow-up message containing the new password.
+Je ontvangt vervolgens opnieuw een e-mail met jouw nieuwe wachtwoord.
 
-You may change that password from your account settings page after logging in.
+Wij adviseren om dit wachtwoord te veranderen onder 'instellingen' nadat je bent ingelogd.
 
-The login details are as follows:
+De inloggegevens zijn volgt:
 
-Site Location:	{{$siteurl}}
-Login Name:	{{$email}}
-
-
+Hub-adres:	{{$siteurl}}
+Inlognaam:	{{$email}}
 
 
-Sincerely,
-	{{$sitename}} Administrator
+
+
+Vriendelijke groet,
+	Beheerder {{$sitename}}
 
  
