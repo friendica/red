@@ -409,10 +409,6 @@
 
 function updatePageItems(mode,data) {
 
-	var e = data.getElementById('content-complete');
-	if(e) {
-		pageHasMoreContent = false;		
-	}
 
 	if(mode === 'append') {
 		$(data).each(function() {
@@ -423,6 +419,12 @@ function updatePageItems(mode,data) {
 			loadingPage = false;
 		}
 	}
+
+	var e = document.getElementById('content-complete');
+	if(e) {
+		pageHasMoreContent = false;		
+	}
+
 }
 
 
