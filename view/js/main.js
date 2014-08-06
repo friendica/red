@@ -677,7 +677,7 @@ function updateConvItems(mode,data) {
 			bParam_page = 1;
 		}
 
-		update_url = baseurl + '/directory/?f=&page=' + bParam_page;
+		update_url = baseurl + '/directory/?f=&aj=1&page=' + bParam_page;
 
 		$("#page-spinner").spin('small');
 		update_mode = 'append';

@@ -11,6 +11,8 @@
 {{/foreach}}
 
 
-
+<div id="page-end"></div>
 <div class="directory-end"></div>
+<script>$(document).ready(function() { loadingPage = false;});</script>
+<div id="page-spinner"></div>
 

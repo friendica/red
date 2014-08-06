@@ -199,12 +199,15 @@ function directory_content(&$a) {
 						$a->data['directory_keywords'] = $j['keywords'];
 					}
 
-//					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
+					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DEBUG);
 
 
-					if($dynamic) {
-
-
+					if($_REQUEST['aj']) {
+						$o = replace_macros(get_markup_template('directajax.tpl'),array(
+							'$entries' => $entries
+						));
+						echo $o;
+						killme();
 					}
 					else {
 
@@ -219,7 +222,7 @@ function directory_content(&$a) {
 							'$submit' => t('Find')
 						));
 
-						$o .= alt_pager($a,$j['records'], t('next page'), t('previous page'));
+//						$o .= alt_pager($a,$j['records'], t('next page'), t('previous page'));
 
 					}
 
