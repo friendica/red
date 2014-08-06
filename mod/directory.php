@@ -199,13 +199,18 @@ function directory_content(&$a) {
 						$a->data['directory_keywords'] = $j['keywords'];
 					}
 
-					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DEBUG);
+					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
 
 
 					if($_REQUEST['aj']) {
-						$o = replace_macros(get_markup_template('directajax.tpl'),array(
-							'$entries' => $entries
-						));
+						if($entries) {
+							$o = replace_macros(get_markup_template('directajax.tpl'),array(
+								'$entries' => $entries
+							));
+						}
+						else {
+							$o = '<div id="content-complete"></div>';
+						}
 						echo $o;
 						killme();
 					}

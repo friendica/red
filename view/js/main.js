@@ -408,6 +408,12 @@
 
 
 function updatePageItems(mode,data) {
+
+	var e = data.getElementById('content-complete');
+	if(e) {
+		pageHasMoreContent = false;		
+	}
+
 	if(mode === 'append') {
 		$(data).each(function() {
 			$('#page-end').before($(this));
