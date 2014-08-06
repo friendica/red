@@ -25,8 +25,7 @@
 
 #selected-channel .channel-selection {
 	clear: both;
-	width: 120px;
-	margin: 0px auto 0px auto;
+	margin: 0 auto 0 auto;
 }
 
 .channel-selection-default {
@@ -35,9 +34,9 @@
 }
 
 #all-channels .channel-selection {
-	width: 120px;
+	width: 10em;
 	float: left;
-	margin-bottom: 15px;
+	margin: 0 15px 15px 0;
 }
 .channels-end {
 	clear: both;
@@ -49,7 +48,13 @@
 }
 
 .channel-selection-name-link .channel-name {
-	width: 120px;
-	height: 18px;
+	padding-top: 10px;
+	text-align: left;	
+	word-wrap: break-word;
 	overflow: hidden;
+}
+
+.channels-notifications-wrapper {
+	clear: both;
+	padding-top: 10px;
 }
