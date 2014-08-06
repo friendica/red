@@ -4,8 +4,6 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Documentation - see Red Documentation Project To-Do List[/li]
 
-[li]Infinite scroll to the directory pages[/li]
-
 [li]Finish the anti-spam bayesian engine[/li]
 
 [li]If DAV folders exist, add an option to the Settings page to set a default folder for attachment uploads.[/li] 
