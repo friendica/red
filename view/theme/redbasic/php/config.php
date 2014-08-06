@@ -110,7 +110,7 @@ if(feature_enabled(local_user(),'expert'))
 		'$nav_bd' => array('redbasic_nav_bd', t('Navigation bar border color '), $arr['nav_bd']),
 		'$nav_icon_colour' => array('redbasic_nav_icon_colour', t('Navigation bar icon color '), $arr['nav_icon_colour']),
 		'$nav_active_icon_colour' => array('redbasic_nav_active_icon_colour', t('Navigation bar active icon color '), $arr['nav_active_icon_colour']),
-		'$link_colour' => array('redbasic_link_colour', t('link colour'), $arr['link_colour'], '', $link_colours),
+		'$link_colour' => array('redbasic_link_colour', t('link color'), $arr['link_colour'], '', $link_colours),
 		'$banner_colour' => array('redbasic_banner_colour', t('Set font-color for banner'), $arr['banner_colour']),
 		'$bgcolour' => array('redbasic_background_colour', t('Set the background color'), $arr['bgcolour']),
 		'$background_image' => array('redbasic_background_image', t('Set the background image'), $arr['background_image']),
