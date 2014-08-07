@@ -34,7 +34,8 @@
 }
 
 #all-channels .channel-selection {
-	width: 10em;
+	width: 12em;
+	height: 16em;
 	float: left;
 	margin: 0 15px 15px 0;
 }
