@@ -275,14 +275,14 @@ function item_post(&$a) {
 			$str_contact_allow = $orig_post['allow_cid'];
 			$str_group_deny    = $orig_post['deny_gid'];
 			$str_contact_deny  = $orig_post['deny_cid'];
-			$public_scope      = $orig_post['public_scope'];
+			$public_policy      = $orig_post['public_policy'];
 		}
 
 		if((strlen($str_group_allow)) 
 			|| strlen($str_contact_allow) 
 			|| strlen($str_group_deny) 
 			|| strlen($str_contact_deny)
-			|| strlen($public_scope)) {
+			|| strlen($public_policy)) {
 			$private = 1;
 		}
 

@@ -1200,6 +1200,12 @@ function zot_import($arr, $sender_url) {
 					continue;
 				}
 
+				// It's a specifically targetted post. If we were sent a public_scope hint (likely), 
+				// get rid of it so that it doesn't get stored and cause trouble. 
+
+				if(array_key_exists('message',$i) && array_key_exists('public_scope',$i['message']))
+					unset($i['message']['public_scope']);
+
 				$deliveries = $r;
 
 				// We found somebody on this site that's in the recipient list. 
@@ -1207,9 +1213,11 @@ function zot_import($arr, $sender_url) {
 			}
 			else {
 				if(($i['message']) && (array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags']))) {
-					// This should not happen but until we can stop it...
-					logger('private message was delivered with no recipients.');
-					continue;
+					if(array_key_exists('public_scope',$i['message']) && $i['message']['public_scope'] === 'public') {
+						// This should not happen but until we can stop it...
+						logger('private message was delivered with no recipients.');
+						continue;
+					}
 				}
 
 				logger('public post');

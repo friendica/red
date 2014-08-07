@@ -903,8 +903,7 @@ function encode_item($item) {
 	if($y = encode_item_flags($item))
 		$x['flags']      = $y;
 
-	if($scope != 'public')
-		$x['public_scope'] = $scope;
+	$x['public_scope'] = $scope;
 
 	if($item['item_flags'] & ITEM_NOCOMMENT)
 		$x['comment_scope'] = 'none';
@@ -2453,6 +2452,8 @@ function tag_deliver($uid,$item_id) {
 
 			$private = (($u[0]['channel_allow_cid'] || $u[0]['channel_allow_gid'] || $u[0]['channel_deny_cid'] || $u[0]['channel_deny_gid']) ? 1 : 0);
 
+//FIXME - add check for public_policy
+
 			$flag_bits = ITEM_WALL|ITEM_ORIGIN;
 
 			// maintain the original source, which will be the original item owner and was stored in source_xchan
@@ -2592,6 +2593,8 @@ function tag_deliver($uid,$item_id) {
 	// also reset all the privacy bits to the forum default permissions
 
 	$private = (($u[0]['channel_allow_cid'] || $u[0]['channel_allow_gid'] || $u[0]['channel_deny_cid'] || $u[0]['channel_deny_gid']) ? 1 : 0);
+
+// FIXME set public_policy and recheck private
 
 	$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
 
