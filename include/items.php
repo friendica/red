@@ -703,6 +703,11 @@ function get_item_elements($x) {
 	$arr['mimetype']     = (($x['mimetype'])       ? htmlspecialchars($x['mimetype'],       ENT_COMPAT,'UTF-8',false) : '');
 	$arr['obj_type']     = (($x['object_type'])    ? htmlspecialchars($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['tgt_type']     = (($x['target_type'])    ? htmlspecialchars($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
+
+	$arr['public_policy'] = (($x['public_scope']) ? htmlspecialchars($x['public_scope'], ENT_COMPAT,'UTF-8',false) : '');
+	if($arr['public_policy'] === 'public')
+		$arr['public_policy'] = '';
+
 	$arr['comment_policy'] = (($x['comment_scope']) ? htmlspecialchars($x['comment_scope'], ENT_COMPAT,'UTF-8',false) : 'contacts');
 
 	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
@@ -1732,6 +1737,8 @@ function item_store($arr,$allow_exec = false) {
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
 	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : 0 );
 
+	$arr['public_policy'] = ((x($arr,'public_policy')) ? notags(trim($arr['public_policy']))  : '' );
+
 	$arr['comment_policy'] = ((x($arr,'comment_policy')) ? notags(trim($arr['comment_policy']))  : 'contacts' );
 
 	
@@ -2133,6 +2140,11 @@ function item_store_update($arr,$allow_exec = false) {
 	
 	$arr['sig']           = ((x($arr,'sig'))           ? $arr['sig']                         : '');
 	$arr['layout_mid']    = ((array_key_exists('layout_mid',$arr)) ? dbesc($arr['layout_mid'])           : $orig[0]['layout_mid'] );
+
+	$arr['public_policy'] = ((x($arr,'public_policy')) ? notags(trim($arr['public_policy']))  : $orig[0]['public_policy'] );
+	$arr['comment_policy'] = ((x($arr,'comment_policy')) ? notags(trim($arr['comment_policy']))  : $orig[0]['comment_policy'] );
+
+
 
 	call_hooks('post_remote_update',$arr);
 
