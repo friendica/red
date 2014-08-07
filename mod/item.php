@@ -80,7 +80,7 @@ function item_post(&$a) {
 	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']) : '');
 	$layout_mid  = ((x($_REQUEST,'layout_mid'))  ? escape_tags($_REQUEST['layout_mid']): '');
 	$plink       = ((x($_REQUEST,'permalink'))   ? escape_tags($_REQUEST['permalink']) : '');
-
+	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : '');
 
 	/*
 	Check service class limits
@@ -275,12 +275,14 @@ function item_post(&$a) {
 			$str_contact_allow = $orig_post['allow_cid'];
 			$str_group_deny    = $orig_post['deny_gid'];
 			$str_contact_deny  = $orig_post['deny_cid'];
+			$public_scope      = $orig_post['public_scope'];
 		}
 
 		if((strlen($str_group_allow)) 
 			|| strlen($str_contact_allow) 
 			|| strlen($str_group_deny) 
-			|| strlen($str_contact_deny)) {
+			|| strlen($str_contact_deny)
+			|| strlen($public_scope)) {
 			$private = 1;
 		}
 
@@ -376,6 +378,13 @@ function item_post(&$a) {
 		}
 	}
 	
+
+	if((! $webpage) && (! $public_policy) && (! $private)) {
+		$public_policy = map_scope($channel['channel_r_stream'],true);
+		if($public_policy)
+			$private = 1;
+	}
+
 
 	$expires = '0000-00-00 00:00:00';
 
@@ -705,6 +714,7 @@ function item_post(&$a) {
 	$datarray['item_restrict']  = $item_restrict;
 	$datarray['item_flags']     = $item_flags;
 	$datarray['layout_mid']     = $layout_mid;
+	$datarray['public_policy']  = $public_policy;
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 	$datarray['term']           = $post_tags;
 	$datarray['plink']          = $plink;

@@ -52,7 +52,7 @@ function collect_recipients($item,&$private) {
 		$private = true;
 	}
 	else {
-		if(! $private) {
+		if($item['public_policy'] || (! $private)) {
 			$r = q("select abook_xchan from abook where abook_channel = %d and not (abook_flags & %d) ",
 				intval($item['uid']),
 				intval(ABOOK_FLAG_SELF|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
@@ -903,7 +903,7 @@ function encode_item($item) {
 	if($y = encode_item_flags($item))
 		$x['flags']      = $y;
 
-	if(! in_array('private',$y))
+	if($scope != 'public')
 		$x['public_scope'] = $scope;
 
 	if($item['item_flags'] & ITEM_NOCOMMENT)
@@ -921,14 +921,18 @@ function encode_item($item) {
 }
 
 
-function map_scope($scope) {
+function map_scope($scope,$strip = false) {
 	switch($scope) {
 		case 0:
 			return 'self';
 		case PERMS_PUBLIC:
+			if($strip)
+				return '';
 			return 'public';
 		case PERMS_NETWORK:
 			return 'network: red';
+		case PERMS_AUTHED:
+			return 'authenticated';
 		case PERMS_SITE:
 			return 'site: ' . get_app()->get_hostname();
 		case PERMS_PENDING:
@@ -939,7 +943,22 @@ function map_scope($scope) {
 	}
 }	
 
-
+function translate_scope($scope) {
+	if(! $scope || $scope === 'public')
+		return t('Visible to anybody on the internet');
+	if(strpos($scope,'self') === 0)
+		return t('Visible to you only.');
+	if(strpos($scope,'network:') === 0)
+		return t('Visible to anybody in this network.');
+	if(strpos($scope,'authenticated') === 0)
+		return t('Visible to anybody authenticated.');
+	if(strpos($scope,'site:') === 0)
+		return sprintf( t('Visible to anybody on %s.'), strip_tags(substr($scope,6)));
+	if(strpos($scope,'any connections') === 0)
+		return t('Visible to all connections.');
+	if(strpos($scope,'contacts') === 0)
+		return t('Visible to approved connections.');
+}
 
 function encode_item_xchan($xchan) {
 
@@ -1807,6 +1826,7 @@ function item_store($arr,$allow_exec = false) {
 			$allow_gid      = $r[0]['allow_gid'];
 			$deny_cid       = $r[0]['deny_cid'];
 			$deny_gid       = $r[0]['deny_gid'];
+			$public_policy  = $r[0]['public_policy'];
 
 			if($r[0]['item_flags'] & ITEM_WALL)
 				$arr['item_flags'] = $arr['item_flags'] | ITEM_WALL; 
@@ -1915,7 +1935,7 @@ function item_store($arr,$allow_exec = false) {
 	if((! $parent_id) || ($arr['parent_mid'] === $arr['mid']))	
 		$parent_id = $current_post;
 
- 	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid))
+ 	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid) || strlen($public_policy))
 		$private = 1;
 	else
 		$private = $arr['item_private']; 
@@ -1923,12 +1943,13 @@ function item_store($arr,$allow_exec = false) {
 	// Set parent id - and also make sure to inherit the parent's ACL's.
 
 	$r = q("UPDATE item SET parent = %d, allow_cid = '%s', allow_gid = '%s',
-		deny_cid = '%s', deny_gid = '%s', item_private = %d WHERE id = %d LIMIT 1",
+		deny_cid = '%s', deny_gid = '%s', public_policy = '%s', item_private = %d WHERE id = %d LIMIT 1",
 		intval($parent_id),
 		dbesc($allow_cid),
 		dbesc($allow_gid),
 		dbesc($deny_cid),
 		dbesc($deny_gid),
+		dbesc($public_policy),
 		intval($private),
 		intval($current_post)
 	);
@@ -1940,6 +1961,7 @@ function item_store($arr,$allow_exec = false) {
 	$arr['allow_gid'] = $allow_gid;
 	$arr['deny_cid']  = $deny_cid;
 	$arr['deny_gid']  = $deny_gid;
+	$arr['public_policy']  = $public_policy;
 	$arr['item_private']   = $private;
 	
 	// Store taxonomy
