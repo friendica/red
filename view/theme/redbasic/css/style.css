@@ -369,7 +369,7 @@ aside li {
 }
 
 #profile-edit-links {
-	width: $converse_width;
+	max-width: $converse_width;
 	padding-top: 15px;
 	padding-bottom: 15px;
 }
