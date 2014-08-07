@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1120 );
+define( 'UPDATE_VERSION' , 1121 );
 
 /**
  *
@@ -1350,4 +1350,13 @@ function update_r1119() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1120() {
+	$r = q("ALTER TABLE `item` ADD `public_policy` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `coord` ,
+ADD INDEX ( `public_policy` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
 
