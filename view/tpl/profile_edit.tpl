@@ -1,4 +1,6 @@
-{{$default}}
+{{if $is_default}}
+<p id="profile-edit-default-desc">{{$default}}</p>
+{{/if}}
 
 <h1>{{$banner}}</h1>
 

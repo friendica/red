@@ -237,7 +237,7 @@ function populate_acl($defaults = null,$show_jotnets = true) {
 
 	$tpl = get_markup_template("acl_selector.tpl");
 	$o = replace_macros($tpl, array(
-		'$showall'=> t("Visible to everybody"),
+		'$showall'=> t("Visible to your default audience"),
 		'$show'		 => t("Show"),
 		'$hide'		 => t("Don't show"),
 		'$allowcid' => json_encode($allow_cid),

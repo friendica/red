@@ -518,6 +518,7 @@ function profiles_content(&$a) {
 
 	$o = '';
 
+	$channel = $a->get_channel();
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
@@ -634,7 +635,8 @@ function profiles_content(&$a) {
 			'$baseurl'      => $a->get_baseurl(true),
 			'$profile_id'   => $r[0]['id'],
 			'$profile_name' => $r[0]['profile_name'],
-			'$default'      => (($is_default) ? '<p id="profile-edit-default-desc">' . t('This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.') . '</p>' : ""),
+			'$is_default'   => $is_default,
+			'$default'      => t('This is your default profile.') . EOL . translate_scope(map_scope($channel['channel_r_profile'])),
 			'$advanced'     => $advanced,
 			'$name'         => $r[0]['name'],
 			'$pdesc'        => $r[0]['pdesc'],

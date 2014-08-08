@@ -951,7 +951,7 @@ function map_scope($scope,$strip = false) {
 
 function translate_scope($scope) {
 	if(! $scope || $scope === 'public')
-		return t('Visible to anybody on the internet');
+		return t('Visible to anybody on the internet.');
 	if(strpos($scope,'self') === 0)
 		return t('Visible to you only.');
 	if(strpos($scope,'network:') === 0)
