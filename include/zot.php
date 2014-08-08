@@ -1231,7 +1231,7 @@ function zot_import($arr, $sender_url) {
 				// of the private flag on the post. 
 
 				if($i['message'] && array_key_exists('public_scope',$i['message']) 
-					&& $i['message']['public_scope'] === 'public') {
+					&& $i['message']['public_scope'] !== 'public') {
 
 					if(! array_key_exists('flags',$i['message'])) 
 						$i['message']['flags'] = array();
