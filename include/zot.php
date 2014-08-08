@@ -1220,13 +1220,25 @@ function zot_import($arr, $sender_url) {
 					}
 				}
 
-				logger('public post');
+				logger('public post');				
 
 				// Public post. look for any site members who are or may be accepting posts from this sender
 				// and who are allowed to see them based on the sender's permissions
 
 				$deliveries = allowed_public_recips($i);
 
+				// if the scope is anything but 'public' we're going to store it as private regardless
+				// of the private flag on the post. 
+
+				if($i['message'] && array_key_exists('public_scope',$i['message']) 
+					&& $i['message']['public_scope'] === 'public') {
+
+					if(! array_key_exists('flags',$i['message'])) 
+						$i['message']['flags'] = array();
+					if(! in_array('private',$i['message']['flags']))
+						$i['message']['flags'][] = 'private';
+
+				}
 			}
 
 			// Go through the hash array and remove duplicates. array_unique() won't do this because the array is more than one level.
