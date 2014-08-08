@@ -264,12 +264,10 @@ function connedit_content(&$a) {
 		$cmd = argv(2);
 
 		$orig_record = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook_xchan = xchan_hash
-			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d ) and not ( abook_flags & %d ) LIMIT 1",
+			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d ) LIMIT 1",
 			intval($contact_id),
 			intval(local_user()),
-			intval(ABOOK_FLAG_SELF),
-			// allow drop even if pending, just duplicate the self query
-			intval(($cmd === 'drop') ? ABOOK_FLAG_SELF : ABOOK_FLAG_PENDING)
+			intval(ABOOK_FLAG_SELF)
 		);
 
 		if(! count($orig_record)) {
@@ -339,7 +337,8 @@ function connedit_content(&$a) {
 			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
 		}
 
-		// We'll prevent somebody from unapproving a contact.
+		// We'll prevent somebody from unapproving an already approved contact.
+		// Though maybe somebody will want this eventually (??)
 
 		if($cmd === 'approve') {
 			if($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
