@@ -10,10 +10,9 @@ var Contact_8php =
     [ "channelx_by_nick", "Contact_8php.html#a87e699f74a1102b25e8aa0432d86a91e", null ],
     [ "contact_remove", "Contact_8php.html#a28e062c884331dbb5dfa713228c25ad6", null ],
     [ "mark_orphan_hubsxchans", "Contact_8php.html#a08845ce8c5b997d5edac38ae7118b5c8", null ],
-    [ "random_profile", "Contact_8php.html#a852fa476f0c70bde10a4f2533aec5f71", null ],
+    [ "random_profile", "Contact_8php.html#a7e3f5bef8ea1d2bf8434c9be36a2b713", null ],
     [ "rconnect_url", "Contact_8php.html#a2f4f495d53f2a334ab75292af79d3c91", null ],
     [ "remove_all_xchan_resources", "Contact_8php.html#acc12cda999c88c4d6185cca967c15125", null ],
-    [ "terminate_friendship", "Contact_8php.html#a38daa1c210b78385307123450ca9a1fc", null ],
     [ "user_remove", "Contact_8php.html#a2fc191067dd571a79603c66b04b1ca15", null ],
     [ "vcard_from_xchan", "Contact_8php.html#a6348a532c9d26cd1c9afbc9aa6aa8960", null ]
 ];

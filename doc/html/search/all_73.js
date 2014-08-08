@@ -63,6 +63,7 @@ var searchData=
   ['setup_5finit',['setup_init',['../setup_8php.html#a267555abd17290e659b4bf44b885e4e0',1,'setup.php']]],
   ['setup_5fpost',['setup_post',['../setup_8php.html#a13cf286774149a0a7bd8adb8179cec75',1,'setup.php']]],
   ['sexpref_5fselector',['sexpref_selector',['../profile__selectors_8php.html#a3b50b3ea4ea4bdbebebfffc5d1b157c7',1,'profile_selectors.php']]],
+  ['sexpref_5fselector_5fmin',['sexpref_selector_min',['../profile__selectors_8php.html#ab0eae5c0ceba77364469f0f580f0d074',1,'profile_selectors.php']]],
   ['share_2ephp',['share.php',['../share_8php.html',1,'']]],
   ['share_5finit',['share_init',['../share_8php.html#afeb26046bdd02567ecd29ab5f188b249',1,'share.php']]],
   ['share_5fshield',['share_shield',['../bb2diaspora_8php.html#ad033be99e87a2aaa05e569c68f30792d',1,'bb2diaspora.php']]],

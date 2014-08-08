@@ -78,7 +78,7 @@ var searchData=
   ['cloud_5finit',['cloud_init',['../cloud_8php.html#a1b79a6fe0454bc76673ad9aef55bf02d',1,'cloud.php']]],
   ['collect',['collect',['../classProtoDriver.html#a2ba1758f0f9e3564580b6ff85292804d',1,'ProtoDriver\collect()'],['../classZotDriver.html#af65febb26031eb7f39871b9e2a539797',1,'ZotDriver\collect()']]],
   ['collect_5fprivate',['collect_private',['../classProtoDriver.html#af66171aa7dab9b62cee915cb4f1abe1b',1,'ProtoDriver\collect_private()'],['../classZotDriver.html#a2e15ff09772f0608203dad1c98299394',1,'ZotDriver\collect_private()']]],
-  ['collect_5frecipients',['collect_recipients',['../items_8php.html#a01e3cf44e082fa9bd06dcde5bf713d70',1,'items.php']]],
+  ['collect_5frecipients',['collect_recipients',['../items_8php.html#a772f0ae77ad77c8ab68ed918a3870946',1,'items.php']]],
   ['collecturls',['collecturls',['../html2plain_8php.html#ae1c203d0f089d5678d73a6c64a395201',1,'html2plain.php']]],
   ['comanche_2ephp',['comanche.php',['../comanche_8php.html',1,'']]],
   ['comanche_5fblock',['comanche_block',['../comanche_8php.html#a5a7ab801717d38e91ac910b933973887',1,'comanche.php']]],
