@@ -7,16 +7,12 @@ require_once('include/photo/photo_driver.php');
 require_once('include/permissions.php');
 
 
-function collect_recipients($item,&$private) {
+function collect_recipients($item,&$private_envelope) {
 
 	require_once('include/group.php');
 
-	$private = ((intval($item['item_private'])) ? true : false);
+	$private_envelope = ((intval($item['item_private'])) ? true : false);
 	$recipients = array();
-
-	// if the post is marked private but there are no recipients, only add the author and owner
-	// as recipients. The ACL for the post may live on the hub of a different clone. We need to 
-	// get the post to that hub.
 
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid']) {
 
@@ -49,10 +45,21 @@ function collect_recipients($item,&$private) {
 
 		$deny = array_unique(array_merge($deny_people,$deny_groups));
 		$recipients = array_diff($recipients,$deny);
-		$private = true;
+		$private_envelope = true;
 	}
 	else {
-		if($item['public_policy'] || (! $private)) {
+
+		// if the post is marked private but there are no recipients and public_policy/scope = self, 
+		// only add the author and owner as recipients. The ACL for the post may live on the hub of
+		// a different clone. We need to get the post to that hub.
+
+		// The post may be private by virtue of not being visible to anybody on the internet,
+		// but there are no envelope recipients, so set this to false. Delivery is controlled 
+		// by the directives in $item['public_policy'].
+
+		$private_envelope = false;
+
+		if(array_key_exists('public_policy',$item) && $item['public_policy'] !== 'self') {
 			$r = q("select abook_xchan from abook where abook_channel = %d and not (abook_flags & %d) ",
 				intval($item['uid']),
 				intval(ABOOK_FLAG_SELF|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
