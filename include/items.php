@@ -858,16 +858,15 @@ function encode_item($item) {
 		intval($item['uid'])
 	);
 
-	if($r) {
-		$public_scope = $r[0]['channel_r_stream'];
+	if($r)
 		$comment_scope = $r[0]['channel_w_comment'];
-	}
-	else {
-		$public_scope = 0;
+	else
 		$comment_scope = 0;
-	}
 
-	$scope = map_scope($public_scope);
+	$scope = $x['public_policy'];
+	if(! $scope)
+		$scope = 'public';
+
 	$c_scope = map_scope($comment_scope);
 
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
@@ -1846,10 +1845,7 @@ function item_store($arr,$allow_exec = false) {
 				$uplinked_comment = true;
 			}
 
-
 			// if the parent is private, force privacy for the entire conversation
-			// This differs from the above settings as it subtly allows comments from 
-			// email correspondents to be private even if the overall thread is not. 
 
 			if($r[0]['item_private'])
 				$arr['item_private'] = $r[0]['item_private'];

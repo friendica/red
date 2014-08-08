@@ -80,7 +80,6 @@ function item_post(&$a) {
 	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']) : '');
 	$layout_mid  = ((x($_REQUEST,'layout_mid'))  ? escape_tags($_REQUEST['layout_mid']): '');
 	$plink       = ((x($_REQUEST,'permalink'))   ? escape_tags($_REQUEST['permalink']) : '');
-	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : '');
 
 	/*
 	Check service class limits
@@ -258,8 +257,11 @@ function item_post(&$a) {
 		logger('mod_item: post accepted from ' . $observer['xchan_name'] . ' for ' . $owner_xchan['xchan_name'], LOGGER_DEBUG);
 	}
 		
-
-
+	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
+	if($webpage)
+		$public_policy = '';
+	if($public_policy)
+		$private = 1;
 
 	if($orig_post) {
 		$private = 0;
@@ -275,7 +277,7 @@ function item_post(&$a) {
 			$str_contact_allow = $orig_post['allow_cid'];
 			$str_group_deny    = $orig_post['deny_gid'];
 			$str_contact_deny  = $orig_post['deny_cid'];
-			$public_policy      = $orig_post['public_policy'];
+			$public_policy     = $orig_post['public_policy'];
 		}
 
 		if((strlen($str_group_allow)) 
@@ -346,6 +348,7 @@ function item_post(&$a) {
 				|| strlen($str_contact_allow) 
 				|| strlen($str_group_deny) 
 				|| strlen($str_contact_deny)
+				|| strlen($public_policy)
 		) ? 1 : 0);
 
 		// If this is a comment, set the permissions from the parent.
@@ -357,10 +360,12 @@ function item_post(&$a) {
 				|| strlen($parent_item['allow_cid']) 
 				|| strlen($parent_item['allow_gid']) 
 				|| strlen($parent_item['deny_cid']) 
-				|| strlen($parent_item['deny_gid'])) {
+				|| strlen($parent_item['deny_gid'])
+				|| strlen($parent_item['public_policy'])) {
 				$private = (($parent_item['item_private']) ? $parent_item['item_private'] : 1);
 			}
 
+			$public_policy     = $parent_item['public_policy'];
 			$str_contact_allow = $parent_item['allow_cid'];
 			$str_group_allow   = $parent_item['allow_gid'];
 			$str_contact_deny  = $parent_item['deny_cid'];
@@ -378,13 +383,6 @@ function item_post(&$a) {
 		}
 	}
 	
-
-	if((! $webpage) && (! $public_policy) && (! $private)) {
-		$public_policy = map_scope($channel['channel_r_stream'],true);
-		if($public_policy)
-			$private = 1;
-	}
-
 
 	$expires = '0000-00-00 00:00:00';
 
