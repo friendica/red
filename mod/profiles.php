@@ -707,7 +707,7 @@ function profiles_content(&$a) {
 					'$alt' => t('Profile Image'),
 					'$profile_name' => $rr['profile_name'],
 					'$visible' => (($rr['is_default']) 
-						? '<strong>' . t('visible to everybody') . '</strong>' 
+						? '<strong>' . translate_scope(map_scope($channel['channel_r_profile'])) . '</strong>' 
 						: '<a href="' . $a->get_baseurl(true) . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}
