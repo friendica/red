@@ -863,7 +863,7 @@ function encode_item($item) {
 	else
 		$comment_scope = 0;
 
-	$scope = $x['public_policy'];
+	$scope = $item['public_policy'];
 	if(! $scope)
 		$scope = 'public';
 
@@ -1795,6 +1795,7 @@ function item_store($arr,$allow_exec = false) {
 		$allow_gid = $arr['allow_gid'];
 		$deny_cid  = $arr['deny_cid'];
 		$deny_gid  = $arr['deny_gid'];
+		$public_policy = $arr['public_policy'];
 		$arr['item_flags'] = $arr['item_flags'] | ITEM_THREAD_TOP;
 	}
 	else { 
