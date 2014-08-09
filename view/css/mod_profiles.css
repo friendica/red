@@ -13,15 +13,9 @@
 }
 
 
-#profile-listing-desc, #profile-stuff-link {
-	margin-left: 30px;
+#profile-listing-desc, #profile-stuff-link, #profile-listing-new-link-wrapper {
+	margin: 15px 10px 15px 0;
 }
-
-#profile-listing-new-link-wrapper {
-	margin-left: 30px;
-	margin-bottom: 30px;
-}
-
 
 #profile-edit-links-end {
 	clear: both;
