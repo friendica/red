@@ -671,9 +671,15 @@ function title_is_body($title, $body) {
 
 function get_item_elements($x) {
 
-
 	$arr = array();
 	$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
+
+	$maxlen = get_max_import_size();
+
+	if($maxlen && mb_strlen($arr['body']) > $maxlen) {
+		$arr['body'] = mb_substr($arr['body'],0,$maxlen,'UTF-8');
+		logger('get_item_elements: message length exceeds max_import_size: truncated');
+	}
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
 	$arr['edited']       = datetime_convert('UTC','UTC',$x['edited']);
