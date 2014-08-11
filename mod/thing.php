@@ -321,7 +321,7 @@ function thing_content(&$a) {
 		'$profile_lbl' => t('Select a profile'),
 		'$profile_select' => contact_profile_assign(''),
 		'$verb_lbl' => $channel['channel_name'],
-		'$activity' => array('activity',t('Post an activity'),true,t('Only sends to viewers of the applicable profile')),
+		'$activity' => array('activity',t('Post an activity'),((array_key_exists('activity',$_REQUEST)) ? $_REQUEST['activity'] : true),t('Only sends to viewers of the applicable profile')),
 		'$verb_select' => obj_verb_selector(),
 		'$thing_lbl' => t('Name of thing e.g. something'),
 		'$url_lbl' => t('URL of thing (optional)'),
