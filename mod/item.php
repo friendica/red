@@ -1102,7 +1102,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 				//select someone by attag or nick and the name passed in
 				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
 					WHERE xchan_addr like ('%s') AND abook_channel = %d LIMIT 1",
-						dbesc($newname . '@%'),
+						dbesc(((strpos($newname,'@')) ? $newname : $newname . '@%')),
 						intval($profile_uid)
 				);
 			}
