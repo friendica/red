@@ -34,7 +34,7 @@ function receive_post(&$a) {
 		$r = q("SELECT * FROM channel left join account on account_id = channel_account_id WHERE channel_guid = '%s' AND account_flags = 0 LIMIT 1",
 			dbesc($guid)
 		);
-		if(! count($r))
+		if(! $r)
 			http_status_exit(500);
 
 		$importer = $r[0];
