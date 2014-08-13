@@ -49,6 +49,8 @@ $cookies = 'store/[data]/frphoto_cookie_' . $channel_address;
 		$args['not_visible'] = 1;
 		$args['created'] = $j['created'];
 		$args['edited'] = $j['edited'];
+		$args['title'] = $j['title'];
+		$args['description'] = $j['desc'];
 
 		if($j['allow_cid'] || $j['allow_gid'] || $j['deny_cid'] || $j['deny_gid'])
 			$args['contact_allow'] = $channel['channel_hash'];		

@@ -175,6 +175,10 @@ function photo_upload($channel, $observer, $args) {
 		$p['created'] = $args['created'];
 	if($args['edited'])
 		$p['edited'] = $args['edited'];
+	if($args['title'])
+		$p['title'] = $args['title'];
+	if($args['description'])
+		$p['desciprion'] = $args['description'];
 
 
 	$r1 = $ph->save($p);
