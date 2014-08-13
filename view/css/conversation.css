@@ -182,7 +182,7 @@
 .comment-edit-text-empty, .comment-edit-text-full {
 	float: left;
 	width: 100%;
-	padding: 8px;
+	padding: 6px 8px;
 }
 
 .comment-edit-text-empty {
