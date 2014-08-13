@@ -625,6 +625,10 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 		return $ret;
 	}
 
+	if(! ($arr['guid'] && $arr['guid_sig'])) {
+		logger('import_xchan: no identity information provided. ' . print_r($arr,true));
+		return $ret;
+	}
 
 	$xchan_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 	$import_photos = false;
