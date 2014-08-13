@@ -171,6 +171,11 @@ function photo_upload($channel, $observer, $args) {
 		'allow_cid' => $str_contact_allow, 'allow_gid' => $str_group_allow,
 		'deny_cid' => $str_contact_deny, 'deny_gid' => $str_group_deny
 	);
+	if($args['created'])
+		$p['created'] = $args['created'];
+	if($args['edited'])
+		$p['edited'] = $args['edited'];
+
 
 	$r1 = $ph->save($p);
 	if(! $r1)

@@ -287,6 +287,8 @@ abstract class photo_driver {
 		$p['allow_gid'] = (($arr['allow_gid']) ? $arr['allow_gid'] : '');
 		$p['deny_cid'] = (($arr['deny_cid']) ? $arr['deny_cid'] : '');
 		$p['deny_gid'] = (($arr['deny_gid']) ? $arr['deny_gid'] : '');
+		$p['created'] = (($arr['created']) ? $arr['created'] : datetime_convert());
+		$p['edited'] = (($arr['edited']) ? $arr['edited'] : $p['created']);
 
 		// temporary until we get rid of photo['profile'] and just use photo['photo_flags']
 		// but this will require updating all existing photos in the DB.
@@ -328,8 +330,8 @@ abstract class photo_driver {
 				intval($p['uid']),
 				dbesc($p['xchan']),
 				dbesc($p['resource_id']),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
+				dbesc($p['created']),
+				dbesc($p['edited']),
 				dbesc(basename($p['filename'])),
 				dbesc($this->getType()),
 				dbesc($p['album']),
@@ -355,8 +357,8 @@ abstract class photo_driver {
 				intval($p['uid']),
 				dbesc($p['xchan']),
 				dbesc($p['resource_id']),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
+				dbesc($p['created']),
+				dbesc($p['edited']),
 				dbesc(basename($p['filename'])),
 				dbesc($this->getType()),
 				dbesc($p['album']),
