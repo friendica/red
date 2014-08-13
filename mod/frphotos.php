@@ -41,6 +41,14 @@ function frphotos_init(&$a) {
 		$total = 0;
 		if(count($j)) {
 			foreach($j as $jj) {
+
+				$r = q("select uid from photo where resource_id = '%s' and uid = %d limit 1",
+					dbesc($jj),
+					intval($channel['channel_id'])
+				);
+				if($r) 
+					continue;
+
 				$total ++;
 				proc_run('php','util/frphotohelper.php',$jj, $channel['channel_address'], urlencode($fr_server));
 				sleep(3);

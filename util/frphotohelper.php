@@ -60,7 +60,6 @@ $cookies = 'store/[data]/frphoto_cookie_' . $channel_address;
 			intval($channel['channel_id'])
 		);
 		if($r) {
-			logger('frphotohelper: duplicate photo ignored');
 			killme();
 		}
 
