@@ -5,7 +5,7 @@ require_once('include/items.php');
 require_once('include/photo/photo_driver.php');
 
 
-function photo_upload($channel, $observer, $args, $local = null) {
+function photo_upload($channel, $observer, $args) {
 
 	$ret = array('success' => false);
 	$channel_id = $channel['channel_id'];
@@ -62,17 +62,17 @@ function photo_upload($channel, $observer, $args, $local = null) {
 	$str_contact_deny  = perms2str(((is_array($args['contact_deny']))  ? $args['contact_deny']  : explode(',',$args['contact_deny'])));
 
 
-	if($local) {
+	if($args['data']) {
 
 		// allow an import from a binary string representing the image.
 		// This bypasses the upload step and max size limit checking
 
-		$imagedata = $local;
+		$imagedata = $args['data'];
 		$filename = $args['filename'];
 		$filesize = strlen($imagedata);
 		// this is going to be deleted if it exists
 		$src = '/tmp/deletemenow';
-		$filetype = $args['filetype'];
+		$type = $args['type'];
 	}
 	else {
 		$f = array('src' => '', 'filename' => '', 'filesize' => 0, 'type' => '');
@@ -158,7 +158,7 @@ function photo_upload($channel, $observer, $args, $local = null) {
 
 	$smallest = 0;
 
-	$photo_hash = photo_new_resource();
+	$photo_hash = (($args['resource_id']) ? $args['resource_id'] : photo_new_resource());
 
 	$visitor = '';
 	if($channel['channel_hash'] !== $observer['xchan_hash'])

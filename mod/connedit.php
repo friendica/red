@@ -121,7 +121,7 @@ function connedit_post(&$a) {
 	if($orig_record[0]['abook_profile'] != $profile_id) { 
 		//Update profile photo permissions
 
-		logger('As a new profile was assigned updateing profile photos');
+		logger('As a new profile was assigned updating profile photos');
 		require_once('mod/profile_photo.php');
 		profile_photo_set_profile_perms($profile_id);
 
