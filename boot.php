@@ -980,6 +980,10 @@ class App {
 
 	function build_pagehead() {
 
+		$user_scalable = ((local_user()) ? get_pconfig(local_user(),'system','user_scalable') : 1);
+		if ($user_scalable === false)
+			$user_scalable = 1;
+
 		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
 		if($interval < 10000)
 			$interval = 40000;
@@ -993,6 +997,7 @@ class App {
 		 */
 		$tpl = get_markup_template('head.tpl');
 		$this->page['htmlhead'] = replace_macros($tpl, array(
+			'$user_scalable' => $user_scalable,
 			'$baseurl' => $this->get_baseurl(),
 			'$local_user' => local_user(),
 			'$generator' => RED_PLATFORM . ' ' . RED_VERSION,
