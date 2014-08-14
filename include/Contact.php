@@ -162,7 +162,7 @@ function user_remove($uid) {
 
 }
 
-function account_remove($account_id,$local = true) {
+function account_remove($account_id,$local = true,$unset_session=true) {
 
 	logger('account_remove: ' . $account_id);
 
@@ -196,7 +196,7 @@ function account_remove($account_id,$local = true) {
 	);
 	if($x) {
 		foreach($x as $xx) {
-			channel_remove($xx['channel_id'],$local);
+			channel_remove($xx['channel_id'],$local,false);
 		}
 	}
 
@@ -204,11 +204,16 @@ function account_remove($account_id,$local = true) {
 		intval($account_id)
 	);
 
+	if ($unset_session) {
+		unset($_SESSION['authenticated']);
+		unset($_SESSION['uid']);
+		goaway(get_app()->get_baseurl());
+	}
 	return $r;
 
 }
 
-function channel_remove($channel_id, $local = true) {
+function channel_remove($channel_id, $local = true, $unset_session=true) {
 
 	if(! $channel_id)
 		return;
@@ -292,7 +297,7 @@ function channel_remove($channel_id, $local = true) {
 
 	proc_run('php','include/directory.php',$channel_id);
 
-	if($channel_id == local_user()) {
+	if($channel_id == local_user() && $unset_session) {
 		unset($_SESSION['authenticated']);
 		unset($_SESSION['uid']);
 		goaway($a->get_baseurl());

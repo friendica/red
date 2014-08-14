@@ -1,6 +1,6 @@
 <?php
 
-function removeme_post(&$a) {
+function removeaccount_post(&$a) {
 
 	if(! local_user())
 		return;
@@ -19,6 +19,7 @@ function removeme_post(&$a) {
 
 
 	$account = $a->get_account();
+	$account_id = get_account_id();
 
 	if(! account_verify_password($account['account_email'],$_POST['qxz_password']))
 		return;
@@ -26,7 +27,7 @@ function removeme_post(&$a) {
 	if($account['account_password_changed'] != '0000-00-00 00:00:00') {
 		$d1 = datetime_convert('UTC','UTC','now - 48 hours');
 		if($account['account_password_changed'] > d1) {
-			notice( t('Channel removals are not allowed within 48 hours of changing the account password.') . EOL);
+			notice( t('Account removals are not allowed within 48 hours of changing the account password.') . EOL);
 			return;
 		}
 	}
@@ -35,13 +36,13 @@ function removeme_post(&$a) {
 
 	$global_remove = intval($_POST['global']);
 
-	channel_remove(local_user(),1 - $global_remove,true);
-
+	account_remove($account_id,true);
+	
 }
 
 
 
-function removeme_content(&$a) {
+function removeaccount_content(&$a) {
 
 	if(! local_user())
 		goaway(z_root());
@@ -49,16 +50,15 @@ function removeme_content(&$a) {
 	$hash = random_string();
 
 	$_SESSION['remove_account_verify'] = $hash;
-
-	$tpl = get_markup_template('removeme.tpl');
+	$tpl = get_markup_template('removeaccount.tpl');
 	$o .= replace_macros($tpl, array(
 		'$basedir' => $a->get_baseurl(),
 		'$hash' => $hash,
-		'$title' => t('Remove This Channel'),
-		'$desc' => t('This will completely remove this channel from the network. Once this has been done it is not recoverable.'),
+		'$title' => t('Remove This Account'),
+		'$desc' => t('This will completely remove this account including all its channels from the network. Once this has been done it is not recoverable.'),
 		'$passwd' => t('Please enter your password for verification:'),
-		'$global' => array('global', t('Remove this channel and all its clones from the network'), false, t('By default only the instance of the channel located on this hub will be removed from the network')),
-		'$submit' => t('Remove Channel')
+		'$global' => array('global', t('Remove this account, all its channels and all its channel clones from the network'), false, t('By default only the instances of the channels located on this hub will be removed from the network')),
+		'$submit' => t('Remove Account')
 	));
 
 	return $o;		
