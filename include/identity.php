@@ -559,6 +559,37 @@ function profile_load(&$a, $nickname, $profile = '') {
 		return;
 	}
 
+	$q = q("select * from profext where hash = '%s' and channel_id = %d",
+		dbesc($p[0]['profile_guid']),
+		intval($p[0]['profile_uid'])
+	);
+	if($q) {
+
+		$extra_fields = array();
+
+		require_once('include/identity.php');
+		$profile_fields_basic    = get_profile_fields_basic();
+		$profile_fields_advanced = get_profile_fields_advanced();
+
+		$advanced = ((feature_enabled(local_user(),'advanced_profiles')) ? true : false);
+		if($advanced)
+			$fields = $profile_fields_advanced;
+		else
+			$fields = $profile_fields_basic;
+
+		foreach($q as $qq) {
+			foreach($fields as $k => $f) {
+				if($k == $qq['k']) {
+					$p[0][$k] = $qq['v'];
+					$extra_fields[] = $k;
+					break;
+				}
+			}
+		}
+	}
+
+	$p[0]['extra_fields'] = $extra_fields;
+
 	$z = q("select xchan_photo_date from xchan where xchan_hash = '%s' limit 1",
 		dbesc($p[0]['channel_hash'])
 	);
@@ -1041,6 +1072,16 @@ function advanced_profile(&$a) {
 
 		if($txt = prepare_text($a->profile['education'])) $profile['education'] = array( t('School/education:'), $txt );
 
+		if($a->profile['extra_fields']) {
+			foreach($a->profile['extra_fields'] as $f) {
+				$x = q("select * from profdef where field_name = '%s' limit 1",
+					dbesc($f)
+				);
+				if($x && $txt = prepare_text($a->profile[$f]))
+					$profile[$f] = array( $x[0]['field_desc'] . ':',$txt);
+			}
+			$profile['extra_fields'] = $a->profile['extra_fields'];
+		}
 
 		$things = get_things($a->profile['profile_guid'],$a->profile['profile_uid']);
 
