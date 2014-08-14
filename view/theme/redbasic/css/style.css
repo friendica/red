@@ -98,6 +98,7 @@ pre code {
 
 code {
 	font-family: Courier, monospace;
+	font-size: 1em;
 	display: block;
 	overflow: auto;
 	border: 1px solid $code_borderc;
@@ -2240,7 +2241,7 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 
 /* bootstrap overrides */
 blockquote {
-	font-size: $body_font_size;
+	font-size: 1em;
 }
 
 .dropdown-menu {
@@ -2377,7 +2378,7 @@ blockquote {
 }
 
 .btn-xs {
-	font-size: 12px;
+	font-size: 0.65rem;
 }
 
 .btn-default {
