@@ -681,7 +681,7 @@ function admin_page_users(&$a){
                 check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
 				// delete user
 				require_once("include/Contact.php");
-				account_remove($uid,true);
+				account_remove($uid,true,false);
 				
 				notice( sprintf(t("User '%s' deleted"), $account[0]['account_email']) . EOL);
 			}; break;
