@@ -185,6 +185,7 @@ function account_remove($account_id,$local = true,$unset_session=true) {
 	$r = q("select * from account where account_id = %d limit 1",
 		intval($account_id)
 	);
+	$account_email=$r[0]['account_email'];
 
 	if(! $r) {
 		logger('account_remove: No account with id: ' . $account_id);
@@ -207,6 +208,7 @@ function account_remove($account_id,$local = true,$unset_session=true) {
 	if ($unset_session) {
 		unset($_SESSION['authenticated']);
 		unset($_SESSION['uid']);
+		notice( sprintf(t("User '%s' deleted"),$account_email) . EOL);
 		goaway(get_app()->get_baseurl());
 	}
 	return $r;
