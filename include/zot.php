@@ -1430,7 +1430,7 @@ function allowed_public_recips($msg) {
 
 	$hash = make_xchan_hash($msg['notify']['sender']['guid'],$msg['notify']['sender']['guid_sig']);
 
-	if($scope === 'public' || $scope === 'network: red')
+	if($scope === 'public' || $scope === 'network: red' || $scope === 'authenticated')
 		return $recips;
 
 	if(strpos($scope,'site:') === 0) {
