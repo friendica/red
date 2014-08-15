@@ -1518,6 +1518,9 @@ require_once('include/items.php');
 		$a = get_app();
 		$ret = array();
 
+		if(! $r)
+			return $ret;
+
 		foreach($r as $item) {
 			localize_item($item);
 
@@ -1895,17 +1898,19 @@ require_once('include/items.php');
 		);
 		
 		$ret = Array();
-		foreach($r as $item) {
-			if ($box == "inbox" || $item['from-url'] != $profile_url){
-				$recipient = $user_info;
-				$sender = api_get_user($a,$item['contact-id']);
+		if($r) {
+			foreach($r as $item) {
+				if ($box == "inbox" || $item['from-url'] != $profile_url){
+					$recipient = $user_info;
+					$sender = api_get_user($a,$item['contact-id']);
+				}
+				elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
+					$recipient = api_get_user($a,$item['contact-id']);
+					$sender = $user_info;
+				}
+	
+				$ret[]=api_format_messages($item, $recipient, $sender);
 			}
-			elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
-				$recipient = api_get_user($a,$item['contact-id']);
-				$sender = $user_info;
-			}
-
-			$ret[]=api_format_messages($item, $recipient, $sender);
 		}
 		
 
