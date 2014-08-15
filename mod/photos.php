@@ -620,6 +620,7 @@ function photos_content(&$a) {
 
 		if((strlen($datum) & 1) || (! ctype_xdigit($datum))) {
 			notice( t('Album name could not be decoded') . EOL);
+			logger('mod_photos: illegal album encoding: ' . $datum);
 			$datum = '';
 		}
 

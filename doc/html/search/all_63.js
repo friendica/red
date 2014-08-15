@@ -17,7 +17,7 @@ var searchData=
   ['channel_2ephp',['channel.php',['../channel_8php.html',1,'']]],
   ['channel_5fcontent',['channel_content',['../channel_8php.html#a9c6a6179e0e626398ebecc6151905ef1',1,'channel.php']]],
   ['channel_5finit',['channel_init',['../channel_8php.html#ac7c8c7845741baadf87fae6bc279f3dc',1,'channel.php']]],
-  ['channel_5fremove',['channel_remove',['../Contact_8php.html#a186162051a5127069cc851d78740f205',1,'Contact.php']]],
+  ['channel_5fremove',['channel_remove',['../Contact_8php.html#a4e8af0f0525161da74583c04b8b03097',1,'Contact.php']]],
   ['channel_5ftotal',['channel_total',['../identity_8php.html#a77d2237f1846964634b1c99089c27c7d',1,'identity.php']]],
   ['channelx_5fby_5fhash',['channelx_by_hash',['../Contact_8php.html#a483cda56f9e37c3a4a8773dcdfeb0258',1,'Contact.php']]],
   ['channelx_5fby_5fn',['channelx_by_n',['../Contact_8php.html#a3a0844dac1e86d523de5d2f432cfeebc',1,'Contact.php']]],

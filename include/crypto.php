@@ -127,19 +127,24 @@ function new_keypair($bits) {
 
 }
 
-function pkcs1to8($oldkey) {
+function pkcs1to8($oldkey,$len) {
+
+	if($len == 4096)
+		$c = 'g';
+	if($len == 2048)
+		$c = 'Q';
 
 	if(strstr($oldkey,'BEGIN PUBLIC'))
 		return $oldkey;
 
 	$oldkey = str_replace('-----BEGIN RSA PUBLIC KEY-----', '', $oldkey);
 	$oldkey = trim(str_replace('-----END RSA PUBLIC KEY-----', '', $oldkey));
-	$key = 'MIICIjANBgkqhkiG9w0BAQEFAAOCAg8A' . str_replace("\n", '', $oldkey);
+	$key = 'MIICIjANBgkqhkiG9w0BAQEFAAOCA' . $c . '8A' . str_replace("\n", '', $oldkey);
 	$key = "-----BEGIN PUBLIC KEY-----\n" . wordwrap($key, 64, "\n", true) . "\n-----END PUBLIC KEY-----";
 	return $key;
 }
 
-function pkcs8to1($oldkey) {
+function pkcs8to1($oldkey,$len) {
 
 	if(strstr($oldkey,'BEGIN RSA'))
 		return $oldkey;

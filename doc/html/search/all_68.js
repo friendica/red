@@ -2,6 +2,9 @@ var searchData=
 [
   ['handle_5ftag',['handle_tag',['../item_8php.html#aa22feef4de326e1d7078dedd892e615c',1,'item.php']]],
   ['has_5fpermissions',['has_permissions',['../items_8php.html#a77051724d1784074ff187e73a4db93fe',1,'items.php']]],
+  ['hcard_2ephp',['hcard.php',['../hcard_8php.html',1,'']]],
+  ['hcard_5fcontent',['hcard_content',['../hcard_8php.html#a3663012f1549849af88aba2bb87388e3',1,'hcard.php']]],
+  ['hcard_5finit',['hcard_init',['../hcard_8php.html#ac34f26b0e6a37eef44fa49bea135136d',1,'hcard.php']]],
   ['head_5fadd_5fcss',['head_add_css',['../plugin_8php.html#a23c4fccf1eb5fcd63b24783ba1f05f7a',1,'plugin.php']]],
   ['head_5fadd_5fjs',['head_add_js',['../plugin_8php.html#a516591850f4fd49fd1425cfa54089db8',1,'plugin.php']]],
   ['head_5fget_5fcss',['head_get_css',['../plugin_8php.html#af92789f559b89a380e49d303218aeeca',1,'plugin.php']]],
