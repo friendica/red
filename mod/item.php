@@ -430,8 +430,8 @@ function item_post(&$a) {
 	if($mimetype === 'text/bbcode') {
 
 		if(local_user() && local_user() == $profile_uid && feature_enabled(local_user(),'markdown')) {
-			require_once('include/bb2diaspora.php');
-			$body = diaspora2bb($body,true);
+			require_once('include/bb2diaspora.php');			
+			$body = diaspora2bb(escape_tags($body),true);
 		}
 
 
