@@ -461,6 +461,8 @@ function notification($params) {
 		// Might be interesting to use GPG,PGP,S/MIME encryption instead
 		// but we'll save that for a clever plugin developer to implement
 
+		$private_activity = false;
+
 		if(! $datarray['email_secure']) {
 			switch($params['type']) {
 				case NOTIFY_WALL:
@@ -469,6 +471,7 @@ function notification($params) {
 				case NOTIFY_COMMENT:
 					if(! $private)
 						break;
+					$private_activity = true;
 				case NOTIFY_MAIL:
 					$datarray['textversion'] = $datarray['htmlversion'] = $datarray['title'] = '';
 					$datarray['subject'] = preg_replace('/' . preg_quote(t('[Red:Notify]')) . '/','$0*',$datarray['subject']);
@@ -477,6 +480,12 @@ function notification($params) {
 					break;
 			}
 		}
+
+		if($private_activity 
+			&& intval(get_pconfig($datarray['uid'],'system','ignore_private_notifications'))) {
+			pop_lang();
+			return;
+		}		
 
 		// load the template for private message notifications
 		$tpl = get_markup_template('email_notify_html.tpl');
