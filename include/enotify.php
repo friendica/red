@@ -411,7 +411,7 @@ function notification($params) {
 
 		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r", "\\n"), array( "", "\n"), $body))),ENT_QUOTES,'UTF-8'));
 
-		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r","\\n"), array("","<br />\n"),$body))), ENT_QUOTES,'UTF-8');
+		$htmlversion = bbcode(stripslashes(str_replace(array("\\r","\\n"), array("","<br />\n"),$body)));
 
 
 		// use $_SESSION['zid_override'] to force zid() to use 
