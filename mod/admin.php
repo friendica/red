@@ -639,7 +639,7 @@ function admin_page_users_post(&$a){
 	if (x($_POST,'page_users_delete')){
 		require_once("include/Contact.php");
 		foreach($users as $uid){
-			account_remove($uid,true);
+			account_remove($uid,true,false);
 		}
 		notice( sprintf( tt("%s user deleted", "%s users deleted", count($users)), count($users)) );
 	}
