@@ -629,6 +629,7 @@ function settings_content(&$a) {
 			'$submit' 	=> t('Submit'),
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
 			'$removeme' => t('Remove Account'),
+			'$removeaccount' => t('Remove this account from this server including all its channels'),
 			'$permanent' => t('Warning: This action is permanent and cannot be reversed.'),
 			'$account_settings' => $account_settings
 		));
