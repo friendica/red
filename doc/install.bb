@@ -15,7 +15,7 @@ local .htaccess file
 php.ini file
         - curl, gd, mysql, and openssl extensions
         - some form of email server or email gateway such that PHP mail() works
-        - mcrypt (optional; used for server-to-server message encryption)
+        - mcrypt 
 
     - Mysql 5.x
 
