@@ -2016,6 +2016,7 @@ function import_site($arr,$pubkey) {
 	$url = htmlspecialchars($arr['url'],ENT_COMPAT,'UTF-8',false);
 	$sellpage = htmlspecialchars($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
 	$site_location = htmlspecialchars($arr['location'],ENT_COMPAT,'UTF-8',false);
+	$site_realm = htmlspecialchars($arr['realm'],ENT_COMPAT,'UTF-8',false);
 
 	if($exists) {
 		if(($siterecord['site_flags'] != $site_directory)
@@ -2023,13 +2024,14 @@ function import_site($arr,$pubkey) {
 			|| ($siterecord['site_directory'] != $directory_url)
 			|| ($siterecord['site_sellpage'] != $sellpage)
 			|| ($siterecord['site_location'] != $site_location)
-			|| ($siterecord['site_register'] != $register_policy)) {
+			|| ($siterecord['site_register'] != $register_policy)
+			|| ($siterecord['site_realm'] != $site_realm)) {
 			$update = true;
 
 //			logger('import_site: input: ' . print_r($arr,true));
 //			logger('import_site: stored: ' . print_r($siterecord,true));
 
-			$r = q("update site set site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s'
+			$r = q("update site set site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s'
 				where site_url = '%s' limit 1",
 				dbesc($site_location),
 				intval($site_directory),
@@ -2038,6 +2040,7 @@ function import_site($arr,$pubkey) {
 				intval($register_policy),
 				dbesc(datetime_convert()),
 				dbesc($sellpage),
+				dbesc($site_realm),
 				dbesc($url)
 			);
 			if(! $r) {

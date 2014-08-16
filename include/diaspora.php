@@ -116,29 +116,15 @@ function diaspora_handle_from_contact($contact_id) {
 	);
 	if($r) {
 		$contact = $r[0];
-
-//fixme
-//		logger("diaspora_handle_from_contact: contact 'self' = " . $contact['self'] . " 'url' = " . $contact['url'], LOGGER_DEBUG);
-
-		if($contact['xchan_network'] === 'diaspora') {
-			$handle = $contact['addr'];
-
-//			logger("diaspora_handle_from_contact: contact id is a Diaspora person, handle = " . $handle, LOGGER_DEBUG);
-		}
-		elseif(($contact['xchan_network'] === 'zot') || ($contact['abook_flags'] & ABOOK_FLAG_SELF)) {
-			$handle = $contact['xchan_addr'];
-
-
-//			logger("diaspora_handle_from_contact: contact id is a redmatrix person, handle = " . $handle, LOGGER_DEBUG);
-		}
 	}
-
+	$handle = $contact['xchan_addr'];
 	return $handle;
 }
 
 function diaspora_get_contact_by_handle($uid,$handle) {
-	$r = q("SELECT * FROM xchan where xchan_addr = '%s' limit 1",
-		dbesc($handle)
+	$r = q("SELECT * FROM abook left join xchan on xchan_hash = abook_xchan where xchan_addr = '%s' and abook_channel = %d limit 1",
+		dbesc($handle),
+		intval($uid)
 	);
 	if($r)
 		return $r[0];
@@ -155,11 +141,10 @@ function find_diaspora_person_by_handle($handle) {
 	$maxloops = 10;
 
 	do {
-		$r = q("select * from fcontact where network = '%s' and addr = '%s' limit 1",
-			dbesc(NETWORK_DIASPORA),
+		$r = q("select * from xchan where xchan_addr = '%s' limit 1",
 			dbesc($handle)
 		);
-		if(count($r)) {
+		if($r) {
 			$person = $r[0];
 			logger('find_diaspora_person_by handle: in cache ' . print_r($r,true), LOGGER_DEBUG);
 
@@ -559,7 +544,7 @@ function diaspora_request($importer,$xml) {
 	if(! $sender_handle || ! $recipient_handle)
 		return;
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$sender_handle);
+	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$sender_handle);
 
 	if($contact) {
 
@@ -641,7 +626,6 @@ function diaspora_request($importer,$xml) {
 	}
 
 	$batch = (($ret['batch']) ? $ret['batch'] : implode('/', array_slice(explode('/',$ret['url']),0,3)) . '/receive/public');
-
 
 
 	$r = q("INSERT INTO `contact` (`uid`, `network`,`addr`,`created`,`url`,`nurl`,`batch`,`name`,`nick`,`photo`,`pubkey`,`notify`,`poll`,`blocked`,`priority`)
@@ -779,7 +763,7 @@ function diaspora_post($importer,$xml,$msg) {
 		return 202;
 	}
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$diaspora_handle);
 	if(! $contact)
 		return;
 
@@ -1211,7 +1195,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	$parent_author_signature = (($xml->parent_author_signature) ? notags(unxmlify($xml->parent_author_signature)) : '');
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
+	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$msg['author']);
 	if(! $contact) {
 		logger('diaspora_comment: cannot find contact: ' . $msg['author']);
 		return;

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1121 );
+define( 'UPDATE_VERSION' , 1122 );
 
 /**
  *
@@ -1354,6 +1354,15 @@ function update_r1119() {
 function update_r1120() {
 	$r = q("ALTER TABLE `item` ADD `public_policy` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `coord` ,
 ADD INDEX ( `public_policy` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1121() {
+	$r = q("ALTER TABLE `site` ADD `site_realm` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD INDEX ( `site_realm` )");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
