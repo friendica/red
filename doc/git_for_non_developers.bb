@@ -41,6 +41,31 @@ This will open up an editor where you can describe the changes you have made.  S
 Finally, push the changes to your own git
 [code]git push[/code]
 
-And that's it!
+And that's it, your repo is up to date!
+
+All you need to do now is actually create the pull request.  There are two ways to do this.
+
+The easy way, if you're using Github is to simply click the green button at the top of your own copy of the repository, enter a description of the changes, and click 'create pull request'.  The
+main repository, themes, and addons all have their main branch at Github, so this method can be used most of the time.
+
+Most people can stop here.
+
+Some projects in the extended RedMatrix ecosphere have no Github presence, to pull request these is a bit different - you'll have to create your pull request manually.  Fortunately, this isn't
+much harder.
+
+[code]git request-pull -p <start> <url>[/code]
+
+Start is the name of a commit to start at.  This must exist upstream.  Normally, you just want master.
+
+URL is the URL of [i]your[/i] repo.
+
+One can also specify <end>.  This defaults to HEAD.
+
+Example:
+[code]
+git request-pull master https://example.com/project
+[/code]
+
+And simply send the output to the project maintainer.
 
 Return to the [url=[baseurl]/help/main]Main documentation page[/url]
