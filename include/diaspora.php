@@ -534,6 +534,8 @@ function diaspora_decode($importer,$xml) {
 }
 
 
+/* sender is now sharing with recipient */
+
 function diaspora_request($importer,$xml) {
 
 	$a = get_app();
@@ -544,212 +546,109 @@ function diaspora_request($importer,$xml) {
 	if(! $sender_handle || ! $recipient_handle)
 		return;
 
+
+	// Do we already have an abook record? 
+
 	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$sender_handle);
 
-	if($contact) {
+	if($contact && $contact['abook_id']) {
 
 		// perhaps we were already sharing with this person. Now they're sharing with us.
-		// That makes us friends.
+		// That makes us friends. Maybe.
 
-		if($contact['rel'] == CONTACT_IS_FOLLOWER && $importer['page-flags'] != PAGE_COMMUNITY) {
-			q("UPDATE `contact` SET `rel` = %d, `writable` = 1 WHERE `id` = %d AND `uid` = %d",
-				intval(CONTACT_IS_FRIEND),
-				intval($contact['id']),
-				intval($importer['uid'])
-			);
-		}
-		// send notification
+		$newperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTO|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_CHAT;
 
-		$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
-			intval($importer['uid'])
+		$r = q("update abook set abook_their_perms = %d where abook_id = %d and abook_channel = %d limit 1",
+			intval($newperms),
+			intval($contact['abook_id']),
+			intval($importer['channel_id'])
 		);
-
-		if((count($r)) && (! $r[0]['hide-friends']) && (! $contact['hidden'])) {
-			require_once('include/items.php');
-
-			$self = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
-				intval($importer['uid'])
-			);
-
-			// they are not CONTACT_IS_FOLLOWER anymore but that's what we have in the array
-
-			if(count($self) && $contact['rel'] == CONTACT_IS_FOLLOWER) {
-
-				$arr = array();
-				$arr['uri'] = $arr['parent-uri'] = item_new_uri($a->get_hostname(), $importer['uid']); 
-				$arr['uid'] = $importer['uid'];
-				$arr['contact-id'] = $self[0]['id'];
-				$arr['wall'] = 1;
-				$arr['type'] = 'wall';
-				$arr['gravity'] = 0;
-				$arr['origin'] = 1;
-				$arr['author-name'] = $arr['owner-name'] = $self[0]['name'];
-				$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
-				$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
-				$arr['verb'] = ACTIVITY_FRIEND;
-				$arr['object-type'] = ACTIVITY_OBJ_PERSON;
-
-				$A = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url]';
-				$B = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
-				$BPhoto = '[url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
-				$arr['body'] =  sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$Bphoto;
-
-				$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
-					. '<id>' . $contact['url'] . '/' . $contact['name'] . '</id>';
-				$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $contact['url'] . '" />' . "\n");
-				$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $contact['thumb'] . '" />' . "\n");
-				$arr['object'] .= '</link></object>' . "\n";
-				$arr['last-child'] = 1;
-
-				$arr['allow_cid'] = $user[0]['allow_cid'];
-				$arr['allow_gid'] = $user[0]['allow_gid'];
-				$arr['deny_cid']  = $user[0]['deny_cid'];
-				$arr['deny_gid']  = $user[0]['deny_gid'];
-
-				$i = item_store($arr);
-				if($i)
-			    	proc_run('php',"include/notifier.php","activity","$i");
-
-			}
-
-		}
 
 		return;
 	}
 
 	$ret = find_diaspora_person_by_handle($sender_handle);
 
-
-	if((! count($ret)) || ($ret['network'] != NETWORK_DIASPORA)) {
+	if((! $ret) || ($ret['xchan_network'] != 'diaspora')) {
 		logger('diaspora_request: Cannot resolve diaspora handle ' . $sender_handle . ' for ' . $recipient_handle);
 		return;
 	}
 
-	$batch = (($ret['batch']) ? $ret['batch'] : implode('/', array_slice(explode('/',$ret['url']),0,3)) . '/receive/public');
-
-
-	$r = q("INSERT INTO `contact` (`uid`, `network`,`addr`,`created`,`url`,`nurl`,`batch`,`name`,`nick`,`photo`,`pubkey`,`notify`,`poll`,`blocked`,`priority`)
-		VALUES ( %d, '%s', '%s', '%s', '%s','%s','%s','%s','%s','%s','%s','%s','%s',%d,%d) ",
-		intval($importer['uid']),
-		dbesc($ret['network']),
-		dbesc($ret['addr']),
-		datetime_convert(),
-		dbesc($ret['url']),
-		dbesc(normalise_link($ret['url'])),
-		dbesc($batch),
-		dbesc($ret['name']),
-		dbesc($ret['nick']),
-		dbesc($ret['photo']),
-		dbesc($ret['pubkey']),
-		dbesc($ret['notify']),
-		dbesc($ret['poll']),
-		1,
-		2
+	$default_perms = 0;
+	// look for default permissions to apply in return - e.g. auto-friend
+	$z = q("select * from abook where abook_channel = %d and (abook_flags & %d) limit 1",
+		intval($importer['channel_id']),
+		intval(ABOOK_FLAG_SELF)
 	);
 
-	// find the contact record we just created
+	if($z)
+		$default_perms = intval($z[0]['abook_my_perms']);
 
-	$contact_record = diaspora_get_contact_by_handle($importer['uid'],$sender_handle);
+	$their_perms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTO|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_CHAT;
+
+	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_my_perms, abook_their_perms, abook_closeness, abook_rating, abook_created, abook_updated, abook_connected, abook_dob, abook_flags, abook_profile) values ( %d, %d, '%s' %d %d, %d, %d, '%s', '%s', '%s', '%s', %d, '%s')",
+		intval($importer['channel_account_id']),
+		intval($importer['channel_id']),
+		dbesc($ret['xchan_hash']),
+		intval($default_perms),
+		intval($their_perms),
+		intval(99),
+		intval(0),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		dbesc('0000-00-00 00:00:00'),
+		intval(($default_perms) ? 0 : ABOOK_FLAG_PENDING)
+	);
+		
+
+	if($r) {
+		logger("New Diaspora introduction received for {$importer['channel_name']}");
+
+		$new_connection = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and abook_xchan = '%s' order by abook_created desc limit 1",
+			intval($importer['channel_id']),
+			dbesc($ret['xchan_hash'])
+		);
+		if($new_connection) {
+			require_once('include/enotify.php');
+			notification(array(
+				'type'         => NOTIFY_INTRO,
+				'from_xchan'   => $ret['xchan_hash'],
+				'to_xchan'     => $importer['channel_hash'],
+				'link'         => z_root() . '/connedit/' . $new_connection[0]['abook_id'],
+			));
+
+			if($default_perms) {
+				// Send back a sharing notification to them
+				diaspora_share($importer['channel_id'],$new_connection[0]);
+        
+			}
+		}
+	}
+
+	// find the abook record we just created
+
+	$contact_record = diaspora_get_contact_by_handle($importer['channel_id'],$sender_handle);
 
 	if(! $contact_record) {
 		logger('diaspora_request: unable to locate newly created contact record.');
 		return;
 	}
 
-	$g = q("select def_gid from user where uid = %d limit 1",
-		intval($importer['uid'])
-	);
-	if($g && intval($g[0]['def_gid'])) {
-		require_once('include/group.php');
-		group_add_member($importer['uid'],'',$contact_record['id'],$g[0]['def_gid']);
-	}
+//FIXME
+//	$g = q("select def_gid from user where uid = %d limit 1",
+//		intval($importer['channel_id'])
+//	);
+//	if($g && intval($g[0]['def_gid'])) {
+//		require_once('include/group.php');
+//		group_add_member($importer['channel_id'],'',$contact_record['id'],$g[0]['def_gid']);
+//	}
 
-	if($importer['page-flags'] == PAGE_NORMAL) {
-
-		$hash = random_string() . (string) time();   // Generate a confirm_key
-
-		$ret = q("INSERT INTO `intro` ( `uid`, `contact-id`, `blocked`, `knowyou`, `note`, `hash`, `datetime` )
-			VALUES ( %d, %d, %d, %d, '%s', '%s', '%s' )",
-			intval($importer['uid']),
-			intval($contact_record['id']),
-			0,
-			0,
-			dbesc( t('Sharing notification from Diaspora network')),
-			dbesc($hash),
-			dbesc(datetime_convert())
-		);
-	}
-	else {
-
-		// automatic friend approval
-
-		require_once('include/Photo.php');
-
-		$photos = import_profile_photo($contact_record['photo'],$importer['uid'],$contact_record['id']);
-
-		// technically they are sharing with us (CONTACT_IS_SHARING),
-		// but if our page-type is PAGE_COMMUNITY or PAGE_SOAPBOX
-		// we are going to change the relationship and make them a follower.
-
-		if($importer['page-flags'] == PAGE_FREELOVE)
-			$new_relation = CONTACT_IS_FRIEND;
-		else
-			$new_relation = CONTACT_IS_FOLLOWER;
-
-		$r = q("UPDATE `contact` SET 
-			`photo` = '%s', 
-			`thumb` = '%s',
-			`micro` = '%s', 
-			`rel` = %d, 
-			`name-date` = '%s', 
-			`uri-date` = '%s', 
-			`avatar-date` = '%s', 
-			`blocked` = 0, 
-			`pending` = 0
-			WHERE `id` = %d
-			",
-			dbesc($photos[0]),
-			dbesc($photos[1]),
-			dbesc($photos[2]),
-			intval($new_relation),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			intval($contact_record['id'])
-		);
-
-		$u = q("select * from user where uid = %d limit 1",intval($importer['uid']));
-		if($u)
-			$ret = diaspora_share($u[0],$contact_record);
-	}
 
 	return;
 }
 
-function diaspora_post_allow($importer,$contact) {
 
-	// perhaps we were already sharing with this person. Now they're sharing with us.
-	// That makes us friends.
-	// Normally this should have handled by getting a request - but this could get lost
-	if($contact['rel'] == CONTACT_IS_FOLLOWER && $importer['page-flags'] != PAGE_COMMUNITY) {
-		q("UPDATE `contact` SET `rel` = %d, `writable` = 1 WHERE `id` = %d AND `uid` = %d",
-			intval(CONTACT_IS_FRIEND),
-			intval($contact['id']),
-			intval($importer['uid'])
-		);
-		$contact['rel'] = CONTACT_IS_FRIEND;
-		logger('diaspora_post_allow: defining user '.$contact["nick"].' as friend');
-	}
-
-	if(($contact['blocked']) || ($contact['readonly']) || ($contact['archive']))
-		return false;
-	if($contact['rel'] == CONTACT_IS_SHARING || $contact['rel'] == CONTACT_IS_FRIEND)
-		return true;
-	if($contact['rel'] == CONTACT_IS_FOLLOWER)
-		if($importer['page-flags'] == PAGE_COMMUNITY)
-			return true;
-	return false;
-}
 
 
 function diaspora_post($importer,$xml,$msg) {
@@ -767,14 +666,14 @@ function diaspora_post($importer,$xml,$msg) {
 	if(! $contact)
 		return;
 
-	if(! diaspora_post_allow($importer,$contact)) {
+	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) {
 		logger('diaspora_post: Ignoring this author.');
 		return 202;
 	}
 
 	$message_id = $diaspora_handle . ':' . $guid;
 	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
-		intval($importer['uid']),
+		intval($importer['channel_id']),
 		dbesc($message_id),
 		dbesc($guid)
 	);
@@ -843,7 +742,7 @@ function diaspora_post($importer,$xml,$msg) {
 
 	$plink = 'https://'.substr($diaspora_handle,strpos($diaspora_handle,'@')+1).'/posts/'.$guid;
 
-	$datarray['uid'] = $importer['uid'];
+	$datarray['uid'] = $importer['channel_id'];
 	$datarray['contact-id'] = $contact['id'];
 	$datarray['wall'] = 0;
 	$datarray['network'] = NETWORK_DIASPORA;
@@ -896,18 +795,18 @@ function diaspora_reshare($importer,$xml,$msg) {
 		return 202;
 	}
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$diaspora_handle);
 	if(! $contact)
 		return;
 
-	if(! diaspora_post_allow($importer,$contact)) {
+	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) {
 		logger('diaspora_reshare: Ignoring this author: ' . $diaspora_handle . ' ' . print_r($xml,true));
 		return 202;
 	}
 
 	$message_id = $diaspora_handle . ':' . $guid;
 	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
-		intval($importer['uid']),
+		intval($importer['channel_id']),
 		dbesc($message_id),
 		dbesc($guid)
 	);
@@ -1030,7 +929,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 	$plink = 'https://'.substr($diaspora_handle,strpos($diaspora_handle,'@')+1).'/posts/'.$guid;
 
-	$datarray['uid'] = $importer['uid'];
+	$datarray['uid'] = $importer['channel_id'];
 	$datarray['contact-id'] = $contact['id'];
 	$datarray['wall'] = 0;
 	$datarray['network']  = NETWORK_DIASPORA;
@@ -1092,18 +991,18 @@ function diaspora_asphoto($importer,$xml,$msg) {
 		return 202;
 	}
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$diaspora_handle);
 	if(! $contact)
 		return;
 
-	if(! diaspora_post_allow($importer,$contact)) {
+	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) {
 		logger('diaspora_asphoto: Ignoring this author.');
 		return 202;
 	}
 
 	$message_id = $diaspora_handle . ':' . $guid;
 	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
-		intval($importer['uid']),
+		intval($importer['channel_id']),
 		dbesc($message_id),
 		dbesc($guid)
 	);
@@ -1144,7 +1043,7 @@ function diaspora_asphoto($importer,$xml,$msg) {
 
 	$datarray = array();
 
-	$datarray['uid'] = $importer['uid'];
+	$datarray['uid'] = $importer['channel_id'];
 	$datarray['contact-id'] = $contact['id'];
 	$datarray['wall'] = 0;
 	$datarray['network']  = NETWORK_DIASPORA;
@@ -1201,13 +1100,13 @@ function diaspora_comment($importer,$xml,$msg) {
 		return;
 	}
 
-	if(! diaspora_post_allow($importer,$contact)) {
+	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments')) {
 		logger('diaspora_comment: Ignoring this author.');
 		return 202;
 	}
 
 	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
-		intval($importer['uid']),
+		intval($importer['channel_id']),
 		dbesc($guid)
 	);
 	if(count($r)) {
@@ -1216,7 +1115,7 @@ function diaspora_comment($importer,$xml,$msg) {
 	}
 
 	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
-		intval($importer['uid']),
+		intval($importer['channel_id']),
 		dbesc($parent_guid)
 	);
 	if(! count($r)) {
@@ -1316,7 +1215,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		}
 	}
 
-	$datarray['uid'] = $importer['uid'];
+	$datarray['uid'] = $importer['channel_id'];
 	$datarray['contact-id'] = $contact['id'];
 	$datarray['type'] = 'remote-comment';
 	$datarray['wall'] = $parent_item['wall'];
@@ -1372,7 +1271,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 AND `deleted` = 0 ",
 		dbesc($parent_item['uri']),
-		intval($importer['uid'])
+		intval($importer['channel_id'])
 	);
 
 	if(count($myconv)) {
@@ -1395,7 +1294,7 @@ function diaspora_comment($importer,$xml,$msg) {
 				'language'     => $importer['language'],
 				'to_name'      => $importer['username'],
 				'to_email'     => $importer['email'],
-				'uid'          => $importer['uid'],
+				'uid'          => $importer['channel_id'],
 				'item'         => $datarray,
 				//'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id,
 				'link'		   => $a->get_baseurl().'/display/'.$datarray['guid'],
@@ -1437,7 +1336,7 @@ function diaspora_conversation($importer,$xml,$msg) {
 		return;
 	}
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
+	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$msg['author']);
 	if(! $contact) {
 		logger('diaspora_conversation: cannot find contact: ' . $msg['author']);
 		return;
@@ -1451,14 +1350,14 @@ function diaspora_conversation($importer,$xml,$msg) {
 	$conversation = null;
 
 	$c = q("select * from conv where uid = %d and guid = '%s' limit 1",
-		intval($importer['uid']),
+		intval($importer['channel_id']),
 		dbesc($guid)
 	);
 	if(count($c))
 		$conversation = $c[0];
 	else {
 		$r = q("insert into conv (uid,guid,creator,created,updated,subject,recips) values(%d, '%s', '%s', '%s', '%s', '%s', '%s') ",
-			intval($importer['uid']),
+			intval($importer['channel_id']),
 			dbesc($guid),
 			dbesc($diaspora_handle),
 			dbesc(datetime_convert('UTC','UTC',$created_at)),
@@ -1468,7 +1367,7 @@ function diaspora_conversation($importer,$xml,$msg) {
 		);
 		if($r)
 			$c = q("select * from conv where uid = %d and guid = '%s' limit 1",
-	        intval($importer['uid']),
+	        intval($importer['channel_id']),
     	    dbesc($guid)
     	);
 	    if(count($c))
@@ -1545,7 +1444,7 @@ function diaspora_conversation($importer,$xml,$msg) {
 		}
 
 		q("insert into mail ( `uid`, `guid`, `convid`, `from-name`,`from-photo`,`from-url`,`contact-id`,`title`,`body`,`seen`,`reply`,`uri`,`parent-uri`,`created`) values ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, '%s','%s','%s')",
-			intval($importer['uid']),
+			intval($importer['channel_id']),
 			dbesc($msg_guid),
 			intval($conversation['id']),
 			dbesc($person['name']),
@@ -1601,7 +1500,7 @@ function diaspora_message($importer,$xml,$msg) {
 
 	$parent_uri = $diaspora_handle . ':' . $msg_parent_guid;
  
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg_diaspora_handle);
+	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$msg_diaspora_handle);
 	if(! $contact) {
 		logger('diaspora_message: cannot find contact: ' . $msg_diaspora_handle);
 		return;
@@ -1615,7 +1514,7 @@ function diaspora_message($importer,$xml,$msg) {
 	$conversation = null;
 
 	$c = q("select * from conv where uid = %d and guid = '%s' limit 1",
-		intval($importer['uid']),
+		intval($importer['channel_id']),
 		dbesc($msg_conversation_guid)
 	);
 	if(count($c))
@@ -1650,7 +1549,7 @@ function diaspora_message($importer,$xml,$msg) {
 
 	$r = q("select id from mail where `uri` = '%s' and uid = %d limit 1",
 		dbesc($message_id),
-		intval($importer['uid'])
+		intval($importer['channel_id'])
 	);
 	if(count($r)) {
 		logger('diaspora_message: duplicate message already delivered.', LOGGER_DEBUG);
@@ -1658,7 +1557,7 @@ function diaspora_message($importer,$xml,$msg) {
 	}
 
 	q("insert into mail ( `uid`, `guid`, `convid`, `from-name`,`from-photo`,`from-url`,`contact-id`,`title`,`body`,`seen`,`reply`,`uri`,`parent-uri`,`created`) values ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, '%s','%s','%s')",
-		intval($importer['uid']),
+		intval($importer['channel_id']),
 		dbesc($msg_guid),
 		intval($conversation['id']),
 		dbesc($person['name']),
@@ -1705,25 +1604,25 @@ function diaspora_photo($importer,$xml,$msg,$attempt=1) {
 
 	logger('diaspora_photo: status_message_guid: ' . $status_message_guid, LOGGER_DEBUG);
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
+	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$msg['author']);
 	if(! $contact) {
 		logger('diaspora_photo: contact record not found: ' . $msg['author'] . ' handle: ' . $diaspora_handle);
 		return;
 	}
 
-	if(! diaspora_post_allow($importer,$contact)) {
+	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) {
 		logger('diaspora_photo: Ignoring this author.');
 		return 202;
 	}
 
 	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
-		intval($importer['uid']),
+		intval($importer['channel_id']),
 		dbesc($status_message_guid)
 	);
 	if(! count($r)) {
 		if($attempt <= 3) {
 			q("INSERT INTO dsprphotoq (uid, msg, attempt) VALUES (%d, '%s', %d)",
-			   intval($importer['uid']),
+			   intval($importer['channel_id']),
 			   dbesc(serialize($msg)),
 			   intval($attempt + 1)
 			);
@@ -1770,19 +1669,20 @@ function diaspora_like($importer,$xml,$msg) {
 //	if($target_type !== 'Post')
 //		return;
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$msg['author']);
+	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$msg['author']);
 	if(! $contact) {
 		logger('diaspora_like: cannot find contact: ' . $msg['author']);
 		return;
 	}
 
-	if(! diaspora_post_allow($importer,$contact)) {
+
+	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments')) {
 		logger('diaspora_like: Ignoring this author.');
 		return 202;
 	}
 
 	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
-		intval($importer['uid']),
+		intval($importer['channel_id']),
 		dbesc($parent_guid)
 	);
 	if(! count($r)) {
@@ -1793,7 +1693,7 @@ function diaspora_like($importer,$xml,$msg) {
 	$parent_item = $r[0];
 
 	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
-		intval($importer['uid']),
+		intval($importer['channel_id']),
 		dbesc($guid)
 	);
 	if(count($r)) {
@@ -1807,7 +1707,7 @@ function diaspora_like($importer,$xml,$msg) {
 			logger('diaspora_like: received a like with positive set to "false"...ignoring');
 /*			q("UPDATE `item` SET `deleted` = 1 WHERE `id` = %d AND `uid` = %d",
 				intval($r[0]['id']),
-				intval($importer['uid'])
+				intval($importer['channel_id'])
 			);*/
 			// FIXME--actually don't unless it turns out that Diaspora does indeed send out "false" likes
 			//  send notification via proc_run()
@@ -1912,7 +1812,7 @@ EOT;
 	$arr = array();
 
 	$arr['uri'] = $uri;
-	$arr['uid'] = $importer['uid'];
+	$arr['uid'] = $importer['channel_id'];
 	$arr['guid'] = $guid;
 	$arr['network']  = NETWORK_DIASPORA;
 	$arr['contact-id'] = $contact['id'];
@@ -1984,7 +1884,7 @@ function diaspora_retraction($importer,$xml) {
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
 	$type = notags(unxmlify($xml->type));
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$diaspora_handle);
 	if(! $contact)
 		return;
 
@@ -1995,7 +1895,7 @@ function diaspora_retraction($importer,$xml) {
 	elseif($type === 'Post') {
 		$r = q("select * from item where guid = '%s' and uid = %d and not file like '%%[%%' limit 1",
 			dbesc('guid'),
-			intval($importer['uid'])
+			intval($importer['channel_id'])
 		);
 		if(count($r)) {
 			if(link_compare($r[0]['author-link'],$contact['url'])) {
@@ -2021,9 +1921,9 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 
 	$parent_author_signature = (($xml->parent_author_signature) ? notags(unxmlify($xml->parent_author_signature)) : '');
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$diaspora_handle);
 	if(! $contact) {
-		logger('diaspora_signed_retraction: no contact ' . $diaspora_handle . ' for ' . $importer['uid']);
+		logger('diaspora_signed_retraction: no contact ' . $diaspora_handle . ' for ' . $importer['channel_id']);
 		return;
 	}
 
@@ -2066,7 +1966,7 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 	if($type === 'StatusMessage' || $type === 'Comment' || $type === 'Like') {
 		$r = q("select * from item where guid = '%s' and uid = %d and not file like '%%[%%' limit 1",
 			dbesc($guid),
-			intval($importer['uid'])
+			intval($importer['channel_id'])
 		);
 		if(count($r)) {
 			if(link_compare($r[0]['author-link'],$contact['url'])) {
@@ -2122,7 +2022,7 @@ function diaspora_profile($importer,$xml,$msg) {
 		return 202;
 	}
 
-	$contact = diaspora_get_contact_by_handle($importer['uid'],$diaspora_handle);
+	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$diaspora_handle);
 	if(! $contact)
 		return;
 
@@ -2147,14 +2047,14 @@ function diaspora_profile($importer,$xml,$msg) {
 	}
 
 /*	$r = q("SELECT DISTINCT ( `resource-id` ) FROM `photo` WHERE  `uid` = %d AND `contact-id` = %d AND `album` = 'Contact Photos' ",
-		intval($importer['uid']),
+		intval($importer['channel_id']),
 		intval($contact['id'])
 	);
 	$oldphotos = ((count($r)) ? $r : null);*/
 
 	require_once('include/Photo.php');
 
-	$images = import_profile_photo($image_url,$importer['uid'],$contact['id']);
+	$images = import_profile_photo($image_url,$importer['channel_id'],$contact['id']);
 	
 	// Generic birthday. We don't know the timezone. The year is irrelevant. 
 
@@ -2180,14 +2080,14 @@ function diaspora_profile($importer,$xml,$msg) {
 		dbesc(datetime_convert()),
 		dbesc($birthday),
 		intval($contact['id']),
-		intval($importer['uid'])
+		intval($importer['channel_id'])
 	); 
 
 /*	if($r) {
 		if($oldphotos) {
 			foreach($oldphotos as $ph) {
 				q("DELETE FROM `photo` WHERE `uid` = %d AND `contact-id` = %d AND `album` = 'Contact Photos' AND `resource-id` = '%s' ",
-					intval($importer['uid']),
+					intval($importer['channel_id']),
 					intval($contact['id']),
 					dbesc($ph['resource-id'])
 				);
