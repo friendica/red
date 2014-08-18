@@ -16,6 +16,7 @@ var searchData=
   ['filerm_5fcontent',['filerm_content',['../filerm_8php.html#ae2eb28d2054fa2c37e38689882172208',1,'filerm.php']]],
   ['filestorage_5fcontent',['filestorage_content',['../filestorage_8php.html#a61bb1be78472555df4ce619f51014040',1,'filestorage.php']]],
   ['filestorage_5fpost',['filestorage_post',['../filestorage_8php.html#ad3b64e3ece9831f9d3a9f00c0ae983cd',1,'filestorage.php']]],
+  ['find_5fdiaspora_5fperson_5fby_5fhandle',['find_diaspora_person_by_handle',['../diaspora_8php.html#aade0c165fcdded71352c7a67bf6ce37b',1,'diaspora.php']]],
   ['find_5ffilename_5fby_5fhash',['find_filename_by_hash',['../include_2attach_8php.html#a4dbfd7e1cef52aa9ef52f4b88929fa86',1,'attach.php']]],
   ['find_5ffolder_5fhash_5fby_5fattach_5fhash',['find_folder_hash_by_attach_hash',['../include_2attach_8php.html#a052f14487ff2ce72f62a09fac8d7e997',1,'attach.php']]],
   ['find_5fthread_5fparent_5findex',['find_thread_parent_index',['../conversation_8php.html#ae59703b07ce2ddf627b4172ff26058b6',1,'conversation.php']]],
@@ -48,6 +49,8 @@ var searchData=
   ['format_5fmentions',['format_mentions',['../text_8php.html#ad8c6e13d6accf057136c5f30a23a5f08',1,'text.php']]],
   ['format_5fnotification',['format_notification',['../include_2notify_8php.html#a0e61728e487df50c72e6434f911a57d3',1,'notify.php']]],
   ['format_5fterm_5ffor_5fdisplay',['format_term_for_display',['../taxonomy_8php.html#adfead45e3b8a3dfb2b4a4b9281d0dbe1',1,'taxonomy.php']]],
+  ['frphotos_5fcontent',['frphotos_content',['../frphotos_8php.html#a6536248e7dda3f06cf37838064b961a4',1,'frphotos.php']]],
+  ['frphotos_5finit',['frphotos_init',['../frphotos_8php.html#a4a33fadb181497eff301ee5132ec61d1',1,'frphotos.php']]],
   ['fsuggest_5fcontent',['fsuggest_content',['../fsuggest_8php.html#aa6c49ed4b50a387f1845f36844dd7998',1,'fsuggest.php']]],
   ['fsuggest_5fpost',['fsuggest_post',['../fsuggest_8php.html#a61ecfe10ce937ed526614f8fd3de3c7d',1,'fsuggest.php']]],
   ['ftosmarty',['fToSmarty',['../namespacefriendica-to-smarty-tpl.html#a89388ea9b2826e8218ed480e917d8105',1,'friendica-to-smarty-tpl']]]

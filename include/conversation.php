@@ -179,8 +179,8 @@ function localize_item(&$item){
 
 	if (activity_match($item['verb'],ACTIVITY_FRIEND)) {
 
-
-//		if ($item['obj_type']=="" || $item['obj_type']!== ACTIVITY_OBJ_PERSON) return;
+		if ($item['obj_type'] == "" || $item['obj_type'] !== ACTIVITY_OBJ_PERSON) 
+			return;
 
 		$Aname = $item['author']['xchan_name'];
 		$Alink = $item['author']['xchan_url'];
@@ -902,6 +902,7 @@ function item_photo_menu($item){
 	$contact_url="";
 	$pm_url="";
 	$vsrc_link = "";
+	$follow_url = "";
 
 	if(local_user()) {
 		$ssl_state = true;
@@ -923,6 +924,9 @@ function item_photo_menu($item){
 
 	if($a->contacts && array_key_exists($item['author_xchan'],$a->contacts))
 		$contact = $a->contacts[$item['author_xchan']];
+	else
+		if(local_user() && $item['author']['xchan_addr'])
+			$follow_url = z_root() . '/follow/?f=&url=' . $item['author']['xchan_addr'];
 
 	if($contact) {
 		$poke_link = $a->get_baseurl($ssl_state) . '/poke/?f=&c=' . $contact['abook_id'];
@@ -940,6 +944,7 @@ function item_photo_menu($item){
 		t("View Profile") => $profile_link,
 		t("View Photos") => $photos_link,
 		t("Matrix Activity") => $posts_link,
+		t("Follow") => $follow_url,
 		t("Edit Contact") => $contact_url,
 		t("Send PM") => $pm_url,
 		t("Poke") => $poke_link

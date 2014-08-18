@@ -119,10 +119,10 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 
 	$limit = service_class_fetch($r[0]['cr_uid'],'chatters_inroom');
 	if($limit !== false) {
-		$x = q("select count(*) as total from chatpresence where cp_room = %d",
+		$y = q("select count(*) as total from chatpresence where cp_room = %d",
 				intval($room_id)
 		);
-		if($x && $x[0]['total'] > $limit) {
+		if($y && $y[0]['total'] > $limit) {
 			notice( t('Room is full') . EOL);
 			return false;
 		}
@@ -235,6 +235,8 @@ function chat_message($uid,$room_id,$xchan,$text) {
  */
 
 function chatroom_flush($room_id,$xchan) {
+
+
 	$date_limit = date('Y-m-d H:i:s', time() - 3600 * MAX_CHATROOM_HOURS);
 	$d = q("delete from chat where chat_room = %d and chat_xchan = '%s' and created < '%s'",
 		intval($room_id),

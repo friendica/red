@@ -1,7 +1,7 @@
 
 Cher(e) $username,
 
-	« $from » a posté quelque chose sur le mur de votre profil.
+	« $from » a publié quelque chose sur le mur de votre profil.
 
 -----
 $body

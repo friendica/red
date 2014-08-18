@@ -81,7 +81,6 @@ function item_post(&$a) {
 	$layout_mid  = ((x($_REQUEST,'layout_mid'))  ? escape_tags($_REQUEST['layout_mid']): '');
 	$plink       = ((x($_REQUEST,'permalink'))   ? escape_tags($_REQUEST['permalink']) : '');
 
-
 	/*
 	Check service class limits
 	*/
@@ -258,8 +257,11 @@ function item_post(&$a) {
 		logger('mod_item: post accepted from ' . $observer['xchan_name'] . ' for ' . $owner_xchan['xchan_name'], LOGGER_DEBUG);
 	}
 		
-
-
+	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
+	if($webpage)
+		$public_policy = '';
+	if($public_policy)
+		$private = 1;
 
 	if($orig_post) {
 		$private = 0;
@@ -275,12 +277,14 @@ function item_post(&$a) {
 			$str_contact_allow = $orig_post['allow_cid'];
 			$str_group_deny    = $orig_post['deny_gid'];
 			$str_contact_deny  = $orig_post['deny_cid'];
+			$public_policy     = $orig_post['public_policy'];
 		}
 
 		if((strlen($str_group_allow)) 
 			|| strlen($str_contact_allow) 
 			|| strlen($str_group_deny) 
-			|| strlen($str_contact_deny)) {
+			|| strlen($str_contact_deny)
+			|| strlen($public_policy)) {
 			$private = 1;
 		}
 
@@ -344,6 +348,7 @@ function item_post(&$a) {
 				|| strlen($str_contact_allow) 
 				|| strlen($str_group_deny) 
 				|| strlen($str_contact_deny)
+				|| strlen($public_policy)
 		) ? 1 : 0);
 
 		// If this is a comment, set the permissions from the parent.
@@ -355,10 +360,12 @@ function item_post(&$a) {
 				|| strlen($parent_item['allow_cid']) 
 				|| strlen($parent_item['allow_gid']) 
 				|| strlen($parent_item['deny_cid']) 
-				|| strlen($parent_item['deny_gid'])) {
+				|| strlen($parent_item['deny_gid'])
+				|| strlen($parent_item['public_policy'])) {
 				$private = (($parent_item['item_private']) ? $parent_item['item_private'] : 1);
 			}
 
+			$public_policy     = $parent_item['public_policy'];
 			$str_contact_allow = $parent_item['allow_cid'];
 			$str_group_allow   = $parent_item['allow_gid'];
 			$str_contact_deny  = $parent_item['deny_cid'];
@@ -423,8 +430,8 @@ function item_post(&$a) {
 	if($mimetype === 'text/bbcode') {
 
 		if(local_user() && local_user() == $profile_uid && feature_enabled(local_user(),'markdown')) {
-			require_once('include/bb2diaspora.php');
-			$body = diaspora2bb($body,true);
+			require_once('include/bb2diaspora.php');			
+			$body = diaspora2bb(escape_tags($body),true);
 		}
 
 
@@ -705,6 +712,7 @@ function item_post(&$a) {
 	$datarray['item_restrict']  = $item_restrict;
 	$datarray['item_flags']     = $item_flags;
 	$datarray['layout_mid']     = $layout_mid;
+	$datarray['public_policy']  = $public_policy;
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 	$datarray['term']           = $post_tags;
 	$datarray['plink']          = $plink;
@@ -1076,6 +1084,13 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			else
 				$newname = str_replace('_',' ',$name);
 
+			// do this bit over since we started over with $name
+
+			if(substr($newname,-1,1) === '+') {
+				$forum = true;
+				$newname = substr($newname,0,-1);
+			}
+
 			//select someone from this user's contacts by name
 			$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
 				WHERE xchan_name = '%s' AND abook_channel = %d LIMIT 1",
@@ -1087,7 +1102,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 				//select someone by attag or nick and the name passed in
 				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
 					WHERE xchan_addr like ('%s') AND abook_channel = %d LIMIT 1",
-						dbesc($newname . '@%'),
+						dbesc(((strpos($newname,'@')) ? $newname : $newname . '@%')),
 						intval($profile_uid)
 				);
 			}
@@ -1161,6 +1176,8 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			}
 		}
 	}
+
+
 	return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $newname, 'url' => $url, 'contact' => $r[0]);
 }
 

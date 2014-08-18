@@ -1,8 +1,8 @@
 #profile-edit-default-desc {
-	color: #FF0000;
-	border: 1px solid #FF8888;
-	background-color: #FFEEEE;
-	padding: 7px;
+    background: none repeat scroll 0 0 orange;
+    font-weight: bold;
+    margin: 10px;
+    padding: 20px 5px 10px;
 }
 
 #profile-edit-clone-link-wrapper {
@@ -13,15 +13,9 @@
 }
 
 
-#profile-listing-desc, #profile-stuff-link {
-	margin-left: 30px;
+#profile-listing-desc, #profile-stuff-link, #profile-listing-new-link-wrapper {
+	margin: 15px 10px 15px 0;
 }
-
-#profile-listing-new-link-wrapper {
-	margin-left: 30px;
-	margin-bottom: 30px;
-}
-
 
 #profile-edit-links-end {
 	clear: both;

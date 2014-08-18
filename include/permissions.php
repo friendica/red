@@ -10,12 +10,12 @@ function get_perms() {
 
 	$global_perms = array(
 		// Read only permissions
-		'view_stream'   => array('channel_r_stream',  intval(PERMS_R_STREAM),  true, t('Can view my "public" stream and posts'), ''),
-		'view_profile'  => array('channel_r_profile', intval(PERMS_R_PROFILE), true, t('Can view my "public" channel profile'), ''),
-		'view_photos'   => array('channel_r_photos',  intval(PERMS_R_PHOTOS),  true, t('Can view my "public" photo albums'), ''),
-		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true, t('Can view my "public" address book'), ''),
-		'view_storage' => array('channel_r_storage',   intval(PERMS_R_STORAGE),   true, t('Can view my "public" file storage'), ''),
-		'view_pages' => array('channel_r_pages',   intval(PERMS_R_PAGES),   true, t('Can view my "public" pages'), ''),
+		'view_stream'   => array('channel_r_stream',  intval(PERMS_R_STREAM),  true, t('Can view my normal stream and posts'), ''),
+		'view_profile'  => array('channel_r_profile', intval(PERMS_R_PROFILE), true, t('Can view my default channel profile'), ''),
+		'view_photos'   => array('channel_r_photos',  intval(PERMS_R_PHOTOS),  true, t('Can view my photo albums'), ''),
+		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true, t('Can view my connections'), ''),
+		'view_storage' => array('channel_r_storage',   intval(PERMS_R_STORAGE),   true, t('Can view my file storage'), ''),
+		'view_pages' => array('channel_r_pages',   intval(PERMS_R_PAGES),   true, t('Can view my webpages'), ''),
 
 		// Write permissions
 		'send_stream'   => array('channel_w_stream',  intval(PERMS_W_STREAM),  false, t('Can send me their channel stream and posts'), ''),
@@ -23,14 +23,14 @@ function get_perms() {
 		'post_comments' => array('channel_w_comment', intval(PERMS_W_COMMENT), false, t('Can comment on or like my posts'), ''),
 		'post_mail'     => array('channel_w_mail',    intval(PERMS_W_MAIL),    false, t('Can send me private mail messages'), ''),
 		'post_photos'   => array('channel_w_photos',  intval(PERMS_W_PHOTOS),  false, t('Can post photos to my photo albums'), ''),
-		'post_like'   => array('channel_w_like',  intval(PERMS_W_LIKE),  false, t('Can like/dislike stuff'), 'Profiles and things other than posts/comments'),
+		'post_like'   => array('channel_w_like',  intval(PERMS_W_LIKE),  false, t('Can like/dislike stuff'), t('Profiles and things other than posts/comments')),
 
 		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false, t('Can forward to all my channel contacts via post @mentions'), t('Advanced - useful for creating group forum channels')),
 		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Can chat with me (when available)'), t('')),
-		'write_storage' => array('channel_w_storage',   intval(PERMS_W_STORAGE),   false, t('Can write to my "public" file storage'), ''),
-		'write_pages' => array('channel_w_pages',   intval(PERMS_W_PAGES),   false, t('Can edit my "public" pages'), ''),
+		'write_storage' => array('channel_w_storage',   intval(PERMS_W_STORAGE),   false, t('Can write to my file storage'), ''),
+		'write_pages' => array('channel_w_pages',   intval(PERMS_W_PAGES),   false, t('Can edit my webpages'), ''),
 
-		'republish' => array('channel_a_republish', intval(PERMS_A_REPUBLISH), false, t('Can source my "public" posts in derived channels'), t('Somewhat advanced - very useful in open communities')),
+		'republish' => array('channel_a_republish', intval(PERMS_A_REPUBLISH), false, t('Can source my public posts in derived channels'), t('Somewhat advanced - very useful in open communities')),
 
 		'delegate'      => array('channel_a_delegate', intval(PERMS_A_DELEGATE),    false, t('Can administer my channel resources'), t('Extremely advanced. Leave this alone unless you know what you are doing')),
 	);
@@ -411,3 +411,63 @@ function site_default_perms() {
 	}
 	return $ret;
 }
+
+
+/**
+ * @function get_role_perms($role)
+ * @param string $role
+ * 
+ *   Given a string for the channel role ('social','forum', etc)
+ * return an array of all permission fields pre-filled for this role.
+ * This includes the channel permission scope indicators as well as
+ *    perms_auto:   The permissions to apply automatically on receipt of a connection request
+ *    perms_follow: The permissions to apply when initiating a connection request to another channel
+ *    perms_accept: The permissions to apply when accepting a connection request from another channel (not automatic)
+ *
+ * Any attributes may be extended (new roles defined) and modified (specific permissions altered) by plugins
+ *
+ */
+
+function get_role_perms($role) {
+
+	$ret = array();
+
+	$ret['role'] = $role;
+
+	switch($role) {
+		case 'social':
+			$ret['perms_auto'] = 0;
+			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
+			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
+			$ret['channel_r_stream']    = PERMS_PUBLIC;
+			$ret['channel_r_profile']   = PERMS_PUBLIC;
+			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_abook']     = PERMS_PUBLIC;
+			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_wall']      = PERMS_CONTACTS;
+			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
+			$ret['channel_w_comment']   = PERMS_CONTACTS;
+			$ret['channel_w_mail']      = PERMS_CONTACTS;
+			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_chat']      = PERMS_CONTACTS;
+			$ret['channel_a_delegate']  = 0;
+			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_r_pages']     = PERMS_PUBLIC;
+			$ret['channel_w_pages']     = 0;
+			$ret['channel_a_republish'] = PERMS_SPECIFIC;
+			$ret['channel_w_like']      = PERMS_NETWORK;
+			
+			break;
+	
+	}
+
+	call_hooks('get_role_perms',$ret);
+
+	return $ret;
+}
+
+

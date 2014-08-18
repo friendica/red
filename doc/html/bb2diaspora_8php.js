@@ -7,6 +7,8 @@ var bb2diaspora_8php =
     [ "diaspora_ul", "bb2diaspora_8php.html#adc92ccda5f85ed27e64fcc17712c89cc", null ],
     [ "format_event_diaspora", "bb2diaspora_8php.html#a29a2ad41f5826f3975fa9a49934ff863", null ],
     [ "get_bb_tag_pos", "bb2diaspora_8php.html#a4c2f8f11b29a06809d9b07782215b1b2", null ],
+    [ "share_shield", "bb2diaspora_8php.html#ad033be99e87a2aaa05e569c68f30792d", null ],
+    [ "share_unshield", "bb2diaspora_8php.html#ab61b4f8c065e97b151411858bb2f209a", null ],
     [ "stripdcode_br_cb", "bb2diaspora_8php.html#a180b0e3a7d702998be19e3c3b44b0e93", null ],
     [ "unescape_underscores_in_links", "bb2diaspora_8php.html#a599428bceb6f6d82a6a78cb66811f747", null ]
 ];

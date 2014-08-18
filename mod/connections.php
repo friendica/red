@@ -337,6 +337,9 @@ function connections_content(&$a) {
 	}
 	$sql_extra .= (($searching) ? protect_sprintf(" AND xchan_name like '%$search_txt%' ") : "");
 
+	if($_REQUEST['gid']) {
+		$sql_extra .= " and xchan_hash in ( select xchan from group_member where gid = " . intval($_REQUEST['gid']) . " and uid = " . intval(local_user()) . " ) ";
+	}
  	
 	$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash 
 		where abook_channel = %d and not (abook_flags & %d) and not (xchan_flags & %d ) $sql_extra $sql_extra2 ",

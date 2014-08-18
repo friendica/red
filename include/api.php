@@ -119,16 +119,36 @@ require_once('include/items.php');
 		
 		// process normal login request
 		require_once('include/auth.php');
+		$channel_login = 0;
 		$record = account_verify_password($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
 		if(! $record) {
-		   logger('API_login failure: ' . print_r($_SERVER,true), LOGGER_DEBUG);
-		    header('WWW-Authenticate: Basic realm="Red"');
-		    header('HTTP/1.0 401 Unauthorized');
-		    die('This api requires login');
+	        $r = q("select * from channel where channel_address = '%s' limit 1",
+    	        dbesc($_SERVER['PHP_AUTH_USER'])
+        	);
+        	if ($r) {
+            	$x = q("select * from account where account_id = %d limit 1",
+                	intval($r[0]['channel_account_id'])
+            	);
+            	if ($x) {
+					$record = account_verify_password($x[0]['account_email'],$_SERVER['PHP_AUTH_PW']);
+					if($record)
+						$channel_login = $r[0]['channel_id'];
+				}
+			}
+			if(! $record) {	
+				logger('API_login failure: ' . print_r($_SERVER,true), LOGGER_DEBUG);
+				header('WWW-Authenticate: Basic realm="Red"');
+				header('HTTP/1.0 401 Unauthorized');
+				die('This api requires login');
+			}
 		}
 
 		require_once('include/security.php');
 		authenticate_success($record);
+
+		if($channel_login)
+			change_channel($channel_login);
+
 		$_SESSION['allow_api'] = true;
 	}
 	
@@ -1498,6 +1518,9 @@ require_once('include/items.php');
 		$a = get_app();
 		$ret = array();
 
+		if(! $r)
+			return $ret;
+
 		foreach($r as $item) {
 			localize_item($item);
 
@@ -1875,17 +1898,19 @@ require_once('include/items.php');
 		);
 		
 		$ret = Array();
-		foreach($r as $item) {
-			if ($box == "inbox" || $item['from-url'] != $profile_url){
-				$recipient = $user_info;
-				$sender = api_get_user($a,$item['contact-id']);
+		if($r) {
+			foreach($r as $item) {
+				if ($box == "inbox" || $item['from-url'] != $profile_url){
+					$recipient = $user_info;
+					$sender = api_get_user($a,$item['contact-id']);
+				}
+				elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
+					$recipient = api_get_user($a,$item['contact-id']);
+					$sender = $user_info;
+				}
+	
+				$ret[]=api_format_messages($item, $recipient, $sender);
 			}
-			elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
-				$recipient = api_get_user($a,$item['contact-id']);
-				$sender = $user_info;
-			}
-
-			$ret[]=api_format_messages($item, $recipient, $sender);
 		}
 		
 

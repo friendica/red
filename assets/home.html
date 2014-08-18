@@ -36,58 +36,54 @@ body::after {
 </style>
 
 <script>
-
-var terms = new Array(
-"Internet-scale Privacy",
-"Social Networking",
-"Single Sign-On",
-"Photo Albums",
-"Decentralised",
-"Cloud Storage",
-"Own Your Content",
-"Blogging",
-"End-to-end Encryption",
-"Chatrooms",
-"Shareable Apps",
-"Cross-Site Access Control",
-"Unsend Private Mail",
-"Webpage Creation",
-"Content Management",
-"Message Expiration",
-"Games and Utilities",
-"Unincorporated",
-"Forums",
-"Like + Dislike",
-"Share Anything Digital",
-"Communications",
-"Identity-Aware Content",
-"Pseudonyms",
-"Multiple Identities",
-"No Advertising",
-"Rich Text Post/Comment",
-"Event Calendar",
-"Bookmarking",
-"Community Tagging",
-"Mirrored Directory",
-"Nomadic Identity",
-"Derivative Channels",
-"Customised Encryption",
-"Multiple Profiles",
-"Privacy Groups",
-"File Sharing",
-"MIT license",
-"Autonomy",
-"Affinity Filtering",
-"Friend Suggestions",
-"Cross-Site Auth",
-"Themes",
-"Plugins",
-"External API",
-"3rd Party Apps",
-"Open Source",
-null
-);
-
+var terms = new Array("Internet-scale Privacy",
+			"Social Networking",
+			"Single Sign-On",
+			"Photo Albums",
+			"Decentralised",
+			"Cloud Storage",
+			"Own Your Content",
+			"Blogging",
+			"End-to-end Encryption",
+			"Chatrooms",
+			"Shareable Apps",
+			"Cross-Site Access Control",
+			"Unsend Private Mail",
+			"Webpage Creation",
+			"Content Management",
+			"Message Expiration",
+			"Games and Utilities",
+			"Unincorporated",
+			"Forums",
+			"Like + Dislike",
+			"Share Anything Digital",
+			"Communications",
+			"Identity-Aware Content",
+			"Pseudonyms",
+			"Multiple Identities",
+			"No Advertising",
+			"Rich Text Post/Comment",
+			"Event Calendar",
+			"Bookmarking",
+			"Community Tagging",
+			"Mirrored Directory",
+			"Nomadic Identity",
+			"Derivative Channels",
+			"Customised Encryption",
+			"Multiple Profiles",
+			"Privacy Groups",
+			"File Sharing",
+			"MIT license",
+			"Autonomy",
+			"Affinity Filtering",
+			"Friend Suggestions",
+			"Cross-Site Auth",
+			"Themes",
+			"Plugins",
+			"External API",
+			"3rd Party Apps",
+			"Open Source",
+			null);
 var r = 0;
 var g = 0;
 var b = 0;
@@ -103,23 +99,6 @@ var seq = 0;
 var nindex = 0;
 var firstTime = 1;
 var curr = null;
-
-function update_element() {
-
-	if(firstTime) {
-		firstTime = 0;
-		fadeout();
-		return;
-	}
-	curr = terms[nindex];
-	nindex ++;
-	if(terms[nindex] == null)
-		nindex = 0;
-
-	var id = document.getElementById(element);
-	id.innerHTML = curr;
-	timer = setTimeout('fadein();',3);
-}
 
 function fadeout() {
 
@@ -157,19 +136,110 @@ function fadein() {
 
 $(document).ready(function() {
 	timer = setTimeout('update_element();',2000);
+	var known = {
+	    en: true, // ENGLISH
+	    fr: true, // FRENCH
+	    nl: true  // NETHERLANDS
+                      // ADD YOUR LANGUAGE HERE.
+	};
+	// Figure out the language, default to English because that's
+	// what I speak.
+	var lang = (navigator.language || navigator.userLanguage || 'en').substr(0, 2);
+	if(!known[lang])
+	    lang = 'en';
+	if(lang=="fr") // FRENCH TRANSLATIONS
+		terms = new Array("R&eacute;seau social",
+			"Authentification unique",
+			"Albums Photos",
+			"Decentralis&eacute;e",
+			"Entreposage dans le nuage",
+			"Vous avez le contr&ocirc;le sur vos partages",
+			"Blogue",
+			"Encryption des donn&eacute;es",
+			"Salle de clavardage",
+			"Partage d&rsquo;applications",
+			"Permissions actives sur toute la matrice",
+			"Reprise de courrier",
+			"Cr&eacute;ation de pages web",
+			"Gestion du contenu",
+			"Expiration des messages",
+			"Jeux et Utilitaires",
+			"Non-Incorpor&eacute;",
+			"Forums",
+			"J&rsquo;aime + Je D&eacute;teste",
+			"Partagez tous types de fichiers",
+			"Plateforme de communications",
+			"Le contenu s&rsquo;ajuste aux individus",
+			"Pseudonymes",
+			"Identit&eacute;s multiples",
+			"Aucune publicit&eacute;",
+			"&Eacute;diteur de texte enrichi (partages/commentaires)",
+			"Calendrier d&rsquo;&eacute;v&eacute;nements",
+			"Favoris",
+			"Suivre des personnes/communaut&eacute;s",
+			"R&eacute;pertoire d&rsquo;utilisateurs synchronis&eacute;",
+			"Identit&eacute; nomade",
+			"Canaux d&rsquo;int&eacute;r&ecirc;ts",
+			"Encryption du traffic (SSL)",
+			"Profils multiples",
+			"Groupes priv&eacute;s",
+			"Partage de fichiers",
+			"License MIT",
+			"Autonomie",
+			"Filtre selon les affinit&eacute;s",
+			"Suggestions d&rsquo;amis potentiel",
+			"Authentification sur tous les HUBs de la matrice",
+			"Th&egrave;mes",
+			"Plugins",
+			"API externe",
+			"Application Tierce Partie",
+			"Code Source Ouvert",
+			"Gratuit",
+			null);
+
+	// Find all <div>s with a class of "wrapper" and lang attribute equal
+	// to `lang` and make them visibile.
+	$('div.wrapper[lang=' + lang + ']').show();
+
+	// Find all <div>s with a class of "wrapper" and lang attribute not
+	// equal to `lang` and make them invisibile.
+	$('div.wrapper[lang!=' + lang + ']').hide();
 });
+
+function update_element() {
+
+	if(firstTime) {
+		firstTime = 0;
+		fadeout();
+		return;
+	}
+	curr = terms[nindex];
+	nindex ++;
+	if(terms[nindex] == null)
+		nindex = 0;
+
+	var id = document.getElementById(element);
+	id.innerHTML = curr;
+	timer = setTimeout('fadein();',3);
+}
 
 
 </script>
 
-
 <div style="margin-top: 50px;"></div>
 
 <center>
+
 <img style="width: 330px; margin-top: 30px; margin-bottom: 30px;" src="assets/hashlogo.png" >
 <div id="word-flasher" style="font-size: 2.5em; font-weight: bold; margin-bottom: 30px;">&quot;The Network&quot;</div>
+
+<!-- TRANSLATIONS START HERE - REMEMBER TO ADD YOUR LANGUAGE IN THE FUNCTION ABOVE($(document).ready(function() ...)
+
+<!-- ENGLISH FRONTPAGE TRANSLATION STARTS HERE -->
+
+<div lang="en" class="wrapper">
 <div class="tr" style="font-size: 1.4em; color: #666; margin-left: 75px; margin-right: 75px;">
-One of the traditional problems with independent publishing on the internet has always been the fact that independent publishers often operate as isolated islands within their own website, and spend most of their resources attracting visitors. The rise of corporate providers and social networking services alleviated many of these problems; however centralisation has led to a situation where your content where is no longer under your direct control. It is shared fully with corporate advertisers and governments, but ironically you are now often asked to pay money to ensure that your friends can see it. What if you could have advantages of scale and connections that centralisation offers whilst maintaining independent control over your own web presence?  
+One of the traditional problems with independent publishing on the internet has always been the fact that independent publishers often operate as isolated islands within their own website, and spend most of their resources attracting visitors. The rise of corporate providers and social networking services alleviated many of these problems; however centralisation has led to a situation where your content where is no longer under your direct control. It is shared fully with corporate advertisers and governments, but ironically you are now often asked to pay money to ensure that your friends can see it. What if you could have advantages of scale and connections that centralisation typically offers whilst maintaining independent control over your own web presence?  
 </div>
 <br />
 <div class="tr" style="font-size: 1.4em; color: #666; margin-left: 75px; margin-right: 75px;">
@@ -181,12 +251,73 @@ What makes the RedMatrix unique is what we call "magic authentication" - which i
 </div>
 <br />
 <div class="tr" style="font-size: 1.4em; color: #666; margin-left: 75px; margin-right: 75px;">
-The RedMatrix is ideal for social communities of any size, from private individuals and families to online forums, business websites, and organisations. It can be used by anybody who has communications or web content that they wish to share, but where they desire complete control of whom they share it with.<br />
+The RedMatrix is ideal for communities of any size, from private individuals and families to online forums, business websites, and organisations. It can be used by anybody who has communications or web content that they wish to share, but where they desire complete control of whom they share it with.<br />
 </div>
 <br />
 <div style="margin-bottom: 15px; color: #808080; font-size: 1.8em;"><strong>RedMatrix - &quot;The Network&quot;</strong></div>
-<div style="font-size: 1.4em;"><a href="pubsites" style="color: white; padding:10px; background-color: #c60032; border-radius: 10px;">Sign up now!</a></div>
+<div style="font-size: 1.4em;">
+<a href="register" style="color: white; padding:10px; background-color: #c60032; border-radius: 10px;">Sign up now!</a>
+<a href="donate" style="color: white; padding:10px; background-color: 	#c60032; border-radius: 10px;">Donate / Sponsor</a>
+</div>
+<div style="margin-top: 15px; margin-bottom: 15px;"><a href="pubsites">Public Sites</a> | <a href="https://redmatrix.me">Project Home</a> | <a href="https://github.com/friendica/red">Code</a> | <a href="https://zothub.com/channel/one">Developers</a></div>
+</div>
 
+<!-- FRENCH FRONTPAGE TRANSLATION STARTS HERE -->
 
-<div style="margin-top: 15px; margin-bottom: 15px;"><a href="pubsites">Public Sites</a> | <a href="https://redmatrix.me">Project Home</a> | <a href="https://github.com/friendica/red">Code</a> | <a href="https://zothub.com/channel/one">Developers</a></div></center>
+<div lang="fr" class="wrapper" style="display: none;">
+<div class="tr" style="font-size: 1.4em; color: #666; margin-left: 75px; margin-right: 75px;">
+La Matrice <span style="color: #c60032;">Rouge</span> &laquo; <span style="color: #c60032;">Red</span>Matrix &raquo; est une <strong>application web d&eacute;centralis&eacute;e</strong>. La centralisation des donn&eacute;es sur des serveurs corporatifs met en jeux votre vie priv&eacute;e et vous assujettit &agrave; la volont&eacute; d&#039;un tiers. Ainsi vos messages, fichiers, photos ne sont plus sous votre contr&ocirc;le et sont partag&eacute;s avec les agences de marketing ainsi que les gouvernements. La Matrice <span style="color: #c60032;">Rouge</span>, c&#039;est un moyen de prot&eacute;ger votre identit&eacute; ainsi que votre vie priv&eacute;e tout en conservant le plein contr&ocirc;le sur le partage de vos donn&eacute;es avec le monde.
+</div>
+<br />
+<div class="tr" style="font-size: 1.4em; color: #666; margin-left: 75px; margin-right: 75px;">
+La Matrice <span style="color: #c60032;">Rouge</span> est un r&eacute;seau constitu&eacute; de serveurs autonomes et ind&eacute;pendants. Ces serveurs, appel&eacute;s &laquo; hubs &raquo;,  assurent la r&eacute;silience de vos donn&eacute;es sur le r&eacute;seau. Chacun de ces &laquo; hubs &raquo; garantit des fonctions de communications (Messages priv&eacute;s, clavardage, blogue, forums et toutes les fonctions des r&eacute;seaux sociaux) ainsi que des fonctions de gestions (photos, calendrier, partage de fichiers, cr&eacute;ation de pages web, cr&eacute;ation d&#039;applications) &agrave; ses membres. En tout temps, votre vie priv&eacute;e et le choix du partage de votre contenu sont sous votre contr&ocirc;le  exclusif.
+</div>
+<br />
+<div class="tr" style="font-size: 1.4em; color: #666; margin-left: 75px; margin-right: 75px;">
+La Matrice <span style="color: #c60032;">Rouge</span> est unique; elle transporte votre identit&eacute; &agrave; l&#039;aide d'une m&eacute;thode d&#039;authentification innovatrice appel&eacute;e &laquo; authentification magique &raquo; - laquelle est le r&eacute;sultat de la recherche et du d&eacute;veloppement appliqu&eacute;e au service d&#039;<strong>identit&eacute; d&eacute;centralis&eacute;e</strong>. Aucune autre plateforme n&#039;offre ce type d&#039;identit&eacute; &laquo; nomade &raquo;.  Ainsi, une fois authentifi&eacute;, vous avez le loisir de vous &laquo; promener &raquo; d&#039;un serveur &agrave; l&#039;autre sans avoir &agrave; reconfirmer votre identit&eacute;. De plus, la Matrice <span style="color: #c60032;">Rouge</span> vous permet de &laquo; cloner &raquo; votre identit&eacute; et de la porter sur un &laquo; hub &raquo; diff&eacute;rent de celui ou vous vous &ecirc;tes inscrit. Voil&agrave; encore un moyen de vous d&eacute;fendre contre toutes formes de censure pour pr&eacute;server votre identit&eacute;, vos listes d&#039;amis, vos publications, photos et fichiers advenant le cas ou votre &laquo; hub &raquo; pr&eacute;f&eacute;r&eacute; serait mis hors ligne. (temporairement ou permanemment).
+</div>
+<br />
+<div class="tr" style="font-size: 1.4em; color: #666; margin-left: 75px; margin-right: 75px;">
+La Matrice <span style="color: #c60032;">Rouge</span> est un outil id&eacute;al pour toutes les communaut&eacute;s en passant par les particuliers et les familles tout en incluant les forums, sites-web d'affaires ainsi que les organisations. C&#039;est une solution de remplacement, non n&eacute;gligeable, aux r&eacute;seaux sociaux actuels rendue accessible &agrave; tous ceux qui sont soucieux de leur vie priv&eacute;e et qui souhaitent conserver le contr&ocirc;le de leur pr&eacute;sence sur internet.<br />
+</div>
+<br />
+<div style="margin-bottom: 15px; color: #808080; font-size: 1.8em;"><strong>RedMatrix - &quot;The Network&quot;</strong></div>
+<div style="font-size: 1.4em;">
+<a href="register" style="color: white; padding:10px; background-color: #c60032; border-radius: 10px;">M'inscrire!</a>
+<a href="donate" style="color: white; padding:10px; background-color: 	#c60032; border-radius: 10px;">Dons / Sponsors</a>
+</div>
+<div style="margin-top: 15px; margin-bottom: 15px;"><a href="pubsites">Hubs public</a> | <a href="https://redmatrix.me">Le Projet</a> | <a href="https://github.com/friendica/red">Source</a> | <a href="https://zothub.com/channel/one">Developpeurs</a></div>
+</div>
+
+<!-- NETHERLANDS TRANSLATIONS STARTS HERE -->
+
+<div lang="nl" class="wrapper" style="display: none;">
+<div class="tr" style="font-size: 1.4em; color: #666; margin-left: 75px; margin-right: 75px;">
+De <strong>Red Matrix</strong> (ook bekend als "<span style="color: #c60032;">red</span>") is een opensource webapplicatie dat een volledig systeem biedt voor <em>gedecentraliseerd</em> publiceren, delen en communiceren. Het combineert communicatie (een <em>sociaal netwerk</em>, chat en priv&#233;communicatie) en mediabeheer (foto's, bookmarks, bestanden, webpagina's en apps), met zoveel mogelijkheden dat het je begint te duizelen.
+</div>
+<br />
+<div class="tr" style="font-size: 1.4em; color: #666; margin-left: 75px; margin-right: 75px;">
+Wat de Red Matrix uniek maakt is de zogenaamde &#8220;magische authenticatie&#8221;. Wat gebaseerd is op ons baanbrekende werk in gedecentraliseerde identificatie. Dit knoopt alle Red Matrix-hubs en -kanalen aan elkaar, waardoor er &#233;&#233;n groot supernetwerk ontstaat waarin de grenzen tussen verschillende websites zijn vervaagd of niet meer lijken te bestaan. Waar &#8220;wie je bent&#8221; niets te maken heeft met met &#8220;wat voor computerserver je verbonden bent&#8221; en waar de inhoud van webpagina's zich kan aanpassen aan wie er naar kijkt.
+</div>
+<br />
+<div class="tr" style="font-size: 1.4em; color: #666; margin-left: 75px; margin-right: 75px;">
+Waarschuwing: Nadat je de &#8220;magische authenticatie&#8221; en een &#8220;nomadische identiteit&#8221; ervaren hebt, kan het erg storend zijn en een beetje &#8220;primitief&#8221; om terug te moeten keren naar het oude internet. Je hoeft geen honderden verschillende wachtwoorden te onthouden om het web te gebruiken... of om volledig ge&#239;soleerd te zijn van je vrienden en familie, omdat een server of router in een ander land "<em>problemen</em>" ondervindt.
+</div>
+<br />
+<div class="tr" style="font-size: 1.4em; color: #666; margin-left: 75px; margin-right: 75px;">
+Voor een gewoon mens is het grootste voordeel van een gedecentraliseerde identiteit dat jij kan beslissen met wie je jouw gegevens deelt. En wanneer iemand niet jouw toestemming heeft, dan krijgt hij/zij het ook niet te zien. Je hebt alles onder controle, gebruik de Red Matrix als een sociaal netwerk &#243;f een bedrijfswebsite &#243;f als persoonlijke cloud-opslag &#243;f om media te publiceren, of voor wat voor toepassing dan ook. Als grens geldt alleen jouw verbeelding.<br />
+</div>
+<br />
+<div style="margin-bottom: 15px; color: #808080; font-size: 1.8em;"><strong>RedMatrix - &quot;The Network&quot;</strong></div>
+<div style="font-size: 1.4em;">
+<a href="register" style="color: white; padding:10px; background-color: #c60032; border-radius: 10px;">Meld je nu aan!</a>
+<a href="donate" style="color: white; padding:10px; background-color: 	#c60032; border-radius: 10px;">schenking</a>
+</div>
+<div style="margin-top: 15px; margin-bottom: 15px;"><a href="pubsites">Andere openbare hubs</a> | <a href="https://redmatrix.me">Projectwebsite</a> | <a href="https://github.com/friendica/red">Broncode</a> | <a href="https://zothub.com/channel/one">Ontwikkelaars</a></div>
+</div>
+<!-- INSERT NEW TRANSLATIONS HERE -->
+
+<!-- DO NOT REMOVE THE 2 LINES BELOW -->
+</div>
+</center>
 

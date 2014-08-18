@@ -287,6 +287,10 @@ abstract class photo_driver {
 		$p['allow_gid'] = (($arr['allow_gid']) ? $arr['allow_gid'] : '');
 		$p['deny_cid'] = (($arr['deny_cid']) ? $arr['deny_cid'] : '');
 		$p['deny_gid'] = (($arr['deny_gid']) ? $arr['deny_gid'] : '');
+		$p['created'] = (($arr['created']) ? $arr['created'] : datetime_convert());
+		$p['edited'] = (($arr['edited']) ? $arr['edited'] : $p['created']);
+		$p['title'] = (($arr['title']) ? $arr['title'] : '');
+		$p['description'] = (($arr['description']) ? $arr['description'] : '');
 
 		// temporary until we get rid of photo['profile'] and just use photo['photo_flags']
 		// but this will require updating all existing photos in the DB.
@@ -318,6 +322,8 @@ abstract class photo_driver {
 				`scale` = %d,
 				`profile` = %d,
 				`photo_flags` = %d,
+				`title` = '%s',
+				`description` = '%s',
 				`allow_cid` = '%s',
 				`allow_gid` = '%s',
 				`deny_cid` = '%s',
@@ -328,8 +334,8 @@ abstract class photo_driver {
 				intval($p['uid']),
 				dbesc($p['xchan']),
 				dbesc($p['resource_id']),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
+				dbesc($p['created']),
+				dbesc($p['edited']),
 				dbesc(basename($p['filename'])),
 				dbesc($this->getType()),
 				dbesc($p['album']),
@@ -340,6 +346,8 @@ abstract class photo_driver {
 				intval($p['scale']),
 				intval($p['profile']),
 				intval($p['photo_flags']),
+				dbesc($p['title']),
+				dbesc($p['description']),
 				dbesc($p['allow_cid']),
 				dbesc($p['allow_gid']),
 				dbesc($p['deny_cid']),
@@ -349,14 +357,14 @@ abstract class photo_driver {
 		}
 		else {
 			$r = q("INSERT INTO `photo`
-				( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `size`, `scale`, `profile`, `photo_flags`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
-				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s' )",
+				( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `size`, `scale`, `profile`, `photo_flags`, `title`, `description`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
+				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 				intval($p['aid']),
 				intval($p['uid']),
 				dbesc($p['xchan']),
 				dbesc($p['resource_id']),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
+				dbesc($p['created']),
+				dbesc($p['edited']),
 				dbesc(basename($p['filename'])),
 				dbesc($this->getType()),
 				dbesc($p['album']),
@@ -367,6 +375,8 @@ abstract class photo_driver {
 				intval($p['scale']),
 				intval($p['profile']),
 				intval($p['photo_flags']),
+				dbesc($p['title']),
+				dbesc($p['description']),
 				dbesc($p['allow_cid']),
 				dbesc($p['allow_gid']),
 				dbesc($p['deny_cid']),

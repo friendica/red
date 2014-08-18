@@ -162,7 +162,7 @@ function user_remove($uid) {
 
 }
 
-function account_remove($account_id,$local = true) {
+function account_remove($account_id,$local = true,$unset_session=true) {
 
 	logger('account_remove: ' . $account_id);
 
@@ -185,6 +185,7 @@ function account_remove($account_id,$local = true) {
 	$r = q("select * from account where account_id = %d limit 1",
 		intval($account_id)
 	);
+	$account_email=$r[0]['account_email'];
 
 	if(! $r) {
 		logger('account_remove: No account with id: ' . $account_id);
@@ -196,7 +197,7 @@ function account_remove($account_id,$local = true) {
 	);
 	if($x) {
 		foreach($x as $xx) {
-			channel_remove($xx['channel_id'],$local);
+			channel_remove($xx['channel_id'],$local,false);
 		}
 	}
 
@@ -204,11 +205,17 @@ function account_remove($account_id,$local = true) {
 		intval($account_id)
 	);
 
+	if ($unset_session) {
+		unset($_SESSION['authenticated']);
+		unset($_SESSION['uid']);
+		notice( sprintf(t("User '%s' deleted"),$account_email) . EOL);
+		goaway(get_app()->get_baseurl());
+	}
 	return $r;
 
 }
 
-function channel_remove($channel_id, $local = true) {
+function channel_remove($channel_id, $local = true, $unset_session=true) {
 
 	if(! $channel_id)
 		return;
@@ -292,7 +299,7 @@ function channel_remove($channel_id, $local = true) {
 
 	proc_run('php','include/directory.php',$channel_id);
 
-	if($channel_id == local_user()) {
+	if($channel_id == local_user() && $unset_session) {
 		unset($_SESSION['authenticated']);
 		unset($_SESSION['uid']);
 		goaway($a->get_baseurl());
@@ -506,73 +513,6 @@ function contact_remove($channel_id, $abook_id) {
 }
 
 
-// sends an unfriend message. Does not remove the contact
-
-function terminate_friendship($user,$self,$contact) {
-
-
-	$a = get_app();
-
-	require_once('include/datetime.php');
-
-	if($contact['network'] === NETWORK_DFRN) {
-		require_once('include/items.php');
-		dfrn_deliver($user,$contact,'placeholder', 1);
-	}
-
-}
-
-
-// Contact has refused to recognise us as a friend. We will start a countdown.
-// If they still don't recognise us in 32 days, the relationship is over,
-// and we won't waste any more time trying to communicate with them.
-// This provides for the possibility that their database is temporarily messed
-// up or some other transient event and that there's a possibility we could recover from it.
- 
-if(! function_exists('mark_for_death')) {
-function mark_for_death($contact) {
-
-	if($contact['archive'])
-		return;
-
-	if($contact['term_date'] == '0000-00-00 00:00:00') {
-		q("UPDATE `contact` SET `term_date` = '%s' WHERE `id` = %d LIMIT 1",
-				dbesc(datetime_convert()),
-				intval($contact['id'])
-		);
-	}
-	else {
-
-		// TODO: We really should send a notification to the owner after 2-3 weeks
-		// so they won't be surprised when the contact vanishes and can take
-		// remedial action if this was a serious mistake or glitch
-
-		$expiry = $contact['term_date'] . ' + 32 days ';
-		if(datetime_convert() > datetime_convert('UTC','UTC',$expiry)) {
-
-			// relationship is really truly dead. 
-			// archive them rather than delete
-			// though if the owner tries to unarchive them we'll start the whole process over again
-
-			q("update contact set `archive` = 1 where id = %d limit 1",
-				intval($contact['id'])
-			);
-
-			//contact_remove($contact['id']);
-
-		}
-	}
-
-}}
-
-if(! function_exists('unmark_for_death')) {
-function unmark_for_death($contact) {
-	// It's a miracle. Our dead contact has inexplicably come back to life.
-	q("UPDATE `contact` SET `term_date` = '%s' WHERE `id` = %d LIMIT 1",
-		dbesc('0000-00-00 00:00:00'),
-		intval($contact['id'])
-	);
-}}
 
 function random_profile() {
 	$r = q("select xchan_url from xchan left join hubloc on hubloc_hash = xchan_hash where hubloc_connected > UTC_TIMESTAMP() - interval 30 day order by rand() limit 1");

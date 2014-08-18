@@ -625,6 +625,10 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 		return $ret;
 	}
 
+	if(! ($arr['guid'] && $arr['guid_sig'])) {
+		logger('import_xchan: no identity information provided. ' . print_r($arr,true));
+		return $ret;
+	}
 
 	$xchan_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 	$import_photos = false;
@@ -985,8 +989,22 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 
 	// Are we a directory server of some kind?
 
+	$other_realm = false;
+	$realm = get_directory_realm();
+	if(array_key_exists('site',$arr) 
+		&& array_key_exists('realm',$arr['site']) 
+		&& (strpos($arr['site']['realm'],$realm) !== false))
+		$other_realm = true;
+
 	if($dirmode != DIRECTORY_MODE_NORMAL) {
-		if(array_key_exists('profile',$arr) && is_array($arr['profile'])) {
+
+		// We're some kind of directory server. However we can only add directory information
+		// if the entry is in the same realm (or is a sub-realm). Sub-realms are denoted by 
+		// including the parent realm in the name. e.g. 'RED_GLOBAL:foo' would allow an entry to 
+		// be in directories for the local realm (foo) and also the RED_GLOBAL realm.
+
+
+		if(array_key_exists('profile',$arr) && is_array($arr['profile']) && (! $other_realm)) {
 			$profile_changed = import_directory_profile($xchan_hash,$arr['profile'],$address,$ud_flags, 1);
 			if($profile_changed) {
 				$what .= 'profile ';
@@ -1200,6 +1218,12 @@ function zot_import($arr, $sender_url) {
 					continue;
 				}
 
+				// It's a specifically targetted post. If we were sent a public_scope hint (likely), 
+				// get rid of it so that it doesn't get stored and cause trouble. 
+
+				if(array_key_exists('message',$i) && array_key_exists('public_scope',$i['message']))
+					unset($i['message']['public_scope']);
+
 				$deliveries = $r;
 
 				// We found somebody on this site that's in the recipient list. 
@@ -1207,18 +1231,32 @@ function zot_import($arr, $sender_url) {
 			}
 			else {
 				if(($i['message']) && (array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags']))) {
-					// This should not happen but until we can stop it...
-					logger('private message was delivered with no recipients.');
-					continue;
+					if(array_key_exists('public_scope',$i['message']) && $i['message']['public_scope'] === 'public') {
+						// This should not happen but until we can stop it...
+						logger('private message was delivered with no recipients.');
+						continue;
+					}
 				}
 
-				logger('public post');
+				logger('public post');				
 
 				// Public post. look for any site members who are or may be accepting posts from this sender
 				// and who are allowed to see them based on the sender's permissions
 
 				$deliveries = allowed_public_recips($i);
 
+				// if the scope is anything but 'public' we're going to store it as private regardless
+				// of the private flag on the post. 
+
+				if($i['message'] && array_key_exists('public_scope',$i['message']) 
+					&& $i['message']['public_scope'] !== 'public') {
+
+					if(! array_key_exists('flags',$i['message'])) 
+						$i['message']['flags'] = array();
+					if(! in_array('private',$i['message']['flags']))
+						$i['message']['flags'][] = 'private';
+
+				}
 			}
 
 			// Go through the hash array and remove duplicates. array_unique() won't do this because the array is more than one level.
@@ -1406,7 +1444,7 @@ function allowed_public_recips($msg) {
 
 	$hash = make_xchan_hash($msg['notify']['sender']['guid'],$msg['notify']['sender']['guid_sig']);
 
-	if($scope === 'public' || $scope === 'network: red')
+	if($scope === 'public' || $scope === 'network: red' || $scope === 'authenticated')
 		return $recips;
 
 	if(strpos($scope,'site:') === 0) {
@@ -1647,11 +1685,6 @@ function delete_imported_item($sender,$item,$uid) {
 	} 
 		
 	require_once('include/items.php');
-
-	// FIXME issue #230 is related
-	// Chicken/egg problem because we have to drop_item, but this removes information that tag_deliver may need to do its stuff.
-	// We can't reverse the order because drop_item refuses to run if the item already has the deleted flag set and we need to
-	// set that flag prior to calling tag_deliver.
 
 	// Use phased deletion to set the deleted flag, call both tag_deliver and the notifier to notify downstream channels
 	// and then clean up after ourselves with a cron job after several days to do the delete_item_lowlevel() (DROPITEM_PHASE2).
@@ -1997,6 +2030,7 @@ function import_site($arr,$pubkey) {
 	$url = htmlspecialchars($arr['url'],ENT_COMPAT,'UTF-8',false);
 	$sellpage = htmlspecialchars($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
 	$site_location = htmlspecialchars($arr['location'],ENT_COMPAT,'UTF-8',false);
+	$site_realm = htmlspecialchars($arr['realm'],ENT_COMPAT,'UTF-8',false);
 
 	if($exists) {
 		if(($siterecord['site_flags'] != $site_directory)
@@ -2004,13 +2038,14 @@ function import_site($arr,$pubkey) {
 			|| ($siterecord['site_directory'] != $directory_url)
 			|| ($siterecord['site_sellpage'] != $sellpage)
 			|| ($siterecord['site_location'] != $site_location)
-			|| ($siterecord['site_register'] != $register_policy)) {
+			|| ($siterecord['site_register'] != $register_policy)
+			|| ($siterecord['site_realm'] != $site_realm)) {
 			$update = true;
 
 //			logger('import_site: input: ' . print_r($arr,true));
 //			logger('import_site: stored: ' . print_r($siterecord,true));
 
-			$r = q("update site set site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s'
+			$r = q("update site set site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s'
 				where site_url = '%s' limit 1",
 				dbesc($site_location),
 				intval($site_directory),
@@ -2019,6 +2054,7 @@ function import_site($arr,$pubkey) {
 				intval($register_policy),
 				dbesc(datetime_convert()),
 				dbesc($sellpage),
+				dbesc($site_realm),
 				dbesc($url)
 			);
 			if(! $r) {
@@ -2028,8 +2064,8 @@ function import_site($arr,$pubkey) {
 	}
 	else {
 		$update = true;
-		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage )
-			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s' )",
+		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm )
+			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s' )",
 			dbesc($site_location),
 			dbesc($url),
 			intval($access_policy),
@@ -2037,7 +2073,8 @@ function import_site($arr,$pubkey) {
 			dbesc(datetime_convert()),
 			dbesc($directory_url),
 			intval($register_policy),
-			dbesc($sellpage)
+			dbesc($sellpage),
+			dbesc($site_realm)
 		);
 		if(! $r) {
 			logger('import_site: record create failed. ' . print_r($arr,true));
@@ -2104,6 +2141,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	$info = (($packet) ? $packet : array());
 	$info['type'] = 'channel_sync';
+	$info['encoding'] = 'red'; // note: not zot, this packet is very red specific
 
 	if(array_key_exists($uid,$a->config) && array_key_exists('transient',$a->config[$uid])) {
 		$settings = $a->config[$uid]['transient'];
@@ -2233,6 +2271,21 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 			$clean = array();
 			foreach($arr['abook'] as $abook) {
+
+				if($abook['abook_xchan'] && $abook['entry_deleted']) {
+					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);
+					require_once('include/Contact.php');
+					
+					$r = q("select abook_id from abook where abook_xchan = '%s' and abook_channel = %d and not ( abook_flags & %d ) limit 1",
+						dbesc($abook['abook_xchan']),
+						intval($channel['channel_id']),
+						intval(ABOOK_FLAG_SELF)
+					);
+					if($r)
+						contact_remove($channel['channel_id'],$r[0]['abook_id']);
+
+					continue;
+				}
 
 				// Perform discovery if the referenced xchan hasn't ever been seen on this hub.
 				// This relies on the undocumented behaviour that red sites send xchan info with the abook

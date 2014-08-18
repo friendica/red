@@ -1,5 +1,6 @@
 [region=aside]
 [widget=follow][/widget]
+[widget=collections][var=mode][connections[/arg][/widget]
 [widget=suggestions][/widget]
 [widget=findpeople][/widget]
 [/region]

@@ -126,6 +126,33 @@ function profiles_init(&$a) {
 		return; // NOTREACHED
 	}
 
+	if((argc() > 2) && (argv(1) === 'export')) {
+		
+		$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			intval(local_user()),
+			intval(argv(2))
+		);
+		if(! $r1) {
+			notice( t('Profile unavailable to export.') . EOL);
+			$a->error = 404;
+			return;
+		}
+		header('content-type: application/octet_stream');
+		header('content-disposition: attachment; filename="' . $r1[0]['profile_name'] . '.json"' );
+
+		unset($r1[0]['id']);
+		unset($r1[0]['aid']);
+		unset($r1[0]['uid']);
+		unset($r1[0]['is_default']);
+		unset($r1[0]['publish']);
+		unset($r1[0]['profile_name']);
+		unset($r1[0]['profile_guid']);
+		echo json_encode($r1[0]);
+		killme();
+	}
+
+
+
 
 	// Run profile_load() here to make sure the theme is set before
 	// we start loading content
@@ -159,6 +186,33 @@ function profiles_post(&$a) {
 
 	call_hooks('profile_post', $_POST);
 
+	// import from json export file.
+ 	// Only import fields that are allowed on this hub
+
+	if(x($_FILES,'userfile')) {
+		$src      = $_FILES['userfile']['tmp_name'];
+		$filesize = intval($_FILES['userfile']['size']);
+		if($filesize) {
+			$j = @json_decode(@file_get_contents($src),true);
+			@unlink($src);
+			if($j) {
+				$fields = get_profile_fields_advanced();
+				if($fields) {
+					foreach($j as $jj => $v) {
+						foreach($fields as $f => $n) {
+							if($jj == $f) {
+								$_POST[$f] = $v;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+
+
 	if((argc() > 1) && (argv(1) !== "new") && intval(argv(1))) {
 		$orig = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
@@ -177,6 +231,12 @@ function profiles_post(&$a) {
 		if(! strlen($profile_name)) {
 			notify( t('Profile Name is required.') . EOL);
 			return;
+		}
+
+		if($_POST['dob']) {
+			$year = substr($_POST['dob'],0,4);
+			$month = substr($_POST['dob'],5,2);
+			$day = substr($_POST['dob'],8,2);
 		}
 	
 		$year = intval($_POST['year']);
@@ -458,10 +518,17 @@ function profiles_content(&$a) {
 
 	$o = '';
 
+	$channel = $a->get_channel();
+
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
+
+	require_once('include/identity.php');
+
+	$profile_fields_basic    = get_profile_fields_basic();
+	$profile_fields_advanced = get_profile_fields_advanced();
 
 	if((argc() > 1) && (intval(argv(1)))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -485,6 +552,12 @@ function profiles_content(&$a) {
 			'$editselect' => $editselect,
 		));
 
+		$advanced = ((feature_enabled(local_user(),'advanced_profiles')) ? true : false);
+		if($advanced)
+			$fields = $profile_fields_advanced;
+		else
+			$fields = $profile_fields_basic;
+
 
 		$opt_tpl = get_markup_template("profile-hide_friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array(
@@ -505,19 +578,24 @@ function profiles_content(&$a) {
 		$o .= replace_macros($tpl,array(
 
 			'$form_security_token' => get_form_security_token("profile_edit"),
-			'$profile_clone_link'  => 'profiles/clone/' . $r[0]['id'] . '?t=' 
-				. get_form_security_token("profile_clone"),
+			'$profile_clone_link'  => ((feature_enabled(local_user(),'multi_profiles')) ? 'profiles/clone/' . $r[0]['id'] . '?t=' 
+				. get_form_security_token("profile_clone") : ''),
 			'$profile_drop_link'   => 'profiles/drop/' . $r[0]['id'] . '?t=' 
 				. get_form_security_token("profile_drop"),
 
+			'$fields'       => $fields,
 			'$guid'         => $r[0]['profile_guid'],
 			'$banner'       => t('Edit Profile Details'),
 			'$submit'       => t('Submit'),
 			'$viewprof'     => t('View this profile'),
+			'$editvis' 	    => t('Edit visibility'),
 			'$profpic'      => t('Change Profile Photo'),
 			'$cr_prof'      => t('Create a new profile using these settings'),
 			'$cl_prof'      => t('Clone this profile'),
 			'$del_prof'     => t('Delete this profile'),
+			'$exportable'   => feature_enabled(local_user(),'profile_export'),
+			'$lbl_import'   => t('Import profile from file'),
+			'$lbl_export'   => t('Export profile to file'),
 			'$lbl_profname' => t('Profile Name:'),
 			'$lbl_fullname' => t('Your Full Name:'),
 			'$lbl_title'    => t('Title/Description:'),
@@ -557,7 +635,9 @@ function profiles_content(&$a) {
 			'$baseurl'      => $a->get_baseurl(true),
 			'$profile_id'   => $r[0]['id'],
 			'$profile_name' => $r[0]['profile_name'],
-			'$default'      => (($is_default) ? '<p id="profile-edit-default-desc">' . t('This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.') . '</p>' : ""),
+			'$is_default'   => $is_default,
+			'$default'      => t('This is your default profile.') . EOL . translate_scope(map_scope($channel['channel_r_profile'])),
+			'$advanced'     => $advanced,
 			'$name'         => $r[0]['name'],
 			'$pdesc'        => $r[0]['pdesc'],
 			'$dob'          => dob($r[0]['dob']),
@@ -569,10 +649,13 @@ function profiles_content(&$a) {
 			'$country_name' => $r[0]['country_name'],
 			'$age'          => ((intval($r[0]['dob'])) ? '(' . t('Age: ') . age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
 			'$gender'       => gender_selector($r[0]['gender']),
+			'$gender_min'       => gender_selector_min($r[0]['gender']),
 			'$marital'      => marital_selector($r[0]['marital']),
+			'$marital_min'      => marital_selector_min($r[0]['marital']),
 			'$with'         => $r[0]['with'],
 			'$howlong'      => ($r[0]['howlong'] === '0000-00-00 00:00:00' ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong'])),
 			'$sexual'       => sexpref_selector($r[0]['sexual']),
+			'$sexual_min'       => sexpref_selector_min($r[0]['sexual']),
 			'$about'        => $r[0]['about'],
 			'$homepage'     => $r[0]['homepage'],
 			'$hometown'     => $r[0]['hometown'],
@@ -624,7 +707,7 @@ function profiles_content(&$a) {
 					'$alt' => t('Profile Image'),
 					'$profile_name' => $rr['profile_name'],
 					'$visible' => (($rr['is_default']) 
-						? '<strong>' . t('visible to everybody') . '</strong>' 
+						? '<strong>' . translate_scope(map_scope($channel['channel_r_profile'])) . '</strong>' 
 						: '<a href="' . $a->get_baseurl(true) . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}

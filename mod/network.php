@@ -315,6 +315,21 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 	$simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) " : '');
+
+	// This fixes a very subtle bug so I'd better explain it. You wake up in the morning or return after a day
+	// or three and look at your matrix page - after opening up your browser. The first page loads just as it 
+	// should. All of a sudden a few seconds later, page 2 will get inserted at the beginning of the page 
+	// (before the page 1 content). The update code is actually doing just what it's supposed
+	// to, it's fetching posts that have the ITEM_UNSEEN bit set. But the reason that page 2 content is being
+	// returned in an UPDATE is because you hadn't gotten that far yet - you're still on page 1 and everything 
+	// that we loaded for page 1 is now marked as seen. But the stuff on page 2 hasn't been. So... it's being
+	// treated as "new fresh" content because it is unseen. We need to distinguish it somehow from content 
+	// which "arrived as you were reading page 1". We're going to do this
+	// by storing in your session the current UTC time whenever you LOAD a network page, and only UPDATE items
+	// which are both ITEM_UNSEEN and have "changed" since that time. Cross fingers...
+
+	if($update && $_SESSION['loadtime']) 
+		$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' "; 
 	if($load)
 		$simple_update = '';
 
@@ -344,6 +359,8 @@ function network_content(&$a, $update = 0, $load = false) {
 				$ordering = "`commented`";
 
 		if($load) {
+
+			$_SESSION['loadtime'] = datetime_convert();
 
 			// Fetch a page full of parent items for this page
 

@@ -141,7 +141,13 @@ function translate_system_apps(&$arr) {
 		'Chat' => t('Chat'),
 		'Search' => t('Search'),
 		'Probe' => t('Probe'),
-		'Suggest' => t('Suggest')
+		'Suggest' => t('Suggest'),
+		'Random Channel' => t('Random Channel'),
+		'Invite' => t('Invite'),
+		'Features' => t('Features'),
+		'Language' => t('Language'),
+		'Post' => t('Post'),
+		'Profile Photo' => t('Profile Photo')
 	);
 
 	if(array_key_exists($arr['name'],$apps))

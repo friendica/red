@@ -52,6 +52,78 @@ function manage_content(&$a) {
 					$selected_channel = $channels[$x];
 				$channels[$x]['default'] = (($channels[$x]['channel_id'] == $account['account_default_channel']) ? "1" : ''); 
 				$channels[$x]['default_links'] = '1';
+
+
+				$c = q("SELECT id, item_restrict, item_flags FROM item
+					WHERE (item_restrict = %d) and ( item_flags & %d ) and uid = %d",
+					intval(ITEM_VISIBLE),
+					intval(ITEM_UNSEEN),
+					intval($channels[$x]['channel_id'])
+				);
+
+				if($c) {	
+					foreach ($c as $it) {
+						if($it['item_flags'] & ITEM_WALL)
+							$channels[$x]['home'] ++;
+						else
+							$channels[$x]['network'] ++;
+					}
+				}
+
+
+				$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) and not ((abook_flags & %d) or (xchan_flags & %d))",
+					intval($channels[$x]['channel_id']),
+					intval(ABOOK_FLAG_PENDING),
+					intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
+					intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
+				);
+
+				if($intr)
+					$channels[$x]['intros'] = intval($intr[0]['total']);
+
+
+				$mails = q("SELECT count(id) as total from mail WHERE channel_id = %d AND not (mail_flags & %d) and from_xchan != '%s' ",
+					intval($channels[$x]['channel_id']),
+					intval(MAIL_SEEN),		
+					dbesc($channels[$x]['channel_hash'])
+				);
+
+				if($mails)
+					$channels[$x]['mail'] = intval($mails[0]['total']);
+		
+
+				$events = q("SELECT type, start, adjust FROM `event`
+					WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
+					ORDER BY `start` ASC ",
+					intval($channels[$x]['channel_id']),
+					dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + 7 days')),
+					dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
+				);
+
+				if($events) {
+					$channels[$x]['all_events'] = count($events);
+
+					if($channels[$x]['all_events']) {
+						$str_now = datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y-m-d');
+						foreach($events as $e) {
+							$bd = false;
+							if($e['type'] === 'birthday') {
+								$channels[$x]['birthdays'] ++;
+								$bd = true;
+							}
+							else {
+								$channels[$x]['events'] ++;
+							}
+							if(datetime_convert('UTC', ((intval($e['adjust'])) ? date_default_timezone_get() : 'UTC'), $e['start'], 'Y-m-d') === $str_now) {
+								$channels[$x]['all_events_today'] ++;
+								if($bd)
+									$channels[$x]['birthdays_today'] ++;
+								else
+									$channels[$x]['events_today'] ++;
+							}
+						}
+					}
+				}
 			}
 		}
 		
@@ -71,7 +143,6 @@ function manage_content(&$a) {
 	$links = array(
 		array( 'new_channel', t('Create a new channel'), t('Create a new channel'))
 	);
-
 
 	$o = replace_macros(get_markup_template('channels.tpl'), array(
 		'$header'           => t('Channel Manager'),

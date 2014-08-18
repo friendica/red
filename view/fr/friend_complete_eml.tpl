@@ -1,22 +1,22 @@
 
-Dear {{$username}},
+Cher {{$username}},
 
-	Great news... '{{$fn}}' at '{{$dfrn_url}}' has accepted 
-your connection request at '{{$sitename}}'.
+	Bonne nouvelle... '{{$fn}}' de '{{$dfrn_url}}' a accepté 
+votre requête de contact sur '{{$sitename}}'.
 
-You are now mutual friends and may exchange status updates, photos, and email
-without restriction.
+Vous entrer maintenant en relation et pouvez échanger vos statuts, photos et courriel
+sans restrictions.
 
-Please visit your 'Connnections' page at {{$sitename}} if you wish to make 
-any changes to this relationship. 
+Visiter la page de vos 'relations' {{$sitename}}  pour tout 
+changements de statut avec cette relation. 
 
 {{$siteurl}}
 
-[For instance, you may create a separate profile with information that is not
-available to the general public - and assign viewing rights to '{{$fn}}'].
+[Par exemple, vous pouvez créer un profil distinct avec des information qui ne sont pas
+accessible au public en général - et définir les autorisations de '{{$fn}}'].
 
-Sincerely,
+Sincèrement,
 
-	{{$sitename}} Administrator
+	Administrateur {{$sitename}} 
 
  

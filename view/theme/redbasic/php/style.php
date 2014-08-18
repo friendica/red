@@ -130,9 +130,9 @@ if(! $a->install) {
 	if (! $item_opacity)
 		$item_opacity = "1";
 	if (! $font_size)
-		$font_size = "1.0em";
+		$font_size = "0.9rem";
 	if (! $body_font_size)
-		$body_font_size = "11px";
+		$body_font_size = "0.75rem";
 	if (! $font_colour)
 		$font_colour = "#4d4d4d";
 	if (! $selected_active_colour)

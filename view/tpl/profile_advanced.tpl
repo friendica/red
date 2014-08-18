@@ -193,6 +193,16 @@
 </dl>
 {{/if}}
 
+{{foreach $profile.extra_fields as $f}}
+{{if $profile.$f}}
+<dl id="aprofile-{{$f}}" class="aprofile">
+ <dt>{{$profile.$f.0}}</dt>
+ <dd>{{$profile.$f.1}}</dd>
+</dl>
+{{/if}}
+{{/foreach}}
+
+
 {{if $things}}
 {{foreach $things as $key => $items}}
 <b>{{$profile.fullname.1}} {{$key}}</b>

@@ -7,7 +7,7 @@ var items_8php =
     [ "atom_entry", "items_8php.html#a275108c050f7eb18bcbb5018e6b81cf6", null ],
     [ "can_comment_on_post", "items_8php.html#a1e75047cf175aaee8dd16aa761913ff9", null ],
     [ "check_item_source", "items_8php.html#a87ac9e359591721a824ecd23bbb56296", null ],
-    [ "collect_recipients", "items_8php.html#a01e3cf44e082fa9bd06dcde5bf713d70", null ],
+    [ "collect_recipients", "items_8php.html#a772f0ae77ad77c8ab68ed918a3870946", null ],
     [ "compare_permissions", "items_8php.html#a0790a4550b829e85504af548623002ca", null ],
     [ "construct_activity_object", "items_8php.html#aa9e99613d38a97b39c8cf5449699c2ee", null ],
     [ "construct_activity_target", "items_8php.html#aa579bc4445d60098b1410961ca8e96b7", null ],
@@ -48,7 +48,7 @@ var items_8php =
     [ "limit_body_size", "items_8php.html#af94c281016c6c912d06e064113336c5c", null ],
     [ "list_post_dates", "items_8php.html#aa2d3caa2f27720762b5c729e07df40fb", null ],
     [ "mail_store", "items_8php.html#a77da7ce9a117601d49ac4a67c71b514f", null ],
-    [ "map_scope", "items_8php.html#ac1fcf621dce7370515b420a7753f4726", null ],
+    [ "map_scope", "items_8php.html#a8675e62674de6fb7c42e4a408c7116cc", null ],
     [ "post_activity_item", "items_8php.html#a410f9c743877c125ca06312373346903", null ],
     [ "posted_dates", "items_8php.html#ad2abb4644ff1f20fefbc80326fe01cf0", null ],
     [ "red_escape_codeblock", "items_8php.html#a49905ea75adfe8a2d110be344d18d6a6", null ],
@@ -62,6 +62,7 @@ var items_8php =
     [ "termtype", "items_8php.html#ad34827ed330898456783fb14c7b46154", null ],
     [ "tgroup_check", "items_8php.html#a88c6cf7649ac836fbbed82a7a0315110", null ],
     [ "title_is_body", "items_8php.html#aa371905f0a211b307cb3f7188c6cba04", null ],
+    [ "translate_scope", "items_8php.html#aabfaa193b83154c2a81e91284e5d5e59", null ],
     [ "update_remote_id", "items_8php.html#a2baa9e05f1e8aa3dd61c85803ae39bd6", null ],
     [ "zot_feed", "items_8php.html#a004e89d86b0f29b2c4da20108ecc4091", null ]
 ];

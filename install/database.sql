@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `account_expire_notified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_service_class` char(32) NOT NULL DEFAULT '',
   `account_level` int(10) unsigned NOT NULL DEFAULT '0',
+  `account_password_changed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`account_id`),
   KEY `account_email` (`account_email`),
   KEY `account_service_class` (`account_service_class`),
@@ -65,7 +66,8 @@ CREATE TABLE IF NOT EXISTS `account` (
   KEY `account_expires` (`account_expires`),
   KEY `account_default_channel` (`account_default_channel`),
   KEY `account_external` (`account_external`),
-  KEY `account_level` (`account_level`)
+  KEY `account_level` (`account_level`),
+  KEY `account_password_changed` (`account_password_changed`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `addon` (
@@ -518,6 +520,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `sig` text NOT NULL DEFAULT '',
   `location` char(255) NOT NULL DEFAULT '',
   `coord` char(255) NOT NULL DEFAULT '',
+  `public_policy` char(255) NOT NULL DEFAULT '',
   `comment_policy` char(255) NOT NULL DEFAULT '',
   `allow_cid` mediumtext NOT NULL DEFAULT '',
   `allow_gid` mediumtext NOT NULL DEFAULT '',
@@ -550,6 +553,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `mid` (`mid`),
   KEY `parent_mid` (`parent_mid`),
   KEY `uid_mid` (`mid`,`uid`),
+  KEY `public_policy` (`public_policy`),
   KEY `comment_policy` (`comment_policy`),
   KEY `layout_mid` (`layout_mid`),
   FULLTEXT KEY `title` (`title`),
@@ -797,6 +801,28 @@ CREATE TABLE IF NOT EXISTS `poll_elm` (
   KEY `pelm_result` (`pelm_result`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `profdef` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `field_name` char(255) NOT NULL DEFAULT '',
+  `field_type` char(16) NOT NULL DEFAULT '',
+  `field_desc` char(255) NOT NULL DEFAULT '',
+  `field_help` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `field_name` (`field_name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `profext` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `channel_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `hash` char(255) NOT NULL DEFAULT '',
+  `k` char(255) NOT NULL DEFAULT '',
+  `v` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `channel_id` (`channel_id`),
+  KEY `hash` (`hash`),
+  KEY `k` (`k`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `profile_guid` char(64) NOT NULL DEFAULT '',
@@ -919,13 +945,15 @@ CREATE TABLE IF NOT EXISTS `site` (
   `site_register` int(11) NOT NULL DEFAULT '0',
   `site_sellpage` char(255) NOT NULL DEFAULT '',
   `site_location` char(255) NOT NULL DEFAULT '',
+  `site_realm` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`site_url`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),
   KEY `site_directory` (`site_directory`),
   KEY `site_register` (`site_register`),
   KEY `site_access` (`site_access`),
-  KEY `site_sellpage` (`site_sellpage`)
+  KEY `site_sellpage` (`site_sellpage`),
+  KEY `site_realm` (`site_realm`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `source` (

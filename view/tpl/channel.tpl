@@ -7,6 +7,8 @@
 {{/if}}
 {{/if}}
 <a href="{{$channel.link}}" class="channel-selection-photo-link" title="{{$channel.channel_name}}"><img class="channel-photo" src="{{$channel.xchan_photo_m}}" alt="{{$channel.channel_name}}" /></a>
+<div class="channels-notifications-wrapper">{{if $channel.mail != 0}}<span style="color:#c60032;"><i class="icon-envelope"></i> {{$channel.mail}}</span>{{else}}<i class="icon-envelope"></i> &nbsp;{{/if}} {{if $channel.intros != 0}}<span style="color:#c60032;"><i class="icon-user"></i> {{$channel.intros}}</span>{{else}}<i class="icon-user"></i> &nbsp;{{/if}}</div>
 <a href="{{$channel.link}}" class="channel-selection-name-link" title="{{$channel.channel_name}}"><div class="channel-name">{{$channel.channel_name}}</div></a>
 </div>
+
 <div class="channel-selection-end"></div>

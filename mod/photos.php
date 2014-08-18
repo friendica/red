@@ -618,6 +618,12 @@ function photos_content(&$a) {
 
 	if($datatype === 'album') {
 
+		if((strlen($datum) & 1) || (! ctype_xdigit($datum))) {
+			notice( t('Album name could not be decoded') . EOL);
+			logger('mod_photos: illegal album encoding: ' . $datum);
+			$datum = '';
+		}
+
 		$album = hex2bin($datum);
 
 		$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 

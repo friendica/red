@@ -65,6 +65,11 @@ function admin_post(&$a){
 			case 'dbsync':
 				admin_page_dbsync_post($a);
 				break;
+
+			case 'profs':
+				admin_page_profs_post($a);
+				break;
+
 		}
 	}
 
@@ -95,6 +100,7 @@ function admin_content(&$a) {
 		'plugins'    =>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
 		'themes'     =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
 		'hubloc'     =>	Array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
+		'profs'      => array(z_root() . '/admin/profs', t('Profile Config'), 'profs'),
 		'dbsync'     => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
 	);
 	
@@ -154,6 +160,9 @@ function admin_content(&$a) {
 				break;
 			case 'dbsync':
 				$o = admin_page_dbsync($a);
+				break;
+			case 'profs':
+				$o = admin_page_profs($a);
 				break;
 			default:
 				notice( t("Item not found.") );
@@ -630,7 +639,7 @@ function admin_page_users_post(&$a){
 	if (x($_POST,'page_users_delete')){
 		require_once("include/Contact.php");
 		foreach($users as $uid){
-			account_remove($uid,true);
+			account_remove($uid,true,false);
 		}
 		notice( sprintf( tt("%s user deleted", "%s users deleted", count($users)), count($users)) );
 	}
@@ -672,7 +681,7 @@ function admin_page_users(&$a){
                 check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
 				// delete user
 				require_once("include/Contact.php");
-				account_remove($uid,true);
+				account_remove($uid,true,false);
 				
 				notice( sprintf(t("User '%s' deleted"), $account[0]['account_email']) . EOL);
 			}; break;
@@ -1316,4 +1325,18 @@ readable.");
         '$form_security_token' => get_form_security_token("admin_logs"),
 	));
 }
+
+function admin_page_profs_post(&$a) {
+
+
+}
+
+function admin_page_profs(&$a) {
+
+
+}
+
+
+
+
 

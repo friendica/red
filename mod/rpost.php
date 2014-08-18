@@ -115,7 +115,7 @@ function rpost_content(&$a) {
 		'nickname' => $channel['channel_address'],
 		'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] 
 			|| $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-		'acl' => populate_acl($channel, $false),
+		'acl' => populate_acl($channel),
 		'bang' => '',
 //		'channel_select' => true,
 		'visitor' => true,

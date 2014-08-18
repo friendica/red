@@ -35,6 +35,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "crypto.php", "crypto_8php.html", "crypto_8php" ],
     [ "datetime.php", "datetime_8php.html", "datetime_8php" ],
     [ "deliver.php", "deliver_8php.html", "deliver_8php" ],
+    [ "diaspora.php", "diaspora_8php.html", "diaspora_8php" ],
     [ "dir_fns.php", "dir__fns_8php.html", "dir__fns_8php" ],
     [ "directory.php", "include_2directory_8php.html", "include_2directory_8php" ],
     [ "enotify.php", "enotify_8php.html", "enotify_8php" ],
@@ -43,10 +44,6 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "externals.php", "externals_8php.html", "externals_8php" ],
     [ "features.php", "features_8php.html", "features_8php" ],
     [ "follow.php", "include_2follow_8php.html", "include_2follow_8php" ],
-    [ "friendica_smarty.php", "friendica__smarty_8php.html", [
-      [ "FriendicaSmarty", "classFriendicaSmarty.html", "classFriendicaSmarty" ],
-      [ "FriendicaSmartyEngine", "classFriendicaSmartyEngine.html", "classFriendicaSmartyEngine" ]
-    ] ],
     [ "gprobe.php", "gprobe_8php.html", "gprobe_8php" ],
     [ "group.php", "include_2group_8php.html", "include_2group_8php" ],
     [ "html2bbcode.php", "html2bbcode_8php.html", "html2bbcode_8php" ],
@@ -87,6 +84,10 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "reddav.php", "reddav_8php.html", "reddav_8php" ],
     [ "security.php", "security_8php.html", "security_8php" ],
     [ "session.php", "session_8php.html", "session_8php" ],
+    [ "smarty.php", "smarty_8php.html", [
+      [ "FriendicaSmarty", "classFriendicaSmarty.html", "classFriendicaSmarty" ],
+      [ "FriendicaSmartyEngine", "classFriendicaSmartyEngine.html", "classFriendicaSmartyEngine" ]
+    ] ],
     [ "socgraph.php", "socgraph_8php.html", "socgraph_8php" ],
     [ "spam.php", "spam_8php.html", "spam_8php" ],
     [ "system_unavailable.php", "system__unavailable_8php.html", "system__unavailable_8php" ],

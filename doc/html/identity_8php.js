@@ -11,6 +11,8 @@ var identity_8php =
     [ "get_my_address", "identity_8php.html#a490972c02fdb638c52ec0e012a30bfd2", null ],
     [ "get_my_url", "identity_8php.html#aa46321e1cd6a3b8dfde8bf9510112fec", null ],
     [ "get_online_status", "identity_8php.html#a332df795f684788002f5a6424abacfd7", null ],
+    [ "get_profile_fields_advanced", "identity_8php.html#a224710dfb7465b706c91134247c20afa", null ],
+    [ "get_profile_fields_basic", "identity_8php.html#a4ff59df0f0a668a06a8411f87496aa21", null ],
     [ "get_sys_channel", "identity_8php.html#aaff86ee3b5984821e7a256c2da5f1a51", null ],
     [ "get_theme_uid", "identity_8php.html#aaeb666872995e3ab8da8f7bc5f3b2bd3", null ],
     [ "identity_basic_export", "identity_8php.html#a3570a4eb77332b292d394c4132cb8f03", null ],

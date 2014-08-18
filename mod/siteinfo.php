@@ -95,7 +95,7 @@ function siteinfo_content(&$a) {
 
 	$o = replace_macros(get_markup_template('siteinfo.tpl'), array(
                 '$title' => t('Red'),
-		'$description' => t('This is a hub of the Red Matrix - a global cooperative network of decentralised privacy enhanced websites.'),
+		'$description' => t('This is a hub of the Red Matrix - a global cooperative network of decentralized privacy enhanced websites.'),
 		'$version' => $version,
 		'$commit' => $commit,
 		'$web_location' => t('Running at web location') . ' ' . z_root(),

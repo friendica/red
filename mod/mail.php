@@ -229,7 +229,7 @@ function mail_content(&$a) {
 			'$attach' => t('Attach file'),
 			'$insert' => t('Insert web link'),
 			'$wait' => t('Please wait'),
-			'$submit' => t('Submit'),
+			'$submit' => t('Send'),
 			'$defexpire' => '',
 			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? true : false),
 			'$expires' => t('Set expiration date'),

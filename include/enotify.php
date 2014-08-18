@@ -65,7 +65,7 @@ function notification($params) {
 			localize_item($i);
 			$title = $i['title'];
 			$body = $i['body'];
-			$private = $i['item_private'];
+			$private = (($i['item_private']) || ($i['item_flags'] & ITEM_OBSCURED));
 		}
 		else {
 			$title = $params['item']['title'];
@@ -135,7 +135,7 @@ function notification($params) {
 
 
 		$item_post_type = item_post_type($p[0]);
-		$private = $p[0]['item_private'];
+//		$private = $p[0]['item_private'];
 		$parent_id = $p[0]['id'];
 
 		//$possess_desc = str_replace('<!item_type!>',$possess_desc);
@@ -411,7 +411,7 @@ function notification($params) {
 
 		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r", "\\n"), array( "", "\n"), $body))),ENT_QUOTES,'UTF-8'));
 
-		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r","\\n"), array("","<br />\n"),$body))), ENT_QUOTES,'UTF-8');
+		$htmlversion = bbcode(stripslashes(str_replace(array("\\r","\\n"), array("","<br />\n"),$body)));
 
 
 		// use $_SESSION['zid_override'] to force zid() to use 
@@ -461,6 +461,8 @@ function notification($params) {
 		// Might be interesting to use GPG,PGP,S/MIME encryption instead
 		// but we'll save that for a clever plugin developer to implement
 
+		$private_activity = false;
+
 		if(! $datarray['email_secure']) {
 			switch($params['type']) {
 				case NOTIFY_WALL:
@@ -469,13 +471,21 @@ function notification($params) {
 				case NOTIFY_COMMENT:
 					if(! $private)
 						break;
+					$private_activity = true;
 				case NOTIFY_MAIL:
 					$datarray['textversion'] = $datarray['htmlversion'] = $datarray['title'] = '';
+					$datarray['subject'] = preg_replace('/' . preg_quote(t('[Red:Notify]')) . '/','$0*',$datarray['subject']);
 					break;
 				default:
 					break;
 			}
 		}
+
+		if($private_activity 
+			&& intval(get_pconfig($datarray['uid'],'system','ignore_private_notifications'))) {
+			pop_lang();
+			return;
+		}		
 
 		// load the template for private message notifications
 		$tpl = get_markup_template('email_notify_html.tpl');

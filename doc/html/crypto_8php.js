@@ -7,8 +7,10 @@ var crypto_8php =
     [ "crypto_encapsulate", "crypto_8php.html#a32fc08d57a5694f94d8543ecbb03323c", null ],
     [ "crypto_unencapsulate", "crypto_8php.html#a0781202b0a43b82426929cc87c2fa2b5", null ],
     [ "new_keypair", "crypto_8php.html#aae0ab70d6a199b29555b1ac3cf250d6a", null ],
+    [ "pkcs1to8", "crypto_8php.html#a4d15d19b446dbf47804675df7c85e2a9", null ],
     [ "pkcs5_pad", "crypto_8php.html#ad5e51fd44cff93cfaa07a37e24a5edec", null ],
     [ "pkcs5_unpad", "crypto_8php.html#ac95ac3b1b23b65b04a86613d4206ae85", null ],
+    [ "pkcs8to1", "crypto_8php.html#a7427a18417341aa35e2207bfa205e432", null ],
     [ "rsa_sign", "crypto_8php.html#a920e5f222d0020f47556033d8b2b6552", null ],
     [ "rsa_verify", "crypto_8php.html#ab4f21d8f6b8ece0915e7c8bb73379f96", null ]
 ];

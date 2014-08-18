@@ -81,12 +81,16 @@ input[type="submit"] {
 	font-weight: bold;
 	color: $input_linksubmit;
 	text-decoration: none;
+	padding: 6px 12px;
+}
+
+input[type="submit"]:hover {
+	text-decoration: underline;
 }
 
 button, input, optgroup, select, textarea {
 	color: #000;
 }
-
 
 pre code {
 	border: none;
@@ -94,6 +98,7 @@ pre code {
 
 code {
 	font-family: Courier, monospace;
+	font-size: 1em;
 	display: block;
 	overflow: auto;
 	border: 1px solid $code_borderc;
@@ -101,7 +106,6 @@ code {
 	color: $code_txtcolour;
 	padding: 10px;
 	margin-top: 20px; 
-	max-width: 80%;
 }
 
 pre {
@@ -286,6 +290,7 @@ aside li {
 	padding: 0;
 	margin-top: 15px;
 	margin-bottom: 0;
+	margin-left: 0;
 	width: 20px;
 }
 
@@ -294,6 +299,7 @@ aside li {
 	margin-bottom: 0;
 	float: left;
 	width: 100px;
+	padding-left: 0;
 }
 
 #main-login .field_end {
@@ -363,13 +369,33 @@ aside li {
 	clear: both;
 }
 
-
-#profile-edit-links ul {
-	list-style-type: none;
+#profile-edit-links {
+	max-width: $converse_width;
+	padding-top: 15px;
+	padding-bottom: 15px;
 }
 
-#profile-edit-links li {
-	margin-top: 10px;
+#profile-edit-links .btn {
+	margin: 0 10px 15px 0;
+}
+
+.profile-import {
+	vertical-align: top;
+	text-align: left;
+}
+
+.profile-import b {
+	color: $link_colour;
+}
+
+.profile-import input {
+	color: $font_colour;
+	border: none;
+}
+
+#profile-edit-drop-link {
+	color: #FFF;
+	font-weight: normal;
 }
 
 #profile-like {
@@ -434,6 +460,7 @@ aside li {
 	opacity: 0.3;
 	filter:alpha(opacity=30);
 	float: right;
+	margin-top: -3px;
 }
 .profile-edit-side-link:hover {
 	opacity: 1.0;
@@ -637,12 +664,12 @@ aside li {
 
 
 .photo-album-image-wrapper .caption {
- 	background-color: rgba(245, 245, 255, 0.8);
- 	border-bottom: 2px solid #CCC;
+ 	background-color: $acpopup_bgcolour;
+ 	border-bottom: 2px solid $acpopup_bordercolour;
 }
 
 .photo-top-album-name {
- 	background-color: rgb(255, 255, 255);
+ 	background-color: $acpopup_bgcolour;
 }
 
 #photos-upload-perms-menu, #photos-upload-perms-menu:visited, #photos-upload-perms-menu:link {
@@ -1235,7 +1262,6 @@ brain is weird like that */
 #cloud-index td {
 	padding:5px;
 }
-
 
 /**
  * Plugins settings
@@ -1908,11 +1934,11 @@ img.mail-list-sender-photo {
 }
 
 #profile-jot-text::-webkit-input-placeholder {
-	font-size:18px;
+	font-size:16px;
 }
 
 #profile-jot-text::-moz-placeholder {
-	font-size:18px;
+	font-size:16px;
 }
 
 #profile-jot-text:focus::-webkit-input-placeholder {
@@ -2062,7 +2088,7 @@ img.mail-list-sender-photo {
 
 .comment-edit-text-empty {
 	color: gray;
-	font-size: 11px;
+	font-size: 12px;
 }
 
 .comment-edit-text-full {
@@ -2215,7 +2241,7 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 
 /* bootstrap overrides */
 blockquote {
-	font-size: $body_font_size;
+	font-size: 1em;
 }
 
 .dropdown-menu {
@@ -2347,19 +2373,27 @@ blockquote {
   }
 }
 
+.btn {
+	font-size: $body_font_size;
+}
+
+.btn-xs {
+	font-size: 0.75rem;
+}
+
 .btn-default {
     	background-color: $editbuttons_bgcolour;
     	border-color: $editbuttons_bordercolour;
-	color: $editbuttons_colour;
+		color: $editbuttons_colour;
     	text-shadow: none;
     	box-shadow: none;
 }
 
 .btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
     	background-color: $editbuttons_bghover;
-	border-color: $editbuttons_bordercolourhover;
-	color: $input_colourhover;
-	text-decoration: $input_decohover;
+		border-color: $editbuttons_bordercolourhover;
+		color: $input_colourhover;
+		text-decoration: $input_decohover;
 }
 
 .btn-default.btn-sm:hover, .btn-default.btn-sm:focus, .btn-default.btn-sm:active .btn-default.btn-sm.active {

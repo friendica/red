@@ -64,26 +64,40 @@ function sync_directories($dirmode) {
 	if($dirmode == DIRECTORY_MODE_STANDALONE || $dirmode == DIRECTORY_MODE_NORMAL)
 		return;
 
-	$r = q("select * from site where (site_flags & %d) and site_url != '%s'",
-		intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
-		dbesc(z_root())
-	);
+	$realm = get_directory_realm();
+	if($realm == DIRECTORY_REALM) {
+		$r = q("select * from site where (site_flags & %d) and site_url != '%s' and ( site_realm = '%s' or site_realm = '') ",
+			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
+			dbesc(z_root()),
+			dbesc($realm)
+		);
+	}
+	else {
+		$r = q("select * from site where (site_flags & %d) and site_url != '%s' and site_realm like '%s' ",
+			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
+			dbesc(z_root()),
+			dbesc(protect_sprintf('%' . $realm . '%'))
+		);
+	}
 
 	// If there are no directory servers, setup the fallback master
+	// FIXME - what to do if we're in a different realm?
 
 	if((! $r) && (z_root() != DIRECTORY_FALLBACK_MASTER)) {
 		$r = array(
 			'site_url' => DIRECTORY_FALLBACK_MASTER,
 			'site_flags' => DIRECTORY_MODE_PRIMARY,
 			'site_update' => '0000-00-00 00:00:00', 
-			'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch'
+			'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch',
+			'site_realm' => DIRECTORY_REALM
 		);
-		$x = q("insert into site ( site_url, site_flags, site_update, site_directory )
-			values ( '%s', %d', '%s', '%s' ) ",
+		$x = q("insert into site ( site_url, site_flags, site_update, site_directory, site_realm )
+			values ( '%s', %d', '%s', '%s', '%s' ) ",
 			dbesc($r[0]['site_url']),
 			intval($r[0]['site_flags']),
 			dbesc($r[0]['site_update']),
-			dbesc($r[0]['site_directory'])
+			dbesc($r[0]['site_directory']),
+			dbesc($r[0]['site_realm'])
 		);
 
 		$r = q("select * from site where (site_flags & %d) and site_url != '%s'",
@@ -185,6 +199,7 @@ function local_dir_update($uid,$force) {
 	);
 
 	$profile = array();
+	$profile['encoding'] = 'zot';
 
 	if($p) {
 		$hash = $p[0]['channel_hash'];

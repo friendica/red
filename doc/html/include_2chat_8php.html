@@ -124,6 +124,8 @@ Functions</h2></td></tr>
 <tr class="separator:aedcb532a0627b8644001a2fadab4e87a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acea6b176eb7aff44d9ba3ae24ce511d3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2chat_8php.html#acea6b176eb7aff44d9ba3ae24ce511d3">chat_message</a> ($uid, $room_id, $xchan, $text)</td></tr>
 <tr class="separator:acea6b176eb7aff44d9ba3ae24ce511d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afffdd0f2c218c392ba28376948624e3f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2chat_8php.html#afffdd0f2c218c392ba28376948624e3f">chatroom_flush</a> ($room_id, $xchan)</td></tr>
+<tr class="separator:afffdd0f2c218c392ba28376948624e3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="acea6b176eb7aff44d9ba3ae24ce511d3"></a>
@@ -258,6 +260,35 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="mod_2chat_8php.html#a8b0b8bee6fef6477e8c64c5e951b1b4f">chat_content()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afffdd0f2c218c392ba28376948624e3f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">chatroom_flush </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$room_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$xchan</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Reduces the number of lines shown in chat by removing those older than MAX_CHATROOM_HOURS </p>
+
+<p>Referenced by <a class="el" href="include_2chat_8php.html#acea6b176eb7aff44d9ba3ae24ce511d3">chat_message()</a>, and <a class="el" href="include_2chat_8php.html#a2c95b545e46bfee64faa05ecf0afea91">chatroom_enter()</a>.</p>
 
 </div>
 </div>

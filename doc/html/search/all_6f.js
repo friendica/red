@@ -30,6 +30,7 @@ var searchData=
   ['opensearch_2ephp',['opensearch.php',['../opensearch_8php.html',1,'']]],
   ['opensearch_5finit',['opensearch_init',['../opensearch_8php.html#ad13034877a496565ac7d99e9fc6f55e9',1,'opensearch.php']]],
   ['orient',['orient',['../classphoto__driver.html#a4de5bac8daea8f291a33c80788019d0d',1,'photo_driver']]],
+  ['os_5fmkdir',['os_mkdir',['../boot_8php.html#a5fbebdf7a1c0ea8f904dbd9d78c2c06c',1,'boot.php']]],
   ['outf',['outf',['../namespacefriendica-to-smarty-tpl.html#a87182a9bab47640428bd0b2b9946bef9',1,'friendica-to-smarty-tpl']]],
   ['outpath',['outpath',['../namespacefriendica-to-smarty-tpl.html#a005c1b7a69cac31fad72a941974ba7bb',1,'friendica-to-smarty-tpl']]]
 ];

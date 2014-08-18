@@ -1,22 +1,22 @@
 
-Dear {{$username}},
+Cher {{$username}},
 
-	'{{$fn}}' at '{{$dfrn_url}}' has accepted 
-your connection request at '{{$sitename}}'.
+	'{{$fn}}' de '{{$dfrn_url}}' a accepté 
+votre requête de relation sur '{{$sitename}}'.
 
-	'{{$fn}}' has chosen to accept you a "fan", which restricts 
-some forms of communication - such as private messaging and some profile
-interactions. If this is a celebrity or community page, these settings were
-applied automatically.
+	'{{$fn}}' vous accepte comme un "fan", ceci restreint 
+certaines formes de communications - tel que les messages privés et quelques modes
+d'intéractions avec le profil. S'il s'agît de la page d'une célébrité ou de la page d'une communauté,
+ ces réglages ont été appliqués automatiquement.
 
-	'{{$fn}}' may choose to extend this into a two-way or more permissive 
-relationship in the future. 
+	'{{$fn}}' peut choisir d'étendre les permissions de cette relation 
+dans le futur. 
 
-	You will start receiving public status updates from '{{$fn}}', 
-which will appear on your 'Matrix' page at  
+	Vous allez commencer à recevoir les changements de statuts de '{{$fn}}', 
+ils seront ajoutés à votre fil de nouvelle sur  
 
 {{$siteurl}}
 
-Sincerely,
+Sincèrement,
 
-	{{$sitename}} Administrator
+	Administrateur {{$sitename}}

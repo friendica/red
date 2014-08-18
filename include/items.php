@@ -7,16 +7,12 @@ require_once('include/photo/photo_driver.php');
 require_once('include/permissions.php');
 
 
-function collect_recipients($item,&$private) {
+function collect_recipients($item,&$private_envelope) {
 
 	require_once('include/group.php');
 
-	$private = ((intval($item['item_private'])) ? true : false);
+	$private_envelope = ((intval($item['item_private'])) ? true : false);
 	$recipients = array();
-
-	// if the post is marked private but there are no recipients, only add the author and owner
-	// as recipients. The ACL for the post may live on the hub of a different clone. We need to 
-	// get the post to that hub.
 
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid']) {
 
@@ -49,10 +45,21 @@ function collect_recipients($item,&$private) {
 
 		$deny = array_unique(array_merge($deny_people,$deny_groups));
 		$recipients = array_diff($recipients,$deny);
-		$private = true;
+		$private_envelope = true;
 	}
 	else {
-		if(! $private) {
+
+		// if the post is marked private but there are no recipients and public_policy/scope = self, 
+		// only add the author and owner as recipients. The ACL for the post may live on the hub of
+		// a different clone. We need to get the post to that hub.
+
+		// The post may be private by virtue of not being visible to anybody on the internet,
+		// but there are no envelope recipients, so set this to false. Delivery is controlled 
+		// by the directives in $item['public_policy'].
+
+		$private_envelope = false;
+
+		if(array_key_exists('public_policy',$item) && $item['public_policy'] !== 'self') {
 			$r = q("select abook_xchan from abook where abook_channel = %d and not (abook_flags & %d) ",
 				intval($item['uid']),
 				intval(ABOOK_FLAG_SELF|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
@@ -664,9 +671,15 @@ function title_is_body($title, $body) {
 
 function get_item_elements($x) {
 
-
 	$arr = array();
 	$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
+
+	$maxlen = get_max_import_size();
+
+	if($maxlen && mb_strlen($arr['body']) > $maxlen) {
+		$arr['body'] = mb_substr($arr['body'],0,$maxlen,'UTF-8');
+		logger('get_item_elements: message length exceeds max_import_size: truncated');
+	}
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
 	$arr['edited']       = datetime_convert('UTC','UTC',$x['edited']);
@@ -703,6 +716,11 @@ function get_item_elements($x) {
 	$arr['mimetype']     = (($x['mimetype'])       ? htmlspecialchars($x['mimetype'],       ENT_COMPAT,'UTF-8',false) : '');
 	$arr['obj_type']     = (($x['object_type'])    ? htmlspecialchars($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['tgt_type']     = (($x['target_type'])    ? htmlspecialchars($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
+
+	$arr['public_policy'] = (($x['public_scope']) ? htmlspecialchars($x['public_scope'], ENT_COMPAT,'UTF-8',false) : '');
+	if($arr['public_policy'] === 'public')
+		$arr['public_policy'] = '';
+
 	$arr['comment_policy'] = (($x['comment_scope']) ? htmlspecialchars($x['comment_scope'], ENT_COMPAT,'UTF-8',false) : 'contacts');
 
 	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
@@ -838,6 +856,7 @@ function import_author_rss($x) {
 function encode_item($item) {
 	$x = array();
 	$x['type'] = 'activity';
+	$x['encoding'] = 'zot';
 
 //	logger('encode_item: ' . print_r($item,true));
 
@@ -845,16 +864,15 @@ function encode_item($item) {
 		intval($item['uid'])
 	);
 
-	if($r) {
-		$public_scope = $r[0]['channel_r_stream'];
+	if($r)
 		$comment_scope = $r[0]['channel_w_comment'];
-	}
-	else {
-		$public_scope = 0;
+	else
 		$comment_scope = 0;
-	}
 
-	$scope = map_scope($public_scope);
+	$scope = $item['public_policy'];
+	if(! $scope)
+		$scope = 'public';
+
 	$c_scope = map_scope($comment_scope);
 
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
@@ -897,8 +915,7 @@ function encode_item($item) {
 	if($y = encode_item_flags($item))
 		$x['flags']      = $y;
 
-	if(! in_array('private',$y))
-		$x['public_scope'] = $scope;
+	$x['public_scope'] = $scope;
 
 	if($item['item_flags'] & ITEM_NOCOMMENT)
 		$x['comment_scope'] = 'none';
@@ -915,14 +932,18 @@ function encode_item($item) {
 }
 
 
-function map_scope($scope) {
+function map_scope($scope,$strip = false) {
 	switch($scope) {
 		case 0:
 			return 'self';
 		case PERMS_PUBLIC:
+			if($strip)
+				return '';
 			return 'public';
 		case PERMS_NETWORK:
 			return 'network: red';
+		case PERMS_AUTHED:
+			return 'authenticated';
 		case PERMS_SITE:
 			return 'site: ' . get_app()->get_hostname();
 		case PERMS_PENDING:
@@ -933,7 +954,22 @@ function map_scope($scope) {
 	}
 }	
 
-
+function translate_scope($scope) {
+	if(! $scope || $scope === 'public')
+		return t('Visible to anybody on the internet.');
+	if(strpos($scope,'self') === 0)
+		return t('Visible to you only.');
+	if(strpos($scope,'network:') === 0)
+		return t('Visible to anybody in this network.');
+	if(strpos($scope,'authenticated') === 0)
+		return t('Visible to anybody authenticated.');
+	if(strpos($scope,'site:') === 0)
+		return sprintf( t('Visible to anybody on %s.'), strip_tags(substr($scope,6)));
+	if(strpos($scope,'any connections') === 0)
+		return t('Visible to all connections.');
+	if(strpos($scope,'contacts') === 0)
+		return t('Visible to approved connections.');
+}
 
 function encode_item_xchan($xchan) {
 
@@ -1069,6 +1105,7 @@ function encode_item_flags($item) {
 function encode_mail($item) {
 	$x = array();
 	$x['type'] = 'mail';
+	$x['encoding'] = 'zot';
 
 	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
 		$key = get_config('system','prvkey');
@@ -1730,6 +1767,8 @@ function item_store($arr,$allow_exec = false) {
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
 	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : 0 );
 
+	$arr['public_policy'] = ((x($arr,'public_policy')) ? notags(trim($arr['public_policy']))  : '' );
+
 	$arr['comment_policy'] = ((x($arr,'comment_policy')) ? notags(trim($arr['comment_policy']))  : 'contacts' );
 
 	
@@ -1762,6 +1801,7 @@ function item_store($arr,$allow_exec = false) {
 		$allow_gid = $arr['allow_gid'];
 		$deny_cid  = $arr['deny_cid'];
 		$deny_gid  = $arr['deny_gid'];
+		$public_policy = $arr['public_policy'];
 		$arr['item_flags'] = $arr['item_flags'] | ITEM_THREAD_TOP;
 	}
 	else { 
@@ -1798,6 +1838,7 @@ function item_store($arr,$allow_exec = false) {
 			$allow_gid      = $r[0]['allow_gid'];
 			$deny_cid       = $r[0]['deny_cid'];
 			$deny_gid       = $r[0]['deny_gid'];
+			$public_policy  = $r[0]['public_policy'];
 
 			if($r[0]['item_flags'] & ITEM_WALL)
 				$arr['item_flags'] = $arr['item_flags'] | ITEM_WALL; 
@@ -1811,10 +1852,7 @@ function item_store($arr,$allow_exec = false) {
 				$uplinked_comment = true;
 			}
 
-
 			// if the parent is private, force privacy for the entire conversation
-			// This differs from the above settings as it subtly allows comments from 
-			// email correspondents to be private even if the overall thread is not. 
 
 			if($r[0]['item_private'])
 				$arr['item_private'] = $r[0]['item_private'];
@@ -1906,7 +1944,7 @@ function item_store($arr,$allow_exec = false) {
 	if((! $parent_id) || ($arr['parent_mid'] === $arr['mid']))	
 		$parent_id = $current_post;
 
- 	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid))
+ 	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid) || strlen($public_policy))
 		$private = 1;
 	else
 		$private = $arr['item_private']; 
@@ -1914,12 +1952,13 @@ function item_store($arr,$allow_exec = false) {
 	// Set parent id - and also make sure to inherit the parent's ACL's.
 
 	$r = q("UPDATE item SET parent = %d, allow_cid = '%s', allow_gid = '%s',
-		deny_cid = '%s', deny_gid = '%s', item_private = %d WHERE id = %d LIMIT 1",
+		deny_cid = '%s', deny_gid = '%s', public_policy = '%s', item_private = %d WHERE id = %d LIMIT 1",
 		intval($parent_id),
 		dbesc($allow_cid),
 		dbesc($allow_gid),
 		dbesc($deny_cid),
 		dbesc($deny_gid),
+		dbesc($public_policy),
 		intval($private),
 		intval($current_post)
 	);
@@ -1931,6 +1970,7 @@ function item_store($arr,$allow_exec = false) {
 	$arr['allow_gid'] = $allow_gid;
 	$arr['deny_cid']  = $deny_cid;
 	$arr['deny_gid']  = $deny_gid;
+	$arr['public_policy']  = $public_policy;
 	$arr['item_private']   = $private;
 	
 	// Store taxonomy
@@ -2131,6 +2171,11 @@ function item_store_update($arr,$allow_exec = false) {
 	
 	$arr['sig']           = ((x($arr,'sig'))           ? $arr['sig']                         : '');
 	$arr['layout_mid']    = ((array_key_exists('layout_mid',$arr)) ? dbesc($arr['layout_mid'])           : $orig[0]['layout_mid'] );
+
+	$arr['public_policy'] = ((x($arr,'public_policy')) ? notags(trim($arr['public_policy']))  : $orig[0]['public_policy'] );
+	$arr['comment_policy'] = ((x($arr,'comment_policy')) ? notags(trim($arr['comment_policy']))  : $orig[0]['comment_policy'] );
+
+
 
 	call_hooks('post_remote_update',$arr);
 
@@ -2417,6 +2462,8 @@ function tag_deliver($uid,$item_id) {
 
 			$private = (($u[0]['channel_allow_cid'] || $u[0]['channel_allow_gid'] || $u[0]['channel_deny_cid'] || $u[0]['channel_deny_gid']) ? 1 : 0);
 
+//FIXME - add check for public_policy
+
 			$flag_bits = ITEM_WALL|ITEM_ORIGIN;
 
 			// maintain the original source, which will be the original item owner and was stored in source_xchan
@@ -2556,6 +2603,8 @@ function tag_deliver($uid,$item_id) {
 	// also reset all the privacy bits to the forum default permissions
 
 	$private = (($u[0]['channel_allow_cid'] || $u[0]['channel_allow_gid'] || $u[0]['channel_deny_cid'] || $u[0]['channel_deny_gid']) ? 1 : 0);
+
+// FIXME set public_policy and recheck private
 
 	$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
 

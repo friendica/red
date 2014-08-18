@@ -1,7 +1,7 @@
 /* override some bootstrap settings */
 
 html {
-font-size: 100%;
+	font-size: 100%;
 }
 
 h1,
@@ -32,19 +32,6 @@ h5,
 h6,
 .h6 {
   font-size: 10px;
-}
-textarea {
-line-height: initial;
-}
-
-.radio, .checkbox{
-padding-left: 0px;
-margin-left: 0px;
-}
-
-.checkbox input[type="checkbox"], inline input[type="checkbox"]{
-float:none;
-margin-left:0px;
 }
 
 /* nav overrides */

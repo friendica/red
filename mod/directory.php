@@ -199,20 +199,37 @@ function directory_content(&$a) {
 						$a->data['directory_keywords'] = $j['keywords'];
 					}
 
-//					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
-
-					$o .= replace_macros($tpl, array(
-						'$search' => $search,
-						'$desc' => t('Find'),
-						'$finddsc' => t('Finding:'),
-						'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
-						'$entries' => $entries,
-						'$dirlbl' => t('Directory'),
-						'$submit' => t('Find')
-					));
+					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
 
 
-					$o .= alt_pager($a,$j['records'], t('next page'), t('previous page'));
+					if($_REQUEST['aj']) {
+						if($entries) {
+							$o = replace_macros(get_markup_template('directajax.tpl'),array(
+								'$entries' => $entries
+							));
+						}
+						else {
+							$o = '<div id="content-complete"></div>';
+						}
+						echo $o;
+						killme();
+					}
+					else {
+
+						$o .= "<script> var page_query_args = '" . $a->query_string . "'; </script>";
+						$o .= replace_macros($tpl, array(
+							'$search' => $search,
+							'$desc' => t('Find'),
+							'$finddsc' => t('Finding:'),
+							'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
+							'$entries' => $entries,
+							'$dirlbl' => t('Directory'),
+							'$submit' => t('Find')
+						));
+
+//						$o .= alt_pager($a,$j['records'], t('next page'), t('previous page'));
+
+					}
 
 				}
 				else {

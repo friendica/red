@@ -61,47 +61,64 @@ function photo_upload($channel, $observer, $args) {
 	$str_group_deny    = perms2str(((is_array($args['group_deny']))    ? $args['group_deny']    : explode(',',$args['group_deny'])));
 	$str_contact_deny  = perms2str(((is_array($args['contact_deny']))  ? $args['contact_deny']  : explode(',',$args['contact_deny'])));
 
-	$f = array('src' => '', 'filename' => '', 'filesize' => 0, 'type' => '');
 
-	call_hooks('photo_upload_file',$f);
+	if($args['data']) {
 
-	if(x($f,'src') && x($f,'filesize')) {
-		$src      = $f['src'];
-		$filename = $f['filename'];
-		$filesize = $f['filesize'];
-		$type     = $f['type'];
+		// allow an import from a binary string representing the image.
+		// This bypasses the upload step and max size limit checking
+
+		$imagedata = $args['data'];
+		$filename = $args['filename'];
+		$filesize = strlen($imagedata);
+		// this is going to be deleted if it exists
+		$src = '/tmp/deletemenow';
+		$type = $args['type'];
 	}
 	else {
-		$src        = $_FILES['userfile']['tmp_name'];
-		$filename   = basename($_FILES['userfile']['name']);
-		$filesize   = intval($_FILES['userfile']['size']);
-		$type       = $_FILES['userfile']['type'];
+		$f = array('src' => '', 'filename' => '', 'filesize' => 0, 'type' => '');
+
+		call_hooks('photo_upload_file',$f);
+
+		if(x($f,'src') && x($f,'filesize')) {
+			$src      = $f['src'];
+			$filename = $f['filename'];
+			$filesize = $f['filesize'];
+			$type     = $f['type'];
+		}
+		else {
+			$src        = $_FILES['userfile']['tmp_name'];
+			$filename   = basename($_FILES['userfile']['name']);
+			$filesize   = intval($_FILES['userfile']['size']);
+			$type       = $_FILES['userfile']['type'];
+		}
+
+		if (! $type) 
+			$type=guess_image_type($filename);
+
+		logger('photo_upload: received file: ' . $filename . ' as ' . $src . ' ('. $type . ') ' . $filesize . ' bytes', LOGGER_DEBUG);
+
+	
+		$maximagesize = get_config('system','maximagesize');
+
+		if(($maximagesize) && ($filesize > $maximagesize)) {
+			$ret['message'] =  sprintf ( t('Image exceeds website size limit of %lu bytes'), $maximagesize);
+			@unlink($src);
+			call_hooks('photo_upload_end',$ret);
+			return $ret;
+		}
+
+		if(! $filesize) {
+			$ret['message'] = t('Image file is empty.');
+			@unlink($src);
+			call_hooks('photo_post_end',$ret);
+			return $ret;
+		}
+
+		logger('photo_upload: loading the contents of ' . $src , LOGGER_DEBUG);
+
+		$imagedata = @file_get_contents($src);
 	}
 
-	if (! $type) 
-		$type=guess_image_type($filename);
-
-	logger('photo_upload: received file: ' . $filename . ' as ' . $src . ' ('. $type . ') ' . $filesize . ' bytes', LOGGER_DEBUG);
-
-	$maximagesize = get_config('system','maximagesize');
-
-	if(($maximagesize) && ($filesize > $maximagesize)) {
-		$ret['message'] =  sprintf ( t('Image exceeds website size limit of %lu bytes'), $maximagesize);
-		@unlink($src);
-		call_hooks('photo_upload_end',$ret);
-		return $ret;
-	}
-
-	if(! $filesize) {
-		$ret['message'] = t('Image file is empty.');
-		@unlink($src);
-		call_hooks('photo_post_end',$ret);
-		return $ret;
-	}
-
-	logger('photo_upload: loading the contents of ' . $src , LOGGER_DEBUG);
-
-	$imagedata = @file_get_contents($src);
 
 	$r = q("select sum(size) as total from photo where aid = %d and scale = 0 ",
 		intval($account_id)
@@ -141,7 +158,7 @@ function photo_upload($channel, $observer, $args) {
 
 	$smallest = 0;
 
-	$photo_hash = photo_new_resource();
+	$photo_hash = (($args['resource_id']) ? $args['resource_id'] : photo_new_resource());
 
 	$visitor = '';
 	if($channel['channel_hash'] !== $observer['xchan_hash'])
@@ -154,6 +171,15 @@ function photo_upload($channel, $observer, $args) {
 		'allow_cid' => $str_contact_allow, 'allow_gid' => $str_group_allow,
 		'deny_cid' => $str_contact_deny, 'deny_gid' => $str_group_deny
 	);
+	if($args['created'])
+		$p['created'] = $args['created'];
+	if($args['edited'])
+		$p['edited'] = $args['edited'];
+	if($args['title'])
+		$p['title'] = $args['title'];
+	if($args['description'])
+		$p['desciprion'] = $args['description'];
+
 
 	$r1 = $ph->save($p);
 	if(! $r1)

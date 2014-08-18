@@ -37,7 +37,7 @@
 						<button class="btn btn-default btn-xs" title="{{$edcode}}" onclick="insertbbcomment('{{$comment}}','code', {{$id}}); return false;">
 							<i class="icon-terminal comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$comment}}" onclick="insertbbcomment('{{$comment}}','img', {{$id}}); return false;">
+						<button class="btn btn-default btn-xs" title="{{$edimg}}" onclick="insertbbcomment('{{$comment}}','img', {{$id}}); return false;">
 							<i class="icon-camera comment-icon"></i>
 						</button>
 						<button class="btn btn-default btn-xs" title="{{$edurl}}" onclick="insertbbcomment('{{$comment}}','url', {{$id}}); return false;">

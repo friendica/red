@@ -14,15 +14,15 @@ main {
 	height: 100%;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 801px) {
 	main {
-    left: -14rem !important;
-    right: -14rem !important;    
-    width: calc(100% + 14rem + 14rem) !important;
+		left: -14rem !important;
+    		right: -14rem !important;    
+    		width: calc(100% + 14rem + 14rem) !important;
 }
 
 #profile-photo-wrapper {
-display:none;
+	display:none;
 }
 }
 

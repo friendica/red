@@ -47,7 +47,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1118  );
+define ( 'DB_UPDATE_VERSION',       1123  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -980,6 +980,10 @@ class App {
 
 	function build_pagehead() {
 
+		$user_scalable = ((local_user()) ? get_pconfig(local_user(),'system','user_scalable') : 1);
+		if ($user_scalable === false)
+			$user_scalable = 1;
+
 		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
 		if($interval < 10000)
 			$interval = 40000;
@@ -993,6 +997,7 @@ class App {
 		 */
 		$tpl = get_markup_template('head.tpl');
 		$this->page['htmlhead'] = replace_macros($tpl, array(
+			'$user_scalable' => $user_scalable,
 			'$baseurl' => $this->get_baseurl(),
 			'$local_user' => local_user(),
 			'$generator' => RED_PLATFORM . ' ' . RED_VERSION,
@@ -2035,3 +2040,8 @@ function head_get_icon() {
 	return $icon;
 }
 
+function get_directory_realm() {
+	if($x = get_config('system','directory_realm'))
+		return $x;
+	return DIRECTORY_REALM;
+}

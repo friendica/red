@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1118 );
+define( 'UPDATE_VERSION' , 1123 );
 
 /**
  *
@@ -1314,3 +1314,66 @@ DROP INDEX `channel_a_bookmark` , ADD INDEX `channel_w_like` ( `channel_w_like` 
 
 }
 
+function update_r1118() {
+	$r = q("ALTER TABLE `account` ADD `account_password_changed` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+ADD INDEX ( `account_password_changed` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1119() {
+	$r1 = q("CREATE TABLE IF NOT EXISTS `profdef` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `field_name` char(255) NOT NULL DEFAULT '',
+  `field_type` char(16) NOT NULL DEFAULT '',
+  `field_desc` char(255) NOT NULL DEFAULT '',
+  `field_help` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `field_name` (`field_name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+
+	$r2 = q("CREATE TABLE IF NOT EXISTS `profext` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `channel_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `hash` char(255) NOT NULL DEFAULT '',
+  `k` char(255) NOT NULL DEFAULT '',
+  `v` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `channel_id` (`channel_id`),
+  KEY `hash` (`hash`),
+  KEY `k` (`k`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1120() {
+	$r = q("ALTER TABLE `item` ADD `public_policy` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `coord` ,
+ADD INDEX ( `public_policy` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1121() {
+	$r = q("ALTER TABLE `site` ADD `site_realm` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD INDEX ( `site_realm` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1122() {
+	$r = q("update site set site_realm = '%s' where true",
+		dbesc(DIRECTORY_REALM)
+	);
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
