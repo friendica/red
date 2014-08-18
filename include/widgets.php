@@ -48,6 +48,13 @@ function widget_collections($args) {
 				$abook_id = 0;
 				$wmode = 0;
 				break;
+		case 'connections':
+				$every = 'connections';
+				$each = 'group';
+				$edit = true;
+				$current = $_REQUEST['gid'];
+				$abook_id = 0;
+				$wmode = 0;
 		case 'groups':
 				$every = 'connections';
 				$each = argv(0);

@@ -989,8 +989,22 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 
 	// Are we a directory server of some kind?
 
+	$other_realm = false;
+	$realm = get_directory_realm();
+	if(array_key_exists('site',$arr) 
+		&& array_key_exists('realm',$arr['site']) 
+		&& (strpos($arr['site']['realm'],$realm) !== false))
+		$other_realm = true;
+
 	if($dirmode != DIRECTORY_MODE_NORMAL) {
-		if(array_key_exists('profile',$arr) && is_array($arr['profile'])) {
+
+		// We're some kind of directory server. However we can only add directory information
+		// if the entry is in the same realm (or is a sub-realm). Sub-realms are denoted by 
+		// including the parent realm in the name. e.g. 'RED_GLOBAL:foo' would allow an entry to 
+		// be in directories for the local realm (foo) and also the RED_GLOBAL realm.
+
+
+		if(array_key_exists('profile',$arr) && is_array($arr['profile']) && (! $other_realm)) {
 			$profile_changed = import_directory_profile($xchan_hash,$arr['profile'],$address,$ud_flags, 1);
 			if($profile_changed) {
 				$what .= 'profile ';
