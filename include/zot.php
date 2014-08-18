@@ -2064,8 +2064,8 @@ function import_site($arr,$pubkey) {
 	}
 	else {
 		$update = true;
-		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage )
-			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s' )",
+		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm )
+			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s' )",
 			dbesc($site_location),
 			dbesc($url),
 			intval($access_policy),
@@ -2073,7 +2073,8 @@ function import_site($arr,$pubkey) {
 			dbesc(datetime_convert()),
 			dbesc($directory_url),
 			intval($register_policy),
-			dbesc($sellpage)
+			dbesc($sellpage),
+			dbesc($site_realm)
 		);
 		if(! $r) {
 			logger('import_site: record create failed. ' . print_r($arr,true));

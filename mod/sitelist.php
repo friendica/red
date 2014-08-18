@@ -18,6 +18,12 @@ function sitelist_init(&$a) {
 	if($open)
 		$sql_extra = " and site_register = " . intval(REGISTER_OPEN) . " ";
 
+	$realm = get_directory_realm();
+	if($realm == DIRECTORY_REALM) {
+		$sql_extra .= " and ( site_realm = '" . dbesc($realm) . "' or site_realm = '') ";
+	}
+	else
+		$sql_extra .= " and site_realm = '" . dbesc($realm) . "' ";
 
 	$result = array('success' => false);
 

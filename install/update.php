@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1122 );
+define( 'UPDATE_VERSION' , 1123 );
 
 /**
  *
@@ -1369,3 +1369,11 @@ ADD INDEX ( `site_realm` )");
 }
 
 
+function update_r1122() {
+	$r = q("update site set site_realm = '%s' where true",
+		dbesc(DIRECTORY_REALM)
+	);
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
