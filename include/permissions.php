@@ -411,3 +411,63 @@ function site_default_perms() {
 	}
 	return $ret;
 }
+
+
+/**
+ * @function get_role_perms($role)
+ * @param string $role
+ * 
+ *   Given a string for the channel role ('social','forum', etc)
+ * return an array of all permission fields pre-filled for this role.
+ * This includes the channel permission scope indicators as well as
+ *    perms_auto:   The permissions to apply automatically on receipt of a connection request
+ *    perms_follow: The permissions to apply when initiating a connection request to another channel
+ *    perms_accept: The permissions to apply when accepting a connection request from another channel (not automatic)
+ *
+ * Any attributes may be extended (new roles defined) and modified (specific permissions altered) by plugins
+ *
+ */
+
+function get_role_perms($role) {
+
+	$ret = array();
+
+	$ret['role'] = $role;
+
+	switch($role) {
+		case 'social':
+			$ret['perms_auto'] = 0;
+			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
+			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
+			$ret['channel_r_stream']    = PERMS_PUBLIC;
+			$ret['channel_r_profile']   = PERMS_PUBLIC;
+			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_abook']     = PERMS_PUBLIC;
+			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_wall']      = PERMS_CONTACTS;
+			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
+			$ret['channel_w_comment']   = PERMS_CONTACTS;
+			$ret['channel_w_mail']      = PERMS_CONTACTS;
+			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_chat']      = PERMS_CONTACTS;
+			$ret['channel_a_delegate']  = 0;
+			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_r_pages']     = PERMS_PUBLIC;
+			$ret['channel_w_pages']     = 0;
+			$ret['channel_a_republish'] = PERMS_SPECIFIC;
+			$ret['channel_w_like']      = PERMS_NETWORK;
+			
+			break;
+	
+	}
+
+	call_hooks('get_role_perms',$ret);
+
+	return $ret;
+}
+
+

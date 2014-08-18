@@ -556,7 +556,7 @@ function diaspora_request($importer,$xml) {
 		// perhaps we were already sharing with this person. Now they're sharing with us.
 		// That makes us friends. Maybe.
 
-		$newperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTO|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_CHAT;
+		$newperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTO|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT;
 
 		$r = q("update abook set abook_their_perms = %d where abook_id = %d and abook_channel = %d limit 1",
 			intval($newperms),
