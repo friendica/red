@@ -418,72 +418,76 @@ function post_to_red_get_avatar($avatar,$id_or_email,$size,$default,$alt) {
 
 // from:
 // http://www.docgate.com/tutorial/php/how-to-convert-html-to-bbcode-with-php-script.html
-function xpost_to_html2bbcode($text) {
-	$htmltags = array(
-		'/\<b\>(.*?)\<\/b\>/is',
-		'/\<i\>(.*?)\<\/i\>/is',
-		'/\<u\>(.*?)\<\/u\>/is',
-		'/\<ul.*?\>(.*?)\<\/ul\>/is',
-		'/\<li\>(.*?)\<\/li\>/is',
-		'/\<img(.*?) src=\"(.*?)\" alt=\"(.*?)\" title=\"Smile(y?)\" \/\>/is',		// some smiley
-		'/\<img(.*?) src=\"http:\/\/(.*?)\" (.*?)\>/is',
-		'/\<img(.*?) src=\"(.*?)\" alt=\":(.*?)\" .*? \/\>/is',						// some smiley
-		'/\<div class=\"quotecontent\"\>(.*?)\<\/div\>/is',	
-		'/\<div class=\"codecontent\"\>(.*?)\<\/div\>/is',	
-		'/\<div class=\"quotetitle\"\>(.*?)\<\/div\>/is',	
-		'/\<div class=\"codetitle\"\>(.*?)\<\/div\>/is',
-		'/\<cite.*?\>(.*?)\<\/cite\>/is',
-		'/\<blockquote.*?\>(.*?)\<\/blockquote\>/is',
-		'/\<div\>(.*?)\<\/div\>/is',
-		'/\<code\>(.*?)\<\/code\>/is',
-		'/\<br(.*?)\>/is',
-		'/\<strong\>(.*?)\<\/strong\>/is',
-		'/\<em\>(.*?)\<\/em\>/is',
-		'/\<a href=\"mailto:(.*?)\"(.*?)\>(.*?)\<\/a\>/is',
-		'/\<a .*?href=\"(.*?)\"(.*?)\>http:\/\/(.*?)\<\/a\>/is',
-		'/\<a .*?href=\"(.*?)\"(.*?)\>(.*?)\<\/a\>/is'
-	);
 
-	$bbtags = array(
-		'[b]$1[/b]',
-		'[i]$1[/i]',
-		'[u]$1[/u]',
-		'[list]$1[/list]',
-		'[*]$1',
-		'$3',
-		'[img]http://$2[/img]' . "\n",
-		':$3',
-		'[quote]$1[/quote]',
-		'[code]$1[/code]',
-		'',
-		'',
-		'',
-		'[quote]$1[/quote]',
-		'$1',
-		'[code]$1[/code]',
-		"\n",
-		'[b]$1[/b]',
-		'[i]$1[/i]',
-		'[email=$1]$3[/email]',
-		'[url]$1[/url]',
-		'[url=$1]$3[/url]'
-	);
+//function exists also in post to friendica plugin; load only if not yet loaded by that plugin
+if(!function_exists('xpost_to_html2bbcode')) {
+	function xpost_to_html2bbcode($text) {
+		$htmltags = array(
+			'/\<b\>(.*?)\<\/b\>/is',
+			'/\<i\>(.*?)\<\/i\>/is',
+			'/\<u\>(.*?)\<\/u\>/is',
+			'/\<ul.*?\>(.*?)\<\/ul\>/is',
+			'/\<li\>(.*?)\<\/li\>/is',
+			'/\<img(.*?) src=\"(.*?)\" alt=\"(.*?)\" title=\"Smile(y?)\" \/\>/is',		// some smiley
+			'/\<img(.*?) src=\"http:\/\/(.*?)\" (.*?)\>/is',
+			'/\<img(.*?) src=\"(.*?)\" alt=\":(.*?)\" .*? \/\>/is',				// some smiley
+			'/\<div class=\"quotecontent\"\>(.*?)\<\/div\>/is',	
+			'/\<div class=\"codecontent\"\>(.*?)\<\/div\>/is',	
+			'/\<div class=\"quotetitle\"\>(.*?)\<\/div\>/is',	
+			'/\<div class=\"codetitle\"\>(.*?)\<\/div\>/is',
+			'/\<cite.*?\>(.*?)\<\/cite\>/is',
+			'/\<blockquote.*?\>(.*?)\<\/blockquote\>/is',
+			'/\<div\>(.*?)\<\/div\>/is',
+			'/\<code\>(.*?)\<\/code\>/is',
+			'/\<br(.*?)\>/is',
+			'/\<strong\>(.*?)\<\/strong\>/is',
+			'/\<em\>(.*?)\<\/em\>/is',
+			'/\<a href=\"mailto:(.*?)\"(.*?)\>(.*?)\<\/a\>/is',
+			'/\<a .*?href=\"(.*?)\"(.*?)\>http:\/\/(.*?)\<\/a\>/is',
+			'/\<a .*?href=\"(.*?)\"(.*?)\>(.*?)\<\/a\>/is'
+		);
 
-	$text = str_replace ("\n", ' ', $text);
-	$ntext = preg_replace ($htmltags, $bbtags, $text);
-	$ntext = preg_replace ($htmltags, $bbtags, $ntext);
+		$bbtags = array(
+			'[b]$1[/b]',
+			'[i]$1[/i]',
+			'[u]$1[/u]',
+			'[list]$1[/list]',
+			'[*]$1',
+			'$3',
+			'[img]http://$2[/img]' . "\n",
+			':$3',
+			'[quote]$1[/quote]',
+			'[code]$1[/code]',
+			'',
+			'',
+			'',
+			'[quote]$1[/quote]',
+			'$1',
+			'[code]$1[/code]',
+			"\n",
+			'[b]$1[/b]',
+			'[i]$1[/i]',
+			'[email=$1]$3[/email]',
+			'[url]$1[/url]',
+			'[url=$1]$3[/url]'
+		);
 
-	// for too large text and cannot handle by str_replace
-	if (!$ntext) {
-		$ntext = str_replace(array('<br>', '<br />'), "\n", $text);
-		$ntext = str_replace(array('<strong>', '</strong>'), array('[b]', '[/b]'), $ntext);
-		$ntext = str_replace(array('<em>', '</em>'), array('[i]', '[/i]'), $ntext);
-	}
-
-	$ntext = strip_tags($ntext);
+		$text = str_replace ("\n", ' ', $text);
+		$ntext = preg_replace ($htmltags, $bbtags, $text);
+		$ntext = preg_replace ($htmltags, $bbtags, $ntext);
 	
-	$ntext = trim(html_entity_decode($ntext,ENT_QUOTES,'UTF-8'));
-	return $ntext;
+		// for too large text and cannot handle by str_replace
+		if (!$ntext) {
+			$ntext = str_replace(array('<br>', '<br />'), "\n", $text);
+			$ntext = str_replace(array('<strong>', '</strong>'), array('[b]', '[/b]'), $ntext);
+			$ntext = str_replace(array('<em>', '</em>'), array('[i]', '[/i]'), $ntext);
+		}
+
+		$ntext = strip_tags($ntext);
+		
+		$ntext = trim(html_entity_decode($ntext,ENT_QUOTES,'UTF-8'));
+		return $ntext;
+	}
 }
 
 
