@@ -26,11 +26,6 @@ function lockview_content(&$a) {
 
 	$item = $r[0];
 
-	if(array_key_exists('public_policy',$item) && $item['public_policy']) {
-		echo '<li>' . translate_scope($item['public_policy']) . '</li>';
-		killme();
-	}
-
 	if($item['uid'] != local_user()) {
 		echo '<li>' . t('Remote privacy information not available.') . '</li>';
 		killme();
@@ -83,4 +78,8 @@ function lockview_content(&$a) {
 	echo $o . implode($l);
 	killme();
 
+	if(array_key_exists('public_policy',$item) && $item['public_policy']) {
+		echo '<li>' . translate_scope($item['public_policy']) . '</li>';
+		killme();
+	}
 }
