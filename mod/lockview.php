@@ -33,7 +33,7 @@ function lockview_content(&$a) {
 
 	if(($item['item_private'] == 1) && (! strlen($item['allow_cid'])) && (! strlen($item['allow_gid'])) 
 		&& (! strlen($item['deny_cid'])) && (! strlen($item['deny_gid']))) {
-		echo '<li>' . t('Remote privacy information not available.') . '</li>';
+		echo '<li>' . translate_scope($item['public_policy']) . '</li>';
 		killme();
 	}
 
@@ -82,4 +82,5 @@ function lockview_content(&$a) {
 		echo '<li>' . translate_scope($item['public_policy']) . '</li>';
 		killme();
 	}
+
 }
