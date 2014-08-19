@@ -671,27 +671,14 @@ function diaspora_post($importer,$xml,$msg) {
 		return 202;
 	}
 
-	$message_id = $diaspora_handle . ':' . $guid;
-	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' AND `guid` = '%s' LIMIT 1",
+	$r = q("SELECT `id` FROM `item` WHERE `uid` = %d AND `uri` = '%s' LIMIT 1",
 		intval($importer['channel_id']),
-		dbesc($message_id),
 		dbesc($guid)
 	);
-	if(count($r)) {
+	if($r) {
+		// check dates if post editing is implemented
 		logger('diaspora_post: message exists: ' . $guid);
 		return;
-	}
-
-	// allocate a guid on our system - we aren't fixing any collisions.
-	// we're ignoring them
-
-	$g = q("select * from guid where guid = '%s' limit 1",
-		dbesc($guid)
-	);
-	if(! count($g)) {
-		q("insert into guid ( guid ) values ( '%s' )",
-			dbesc($guid)
-		);
 	}
 
 	$created = unxmlify($xml->created_at);
@@ -699,14 +686,17 @@ function diaspora_post($importer,$xml,$msg) {
 
 	$body = diaspora2bb($xml->raw_message);
 
+//WTF? FIXME
 	// Add OEmbed and other information to the body
-	$body = add_page_info_to_body($body, false, true);
+//	$body = add_page_info_to_body($body, false, true);
 
 	$datarray = array();
 
 	$str_tags = '';
 
 	$tags = get_tags($body);
+
+// FIXME call handle_tags()
 
 	if(count($tags)) {
 		foreach($tags as $tag) {
@@ -743,40 +733,36 @@ function diaspora_post($importer,$xml,$msg) {
 	$plink = 'https://'.substr($diaspora_handle,strpos($diaspora_handle,'@')+1).'/posts/'.$guid;
 
 	$datarray['uid'] = $importer['channel_id'];
+
+// FIXME
 	$datarray['contact-id'] = $contact['id'];
 	$datarray['wall'] = 0;
 	$datarray['network'] = NETWORK_DIASPORA;
+
+
 	$datarray['verb'] = ACTIVITY_POST;
-	$datarray['guid'] = $guid;
-	$datarray['uri'] = $datarray['parent-uri'] = $message_id;
+	$datarray['mid'] = $datarray['parent-mid'] = $guid;
+
 	$datarray['changed'] = $datarray['created'] = $datarray['edited'] = datetime_convert('UTC','UTC',$created);
-	$datarray['private'] = $private;
-	$datarray['parent'] = 0;
+	$datarray['item_private'] = $private;
+
+
 	$datarray['plink'] = $plink;
-	$datarray['owner-name'] = $contact['name'];
-	$datarray['owner-link'] = $contact['url'];
-	//$datarray['owner-avatar'] = $contact['thumb'];
-	$datarray['owner-avatar'] = ((x($contact,'thumb')) ? $contact['thumb'] : $contact['photo']);
-	$datarray['author-name'] = $contact['name'];
-	$datarray['author-link'] = $contact['url'];
-	$datarray['author-avatar'] = $contact['thumb'];
+
+	$datarray['author_xchan'] = $contact['xchan_hash'];
+	$datarray['owner_xchan'] = $importer['channel_hash'];
+
 	$datarray['body'] = $body;
-	$datarray['tag'] = $str_tags;
+
+// FIXME
+//	$datarray['tag'] = $str_tags;
+
 	$datarray['app']  = 'Diaspora';
 
 	// if empty content it might be a photo that hasn't arrived yet. If a photo arrives, we'll make it visible.
+//	$datarray['visible'] = ((strlen($body)) ? 1 : 0);
 
-	$datarray['visible'] = ((strlen($body)) ? 1 : 0);
-
-	$message_id = item_store($datarray);
-
-	//if($message_id) {
-	//	q("update item set plink = '%s' where id = %d",
-	//		dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
-	//		intval($message_id)
-	//	);
-	//}
-
+	$result = item_store($datarray);
 	return;
 
 }
@@ -1105,20 +1091,20 @@ function diaspora_comment($importer,$xml,$msg) {
 		return 202;
 	}
 
-	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `mid` = '%s' LIMIT 1",
 		intval($importer['channel_id']),
 		dbesc($guid)
 	);
-	if(count($r)) {
+	if($r) {
 		logger('diaspora_comment: our comment just got relayed back to us (or there was a guid collision) : ' . $guid);
 		return;
 	}
 
-	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `mid` = '%s' LIMIT 1",
 		intval($importer['channel_id']),
 		dbesc($parent_guid)
 	);
-	if(! count($r)) {
+	if(! $r) {
 		logger('diaspora_comment: parent item not found: parent: ' . $parent_guid . ' item: ' . $guid);
 		return;
 	}
@@ -1183,7 +1169,6 @@ function diaspora_comment($importer,$xml,$msg) {
 	}
 
 	$body = diaspora2bb($text);
-	$message_id = $diaspora_handle . ':' . $guid;
 
 	$datarray = array();
 
@@ -1216,59 +1201,54 @@ function diaspora_comment($importer,$xml,$msg) {
 	}
 
 	$datarray['uid'] = $importer['channel_id'];
-	$datarray['contact-id'] = $contact['id'];
-	$datarray['type'] = 'remote-comment';
-	$datarray['wall'] = $parent_item['wall'];
-	$datarray['network']  = NETWORK_DIASPORA;
+
+//FIXME
+//	$datarray['contact-id'] = $contact['id'];
+//	$datarray['type'] = 'remote-comment';
+//	$datarray['wall'] = $parent_item['wall'];
+//	$datarray['network']  = NETWORK_DIASPORA;
+
 	$datarray['verb'] = ACTIVITY_POST;
-	$datarray['gravity'] = GRAVITY_COMMENT;
-	$datarray['guid'] = $guid;
-	$datarray['uri'] = $message_id;
-	$datarray['parent-uri'] = $parent_item['uri'];
+	$datarray['mid'] = $guid;
+	$datarray['parent_mid'] = $parent_item['mid'];
+
 
 	// No timestamps for comments? OK, we'll the use current time.
 	$datarray['changed'] = $datarray['created'] = $datarray['edited'] = datetime_convert();
 	$datarray['private'] = $parent_item['private'];
 
-	$datarray['owner-name'] = $parent_item['owner-name'];
-	$datarray['owner-link'] = $parent_item['owner-link'];
-	$datarray['owner-avatar'] = $parent_item['owner-avatar'];
+	$datarray['owner_xchan'] = $parent_item['owner_xchan'];
+	$datarray['author_xchan'] = $person['xchan_hash'];
 
-	$datarray['author-name'] = $person['name'];
-	$datarray['author-link'] = $person['url'];
-	$datarray['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
 	$datarray['body'] = $body;
-	$datarray['tag'] = $str_tags;
+
+// FIXME
+//	$datarray['tag'] = $str_tags;
 
 	// We can't be certain what the original app is if the message is relayed.
-	if(($parent_item['origin']) && (! $parent_author_signature))
-		$datarray['app']  = 'Diaspora';
+//	if(($parent_item['origin']) && (! $parent_author_signature))
+//		$datarray['app']  = 'Diaspora';
 
-	$message_id = item_store($datarray);
+	$result = item_store($datarray);
 
-	//if($message_id) {
-		//q("update item set plink = '%s' where id = %d",
-		//	//dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
-		//	dbesc($a->get_baseurl().'/display/'.$datarray['guid']),
-		//	intval($message_id)
-		//);
-	//}
-
-	if(($parent_item['origin']) && (! $parent_author_signature)) {
-		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-			intval($message_id),
-			dbesc($signed_data),
-			dbesc(base64_encode($author_signature)),
-			dbesc($diaspora_handle)
-		);
+//	if(($parent_item['origin']) && (! $parent_author_signature)) {
+//		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+//			intval($message_id),
+//			dbesc($signed_data),
+//			dbesc(base64_encode($author_signature)),
+//			dbesc($diaspora_handle)
+//		);
 
 		// if the message isn't already being relayed, notify others
 		// the existence of parent_author_signature means the parent_author or owner
 		// is already relaying.
 
-		proc_run('php','include/notifier.php','comment-import',$message_id);
-	}
+//		proc_run('php','include/notifier.php','comment-import',$message_id);
+//	}
 
+
+// FIXME
+/*
 	$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 AND `deleted` = 0 ",
 		dbesc($parent_item['uri']),
 		intval($importer['channel_id'])
@@ -1311,6 +1291,9 @@ function diaspora_comment($importer,$xml,$msg) {
 			break;
 		}
 	}
+
+*/
+
 	return;
 }
 
