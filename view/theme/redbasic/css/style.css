@@ -177,6 +177,8 @@ nav #banner #logo-text a {
 }
 nav #banner #logo-text a:hover { text-decoration: none; }
 
+.nav-channel-select { margin-left: 8px; }
+
 header #banner {
 /*  overflow: hidden; */
   text-align: center;

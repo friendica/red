@@ -31,6 +31,9 @@ function get_features() {
 // prettyphoto has licensing issues and will no longer be provided in core - 
 // in any event this setting should probably be a theme option or plugin 
 //			array('prettyphoto',       t('Enhanced Photo Albums'),                 t('Enable photo album with enhanced features')),
+			array('nav_channel_select',  t('Navigation Channel Select'),                 t('Change channels directly from within the navigation dropdown menu')),
+
+
 			//FIXME - needs a description, but how the hell do we explain this to normals?
 			array('sendzid',		t('Extended Identity Sharing'),	t('Share your identity with all websites on the internet. When disabled, identity is only shared with sites in the matrix.')),
 			array('expert',       t('Expert Mode'),                 t('Enable Expert Mode to provide advanced configuration options')),

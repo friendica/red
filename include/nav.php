@@ -38,6 +38,14 @@ EOT;
 			intval($channel['channel_id'])
 		);
 
+		$chans = q("select channel_name, channel_id from channel where channel_account_id = %d and not ( channel_pageflags & %d ) order by channel_name ",
+			intval(get_account_id()),
+			intval(PAGE_REMOVED)
+		);
+
+
+
+
 	}
 	elseif(remote_user())
 		$observer = $a->get_observer();
@@ -78,6 +86,11 @@ EOT;
 	$userinfo = null;
 
 	if(local_user()) {
+
+
+		if($chans && count($chans) > 1 && feature_enabled(local_user(),'nav_channel_select'))
+			$nav['channels'] = $chans;
+
 		$nav['logout'] = Array('logout',t('Logout'), "", t('End this session'));
 		
 		// user menu
@@ -193,7 +206,7 @@ EOT;
 		$nav['all_events']['all']=array('events', t('See all events'), "", "");
 		$nav['all_events']['mark'] = array('', t('Mark all events seen'), '','');
 		
-		$nav['manage'] = array('manage', t('Channel Select'), "", t('Manage Your Channels'));
+		$nav['manage'] = array('manage', t('Channel Manager'), "", t('Manage Your Channels'));
 
 		$nav['settings'] = array('settings', t('Settings'),"", t('Account/Channel Settings'));
 
