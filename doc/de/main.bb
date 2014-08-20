@@ -58,6 +58,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/developers]Entwickler[/zrl]
 [zrl=[baseurl]/help/intro_for_developers]Einführung für Entwickler[/zrl]
 [zrl=[baseurl]/help/api_functions]API-Funktionen[/zrl]
+[zrl=[baseurl]/help/api_posting]Mit der API einen Beitrag erstellen[/zrl]
 [zrl=[baseurl]/help/developer_function_primer]Übersicht der wichtigsten Red-Funktionen[/zrl]
 [zrl=[baseurl]/doc/html/]Code-Referenz (mit doxygen generiert - setzt Cookies)[/zrl]
 [zrl=[baseurl]/help/to_do_doco]To-Do-Liste für das Projekt Red-Dokumentation[/zrl]
