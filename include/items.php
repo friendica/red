@@ -2462,9 +2462,12 @@ function tag_deliver($uid,$item_id) {
 
 			$private = (($u[0]['channel_allow_cid'] || $u[0]['channel_allow_gid'] || $u[0]['channel_deny_cid'] || $u[0]['channel_deny_gid']) ? 1 : 0);
 
-//FIXME - add check for public_policy
+			$new_public_policy = map_scope($u[0]['channel_r_stream'],true);
 
-			$flag_bits = ITEM_WALL|ITEM_ORIGIN;
+			if((! $private) && $new_public_policy)
+				$private = 1;
+
+			$flag_bits = $item['item_flags'] | ITEM_WALL|ITEM_ORIGIN;
 
 			// maintain the original source, which will be the original item owner and was stored in source_xchan
 			// when we created the delivery fork
@@ -2474,8 +2477,28 @@ function tag_deliver($uid,$item_id) {
 				intval($item_id)
 			); 
 
-			$r = q("update item set item_flags = ( item_flags | %d ), owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
-				deny_cid = '%s', deny_gid = '%s', item_private = %d  where id = %d limit 1",
+			$title = $item['title'];
+			$body  = $item['body'];
+
+			if($private) {
+				if(!($flag_bits & ITEM_OBSCURED)) {
+					$key = get_config('system','pubkey');
+					$flag_bits = $flag_bits|ITEM_OBSCURED;
+					$title = json_encode(aes_encapsulate($title,$key));
+					$body  = json_encode(aes_encapsulate($body,$key));
+				}
+			}
+			else {
+				if($flag_bits & ITEM_OBSCURED) {
+					$key = get_config('system','prvkey');
+					$flag_bits = $flag_bits ^ ITEM_OBSCURED;
+					$title = json_encode(aes_unencapsulate($title,$key));
+					$body  = json_encode(aes_unencapsulate($body,$key));
+				}
+			}
+
+			$r = q("update item set item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
+				deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', title = '%s', body = '%s'  where id = %d limit 1",
 				intval($flag_bits),
 				dbesc($u[0]['channel_hash']),
 				dbesc($u[0]['channel_allow_cid']),
@@ -2483,6 +2506,9 @@ function tag_deliver($uid,$item_id) {
 				dbesc($u[0]['channel_deny_cid']),
 				dbesc($u[0]['channel_deny_gid']),
 				intval($private),
+				dbesc($new_public_policy),
+				dbesc($title),
+				dbesc($body),
 				intval($item_id)
 			);
 			if($r)
@@ -2604,9 +2630,12 @@ function tag_deliver($uid,$item_id) {
 
 	$private = (($u[0]['channel_allow_cid'] || $u[0]['channel_allow_gid'] || $u[0]['channel_deny_cid'] || $u[0]['channel_deny_gid']) ? 1 : 0);
 
-// FIXME set public_policy and recheck private
+	$new_public_policy = map_scope($u[0]['channel_r_stream'],true);
 
-	$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
+	if((! $private) && $new_public_policy)
+		$private = 1;
+
+	$flag_bits = $item['item_flags'] | ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
 
 	// preserve the source
 
@@ -2614,8 +2643,30 @@ function tag_deliver($uid,$item_id) {
 		intval($item_id)
 	);
 
-	$r = q("update item set item_flags = ( item_flags | %d ), owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
-		deny_cid = '%s', deny_gid = '%s', item_private = %d  where id = %d limit 1",
+	// make sure encryption matches the new scope
+
+	$title = $item['title'];
+	$body  = $item['body'];
+
+	if($private) {
+		if(!($flag_bits & ITEM_OBSCURED)) {
+			$key = get_config('system','pubkey');
+			$flag_bits = $flag_bits|ITEM_OBSCURED;
+			$title = json_encode(aes_encapsulate($title,$key));
+			$body  = json_encode(aes_encapsulate($body,$key));
+		}
+	}
+	else {
+		if($flag_bits & ITEM_OBSCURED) {
+			$key = get_config('system','prvkey');
+			$flag_bits = $flag_bits ^ ITEM_OBSCURED;
+			$title = json_encode(aes_unencapsulate($title,$key));
+			$body  = json_encode(aes_unencapsulate($body,$key));
+		}
+	}
+
+	$r = q("update item set item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
+		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', title = '%s', body = '%s'  where id = %d limit 1",
 		intval($flag_bits),
 		dbesc($u[0]['channel_hash']),
 		dbesc($u[0]['channel_allow_cid']),
@@ -2623,6 +2674,9 @@ function tag_deliver($uid,$item_id) {
 		dbesc($u[0]['channel_deny_cid']),
 		dbesc($u[0]['channel_deny_gid']),
 		intval($private),
+		dbesc($new_public_policy),
+		dbesc($title),
+		dbesc($body),
 		intval($item_id)
 	);
 	if($r)
