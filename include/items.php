@@ -2498,7 +2498,7 @@ function tag_deliver($uid,$item_id) {
 			}
 
 			$r = q("update item set item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
-				deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', title = '%s', body = '%s'  where id = %d limit 1",
+				deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s'  where id = %d limit 1",
 				intval($flag_bits),
 				dbesc($u[0]['channel_hash']),
 				dbesc($u[0]['channel_allow_cid']),
@@ -2507,6 +2507,7 @@ function tag_deliver($uid,$item_id) {
 				dbesc($u[0]['channel_deny_gid']),
 				intval($private),
 				dbesc($new_public_policy),
+				dbesc(map_scope($u[0]['channel_w_comment'])),
 				dbesc($title),
 				dbesc($body),
 				intval($item_id)
@@ -2666,7 +2667,7 @@ function tag_deliver($uid,$item_id) {
 	}
 
 	$r = q("update item set item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
-		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', title = '%s', body = '%s'  where id = %d limit 1",
+		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s'  where id = %d limit 1",
 		intval($flag_bits),
 		dbesc($u[0]['channel_hash']),
 		dbesc($u[0]['channel_allow_cid']),
@@ -2675,6 +2676,7 @@ function tag_deliver($uid,$item_id) {
 		dbesc($u[0]['channel_deny_gid']),
 		intval($private),
 		dbesc($new_public_policy),
+		dbesc(map_scope($u[0]['channel_w_comment'])),
 		dbesc($title),
 		dbesc($body),
 		intval($item_id)
