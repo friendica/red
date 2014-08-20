@@ -1233,13 +1233,14 @@ function get_atom_elements($feed,$item) {
 
 	$author = $item->get_author();
 	if($author) { 
-		$res['author-name'] = unxmlify($author->get_name());
-		$res['author-link'] = unxmlify($author->get_link());
+		$res['author_name'] = unxmlify($author->get_name());
+		$res['author_link'] = unxmlify($author->get_link());
 	}
 	else {
-		$res['author-name'] = unxmlify($feed->get_title());
-		$res['author-link'] = unxmlify($feed->get_permalink());
+		$res['author_name'] = unxmlify($feed->get_title());
+		$res['author_link'] = unxmlify($feed->get_permalink());
 	}
+
 	$res['mid'] = unxmlify($item->get_id());
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
@@ -1264,9 +1265,9 @@ function get_atom_elements($feed,$item) {
 	if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
 		$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 		foreach($base as $link) {
-			if(!x($res, 'author-avatar') || !$res['author-avatar']) {
+			if(!x($res, 'author_photo') || !$res['author_photo']) {
 				if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
-					$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
+					$res['author_photo'] = unxmlify($link['attribs']['']['href']);
 			}
 		}
 	}
@@ -1277,11 +1278,11 @@ function get_atom_elements($feed,$item) {
 		$base = $rawactor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 		if($base && count($base)) {
 			foreach($base as $link) {
-				if($link['attribs']['']['rel'] === 'alternate' && (! $res['author-link']))
-					$res['author-link'] = unxmlify($link['attribs']['']['href']);
-				if(!x($res, 'author-avatar') || !$res['author-avatar']) {
+				if($link['attribs']['']['rel'] === 'alternate' && (! $res['author_link']))
+					$res['author_link'] = unxmlify($link['attribs']['']['href']);
+				if(!x($res, 'author_photo') || !$res['author_photo']) {
 					if($link['attribs']['']['rel'] === 'avatar' || $link['attribs']['']['rel'] === 'photo')
-						$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
+						$res['author_photo'] = unxmlify($link['attribs']['']['href']);
 				}
 			}
 		}
@@ -1289,16 +1290,16 @@ function get_atom_elements($feed,$item) {
 
 	// No photo/profile-link on the item - look at the feed level
 
-	if((! (x($res,'author-link'))) || (! (x($res,'author-avatar')))) {
+	if((! (x($res,'author_link'))) || (! (x($res,'author_photo')))) {
 		$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
 			$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 			foreach($base as $link) {
-				if($link['attribs']['']['rel'] === 'alternate' && (! $res['author-link']))
-					$res['author-link'] = unxmlify($link['attribs']['']['href']);
-				if(! $res['author-avatar']) {
+				if($link['attribs']['']['rel'] === 'alternate' && (! $res['author_link']))
+					$res['author_link'] = unxmlify($link['attribs']['']['href']);
+				if(! $res['author_photo']) {
 					if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
-						$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
+						$res['author_photo'] = unxmlify($link['attribs']['']['href']);
 				}
 			}
 		}
@@ -1310,11 +1311,11 @@ function get_atom_elements($feed,$item) {
 
 			if($base && count($base)) {
 				foreach($base as $link) {
-					if($link['attribs']['']['rel'] === 'alternate' && (! $res['author-link']))
-						$res['author-link'] = unxmlify($link['attribs']['']['href']);
-					if(! (x($res,'author-avatar'))) {
+					if($link['attribs']['']['rel'] === 'alternate' && (! $res['author_link']))
+						$res['author_link'] = unxmlify($link['attribs']['']['href']);
+					if(! (x($res,'author_photo'))) {
 						if($link['attribs']['']['rel'] === 'avatar' || $link['attribs']['']['rel'] === 'photo')
-							$res['author-avatar'] = unxmlify($link['attribs']['']['href']);
+							$res['author_photo'] = unxmlify($link['attribs']['']['href']);
 					}
 				}
 			}
@@ -1378,9 +1379,9 @@ function get_atom_elements($feed,$item) {
 
 	$private = $item->get_item_tags(NAMESPACE_DFRN,'private');
 	if($private && intval($private[0]['data']) > 0)
-		$res['private'] = intval($private[0]['data']);
+		$res['item_private'] = ((intval($private[0]['data'])) ? 1 : 0);
 	else
-		$res['private'] = 0;
+		$res['item_private'] = 0;
 
 	$rawlocation = $item->get_item_tags(NAMESPACE_DFRN, 'location');
 	if($rawlocation)
@@ -1419,21 +1420,21 @@ function get_atom_elements($feed,$item) {
 
 	$rawowner = $item->get_item_tags(NAMESPACE_DFRN, 'owner');
 	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'])
-		$res['owner-name'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']);
+		$res['owner_name'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']);
 	elseif($rawowner[0]['child'][NAMESPACE_DFRN]['name'][0]['data'])
-		$res['owner-name'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['name'][0]['data']);
+		$res['owner_name'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['name'][0]['data']);
 	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data'])
-		$res['owner-link'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data']);
+		$res['owner_link'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data']);
 	elseif($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data'])
-		$res['owner-link'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data']);
+		$res['owner_link'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data']);
 
 	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
 		$base = $rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 
 		foreach($base as $link) {
-			if(!x($res, 'owner-avatar') || !$res['owner-avatar']) {
+			if(!x($res, 'owner_photo') || !$res['owner_photo']) {
 				if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
-					$res['owner-avatar'] = unxmlify($link['attribs']['']['href']);
+					$res['owner_photo'] = unxmlify($link['attribs']['']['href']);
 			}
 		}
 	}
@@ -1488,6 +1489,7 @@ function get_atom_elements($feed,$item) {
 
 	$attach = $item->get_enclosures();
 	if($attach) {
+		$res['attach'] = array();
 		$att_arr = array();
 		foreach($attach as $att) {
 			$len   = intval($att->get_length());
@@ -1503,33 +1505,32 @@ function get_atom_elements($feed,$item) {
 				$title = ' ';
 			if(! $type)
 				$type = 'application/octet-stream';
-
-			$att_arr[] = '[attach]href="' . $link . '" length="' . $len . '" type="' . $type . '" title="' . $title . '"[/attach]'; 
 		}
-		$res['attach'] = implode(',', $att_arr);
+		$res['attach'][] = array('href' => $link, 'length' => $len, 'type' => $type, 'title' => $title );
 	}
 
 	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
 
 	if($rawobj) {
-		$res['object'] = '<object>' . "\n";
+		$obj = array();
+
 		$child = $rawobj[0]['child'];
 		if($child[NAMESPACE_ACTIVITY]['obj_type'][0]['data']) {
 			$res['obj_type'] = $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'];
-			$res['object'] .= '<type>' . $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'] . '</type>' . "\n";
+			$obj['type'] = $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'];
 		}	
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'id') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
-			$res['object'] .= '<id>' . $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
+			$obj['id'] = $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'];
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'link') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
-			$res['object'] .= '<link>' . encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']) . '</link>' . "\n";
+			$obj['link'] = encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']);
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'title') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'])
-			$res['object'] .= '<title>' . $child[SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'] . '</title>' . "\n";
+			$obj['title'] =  $child[SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'];
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'content') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']) {
 			$body = $child[SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data'];
 			if(! $body)
 				$body = $child[SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
 			// preserve a copy of the original body content in case we later need to parse out any microformat information, e.g. events
-			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
+			$obj['orig'] = xmlify($body);
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
 				$body = purify_html($body);
@@ -1537,48 +1538,52 @@ function get_atom_elements($feed,$item) {
 
 			}
 
-			$res['object'] .= '<content>' . $body . '</content>' . "\n";
+			$obj['content'] = $body;
 		}
 
-		$res['object'] .= '</object>' . "\n";
+		$res['object'] = $obj;
 	}
 
 	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'target');
 
 	if($rawobj) {
-		$res['target'] = '<target>' . "\n";
+		$obj = array();
+
 		$child = $rawobj[0]['child'];
 		if($child[NAMESPACE_ACTIVITY]['obj_type'][0]['data']) {
-			$res['target'] .= '<type>' . $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'] . '</type>' . "\n";
+			$res['tgt_type'] = $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'];
+			$obj['type'] = $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'];
 		}	
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'id') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
-			$res['target'] .= '<id>' . $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
+			$obj['id'] = $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'];
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'link') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
-			$res['target'] .= '<link>' . encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']) . '</link>' . "\n";
-		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'data') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'])
-			$res['target'] .= '<title>' . $child[SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'] . '</title>' . "\n";
-		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'data') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']) {
+			$obj['link'] = encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']);
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'title') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'])
+			$obj['title'] =  $child[SIMPLEPIE_NAMESPACE_ATOM_10]['title'][0]['data'];
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'content') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']) {
 			$body = $child[SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data'];
 			if(! $body)
 				$body = $child[SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data'];
 			// preserve a copy of the original body content in case we later need to parse out any microformat information, e.g. events
-			$res['target'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
+			$obj['orig'] = xmlify($body);
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
 				$body = purify_html($body);
 				$body = html2bbcode($body);
+
 			}
 
-			$res['target'] .= '<content>' . $body . '</content>' . "\n";
+			$obj['content'] = $body;
 		}
 
-		$res['target'] .= '</target>' . "\n";
+		$res['target'] = $obj;
 	}
 
 	// This is some experimental stuff. By now retweets are shown with "RT:"
 	// But: There is data so that the message could be shown similar to native retweets
 	// There is some better way to parse this array - but it didn't worked for me.
 
+/*
 	$child = $item->feed->data["child"][SIMPLEPIE_NAMESPACE_ATOM_10]["feed"][0]["child"][SIMPLEPIE_NAMESPACE_ATOM_10]["entry"][0]["child"]["http://activitystrea.ms/spec/1.0/"][object][0]["child"];
 	if (is_array($child)) {
 		$message = $child["http://activitystrea.ms/spec/1.0/"]["object"][0]["child"][SIMPLEPIE_NAMESPACE_ATOM_10]["content"][0]["data"];
@@ -1601,6 +1606,8 @@ function get_atom_elements($feed,$item) {
 		}
 	}
 
+*/
+
 	$arr = array('feed' => $feed, 'item' => $item, 'result' => $res);
 
 	call_hooks('parse_atom', $arr);
@@ -1613,6 +1620,10 @@ function encode_rel_links($links) {
 	$o = '';
 	if(! ((is_array($links)) && (count($links))))
 		return $o;
+
+//fixme
+	return '';
+
 	foreach($links as $link) {
 		$o .= '<link ';
 		if($link['attribs']['']['rel'])
@@ -2342,6 +2353,10 @@ function tag_deliver($uid,$item_id) {
 
 	$mention = false;
 
+	/**
+	 * Fetch stuff we need - a channel and an item
+	 */
+
 	$u = q("select * from channel where channel_id = %d limit 1",
 		intval($uid)
 	);
@@ -2366,6 +2381,10 @@ function tag_deliver($uid,$item_id) {
 		return;
 	}
 
+
+	/**
+	 * Seems like a good place to plug in a poke notification.
+	 */
 
 	if (stristr($item['verb'],ACTIVITY_POKE)) {
 		$poke_notify = true;
@@ -2394,6 +2413,10 @@ function tag_deliver($uid,$item_id) {
 			));
 		}
 	}
+
+	/**
+	 * Do community tagging
+	 */
 
 	if($item['obj_type'] === ACTIVITY_OBJ_TAGTERM) {
 
@@ -2435,6 +2458,11 @@ function tag_deliver($uid,$item_id) {
 			logger('tag_deliver: tag permission denied for ' . $u[0]['channel_address']);
 	}
 
+	/**
+	 * A "union" is a message which our channel has sourced from another channel.
+	 * This sets up a second delivery chain just like forum tags do.
+	 * Find out if this is a source-able post.
+	 */
 
 	$union = check_item_source($uid,$item);
 	if($union)
@@ -2519,6 +2547,12 @@ function tag_deliver($uid,$item_id) {
 		}
 	}
 
+
+	/**
+	 * Now we've got those out of the way. Let's see if this is a post that's tagged for re-delivery
+	 */
+
+
 	$terms = get_terms_oftype($item['term'],TERM_MENTION);
 
 	if($terms)
@@ -2580,7 +2614,9 @@ function tag_deliver($uid,$item_id) {
 		$arr = array('channel_id' => $uid, 'item' => $item, 'body' => $body);
 		call_hooks('tagged',$arr);
 
-		// Valid tag. Send a notification
+		/**
+		 * Kill two birds with one stone. As long as we're here, send a mention notification.
+		 */
 
 		require_once('include/enotify.php');
 		notification(array(
@@ -2623,6 +2659,10 @@ function tag_deliver($uid,$item_id) {
 		logger('tag_deliver: item was local or a comment. rejected.');
 		return;
 	}
+
+	/**
+	 * At this point we're committed to setting up a second delivery chain. We just have to mangle some bits first.
+	 */
 
 	logger('tag_deliver: creating second delivery chain.');
 
@@ -2687,6 +2727,16 @@ function tag_deliver($uid,$item_id) {
 		logger('tag_deliver: failed to update item');			
 
 }
+
+/**
+ * @function tgroup_check($uid,$item)
+ *
+ * This function is called pre-deliver to see if a post matches the criteria to be tag delivered.
+ * We don't actually do anything except check that it matches the criteria.
+ * This is so that the channel with tag_delivery enabled can receive the post even if they turn off
+ * permissions for the sender to send their stream. tag_deliver() can't be called until the post is actually stored.
+ * By then it would be too late to reject it. 
+ */
 
 
 
@@ -2999,8 +3049,11 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				else
 					$when = datetime_convert('UTC','UTC','now','Y-m-d H:i:s');
 			}
+
+
 			if($deleted && is_array($contact)) {
-/*				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join `contact` on `item`.`contact-id` = `contact`.`id` 
+/*
+				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join `contact` on `item`.`contact-id` = `contact`.`id` 
 					WHERE `mid` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
 					dbesc($mid),
 					intval($importer['channel_id']),
@@ -3077,14 +3130,15 @@ logger('consume_feed: processing ' . $item_id);
 				$item_id  = $item->get_id();
 				$datarray = get_atom_elements($feed,$item);
 
+/*
 				if((! x($datarray,'author-name')) && ($contact['network'] != NETWORK_DFRN))
 					$datarray['author-name'] = $contact['name'];
 				if((! x($datarray,'author-link')) && ($contact['network'] != NETWORK_DFRN))
 					$datarray['author-link'] = $contact['url'];
 				if((! x($datarray,'author-avatar')) && ($contact['network'] != NETWORK_DFRN))
 					$datarray['author-avatar'] = $contact['thumb'];
-
-				if((! x($datarray,'author-name')) || (! x($datarray,'author-link'))) {
+*/
+				if((! x($datarray,'author_name')) || (! x($datarray,'author_link'))) {
 					logger('consume_feed: no author information! ' . print_r($datarray,true));
 					continue;
 				}
@@ -3119,7 +3173,8 @@ logger('consume_feed: processing ' . $item_id);
 
 				$datarray['parent_mid'] = $parent_mid;
 				$datarray['uid'] = $importer['channel_id'];
-				$datarray['contact-id'] = $contact['id'];
+//				$datarray['contact-id'] = $contact['id'];
+
 				if((activity_match($datarray['verb'],ACTIVITY_LIKE)) || (activity_match($datarray['verb'],ACTIVITY_DISLIKE))) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
