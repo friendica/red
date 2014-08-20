@@ -337,101 +337,6 @@ function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
         }
 }
 
-// Given an email style address, perform webfinger lookup and 
-// return the resulting DFRN profile URL, or if no DFRN profile URL
-// is located, returns an OStatus subscription template (prefixed 
-// with the string 'stat:' to identify it as on OStatus template).
-// If this isn't an email style address just return $s.
-// Return an empty string if email-style addresses but webfinger fails,
-// or if the resultant personal XRD doesn't contain a supported 
-// subscription/friend-request attribute.
-
-// amended 7/9/2011 to return an hcard which could save potentially loading 
-// a lengthy content page to scrape dfrn attributes
-
-
-function webfinger_dfrn($s,&$hcard) {
-	if(! strstr($s,'@')) {
-		return $s;
-	}
-	$profile_link = '';
-
-	$links = webfinger($s);
-	logger('webfinger_dfrn: ' . $s . ':' . print_r($links,true), LOGGER_DATA);
-	if(count($links)) {
-		foreach($links as $link) {
-			if($link['@attributes']['rel'] === NAMESPACE_DFRN)
-				$profile_link = $link['@attributes']['href'];
-			if($link['@attributes']['rel'] === NAMESPACE_OSTATUSSUB)
-				$profile_link = 'stat:' . $link['@attributes']['template'];	
-			if($link['@attributes']['rel'] === 'http://microformats.org/profile/hcard')
-				$hcard = $link['@attributes']['href'];				
-		}
-	}
-	return $profile_link;
-}
-
-// Given an email style address, perform webfinger lookup and 
-// return the array of link attributes from the personal XRD file.
-// On error/failure return an empty array.
-
-
-
-function webfinger($s, $debug = false) {
-	$host = '';
-	if(strstr($s,'@')) {
-		$host = substr($s,strpos($s,'@') + 1);
-	}
-	if(strlen($host)) {
-		$tpl = fetch_lrdd_template($host);
-		logger('webfinger: lrdd template: ' . $tpl);
-		if(strlen($tpl)) {
-			$pxrd = str_replace('{uri}', urlencode('acct:' . $s), $tpl);
-			logger('webfinger: pxrd: ' . $pxrd);
-			$links = fetch_xrd_links($pxrd);
-			if(! count($links)) {
-				// try with double slashes
-				$pxrd = str_replace('{uri}', urlencode('acct://' . $s), $tpl);
-				logger('webfinger: pxrd: ' . $pxrd);
-				$links = fetch_xrd_links($pxrd);
-			}
-			return $links;
-		}
-	}
-	return array();
-}
-
-
-
-
-// Given a host name, locate the LRDD template from that
-// host. Returns the LRDD template or an empty string on
-// error/failure.
-
-
-function fetch_lrdd_template($host) {
-	$tpl = '';
-
-	$url1 = 'https://' . $host . '/.well-known/host-meta' ;
-	$url2 = 'http://' . $host . '/.well-known/host-meta' ;
-	$links = fetch_xrd_links($url1);
-	logger('fetch_lrdd_template from: ' . $url1);
-	logger('template (https): ' . print_r($links,true));
-	if(! count($links)) {
-		logger('fetch_lrdd_template from: ' . $url2);
-		$links = fetch_xrd_links($url2);
-		logger('template (http): ' . print_r($links,true));
-	}
-	if(count($links)) {
-		foreach($links as $link)
-			if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd')
-				$tpl = $link['@attributes']['template'];
-	}
-	if(! strpos($tpl,'{uri}'))
-		$tpl = '';
-	return $tpl;
-}
-
 // Take a URL from the wild, prepend http:// if necessary
 // and check DNS to see if it's real (or check if is a valid IP address)
 // return true if it's OK, false if something is wrong with it
@@ -911,4 +816,153 @@ function email_send($addr, $subject, $headers, $item) {
 	//$message = html2plain($html);
 	logger('notifier: email delivery to ' . $addr);
 	mail($addr, $subject, $body, $headers);
+}
+
+
+function discover_by_webbie($webbie) {
+
+	$x = webfinger_rfc7033($webbie);
+	if($x && array_key_exists('links',$x) && $x['links']) {
+		foreach($x['links'] as $link) {
+			if(array_key_exists('rel',$link) && $link['rel'] == 'http://purl.org/zot/protocol') {
+				logger('discover_by_webbie: zot found for ' . $webbie);
+				$z = z_fetch_url($link['href']);
+				if($z['success']) {
+					$j = json_decode($z['body'],true);
+					$i = import_xchan($j);
+					return true;
+				}
+			}
+		}
+	}
+
+	$x = old_webfinger($webbie);			
+	if($x) {
+		logger('old_webfinger: ' . print_r($x,true));
+	}
+}
+
+
+function webfinger_rfc7033($webbie) {
+
+
+	if(! strpos($webbie,'@'))
+		return false;
+	$lhs = substr($webbie,0,strpos($webbie,'@'));
+	$rhs = substr($webbie,strpos($webbie,'@')+1);
+
+	$resource = 'acct:' . $webbie;
+
+	$s = z_fetch_url('https://' . $rhs . '/.well-known/webfinger?resource=' . $resource);
+
+	if($s['success'])
+		$j = json_decode($s['body'],true);
+	else
+		return false;
+	return($j);
+}
+
+
+function old_webfinger($webbie) {
+
+	$host = '';
+	if(strstr($webbie,'@'))
+		$host = substr($webbie,strpos($webbie,'@') + 1);
+
+	if(strlen($host)) {
+		$tpl = fetch_lrdd_template($host);
+		logger('old_webfinger: lrdd template: ' . $tpl,LOGGER_DATA);
+		if(strlen($tpl)) {
+			$pxrd = str_replace('{uri}', urlencode('acct:' . $webbie), $tpl);
+			logger('old_webfinger: pxrd: ' . $pxrd,LOGGER_DATA);
+			$links = fetch_xrd_links($pxrd);
+			if(! count($links)) {
+				// try with double slashes
+				$pxrd = str_replace('{uri}', urlencode('acct://' . $webbie), $tpl);
+				logger('old_webfinger: pxrd: ' . $pxrd,LOGGER_DATA);
+				$links = fetch_xrd_links($pxrd);
+			}
+			return $links;
+    	}
+	}
+    return array();
+}
+
+
+function fetch_lrdd_template($host) {
+    $tpl = '';
+
+    $url1 = 'https://' . $host . '/.well-known/host-meta' ;
+    $url2 = 'http://' . $host . '/.well-known/host-meta' ;
+    $links = fetch_xrd_links($url1);
+    logger('fetch_lrdd_template from: ' . $url1, LOGGER_DEBUG);
+    logger('template (https): ' . print_r($links,true),LOGGER_DEBUG);
+    if(! count($links)) {
+        logger('fetch_lrdd_template from: ' . $url2);
+        $links = fetch_xrd_links($url2);
+        logger('template (http): ' . print_r($links,true),LOGGER_DEBUG);
+    }
+    if(count($links)) {
+        foreach($links as $link)
+            if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd' && (!$link['@attributes']['type'] || $link['@attributes']['type'] === 'application/xrd+xml'))
+                $tpl = $link['@attributes']['template'];
+    }
+    if(! strpos($tpl,'{uri}'))
+        $tpl = '';
+    return $tpl;
+
+}
+
+
+function fetch_xrd_links($url) {
+
+logger('fetch_xrd_links: ' . $url);
+
+	$redirects = 0;
+    $x = z_fetch_url($url,false,$redirects,array('timeout' => 20));
+
+	if(! $x['success'])
+		return array();
+
+	$xml = $x['body'];
+    logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
+
+    if ((! $xml) || (! stristr($xml,'<xrd')))
+        return array();
+
+    // fix diaspora's bad xml
+    $xml = str_replace(array('href=&quot;','&quot;/>'),array('href="','"/>'),$xml);
+
+    $h = parse_xml_string($xml);
+    if(! $h)
+        return array();
+
+    $arr = convert_xml_element_to_array($h);
+
+    $links = array();
+
+    if(isset($arr['xrd']['link'])) {
+        $link = $arr['xrd']['link'];
+
+        if(! isset($link[0]))
+            $links = array($link);
+        else
+            $links = $link;
+    }
+    if(isset($arr['xrd']['alias'])) {
+        $alias = $arr['xrd']['alias'];
+        if(! isset($alias[0]))
+            $aliases = array($alias);
+        else
+            $aliases = $alias;
+        if(is_array($aliases) && count($aliases)) {
+            foreach($aliases as $alias) {
+                $links[]['@attributes'] = array('rel' => 'alias' , 'href' => $alias);
+            }
+        }
+    }
+
+    logger('fetch_xrd_links: ' . print_r($links,true), LOGGER_DATA);
+
+    return $links;
 }

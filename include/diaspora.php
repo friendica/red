@@ -140,85 +140,30 @@ function find_diaspora_person_by_handle($handle) {
 	$endlessloop = 0;
 	$maxloops = 10;
 
-	do {
-		$r = q("select * from xchan where xchan_addr = '%s' limit 1",
-			dbesc($handle)
-		);
-		if($r) {
-			$person = $r[0];
-			logger('find_diaspora_person_by handle: in cache ' . print_r($r,true), LOGGER_DEBUG);
+
+	$r = q("select * from xchan where xchan_addr = '%s' limit 1",
+		dbesc($handle)
+	);
+	if($r) {
+		$person = $r[0];
+		logger('find_diaspora_person_by handle: in cache ' . print_r($r,true), LOGGER_DATA);
 
 			// update record occasionally so it doesn't get stale
-			$d = strtotime($person['updated'] . ' +00:00');
-			if($d < strtotime('now - 14 days'))
-				$update = true;
-		}
+//			$d = strtotime($person['updated'] . ' +00:00');
+//			if($d < strtotime('now - 14 days'))
+//				$update = true;
+	}
+
+	if((! $person) || ($update))  {
+
+		// try webfinger. Make sure to distinguish between diaspora, 
+		// redmatrix w/diaspora protocol and friendica w/diaspora protocol.
+
+		$result = discover_by_webbie($handle);
 
 
-		// FETCHING PERSON INFORMATION FROM REMOTE SERVER
-		//
-		// If the person isn't in our 'fcontact' table, or if he/she is but
-		// his/her information hasn't been updated for more than 14 days, then
-		// we want to fetch the person's information from the remote server.
-		//
-		// Note that $person isn't changed by this block of code unless the
-		// person's information has been successfully fetched from the remote
-		// server. So if $person was 'false' to begin with (because he/she wasn't
-		// in the local cache), it'll stay false, and if $person held the local
-		// cache information to begin with, it'll keep that information. That way
-		// if there's a problem with the remote fetch, we can at least use our
-		// cached information--it's better than nothing.
+	}
 
-//fixme!!!
-
-		if((! $person) || ($update))  {
-			// Lock the function to prevent race conditions if multiple items
-			// come in at the same time from a person who doesn't exist in
-			// fcontact
-			//
-			// Don't loop forever. On the last loop, try to create the contact
-			// whether the function is locked or not. Maybe the locking thread
-			// has died or something. At any rate, a duplicate in 'fcontact'
-			// is a much smaller problem than a deadlocked thread
-//			$got_lock = lock_function('find_diaspora_person_by_handle', false);
-			if(($endlessloop + 1) >= $maxloops)
-				$got_lock = true;
-
-			if($got_lock) {
-				logger('find_diaspora_person_by_handle: create or refresh', LOGGER_DEBUG);
-				require_once('include/Scrape.php');
-				$r = probe_url($handle, PROBE_DIASPORA);
-
-				// Note that Friendica contacts can return a "Diaspora person"
-				// if Diaspora connectivity is enabled on their server
-				if((count($r)) && ($r['network'] === NETWORK_DIASPORA)) {
-					add_fcontact($r,$update);
-					$person = ($r);
-				}
-
-//				unlock_function('find_diaspora_person_by_handle');
-			}
-			else {
-				logger('find_diaspora_person_by_handle: couldn\'t lock function', LOGGER_DEBUG);
-//				if(! $person)
-//					block_on_function_lock('find_diaspora_person_by_handle');
-			}
-		}
-	} while((! $person) && (! $got_lock) && (++$endlessloop < $maxloops));
-
-	// We need to try again if the person wasn't in 'fcontact' but the function was locked.
-	// The fact that the function was locked may mean that another process was creating the
-	// person's record. It could also mean another process was creating or updating an unrelated
-	// person.
-	//
-	// At any rate, we need to keep trying until we've either got the person or had a chance to
-	// try to fetch his/her remote information. But we don't want to block on locking the
-	// function, because if the other process is creating the record, then when we acquire the lock
-	// we'll dive right into creating another, duplicate record. We DO want to at least wait
-	// until the lock is released, so we don't flood the database with requests.
-	//
-	// If the person was in the 'fcontact' table, don't try again. It's not worth the time, since
-	// we do have some information for the person
 
 	return $person;
 }
