@@ -944,7 +944,7 @@ function item_photo_menu($item){
 		t("View Profile") => $profile_link,
 		t("View Photos") => $photos_link,
 		t("Matrix Activity") => $posts_link,
-		t("Follow") => $follow_url,
+		t("Connect") => $follow_url,
 		t("Edit Contact") => $contact_url,
 		t("Send PM") => $pm_url,
 		t("Poke") => $poke_link

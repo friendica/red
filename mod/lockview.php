@@ -33,7 +33,13 @@ function lockview_content(&$a) {
 
 	if(($item['item_private'] == 1) && (! strlen($item['allow_cid'])) && (! strlen($item['allow_gid'])) 
 		&& (! strlen($item['deny_cid'])) && (! strlen($item['deny_gid']))) {
-		echo '<li>' . translate_scope($item['public_policy']) . '</li>';
+
+		// if the post is private, but public_policy is blank ("visible to the internet"), and there aren't any
+		// specific recipients, we're the recipient of a post with "bcc" or targeted recipients; so we'll just show it
+		// as unknown specific recipients. The sender will have the visibility list and will fall through to the
+		// next section.
+ 
+		echo '<li>' . translate_scope((! $item['public_policy']) ? PERMS_SPECIFIC : $item['public_policy']) . '</li>';
 		killme();
 	}
 
@@ -78,9 +84,5 @@ function lockview_content(&$a) {
 	echo $o . implode($l);
 	killme();
 
-	if(array_key_exists('public_policy',$item) && $item['public_policy']) {
-		echo '<li>' . translate_scope($item['public_policy']) . '</li>';
-		killme();
-	}
 
 }
