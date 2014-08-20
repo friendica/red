@@ -3005,7 +3005,7 @@ function mail_store($arr) {
  * recursion.  
  */
 
-function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) {
+function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 	require_once('library/simplepie/simplepie.inc');
 
@@ -3360,6 +3360,28 @@ logger('consume_feed: ' . print_r($datarray,true));
 
 }
 
+
+function handle_feed($uid,$abook_id,$url) {
+
+	require_once('include/Contact.php');
+	$channel = channelx_by_n($uid);
+	if(! $channel)
+		return;
+	$x = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d limit 1",
+		dbesc($abook_id),
+		intval($uid)
+	);
+
+	$recurse = 0;
+	$z = z_fetch_url($url,false,$recurse,array('novalidate' => true));
+
+logger('handle_feed:' . print_r($z,true));
+
+	if($z['success']) {
+		consume_feed($z['body'],$channel,$x[0],0);
+		consume_feed($z['body'],$channel,$x[0],1);
+	}
+}
 
 
 function atom_author($tag,$name,$uri,$h,$w,$type,$photo) {
