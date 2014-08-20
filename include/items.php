@@ -3019,10 +3019,6 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 		
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
-	if($datedir)
-		$feed->enable_order_by_date(true);
-	else
-		$feed->enable_order_by_date(false);
 	$feed->init();
 
 	if($feed->error())
@@ -3031,7 +3027,6 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 	$permalink = $feed->get_permalink();
 
 	// Check at the feed level for updated contact name and/or photo
-
 
 	// process any deleted entries
 
@@ -3052,41 +3047,18 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 
 			if($deleted && is_array($contact)) {
-/*
-				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join `contact` on `item`.`contact-id` = `contact`.`id` 
-					WHERE `mid` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
+				$r = q("SELECT * from item where mid = '%s' and author_xchan = '%s' and uid = %d limit 1",
 					dbesc($mid),
-					intval($importer['channel_id']),
-					intval($contact['id'])
+					dbesc($contact['xchan_hash']),
+					intval($importer['channel_id'])
 				);
-*/
-				if(count($r)) {
+
+				if($r) {
 					$item = $r[0];
 
-					if(! $item['deleted'])
+					if(! ($item['item_restrict'] & ITEM_DELETED)) {
 						logger('consume_feed: deleting item ' . $item['id'] . ' mid=' . $item['mid'], LOGGER_DEBUG);
-
-					if($item['mid'] == $item['parent_mid']) {
-						$r = q("UPDATE `item` SET item_restrict = (item_restrict | %d), `edited` = '%s', `changed` = '%s',
-							`body` = '', `title` = ''
-							WHERE `parent_mid` = '%s' AND `uid` = %d",
-							intval(ITEM_DELETED),
-							dbesc($when),
-							dbesc(datetime_convert()),
-							dbesc($item['mid']),
-							intval($importer['channel_id'])
-						);
-					}
-					else {
-						$r = q("UPDATE `item` SET item_restrict = ( item_restrict | %d ), `edited` = '%s', `changed` = '%s',
-							`body` = '', `title` = '' 
-							WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
-							intval(ITEM_DELETED),
-							dbesc($when),
-							dbesc(datetime_convert()),
-							dbesc($mid),
-							intval($importer['channel_id'])
-						);
+						drop_item($item['id'],false);
 					}
 				}	
 			}
@@ -3097,21 +3069,16 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 	if($feed->get_item_quantity()) {
 
-		logger('consume_feed: feed item count = ' . $feed->get_item_quantity());
+		logger('consume_feed: feed item count = ' . $feed->get_item_quantity(), LOGGER_DEBUG);
 
-        // in inverse date order
-		if ($datedir)
-			$items = array_reverse($feed->get_items());
-		else
-			$items = $feed->get_items();
-
+		$items = $feed->get_items();
 
 		foreach($items as $item) {
 
 			$is_reply = false;
 			$item_id = $item->get_id();
 
-logger('consume_feed: processing ' . $item_id);
+			logger('consume_feed: processing ' . $item_id, LOGGER_DEBUG);
 
 			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
@@ -3130,21 +3097,14 @@ logger('consume_feed: processing ' . $item_id);
 				$item_id  = $item->get_id();
 				$datarray = get_atom_elements($feed,$item);
 
-/*
-				if((! x($datarray,'author-name')) && ($contact['network'] != NETWORK_DFRN))
-					$datarray['author-name'] = $contact['name'];
-				if((! x($datarray,'author-link')) && ($contact['network'] != NETWORK_DFRN))
-					$datarray['author-link'] = $contact['url'];
-				if((! x($datarray,'author-avatar')) && ($contact['network'] != NETWORK_DFRN))
-					$datarray['author-avatar'] = $contact['thumb'];
-*/
-				if((! x($datarray,'author_name')) || (! x($datarray,'author_link'))) {
-					logger('consume_feed: no author information! ' . print_r($datarray,true));
-					continue;
-				}
+				if(! x($datarray,'author_name'))
+					$datarray['author_name'] = $contact['xchan_name'];
+				if(! x($datarray,'author_link'))
+					$datarray['author_link'] = $contact['xchan_url'];
+				if(! x($datarray,'author_photo')) 
+					$datarray['author_photo'] = $contact['xchan_photo_m'];
 
-
-				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['channel_id'])
 				);
@@ -3152,70 +3112,26 @@ logger('consume_feed: processing ' . $item_id);
 				// Update content if 'updated' changes
 
 				if($r) {
-					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+					if((x($datarray,'edited') !== false) 
+						&& (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
 
 						// do not accept (ignore) an earlier edit than one we currently have.
 						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
 
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
-							dbesc($datarray['title']),
-							dbesc($datarray['body']),
-							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
-							dbesc($item_id),
-							intval($importer['channel_id'])
-						);
+						update_feed_item($importer['channel_id'],$datarray);
 					}
-
 					continue;
 				}
 
-
 				$datarray['parent_mid'] = $parent_mid;
 				$datarray['uid'] = $importer['channel_id'];
-//				$datarray['contact-id'] = $contact['id'];
+				$datarray['author_xchan'] = $contact['xchan_hash'];
 
-				if((activity_match($datarray['verb'],ACTIVITY_LIKE)) || (activity_match($datarray['verb'],ACTIVITY_DISLIKE))) {
-					$datarray['type'] = 'activity';
-					$datarray['gravity'] = GRAVITY_LIKE;
-					// only one like or dislike per person
-					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent_mid` = '%s' OR `thr_parent` = '%s') limit 1",
-						intval($datarray['uid']),
-						intval($datarray['contact-id']),
-						dbesc($datarray['verb']),
-						dbesc($parent_mid),
-						dbesc($parent_mid)
-					);
-					if($r && count($r))
-						continue; 
-				}
+				// FIXME pull out the author and owner
 
-				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['obj_type'] === ACTIVITY_OBJ_TAGTERM)) {
-					$xo = parse_xml_string($datarray['object'],false);
-					$xt = parse_xml_string($datarray['target'],false);
 
-					if($xt->type == ACTIVITY_OBJ_NOTE) {
-						$r = q("select * from item where `mid` = '%s' AND `uid` = %d limit 1",
-							dbesc($xt->id),
-							intval($importer['channel_id'])
-						);
-						if(! count($r))
-							continue;
-
-						// extract tag, if not duplicate, add to parent item
-						if($xo->id && $xo->content) {
-							$newtag = '#[zrl=' . $xo->id . ']'. $xo->content . '[/zrl]';
-							if(! (stristr($r[0]['tag'],$newtag))) {
-								q("UPDATE item SET tag = '%s' WHERE id = %d LIMIT 1",
-									dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . $newtag),
-									intval($r[0]['id'])
-								);
-							}
-						}
-					}
-				}
-
-logger('consume_feed: ' . print_r($datarray,true));
+				logger('consume_feed: ' . print_r($datarray,true),LOGGER_DATA);
 
 //				$xx = item_store($datarray);
 				$r = $xx['item_id'];
@@ -3231,43 +3147,21 @@ logger('consume_feed: ' . print_r($datarray,true));
 				$datarray = get_atom_elements($feed,$item);
 
 				if(is_array($contact)) {
-					if((! x($datarray,'author-name')) && ($contact['network'] != NETWORK_DFRN))
-						$datarray['author-name'] = $contact['name'];
-					if((! x($datarray,'author-link')) && ($contact['network'] != NETWORK_DFRN))
-						$datarray['author-link'] = $contact['url'];
-					if((! x($datarray,'author-avatar')) && ($contact['network'] != NETWORK_DFRN))
-						$datarray['author-avatar'] = $contact['thumb'];
+					if(! x($datarray,'author_name'))
+						$datarray['author_name'] = $contact['xchan_name'];
+					if(! x($datarray,'author_link'))
+						$datarray['author_link'] = $contact['xchan_url'];
+					if(! x($datarray,'author_photo'))
+						$datarray['author_photo'] = $contact['xchan_photo_m'];
 				}
 
-				if((! x($datarray,'author-name')) || (! x($datarray,'author-link'))) {
+				if((! x($datarray,'author_name')) || (! x($datarray,'author_link'))) {
 					logger('consume_feed: no author information! ' . print_r($datarray,true));
 					continue;
 				}
 
-				// special handling for events
 
-				if((x($datarray,'obj_type')) && ($datarray['obj_type'] === ACTIVITY_OBJ_EVENT)) {
-					$ev = bbtoevent($datarray['body']);
-					if(x($ev,'desc') && x($ev,'start')) {
-						$ev['uid'] = $importer['channel_id'];
-						$ev['mid'] = $item_id;
-						$ev['edited'] = $datarray['edited'];
-						$ev['private'] = $datarray['private'];
-
-						if(is_array($contact))
-							$ev['cid'] = $contact['id'];
-						$r = q("SELECT * FROM `event` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
-							dbesc($item_id),
-							intval($importer['channel_id'])
-						);
-						if(count($r))
-							$ev['id'] = $r[0]['id'];
-//						$xyz = event_store($ev);
-						continue;
-					}
-				}
-
-				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['channel_id'])
 				);
@@ -3275,79 +3169,32 @@ logger('consume_feed: ' . print_r($datarray,true));
 				// Update content if 'updated' changes
 
 				if($r) {
-					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
+					if((x($datarray,'edited') !== false) 
+						&& (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
 
 						// do not accept (ignore) an earlier edit than one we currently have.
 						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
 
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
-							dbesc($datarray['title']),
-							dbesc($datarray['body']),
-							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
-							dbesc($item_id),
-							intval($importer['channel_id'])
-						);
+						update_feed_item($importer['channel_id'],$datarray);
 					}
 
 					continue;
 				}
 
-				if(activity_match($datarray['verb'],ACTIVITY_FOLLOW)) {
-					logger('consume-feed: New follower');
-					new_follower($importer,$contact,$datarray,$item);
-					return;
-				}
-				if(activity_match($datarray['verb'],ACTIVITY_UNFOLLOW))  {
-					lose_follower($importer,$contact,$datarray,$item);
-					return;
-				}
-
-				if(activity_match($datarray['verb'],ACTIVITY_REQ_FRIEND)) {
-					logger('consume-feed: New friend request');
-					new_follower($importer,$contact,$datarray,$item,true);
-					return;
-				}
-				if(activity_match($datarray['verb'],ACTIVITY_UNFRIEND))  {
-					lose_sharer($importer,$contact,$datarray,$item);
-					return;
-				}
-
-
-//				if(! is_array($contact))
-//					return;
-
-
-				// This is my contact on another system, but it's really me.
-				// Turn this into a wall post.
-
-				if($contact['remote_self']) {
-					$datarray['wall'] = 1;
-				}
 
 				$datarray['parent_mid'] = $item_id;
 				$datarray['uid'] = $importer['channel_id'];
-				$datarray['contact-id'] = $contact['id'];
+				$datarray['author_xchan'] = $contact['author_xchan'];
 
-				if(! link_compare($datarray['owner-link'],$contact['url'])) {
-					// The item owner info is not our contact. It's OK and is to be expected if this is a tgroup delivery, 
-					// but otherwise there's a possible data mixup on the sender's system.
-					// the tgroup delivery code called from item_store will correct it if it's a forum,
-					// but we're going to unconditionally correct it here so that the post will always be owned by our contact. 
-					logger('consume_feed: Correcting item owner.', LOGGER_DEBUG);
-					$datarray['owner-name']   = $contact['name'];
-					$datarray['owner-link']   = $contact['url'];
-					$datarray['owner-avatar'] = $contact['thumb'];
-				}
+//				if(! link_compare($datarray['owner_link'],$contact['xchan_url'])) {
+//					logger('consume_feed: Correcting item owner.', LOGGER_DEBUG);
+//					$datarray['owner-name']   = $contact['name'];
+//					$datarray['owner-link']   = $contact['url'];
+//					$datarray['owner-avatar'] = $contact['thumb'];
+//				}
 
-				// We've allowed "followers" to reach this point so we can decide if they are 
-				// posting an @-tag delivery, which followers are allowed to do for certain
-				// page types. Now that we've parsed the post, let's check if it is legit. Otherwise ignore it. 
-
-				if(($contact['rel'] == CONTACT_IS_FOLLOWER) && (! tgroup_check($importer['channel_id'],$datarray)))
-					continue;
-
-logger('consume_feed: ' . print_r($datarray,true));
+				logger('consume_feed: ' . print_r($datarray,true),LOGGER_DATA);
 
 //				$xx = item_store($datarray);
 				$r = $xx['item_id'];
@@ -3356,6 +3203,13 @@ logger('consume_feed: ' . print_r($datarray,true));
 			}
 		}
 	}
+
+
+}
+
+function update_feed_item($uid,$datarray) {
+
+	logger('update_feed_item: ' . $uid . ' ' . print_r($datarray,true), LOGGER_DATA);
 
 
 }
