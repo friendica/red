@@ -358,11 +358,6 @@ define ( 'MAX_LIKERS',    10);
 
 define ( 'ZCURL_TIMEOUT' , (-1));
 
-/**
- * Hours before chat lines are deleted
- */
-
-define ( 'MAX_CHATROOM_HOURS' , 36);
 
 /**
  * email notification options

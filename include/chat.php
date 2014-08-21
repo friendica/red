@@ -128,8 +128,10 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 		}
 	}
 
-	if(intval($x[0]['cr_expire']))
-		$r = q("delete from chat where created < UTC_TIMESTAMP() - INTERVAL " . intval($x[0]['cr_expire']) . " MINUTE and chat_room = " . intval($x[0]['cr_id']));
+	if(intval($x[0]['cr_expire'])) {
+		$sql = "delete from chat where created < UTC_TIMESTAMP() - INTERVAL " . intval($x[0]['cr_expire']) . " MINUTE and chat_room = " . intval($x[0]['cr_id']);
+		$r = q($sql);
+	}
 
 	$r = q("select * from chatpresence where cp_xchan = '%s' and cp_room = %d limit 1",
 		dbesc($observer_xchan),
@@ -153,7 +155,6 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 		dbesc($client)
 	);
 	
-	chatroom_flush($room_id,$xchan);
 	return $r;
 }
 
@@ -226,21 +227,5 @@ function chat_message($uid,$room_id,$xchan,$text) {
 	);
 
 	$ret['success'] = true;
-	chatroom_flush($room_id,$xchan);
 	return $ret;
-}
-
-/**
- * Reduces the number of lines shown in chat by removing those older than MAX_CHATROOM_HOURS
- */
-
-function chatroom_flush($room_id,$xchan) {
-
-
-	$date_limit = date('Y-m-d H:i:s', time() - 3600 * MAX_CHATROOM_HOURS);
-	$d = q("delete from chat where chat_room = %d and chat_xchan = '%s' and created < '%s'",
-		intval($room_id),
-		dbesc($xchan),
-		datetime_convert('','', $date_limit));
-	return true;
 }
