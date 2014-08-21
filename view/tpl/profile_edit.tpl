@@ -349,6 +349,11 @@
 <div id="education-jot-end"></div>
 {{/if}}
 
+{{if $extra_fields}}
+{{foreach $extra_fields as $field }}
+{{include file="field_input.tpl" field=$field}}
+{{/foreach}}
+{{/if}}
 
 <div class="profile-edit-submit-wrapper" >
 <input type="submit" name="submit" class="profile-edit-submit-button" value="{{$submit}}" />

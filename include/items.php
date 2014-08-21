@@ -1340,6 +1340,12 @@ function get_atom_elements($feed,$item,&$author) {
 		$res['body'] = str_replace(array(' ',"\t","\r","\n"), array('','','',''),$res['body']);
 		// make sure nobody is trying to sneak some html tags by us
 		$res['body'] = notags(base64url_decode($res['body']));
+
+		// We could probably turn these old Friendica bbcode bookmarks into bookmark tags but we'd have to 
+		// create a term table item for them. For now just make sure they stay as links.
+
+		$res['body'] = preg_replace('/\[bookmark(.*?)\](.*?)\[\/bookmark\]','[url$1]$2[/url]',$res['body']);
+
 	}
 
 	
@@ -2346,8 +2352,9 @@ function tag_deliver($uid,$item_id) {
 
 	$item = $i[0];
 
-	if(($item['source_xchan']) && ($item['item_flags'] & ITEM_UPLINK) && ($item['item_flags'] & ITEM_THREAD_TOP) && ($item['edited'] != $item['created'])) {
-		// this is an update to a post which was already processed by us and has a second delivery chain
+	if(($item['source_xchan']) && ($item['item_flags'] & ITEM_UPLINK) 
+		&& ($item['item_flags'] & ITEM_THREAD_TOP) && ($item['edited'] != $item['created'])) {
+		// this is an update (edit) to a post which was already processed by us and has a second delivery chain
 		// Just start the second delivery chain to deliver the updated post
 		proc_run('php','include/notifier.php','tgroup',$item['id']);
 		return;
@@ -2444,78 +2451,14 @@ function tag_deliver($uid,$item_id) {
 	// This might be a followup (e.g. comment) by the original post author to a tagged forum
 	// If so setup a second delivery chain
 
-	$r = null;
-
 	if( ! ($item['item_flags'] & ITEM_THREAD_TOP)) {
 		$x = q("select * from item where id = parent and parent = %d and uid = %d limit 1",
 			intval($item['parent']),
 			intval($uid)
 		);
 
-
 		if(($x) && ($x[0]['item_flags'] & ITEM_UPLINK)) {
-
-			logger('tag_deliver: creating second delivery chain for comment to tagged post.');
-
-			// now change this copy of the post to a forum head message and deliver to all the tgroup members
-			// also reset all the privacy bits to the forum default permissions
-
-			$private = (($u[0]['channel_allow_cid'] || $u[0]['channel_allow_gid'] || $u[0]['channel_deny_cid'] || $u[0]['channel_deny_gid']) ? 1 : 0);
-
-			$new_public_policy = map_scope($u[0]['channel_r_stream'],true);
-
-			if((! $private) && $new_public_policy)
-				$private = 1;
-
-			$flag_bits = $item['item_flags'] | ITEM_WALL|ITEM_ORIGIN;
-
-			// maintain the original source, which will be the original item owner and was stored in source_xchan
-			// when we created the delivery fork
-
-			$r = q("update item set source_xchan = '%s' where id = %d limit 1",
-				dbesc($x[0]['source_xchan']),
-				intval($item_id)
-			); 
-
-			$title = $item['title'];
-			$body  = $item['body'];
-
-			if($private) {
-				if(!($flag_bits & ITEM_OBSCURED)) {
-					$key = get_config('system','pubkey');
-					$flag_bits = $flag_bits|ITEM_OBSCURED;
-					$title = json_encode(aes_encapsulate($title,$key));
-					$body  = json_encode(aes_encapsulate($body,$key));
-				}
-			}
-			else {
-				if($flag_bits & ITEM_OBSCURED) {
-					$key = get_config('system','prvkey');
-					$flag_bits = $flag_bits ^ ITEM_OBSCURED;
-					$title = json_encode(aes_unencapsulate($title,$key));
-					$body  = json_encode(aes_unencapsulate($body,$key));
-				}
-			}
-
-			$r = q("update item set item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
-				deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s'  where id = %d limit 1",
-				intval($flag_bits),
-				dbesc($u[0]['channel_hash']),
-				dbesc($u[0]['channel_allow_cid']),
-				dbesc($u[0]['channel_allow_gid']),
-				dbesc($u[0]['channel_deny_cid']),
-				dbesc($u[0]['channel_deny_gid']),
-				intval($private),
-				dbesc($new_public_policy),
-				dbesc(map_scope($u[0]['channel_w_comment'])),
-				dbesc($title),
-				dbesc($body),
-				intval($item_id)
-			);
-			if($r)
-				proc_run('php','include/notifier.php','tgroup',$item_id);
-			else
-				logger('tag_deliver: failed to update item');			
+			start_delivery_chain($u[0],$item,$item_id,$x[0]);
 		}
 	}
 
@@ -2548,8 +2491,6 @@ function tag_deliver($uid,$item_id) {
 			intval(ITEM_MENTIONSME),
 			intval($item_id)
 		);			
-
-
 
 		// At this point we've determined that the person receiving this post was mentioned in it or it is a union.
 		// Now let's check if this mention was inside a reshare so we don't spam a forum
@@ -2622,81 +2563,20 @@ function tag_deliver($uid,$item_id) {
 		return;
 	}
 
-
 	// tgroup delivery - setup a second delivery chain
 	// prevent delivery looping - only proceed
 	// if the message originated elsewhere and is a top-level post
 
-	if(($item['item_flags'] & ITEM_WALL) || ($item['item_flags'] & ITEM_ORIGIN) || (!($item['item_flags'] & ITEM_THREAD_TOP)) || ($item['id'] != $item['parent'])) {
+	if(($item['item_flags'] & ITEM_WALL) 
+		|| ($item['item_flags'] & ITEM_ORIGIN) 
+		|| (!($item['item_flags'] & ITEM_THREAD_TOP)) 
+		|| ($item['id'] != $item['parent'])) {
 		logger('tag_deliver: item was local or a comment. rejected.');
 		return;
 	}
 
-	/**
-	 * At this point we're committed to setting up a second delivery chain. We just have to mangle some bits first.
-	 */
-
 	logger('tag_deliver: creating second delivery chain.');
-
-	// now change this copy of the post to a forum head message and deliver to all the tgroup members
-	// also reset all the privacy bits to the forum default permissions
-
-	$private = (($u[0]['channel_allow_cid'] || $u[0]['channel_allow_gid'] || $u[0]['channel_deny_cid'] || $u[0]['channel_deny_gid']) ? 1 : 0);
-
-	$new_public_policy = map_scope($u[0]['channel_r_stream'],true);
-
-	if((! $private) && $new_public_policy)
-		$private = 1;
-
-	$flag_bits = $item['item_flags'] | ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
-
-	// preserve the source
-
-	$r = q("update item set source_xchan = owner_xchan where id = %d limit 1",
-		intval($item_id)
-	);
-
-	// make sure encryption matches the new scope
-
-	$title = $item['title'];
-	$body  = $item['body'];
-
-	if($private) {
-		if(!($flag_bits & ITEM_OBSCURED)) {
-			$key = get_config('system','pubkey');
-			$flag_bits = $flag_bits|ITEM_OBSCURED;
-			$title = json_encode(aes_encapsulate($title,$key));
-			$body  = json_encode(aes_encapsulate($body,$key));
-		}
-	}
-	else {
-		if($flag_bits & ITEM_OBSCURED) {
-			$key = get_config('system','prvkey');
-			$flag_bits = $flag_bits ^ ITEM_OBSCURED;
-			$title = json_encode(aes_unencapsulate($title,$key));
-			$body  = json_encode(aes_unencapsulate($body,$key));
-		}
-	}
-
-	$r = q("update item set item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
-		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s'  where id = %d limit 1",
-		intval($flag_bits),
-		dbesc($u[0]['channel_hash']),
-		dbesc($u[0]['channel_allow_cid']),
-		dbesc($u[0]['channel_allow_gid']),
-		dbesc($u[0]['channel_deny_cid']),
-		dbesc($u[0]['channel_deny_gid']),
-		intval($private),
-		dbesc($new_public_policy),
-		dbesc(map_scope($u[0]['channel_w_comment'])),
-		dbesc($title),
-		dbesc($body),
-		intval($item_id)
-	);
-	if($r)
-		proc_run('php','include/notifier.php','tgroup',$item_id);
-	else
-		logger('tag_deliver: failed to update item');			
+	start_delivery_chain($u[0],$item,$item_id,null);
 
 }
 
@@ -2779,6 +2659,90 @@ function tgroup_check($uid,$item) {
 	return true;
 
 }
+
+/**
+ * Sourced and tag-delivered posts are re-targetted for delivery to the connections of the channel
+ * receiving the post. This starts the second delivery chain, by resetting permissions and ensuring 
+ * that ITEM_UPLINK is set on the parent post, and storing the current owner_xchan as the source_xchan. 
+ * We'll become the new owner. If called without $parent, this *is* the parent post.
+ */
+
+function start_delivery_chain($channel,$item,$item_id,$parent) {
+
+
+	// Change this copy of the post to a forum head message and deliver to all the tgroup members
+	// also reset all the privacy bits to the forum default permissions
+
+	$private = (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] 
+		|| $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 1 : 0);
+
+	$new_public_policy = map_scope($channel['channel_r_stream'],true);
+
+	if((! $private) && $new_public_policy)
+		$private = 1;
+
+	$flag_bits = $item['item_flags'] | ITEM_WALL|ITEM_ORIGIN;
+
+	// maintain the original source, which will be the original item owner and was stored in source_xchan
+	// when we created the delivery fork
+
+	if($parent) {
+		$r = q("update item set source_xchan = '%s' where id = %d limit 1",
+			dbesc($parent['source_xchan']),
+			intval($item_id)
+		);
+	}
+	else {
+		$flag_bits = $flag_bits | ITEM_UPLINK;
+		$r = q("update item set source_xchan = owner_xchan where id = %d limit 1",
+			intval($item_id)
+		);
+	} 
+
+	$title = $item['title'];
+	$body  = $item['body'];
+
+	if($private) {
+		if(!($flag_bits & ITEM_OBSCURED)) {
+			$key = get_config('system','pubkey');
+			$flag_bits = $flag_bits|ITEM_OBSCURED;
+			$title = json_encode(aes_encapsulate($title,$key));
+			$body  = json_encode(aes_encapsulate($body,$key));
+		}
+	}
+	else {
+		if($flag_bits & ITEM_OBSCURED) {
+			$key = get_config('system','prvkey');
+			$flag_bits = $flag_bits ^ ITEM_OBSCURED;
+			$title = json_encode(aes_unencapsulate($title,$key));
+			$body  = json_encode(aes_unencapsulate($body,$key));
+		}
+	}
+
+	$r = q("update item set item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
+		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s'  where id = %d limit 1",
+		intval($flag_bits),
+		dbesc($channel['channel_hash']),
+		dbesc($channel['channel_allow_cid']),
+		dbesc($channel['channel_allow_gid']),
+		dbesc($channel['channel_deny_cid']),
+		dbesc($channel['channel_deny_gid']),
+		intval($private),
+		dbesc($new_public_policy),
+		dbesc(map_scope($channel['channel_w_comment'])),
+		dbesc($title),
+		dbesc($body),
+		intval($item_id)
+	);
+
+	if($r)
+		proc_run('php','include/notifier.php','tgroup',$item_id);
+	else
+		logger('start_delivery_chain: failed to update item');			
+
+	return;
+}
+
 
 
 /**

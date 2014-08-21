@@ -568,6 +568,24 @@ function profiles_content(&$a) {
 			'$no_selected'  => (($r[0]['hide_friends'] == 0) ? " checked=\"checked\" " : "")
 		));
 
+		$q = q("select * from profdef where true");
+		if($q) {
+			$extra_fields = array();
+
+			foreach($q as $qq) {
+				$mine = q("select v from profext where k = '%s' and hash = '%s' and channel_id = %d limit 1",
+					dbesc($qq['field_name']),					
+					dbesc($r[0]['profile_guid']),
+					intval(local_user())
+				);
+
+				if(array_key_exists($qq['field_name'],$fields)) {
+					$extra_fields[] = array($qq['field_name'],$qq['field_desc'],(($mine) ? $mine[0]['v'] : ''), $qq['field_help']);
+				}
+			}
+		}
+
+logger('extra_fields: ' . print_r($extra_fields,true));
 
 		$f = get_config('system','birthday_input_format');
 		if(! $f)
@@ -674,6 +692,7 @@ function profiles_content(&$a) {
 			'$education'    => $r[0]['education'],
 			'$contact'      => $r[0]['contact'],
 			'$channels'     => $r[0]['channels'],
+			'$extra_fields' => $extra_fields,
 		));
 
 		$arr = array('profile' => $r[0], 'entry' => $o);
