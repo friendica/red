@@ -1224,21 +1224,21 @@ function get_profile_elements($x) {
 
 
 
-function get_atom_elements($feed,$item) {
+function get_atom_elements($feed,$item,&$author) {
 
 
 	$best_photo = array();
 
 	$res = array();
 
-	$author = $item->get_author();
-	if($author) { 
-		$res['author_name'] = unxmlify($author->get_name());
-		$res['author_link'] = unxmlify($author->get_link());
+	$found_author = $item->get_author();
+	if($found_author) { 
+		$author['author_name'] = unxmlify($found_author->get_name());
+		$author['author_link'] = unxmlify($found_author->get_link());
 	}
 	else {
-		$res['author_name'] = unxmlify($feed->get_title());
-		$res['author_link'] = unxmlify($feed->get_permalink());
+		$author['author_name'] = unxmlify($feed->get_title());
+		$author['author_link'] = unxmlify($feed->get_permalink());
 	}
 
 	$res['mid'] = unxmlify($item->get_id());
@@ -1265,9 +1265,9 @@ function get_atom_elements($feed,$item) {
 	if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
 		$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 		foreach($base as $link) {
-			if(!x($res, 'author_photo') || !$res['author_photo']) {
+			if(!x($author, 'author_photo') || ! $author['author_photo']) {
 				if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
-					$res['author_photo'] = unxmlify($link['attribs']['']['href']);
+					$author['author_photo'] = unxmlify($link['attribs']['']['href']);
 			}
 		}
 	}
@@ -1279,10 +1279,10 @@ function get_atom_elements($feed,$item) {
 		if($base && count($base)) {
 			foreach($base as $link) {
 				if($link['attribs']['']['rel'] === 'alternate' && (! $res['author_link']))
-					$res['author_link'] = unxmlify($link['attribs']['']['href']);
-				if(!x($res, 'author_photo') || !$res['author_photo']) {
+					$author['author_link'] = unxmlify($link['attribs']['']['href']);
+				if(!x($author, 'author_photo') || ! $author['author_photo']) {
 					if($link['attribs']['']['rel'] === 'avatar' || $link['attribs']['']['rel'] === 'photo')
-						$res['author_photo'] = unxmlify($link['attribs']['']['href']);
+						$author['author_photo'] = unxmlify($link['attribs']['']['href']);
 				}
 			}
 		}
@@ -1290,16 +1290,16 @@ function get_atom_elements($feed,$item) {
 
 	// No photo/profile-link on the item - look at the feed level
 
-	if((! (x($res,'author_link'))) || (! (x($res,'author_photo')))) {
+	if((! (x($author,'author_link'))) || (! (x($author,'author_photo')))) {
 		$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
 			$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 			foreach($base as $link) {
-				if($link['attribs']['']['rel'] === 'alternate' && (! $res['author_link']))
-					$res['author_link'] = unxmlify($link['attribs']['']['href']);
-				if(! $res['author_photo']) {
+				if($link['attribs']['']['rel'] === 'alternate' && (! $author['author_link']))
+					$author['author_link'] = unxmlify($link['attribs']['']['href']);
+				if(! $author['author_photo']) {
 					if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
-						$res['author_photo'] = unxmlify($link['attribs']['']['href']);
+						$author['author_photo'] = unxmlify($link['attribs']['']['href']);
 				}
 			}
 		}
@@ -1312,10 +1312,10 @@ function get_atom_elements($feed,$item) {
 			if($base && count($base)) {
 				foreach($base as $link) {
 					if($link['attribs']['']['rel'] === 'alternate' && (! $res['author_link']))
-						$res['author_link'] = unxmlify($link['attribs']['']['href']);
-					if(! (x($res,'author_photo'))) {
+						$author['author_link'] = unxmlify($link['attribs']['']['href']);
+					if(! (x($author,'author_photo'))) {
 						if($link['attribs']['']['rel'] === 'avatar' || $link['attribs']['']['rel'] === 'photo')
-							$res['author_photo'] = unxmlify($link['attribs']['']['href']);
+							$author['author_photo'] = unxmlify($link['attribs']['']['href']);
 					}
 				}
 			}
@@ -1419,22 +1419,25 @@ function get_atom_elements($feed,$item) {
 		$res['edited'] = datetime_convert();
 
 	$rawowner = $item->get_item_tags(NAMESPACE_DFRN, 'owner');
+	if(! $rawowner)
+		$rawowner = $item->get_item_tags(NAMESPACE_ZOT,'owner');
+
 	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data'])
-		$res['owner_name'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']);
+		$author['owner_name'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']);
 	elseif($rawowner[0]['child'][NAMESPACE_DFRN]['name'][0]['data'])
-		$res['owner_name'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['name'][0]['data']);
+		$author['owner_name'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['name'][0]['data']);
 	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data'])
-		$res['owner_link'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data']);
+		$author['owner_link'] = unxmlify($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data']);
 	elseif($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data'])
-		$res['owner_link'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data']);
+		$author['owner_link'] = unxmlify($rawowner[0]['child'][NAMESPACE_DFRN]['uri'][0]['data']);
 
 	if($rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
 		$base = $rawowner[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 
 		foreach($base as $link) {
-			if(!x($res, 'owner_photo') || !$res['owner_photo']) {
+			if(!x($author, 'owner_photo') || ! $author['owner_photo']) {
 				if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
-					$res['owner_photo'] = unxmlify($link['attribs']['']['href']);
+					$author['owner_photo'] = unxmlify($link['attribs']['']['href']);
 			}
 		}
 	}
@@ -1579,39 +1582,11 @@ function get_atom_elements($feed,$item) {
 		$res['target'] = $obj;
 	}
 
-	// This is some experimental stuff. By now retweets are shown with "RT:"
-	// But: There is data so that the message could be shown similar to native retweets
-	// There is some better way to parse this array - but it didn't worked for me.
-
-/*
-	$child = $item->feed->data["child"][SIMPLEPIE_NAMESPACE_ATOM_10]["feed"][0]["child"][SIMPLEPIE_NAMESPACE_ATOM_10]["entry"][0]["child"]["http://activitystrea.ms/spec/1.0/"][object][0]["child"];
-	if (is_array($child)) {
-		$message = $child["http://activitystrea.ms/spec/1.0/"]["object"][0]["child"][SIMPLEPIE_NAMESPACE_ATOM_10]["content"][0]["data"];
-		$author = $child[SIMPLEPIE_NAMESPACE_ATOM_10]["author"][0]["child"][SIMPLEPIE_NAMESPACE_ATOM_10];
-		$uri = $author["uri"][0]["data"];
-		$name = $author["name"][0]["data"];
-		$avatar = @array_shift($author["link"][2]["attribs"]);
-		$avatar = $avatar["href"];
-
-		if (($name != "") and ($uri != "") and ($avatar != "") and ($message != "")) {
-			$res["owner-name"] = $res["author-name"];
-			$res["owner-link"] = $res["author-link"];
-			$res["owner-avatar"] = $res["author-avatar"];
-
-			$res["author-name"] = $name;
-			$res["author-link"] = $uri;
-			$res["author-avatar"] = $avatar;
-
-			$res["body"] = html2bbcode($message);
-		}
-	}
-
-*/
-
 	$arr = array('feed' => $feed, 'item' => $item, 'result' => $res);
 
 	call_hooks('parse_atom', $arr);
-	logger('get_atom_elements: ' . print_r($res,true));
+	logger('get_atom_elements: author: ' . print_r($author,true),LOGGER_DATA);
+	logger('get_atom_elements: ' . print_r($res,true),LOGGER_DATA);
 
 	return $res;
 }
@@ -1620,9 +1595,6 @@ function encode_rel_links($links) {
 	$o = '';
 	if(! ((is_array($links)) && (count($links))))
 		return $o;
-
-//fixme
-	return '';
 
 	foreach($links as $link) {
 		$o .= '<link ';
@@ -3014,9 +2986,6 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 		return;
 	}
 
-	// Want to see this work as a content source for the matrix? 
-	// Read this: https://github.com/friendica/red/wiki/Service_Federation
-		
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
 	$feed->init();
@@ -3095,14 +3064,15 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				// Have we seen it? If not, import it.
 
 				$item_id  = $item->get_id();
-				$datarray = get_atom_elements($feed,$item);
+				$author = array();
+				$datarray = get_atom_elements($feed,$item,$author);
 
-				if(! x($datarray,'author_name'))
-					$datarray['author_name'] = $contact['xchan_name'];
-				if(! x($datarray,'author_link'))
-					$datarray['author_link'] = $contact['xchan_url'];
-				if(! x($datarray,'author_photo')) 
-					$datarray['author_photo'] = $contact['xchan_photo_m'];
+				if(! x($author,'author_name'))
+					$author['author_name'] = $contact['xchan_name'];
+				if(! x($author,'author_link'))
+					$author['author_link'] = $contact['xchan_url'];
+				if(! x($author,'author_photo')) 
+					$author['author_photo'] = $contact['xchan_photo_m'];
 
 				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
 					dbesc($item_id),
@@ -3126,6 +3096,8 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 				$datarray['parent_mid'] = $parent_mid;
 				$datarray['uid'] = $importer['channel_id'];
+
+//FIXME
 				$datarray['author_xchan'] = $contact['xchan_hash'];
 
 				// FIXME pull out the author and owner
@@ -3143,20 +3115,20 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				// Head post of a conversation. Have we seen it? If not, import it.
 
 				$item_id  = $item->get_id();
-
-				$datarray = get_atom_elements($feed,$item);
+				$author = array();
+				$datarray = get_atom_elements($feed,$item,$author);
 
 				if(is_array($contact)) {
-					if(! x($datarray,'author_name'))
-						$datarray['author_name'] = $contact['xchan_name'];
-					if(! x($datarray,'author_link'))
-						$datarray['author_link'] = $contact['xchan_url'];
-					if(! x($datarray,'author_photo'))
-						$datarray['author_photo'] = $contact['xchan_photo_m'];
+					if(! x($author,'author_name'))
+						$author['author_name'] = $contact['xchan_name'];
+					if(! x($author,'author_link'))
+						$author['author_link'] = $contact['xchan_url'];
+					if(! x($author,'author_photo'))
+						$author['author_photo'] = $contact['xchan_photo_m'];
 				}
 
-				if((! x($datarray,'author_name')) || (! x($datarray,'author_link'))) {
-					logger('consume_feed: no author information! ' . print_r($datarray,true));
+				if((! x($author,'author_name')) || (! x($author,'author_link'))) {
+					logger('consume_feed: no author information! ' . print_r($author,true));
 					continue;
 				}
 
@@ -3185,14 +3157,15 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 				$datarray['parent_mid'] = $item_id;
 				$datarray['uid'] = $importer['channel_id'];
+//FIXME
 				$datarray['author_xchan'] = $contact['author_xchan'];
 
-//				if(! link_compare($datarray['owner_link'],$contact['xchan_url'])) {
-//					logger('consume_feed: Correcting item owner.', LOGGER_DEBUG);
-//					$datarray['owner-name']   = $contact['name'];
-//					$datarray['owner-link']   = $contact['url'];
-//					$datarray['owner-avatar'] = $contact['thumb'];
-//				}
+				if(! link_compare($author['owner_link'],$contact['xchan_url'])) {
+					logger('consume_feed: Correcting item owner.', LOGGER_DEBUG);
+					$author['owner-name']   = $contact['name'];
+					$author['owner-link']   = $contact['url'];
+					$author['owner-avatar'] = $contact['thumb'];
+				}
 
 				logger('consume_feed: ' . print_r($datarray,true),LOGGER_DATA);
 
