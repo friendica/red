@@ -106,6 +106,26 @@ function diaspora_dispatch($importer,$msg,$attempt=1) {
 	return $ret;
 }
 
+
+function diaspora_is_blacklisted($s) {
+
+	$bl1 = get_config('system','blacklisted_sites');
+	if(is_array($bl1) && $bl1) {
+		foreach($bl1 as $bl) {
+			if($bl && strpos($s,$bl) !== false) {
+				logger('diaspora_is_blacklisted: blacklisted ' . $s);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+
+
+
+
+
 function diaspora_handle_from_contact($contact_id) {
 	$handle = false;
 
@@ -122,6 +142,10 @@ function diaspora_handle_from_contact($contact_id) {
 }
 
 function diaspora_get_contact_by_handle($uid,$handle) {
+
+	if(diaspora_is_blacklisted($handle))
+		return false;
+
 	$r = q("SELECT * FROM abook left join xchan on xchan_hash = abook_xchan where xchan_addr = '%s' and abook_channel = %d limit 1",
 		dbesc($handle),
 		intval($uid)
@@ -140,6 +164,8 @@ function find_diaspora_person_by_handle($handle) {
 	$endlessloop = 0;
 	$maxloops = 10;
 
+	if(diaspora_is_blacklisted($handle))
+		return false;
 
 	$r = q("select * from xchan where xchan_addr = '%s' limit 1",
 		dbesc($handle)
