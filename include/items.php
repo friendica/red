@@ -400,6 +400,7 @@ function get_public_feed($channel,$params) {
 	$params['records']   = ((x($params,'records'))   ? $params['records']       : 40);
 	$params['direction'] = ((x($params,'direction')) ? $params['direction']     : 'desc');
 	$params['pages']     = ((x($params,'pages'))     ? intval($params['pages']) : 0);
+	$params['top']       = ((x($params,'top'))       ? intval($params['top'])   : 0);
 		
 	switch($params['type']) {
 		case 'json':
@@ -440,7 +441,8 @@ function get_feed_for($channel, $observer_hash, $params) {
 	 	'records' => $params['records'],      // FIXME
 		'direction' => $params['direction'],  // FIXME
 		'pages' => $params['pages'],
-		'order' => 'post'
+		'order' => 'post',
+		'top'   => $params['top']
 		), $channel, $observer_hash, CLIENT_MODE_NORMAL, get_app()->module);
 
 
@@ -4185,6 +4187,9 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         if($r) {
 
             $parents_str = ids_to_querystr($r,'item_id');
+
+			if($arr['top'])
+				$sql_extra = ' and id = parent ' . $sql_extra;
 
             $items = q("SELECT item.*, item.id AS item_id FROM item
                 WHERE $item_uids $item_restrict
