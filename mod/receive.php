@@ -4,8 +4,6 @@
  * Diaspora endpoint
  */
 
-
-//require_once('include/salmon.php');
 require_once('include/crypto.php');
 require_once('include/diaspora.php');
 
@@ -31,8 +29,11 @@ function receive_post(&$a) {
 
 		$guid = argv(2);
 
-		$r = q("SELECT * FROM channel left join account on account_id = channel_account_id WHERE channel_guid = '%s' AND account_flags = 0 LIMIT 1",
-			dbesc($guid)
+		// Diaspora sites *may* provide a truncated guid. 
+
+		$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_guid like '%s' AND NOT (channel_pageflags & %d ) LIMIT 1",
+			dbesc($guid . '%'),
+			intval(PAGE_REMOVED)
 		);
 		if(! $r)
 			http_status_exit(500);
