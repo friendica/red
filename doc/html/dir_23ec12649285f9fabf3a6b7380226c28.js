@@ -6,7 +6,6 @@ var dir_23ec12649285f9fabf3a6b7380226c28 =
     [ "docblox_errorchecker.php", "docblox__errorchecker_8php.html", "docblox__errorchecker_8php" ],
     [ "extract.php", "extract_8php.html", "extract_8php" ],
     [ "friendica-to-smarty-tpl.py", "friendica-to-smarty-tpl_8py.html", "friendica-to-smarty-tpl_8py" ],
-    [ "frphotohelper.php", "frphotohelper_8php.html", "frphotohelper_8php" ],
     [ "php2po.php", "php2po_8php.html", "php2po_8php" ],
     [ "po2php.php", "po2php_8php.html", "po2php_8php" ],
     [ "tpldebug.php", "tpldebug_8php.html", "tpldebug_8php" ],

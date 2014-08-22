@@ -38,7 +38,6 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "filerm.php", "filerm_8php.html", "filerm_8php" ],
     [ "filestorage.php", "filestorage_8php.html", "filestorage_8php" ],
     [ "follow.php", "mod_2follow_8php.html", "mod_2follow_8php" ],
-    [ "frphotos.php", "frphotos_8php.html", "frphotos_8php" ],
     [ "fsuggest.php", "fsuggest_8php.html", "fsuggest_8php" ],
     [ "group.php", "mod_2group_8php.html", "mod_2group_8php" ],
     [ "hcard.php", "hcard_8php.html", "hcard_8php" ],

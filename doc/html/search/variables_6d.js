@@ -6,7 +6,6 @@ var searchData=
   ['mail_5frecalled',['MAIL_RECALLED',['../boot_8php.html#ae4861de36017fe399c1839f778bad9f5',1,'boot.php']]],
   ['mail_5freplied',['MAIL_REPLIED',['../boot_8php.html#aa3679df31c8dad1b71816b0322d5baff',1,'boot.php']]],
   ['mail_5fseen',['MAIL_SEEN',['../boot_8php.html#a1fbb93cf030f07391f22cc2948744869',1,'boot.php']]],
-  ['max_5fchatroom_5fhours',['MAX_CHATROOM_HOURS',['../boot_8php.html#ae543d0b69f816b52e91167fc19d3fddc',1,'boot.php']]],
   ['max_5fimage_5flength',['MAX_IMAGE_LENGTH',['../boot_8php.html#a525ca93ff35d3535d1a2b8ba57876afa',1,'boot.php']]],
   ['max_5flikers',['MAX_LIKERS',['../boot_8php.html#a35625dacd2158b9f1f1a8e77f9f081fd',1,'boot.php']]],
   ['menu_5fbookmark',['MENU_BOOKMARK',['../boot_8php.html#a458e19af801bc4b0d1f1ce1a6d9e857e',1,'boot.php']]],
