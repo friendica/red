@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-15 00:03-0700\n"
-"PO-Revision-Date: 2014-08-19 21:46+0000\n"
+"PO-Revision-Date: 2014-08-22 14:38+0000\n"
 "Last-Translator: jeroenpraat <>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -1508,7 +1508,7 @@ msgstr "[Red:Notificatie] %s heeft je genoemd"
 #: ../../include/enotify.php:211
 #, php-format
 msgid "%1$s, %2$s tagged you at %3$s"
-msgstr "%1$s, %2$s noemde jou om %3$s"
+msgstr "%1$s, %2$s noemde jou op %3$s"
 
 #: ../../include/enotify.php:212
 #, php-format
@@ -4698,7 +4698,7 @@ msgstr "Wachtwoorden komen niet met elkaar overeen."
 msgid ""
 "Registration successful. Please check your email for validation "
 "instructions."
-msgstr "Registratie geslaagd. Controleer je e-mail voor instructies om je e-mail te bevestigen."
+msgstr "Registratie geslaagd. Controleer je e-mail voor instructies."
 
 #: ../../mod/register.php:122
 msgid "Your registration is pending approval by the site owner."

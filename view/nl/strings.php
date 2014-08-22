@@ -353,7 +353,7 @@ $a->strings["[Red:Notify] %s posted to your profile wall"] = "[Red:Notificatie] 
 $a->strings["%1\$s, %2\$s posted to your profile wall at %3\$s"] = "%1\$s, %2\$s heeft om %3\$s een bericht op jouw kanaal geplaatst";
 $a->strings["%1\$s, %2\$s posted to [zrl=%3\$s]your wall[/zrl]"] = "%1\$s, %2\$s heeft een bericht op [zrl=%3\$s]jouw kanaal[/zrl] geplaatst";
 $a->strings["[Red:Notify] %s tagged you"] = "[Red:Notificatie] %s heeft je genoemd";
-$a->strings["%1\$s, %2\$s tagged you at %3\$s"] = "%1\$s, %2\$s noemde jou om %3\$s";
+$a->strings["%1\$s, %2\$s tagged you at %3\$s"] = "%1\$s, %2\$s noemde jou op %3\$s";
 $a->strings["%1\$s, %2\$s [zrl=%3\$s]tagged you[/zrl]."] = "%1\$s, %2\$s [zrl=%3\$s]noemde jou[/zrl].";
 $a->strings["[Red:Notify] %1\$s poked you"] = "[Red:Notificatie] %1\$s heeft je aangestoten";
 $a->strings["%1\$s, %2\$s poked you at %3\$s"] = "%1\$s, %2\$s heeft je aangestoten op %3\$s";
@@ -1113,7 +1113,7 @@ $a->strings["%1\$s's Chatrooms"] = "Chatkanalen van %1\$s";
 $a->strings["Maximum daily site registrations exceeded. Please try again tomorrow."] = "Maximum toegestane dagelijkse registraties op deze RedMatrix-hub bereikt. Probeer het morgen (UTC) nogmaals.";
 $a->strings["Please indicate acceptance of the Terms of Service. Registration failed."] = "Registratie mislukt. De gebruiksvoorwaarden dienen wel geaccepteerd te worden.";
 $a->strings["Passwords do not match."] = "Wachtwoorden komen niet met elkaar overeen.";
-$a->strings["Registration successful. Please check your email for validation instructions."] = "Registratie geslaagd. Controleer je e-mail voor instructies om je e-mail te bevestigen.";
+$a->strings["Registration successful. Please check your email for validation instructions."] = "Registratie geslaagd. Controleer je e-mail voor instructies.";
 $a->strings["Your registration is pending approval by the site owner."] = "Jouw accountregistratie wacht op goedkeuring van de beheerder van deze RedMatrix-hub.";
 $a->strings["Your registration can not be processed."] = "Jouw registratie kan niet verwerkt worden.";
 $a->strings["Registration on this site/hub is by approval only."] = "Registraties op deze RedMatrix-hub moeten eerst worden goedgekeurd.";
