@@ -507,6 +507,22 @@ function zot_refresh($them,$channel = null, $force = false) {
 function zot_gethub($arr) {
 
 	if($arr['guid'] && $arr['guid_sig'] && $arr['url'] && $arr['url_sig']) {
+
+		$blacklisted = false;
+		$bl1 = get_config('system','blacklisted_sites');
+		if(is_array($bl1) && $bl1) {
+			foreach($bl1 as $bl) {
+				if($bl && strpos($arr['url'],$bl) !== false) {
+					$blacklisted = true;
+					break;
+				}
+			}
+		}
+		if($blacklisted) {
+			logger('zot_gethub: blacklisted site: ' . $arr['url']);
+			return null;
+		}
+
 		$r = q("select * from hubloc 
 				where hubloc_guid = '%s' and hubloc_guid_sig = '%s' 
 				and hubloc_url = '%s' and hubloc_url_sig = '%s'

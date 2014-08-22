@@ -9,12 +9,12 @@
 <div id="profile-edit-links">
 <span class="btn btn-default"><a href="profile_photo" id="profile-photo_upload-link" title="{{$profpic}}">{{$profpic}}</a></span>
 <span class="btn btn-default"><a href="profile/{{$profile_id}}/view" id="profile-edit-view-link" title="{{$viewprof}}">{{$viewprof}}</a></span>
-{{if ! $default}}<span class="btn btn-default"><a href="profperm/{{$profile_id}}" id="profile-edit-view-link" title="{{$editvis}}">{{$editvis}}</a></span>{{/if}}
+{{if ! $is_default}}<span class="btn btn-default"><a href="profperm/{{$profile_id}}" id="profile-edit-view-link" title="{{$editvis}}">{{$editvis}}</a></span>{{/if}}
 {{if $profile_clone_link}}<span class="btn btn-default"><a href="{{$profile_clone_link}}" id="profile-edit-clone-link" title="{{$cr_prof}}">{{$cl_prof}}</a></span>{{/if}}
 {{if $exportable}}<br /><span class="btn btn-default"><a href="profiles/export/{{$profile_id}}" target="_blank">{{$lbl_export}}</a></span>
 <span class="btn btn-default profile-import"><b>{{$lbl_import}}</b> <input type="file" name="userfile" class="profile-import" ></span>
 {{/if}}
-{{if ! $default}}<span class="btn btn-danger"><a href="{{$profile_drop_link}}" id="profile-edit-drop-link" title="{{$del_prof}}" onclick="return confirmDelete();" {{$disabled}} >{{$del_prof}}</a></span>{{/if}}
+{{if ! $is_default}}<span class="btn btn-danger"><a href="{{$profile_drop_link}}" id="profile-edit-drop-link" title="{{$del_prof}}" onclick="return confirmDelete();" {{$disabled}} >{{$del_prof}}</a></span>{{/if}}
 </div>
 
 

@@ -14,5 +14,13 @@
     <Link rel="http://webfinger.net/rel/avatar"
           type="image/jpeg"
           href="{{$photo}}" />
- 
+    <Link rel="http://microformats.org/profile/hcard"
+          type="text/html"
+          href="{{$hcard_url}}" />
+
+   <Link rel="magic-public-key"
+          href="{{$modexp}}" />
+
+	{{$dspr}}
+
 </XRD>

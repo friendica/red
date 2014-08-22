@@ -41,7 +41,7 @@ function externals_run($argv, $argc){
 		$bl1 = get_config('system','blacklisted_sites');
 		if(is_array($bl1) && $bl1) {
 			foreach($bl1 as $bl) {
-				if(strpos($url,$bl) !== false) {
+				if($bl && strpos($url,$bl) !== false) {
 					$blacklisted = true;
 					break;
 				}

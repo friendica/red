@@ -790,7 +790,6 @@ function item_post(&$a) {
 	else
 		$post_id = 0;
 
-
 	$post = item_store($datarray,$execflag);
 
 	$post_id = $post['item_id'];
