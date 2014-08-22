@@ -1,5 +1,8 @@
 <?php /** @file */
 
+require_once('library/ASNValue.class.php');
+require_once('library/asn1.php');
+
 function rsa_sign($data,$key,$alg = 'sha256') {
 	if(! $key)
 		return 'no key';
@@ -241,7 +244,6 @@ function metopem($m,$e) {
 
 function pubrsatome($key,&$m,&$e) {
 	require_once('library/asn1.php');
-	require_once('include/salmon.php');
 
 	$lines = explode("\n",$key);
 	unset($lines[0]);
@@ -266,7 +268,6 @@ function pemtorsa($key) {
 }
 
 function pemtome($key,&$m,&$e) {
-	require_once('include/salmon.php');
 	$lines = explode("\n",$key);
 	unset($lines[0]);
 	unset($lines[count($lines)]);
