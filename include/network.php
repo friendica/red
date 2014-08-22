@@ -966,3 +966,167 @@ logger('fetch_xrd_links: ' . $url);
 
     return $links;
 }
+
+
+function scrape_vcard($url) {
+
+	$a = get_app();
+
+	$ret = array();
+
+	logger('scrape_vcard: url=' . $url);
+
+	$x = z_fetch_url($url);
+	if(! $x['success'])
+		return $ret;
+
+	$s = $x['body'];
+
+	if(! $s)
+		return $ret;
+
+	$headers = $x['header'];
+	$lines = explode("\n",$headers);
+	if(count($lines)) {
+		foreach($lines as $line) {
+			// don't try and run feeds through the html5 parser
+			if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
+				return ret;
+		}
+	}
+
+	try {
+		$dom = HTML5_Parser::parse($s);
+	} catch (DOMException $e) {
+		logger('scrape_vcard: parse error: ' . $e);
+	}
+
+	if(! $dom)
+		return $ret;
+
+	// Pull out hCard profile elements
+
+	$largest_photo = 0;
+
+	$items = $dom->getElementsByTagName('*');
+	foreach($items as $item) {
+		if(attribute_contains($item->getAttribute('class'), 'vcard')) {
+			$level2 = $item->getElementsByTagName('*');
+			foreach($level2 as $x) {
+				if(attribute_contains($x->getAttribute('class'),'fn'))
+					$ret['fn'] = $x->textContent;
+				if((attribute_contains($x->getAttribute('class'),'photo'))
+					|| (attribute_contains($x->getAttribute('class'),'avatar'))) {
+					$size = intval($x->getAttribute('width'));
+					if(($size > $largest_photo) || (! $largest_photo)) {
+						$ret['photo'] = $x->getAttribute('src');
+						$largest_photo = $size;
+					}
+				}
+				if((attribute_contains($x->getAttribute('class'),'nickname'))
+					|| (attribute_contains($x->getAttribute('class'),'uid'))) {
+					$ret['nick'] = $x->textContent;
+				}
+			}
+		}
+	}
+
+	return $ret;
+}
+
+
+
+function scrape_feed($url) {
+
+	$a = get_app();
+
+	$ret = array();
+	$level = 0;
+	$x = z_fetch_url($url,false,$level,array('novalidate' => true));
+
+	if(! $x['success'])
+		return $ret;
+
+	$headers = $x['header'];
+	$code = $x['return_code'];
+	$s = $x['body'];
+
+	logger('scrape_feed: returns: ' . $code . ' headers=' . $headers, LOGGER_DEBUG);
+
+	if(! $s) {
+		logger('scrape_feed: no data returned for ' . $url);
+		return $ret;
+	}
+
+
+	$lines = explode("\n",$headers);
+	if(count($lines)) {
+		foreach($lines as $line) {
+			if(stristr($line,'content-type:')) {
+				if(stristr($line,'application/atom+xml') || stristr($s,'<feed')) {
+					$ret['feed_atom'] = $url;
+					return $ret;
+				}
+ 				if(stristr($line,'application/rss+xml') || stristr($s,'<rss')) {
+					$ret['feed_rss'] = $url;
+					return $ret;
+				}
+			}
+		}
+		// perhaps an RSS version 1 feed with a generic or incorrect content-type?
+		if(stristr($s,'</item>')) {
+			$ret['feed_rss'] = $url;
+			return $ret;
+		}
+	}
+
+	try {
+		$dom = HTML5_Parser::parse($s);
+	} catch (DOMException $e) {
+		logger('scrape_feed: parse error: ' . $e);
+	}
+
+	if(! $dom) {
+		logger('scrape_feed: failed to parse.');
+		return $ret;
+	}
+
+
+	$head = $dom->getElementsByTagName('base');
+	if($head) {
+		foreach($head as $head0) {
+			$basename = $head0->getAttribute('href');
+			break;
+		}
+	}
+	if(! $basename)
+		$basename = implode('/', array_slice(explode('/',$url),0,3)) . '/';
+
+	$items = $dom->getElementsByTagName('link');
+
+	// get Atom/RSS link elements, take the first one of either.
+
+	if($items) {
+		foreach($items as $item) {
+			$x = $item->getAttribute('rel');
+			if(($x === 'alternate') && ($item->getAttribute('type') === 'application/atom+xml')) {
+				if(! x($ret,'feed_atom'))
+					$ret['feed_atom'] = $item->getAttribute('href');
+			}
+			if(($x === 'alternate') && ($item->getAttribute('type') === 'application/rss+xml')) {
+				if(! x($ret,'feed_rss'))
+					$ret['feed_rss'] = $item->getAttribute('href');
+			}
+		}
+	}
+
+	// Drupal and perhaps others only provide relative URL's. Turn them into absolute.
+
+	if(x($ret,'feed_atom') && (! strstr($ret['feed_atom'],'://')))
+		$ret['feed_atom'] = $basename . $ret['feed_atom'];
+	if(x($ret,'feed_rss') && (! strstr($ret['feed_rss'],'://')))
+		$ret['feed_rss'] = $basename . $ret['feed_rss'];
+
+	return $ret;
+}
+

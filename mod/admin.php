@@ -265,50 +265,10 @@ function admin_page_site_post(&$a){
 	$delivery_interval	=	((x($_POST,'delivery_interval'))? intval(trim($_POST['delivery_interval']))		: 0);
 	$poll_interval	=	((x($_POST,'poll_interval'))? intval(trim($_POST['poll_interval']))		: 0);
 	$maxloadavg	=	((x($_POST,'maxloadavg'))? intval(trim($_POST['maxloadavg']))		: 50);
-//	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
-/*
-	if($ssl_policy != intval(get_config('system','ssl_policy'))) {
-		if($ssl_policy == SSL_POLICY_FULL) {
-			q("update `contact` set 
-				`url`     = replace(`url`    , 'http:' , 'https:'),
-				`photo`   = replace(`photo`  , 'http:' , 'https:'),
-				`thumb`   = replace(`thumb`  , 'http:' , 'https:'),
-				`micro`   = replace(`micro`  , 'http:' , 'https:'),
-				`request` = replace(`request`, 'http:' , 'https:'),
-				`notify`  = replace(`notify` , 'http:' , 'https:'),
-				`poll`    = replace(`poll`   , 'http:' , 'https:'),
-				`confirm` = replace(`confirm`, 'http:' , 'https:'),
-				`poco`    = replace(`poco`   , 'http:' , 'https:')
-				where `self` = 1"
-			);
-			q("update `profile` set 
-				`photo`   = replace(`photo`  , 'http:' , 'https:'),
-				`thumb`   = replace(`thumb`  , 'http:' , 'https:')
-				where 1 "
-			);
-		}
-		elseif($ssl_policy == SSL_POLICY_SELFSIGN) {
-			q("update `contact` set 
-				`url`     = replace(`url`    , 'https:' , 'http:'),
-				`photo`   = replace(`photo`  , 'https:' , 'http:'),
-				`thumb`   = replace(`thumb`  , 'https:' , 'http:'),
-				`micro`   = replace(`micro`  , 'https:' , 'http:'),
-				`request` = replace(`request`, 'https:' , 'http:'),
-				`notify`  = replace(`notify` , 'https:' , 'http:'),
-				`poll`    = replace(`poll`   , 'https:' , 'http:'),
-				`confirm` = replace(`confirm`, 'https:' , 'http:'),
-				`poco`    = replace(`poco`   , 'https:' , 'http:')
-				where `self` = 1"
-			);
-			q("update `profile` set 
-				`photo`   = replace(`photo`  , 'https:' , 'http:'),
-				`thumb`   = replace(`thumb`  , 'https:' , 'http:')
-				where 1 "
-			);
-		}
-	}
-*/
-//	set_config('system','ssl_policy',$ssl_policy);
+	$feed_contacts = ((x($_POST,'feed_contacts')) ? intval($_POST['feed_contacts']) : 0);
+
+
+	set_config('system','feed_contacts',$feed_contacts);
 	set_config('system','delivery_interval',$delivery_interval);
 	set_config('system','poll_interval',$poll_interval);
 	set_config('system','maxloadavg',$maxloadavg);
@@ -464,7 +424,7 @@ function admin_page_site(&$a) {
 		'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),
 		'$theme_accessibility' 	=> array('theme_accessibility', t("Accessibility system theme"), get_config('system','accessibility_theme'), t("Accessibility theme"), $theme_choices_accessibility),
 		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
-//		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
+		'$feed_contacts'    => array('feed_contacts', t('Allow Feeds as Connections'),get_config('system','feed_contacts'),t('(Heavy system resource usage)')), 
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), intval(get_config('system','maximagesize')), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Does this site allow new member registration?"), get_config('system','register_policy'), "", $register_choices),
 		'$access_policy'	=> array('access_policy', t("Which best describes the types of account offered by this hub?"), get_config('system','access_policy'), "This is displayed on the public server site list.", $access_choices),

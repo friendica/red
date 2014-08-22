@@ -43,6 +43,9 @@
 
 	{{if $homepage}}<dl class="homepage"><dt class="homepage-label">{{$homepage}}</dt><dd class="homepage-url"><a href="{{$profile.homepage}}" >{{$profile.homepage}}</a></dd></dl>{{/if}}
 
+	{{if $diaspora}}
+	{{include file="diaspora_vcard.tpl"}}
+	{{/if}}
 
 {{if $connect}}
 <a href="{{$connect_url}}" class="rconnect"><i class="icon-plus connect-icon"></i> {{$connect}}</a>
