@@ -382,7 +382,7 @@ function notifier_run($argv, $argc){
 
 	$env_recips = (($private) ? array() : null);
 
-	$details = q("select xchan_hash, xchan_instance_url, xchan_addr, xchan_guid, xchan_guid_sig from xchan where xchan_hash in (" . implode(',',$recipients) . ")");
+	$details = q("select xchan_hash, xchan_instance_url, xchan_network, xchan_addr, xchan_guid, xchan_guid_sig from xchan where xchan_hash in (" . implode(',',$recipients) . ")");
 
 	$recip_list = array();
 

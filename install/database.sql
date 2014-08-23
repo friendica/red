@@ -442,6 +442,7 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_guid_sig` text NOT NULL,
   `hubloc_hash` char(255) NOT NULL,
   `hubloc_addr` char(255) NOT NULL DEFAULT '',
+  `hubloc_network` char(32) NOT NULL DEFAULT '',
   `hubloc_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `hubloc_status` int(10) unsigned NOT NULL DEFAULT '0',
   `hubloc_url` char(255) NOT NULL DEFAULT '',
@@ -459,6 +460,7 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   KEY `hubloc_connect` (`hubloc_connect`),
   KEY `hubloc_host` (`hubloc_host`),
   KEY `hubloc_addr` (`hubloc_addr`),
+  KEY `hubloc_network` (`hubloc_network`),
   KEY `hubloc_updated` (`hubloc_updated`),
   KEY `hubloc_connected` (`hubloc_connected`),
   KEY `hubloc_status` (`hubloc_status`)

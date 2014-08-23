@@ -176,8 +176,8 @@ Functions</h2></td></tr>
 <tr class="separator:a94ddb1d6c8fa21dd7433677e85168037"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a251343637ff40a50cca93452cd530c26"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a251343637ff40a50cca93452cd530c26">get_profile_elements</a> ($<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>)</td></tr>
 <tr class="separator:a251343637ff40a50cca93452cd530c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a896c1809d58f2d7a42cfe14577958ddf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a896c1809d58f2d7a42cfe14577958ddf">get_atom_elements</a> ($feed, $item)</td></tr>
-<tr class="separator:a896c1809d58f2d7a42cfe14577958ddf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e5be7bf1f8257dec0b2647e60a3f3f1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a5e5be7bf1f8257dec0b2647e60a3f3f1">get_atom_elements</a> ($feed, $item, &amp;$author)</td></tr>
+<tr class="separator:a5e5be7bf1f8257dec0b2647e60a3f3f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa723c0571e314a1853a24c5854b4f54f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#aa723c0571e314a1853a24c5854b4f54f">encode_rel_links</a> ($links)</td></tr>
 <tr class="separator:aa723c0571e314a1853a24c5854b4f54f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2541e6861a56d145c9281877cc501615"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a2541e6861a56d145c9281877cc501615">item_store</a> ($arr, $allow_exec=false)</td></tr>
@@ -192,12 +192,18 @@ Functions</h2></td></tr>
 <tr class="separator:ab1bce4261bcf75ad62753b498a144d17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88c6cf7649ac836fbbed82a7a0315110"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a88c6cf7649ac836fbbed82a7a0315110">tgroup_check</a> ($uid, $item)</td></tr>
 <tr class="separator:a88c6cf7649ac836fbbed82a7a0315110"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf2b8137dc4ad9ec958de2842f16f3c2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#adf2b8137dc4ad9ec958de2842f16f3c2">start_delivery_chain</a> ($channel, $item, $item_id, $parent)</td></tr>
+<tr class="separator:adf2b8137dc4ad9ec958de2842f16f3c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87ac9e359591721a824ecd23bbb56296"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a87ac9e359591721a824ecd23bbb56296">check_item_source</a> ($uid, $item)</td></tr>
 <tr class="separator:a87ac9e359591721a824ecd23bbb56296"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77da7ce9a117601d49ac4a67c71b514f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a77da7ce9a117601d49ac4a67c71b514f">mail_store</a> ($arr)</td></tr>
 <tr class="separator:a77da7ce9a117601d49ac4a67c71b514f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8794863cdf8ce1333040933d3a3f66bd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a8794863cdf8ce1333040933d3a3f66bd">consume_feed</a> ($xml, $importer, &amp;$contact, &amp;$hub, $datedir=0, $pass=0)</td></tr>
-<tr class="separator:a8794863cdf8ce1333040933d3a3f66bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc26e08aa61f5666da04ab5d2a9d68a6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#adc26e08aa61f5666da04ab5d2a9d68a6">consume_feed</a> ($xml, $importer, &amp;$contact, $pass=0)</td></tr>
+<tr class="separator:adc26e08aa61f5666da04ab5d2a9d68a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b449eeae50003414b8b30ca927af434"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a9b449eeae50003414b8b30ca927af434">update_feed_item</a> ($uid, $datarray)</td></tr>
+<tr class="separator:a9b449eeae50003414b8b30ca927af434"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52c24114b73c0bdb605a03cd29712223"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a52c24114b73c0bdb605a03cd29712223">handle_feed</a> ($uid, $abook_id, $url)</td></tr>
+<tr class="separator:a52c24114b73c0bdb605a03cd29712223"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a016dd86c827d08db89061ea81d15c6cb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a016dd86c827d08db89061ea81d15c6cb">atom_author</a> ($tag, $name, $uri, $h, $w, $type, $photo)</td></tr>
 <tr class="separator:a016dd86c827d08db89061ea81d15c6cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a275108c050f7eb18bcbb5018e6b81cf6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a275108c050f7eb18bcbb5018e6b81cf6">atom_entry</a> ($item, $type, $author, $owner, $comment=false, $cid=0)</td></tr>
@@ -603,7 +609,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a8794863cdf8ce1333040933d3a3f66bd"></a>
+<a class="anchor" id="adc26e08aa61f5666da04ab5d2a9d68a6"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -628,18 +634,6 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&amp;&#160;</td>
-          <td class="paramname"><em>$hub</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$datedir</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>$pass</em> = <code>0</code>&#160;</td>
         </tr>
@@ -654,6 +648,8 @@ Functions</h2></td></tr>
 <p>$xml = the (atom) feed to consume - RSS isn't as fully supported but may work for simple feeds.</p>
 <p>$importer = the contact_record (joined to user_record) of the local user who owns this relationship. It is this person's stuff that is going to be updated. $contact = the person who is sending us stuff. If not set, we MAY be processing a "follow" activity from an external network and MAY create an appropriate contact record. Otherwise, we MUST have a contact record. $hub = should we find a hub declation in the feed, pass it back to our calling process, who might (or might not) try and subscribe to it. $datedir sorts in reverse order $pass - by default ($pass = 0) we cannot guarantee that a parent item has been imported prior to its children being seen in the stream unless we are certain of how the feed is arranged/ordered. With $pass = 1, we only pull parent items out of the stream. With $pass = 2, we only pull children (comments/likes).</p>
 <p>So running this twice, first with pass 1 and then with pass 2 will do the right thing regardless of feed ordering. This won't be adequate in a fully-threaded model where comments can have sub-threads. That would require some massive sorting to get all the feed items into a mostly linear ordering, and might still require recursion. </p>
+
+<p>Referenced by <a class="el" href="items_8php.html#a52c24114b73c0bdb605a03cd29712223">handle_feed()</a>.</p>
 
 </div>
 </div>
@@ -733,7 +729,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="include_2api_8php.html#ad4c29f43418f6110f85a6b3998239ab4">api_statuses_destroy()</a>, <a class="el" href="Contact_8php.html#a28e062c884331dbb5dfa713228c25ad6">contact_remove()</a>, <a class="el" href="zot_8php.html#adfeb9400ae6b726beec89f8f1e8fde72">delete_imported_item()</a>, <a class="el" href="items_8php.html#a668ece2c37f05cc3abe538eb0dabfe55">drop_items()</a>, <a class="el" href="expire_8php.html#a444e45c9b67727b27db4c779fd51a298">expire_run()</a>, <a class="el" href="item_8php.html#a764bbb2e9a885a86fb23d0b5e4a09221">item_content()</a>, <a class="el" href="items_8php.html#a6f7e1334af5d684a987fa6a3eb37f4cc">item_expire()</a>, <a class="el" href="like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538">like_content()</a>, <a class="el" href="mod_2photos_8php.html#a062bed4d04d14fee8a53f4c9be673080">photos_post()</a>, <a class="el" href="poller_8php.html#a5f12df3a4738124b6c039971e87e76da">poller_run()</a>, and <a class="el" href="Contact_8php.html#acc12cda999c88c4d6185cca967c15125">remove_all_xchan_resources()</a>.</p>
+<p>Referenced by <a class="el" href="include_2api_8php.html#ad4c29f43418f6110f85a6b3998239ab4">api_statuses_destroy()</a>, <a class="el" href="items_8php.html#adc26e08aa61f5666da04ab5d2a9d68a6">consume_feed()</a>, <a class="el" href="Contact_8php.html#a28e062c884331dbb5dfa713228c25ad6">contact_remove()</a>, <a class="el" href="zot_8php.html#adfeb9400ae6b726beec89f8f1e8fde72">delete_imported_item()</a>, <a class="el" href="items_8php.html#a668ece2c37f05cc3abe538eb0dabfe55">drop_items()</a>, <a class="el" href="expire_8php.html#a444e45c9b67727b27db4c779fd51a298">expire_run()</a>, <a class="el" href="item_8php.html#a764bbb2e9a885a86fb23d0b5e4a09221">item_content()</a>, <a class="el" href="items_8php.html#a6f7e1334af5d684a987fa6a3eb37f4cc">item_expire()</a>, <a class="el" href="like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538">like_content()</a>, <a class="el" href="mod_2photos_8php.html#a062bed4d04d14fee8a53f4c9be673080">photos_post()</a>, <a class="el" href="poller_8php.html#a5f12df3a4738124b6c039971e87e76da">poller_run()</a>, and <a class="el" href="Contact_8php.html#acc12cda999c88c4d6185cca967c15125">remove_all_xchan_resources()</a>.</p>
 
 </div>
 </div>
@@ -859,7 +855,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="items_8php.html#a896c1809d58f2d7a42cfe14577958ddf">get_atom_elements()</a>.</p>
+<p>Referenced by <a class="el" href="items_8php.html#a5e5be7bf1f8257dec0b2647e60a3f3f1">get_atom_elements()</a>.</p>
 
 </div>
 </div>
@@ -977,7 +973,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a896c1809d58f2d7a42cfe14577958ddf"></a>
+<a class="anchor" id="a5e5be7bf1f8257dec0b2647e60a3f3f1"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -991,7 +987,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$item</em>&#160;</td>
+          <td class="paramname"><em>$item</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&amp;&#160;</td>
+          <td class="paramname"><em>$author</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1002,7 +1004,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>If there's a copy of the body content which is guaranteed to have survived mangling in transit, use it.</p>
 
-<p>Referenced by <a class="el" href="items_8php.html#a8794863cdf8ce1333040933d3a3f66bd">consume_feed()</a>.</p>
+<p>Referenced by <a class="el" href="items_8php.html#adc26e08aa61f5666da04ab5d2a9d68a6">consume_feed()</a>.</p>
 
 </div>
 </div>
@@ -1146,6 +1148,38 @@ Functions</h2></td></tr>
 <p>get_public_feed($channel,$params) generate an Atom feed </p>
 
 <p>Referenced by <a class="el" href="feed_8php.html#af86137700b56f33d1d5f25c8dec22c04">feed_init()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a52c24114b73c0bdb605a03cd29712223"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">handle_feed </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$uid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$abook_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$url</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1352,7 +1386,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="diaspora_8php.html#a006731620a5242d410358b32678e48e3">diaspora_asphoto()</a>, <a class="el" href="diaspora_8php.html#a0fb2abe304aae19efc040a5e6b917829">diaspora_comment()</a>, <a class="el" href="diaspora_8php.html#a5d57518545baa31cf8a85a937a267681">diaspora_like()</a>, <a class="el" href="diaspora_8php.html#a20b968d64ef26afe5cb0cc75a7570a31">diaspora_post()</a>, <a class="el" href="diaspora_8php.html#ac1ab782a34552a7c6b4dc961754ed598">diaspora_request()</a>, <a class="el" href="diaspora_8php.html#a2bf43f6b5890897f425ef4325d34b007">diaspora_reshare()</a>, <a class="el" href="event_8php.html#a7378e839ac3de9d55579eb3ec48eaf92">event_store_item()</a>, <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>, <a class="el" href="like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538">like_content()</a>, <a class="el" href="mood_8php.html#a7ae136dd7476865b4828136175db5022">mood_init()</a>, <a class="el" href="include_2photos_8php.html#a6c40ef58aefef705a5adc84a40e97109">photo_upload()</a>, <a class="el" href="include_2photos_8php.html#ad648c0c5544fe9263409b6f6e57c6274">photos_create_item()</a>, <a class="el" href="items_8php.html#a410f9c743877c125ca06312373346903">post_activity_item()</a>, <a class="el" href="zot_8php.html#a4d9e6ca295e443b740d9960c304b3474">process_delivery()</a>, <a class="el" href="activities_8php.html#a80134e807719b3c54aba971958d2e132">profile_activity()</a>, and <a class="el" href="subthread_8php.html#a50368f3d825b77996030528e7fbfa3d3">subthread_content()</a>.</p>
+<p>Referenced by <a class="el" href="diaspora_8php.html#a006731620a5242d410358b32678e48e3">diaspora_asphoto()</a>, <a class="el" href="diaspora_8php.html#a0fb2abe304aae19efc040a5e6b917829">diaspora_comment()</a>, <a class="el" href="diaspora_8php.html#a5d57518545baa31cf8a85a937a267681">diaspora_like()</a>, <a class="el" href="diaspora_8php.html#a20b968d64ef26afe5cb0cc75a7570a31">diaspora_post()</a>, <a class="el" href="diaspora_8php.html#a2bf43f6b5890897f425ef4325d34b007">diaspora_reshare()</a>, <a class="el" href="event_8php.html#a7378e839ac3de9d55579eb3ec48eaf92">event_store_item()</a>, <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>, <a class="el" href="like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538">like_content()</a>, <a class="el" href="mood_8php.html#a7ae136dd7476865b4828136175db5022">mood_init()</a>, <a class="el" href="include_2photos_8php.html#a6c40ef58aefef705a5adc84a40e97109">photo_upload()</a>, <a class="el" href="include_2photos_8php.html#ad648c0c5544fe9263409b6f6e57c6274">photos_create_item()</a>, <a class="el" href="items_8php.html#a410f9c743877c125ca06312373346903">post_activity_item()</a>, <a class="el" href="zot_8php.html#a4d9e6ca295e443b740d9960c304b3474">process_delivery()</a>, <a class="el" href="activities_8php.html#a80134e807719b3c54aba971958d2e132">profile_activity()</a>, and <a class="el" href="subthread_8php.html#a50368f3d825b77996030528e7fbfa3d3">subthread_content()</a>.</p>
 
 </div>
 </div>
@@ -1444,7 +1478,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="items_8php.html#a896c1809d58f2d7a42cfe14577958ddf">get_atom_elements()</a>.</p>
+<p>Referenced by <a class="el" href="items_8php.html#a5e5be7bf1f8257dec0b2647e60a3f3f1">get_atom_elements()</a>.</p>
 
 </div>
 </div>
@@ -1519,7 +1553,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="items_8php.html#a82955cc578f0fa600acec84475026194">encode_item()</a>, <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>, <a class="el" href="items_8php.html#a410f9c743877c125ca06312373346903">post_activity_item()</a>, and <a class="el" href="profiles_8php.html#a46975783b8b8d70402d51487eb1f0b00">profiles_content()</a>.</p>
+<p>Referenced by <a class="el" href="items_8php.html#a82955cc578f0fa600acec84475026194">encode_item()</a>, <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>, <a class="el" href="items_8php.html#a410f9c743877c125ca06312373346903">post_activity_item()</a>, <a class="el" href="profiles_8php.html#a46975783b8b8d70402d51487eb1f0b00">profiles_content()</a>, and <a class="el" href="items_8php.html#adf2b8137dc4ad9ec958de2842f16f3c2">start_delivery_chain()</a>.</p>
 
 </div>
 </div>
@@ -1703,6 +1737,47 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="adf2b8137dc4ad9ec958de2842f16f3c2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">start_delivery_chain </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$channel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$item</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$item_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$parent</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sourced and tag-delivered posts are re-targetted for delivery to the connections of the channel receiving the post. This starts the second delivery chain, by resetting permissions and ensuring that ITEM_UPLINK is set on the parent post, and storing the current owner_xchan as the source_xchan. We'll become the new owner. If called without $parent, this <em>is</em> the parent post. </p>
+
+<p>Referenced by <a class="el" href="items_8php.html#ab1bce4261bcf75ad62753b498a144d17">tag_deliver()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ab1bce4261bcf75ad62753b498a144d17"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1726,6 +1801,12 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Fetch stuff we need - a channel and an item</p>
+<p>Seems like a good place to plug in a poke notification.</p>
+<p>Do community tagging</p>
+<p>A "union" is a message which our channel has sourced from another channel. This sets up a second delivery chain just like forum tags do. Find out if this is a source-able post.</p>
+<p>Now we've got those out of the way. Let's see if this is a post that's tagged for re-delivery</p>
+<p>Kill two birds with one stone. As long as we're here, send a mention notification.</p>
 
 <p>Referenced by <a class="el" href="zot_8php.html#adfeb9400ae6b726beec89f8f1e8fde72">delete_imported_item()</a>, <a class="el" href="item_8php.html#a764bbb2e9a885a86fb23d0b5e4a09221">item_content()</a>, <a class="el" href="items_8php.html#a2541e6861a56d145c9281877cc501615">item_store()</a>, and <a class="el" href="items_8php.html#acf0bf7c9d21ac84f32effb754f7ad484">item_store_update()</a>.</p>
 
@@ -1772,8 +1853,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>tgroup_check($uid,$item)</p>
+<p>This function is called pre-deliver to see if a post matches the criteria to be tag delivered. We don't actually do anything except check that it matches the criteria. This is so that the channel with tag_delivery enabled can receive the post even if they turn off permissions for the sender to send their stream. <a class="el" href="items_8php.html#ab1bce4261bcf75ad62753b498a144d17">tag_deliver()</a> can't be called until the post is actually stored. By then it would be too late to reject it. </p>
 
-<p>Referenced by <a class="el" href="items_8php.html#a8794863cdf8ce1333040933d3a3f66bd">consume_feed()</a>, and <a class="el" href="zot_8php.html#a4d9e6ca295e443b740d9960c304b3474">process_delivery()</a>.</p>
+<p>Referenced by <a class="el" href="zot_8php.html#a4d9e6ca295e443b740d9960c304b3474">process_delivery()</a>.</p>
 
 </div>
 </div>
@@ -1801,7 +1884,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="items_8php.html#a896c1809d58f2d7a42cfe14577958ddf">get_atom_elements()</a>.</p>
+<p>Referenced by <a class="el" href="items_8php.html#a5e5be7bf1f8257dec0b2647e60a3f3f1">get_atom_elements()</a>.</p>
 
 </div>
 </div>
@@ -1820,6 +1903,34 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="lockview_8php.html#a851e26ab9a1008df5c5ebebea31e9b44">lockview_content()</a>, and <a class="el" href="profiles_8php.html#a46975783b8b8d70402d51487eb1f0b00">profiles_content()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9b449eeae50003414b8b30ca927af434"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">update_feed_item </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$uid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$datarray</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="items_8php.html#adc26e08aa61f5666da04ab5d2a9d68a6">consume_feed()</a>.</p>
 
 </div>
 </div>

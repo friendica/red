@@ -179,13 +179,14 @@ function import_post(&$a) {
 
 	// create new hubloc for the new channel at this site
 
-	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, 
+	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_flags, 
 		hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey )
-		values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s' )",
+		values ( '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s' )",
 		dbesc($channel['channel_guid']),
 		dbesc($channel['channel_guid_sig']),
 		dbesc($channel['channel_hash']),
 		dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
+		dbesc('zot'),
 		intval(($seize) ? HUBLOC_FLAGS_PRIMARY : 0),
 		dbesc(z_root()),
 		dbesc(base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))),

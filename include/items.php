@@ -296,6 +296,9 @@ function post_activity_item($arr) {
 		return $ret;
 	}
 
+	$arr['public_policy'] = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
+	if($arr['public_policy'])
+		$arr['item_private'] = 1;
 
 	if(! array_key_exists('mimetype',$arr))
 		$arr['mimetype'] = 'text/bbcode';
@@ -400,6 +403,7 @@ function get_public_feed($channel,$params) {
 	$params['records']   = ((x($params,'records'))   ? $params['records']       : 40);
 	$params['direction'] = ((x($params,'direction')) ? $params['direction']     : 'desc');
 	$params['pages']     = ((x($params,'pages'))     ? intval($params['pages']) : 0);
+	$params['top']       = ((x($params,'top'))       ? intval($params['top'])   : 0);
 		
 	switch($params['type']) {
 		case 'json':
@@ -440,7 +444,8 @@ function get_feed_for($channel, $observer_hash, $params) {
 	 	'records' => $params['records'],      // FIXME
 		'direction' => $params['direction'],  // FIXME
 		'pages' => $params['pages'],
-		'order' => 'post'
+		'order' => 'post',
+		'top'   => $params['top']
 		), $channel, $observer_hash, CLIENT_MODE_NORMAL, get_app()->module);
 
 
@@ -2670,6 +2675,7 @@ function tgroup_check($uid,$item) {
 function start_delivery_chain($channel,$item,$item_id,$parent) {
 
 
+
 	// Change this copy of the post to a forum head message and deliver to all the tgroup members
 	// also reset all the privacy bits to the forum default permissions
 
@@ -2706,16 +2712,20 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 		if(!($flag_bits & ITEM_OBSCURED)) {
 			$key = get_config('system','pubkey');
 			$flag_bits = $flag_bits|ITEM_OBSCURED;
-			$title = json_encode(aes_encapsulate($title,$key));
-			$body  = json_encode(aes_encapsulate($body,$key));
+			if($title)
+				$title = json_encode(aes_encapsulate($title,$key));
+			if($body)
+				$body  = json_encode(aes_encapsulate($body,$key));
 		}
 	}
 	else {
 		if($flag_bits & ITEM_OBSCURED) {
 			$key = get_config('system','prvkey');
 			$flag_bits = $flag_bits ^ ITEM_OBSCURED;
-			$title = json_encode(aes_unencapsulate($title,$key));
-			$body  = json_encode(aes_unencapsulate($body,$key));
+			if($title)
+				$title = crypto_unencapsulate(json_decode($title,true),$key);
+			if($body)
+				$body = crypto_unencapsulate(json_decode($body,true),$key);
 		}
 	}
 
@@ -4185,6 +4195,9 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         if($r) {
 
             $parents_str = ids_to_querystr($r,'item_id');
+
+			if($arr['top'])
+				$sql_extra = ' and id = parent ' . $sql_extra;
 
             $items = q("SELECT item.*, item.id AS item_id FROM item
                 WHERE $item_uids $item_restrict
