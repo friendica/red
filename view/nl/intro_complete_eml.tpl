@@ -1,22 +1,22 @@
 
-Dear {{$username}},
+Beste {{$username}},
 
-	'{{$fn}}' at '{{$dfrn_url}}' has accepted 
-your connection request at '{{$sitename}}'.
+	'{{$fn}}' op '{{$dfrn_url}}' heeft jouw 
+connectieverzoek geaccepteerd op '{{$sitename}}'.
 
-	'{{$fn}}' has chosen to accept you a "fan", which restricts 
-some forms of communication - such as private messaging and some profile
-interactions. If this is a celebrity or community page, these settings were
-applied automatically.
+	'{{$fn}}' heeft er voor gekozen om jou als "fan" te accepteren. 
+Hierdoor worden sommige vormen van communicatie beperkt, zoals het sturen van privéberichten en sommige
+profiel-interacties. Wanneer dit een kanaal van een beroemdheid of een groep/forum is werden
+deze instellingen automatisch toegepast.
 
-	'{{$fn}}' may choose to extend this into a two-way or more permissive 
-relationship in the future. 
+	'{{$fn}}' kan er voor kiezen om in de toekomst deze beperkingen op te heffen of  
+om juist meer beperkingen op te leggen. 
 
-	You will start receiving public status updates from '{{$fn}}', 
-which will appear on your 'Matrix' page at  
+	Vanaf nu ontvang je openbare berichten van '{{$fn}}'. 
+Deze zullen in jouw 'matrix' (tijdlijn) verschijnen op  
 
-{{$siteurl}}
+{{$siteurl}}.
 
-Sincerely,
+Vriendelijke groet,
 
-	{{$sitename}} Administrator
+	Beheerder {{$sitename}} ({{$siteurl}})

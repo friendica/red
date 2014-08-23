@@ -15,6 +15,6 @@ Wij adviseren om dit wachtwoord te veranderen onder 'instellingen' nadat je bent
 
 
 Vriendelijke groet,
-	Beheerder {{$sitename}}
+	Beheerder {{$sitename}} ({{$siteurl}})
 
  

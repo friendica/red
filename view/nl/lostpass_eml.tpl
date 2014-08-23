@@ -27,6 +27,6 @@ Inlognaam:	{{$email}}
 
 
 Vriendelijke groet,
-	Beheerder {{$sitename}}
+	Beheerder {{$sitename}} ({{$siteurl}})
 
  
