@@ -2672,6 +2672,7 @@ function tgroup_check($uid,$item) {
 function start_delivery_chain($channel,$item,$item_id,$parent) {
 
 
+
 	// Change this copy of the post to a forum head message and deliver to all the tgroup members
 	// also reset all the privacy bits to the forum default permissions
 
@@ -2708,16 +2709,20 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 		if(!($flag_bits & ITEM_OBSCURED)) {
 			$key = get_config('system','pubkey');
 			$flag_bits = $flag_bits|ITEM_OBSCURED;
-			$title = json_encode(aes_encapsulate($title,$key));
-			$body  = json_encode(aes_encapsulate($body,$key));
+			if($title)
+				$title = json_encode(aes_encapsulate($title,$key));
+			if($body)
+				$body  = json_encode(aes_encapsulate($body,$key));
 		}
 	}
 	else {
 		if($flag_bits & ITEM_OBSCURED) {
 			$key = get_config('system','prvkey');
 			$flag_bits = $flag_bits ^ ITEM_OBSCURED;
-			$title = json_encode(aes_unencapsulate($title,$key));
-			$body  = json_encode(aes_unencapsulate($body,$key));
+			if($title)
+				$title = crypto_unencapsulate(json_decode($title,true),$key);
+			if($body)
+				$body = crypto_unencapsulate(json_decode($body,true),$key);
 		}
 	}
 
