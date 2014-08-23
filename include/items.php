@@ -296,6 +296,9 @@ function post_activity_item($arr) {
 		return $ret;
 	}
 
+	$arr['public_policy'] = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
+	if($arr['public_policy'])
+		$arr['item_private'] = 1;
 
 	if(! array_key_exists('mimetype',$arr))
 		$arr['mimetype'] = 'text/bbcode';
