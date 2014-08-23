@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1123 );
+define( 'UPDATE_VERSION' , 1124 );
 
 /**
  *
@@ -1377,3 +1377,15 @@ function update_r1122() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1123() {
+	$r1 = q("ALTER TABLE `hubloc` ADD `hubloc_network` CHAR( 32 ) NOT NULL DEFAULT '' AFTER `hubloc_addr` ,
+ADD INDEX ( `hubloc_network` )");
+	$r2 = q("update hubloc set hubloc_network = 'zot' where true");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
