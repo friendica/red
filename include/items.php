@@ -132,6 +132,7 @@ function can_comment_on_post($observer_xchan,$item) {
 			// false.
 			return false;
 			break;
+		case 'any connections':
 		case 'contacts':
 		case '':
 			if(array_key_exists('owner',$item)) {
