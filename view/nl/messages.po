@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-22 00:03-0700\n"
-"PO-Revision-Date: 2014-08-23 16:06+0000\n"
+"PO-Revision-Date: 2014-08-23 20:09+0000\n"
 "Last-Translator: jeroenpraat <>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -7093,7 +7093,7 @@ msgstr "%s : Geen geldig e-mailadres."
 
 #: ../../mod/invite.php:76
 msgid "Please join us on Red"
-msgstr "Kom op de RedMatrix"
+msgstr "Uitnodiging voor de RedMatrix"
 
 #: ../../mod/invite.php:87
 msgid "Invitation limit exceeded. Please contact your site administrator."
@@ -7129,7 +7129,7 @@ msgstr "Jouw bericht:"
 
 #: ../../mod/invite.php:132
 msgid "Please join my community on RedMatrix."
-msgstr "Vergezel ons op de RedMatrix."
+msgstr "Hierbij nodig ik je uit om mij, en andere vrienden en kennissen, op de RedMatrix te vergezellen. Lees meer over de RedMatrix op https://redmatrix.me."
 
 #: ../../mod/invite.php:134
 msgid "You will need to supply this invitation code: "
@@ -7137,19 +7137,19 @@ msgstr "Je moet deze uitnodigingscode opgeven:"
 
 #: ../../mod/invite.php:135
 msgid "1. Register at any RedMatrix location (they are all inter-connected)"
-msgstr "1. Registreer je op een willekeurige RedMatrix-hub (ze zijn allemaal onderling met elkaar verbonden)"
+msgstr "1. Registreer je op een willekeurige RedMatrix-hub (ze zijn allemaal onderling met elkaar verbonden):"
 
 #: ../../mod/invite.php:137
 msgid "2. Enter my RedMatrix network address into the site searchbar."
-msgstr "2. Nadat je bent ingelogd en een kanaal hebt aangemaakt kan je mijn kanaaladres in het zoekveld invullen."
+msgstr "2. Nadat je bent ingelogd en een kanaal hebt aangemaakt kan je mijn kanaaladres in het zoekveld invullen:"
 
 #: ../../mod/invite.php:138
 msgid "or visit "
-msgstr "of bezoek"
+msgstr "of bezoek "
 
 #: ../../mod/invite.php:140
 msgid "3. Click [Connect]"
-msgstr "3. Klik [+ Verbinden]"
+msgstr "3. Klik op [+ Verbinden]"
 
 #: ../../mod/item.php:146
 msgid "Unable to locate original post."
