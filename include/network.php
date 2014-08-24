@@ -820,6 +820,7 @@ function email_send($addr, $subject, $headers, $item) {
 
 
 function discover_by_webbie($webbie) {
+	require_once('library/HTML5/Parser.php');
 
 	$x = webfinger_rfc7033($webbie);
 	if($x && array_key_exists('links',$x) && $x['links']) {
@@ -836,9 +837,121 @@ function discover_by_webbie($webbie) {
 		}
 	}
 
+	$result = array();
+    $network = null;
+    $diaspora = false;
+
+    $diaspora_base = '';
+    $diaspora_guid = '';
+    $diaspora_key = '';
+	$dfrn = false;
+
 	$x = old_webfinger($webbie);			
 	if($x) {
 		logger('old_webfinger: ' . print_r($x,true));
+		foreach($x as $link) {
+			if($link['@attributes']['rel'] === NAMESPACE_DFRN)
+				$dfrn = unamp($link['@attributes']['href']);				
+			if($link['@attributes']['rel'] === 'salmon')
+				$notify = unamp($link['@attributes']['href']);
+ 			if($link['@attributes']['rel'] === NAMESPACE_FEED)
+				$poll = unamp($link['@attributes']['href']);
+			if($link['@attributes']['rel'] === 'http://microformats.org/profile/hcard')
+				$hcard = unamp($link['@attributes']['href']);
+			if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
+				$profile = unamp($link['@attributes']['href']);
+			if($link['@attributes']['rel'] === 'http://portablecontacts.net/spec/1.0')
+				$poco = unamp($link['@attributes']['href']);
+			if($link['@attributes']['rel'] === 'http://joindiaspora.com/seed_location') {
+				$diaspora_base = unamp($link['@attributes']['href']);
+				$diaspora = true;
+			}
+			if($link['@attributes']['rel'] === 'http://joindiaspora.com/guid') {
+				$diaspora_guid = unamp($link['@attributes']['href']);
+				$diaspora = true;
+			}
+			if($link['@attributes']['rel'] === 'diaspora-public-key') {
+				$diaspora_key = base64_decode(unamp($link['@attributes']['href']));
+				if(strstr($diaspora_key,'RSA '))
+					$pubkey = rsatopem($diaspora_key);
+				else
+					$pubkey = $diaspora_key;
+				$diaspora = true;
+			}
+		}
+
+		if($diaspora && $diaspora_base && $diaspora_guid) {
+			$notify = $diaspora_base . 'receive/users/' . $diaspora_guid;
+			$batch  = $diaspora_base . 'receive/public' ;
+	        if(strpos($webbie,'@'))
+    	        $addr = str_replace('acct:', '', $webbie);
+			$network = 'diaspora';
+			if($dfrn)
+				$network = 'f-diaspora';
+			if($hcard)
+				$vcard = scrape_vcard($hcard);
+		}
+
+   $vcard['fn'] = notags($vcard['fn']);
+    $vcard['nick'] = str_replace(' ','',notags($vcard['nick']));
+
+    $result['name'] = $vcard['fn'];
+    $result['nick'] = $vcard['nick'];
+    $result['url'] = $profile;
+    $result['addr'] = $addr;
+    $result['batch'] = $batch;
+    $result['notify'] = $notify;
+    $result['poll'] = $poll;
+    $result['request'] = $request;
+    $result['confirm'] = $confirm;
+    $result['poco'] = $poco;
+    $result['photo'] = $vcard['photo'];
+    $result['priority'] = $priority;
+    $result['network'] = $network;
+   $result['alias'] = $alias;
+    $result['pubkey'] = $pubkey;
+
+    logger('probe_url: ' . print_r($result,true), LOGGER_DEBUG);
+
+    return $result;
+/*
+Array
+(
+    [name] => Mike Macgirvin
+    [nick] => MikeMacgirvin
+    [url] => https://joindiaspora.com/u/macgirvin
+    [addr] => macgirvin@joindiaspora.com
+    [batch] => https://joindiaspora.com/receive/public
+    [notify] => https://joindiaspora.com/receive/users/a9174a618f8d269a
+    [poll] => https://joindiaspora.com/public/macgirvin.atom
+    [request] => 
+    [confirm] => 
+    [poco] => 
+    [photo] => https://joindiaspora.s3.amazonaws.com/uploads/images/thumb_large_fec4e6eef13ae5e56207.jpg
+    [priority] => 
+    [network] => diaspora
+    [alias] => 
+    [pubkey] => -----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtihtyIuRDWkDpCA+I1UaQ
+jI4S7k625+A7EEJm+pL2ZVSJxeCKiFeEgHBQENjLMNNm8l8F6blxgQqE6ZJ9Spa7f
+tlaXYTRCrfxKzh02L3hR7sNA+JS/nXJaUAIo+IwpIEspmcIRbD9GB7Wv/rr+M28uH
+31EeYyDz8QL6InU/bJmnCdFvmEMBQxJOw1ih9tQp7UNJAbUMCje0WYFzBz7sfcaHL
+OyYcCOqOCBLdGucUoJzTQ9iDBVzB8j1r1JkIHoEb2moUoKUp+tkCylNfd/3IVELF9
+7w1Qjmit3m50OrJk2DQOXvCW9KQxaQNdpRPSwhvemIt98zXSeyZ1q/YjjOwG0DWDq
+AF8aLj3/oQaZndTPy/6tMiZogKaijoxj8xFLuPYDTw5VpKquriVC0z8oxyRbv4t9v
+8JZZ9BXqzmayvY3xZGGp8NulrfjW+me2bKh0/df1aHaBwpZdDTXQ6kqAiS2FfsuPN
+vg57fhfHbL1yJ4oDbNNNeI0kJTGchXqerr8C20khU/cQ2Xt31VyEZtnTB665Ceugv
+kp3t2qd8UpAVKl430S5Quqx2ymfUIdxdW08CEjnoRNEL3aOWOXfbf4gSVaXmPCR4i
+LSIeXnd14lQYK/uxW/8cTFjcmddsKxeXysoQxbSa9VdDK+KkpZdgYXYrTTofXs6v+
+4afAEhRaaY+MCAwEAAQ==
+-----END PUBLIC KEY-----
+
+)
+*/
+
+
+
+
 	}
 }
 
