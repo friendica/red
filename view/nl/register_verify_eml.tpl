@@ -1,25 +1,24 @@
 
-A new user registration request was received at {{$sitename}} which requires 
-your approval. 
+{{$sitename}} heeft een nieuwe accountregistratie ontvangen die jouw goedkeuring 
+nodig heeft. 
 
 
-The login details are as follows:
+De inloggegevens zijn als volgt:
 
-Site Location:	{{$siteurl}}
-Login Name:	{{$email}}
-IP Address: {{$details}}
+Hub:	{{$siteurl}}
+Inlognaam:	{{$email}}
+IP-adres: 
 
-To approve this request please visit the following link:
+Om dit verzoek goed te keuren bezoek je de volgende link:
 
 
 {{$siteurl}}/regmod/allow/{{$hash}} 
 
 
-To deny the request and remove the account, please visit:
+Om dit verzoek af te keuren en het account te verwijderen bezoek je:
 
 
 {{$siteurl}}/regmod/deny/{{$hash}}
 
 
-Thank you.
-
+Bedankt

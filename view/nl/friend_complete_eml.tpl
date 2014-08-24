@@ -1,22 +1,22 @@
 
-Dear {{$username}},
+Beste {{$username}},
 
-	Great news... '{{$fn}}' at '{{$dfrn_url}}' has accepted 
-your connection request at '{{$sitename}}'.
+	Groot nieuws... '{{$fn}}' op '{{$dfrn_url}}' heeft jouw 
+connectieverzoek op '{{$sitename}}' geaccepteerd.
 
-You are now mutual friends and may exchange status updates, photos, and email
-without restriction.
+Jullie zijn nu met elkaar verbonden en kunnen zonder beperkingen berichten, foto's en 
+privéberichten uitwisselen.
 
-Please visit your 'Connnections' page at {{$sitename}} if you wish to make 
-any changes to this relationship. 
+Bezoek jouw 'connecties'-pagina op {{$sitename}} wanneer je instellingen voor 
+deze connectie wil veranderen. 
 
 {{$siteurl}}
 
-[For instance, you may create a separate profile with information that is not
-available to the general public - and assign viewing rights to '{{$fn}}'].
+[Je kan bijvoorbeeld een apart profiel aanmaken (zie extra functies) die niet voor het 
+grote publiek te zien is en deze zichtbaar maken voor '{{$fn}}'].
 
-Sincerely,
+Vriendelijke groet,
 
-	{{$sitename}} Administrator
+	Beheerder {{$sitename}} ({{siteurl}})
 
  

@@ -11,4 +11,4 @@ Je dient op je hub in te loggen om het verzoek te accepteren, het af te wijzen o
 
 Vriendelijke groet,
 
-	Beheerder {{$sitename}}
+	Beheerder {{$sitename}} ({{$siteurl}})

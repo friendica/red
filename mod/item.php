@@ -768,9 +768,9 @@ function item_post(&$a) {
 		$key = get_config('system','pubkey');
 		$datarray['item_flags'] = $datarray['item_flags'] | ITEM_OBSCURED;
 		if($datarray['title'])
-			$datarray['title'] = json_encode(aes_encapsulate($datarray['title'],$key));
+			$datarray['title'] = json_encode(crypto_encapsulate($datarray['title'],$key));
 		if($datarray['body'])
-			$datarray['body']  = json_encode(aes_encapsulate($datarray['body'],$key));
+			$datarray['body']  = json_encode(crypto_encapsulate($datarray['body'],$key));
 	}
 
 	if($orig_post) {

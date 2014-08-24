@@ -132,6 +132,7 @@ function can_comment_on_post($observer_xchan,$item) {
 			// false.
 			return false;
 			break;
+		case 'any connections':
 		case 'contacts':
 		case '':
 			if(array_key_exists('owner',$item)) {
@@ -318,9 +319,9 @@ function post_activity_item($arr) {
 		$key = get_config('system','pubkey');
 		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
 		if($arr['title'])
-			$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+			$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 		if($arr['body'])
-			$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+			$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 	}
 
 	$arr['mid']          = 	((x($arr,'mid')) ? $arr['mid'] : item_message_id());
@@ -2713,9 +2714,9 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 			$key = get_config('system','pubkey');
 			$flag_bits = $flag_bits|ITEM_OBSCURED;
 			if($title)
-				$title = json_encode(aes_encapsulate($title,$key));
+				$title = json_encode(crypto_encapsulate($title,$key));
 			if($body)
-				$body  = json_encode(aes_encapsulate($body,$key));
+				$body  = json_encode(crypto_encapsulate($body,$key));
 		}
 	}
 	else {
