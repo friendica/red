@@ -262,6 +262,8 @@ function localize_item(&$item){
 
 		$item['body'] = sprintf($txt, $A, t($verb));
 	}
+
+
 /*
 // FIXME store parent item as object or target
 // (and update to json storage)
@@ -363,6 +365,17 @@ function localize_item(&$item){
 	//	if($sparkle)
 //			$item['plink'] = $y . '?f=&url=' . $item['plink'];
 //	} 
+
+	// if item body was obscured and we changed it, re-obscure it
+	// FIXME - we need a better filter than just the string 'data'; try and
+	// match the fact that it's json encoded
+
+	if(($item['item_flags'] & ITEM_OBSCURED) 
+		&& strlen($item['body']) && (! strpos($item['body'],'data'))) {
+		$item['body']  = json_encode(crypto_encapsulate($item['body'],get_config('system','pubkey')));
+	}
+	
+
 }
 
 /**
