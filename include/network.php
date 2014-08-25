@@ -280,7 +280,7 @@ function xml_status($st, $message = '') {
 
 function http_status_exit($val,$msg = '') {
 
-    $err = '';
+	$err = '';
 	if($val >= 400)
 		$msg = (($msg) ? $msg : 'Error');
 	if($val >= 200 && $val < 300)
@@ -298,43 +298,43 @@ function http_status_exit($val,$msg = '') {
 
 function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
 
-        // If we're getting too deep, bail out
-        if ($recursion_depth > 512) {
-                return(null);
-        }
+		// If we're getting too deep, bail out
+		if ($recursion_depth > 512) {
+				return(null);
+		}
 
-        if (!is_string($xml_element) &&
-        !is_array($xml_element) &&
-        (get_class($xml_element) == 'SimpleXMLElement')) {
-                $xml_element_copy = $xml_element;
-                $xml_element = get_object_vars($xml_element);
-        }
+		if (!is_string($xml_element) &&
+		!is_array($xml_element) &&
+		(get_class($xml_element) == 'SimpleXMLElement')) {
+				$xml_element_copy = $xml_element;
+				$xml_element = get_object_vars($xml_element);
+		}
 
-        if (is_array($xml_element)) {
-                $result_array = array();
-                if (count($xml_element) <= 0) {
-                        return (trim(strval($xml_element_copy)));
-                }
+		if (is_array($xml_element)) {
+				$result_array = array();
+				if (count($xml_element) <= 0) {
+						return (trim(strval($xml_element_copy)));
+				}
 
-                foreach($xml_element as $key=>$value) {
+				foreach($xml_element as $key=>$value) {
 
-                        $recursion_depth++;
-                        $result_array[strtolower($key)] =
-                convert_xml_element_to_array($value, $recursion_depth);
-                        $recursion_depth--;
-                }
-                if ($recursion_depth == 0) {
-                        $temp_array = $result_array;
-                        $result_array = array(
-                                strtolower($xml_element_copy->getName()) => $temp_array,
-                        );
-                }
+						$recursion_depth++;
+						$result_array[strtolower($key)] =
+				convert_xml_element_to_array($value, $recursion_depth);
+						$recursion_depth--;
+				}
+				if ($recursion_depth == 0) {
+						$temp_array = $result_array;
+						$result_array = array(
+								strtolower($xml_element_copy->getName()) => $temp_array,
+						);
+				}
 
-                return ($result_array);
+				return ($result_array);
 
-        } else {
-                return (trim(strval($xml_element)));
-        }
+		} else {
+				return (trim(strval($xml_element)));
+		}
 }
 
 // Take a URL from the wild, prepend http:// if necessary
@@ -584,35 +584,35 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
  */ 
 
 function xml2array($contents, $namespaces = true, $get_attributes=1, $priority = 'attribute') {
-    if(!$contents) return array();
+	if(!$contents) return array();
 
-    if(!function_exists('xml_parser_create')) {
-        logger('xml2array: parser function missing');
-        return array();
-    }
+	if(!function_exists('xml_parser_create')) {
+		logger('xml2array: parser function missing');
+		return array();
+	}
 
 
 	libxml_use_internal_errors(true);
 	libxml_clear_errors();
 
 	if($namespaces)
-	    $parser = @xml_parser_create_ns("UTF-8",':');
+		$parser = @xml_parser_create_ns("UTF-8",':');
 	else
-	    $parser = @xml_parser_create();
+		$parser = @xml_parser_create();
 
 	if(! $parser) {
 		logger('xml2array: xml_parser_create: no resource');
 		return array();
 	}
 
-    xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8"); 
+	xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8"); 
 	// http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
-    xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
-    xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
-    @xml_parse_into_struct($parser, trim($contents), $xml_values);
-    @xml_parser_free($parser);
+	xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
+	xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
+	@xml_parse_into_struct($parser, trim($contents), $xml_values);
+	@xml_parser_free($parser);
 
-    if(! $xml_values) {
+	if(! $xml_values) {
 		logger('xml2array: libxml: parse error: ' . $contents, LOGGER_DATA);
 		foreach(libxml_get_errors() as $err)
 			logger('libxml: parse: ' . $err->code . " at " . $err->line . ":" . $err->column . " : " . $err->message, LOGGER_DATA);
@@ -620,40 +620,40 @@ function xml2array($contents, $namespaces = true, $get_attributes=1, $priority =
 		return;
 	}
 
-    //Initializations
-    $xml_array = array();
-    $parents = array();
-    $opened_tags = array();
-    $arr = array();
+	//Initializations
+	$xml_array = array();
+	$parents = array();
+	$opened_tags = array();
+	$arr = array();
 
-    $current = &$xml_array; // Reference
+	$current = &$xml_array; // Reference
 
-    // Go through the tags.
-    $repeated_tag_index = array(); // Multiple tags with same name will be turned into an array
-    foreach($xml_values as $data) {
-        unset($attributes,$value); // Remove existing values, or there will be trouble
+	// Go through the tags.
+	$repeated_tag_index = array(); // Multiple tags with same name will be turned into an array
+	foreach($xml_values as $data) {
+		unset($attributes,$value); // Remove existing values, or there will be trouble
 
-        // This command will extract these variables into the foreach scope
-        // tag(string), type(string), level(int), attributes(array).
-        extract($data); // We could use the array by itself, but this cooler.
+		// This command will extract these variables into the foreach scope
+		// tag(string), type(string), level(int), attributes(array).
+		extract($data); // We could use the array by itself, but this cooler.
 
-        $result = array();
-        $attributes_data = array();
-        
-        if(isset($value)) {
-            if($priority == 'tag') $result = $value;
-            else $result['value'] = $value; // Put the value in a assoc array if we are in the 'Attribute' mode
-        }
+		$result = array();
+		$attributes_data = array();
+		
+		if(isset($value)) {
+			if($priority == 'tag') $result = $value;
+			else $result['value'] = $value; // Put the value in a assoc array if we are in the 'Attribute' mode
+		}
 
-        //Set the attributes too.
-        if(isset($attributes) and $get_attributes) {
-            foreach($attributes as $attr => $val) {
-                if($priority == 'tag') $attributes_data[$attr] = $val;
-                else $result['@attributes'][$attr] = $val; // Set all the attributes in a array called 'attr'
-            }
-        }
+		//Set the attributes too.
+		if(isset($attributes) and $get_attributes) {
+			foreach($attributes as $attr => $val) {
+				if($priority == 'tag') $attributes_data[$attr] = $val;
+				else $result['@attributes'][$attr] = $val; // Set all the attributes in a array called 'attr'
+			}
+		}
 
-        // See tag status and do the needed.
+		// See tag status and do the needed.
 		if($namespaces && strpos($tag,':')) {
 			$namespc = substr($tag,0,strrpos($tag,':')); 
 			$tag = strtolower(substr($tag,strlen($namespc)+1));
@@ -662,80 +662,80 @@ function xml2array($contents, $namespaces = true, $get_attributes=1, $priority =
 		$tag = strtolower($tag);
 
 		if($type == "open") {   // The starting of the tag '<tag>'
-            $parent[$level-1] = &$current;
-            if(!is_array($current) or (!in_array($tag, array_keys($current)))) { // Insert New tag
-                $current[$tag] = $result;
-                if($attributes_data) $current[$tag. '_attr'] = $attributes_data;
-                $repeated_tag_index[$tag.'_'.$level] = 1;
+			$parent[$level-1] = &$current;
+			if(!is_array($current) or (!in_array($tag, array_keys($current)))) { // Insert New tag
+				$current[$tag] = $result;
+				if($attributes_data) $current[$tag. '_attr'] = $attributes_data;
+				$repeated_tag_index[$tag.'_'.$level] = 1;
 
-                $current = &$current[$tag];
+				$current = &$current[$tag];
 
-            } else { // There was another element with the same tag name
+			} else { // There was another element with the same tag name
 
-                if(isset($current[$tag][0])) { // If there is a 0th element it is already an array
-                    $current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
-                    $repeated_tag_index[$tag.'_'.$level]++;
-                } else { // This section will make the value an array if multiple tags with the same name appear together
-                    $current[$tag] = array($current[$tag],$result); // This will combine the existing item and the new item together to make an array
-                    $repeated_tag_index[$tag.'_'.$level] = 2;
-                    
-                    if(isset($current[$tag.'_attr'])) { // The attribute of the last(0th) tag must be moved as well
-                        $current[$tag]['0_attr'] = $current[$tag.'_attr'];
-                        unset($current[$tag.'_attr']);
-                    }
+				if(isset($current[$tag][0])) { // If there is a 0th element it is already an array
+					$current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
+					$repeated_tag_index[$tag.'_'.$level]++;
+				} else { // This section will make the value an array if multiple tags with the same name appear together
+					$current[$tag] = array($current[$tag],$result); // This will combine the existing item and the new item together to make an array
+					$repeated_tag_index[$tag.'_'.$level] = 2;
+					
+					if(isset($current[$tag.'_attr'])) { // The attribute of the last(0th) tag must be moved as well
+						$current[$tag]['0_attr'] = $current[$tag.'_attr'];
+						unset($current[$tag.'_attr']);
+					}
 
-                }
-                $last_item_index = $repeated_tag_index[$tag.'_'.$level]-1;
-                $current = &$current[$tag][$last_item_index];
-            }
+				}
+				$last_item_index = $repeated_tag_index[$tag.'_'.$level]-1;
+				$current = &$current[$tag][$last_item_index];
+			}
 
-        } elseif($type == "complete") { // Tags that ends in 1 line '<tag />'
-            //See if the key is already taken.
-            if(!isset($current[$tag])) { //New Key
-                $current[$tag] = $result;
-                $repeated_tag_index[$tag.'_'.$level] = 1;
-                if($priority == 'tag' and $attributes_data) $current[$tag. '_attr'] = $attributes_data;
+		} elseif($type == "complete") { // Tags that ends in 1 line '<tag />'
+			//See if the key is already taken.
+			if(!isset($current[$tag])) { //New Key
+				$current[$tag] = $result;
+				$repeated_tag_index[$tag.'_'.$level] = 1;
+				if($priority == 'tag' and $attributes_data) $current[$tag. '_attr'] = $attributes_data;
 
-            } else { // If taken, put all things inside a list(array)
-                if(isset($current[$tag][0]) and is_array($current[$tag])) { // If it is already an array...
+			} else { // If taken, put all things inside a list(array)
+				if(isset($current[$tag][0]) and is_array($current[$tag])) { // If it is already an array...
 
-                    // ...push the new element into that array.
-                    $current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
-                    
-                    if($priority == 'tag' and $get_attributes and $attributes_data) {
-                        $current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
-                    }
-                    $repeated_tag_index[$tag.'_'.$level]++;
+					// ...push the new element into that array.
+					$current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
+					
+					if($priority == 'tag' and $get_attributes and $attributes_data) {
+						$current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
+					}
+					$repeated_tag_index[$tag.'_'.$level]++;
 
-                } else { // If it is not an array...
-                    $current[$tag] = array($current[$tag],$result); //...Make it an array using using the existing value and the new value
-                    $repeated_tag_index[$tag.'_'.$level] = 1;
-                    if($priority == 'tag' and $get_attributes) {
-                        if(isset($current[$tag.'_attr'])) { // The attribute of the last(0th) tag must be moved as well
-                            
-                            $current[$tag]['0_attr'] = $current[$tag.'_attr'];
-                            unset($current[$tag.'_attr']);
-                        }
-                        
-                        if($attributes_data) {
-                            $current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
-                        }
-                    }
-                    $repeated_tag_index[$tag.'_'.$level]++; // 0 and 1 indexes are already taken
-                }
-            }
+				} else { // If it is not an array...
+					$current[$tag] = array($current[$tag],$result); //...Make it an array using using the existing value and the new value
+					$repeated_tag_index[$tag.'_'.$level] = 1;
+					if($priority == 'tag' and $get_attributes) {
+						if(isset($current[$tag.'_attr'])) { // The attribute of the last(0th) tag must be moved as well
+							
+							$current[$tag]['0_attr'] = $current[$tag.'_attr'];
+							unset($current[$tag.'_attr']);
+						}
+						
+						if($attributes_data) {
+							$current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
+						}
+					}
+					$repeated_tag_index[$tag.'_'.$level]++; // 0 and 1 indexes are already taken
+				}
+			}
 
-        } elseif($type == 'close') { // End of tag '</tag>'
-            $current = &$parent[$level-1];
-        }
-    }
-    
-    return($xml_array);
+		} elseif($type == 'close') { // End of tag '</tag>'
+			$current = &$parent[$level-1];
+		}
+	}
+	
+	return($xml_array);
 }  
 
 
 function email_header_encode($in_str, $charset = 'UTF-8') {
-    $out_str = $in_str;
+	$out_str = $in_str;
 	$need_to_convert = false;
 
 	for($x = 0; $x < strlen($in_str); $x ++) {
@@ -747,42 +747,42 @@ function email_header_encode($in_str, $charset = 'UTF-8') {
 	if(! $need_to_convert)
 		return $in_str;
 
-    if ($out_str && $charset) {
+	if ($out_str && $charset) {
 
-        // define start delimimter, end delimiter and spacer
-        $end = "?=";
-        $start = "=?" . $charset . "?B?";
-        $spacer = $end . "\r\n " . $start;
+		// define start delimimter, end delimiter and spacer
+		$end = "?=";
+		$start = "=?" . $charset . "?B?";
+		$spacer = $end . "\r\n " . $start;
 
-        // determine length of encoded text within chunks
-        // and ensure length is even
-        $length = 75 - strlen($start) - strlen($end);
+		// determine length of encoded text within chunks
+		// and ensure length is even
+		$length = 75 - strlen($start) - strlen($end);
 
-        /*
-            [EDIT BY danbrown AT php DOT net: The following
-            is a bugfix provided by (gardan AT gmx DOT de)
-            on 31-MAR-2005 with the following note:
-            "This means: $length should not be even,
-            but divisible by 4. The reason is that in
-            base64-encoding 3 8-bit-chars are represented
-            by 4 6-bit-chars. These 4 chars must not be
-            split between two encoded words, according
-            to RFC-2047.
-        */
-        $length = $length - ($length % 4);
+		/*
+			[EDIT BY danbrown AT php DOT net: The following
+			is a bugfix provided by (gardan AT gmx DOT de)
+			on 31-MAR-2005 with the following note:
+			"This means: $length should not be even,
+			but divisible by 4. The reason is that in
+			base64-encoding 3 8-bit-chars are represented
+			by 4 6-bit-chars. These 4 chars must not be
+			split between two encoded words, according
+			to RFC-2047.
+		*/
+		$length = $length - ($length % 4);
 
-        // encode the string and split it into chunks
-        // with spacers after each chunk
-        $out_str = base64_encode($out_str);
-        $out_str = chunk_split($out_str, $length, $spacer);
+		// encode the string and split it into chunks
+		// with spacers after each chunk
+		$out_str = base64_encode($out_str);
+		$out_str = chunk_split($out_str, $length, $spacer);
 
-        // remove trailing spacer and
-        // add start and end delimiters
-        $spacer = preg_quote($spacer,'/');
-        $out_str = preg_replace("/" . $spacer . "$/", "", $out_str);
-        $out_str = $start . $out_str . $end;
-    }
-    return $out_str;
+		// remove trailing spacer and
+		// add start and end delimiters
+		$spacer = preg_quote($spacer,'/');
+		$out_str = preg_replace("/" . $spacer . "$/", "", $out_str);
+		$out_str = $start . $out_str . $end;
+	}
+	return $out_str;
 }
 
 function email_send($addr, $subject, $headers, $item) {
@@ -793,7 +793,7 @@ function email_send($addr, $subject, $headers, $item) {
 
 	$part = uniqid("", true);
 
-	$html    = prepare_body($item);
+	$html	= prepare_body($item);
 
 	$headers .= "Mime-Version: 1.0\n";
 	$headers .= 'Content-Type: multipart/alternative; boundary="=_'.$part.'"'."\n\n";
@@ -822,11 +822,13 @@ function email_send($addr, $subject, $headers, $item) {
 function discover_by_webbie($webbie) {
 	require_once('library/HTML5/Parser.php');
 
+	$webbie = strtolower($webbie);
+
 	$x = webfinger_rfc7033($webbie);
 	if($x && array_key_exists('links',$x) && $x['links']) {
 		foreach($x['links'] as $link) {
 			if(array_key_exists('rel',$link) && $link['rel'] == 'http://purl.org/zot/protocol') {
-				logger('discover_by_webbie: zot found for ' . $webbie);
+				logger('discover_by_webbie: zot found for ' . $webbie, LOGGER_DEBUG);
 				$z = z_fetch_url($link['href']);
 				if($z['success']) {
 					$j = json_decode($z['body'],true);
@@ -838,12 +840,12 @@ function discover_by_webbie($webbie) {
 	}
 
 	$result = array();
-    $network = null;
-    $diaspora = false;
+	$network = null;
+	$diaspora = false;
 
-    $diaspora_base = '';
-    $diaspora_guid = '';
-    $diaspora_key = '';
+	$diaspora_base = '';
+	$diaspora_guid = '';
+	$diaspora_key = '';
 	$dfrn = false;
 
 	$x = old_webfinger($webbie);			
@@ -881,48 +883,118 @@ function discover_by_webbie($webbie) {
 		}
 
 		if($diaspora && $diaspora_base && $diaspora_guid) {
-			$notify = $diaspora_base . 'receive/users/' . $diaspora_guid;
-			$batch  = $diaspora_base . 'receive/public' ;
-	        if(strpos($webbie,'@'))
-    	        $addr = str_replace('acct:', '', $webbie);
+			$guid = $diaspora_guid;
+			$diaspora_base = trim($diaspora_base,'/');
+
+			$notify = $diaspora_base . '/receive';
+
+//			// '/users/' . $diaspora_guid;
+//			$batch  = $diaspora_base . '/receive/public' ;
+			if(strpos($webbie,'@')) {
+				$addr = str_replace('acct:', '', $webbie);
+				$hostname = substr($webbie,strpos($webbie,'@')+1);
+			}
 			$network = 'diaspora';
+			// until we get a dfrn layer, we'll use diaspora protocols for Friendica,
+			// but give it a different network so we can go back and fix these when we get proper support. 
+			// It really should be just 'friendica' but we also want to distinguish
+			// between Friendica sites that we can use D* protocols with and those we can't.
+			// Some Friendica sites will have Diaspora disabled. 
 			if($dfrn)
-				$network = 'f-diaspora';
-			if($hcard)
+				$network = 'friendica-over-diaspora';
+			if($hcard) {
 				$vcard = scrape_vcard($hcard);
+				$vcard['nick'] = substr($webbie,0,strpos($webbie,'@'));
+			} 
+
+			$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+				dbesc($webbie)
+			);
+			if($r)
+				return true;
+
+			$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_pubkey, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_instance_url, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+				dbesc($addr),
+				dbesc($guid),
+				dbesc($pubkey),
+				dbesc($addr),
+				dbesc($profile),
+				dbesc($vcard['fn']),
+				dbesc($network),
+				dbesc(z_root()),
+				dbesc(datetime_convert())
+			);
+
+			$r = q("select * from hubloc where hubloc_hash = '%s' limit 1",
+				dbesc($webbie)
+			);
+			if(! $r) {
+				$r = q("insert into hubloc ( hubloc_guid, hubloc_hash, hubloc_addr, hubloc_network, hubloc_url, hubloc_host, hubloc_callback, hubloc_updated ) values ('%s','%s','%s','%s','%s','%s','%s','%s')",
+					dbesc($guid),
+					dbesc($addr),
+					dbesc($addr),
+					dbesc($network),
+					dbesc(trim($diaspora_base,'/')),
+					dbesc($hostname),
+					dbesc($notify),
+					dbesc(datetime_convert())
+				);
+			}
+			$photos = import_profile_photo($vcard['photo'],$addr);
+			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s' limit 1",
+				dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
+				dbesc($photos[0]),
+				dbesc($photos[1]),
+				dbesc($photos[2]),
+				dbesc($photos[3]),
+				dbesc($addr)
+			);
+			return true;
+
 		}
 
-   $vcard['fn'] = notags($vcard['fn']);
-    $vcard['nick'] = str_replace(' ','',notags($vcard['nick']));
+	return false;
 
-    $result['name'] = $vcard['fn'];
-    $result['nick'] = $vcard['nick'];
-    $result['url'] = $profile;
-    $result['addr'] = $addr;
-    $result['batch'] = $batch;
-    $result['notify'] = $notify;
-    $result['poll'] = $poll;
-    $result['request'] = $request;
-    $result['confirm'] = $confirm;
-    $result['poco'] = $poco;
-    $result['photo'] = $vcard['photo'];
-    $result['priority'] = $priority;
-    $result['network'] = $network;
-   $result['alias'] = $alias;
-    $result['pubkey'] = $pubkey;
-
-    logger('probe_url: ' . print_r($result,true), LOGGER_DEBUG);
-
-    return $result;
 /*
+	$vcard['fn'] = notags($vcard['fn']);
+	$vcard['nick'] = str_replace(' ','',notags($vcard['nick']));
+
+	$result['name'] = $vcard['fn'];
+	$result['nick'] = $vcard['nick'];
+	$result['guid'] = $guid;
+	$result['url'] = $profile;
+	$result['hostname'] = $hostname;
+	$result['addr'] = $addr;
+	$result['batch'] = $batch;
+	$result['notify'] = $notify;
+	$result['poll'] = $poll;
+	$result['request'] = $request;
+	$result['confirm'] = $confirm;
+	$result['poco'] = $poco;
+	$result['photo'] = $vcard['photo'];
+	$result['priority'] = $priority;
+	$result['network'] = $network;
+	$result['alias'] = $alias;
+	$result['pubkey'] = $pubkey;
+
+	logger('probe_url: ' . print_r($result,true), LOGGER_DEBUG);
+
+	return $result;
+
+*/
+
+/* Sample Diaspora result.
+
 Array
 (
     [name] => Mike Macgirvin
-    [nick] => MikeMacgirvin
+    [nick] => macgirvin
+    [guid] => a9174a618f8d269a
     [url] => https://joindiaspora.com/u/macgirvin
+    [hostname] => joindiaspora.com
     [addr] => macgirvin@joindiaspora.com
-    [batch] => https://joindiaspora.com/receive/public
-    [notify] => https://joindiaspora.com/receive/users/a9174a618f8d269a
+    [batch] => 
+    [notify] => https://joindiaspora.com/receive
     [poll] => https://joindiaspora.com/public/macgirvin.atom
     [request] => 
     [confirm] => 
@@ -996,33 +1068,33 @@ function old_webfinger($webbie) {
 				$links = fetch_xrd_links($pxrd);
 			}
 			return $links;
-    	}
+		}
 	}
-    return array();
+	return array();
 }
 
 
 function fetch_lrdd_template($host) {
-    $tpl = '';
+	$tpl = '';
 
-    $url1 = 'https://' . $host . '/.well-known/host-meta' ;
-    $url2 = 'http://' . $host . '/.well-known/host-meta' ;
-    $links = fetch_xrd_links($url1);
-    logger('fetch_lrdd_template from: ' . $url1, LOGGER_DEBUG);
-    logger('template (https): ' . print_r($links,true),LOGGER_DEBUG);
-    if(! count($links)) {
-        logger('fetch_lrdd_template from: ' . $url2);
-        $links = fetch_xrd_links($url2);
-        logger('template (http): ' . print_r($links,true),LOGGER_DEBUG);
-    }
-    if(count($links)) {
-        foreach($links as $link)
-            if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd' && (!$link['@attributes']['type'] || $link['@attributes']['type'] === 'application/xrd+xml'))
-                $tpl = $link['@attributes']['template'];
-    }
-    if(! strpos($tpl,'{uri}'))
-        $tpl = '';
-    return $tpl;
+	$url1 = 'https://' . $host . '/.well-known/host-meta' ;
+	$url2 = 'http://' . $host . '/.well-known/host-meta' ;
+	$links = fetch_xrd_links($url1);
+	logger('fetch_lrdd_template from: ' . $url1, LOGGER_DEBUG);
+	logger('template (https): ' . print_r($links,true),LOGGER_DEBUG);
+	if(! count($links)) {
+		logger('fetch_lrdd_template from: ' . $url2);
+		$links = fetch_xrd_links($url2);
+		logger('template (http): ' . print_r($links,true),LOGGER_DEBUG);
+	}
+	if(count($links)) {
+		foreach($links as $link)
+			if($link['@attributes']['rel'] && $link['@attributes']['rel'] === 'lrdd' && (!$link['@attributes']['type'] || $link['@attributes']['type'] === 'application/xrd+xml'))
+				$tpl = $link['@attributes']['template'];
+	}
+	if(! strpos($tpl,'{uri}'))
+		$tpl = '';
+	return $tpl;
 
 }
 
@@ -1032,52 +1104,52 @@ function fetch_xrd_links($url) {
 logger('fetch_xrd_links: ' . $url);
 
 	$redirects = 0;
-    $x = z_fetch_url($url,false,$redirects,array('timeout' => 20));
+	$x = z_fetch_url($url,false,$redirects,array('timeout' => 20));
 
 	if(! $x['success'])
 		return array();
 
 	$xml = $x['body'];
-    logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
+	logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
 
-    if ((! $xml) || (! stristr($xml,'<xrd')))
-        return array();
+	if ((! $xml) || (! stristr($xml,'<xrd')))
+		return array();
 
-    // fix diaspora's bad xml
-    $xml = str_replace(array('href=&quot;','&quot;/>'),array('href="','"/>'),$xml);
+	// fix diaspora's bad xml
+	$xml = str_replace(array('href=&quot;','&quot;/>'),array('href="','"/>'),$xml);
 
-    $h = parse_xml_string($xml);
-    if(! $h)
-        return array();
+	$h = parse_xml_string($xml);
+	if(! $h)
+		return array();
 
-    $arr = convert_xml_element_to_array($h);
+	$arr = convert_xml_element_to_array($h);
 
-    $links = array();
+	$links = array();
 
-    if(isset($arr['xrd']['link'])) {
-        $link = $arr['xrd']['link'];
+	if(isset($arr['xrd']['link'])) {
+		$link = $arr['xrd']['link'];
 
-        if(! isset($link[0]))
-            $links = array($link);
-        else
-            $links = $link;
-    }
-    if(isset($arr['xrd']['alias'])) {
-        $alias = $arr['xrd']['alias'];
-        if(! isset($alias[0]))
-            $aliases = array($alias);
-        else
-            $aliases = $alias;
-        if(is_array($aliases) && count($aliases)) {
-            foreach($aliases as $alias) {
-                $links[]['@attributes'] = array('rel' => 'alias' , 'href' => $alias);
-            }
-        }
-    }
+		if(! isset($link[0]))
+			$links = array($link);
+		else
+			$links = $link;
+	}
+	if(isset($arr['xrd']['alias'])) {
+		$alias = $arr['xrd']['alias'];
+		if(! isset($alias[0]))
+			$aliases = array($alias);
+		else
+			$aliases = $alias;
+		if(is_array($aliases) && count($aliases)) {
+			foreach($aliases as $alias) {
+				$links[]['@attributes'] = array('rel' => 'alias' , 'href' => $alias);
+			}
+		}
+	}
 
-    logger('fetch_xrd_links: ' . print_r($links,true), LOGGER_DATA);
+	logger('fetch_xrd_links: ' . print_r($links,true), LOGGER_DATA);
 
-    return $links;
+	return $links;
 }
 
 
