@@ -117,14 +117,25 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	}
 	else {
 
-		// attempt network auto-discovery
-		
 		$my_perms = 0;
 		$their_perms = 0;
 		$xchan_hash = '';
-		
 
+		$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+			dbesc($url)
+		);
 
+		if(! $r) {
+			// attempt network auto-discovery
+			if(strpos($url,'@')) {
+				$r = discover_by_webbie($url);
+			}
+		}
+		if($r) {
+			$xchan_hash = $url;
+			$their_perms = 0;
+			$my_perms = PERMS_W_STREAM|PERMS_W_MAIL;
+		}
 
 	}
 
