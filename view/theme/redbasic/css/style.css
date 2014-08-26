@@ -410,37 +410,35 @@ aside li {
 
 
 .fn {
-	padding: 0px 0px 5px 0px;
-	font-size: 120%;
 	font-weight: bold;
+	font-size: 16px;
 	color: #444444;
 }
 
 .vcard {
-	padding: 8px;
+	margin-bottom: 10px;
+	padding: 10px;
+	background-color: $comment_item_colour;
+	border-bottom: 1px solid $widget_brdrcolour;
+	-moz-border-radius: $radiuspx;
+	-webkit-border-radius: $radiuspx;
+	border-radius: $radiuspx;
 }
 
 .vcard .title {
-	margin-bottom: 5px;
+	margin-bottom: 10px;
+
 }
 
-.vcard dl {
-	clear: both;
-	word-wrap:break-word;
+.vcard dl  {
+	margin-top: 10px;
+	margin-bottom: 0px;
 }
 
-.vcard-profile-edit-icon {
-	font-size: 1.2em;
-}
 .vcard-profile-edit-icon:hover {
 	text-decoration: none;
 }
 
-.vcard .dropdown-menu {
-	position: absolute;
-	left: 200px;
-	top: 18px;
-}
 
 #profile-extra-links {
 	clear: both;
@@ -454,20 +452,21 @@ aside li {
 
 
 #profile-extra-links li {
-	margin-top: 5px;
+	margin-top: 10px;
 }
 
 
 .profile-edit-side-link {
-	opacity: 0.3;
+	opacity: 0;
 	filter:alpha(opacity=30);
 	float: right;
-	margin-top: -3px;
 }
-.profile-edit-side-link:hover {
-	opacity: 1.0;
+
+.vcard:hover .profile-edit-side-link {
+	opacity: 1;
 	filter:alpha(opacity=100);
 }
+
 
 .view-contact-wrapper {
 	margin-top: 20px;
@@ -494,9 +493,9 @@ aside li {
 
 
 #profile-photo-wrapper img {
-	padding: 12px;
-	width: 201px;
-	height: 201px;
+	padding: 10px;
+	width: 197px;
+	height: 197px;
 }
 
 #profile-in-dir-yes-label,
@@ -777,19 +776,25 @@ aside li {
 }
 
 #contact-block {
-	margin-top: 25px;
-	padding: 8px;
+	float: left;
+	background-color: $comment_item_colour;
+	border-bottom: 1px solid $widget_brdrcolour;
+	-moz-border-radius: $radiuspx;
+	-webkit-border-radius: $radiuspx;
+	border-radius: $radiuspx;
+	padding: 10px;
+	margin-bottom:10px;
 }
 
 #contact-block-numcontacts {
 	font-weight: bold;
-	margin-bottom:8px;
+	margin-bottom:10px;
 }
 
 .contact-block-div {
 	float: left;
-	width: 50px;
-	height: 50px;
+	width: 49px;
+	height: 49px;
 }
 .contact-block-textdiv {
 	float: left;
@@ -804,8 +809,8 @@ aside li {
 	float: left;
 }
 .contact-block-img {
-	width:48px;
-	height:48px;
+	width:47px;
+	height:47px;
 }
 
 #tag-remove {
@@ -884,19 +889,6 @@ aside li {
 
 #search-text::-moz-placeholder {
 	font-family: FontAwesome;
-}
-
-.location-label, .gender-label, .marital-label, .homepage-label {
-	float: left;
-	display: block;
-	width: 70px;
-
-}
-
-.adr, .x-gender, .marital-text, .homepage-url {
-	float: left;
-	display: block;
-	width: 130px;
 }
 
 .profile-clear {
@@ -1722,7 +1714,7 @@ header {
 }
 
 .contact-block-content {
-	margin-top: 8px;
+	margin-top: 10px;
 }
 .contact-block-img.archived {
 	opacity: 0.3;
