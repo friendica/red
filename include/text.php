@@ -1552,6 +1552,7 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 
 	$x = array(
 		'text/bbcode',
+		'text/html',
 		'text/markdown',
 		'text/plain'
 	);
@@ -1563,10 +1564,8 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 
 	if($r) {
 		if($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) {
-			if(local_user() && get_account_id() == $r[0]['account_id']) {
-				$x[] = 'text/html';
+			if(local_user() && get_account_id() == $r[0]['account_id'])
 				$x[] = 'application/x-php';
-			}
 		}
 	}
 
@@ -2022,4 +2021,5 @@ function in_arrayi($needle, $haystack) {
 function normalise_openid($s) {
 	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
 }
+
 
