@@ -153,9 +153,9 @@ function diaspora_process_outbound($arr) {
 	if($arr['walltowall'])
 		return;
 
-	if($arr['recipients']) {
+	if($arr['env_recips']) {
 		$r = q("select * from xchan left join hubloc on xchan_hash = hubloc_hash where hubloc_url = '%s' 
-			and xchan_hash in (" . implode(',',$arr['recipients']) . ") 
+			and xchan_hash in (" . implode(',',$arr['env_recips']) . ") 
 			and xchan_network in ('diaspora', 'friendica-over-diaspora') ",
 			dbesc($arr['hub']['hubloc_url'])
 		);
@@ -228,13 +228,13 @@ function diaspora_process_outbound($arr) {
 			diaspora_send_retraction($arr['target_item'],$arr['channel'],$contact,true);
 			return;
 		}
-		elseif($arr['target_item']['mid'] !== $mid['target_item']['parent_mid']) {
+		elseif($arr['target_item']['mid'] !== $arr['target_item']['parent_mid']) {
 			// we are the relay - send comments, likes and relayable_retractions to our conversants
 			logger('delivery: diaspora relay: ' . $loc);
 			diaspora_send_relay($arr['target_item'],$arr['channel'],$contact,true);
 			return;
 		}
-		elseif(($arr['top_level_post']) && (! $arr['walltowall'])) {
+		elseif($arr['top_level_post']) {
 			// currently no workable solution for sending walltowall
 			logger('delivery: diaspora status: ' . $loc);
 			diaspora_send_status($arr['target_item'],$arr['channel'],$contact,true);
@@ -2241,12 +2241,38 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 	}
 */
 
-	//if(strlen($title))
-	//	$body = "[b]".html_entity_decode($title)."[/b]\n\n".$body;
+
+	$body = str_ireplace("[quote", "\n\n[quote", $body);
+	$body = str_ireplace("[/quote]", "[/quote]\n\n", $body);
+
+	// strip bookmark indicators
+
+	$body = preg_replace('/\#\^\[([zu])rl/i', '[$1rl', $body);
+	$body = preg_replace('/\#\^http/i', 'http', $body);
+
+	// protect tags and mentions from hijacking
+
+	if(! intval(get_pconfig($owner['channel_id'],'system','allow_tag_hijacking'))) {
+		$new_tag	 = html_entity_decode('&#x22d5;',ENT_COMPAT,'UTF-8');
+		$new_mention = html_entity_decode('&#xff20;',ENT_COMPAT,'UTF-8');
+
+		// #-tags
+		$body = preg_replace('/\#\[url/i', $new_tag . '[url', $body);
+		$body = preg_replace('/\#\[zrl/i', $new_tag . '[zrl', $body);
+		// @-mentions
+		$body = preg_replace('/\@\[url/i', $new_mention . '[url', $body);
+		$body = preg_replace('/\@\[zrl/i', $new_mention . '[zrl', $body);
+	}
+
+	// remove multiple newlines
+	do {
+		$oldbody = $body;
+		$body = str_replace("\n\n\n", "\n\n", $body);
+	} while ($oldbody != $body);
+
 
 	// convert to markdown
 	$body = xmlify(html_entity_decode(bb2diaspora($body)));
-	//$body = bb2diaspora($body);
 
 	// Adding the title
 	if(strlen($title))
@@ -2261,7 +2287,6 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 			}
 		}
 	}
-
 
 	$public = (($item['item_private']) ? 'false' : 'true');
 
@@ -2279,7 +2304,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 			'$handle' => xmlify($myaddr),
 			'$public' => $public,
 			'$created' => $created,
-			'$provider' => $item['app']
+			'$provider' => (($item['app']) ? $item['app'] : 'redmatrix')
 		));
 	} else {
 		$tpl = get_markup_template('diaspora_post.tpl');
@@ -2289,11 +2314,11 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 			'$handle' => xmlify($myaddr),
 			'$public' => $public,
 			'$created' => $created,
-			'$provider' => $item['app']
+			'$provider' => (($item['app']) ? $item['app'] : 'redmatrix')
 		));
 	}
 
-	logger('diaspora_send_status: '.$owner['channel_name'].' -> '.$contact['xchan_name'].' base message: '.$msg, LOGGER_DATA);
+	logger('diaspora_send_status: '.$owner['channel_name'].' -> '.$contact['xchan_name'].' base message: ' . $msg, LOGGER_DATA);
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['channel_prvkey'],$contact['xchan_pubkey'],$public_batch)));
 

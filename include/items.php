@@ -95,6 +95,7 @@ function collect_recipients($item,&$private_envelope) {
 	$recipients[] = $item['author_xchan'];
 	if($item['owner_xchan'] != $item['author_xchan'])
 		$recipients[] = $item['owner_xchan'];
+
 	return $recipients;
 
 }

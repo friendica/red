@@ -493,7 +493,7 @@ function notifier_run($argv, $argc){
 		}
 
 
-		if($hub['network'] === 'diaspora' || $hub['network'] === 'friendica-over-diaspora') {
+		if($hub['hubloc_network'] === 'diaspora' || $hub['hubloc_network'] === 'friendica-over-diaspora') {
 			if(! get_config('system','diaspora_enabled'))
 				continue;
 
