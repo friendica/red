@@ -929,7 +929,7 @@ function discover_by_webbie($webbie) {
 				dbesc($webbie)
 			);
 			if(! $r) {
-				$r = q("insert into hubloc ( hubloc_guid, hubloc_hash, hubloc_addr, hubloc_network, hubloc_url, hubloc_host, hubloc_callback, hubloc_updated ) values ('%s','%s','%s','%s','%s','%s','%s','%s')",
+				$r = q("insert into hubloc ( hubloc_guid, hubloc_hash, hubloc_addr, hubloc_network, hubloc_url, hubloc_host, hubloc_callback, hubloc_updated, hubloc_flags ) values ('%s','%s','%s','%s','%s','%s','%s','%s', %d)",
 					dbesc($guid),
 					dbesc($addr),
 					dbesc($addr),
@@ -937,7 +937,8 @@ function discover_by_webbie($webbie) {
 					dbesc(trim($diaspora_base,'/')),
 					dbesc($hostname),
 					dbesc($notify),
-					dbesc(datetime_convert())
+					dbesc(datetime_convert()),
+					intval(HUBLOC_FLAGS_PRIMARY)
 				);
 			}
 			$photos = import_profile_photo($vcard['photo'],$addr);

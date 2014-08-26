@@ -198,11 +198,17 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 
 	if($r) {
 		$url = $r[0]['hubloc_url'];
+
+		if($r[0]['hubloc_network'] && $r[0]['hubloc_network'] !== 'zot') {
+			logger('zot_finger: alternate network: ' . $webbie);
+			return array('success' => false);
+		}		
 	}
 	else {
 		$url = 'https://' . $host;
 	}
-	
+
+			
 	$rhs = '/.well-known/zot-info';
 	$https = ((strpos($url,'https://') === 0) ? true : false);
 
@@ -270,6 +276,11 @@ function zot_finger($webbie,$channel,$autofallback = true) {
  */
 
 function zot_refresh($them,$channel = null, $force = false) {
+
+	if(array_key_exists('xchan_network',$them) && ($them['xchan_network'] !== 'zot')) {
+		logger('zot_refresh: not got zot. ' . $them['xchan_name']);
+		return true;
+	}
 
 	logger('zot_refresh: them: ' . print_r($them,true), LOGGER_DATA);
 	if($channel)

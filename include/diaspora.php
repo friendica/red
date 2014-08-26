@@ -215,7 +215,7 @@ function diaspora_process_outbound($arr) {
 	else {
 		// public message
 
-		$contact = array('hubloc_callback' => $arr['hub']['hubloc_callback']);
+		$contact = $arr['hub'];
 
 		if($target_item['verb'] === ACTIVITY_DISLIKE) {
 			// unsupported
@@ -2709,9 +2709,9 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch,$queue_run=false)
 	if($public_batch)
 		$dest_url = $contact['hubloc_callback'] . '/public';
 	else
-		$dest_url = $contact['hubloc_callback'] . '/users/' . $contact['guid'];
+		$dest_url = $contact['hubloc_callback'] . '/users/' . $contact['hubloc_guid'];
 
-	
+	logger('diaspora_transmit: URL: ' . $dest_url, LOGGER_DEBUG);	
 
 	if(intval(get_config('system','diaspora_test')))
 		return 200;
