@@ -2022,3 +2022,4 @@ function normalise_openid($s) {
 	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
 }
 
+
