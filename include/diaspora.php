@@ -121,7 +121,129 @@ function diaspora_is_blacklisted($s) {
 	return false;
 }
 
+function diaspora_process_outbound($arr) {
 
+/*
+
+	We are passed the following array from the notifier, providing everything we need to make delivery decisions.
+
+			diaspora_process_outbound(array(
+				'channel' => $channel,
+				'env_recips' => $env_recips,
+				'recipients' => $recipients,
+				'item' => $item,
+				'target_item' => $target_item,
+				'hub' => $hub,
+				'top_level_post' => $top_level_post,
+				'private' => $private,
+				'followup' => $followup,
+				'relay_to_owner' => $relay_to_owner,
+				'uplink' => $uplink,
+				'cmd' => $cmd,
+				'expire' =>	$expire,
+				'mail' => $mail,
+				'fsuggest' => $fsuggest,
+				'normal_mode' => $normal_mode,
+				'packet_type' => $packet_type,
+				'walltowall' => $walltowall,
+			));
+*/
+
+
+	if($arr['walltowall'])
+		return;
+
+	if($arr['recipients']) {
+		$r = q("select * from xchan left join hubloc on xchan_hash = hubloc_hash where hubloc_url = '%s' 
+			and xchan_hash in (" . implode(',',$arr['recipients']) . ") 
+			and xchan_network in ('diaspora', 'friendica-over-diaspora') ",
+			dbesc($arr['hub']['hubloc_url'])
+		);
+		if(! $r) {
+			logger('diaspora_process_outbound: no recipients');
+			return; 
+		}
+
+		foreach($r as $contact) {
+	
+			if($arr['mail']) {
+				diaspora_send_mail($arr['item'],$arr['channel'],$contact);
+				continue;
+			}
+
+			if(! $arr['normal_mode'])
+				continue;
+
+			// special handling for followup to public post
+			// all other public posts processed as public batches further below
+
+			if((! $arr['private']) && ($arr['followup'])) {
+				diaspora_send_followup($arr['target_item'],$arr['channel'],$contact, true);
+				continue;
+			}
+
+			if(! $contact['xchan_pubkey'])
+				continue;
+
+			if(activity_match($arr['target_item']['verb'],ACTIVITY_DISLIKE)) {
+				continue;
+			}
+			elseif(($arr['target_item']['item_restrict'] & ITEM_DELETED) 
+				&& (($arr['target_item']['mid'] === $arr['target_item']['parent_mid']) || $arr['followup'])) {
+				// send both top-level retractions and relayable retractions for owner to relay
+				diaspora_send_retraction($arr['target_item'],$arr['channel'],$contact);
+				continue;
+			}
+			elseif($arr['followup']) {
+				// send comments and likes to owner to relay
+				diaspora_send_followup($arr['target_item'],$arr['channel'],$contact);
+				continue;
+			}
+
+			elseif($target_item['mid'] !== $target_item['parent_mid']) {
+				// we are the relay - send comments, likes and relayable_retractions
+				// (of comments and likes) to our conversants
+				diaspora_send_relay($arr['target_item'],$arr['channel'],$contact);
+				continue;
+			}
+			elseif($arr['top_level']) {
+				diaspora_send_status($arr['target_item'],$arr['channel'],$contact);
+				continue;
+			}
+		}
+	}
+	else {
+		// public message
+
+		$contact = array('hubloc_callback' => $arr['hub']['hubloc_callback']);
+
+		if($target_item['verb'] === ACTIVITY_DISLIKE) {
+			// unsupported
+			return;
+		}
+		elseif(($arr['target_item']['deleted']) 
+			&& ($arr['target_item']['mid'] === $arr['target_item']['parent_mod'])) {
+			// top-level retraction
+			logger('delivery: diaspora retract: ' . $loc);
+			diaspora_send_retraction($arr['target_item'],$arr['channel'],$contact,true);
+			return;
+		}
+		elseif($arr['target_item']['mid'] !== $mid['target_item']['parent_mid']) {
+			// we are the relay - send comments, likes and relayable_retractions to our conversants
+			logger('delivery: diaspora relay: ' . $loc);
+			diaspora_send_relay($arr['target_item'],$arr['channel'],$contact,true);
+			return;
+		}
+		elseif(($arr['top_level_post']) && (! $arr['walltowall'])) {
+			// currently no workable solution for sending walltowall
+			logger('delivery: diaspora status: ' . $loc);
+			diaspora_send_status($arr['target_item'],$arr['channel'],$contact,true);
+			return;
+		}
+
+	}
+
+}
 
 
 
@@ -226,13 +348,13 @@ $magic_env = <<< EOT
 <?xml version='1.0' encoding='UTF-8'?>
 <diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env" >
   <header>
-    <author_id>$handle</author_id>
+	<author_id>$handle</author_id>
   </header>
   <me:env>
-    <me:encoding>base64url</me:encoding>
-    <me:alg>RSA-SHA256</me:alg>
-    <me:data type="application/xml">$data</me:data>
-    <me:sig>$sig</me:sig>
+	<me:encoding>base64url</me:encoding>
+	<me:alg>RSA-SHA256</me:alg>
+	<me:data type="application/xml">$data</me:data>
+	<me:sig>$sig</me:sig>
   </me:env>
 </diaspora>
 EOT;
@@ -323,10 +445,10 @@ $magic_env = <<< EOT
 <diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env" >
   $encrypted_header
   <me:env>
-    <me:encoding>base64url</me:encoding>
-    <me:alg>RSA-SHA256</me:alg>
-    <me:data type="application/xml">$data</me:data>
-    <me:sig>$sig</me:sig>
+	<me:encoding>base64url</me:encoding>
+	<me:alg>RSA-SHA256</me:alg>
+	<me:data type="application/xml">$data</me:data>
+	<me:sig>$sig</me:sig>
   </me:env>
 </diaspora>
 EOT;
@@ -386,19 +508,19 @@ function diaspora_decode($importer,$xml) {
 		 * $decrypted now contains something like
 		 *
 		 *  <decrypted_header>
-		 *     <iv>8e+G2+ET8l5BPuW0sVTnQw==</iv>
-		 *     <aes_key>UvSMb4puPeB14STkcDWq+4QE302Edu15oaprAQSkLKU=</aes_key>
+		 *	 <iv>8e+G2+ET8l5BPuW0sVTnQw==</iv>
+		 *	 <aes_key>UvSMb4puPeB14STkcDWq+4QE302Edu15oaprAQSkLKU=</aes_key>
 
 ***** OBSOLETE
 
-		 *     <author>
-		 *       <name>Ryan Hughes</name>
-		 *       <uri>acct:galaxor@diaspora.pirateship.org</uri>
-		 *     </author>
+		 *	 <author>
+		 *	   <name>Ryan Hughes</name>
+		 *	   <uri>acct:galaxor@diaspora.pirateship.org</uri>
+		 *	 </author>
 
 ***** CURRENT
 
-		 *     <author_id>galaxor@diaspora.priateship.org</author_id>
+		 *	 <author_id>galaxor@diaspora.priateship.org</author_id>
 
 ***** END DIFFS
 
@@ -576,7 +698,7 @@ function diaspora_request($importer,$xml) {
 		if($new_connection) {
 			require_once('include/enotify.php');
 			notification(array(
-				'type'         => NOTIFY_INTRO,
+				'type'	     => NOTIFY_INTRO,
 				'from_xchan'   => $ret['xchan_hash'],
 				'to_xchan'     => $importer['channel_hash'],
 				'link'         => z_root() . '/connedit/' . $new_connection[0]['abook_id'],
@@ -585,7 +707,7 @@ function diaspora_request($importer,$xml) {
 			if($default_perms) {
 				// Send back a sharing notification to them
 				diaspora_share($importer['channel_id'],$new_connection[0]);
-        
+		
 			}
 		}
 	}
@@ -1309,11 +1431,11 @@ function diaspora_conversation($importer,$xml,$msg) {
 		);
 		if($r)
 			$c = q("select * from conv where uid = %d and guid = '%s' limit 1",
-	        intval($importer['channel_id']),
-    	    dbesc($guid)
-    	);
-	    if(count($c))
-    	    $conversation = $c[0];
+			intval($importer['channel_id']),
+			dbesc($guid)
+		);
+		if(count($c))
+			$conversation = $c[0];
 	}
 	if(! $conversation) {
 		logger('diaspora_conversation: unable to create conversation.');
@@ -1578,7 +1700,7 @@ function diaspora_photo($importer,$xml,$msg,$attempt=1) {
 	$link_text = '[img]' . $remote_photo_path . $remote_photo_name . '[/img]' . "\n";
 
 	$link_text = scale_external_images($link_text, true,
-	                                   array($remote_photo_name, 'scaled_full_' . $remote_photo_name));
+									   array($remote_photo_name, 'scaled_full_' . $remote_photo_name));
 
 	if(strpos($parent_item['body'],$link_text) === false) {
 		$r = q("update item set `body` = '%s', `visible` = 1 where `id` = %d and `uid` = %d",
@@ -2044,6 +2166,18 @@ function diaspora_profile($importer,$xml,$msg) {
 function diaspora_share($me,$contact) {
 	$a = get_app();
 	$myaddr = $me['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+
+	if(! array_key_exists('xchan_hash',$contact)) {
+		$c = q("select * from xchan left join hubloc on xchan_hash = hubloc_hash where xchan_hash = '%s' limit 1",
+			dbesc($contact['hubloc_hash'])
+		);
+		if(! $c) {
+			logger('diaspora_share: ' . $contact['hubloc_hash']  . ' not found.');
+			return;
+		}
+		$contact = $c[0];
+	}
+
 	$theiraddr = $contact['xchan_addr'];
 
 	$tpl = get_markup_template('diaspora_share.tpl');
@@ -2052,29 +2186,25 @@ function diaspora_share($me,$contact) {
 		'$recipient' => $theiraddr
 	));
 
-	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey'])));
-	//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey']));
-
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['channel_prvkey'],$contact['xchan_pubkey'])));
 	return(diaspora_transmit($owner,$contact,$slap, false));
 }
 
 function diaspora_unshare($me,$contact) {
 
 	$a = get_app();
-	$myaddr = $me['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $me['channel_address'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
 	$tpl = get_markup_template('diaspora_retract.tpl');
 	$msg = replace_macros($tpl, array(
-		'$guid'   => $me['guid'],
+		'$guid'   => $me['channel_guid'],
 		'$type'   => 'Person',
 		'$handle' => $myaddr
 	));
 
-	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey'])));
-	//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$me,$contact,$me['prvkey'],$contact['pubkey']));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['channel_prvkey'],$contact['xchan_pubkey'])));
 
 	return(diaspora_transmit($owner,$contact,$slap, false));
-
 }
 
 
@@ -2082,7 +2212,6 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 
 	$a = get_app();
 	$myaddr = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
-	$theiraddr = $contact['xchan_addr'];
 
 	$images = array();
 
@@ -2167,7 +2296,6 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 	logger('diaspora_send_status: '.$owner['channel_name'].' -> '.$contact['xchan_name'].' base message: '.$msg, LOGGER_DATA);
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['channel_prvkey'],$contact['xchan_pubkey'],$public_batch)));
-	//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch));
 
 	$return_code = diaspora_transmit($owner,$contact,$slap,$public_batch);
 
@@ -2210,7 +2338,7 @@ function diaspora_is_reshare($body) {
 	$ret= array();
 
 	$ret["root_handle"] = preg_replace("=https?://(.*)/u/(.*)=ism", "$2@$1", $profile);
-    if (($ret["root_handle"] == $profile) OR ($ret["root_handle"] == ""))
+	if (($ret["root_handle"] == $profile) OR ($ret["root_handle"] == ""))
 		return(false);
 
 	$link = "";
@@ -2262,7 +2390,6 @@ function diaspora_send_images($item,$owner,$contact,$images,$public_batch = fals
 
 		logger('diaspora_send_photo: base message: ' . $msg, LOGGER_DATA);
 		$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['channel_prvkey'],$contact['xchan_pubkey'],$public_batch)));
-		//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch));
 
 		diaspora_transmit($owner,$contact,$slap,$public_batch);
 	}
@@ -2346,7 +2473,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 
 	$a = get_app();
 	$myaddr = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
-//	$theiraddr = $contact['addr'];
+
 
 	$body = $item['body'];
 	$text = html_entity_decode(bb2diaspora($body));
@@ -2356,7 +2483,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	// likes on comments
 	if($item['verb'] === ACTIVITY_LIKE && $item['thr_parent']) {
 		$p = q("select * from item where mid = '%s' limit 1",
-		        dbesc($item['thr_parent'])
+				dbesc($item['thr_parent'])
 		);
 	}
 	else {
@@ -2364,9 +2491,9 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		// return the items ordered by `item`.`id`, in which case the wrong item is chosen as the parent.
 		// The only item with `parent` and `id` as the parent id is the parent item.
 		$p = q("select * from item where parent = %d and id = %d limit 1",
-		       intval($item['parent']),
-		       intval($item['parent'])
-		      );
+			   intval($item['parent']),
+			   intval($item['parent'])
+			  );
 	}
 	if($p)
 		$parent = $p[0];
@@ -2471,8 +2598,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	logger('diaspora_send_relay: base message: ' . $msg, LOGGER_DATA);
 
 
-	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
-	//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['channel_prvkey'],$contact['xchan_pubkey'],$public_batch)));
 
 	return(diaspora_transmit($owner,$contact,$slap,$public_batch));
 
@@ -2506,8 +2632,7 @@ function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 		'$signature' => xmlify(base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha256')))
 	));
 
-	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch)));
-	//$slap = 'xml=' . urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],$public_batch));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['channel_prvkey'],$contact['xchan_pubkey'],$public_batch)));
 
 	return(diaspora_transmit($owner,$contact,$slap,$public_batch));
 }
@@ -2542,7 +2667,7 @@ function diaspora_send_mail($item,$owner,$contact) {
 	$signed_text =  $item['guid'] . ';' . $cnv['guid'] . ';' . $body .  ';' 
 		. $created . ';' . $myaddr . ';' . $cnv['guid'];
 
-	$sig = base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha256'));
+	$sig = base64_encode(rsa_sign($signed_text,$owner['channel_prvkey'],'sha256'));
 
 	$msg = array(
 		'guid' => xmlify($item['guid']),
@@ -2567,8 +2692,7 @@ function diaspora_send_mail($item,$owner,$contact) {
 
 	logger('diaspora_conversation: ' . print_r($xmsg,true), LOGGER_DATA);
 
-	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($xmsg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],false)));
-	//$slap = 'xml=' . urlencode(diaspora_msg_build($xmsg,$owner,$contact,$owner['uprvkey'],$contact['pubkey'],false));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($xmsg,$owner,$contact,$owner['channel_prvkey'],$contact['xchan_pubkey'],false)));
 
 	return(diaspora_transmit($owner,$contact,$slap,false));
 
@@ -2581,6 +2705,21 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch,$queue_run=false)
 	if(! $enabled) {
 		return 200;
 	}
+
+	if($public_batch)
+		$dest_url = $contact['hubloc_callback'] . '/public';
+	else
+		$dest_url = $contact['hubloc_callback'] . '/users/' . $contact['guid'];
+
+	
+
+	if(intval(get_config('system','diaspora_test')))
+		return 200;
+
+
+
+return 200;
+
 
 	$a = get_app();
 	$logid = random_string(4);
