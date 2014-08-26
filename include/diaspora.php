@@ -2741,56 +2741,31 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch,$queue_run=false)
 	if(intval(get_config('system','diaspora_test')))
 		return 200;
 
-
-
-return 200;
-
-
 	$a = get_app();
 	$logid = random_string(4);
-	$dest_url = (($public_batch) ? $contact['batch'] : $contact['notify']);
-	if(! $dest_url) {
-		logger('diaspora_transmit: no url for contact: ' . $contact['id'] . ' batch mode =' . $public_batch);
-		return 0;
-	} 
 
-	logger('diaspora_transmit: ' . $logid . ' ' . $dest_url);
+	logger('diaspora_transmit: ' . $logid . ' ' . $dest_url, LOGGER_DEBUG);
 
-	if( (! $queue_run) && (was_recently_delayed($contact['id'])) ) {
-		$return_code = 0;
-	}
-	else {
-		if (!intval(get_config('system','diaspora_test'))) {
-			post_url($dest_url . '/', $slap);
-			$return_code = $a->get_curl_code();
-		} else {
-			logger('diaspora_transmit: test_mode');
-			return 200;
-		}
-	}
+	$hash = random_string();
 
-	logger('diaspora_transmit: ' . $logid . ' returns: ' . $return_code);
+	$interval = ((get_config('system','delivery_interval') !== false) 
+		? intval(get_config('system','delivery_interval')) : 2 );
 
-	if((! $return_code) || (($return_code == 503) && (stristr($a->get_curl_headers(),'retry-after')))) {
-		logger('diaspora_transmit: queue message');
+	q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
+		dbesc($hash),
+		intval($owner['account_id']),
+		intval($owner['channel_id']),
+		dbesc('post'),
+		dbesc($dest_url),
+		intval(1),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		dbesc(''),
+		dbesc($slap)
+	);
 
-		$r = q("SELECT id from queue where cid = %d and network = '%s' and content = '%s' and batch = %d limit 1",
-			intval($contact['id']),
-			dbesc(NETWORK_DIASPORA),
-			dbesc($slap),
-			intval($public_batch)
-		);
-		if(count($r)) {
-			logger('diaspora_transmit: add_to_queue ignored - identical item already in queue');
-		}
-		else {
-			// queue message for redelivery
-			add_to_queue($contact['id'],NETWORK_DIASPORA,$slap,$public_batch);
-		}
-	}
+	proc_run('php','include/deliver.php',$hash);
+	if($interval)
+		@time_sleep_until(microtime(true) + (float) $interval);
 
-
-	return(($return_code) ? $return_code : (-1));
 }
-
-

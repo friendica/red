@@ -245,12 +245,12 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 			intval($channel_id)
 		);
 
-		$r = q("update hubloc set hubloc_flags = hubloc_flags | %d where hubloc_hash = '%s'",
+		$r = q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_hash = '%s'",
 			intval(HUBLOC_FLAGS_DELETED),
 			dbesc($channel['channel_hash'])
 		);
 
-		$r = q("update xchan set xchan_flags = xchan_flags | %d where xchan_hash = '%s'",
+		$r = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
 			intval(XCHAN_FLAGS_DELETED),
 			dbesc($channel['channel_hash'])
 		);
@@ -274,7 +274,7 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 	q("DELETE FROM `spam` WHERE `uid` = %d", intval($channel_id));
 
 
-	q("delete from abook where abook_xchan = '%s' and abook_flags & %d limit 1",
+	q("delete from abook where abook_xchan = '%s' and (abook_flags & %d) limit 1",
 		dbesc($channel['channel_hash']),
 		dbesc(ABOOK_FLAG_SELF)
 	);
@@ -285,13 +285,13 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 		intval($channel_id)
 	);
 
-	$r = q("update hubloc set hubloc_flags = hubloc_flags | %d where hubloc_hash = '%s' and hubloc_url = '%s' ",
+	$r = q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_hash = '%s' and hubloc_url = '%s' ",
 		intval(HUBLOC_FLAGS_DELETED),
 		dbesc($channel['channel_hash']),
 		dbesc(z_root())
 	);
 
-	$r = q("update xchan set xchan_flags = xchan_flags | %d where xchan_hash = '%s' ",
+	$r = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s' ",
 		intval(XCHAN_FLAGS_DELETED),
 		dbesc($channel['channel_hash'])
 	);
@@ -435,12 +435,12 @@ function remove_all_xchan_resources($xchan, $channel_id = 0) {
 
 			// directory servers need to keep the record around for sync purposes - mark it deleted
 
-	        $r = q("update hubloc set hubloc_flags = hubloc_flags | %d where hubloc_hash = '%s'",
+	        $r = q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_hash = '%s'",
     	        intval(HUBLOC_FLAGS_DELETED),
         	    dbesc($xchan)
         	);
 
-        	$r = q("update xchan set xchan_flags = xchan_flags | %d where xchan_hash = '%s'",
+        	$r = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
             	intval(XCHAN_FLAGS_DELETED),
             	dbesc($xchan)
         	);

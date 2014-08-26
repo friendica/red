@@ -20,6 +20,20 @@ function deliver_run($argv, $argc) {
 			dbesc($argv[$x])
 		);
 		if($r) {
+			if($r[0]['outq_driver'] === 'post') {
+				$result = z_post_url($r[0]['outq_posturl'],$r[0]['outq_msg']); 
+				if($result['success'] && $result['status_code'] < 300) {
+					logger('deliver: queue post success to ' . $r[0]['outq_posturl'], LOGGER_DEBUG);
+				}
+				else {
+					$y = q("update outq set outq_updated = '%s' where outq_hash = '%s' limit 1",
+						dbesc(datetime_convert()),
+						dbesc($argv[$x])
+					);
+				}
+				continue;
+			}
+
 			if($r[0]['outq_posturl'] === z_root() . '/post') {
 				logger('deliver: local delivery', LOGGER_DEBUG);
 				// local delivery
