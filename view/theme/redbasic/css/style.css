@@ -2118,6 +2118,7 @@ img.mail-list-sender-photo {
 /* widgets */
 
 .widget {
+	background-color: $comment_item_colour;
 	border-bottom: 1px solid $widget_brdrcolour;
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
@@ -2407,7 +2408,6 @@ blockquote {
 	border: 1px solid $advperm_bordercol;
 	background-image: linear-gradient(to bottom, $advperm_gradientcol 0px, $advperm_bgcolour 100%);
 }
-
 
 @media screen and (max-width: 767px) {
 	aside#region_1 {

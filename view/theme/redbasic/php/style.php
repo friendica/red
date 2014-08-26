@@ -140,7 +140,7 @@ if(! $a->install) {
 	if (! $selected_active_deco)
 		$selected_active_deco = "none";
 	if (! $widget_brdrcolour)
-		$widget_brdrcolour = "#eec";
+		$widget_brdrcolour = "rgba(238,238,238,0.8)";
 	if (! $blockquote_colour)
 		$blockquote_colour = "#000";
 	if (! $blockquote_bgcolour)
