@@ -117,8 +117,11 @@ function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_
 		'version' => ZOT_REVISION
 	);
 
-	if($recipients)
+	if($recipients) {
+		for($x = 0; $x < count($recipients); $x ++)
+			unset($recipients[$x]['hash']);
 		$data['recipients'] = $recipients;
+	}
 
 	if($secret) {
 		$data['secret'] = $secret; 

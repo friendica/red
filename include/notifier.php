@@ -412,7 +412,7 @@ function notifier_run($argv, $argc){
 
 			$recip_list[] = $d['xchan_addr'] . ' (' . $d['xchan_hash'] . ')'; 
 			if($private)
-				$env_recips[] = array('guid' => $d['xchan_guid'],'guid_sig' => $d['xchan_guid_sig']);
+				$env_recips[] = array('guid' => $d['xchan_guid'],'guid_sig' => $d['xchan_guid_sig'],'hash' => $d['xchan_hash']);
 		}
 	}
 
@@ -445,11 +445,11 @@ function notifier_run($argv, $argc){
 		// aren't the owner or author.  
 
 
-		$r = q("select hubloc_guid, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
 			where hubloc_hash in (" . implode(',',$recipients) . ") group by hubloc_sitekey order by hubloc_connected desc limit 1");
 	} 
 	else {
-		$r = q("select hubloc_guid, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
 			where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_sitekey");
 	}
 

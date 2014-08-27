@@ -150,15 +150,32 @@ function diaspora_process_outbound($arr) {
 */
 
 
+	$target_item = $arr['target_item'];
+
+	if($target_item && array_key_exists('item_flags',$target_item) && ($target_item['item_flags'] & ITEM_OBSCURED)) {
+		$key = get_config('system','prvkey');
+		if($target_item['title'])
+			$target_item['title'] = crypto_unencapsulate(json_decode($target_item['title'],true),$key);
+		if($target_item['body'])
+			$target_item['body'] = crypto_unencapsulate(json_decode($target_item['body'],true),$key);
+	}
+
 	if($arr['walltowall'])
 		return;
 
 	if($arr['env_recips']) {
+		$hashes = array();
+
+		// re-explode the recipients, but only for this hub/pod
+
+		foreach($arr['env_recips'] as $recip)
+			$hashes[] = "'" . $recip['hash'] . "'";
+
 		$r = q("select * from xchan left join hubloc on xchan_hash = hubloc_hash where hubloc_url = '%s' 
-			and xchan_hash in (" . implode(',',$arr['env_recips']) . ") 
-			and xchan_network in ('diaspora', 'friendica-over-diaspora') ",
+			and xchan_hash in (" . implode(',', $hashes) . ") and xchan_network in ('diaspora', 'friendica-over-diaspora') ",
 			dbesc($arr['hub']['hubloc_url'])
 		);
+
 		if(! $r) {
 			logger('diaspora_process_outbound: no recipients');
 			return; 
@@ -178,36 +195,36 @@ function diaspora_process_outbound($arr) {
 			// all other public posts processed as public batches further below
 
 			if((! $arr['private']) && ($arr['followup'])) {
-				diaspora_send_followup($arr['target_item'],$arr['channel'],$contact, true);
+				diaspora_send_followup($target_item,$arr['channel'],$contact, true);
 				continue;
 			}
 
 			if(! $contact['xchan_pubkey'])
 				continue;
 
-			if(activity_match($arr['target_item']['verb'],ACTIVITY_DISLIKE)) {
+			if(activity_match($target_item['verb'],ACTIVITY_DISLIKE)) {
 				continue;
 			}
-			elseif(($arr['target_item']['item_restrict'] & ITEM_DELETED) 
-				&& (($arr['target_item']['mid'] === $arr['target_item']['parent_mid']) || $arr['followup'])) {
+			elseif(($target_item['item_restrict'] & ITEM_DELETED) 
+				&& (($target_item['mid'] === $target_item['parent_mid']) || $arr['followup'])) {
 				// send both top-level retractions and relayable retractions for owner to relay
-				diaspora_send_retraction($arr['target_item'],$arr['channel'],$contact);
+				diaspora_send_retraction($target_item,$arr['channel'],$contact);
 				continue;
 			}
 			elseif($arr['followup']) {
 				// send comments and likes to owner to relay
-				diaspora_send_followup($arr['target_item'],$arr['channel'],$contact);
+				diaspora_send_followup($target_item,$arr['channel'],$contact);
 				continue;
 			}
 
 			elseif($target_item['mid'] !== $target_item['parent_mid']) {
 				// we are the relay - send comments, likes and relayable_retractions
 				// (of comments and likes) to our conversants
-				diaspora_send_relay($arr['target_item'],$arr['channel'],$contact);
+				diaspora_send_relay($target_item,$arr['channel'],$contact);
 				continue;
 			}
-			elseif($arr['top_level']) {
-				diaspora_send_status($arr['target_item'],$arr['channel'],$contact);
+			elseif($arr['top_level_post']) {
+				diaspora_send_status($target_item,$arr['channel'],$contact);
 				continue;
 			}
 		}
@@ -221,23 +238,23 @@ function diaspora_process_outbound($arr) {
 			// unsupported
 			return;
 		}
-		elseif(($arr['target_item']['deleted']) 
-			&& ($arr['target_item']['mid'] === $arr['target_item']['parent_mod'])) {
+		elseif(($target_item['deleted']) 
+			&& ($target_item['mid'] === $target_item['parent_mod'])) {
 			// top-level retraction
 			logger('delivery: diaspora retract: ' . $loc);
-			diaspora_send_retraction($arr['target_item'],$arr['channel'],$contact,true);
+			diaspora_send_retraction($target_item,$arr['channel'],$contact,true);
 			return;
 		}
-		elseif($arr['target_item']['mid'] !== $arr['target_item']['parent_mid']) {
+		elseif($target_item['mid'] !== $target_item['parent_mid']) {
 			// we are the relay - send comments, likes and relayable_retractions to our conversants
 			logger('delivery: diaspora relay: ' . $loc);
-			diaspora_send_relay($arr['target_item'],$arr['channel'],$contact,true);
+			diaspora_send_relay($target_item,$arr['channel'],$contact,true);
 			return;
 		}
 		elseif($arr['top_level_post']) {
 			// currently no workable solution for sending walltowall
 			logger('delivery: diaspora status: ' . $loc);
-			diaspora_send_status($arr['target_item'],$arr['channel'],$contact,true);
+			diaspora_send_status($target_item,$arr['channel'],$contact,true);
 			return;
 		}
 
@@ -392,7 +409,7 @@ function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey,$public = false)
 	$outer_iv = random_string(16);
 	$b_outer_iv = base64_encode($outer_iv);
 
-	$handle = $user['xchan_addr'];
+    $handle = $user['channel_address'] . '@' . get_app()->get_hostname();
 
 	$padded_data = pkcs5_pad($msg,16);
 	$inner_encrypted = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $inner_aes_key, $padded_data, MCRYPT_MODE_CBC, $inner_iv);
@@ -1174,18 +1191,20 @@ function diaspora_comment($importer,$xml,$msg) {
 		return 202;
 	}
 
-	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `mid` = '%s' LIMIT 1",
+	// Friendica is truncating guids at 64 chars
+
+	$r = q("SELECT * FROM item WHERE uid = %d AND mid like '%s' LIMIT 1",
 		intval($importer['channel_id']),
-		dbesc($guid)
+		dbesc($guid . '%')
 	);
 	if($r) {
 		logger('diaspora_comment: our comment just got relayed back to us (or there was a guid collision) : ' . $guid);
 		return;
 	}
 
-	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `mid` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM item WHERE uid = %d AND mid LIKE '%s' LIMIT 1",
 		intval($importer['channel_id']),
-		dbesc($parent_guid)
+		dbesc($parent_guid . '%')
 	);
 	if(! $r) {
 		logger('diaspora_comment: parent item not found: parent: ' . $parent_guid . ' item: ' . $guid);
@@ -1298,7 +1317,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	// No timestamps for comments? OK, we'll the use current time.
 	$datarray['changed'] = $datarray['created'] = $datarray['edited'] = datetime_convert();
-	$datarray['private'] = $parent_item['private'];
+	$datarray['item_private'] = $parent_item['item_private'];
 
 	$datarray['owner_xchan'] = $parent_item['owner_xchan'];
 	$datarray['author_xchan'] = $person['xchan_hash'];
@@ -2326,7 +2345,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 
 	$return_code = diaspora_transmit($owner,$contact,$slap,$public_batch);
 
-	logger('diaspora_send_status: guid: '.$item['mid'].' result '.$return_code, LOGGER_DEBUG);
+//	logger('diaspora_send_status: guid: '.$item['mid'].' result '.$return_code, LOGGER_DEBUG);
 
 	if(count($images)) {
 		diaspora_send_images($item,$owner,$contact,$images,$public_batch);

@@ -22,7 +22,7 @@ function deliver_run($argv, $argc) {
 		if($r) {
 			if($r[0]['outq_driver'] === 'post') {
 				$result = z_post_url($r[0]['outq_posturl'],$r[0]['outq_msg']); 
-				if($result['success'] && $result['status_code'] < 300) {
+				if($result['success'] && $result['return_code'] < 300) {
 					logger('deliver: queue post success to ' . $r[0]['outq_posturl'], LOGGER_DEBUG);
 				}
 				else {
