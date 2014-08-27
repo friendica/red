@@ -107,7 +107,7 @@ function notifier_run($argv, $argc){
 				intval($r[0]['abook_channel'])
 			);
 			if($s) {
-				if($r[0]['hubloc_network'] === 'diaspora' || $r[0]['hubloc_network'] === 'friendica_over_diaspora') {
+				if($r[0]['hubloc_network'] === 'diaspora' || $r[0]['hubloc_network'] === 'friendica-over-diaspora') {
 					require_once('include/diaspora.php');
 					diaspora_share($s[0],$r[0]);
 				}

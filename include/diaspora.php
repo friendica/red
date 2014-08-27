@@ -330,7 +330,7 @@ function diaspora_pubmsg_build($msg,$user,$contact,$prvkey,$pubkey) {
 
 	$handle = $user['xchan_addr'];
 
-	$b64url_data = base64url_encode($msg);
+	$b64url_data = base64url_encode($msg,false);
 
 	$data = str_replace(array("\n","\r"," ","\t"),array('','','',''),$b64url_data);
 
@@ -338,11 +338,11 @@ function diaspora_pubmsg_build($msg,$user,$contact,$prvkey,$pubkey) {
 	$encoding = 'base64url';
 	$alg = 'RSA-SHA256';
 
-	$signable_data = $data  . '.' . base64url_encode($type) . '.'
-		. base64url_encode($encoding) . '.' . base64url_encode($alg) ;
+	$signable_data = $data  . '.' . base64url_encode($type,false) . '.'
+		. base64url_encode($encoding,false) . '.' . base64url_encode($alg,false) ;
 
 	$signature = rsa_sign($signable_data,$prvkey);
-	$sig = base64url_encode($signature);
+	$sig = base64url_encode($signature,false);
 
 $magic_env = <<< EOT
 <?xml version='1.0' encoding='UTF-8'?>
@@ -400,18 +400,20 @@ function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey,$public = false)
 	$b64_data = base64_encode($inner_encrypted);
 
 
-	$b64url_data = base64url_encode($b64_data);
+	$b64url_data = base64url_encode($b64_data,false);
 	$data = str_replace(array("\n","\r"," ","\t"),array('','','',''),$b64url_data);
 
 	$type = 'application/xml';
 	$encoding = 'base64url';
 	$alg = 'RSA-SHA256';
 
-	$signable_data = $data  . '.' . base64url_encode($type) . '.'
-		. base64url_encode($encoding) . '.' . base64url_encode($alg) ;
+	$signable_data = $data  . '.' . base64url_encode($type,false) . '.'
+		. base64url_encode($encoding,false) . '.' . base64url_encode($alg,false) ;
+
+	logger('diaspora_msg_build: signable_data: ' . $signable_data, LOGGER_DATA);
 
 	$signature = rsa_sign($signable_data,$prvkey);
-	$sig = base64url_encode($signature);
+	$sig = base64url_encode($signature,false);
 
 $decrypted_header = <<< EOT
 <decrypted_header>
@@ -570,7 +572,7 @@ function diaspora_decode($importer,$xml) {
 	$encoding = $base->encoding;
 	$alg = $base->alg;
 
-	$signed_data = $data  . '.' . base64url_encode($type) . '.' . base64url_encode($encoding) . '.' . base64url_encode($alg);
+	$signed_data = $data  . '.' . base64url_encode($type,false) . '.' . base64url_encode($encoding,false) . '.' . base64url_encode($alg,false);
 
 
 	// decode the data
@@ -642,7 +644,7 @@ function diaspora_request($importer,$xml) {
 		// perhaps we were already sharing with this person. Now they're sharing with us.
 		// That makes us friends. Maybe.
 
-		$newperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTO|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT;
+		$newperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT;
 
 		$r = q("update abook set abook_their_perms = %d where abook_id = %d and abook_channel = %d limit 1",
 			intval($newperms),
@@ -655,7 +657,7 @@ function diaspora_request($importer,$xml) {
 
 	$ret = find_diaspora_person_by_handle($sender_handle);
 
-	if((! $ret) || ($ret['xchan_network'] != 'diaspora')) {
+	if((! $ret) || (! strstr($ret['xchan_network'],'diaspora'))) {
 		logger('diaspora_request: Cannot resolve diaspora handle ' . $sender_handle . ' for ' . $recipient_handle);
 		return;
 	}
