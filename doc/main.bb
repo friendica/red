@@ -33,6 +33,7 @@ Zot is the great new communicaton protocol invented especially for the Red Matri
 [zrl=[baseurl]/help/AdvancedSearch]Advanced Directory Search[/zrl]
 [zrl=[baseurl]/help/addons]Help With Addons[/zrl]
 [zrl=[baseurl]/help/nomadic-identity]Got Zot? Nomadic Identity, Channel Cloning And More[/zrl]
+[zrl=[baseurl]/help/diaspora_compat]Diaspora Communications Compatibility (Diaspora and Friendica)[/zrl]
 
 [size=large][b]Frequently Asked Questions For Users[/b][/size]
 [zrl=[baseurl]/help/faq_users]FAQ For Users[/zrl]
