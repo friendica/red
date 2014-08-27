@@ -1333,6 +1333,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		}
 	}
 
+	$datarray['uid'] = $importer['channel_id'];
 	$datarray['verb'] = ACTIVITY_POST;
 	$datarray['mid'] = $guid;
 	$datarray['parent_mid'] = $parent_item['mid'];
