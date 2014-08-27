@@ -823,6 +823,7 @@ CREATE TABLE IF NOT EXISTS `profdef` (
   `field_type` char(16) NOT NULL DEFAULT '',
   `field_desc` char(255) NOT NULL DEFAULT '',
   `field_help` char(255) NOT NULL DEFAULT '',
+  `field_inputs` mediumtext NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `field_name` (`field_name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

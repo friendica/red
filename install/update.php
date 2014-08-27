@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1125 );
+define( 'UPDATE_VERSION' , 1126 );
 
 /**
  *
@@ -1421,3 +1421,12 @@ function update_r1124() {
 
 
 }
+
+function update_r1125() {
+	$r = q("ALTER TABLE `profdef` ADD `field_inputs` MEDIUMTEXT NOT NULL DEFAULT ''");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+
