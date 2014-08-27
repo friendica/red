@@ -293,11 +293,6 @@ function diaspora_get_contact_by_handle($uid,$handle) {
 function find_diaspora_person_by_handle($handle) {
 
 	$person = false;
-	$update = false;
-	$got_lock = false;
-
-	$endlessloop = 0;
-	$maxloops = 10;
 
 	if(diaspora_is_blacklisted($handle))
 		return false;
@@ -308,24 +303,24 @@ function find_diaspora_person_by_handle($handle) {
 	if($r) {
 		$person = $r[0];
 		logger('find_diaspora_person_by handle: in cache ' . print_r($r,true), LOGGER_DATA);
-
-			// update record occasionally so it doesn't get stale
-//			$d = strtotime($person['updated'] . ' +00:00');
-//			if($d < strtotime('now - 14 days'))
-//				$update = true;
 	}
 
-	if((! $person) || ($update))  {
+	if(! $person) {
 
 		// try webfinger. Make sure to distinguish between diaspora, 
 		// redmatrix w/diaspora protocol and friendica w/diaspora protocol.
 
 		$result = discover_by_webbie($handle);
-
-
-
+		if($result) {
+			$r = q("select * from xchan where xchan_addr = '%s' limit 1",
+				dbesc($handle)
+			);
+			if($r) {
+				$person = $r[0];
+				logger('find_diaspora_person_by handle: discovered ' . print_r($r,true), LOGGER_DATA);
+			}
+		}
 	}
-
 
 	return $person;
 }
@@ -338,14 +333,13 @@ function get_diaspora_key($handle) {
 }
 
 
-function diaspora_pubmsg_build($msg,$user,$contact,$prvkey,$pubkey) {
+function diaspora_pubmsg_build($msg,$channel,$contact,$prvkey,$pubkey) {
 
 	$a = get_app();
 
 	logger('diaspora_pubmsg_build: ' . $msg, LOGGER_DATA);
 
-
-	$handle = $user['xchan_addr'];
+	$handle = $channel['xchan_addr'];
 
 	$b64url_data = base64url_encode($msg,false);
 
@@ -384,11 +378,11 @@ EOT;
 
 
 
-function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey,$public = false) {
+function diaspora_msg_build($msg,$channel,$contact,$prvkey,$pubkey,$public = false) {
 	$a = get_app();
 
 	if($public)
-		return diaspora_pubmsg_build($msg,$user,$contact,$prvkey,$pubkey);
+		return diaspora_pubmsg_build($msg,$channel,$contact,$prvkey,$pubkey);
 
 	logger('diaspora_msg_build: ' . $msg, LOGGER_DATA);
 
@@ -409,7 +403,7 @@ function diaspora_msg_build($msg,$user,$contact,$prvkey,$pubkey,$public = false)
 	$outer_iv = random_string(16);
 	$b_outer_iv = base64_encode($outer_iv);
 
-    $handle = $user['channel_address'] . '@' . get_app()->get_hostname();
+    $handle = $channel['channel_address'] . '@' . get_app()->get_hostname();
 
 	$padded_data = pkcs5_pad($msg,16);
 	$inner_encrypted = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $inner_aes_key, $padded_data, MCRYPT_MODE_CBC, $inner_iv);
@@ -661,7 +655,10 @@ function diaspora_request($importer,$xml) {
 		// perhaps we were already sharing with this person. Now they're sharing with us.
 		// That makes us friends. Maybe.
 
-		$newperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT;
+		// Please note some of these permissions such as PERMS_R_PAGES are impossible for Disapora.
+		// They cannot authenticate to our system.
+
+		$newperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT|PERMS_R_STORAGE|PERMS_R_PAGES;
 
 		$r = q("update abook set abook_their_perms = %d where abook_id = %d and abook_channel = %d limit 1",
 			intval($newperms),
@@ -689,7 +686,7 @@ function diaspora_request($importer,$xml) {
 	if($z)
 		$default_perms = intval($z[0]['abook_my_perms']);
 
-	$their_perms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTO|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_CHAT;
+	$their_perms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT|PERMS_R_STORAGE|PERMS_R_PAGES;
 
 	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_my_perms, abook_their_perms, abook_closeness, abook_rating, abook_created, abook_updated, abook_connected, abook_dob, abook_flags, abook_profile) values ( %d, %d, '%s' %d %d, %d, %d, '%s', '%s', '%s', '%s', %d, '%s')",
 		intval($importer['channel_account_id']),
@@ -796,13 +793,17 @@ function diaspora_post($importer,$xml,$msg) {
 
 	$datarray = array();
 
-	$str_tags = '';
-
+	
 	$tags = get_tags($body);
 
-// FIXME call handle_tags()
+
+
+
 
 	if(count($tags)) {
+
+		$datarray['term'] = array();
+
 		foreach($tags as $tag) {
 			if(strpos($tag,'#') === 0) {
 				if(strpos($tag,'[url='))
@@ -817,20 +818,28 @@ function diaspora_post($importer,$xml,$msg) {
 
 				$basetag = str_replace('_',' ',substr($tag,1));
 				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
-				if(strlen($str_tags))
-					$str_tags .= ',';
-				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
-				continue;
+
+				$datarray['term'][] = array(
+					'uid'   => $importer['channel_id'],
+					'type'  => TERM_HASHTAG,
+					'otype' => TERM_OBJ_POST,
+					'term'  => $basetag,
+					'url'   => z_root() . '/search?tag=' . rawurlencode($basetag)
+				);
 			}
 		}
 	}
 
-	$cnt = preg_match_all('/@\[url=(.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
+	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
-			if(strlen($str_tags))
-				$str_tags .= ',';
-			$str_tags .= '@[url=' . $mtch[1] . '[/url]';
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $mtch[2],
+				'url'   => $mtch[1]
+			);
 		}
 	}
 
@@ -838,11 +847,8 @@ function diaspora_post($importer,$xml,$msg) {
 
 	$datarray['uid'] = $importer['channel_id'];
 
-// FIXME
-
-
 	$datarray['verb'] = ACTIVITY_POST;
-	$datarray['mid'] = $datarray['parent-mid'] = $guid;
+	$datarray['mid'] = $datarray['parent_mid'] = $guid;
 
 	$datarray['changed'] = $datarray['created'] = $datarray['edited'] = datetime_convert('UTC','UTC',$created);
 	$datarray['item_private'] = $private;
@@ -854,13 +860,10 @@ function diaspora_post($importer,$xml,$msg) {
 
 	$datarray['body'] = $body;
 
-// FIXME
-//	$datarray['tag'] = $str_tags;
-
 	$datarray['app']  = 'Diaspora';
 
-	// if empty content it might be a photo that hasn't arrived yet. If a photo arrives, we'll make it visible.
-//	$datarray['visible'] = ((strlen($body)) ? 1 : 0);
+	$datarray['item_flags'] = ITEM_UNSEEN|ITEM_THREAD_TOP;
+
 
 	$result = item_store($datarray);
 	return;
@@ -1191,20 +1194,29 @@ function diaspora_comment($importer,$xml,$msg) {
 		return 202;
 	}
 
-	// Friendica is truncating guids at 64 chars
+	// Friendica is currently truncating guids at 64 chars
+
+	$search_guid = $guid;
+	if(strlen($guid) == 64)
+		$search_guid = $guid . '%';
 
 	$r = q("SELECT * FROM item WHERE uid = %d AND mid like '%s' LIMIT 1",
 		intval($importer['channel_id']),
-		dbesc($guid . '%')
+		dbesc($search_guid)
 	);
 	if($r) {
 		logger('diaspora_comment: our comment just got relayed back to us (or there was a guid collision) : ' . $guid);
 		return;
 	}
 
+	$search_guid = $parent_guid;
+	if(strlen($parent_guid) == 64)
+		$search_guid = $parent_guid . '%';
+
+
 	$r = q("SELECT * FROM item WHERE uid = %d AND mid LIKE '%s' LIMIT 1",
 		intval($importer['channel_id']),
-		dbesc($parent_guid . '%')
+		dbesc($search_guid)
 	);
 	if(! $r) {
 		logger('diaspora_comment: parent item not found: parent: ' . $parent_guid . ' item: ' . $guid);
@@ -1259,6 +1271,7 @@ function diaspora_comment($importer,$xml,$msg) {
 	// Find the original comment author information.
 	// We need this to make sure we display the comment author
 	// information (name and avatar) correctly.
+
 	if(strcasecmp($diaspora_handle,$msg['author']) == 0)
 		$person = $contact;
 	else {
@@ -1270,15 +1283,17 @@ function diaspora_comment($importer,$xml,$msg) {
 		}
 	}
 
+
 	$body = diaspora2bb($text);
 
 	$datarray = array();
 
-	$str_tags = '';
-
 	$tags = get_tags($body);
 
 	if(count($tags)) {
+
+		$datarray['term'] = array();
+
 		foreach($tags as $tag) {
 			if(strpos($tag,'#') === 0) {
 				if(strpos($tag,'[url='))
@@ -1291,24 +1306,32 @@ function diaspora_comment($importer,$xml,$msg) {
 				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$body))
 					continue;
 
-
 				$basetag = str_replace('_',' ',substr($tag,1));
 				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
-				if(strlen($str_tags))
-					$str_tags .= ',';
-				$str_tags .= '#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
-				continue;
+
+				$datarray['term'][] = array(
+					'uid'   => $importer['channel_id'],
+					'type'  => TERM_HASHTAG,
+					'otype' => TERM_OBJ_POST,
+					'term'  => $basetag,
+					'url'   => z_root() . '/search?tag=' . rawurlencode($basetag)
+				);
 			}
 		}
 	}
 
-	$datarray['uid'] = $importer['channel_id'];
-
-//FIXME
-//	$datarray['contact-id'] = $contact['id'];
-//	$datarray['type'] = 'remote-comment';
-//	$datarray['wall'] = $parent_item['wall'];
-//	$datarray['network']  = NETWORK_DIASPORA;
+	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $mtch[2],
+				'url'   => $mtch[1]
+			);
+		}
+	}
 
 	$datarray['verb'] = ACTIVITY_POST;
 	$datarray['mid'] = $guid;
@@ -1324,77 +1347,32 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	$datarray['body'] = $body;
 
-// FIXME
-//	$datarray['tag'] = $str_tags;
-
-	// We can't be certain what the original app is if the message is relayed.
-//	if(($parent_item['origin']) && (! $parent_author_signature))
-//		$datarray['app']  = 'Diaspora';
+	$datarray['app']  = 'Diaspora';
 
 	$result = item_store($datarray);
 
-//	if(($parent_item['origin']) && (! $parent_author_signature)) {
-//		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-//			intval($message_id),
-//			dbesc($signed_data),
-//			dbesc(base64_encode($author_signature)),
-//			dbesc($diaspora_handle)
-//		);
+	if(($parent_item['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature)) {
+		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+			intval($message_id),
+			dbesc($signed_data),
+			dbesc(base64_encode($author_signature)),
+			dbesc($diaspora_handle)
+		);
 
 		// if the message isn't already being relayed, notify others
 		// the existence of parent_author_signature means the parent_author or owner
 		// is already relaying.
 
-//		proc_run('php','include/notifier.php','comment-import',$message_id);
-//	}
-
-
-// FIXME
-/*
-	$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 AND `deleted` = 0 ",
-		dbesc($parent_item['uri']),
-		intval($importer['channel_id'])
-	);
-
-	if(count($myconv)) {
-		$importer_url = $a->get_baseurl() . '/profile/' . $importer['nickname'];
-
-		foreach($myconv as $conv) {
-
-			// now if we find a match, it means we're in this conversation
-
-			if(! link_compare($conv['author-link'],$importer_url))
-				continue;
-
-			require_once('include/enotify.php');
-
-			$conv_parent = $conv['parent'];
-
-			notification(array(
-				'type'         => NOTIFY_COMMENT,
-				'notify_flags' => $importer['notify-flags'],
-				'language'     => $importer['language'],
-				'to_name'      => $importer['username'],
-				'to_email'     => $importer['email'],
-				'uid'          => $importer['channel_id'],
-				'item'         => $datarray,
-				//'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id,
-				'link'		   => $a->get_baseurl().'/display/'.$datarray['guid'],
-				'source_name'  => $datarray['author-name'],
-				'source_link'  => $datarray['author-link'],
-				'source_photo' => $datarray['author-avatar'],
-				'verb'         => ACTIVITY_POST,
-				'otype'        => 'item',
-				'parent'       => $conv_parent,
-				'parent_uri'   => $parent_uri
-			));
-
-			// only send one notification
-			break;
-		}
+		proc_run('php','include/notifier.php','comment-import',$message_id);
 	}
 
-*/
+	if($result['item_id']) {
+		$r = q("select * from item where id = %d limit 1",
+			intval($result['item_id'])
+		);
+		if($r)
+			send_status_notifications($result['item_id'],$r[0]);
+	}
 
 	return;
 }
