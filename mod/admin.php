@@ -1291,11 +1291,74 @@ readable.");
 
 function admin_page_profs_post(&$a) {
 
+	if($_REQUEST['id']) {
+		$r = q("update profdef set field_name = '%s', field_type = '%s', field_desc = '%s' field_help = '%s', field_inputs = '%s' where id = %d limit 1",
+			dbesc($_REQUEST['field_name']),
+			dbesc($_REQUEST['field_type']),
+			dbesc($_REQUEST['field_desc']),
+			dbesc($_REQUEST['field_help']),
+			dbesc($_REQUEST['field_inputs']),
+			intval($_REQUEST['id'])
+		);
+	}
+	else {
+		$r = q("insert into profdef ( field_name, field_type, field_desc, field_help, field_inputs ) values ( '%s' , '%s', '%s', '%s', '%s' )",
+			dbesc($_REQUEST['field_name']),
+			dbesc($_REQUEST['field_type']),
+			dbesc($_REQUEST['field_desc']),
+			dbesc($_REQUEST['field_help']),
+			dbesc($_REQUEST['field_inputs'])
+		);
+	}
+
+	// add to chosen array basic or advanced
+
+	goaway(z_root() . '/admin/profs');
 
 }
 
 function admin_page_profs(&$a) {
 
+	if((argc() > 3) && argv(2) == 'drop' && intval(argv(3))) {
+		$r = q("delete from profdef where id = %d limit 1",
+			intval(argv(3))
+		);
+		// remove from allowed fields
+
+		goaway(z_root() . '/admin/profs');	
+	}
+
+	if((argc() > 2) && argv(2) === 'new') {
+		return replace_macros(get_markup_template('profdef_edit.tpl'),array(
+			'$header' => t('New Profile Field'),
+			'$field_name' => array('field_name',t('Field nickname'),$_REQUEST['field_name'],t('System name of field')),
+			'$field_type' => array('field_type',t('Input type'),(($_REQUEST['field_type']) ? $_REQUEST['field_type'] : 'text'),''),
+			'$field_desc' => array('field_desc',t('Field Name'),$_REQUEST['field_desc'],t('Label on profile pages')),
+			'$field_help' => array('field_help',t('Help text'),$_REQUEST['field_help'],t('Additional info (optional)')),
+			'$submit' => t('Save')
+		));
+
+	}
+
+	if((argc() > 2) && intval(argv(2))) {
+		$r = q("select * from profdef where id = %d limit 1",
+			intval(argv(2))
+		);
+		if(! $r) {
+			notice( t('Field definition not found') . EOL);
+			goaway(z_root() . '/admin/profs');
+		}
+
+		return replace_macros(get_markup_template('profdef_edit.tpl'),array(
+			'$id' => intval($r[0]['id']),
+			'$header' => t('New Profile Field'),
+			'$field_name' => array('field_name',t('Field nickname'),$r[0]['field_name'],t('System name of field')),
+			'$field_type' => array('field_type',t('Input type'),$r[0]['field_type'],''),
+			'$field_desc' => array('field_desc',t('Field Name'),$r[0]['field_desc'],t('Label on profile pages')),
+			'$field_help' => array('field_help',t('Help text'),$r[0]['field_help'],t('Additional info (optional)')),
+			'$submit' => t('Save')
+		));
+	}
 
 }
 

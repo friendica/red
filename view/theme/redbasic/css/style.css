@@ -371,6 +371,17 @@ aside li {
 	clear: both;
 }
 
+#profile-edit-wrapper .field label {
+	margin-top: 20px;
+	width: 175px;
+}
+
+#profile-edit-wrapper .field input[type="text"] {
+	margin-top: 20px;
+	width: 220px;
+}
+
+
 #profile-edit-links {
 	max-width: $converse_width;
 	padding-top: 15px;
