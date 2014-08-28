@@ -1351,7 +1351,7 @@ function admin_page_profs(&$a) {
 
 		return replace_macros(get_markup_template('profdef_edit.tpl'),array(
 			'$id' => intval($r[0]['id']),
-			'$header' => t('New Profile Field'),
+			'$header' => t('Edit Profile Field'),
 			'$field_name' => array('field_name',t('Field nickname'),$r[0]['field_name'],t('System name of field')),
 			'$field_type' => array('field_type',t('Input type'),$r[0]['field_type'],''),
 			'$field_desc' => array('field_desc',t('Field Name'),$r[0]['field_desc'],t('Label on profile pages')),
