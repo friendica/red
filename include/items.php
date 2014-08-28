@@ -976,6 +976,8 @@ function translate_scope($scope) {
 		return t('Visible to all connections.');
 	if(strpos($scope,'contacts') === 0)
 		return t('Visible to approved connections.');
+	if(strpos($scope,'specific') === 0)
+		return t('Visible to specific connections.');
 }
 
 function encode_item_xchan($xchan) {

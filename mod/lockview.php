@@ -40,7 +40,7 @@ function lockview_content(&$a) {
 		// as unknown specific recipients. The sender will have the visibility list and will fall through to the
 		// next section.
  
-		echo '<li>' . translate_scope((! $item['public_policy']) ? 'contacts' : $item['public_policy']) . '</li>';
+		echo '<li>' . translate_scope((! $item['public_policy']) ? 'specific' : $item['public_policy']) . '</li>';
 		killme();
 	}
 
