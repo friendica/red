@@ -124,7 +124,7 @@ function translate_system_apps(&$arr) {
 		'Bookmarks' => t('Bookmarks'),
 		'Address Book' => t('Address Book'),
 		'Login' => t('Login'),
-		'Channel Select' => t('Channel Select'), 
+		'Channel Manager' => t('Channel Manager'), 
 		'Matrix' => t('Matrix'), 
 		'Settings' => t('Settings'),
 		'Files' => t('Files'),

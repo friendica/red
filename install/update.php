@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1127 );
+define( 'UPDATE_VERSION' , 1128 );
 
 /**
  *
@@ -1440,3 +1440,11 @@ ADD INDEX ( `convid` )");
 
 }
 
+function update_r1127() {
+	$r = q("ALTER TABLE `item` ADD `comments_closed` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `changed` ,
+ADD INDEX ( `comments_closed` ), ADD INDEX ( `changed` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}

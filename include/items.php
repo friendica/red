@@ -100,6 +100,17 @@ function collect_recipients($item,&$private_envelope) {
 
 }
 
+
+function comments_are_now_closed($item) {
+	if($item['comments_closed'] !== '0000-00-00 00:00:00') {
+		$d = datetime_convert();
+		if($d > $item['comments_closed'])
+			return true;
+	}
+	return false;
+}
+
+
 /**
  * @function can_comment_on_post($observer_xchan,$item);
  *
@@ -109,6 +120,7 @@ function collect_recipients($item,&$private_envelope) {
  * Generally we should look at the item - in particular the author['book_flags'] and see if ABOOK_FLAG_SELF is set.
  * If it is, you should be able to use perm_is_allowed( ... 'post_comments'), and if it isn't you need to call 
  * can_comment_on_post()
+ * We also check the comments_closed date/time on the item if this is set. 
  */
 
 function can_comment_on_post($observer_xchan,$item) {
@@ -117,8 +129,14 @@ function can_comment_on_post($observer_xchan,$item) {
 
 	if(! $observer_xchan)
 		return false;
+
+
 	if($item['comment_policy'] === 'none')
 		return false;
+
+	if(comments_are_now_closed($item))
+		return false;
+
 	if($observer_xchan === $item['author_xchan'] || $observer_xchan === $item['owner_xchan'])
 		return true;
 	switch($item['comment_policy']) {
@@ -703,6 +721,9 @@ function get_item_elements($x) {
 	$arr['commented']    = ((x($x,'commented') && $x['commented']) 
 								? datetime_convert('UTC','UTC',$x['commented']) 
 								: $arr['created']);
+	$arr['comments_closed']    = ((x($x,'comments_closed') && $x['comments_closed']) 
+								? datetime_convert('UTC','UTC',$x['comments_closed']) 
+								: '0000-00-00 00:00:00');
 
 	$arr['title']        = (($x['title'])          ? htmlspecialchars($x['title'],          ENT_COMPAT,'UTF-8',false) : '');
 
@@ -891,38 +912,41 @@ function encode_item($item) {
 	}
 
 
-	$x['message_id']     = $item['mid'];
-	$x['message_top']    = $item['parent_mid'];
-	$x['message_parent'] = $item['thr_parent'];
-	$x['created']        = $item['created'];
-	$x['edited']         = $item['edited'];
-	$x['expires']        = $item['expires'];
-	$x['commented']      = $item['commented'];
-	$x['mimetype']       = $item['mimetype'];
-	$x['title']          = $item['title'];
-	$x['body']           = $item['body'];
-	$x['app']            = $item['app'];
-	$x['verb']           = $item['verb'];
-	$x['object_type']    = $item['obj_type'];
-	$x['target_type']    = $item['tgt_type'];
-	$x['permalink']      = $item['plink'];
-	$x['location']       = $item['location'];
-	$x['longlat']        = $item['coord'];
-	$x['signature']      = $item['sig'];
-	$x['route']          = $item['route'];
+	$x['message_id']      = $item['mid'];
+	$x['message_top']     = $item['parent_mid'];
+	$x['message_parent']  = $item['thr_parent'];
+	$x['created']         = $item['created'];
+	$x['edited']          = $item['edited'];
+	$x['expires']         = $item['expires'];
+	$x['commented']       = $item['commented'];
+	$x['mimetype']        = $item['mimetype'];
+	$x['title']           = $item['title'];
+	$x['body']            = $item['body'];
+	$x['app']             = $item['app'];
+	$x['verb']            = $item['verb'];
+	$x['object_type']     = $item['obj_type'];
+	$x['target_type']     = $item['tgt_type'];
+	$x['permalink']       = $item['plink'];
+	$x['location']        = $item['location'];
+	$x['longlat']         = $item['coord'];
+	$x['signature']       = $item['sig'];
+	$x['route']           = $item['route'];
 
-	$x['owner']          = encode_item_xchan($item['owner']);
-	$x['author']         = encode_item_xchan($item['author']);
+	$x['owner']           = encode_item_xchan($item['owner']);
+	$x['author']          = encode_item_xchan($item['author']);
 	if($item['object'])
-		$x['object']     = json_decode_plus($item['object']);
+		$x['object']      = json_decode_plus($item['object']);
 	if($item['target'])
-		$x['target']     = json_decode_plus($item['target']);
+		$x['target']      = json_decode_plus($item['target']);
 	if($item['attach'])
-		$x['attach']     = json_decode_plus($item['attach']);
+		$x['attach']      = json_decode_plus($item['attach']);
 	if($y = encode_item_flags($item))
-		$x['flags']      = $y;
+		$x['flags']       = $y;
 
-	$x['public_scope'] = $scope;
+	if($item['comments_closed'] !== '0000-00-00 00:00:00')
+		$x['comments_closed'] = $item['comments_closed'];
+
+	$x['public_scope']    = $scope;
 
 	if($item['item_flags'] & ITEM_NOCOMMENT)
 		$x['comment_scope'] = 'none';
@@ -930,7 +954,7 @@ function encode_item($item) {
 		$x['comment_scope'] = $c_scope;
 
 	if($item['term'])
-		$x['tags']       = encode_item_terms($item['term']);
+		$x['tags']        = encode_item_terms($item['term']);
 
 	logger('encode_item: ' . print_r($x,true), LOGGER_DATA);
 
@@ -1749,6 +1773,8 @@ function item_store($arr,$allow_exec = false) {
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
 	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : '0000-00-00 00:00:00');
 	$arr['commented']     = ((x($arr,'commented')  !== false) ? datetime_convert('UTC','UTC',$arr['commented'])  : datetime_convert());
+	$arr['comments_closed'] = ((x($arr,'comments_closed')  !== false) ? datetime_convert('UTC','UTC',$arr['comments_closed'])  : '0000-00-00 00:00:00');
+
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
@@ -1768,7 +1794,6 @@ function item_store($arr,$allow_exec = false) {
 	$arr['public_policy'] = ((x($arr,'public_policy')) ? notags(trim($arr['public_policy']))  : '' );
 
 	$arr['comment_policy'] = ((x($arr,'comment_policy')) ? notags(trim($arr['comment_policy']))  : 'contacts' );
-
 	
 	$arr['item_flags'] = $arr['item_flags'] | ITEM_UNSEEN;
 
@@ -1800,6 +1825,7 @@ function item_store($arr,$allow_exec = false) {
 		$deny_cid  = $arr['deny_cid'];
 		$deny_gid  = $arr['deny_gid'];
 		$public_policy = $arr['public_policy'];
+		$comments_closed = $arr['comments_closed'];
 		$arr['item_flags'] = $arr['item_flags'] | ITEM_THREAD_TOP;
 	}
 	else { 
@@ -1813,6 +1839,12 @@ function item_store($arr,$allow_exec = false) {
 		);
 
 		if($r) {
+
+			if(comments_are_now_closed($r[0])) {
+				logger('item_store: comments closed');
+				$ret['message'] = 'Comments closed.';
+				return ret;
+			}
 
 			// is the new message multi-level threaded?
 			// even though we don't support it now, preserve the info
@@ -1830,13 +1862,14 @@ function item_store($arr,$allow_exec = false) {
 					$r = $z;
 			}
 
-			$parent_id      = $r[0]['id'];
-			$parent_deleted = $r[0]['item_restrict'] & ITEM_DELETED;
-			$allow_cid      = $r[0]['allow_cid'];
-			$allow_gid      = $r[0]['allow_gid'];
-			$deny_cid       = $r[0]['deny_cid'];
-			$deny_gid       = $r[0]['deny_gid'];
-			$public_policy  = $r[0]['public_policy'];
+			$parent_id       = $r[0]['id'];
+			$parent_deleted  = $r[0]['item_restrict'] & ITEM_DELETED;
+			$allow_cid       = $r[0]['allow_cid'];
+			$allow_gid       = $r[0]['allow_gid'];
+			$deny_cid        = $r[0]['deny_cid'];
+			$deny_gid        = $r[0]['deny_gid'];
+			$public_policy   = $r[0]['public_policy'];
+			$comments_closed = $r[0]['comments_closed'];
 
 			if($r[0]['item_flags'] & ITEM_WALL)
 				$arr['item_flags'] = $arr['item_flags'] | ITEM_WALL; 
@@ -1950,7 +1983,8 @@ function item_store($arr,$allow_exec = false) {
 	// Set parent id - and also make sure to inherit the parent's ACL's.
 
 	$r = q("UPDATE item SET parent = %d, allow_cid = '%s', allow_gid = '%s',
-		deny_cid = '%s', deny_gid = '%s', public_policy = '%s', item_private = %d WHERE id = %d LIMIT 1",
+		deny_cid = '%s', deny_gid = '%s', public_policy = '%s', item_private = %d, comments_closed = '%s' 
+		WHERE id = %d LIMIT 1",
 		intval($parent_id),
 		dbesc($allow_cid),
 		dbesc($allow_gid),
@@ -1958,6 +1992,7 @@ function item_store($arr,$allow_exec = false) {
 		dbesc($deny_gid),
 		dbesc($public_policy),
 		intval($private),
+		dbesc($comments_closed),
 		intval($current_post)
 	);
 
@@ -1970,7 +2005,8 @@ function item_store($arr,$allow_exec = false) {
 	$arr['deny_gid']  = $deny_gid;
 	$arr['public_policy']  = $public_policy;
 	$arr['item_private']   = $private;
-	
+	$arr['comments_closed'] = $comments_closed;
+
 	// Store taxonomy
 
 	if(($terms) && (is_array($terms))) {
@@ -2142,6 +2178,12 @@ function item_store_update($arr,$allow_exec = false) {
 
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
 	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : $orig[0]['expires']);
+
+	if(array_key_exists('comments_closed',$arr) && $arr['comments_closed'] != '0000-00-00 00:00:00')
+		$arr['comments_closed'] = datetime_convert('UTC','UTC',$arr['comments_closed']);
+	else
+		$arr['comments_closed'] = $orig[0]['comments_closed'];
+
 	$arr['commented']     = $orig[0]['commented'];
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
