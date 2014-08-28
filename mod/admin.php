@@ -266,9 +266,11 @@ function admin_page_site_post(&$a){
 	$poll_interval	=	((x($_POST,'poll_interval'))? intval(trim($_POST['poll_interval']))		: 0);
 	$maxloadavg	=	((x($_POST,'maxloadavg'))? intval(trim($_POST['maxloadavg']))		: 50);
 	$feed_contacts = ((x($_POST,'feed_contacts')) ? intval($_POST['feed_contacts']) : 0);
+	$diaspora_enable = ((x($_POST,'diaspora_enable')) ? intval($_POST['diaspora_enable']) : 0);
 
 
 	set_config('system','feed_contacts',$feed_contacts);
+	set_config('system','diaspora_enable',$diaspora_enable);
 	set_config('system','delivery_interval',$delivery_interval);
 	set_config('system','poll_interval',$poll_interval);
 	set_config('system','maxloadavg',$maxloadavg);
@@ -424,6 +426,7 @@ function admin_page_site(&$a) {
 		'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),
 		'$theme_accessibility' 	=> array('theme_accessibility', t("Accessibility system theme"), get_config('system','accessibility_theme'), t("Accessibility theme"), $theme_choices_accessibility),
 		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
+		'$diaspora_enable'  => array('diaspora_enable',t('Enable Diaspora Protocol'), get_config('system','diaspora_enable'), t('Communicate with Diaspora and Friendica - experimental')),
 		'$feed_contacts'    => array('feed_contacts', t('Allow Feeds as Connections'),get_config('system','feed_contacts'),t('(Heavy system resource usage)')), 
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), intval(get_config('system','maximagesize')), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Does this site allow new member registration?"), get_config('system','register_policy'), "", $register_choices),
