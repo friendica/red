@@ -16,11 +16,12 @@ function lockview_content(&$a) {
 
 	if (!in_array($type, array('item','photo','event')))
 		killme();
-     
+
 	$r = q("SELECT * FROM %s WHERE id = %d LIMIT 1",
 		dbesc($type),
 		intval($item_id)
 	);
+
 	if(! $r)
 		killme();
 
@@ -39,7 +40,7 @@ function lockview_content(&$a) {
 		// as unknown specific recipients. The sender will have the visibility list and will fall through to the
 		// next section.
  
-		echo '<li>' . translate_scope((! $item['public_policy']) ? PERMS_SPECIFIC : $item['public_policy']) . '</li>';
+		echo '<li>' . translate_scope((! $item['public_policy']) ? 'contacts' : $item['public_policy']) . '</li>';
 		killme();
 	}
 
