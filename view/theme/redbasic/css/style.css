@@ -366,11 +366,6 @@ aside li {
 	font-weight: bold;
 }
 
-
-#profile-vcard-break {
-	clear: both;
-}
-
 #profile-edit-wrapper .field label {
 	margin-top: 20px;
 	width: 175px;
@@ -446,11 +441,6 @@ aside li {
 	margin-bottom: 0px;
 }
 
-.vcard-profile-edit-icon:hover {
-	text-decoration: none;
-}
-
-
 #profile-extra-links {
 	clear: both;
 	margin-top: 10px;
@@ -468,6 +458,7 @@ aside li {
 
 
 .profile-edit-side-link {
+	padding: 3px 0px;
 	opacity: 0;
 	filter:alpha(opacity=30);
 	float: right;
@@ -787,6 +778,7 @@ aside li {
 }
 
 #contact-block {
+	width: 100%;
 	float: left;
 	background-color: $comment_item_colour;
 	border-bottom: 1px solid $widget_brdrcolour;
