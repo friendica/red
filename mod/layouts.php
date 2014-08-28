@@ -68,7 +68,8 @@ function layouts_content(&$a) {
 
 
 	// Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
-	// Nickname is set to the observers xchan, and profile_uid to the owners.  This lets you post pages at other people's channels.
+	// Nickname is set to the observers xchan, and profile_uid to the owners.  
+	// This lets you post pages at other people's channels.
 
 	require_once ('include/conversation.php');
 
@@ -84,6 +85,14 @@ function layouts_content(&$a) {
 		'ptlabel' => t('Layout Name'),
 		'profile_uid' => intval($owner),
 	);
+
+	if($_REQUEST['title'])
+		$x['title'] = $_REQUEST['title'];
+	if($_REQUEST['body'])
+		$x['body'] = $_REQUEST['body'];
+	if($_REQUEST['pagetitle'])
+		$x['pagetitle'] = $_REQUEST['pagetitle'];
+
 
 	$o .= status_editor($a,$x);
 
