@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1126 );
+define( 'UPDATE_VERSION' , 1127 );
 
 /**
  *
@@ -1424,6 +1424,16 @@ function update_r1124() {
 
 function update_r1125() {
 	$r = q("ALTER TABLE `profdef` ADD `field_inputs` MEDIUMTEXT NOT NULL DEFAULT ''");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+
+
+function update_r1126() {
+	$r = q("ALTER TABLE `mail` ADD `convid` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `id` ,
+ADD INDEX ( `convid` )");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
