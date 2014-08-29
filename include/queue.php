@@ -46,6 +46,23 @@ function queue_run($argv, $argc){
 	foreach($r as $rr) {
 		if(in_array($rr['outq_posturl'],$deadguys))
 			continue;
+
+		if($rr['outq_driver'] === 'post') {
+			$result = z_post_url($rr['outq_posturl'],$rr['outq_msg']); 
+			if($result['success'] && $result['return_code'] < 300) {
+				logger('deliver: queue post success to ' . $rr['outq_posturl'], LOGGER_DEBUG);
+				$y = q("update outq set outq_delivered = '%s' where outq_hash = '%s' limit 1",
+					dbesc($rr['ouq_hash'])
+				);
+			}
+			else {
+				$y = q("update outq set outq_updated = '%s' where outq_hash = '%s' limit 1",
+					dbesc(datetime_convert()),
+					dbesc($rr['outq_hash'])
+				);
+			}
+			continue;
+		}
 		$result = zot_zot($rr['outq_posturl'],$rr['outq_notify']); 
 		if($result['success']) {
 			zot_process_response($rr['outq_posturl'],$result, $rr);				

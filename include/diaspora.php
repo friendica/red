@@ -18,7 +18,7 @@ function diaspora_dispatch_public($msg) {
 	// find everybody following or allowing this author
 
 
-	$r = q("SELECT * from channel where channel_id in ( SELECT abook_channel from abook WHERE abook_network = 'diaspora' and abook_xchan = '%s' )",
+	$r = q("SELECT * from channel where channel_id in ( SELECT abook_channel from abook left join xchan on abook_xchan = xchan_hash WHERE xchan_network like '%%diaspora%%' and xchan_addr = '%s' )",
 		dbesc($msg['author'])
 	);
 
@@ -339,7 +339,8 @@ function diaspora_pubmsg_build($msg,$channel,$contact,$prvkey,$pubkey) {
 
 	logger('diaspora_pubmsg_build: ' . $msg, LOGGER_DATA);
 
-	$handle = $channel['xchan_addr'];
+    $handle = $channel['channel_address'] . '@' . get_app()->get_hostname();
+
 
 	$b64url_data = base64url_encode($msg,false);
 
@@ -757,6 +758,10 @@ function diaspora_post($importer,$xml,$msg) {
 	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
+	$app = notags(xmlify($xml->provider_display_name));
+
+
+
 
 	if($diaspora_handle != $msg['author']) {
 		logger('diaspora_post: Potential forgery. Message handle is not the same as envelope sender.');
@@ -766,6 +771,16 @@ function diaspora_post($importer,$xml,$msg) {
 	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$diaspora_handle);
 	if(! $contact)
 		return;
+
+
+
+	if(! $app) {
+		if(strstr($contact['xchan_network'],'friendica'))
+			$app = 'Friendica';
+		else
+			$app = 'Diaspora';
+	}
+
 
 	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) {
 		logger('diaspora_post: Ignoring this author.');
@@ -857,11 +872,11 @@ function diaspora_post($importer,$xml,$msg) {
 	$datarray['plink'] = $plink;
 
 	$datarray['author_xchan'] = $contact['xchan_hash'];
-	$datarray['owner_xchan'] = $importer['channel_hash'];
+	$datarray['owner_xchan']  = $contact['xchan_hash'];
 
 	$datarray['body'] = $body;
 
-	$datarray['app']  = 'Diaspora';
+	$datarray['app']  = $app;
 
 	$datarray['item_flags'] = ITEM_UNSEEN|ITEM_THREAD_TOP;
 
