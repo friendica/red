@@ -24,7 +24,7 @@ function deliver_run($argv, $argc) {
 				$result = z_post_url($r[0]['outq_posturl'],$r[0]['outq_msg']); 
 				if($result['success'] && $result['return_code'] < 300) {
 					logger('deliver: queue post success to ' . $r[0]['outq_posturl'], LOGGER_DEBUG);
-					$y = q("update outq set outq_delivered = '%s' where outq_hash = '%s' limit 1",
+					$y = q("delete from outq where outq_hash = '%s' limit 1",
 						dbesc($argv[$x])
 					);
 				}
