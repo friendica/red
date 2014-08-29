@@ -38,7 +38,7 @@ function queue_run($argv, $argc){
 		// The zot driver will deliver everything destined for a single hub once contact is made (*if* contact is made).
 		// Other drivers will have to do something different here and may need their own query.
  
-		$r = q("SELECT * FROM outq WHERE outq_delivered = 0 and (( outq_created > UTC_TIMESTAMP() - INTERVAL 12 HOUR and outq_updated < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ) OR ( outq_updated < UTC_TIMESTAMP() - INTERVAL 1 HOUR )) and outq_driver in ('','zot') group by outq_posturl");
+		$r = q("SELECT * FROM outq WHERE outq_delivered = 0 and (( outq_created > UTC_TIMESTAMP() - INTERVAL 12 HOUR and outq_updated < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ) OR ( outq_updated < UTC_TIMESTAMP() - INTERVAL 1 HOUR )) group by outq_posturl");
 	}
 	if(! $r)
 		return;
