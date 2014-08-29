@@ -372,7 +372,7 @@ function profiles_post(&$a) {
 						);
 					}
 					else {
-						q("insert into profdef ( channel_id, hash, k, v ) values ( %d, '%s', '%s', '%s') ",
+						q("insert into profext ( channel_id, hash, k, v ) values ( %d, '%s', '%s', '%s') ",
 							intval(local_user()),
 							dbesc($orig[0]['profile_guid']),
 							dbesc($zz['field_name']),
@@ -383,8 +383,6 @@ function profiles_post(&$a) {
 			}
 		}
 													
-
-
 		$changes = array();
 		$value = '';
 		if($is_default) {
