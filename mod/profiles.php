@@ -254,6 +254,7 @@ function profiles_post(&$a) {
 //			$month = 1; $day = 1;
 //		}
 
+
 		$dob = '0000-00-00';
 		$dob = sprintf('%04d-%02d-%02d',$year,$month,$day);
 
@@ -262,6 +263,9 @@ function profiles_post(&$a) {
 
 		if($orig[0]['name'] != $name)
 			$namechanged = true;
+
+
+
 
 
 		$pdesc        = escape_tags(trim($_POST['pdesc']));
@@ -344,7 +348,41 @@ function profiles_post(&$a) {
 				$with = $orig[0]['with'];
 		}
 
+		$profile_fields_basic    = get_profile_fields_basic();
+		$profile_fields_advanced = get_profile_fields_advanced();
+		$advanced = ((feature_enabled(local_user(),'advanced_profiles')) ? true : false);
+		if($advanced)
+			$fields = $profile_fields_advanced;
+		else
+			$fields = $profile_fields_basic;
 
+		$z = q("select * from profdef where true");
+		if($z) {
+			foreach($z as $zz) {
+				if(array_key_exists($zz['field_name'],$fields)) {
+					$w = q("select * from profext where channel_id = %d and hash = '%s' and k = '%s' limit 1",
+						intval(local_user()),
+						dbesc($orig[0]['profile_guid']),
+						dbesc($zz['field_name'])
+					);
+					if($w) {
+						q("update profext set v = '%s' where id = %d limit 1",
+							dbesc(escape_tags(trim($_POST[$zz['field_name']]))),
+							intval($w[0]['id'])
+						);
+					}
+					else {
+						q("insert into profdef ( channel_id, hash, k, v ) values ( %d, '%s', '%s', '%s') ",
+							intval(local_user()),
+							dbesc($orig[0]['profile_guid']),
+							dbesc($zz['field_name']),
+							dbesc(escape_tags(trim($_POST[$zz['field_name']])))
+						);
+					}
+				}
+			}
+		}
+													
 
 
 		$changes = array();
