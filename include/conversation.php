@@ -1270,6 +1270,8 @@ function conv_sort($arr,$order) {
 		}
 	}
 
+logger('conv_sort: ' . print_r($ret,true));
+
 	return $ret;
 }
 

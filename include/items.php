@@ -2029,9 +2029,10 @@ function item_store($arr,$allow_exec = false) {
 
 	// update the commented timestamp on the parent
 
-	$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d ",
+	$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d and not ( item_restrict & %d ) ",
 		dbesc($arr['parent_mid']),
-		intval($arr['uid'])
+		intval($arr['uid']),
+		intval(ITEM_DELAYED_PUBLISH)
 	);
 
 	q("UPDATE item set commented = '%s', changed = '%s' WHERE id = %d LIMIT 1",
