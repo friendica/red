@@ -29,6 +29,7 @@ function dirsearch_content(&$a) {
 
 	$sql_extra = '';
 
+
 	$tables = array('name','address','locale','region','postcode','country','gender','marital','sexual','keywords');
 
 	if($_REQUEST['query']) {
@@ -145,6 +146,11 @@ function dirsearch_content(&$a) {
 	if($hash)
 		$logic = 1;
 
+	if($dirmode == DIRECTORY_MODE_STANDALONE) {
+		$sql_extra .= " and xchan_addr like '%%" . get_app()->get_hostname() . "' ";
+	}
+
+
 	$safesql = (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " ) " : '');
 	if($safe < 0)
 		$safesql = " and ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " ) ";
@@ -254,8 +260,8 @@ function dirsearch_content(&$a) {
 			}
 		}
 	}		
-	json_return_and_die($ret);
 
+	json_return_and_die($ret);
 }
 
 function dir_query_build($joiner,$field,$s) {

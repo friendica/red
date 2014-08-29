@@ -233,6 +233,11 @@ function directory_content(&$a) {
 
 				}
 				else {
+					if($_REQUEST['aj']) {
+						$o = '<div id="content-complete"></div>';
+						echo $o;
+						killme();
+					}
 					if($a->pager['page'] == 1 && $j['records'] == 0 && strpos($search,'@')) {
 						goaway(z_root() . '/chanview/?f=&address=' . $search);
 					}
