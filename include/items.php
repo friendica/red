@@ -1665,7 +1665,7 @@ function item_store($arr,$allow_exec = false) {
 	if(! $arr['uid']) {
 		logger('item_store: no uid');
 		$ret['message'] = 'No uid.';
-		return ret;
+		return $ret;
 	}
 
 	$uplinked_comment = false;
@@ -1843,7 +1843,7 @@ function item_store($arr,$allow_exec = false) {
 			if(comments_are_now_closed($r[0])) {
 				logger('item_store: comments closed');
 				$ret['message'] = 'Comments closed.';
-				return ret;
+				return $ret;
 			}
 
 			// is the new message multi-level threaded?
@@ -2287,6 +2287,52 @@ function item_store_update($arr,$allow_exec = false) {
 	return $ret;
 }
 
+function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id) {
+
+	// We won't be able to sign Diaspora comments for authenticated visitors 
+	// - we don't have their private key
+
+	// since Diaspora doesn't handle edits we can only do this for the original text and not update it.
+
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		logger('mod_item: diaspora support disabled, not storing comment signature', LOGGER_DEBUG);
+		return;
+	}
+
+	$body = $datarray['body'];
+	if(array_key_exists('item_flags',$datarray) && ($datarray['item_flags'] & ITEM_OBSCURED)) {
+		$key = get_config('system','prvkey');
+		if($datarray['body'])
+			$body = crypto_unencapsulate(json_decode($datarray['body'],true),$key);
+	}
+
+	logger('mod_item: storing diaspora comment signature',LOGGER_DEBUG);
+
+	require_once('include/bb2diaspora.php');
+
+	$signed_body = html_entity_decode(bb2diaspora($body));
+
+	$diaspora_handle = $channel['channel_address'] . '@' . get_app()->get_hostname();
+
+	$signed_text = $datarray['mid'] . ';' . $parent_item['mid'] . ';' . $signed_body . ';' . $diaspora_handle;
+
+	if( $uprvkey !== false )
+		$authorsig = base64_encode(rsa_sign($signed_text,$channel['channel_prvkey'],'sha256'));
+	else
+		$authorsig = '';
+
+	$r = q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+		intval($post_id),
+		dbesc($signed_text),
+		dbesc(base64_encode($authorsig)),
+		dbesc($diaspora_handle)
+	);
+	if(! $r)
+		logger('store_diaspora_comment_sig: DB write failed');
+
+	return;
+}
 
 
 

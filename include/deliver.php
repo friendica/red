@@ -29,6 +29,7 @@ function deliver_run($argv, $argc) {
 					);
 				}
 				else {
+					logger('deliver: queue post returned ' . $result['return_code'] . ' from ' . $r[0]['outq_posturl'],LOGGER_DEBUG);
 					$y = q("update outq set outq_updated = '%s' where outq_hash = '%s' limit 1",
 						dbesc(datetime_convert()),
 						dbesc($argv[$x])

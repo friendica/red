@@ -1228,7 +1228,7 @@ function diaspora_comment($importer,$xml,$msg) {
 	     check only the parent_author_signature. Basically, they trust that the top-level post
 	     owner has already verified the authenticity of anything he/she sends out
 	   - In either case, the signature that get checked is the signature created by the person
-	     who sent the salmon
+	     who sent the psuedo-salmon
 	*/
 
 	$signed_data = $guid . ';' . $parent_guid . ';' . $text . ';' . $diaspora_handle;
@@ -1345,6 +1345,9 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['app']  = 'Diaspora';
 
 	$result = item_store($datarray);
+
+	if($result && $result['success'])
+		$message_id = $result['item_id'];
 
 	if(($parent_item['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature)) {
 		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
@@ -2500,6 +2503,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	// Diaspora doesn't support threaded comments, but some
 	// versions of Diaspora (i.e. Diaspora-pistos) support
 	// likes on comments
+
 	if($item['verb'] === ACTIVITY_LIKE && $item['thr_parent']) {
 		$p = q("select * from item where mid = '%s' limit 1",
 				dbesc($item['thr_parent'])
@@ -2514,14 +2518,18 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 			   intval($item['parent'])
 			  );
 	}
+
 	if($p)
 		$parent = $p[0];
-	else
+	else {
+		logger('diaspora_send_relay: no parent');
 		return;
+	}
 
 	$like = false;
 	$relay_retract = false;
 	$sql_sign_id = 'iid';
+
 	if( $item['item_restrict'] & ITEM_DELETED) {
 		$relay_retract = true;
 
@@ -2544,10 +2552,10 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	}
 
 
-	// fetch the original signature	if the relayable was created by a Diaspora
-	// or DFRN user. Relayables for other networks are not supported.
+	// fetch the original signature	if the relayable was created by a Diaspora, Friendica-over Diaspora,
+	// or zot user. Relayables for other networks are not supported.
 
-/*	$r = q("select * from sign where " . $sql_sign_id . " = %d limit 1",
+	$r = q("select * from sign where " . $sql_sign_id . " = %d limit 1",
 		intval($item['id'])
 	);
 	if(count($r)) { 
@@ -2557,13 +2565,12 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		$handle = $orig_sign['signer'];
 	}
 	else {
-
 		// Author signature information (for likes, comments, and retractions of likes or comments,
 		// whether from Diaspora or Friendica) must be placed in the `sign` table before this 
 		// function is called
 		logger('diaspora_send_relay: original author signature not found, cannot send relayable');
 		return;
-	}*/
+	}
 
 	/* Since the author signature is only checked by the parent, not by the relay recipients,
 	 * I think it may not be necessary for us to do so much work to preserve all the original
@@ -2574,14 +2581,14 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	 * versions of Diaspora (diaspora-pistos), but since there are a number of problems with
 	 * doing that, let's ignore it for now.
 	 *
-	 * Currently, only DFRN contacts are supported. StatusNet shouldn't be hard, but it hasn't
-	 * been done yet
+	 *
 	 */
 
 	$handle = diaspora_handle_from_contact($item['author_xchan']);
-	if(! $handle)
+	if(! $handle) {
+		logger('diaspora_send_relay: no handle');
 		return;
-
+	}
 
 	if($relay_retract)
 		$sender_signed_text = $item['guid'] . ';' . $target_type;
@@ -2601,11 +2608,11 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	// markup at the top of this function, which is AFTER we placed the original $signed_text
 	// in the database, it's hazardous to trust the original $signed_text.
 
-	$parentauthorsig = base64_encode(rsa_sign($sender_signed_text,$owner['uprvkey'],'sha256'));
+	$parentauthorsig = base64_encode(rsa_sign($sender_signed_text,$owner['channel_prvkey'],'sha256'));
 
 	$msg = replace_macros($tpl,array(
-		'$guid' => xmlify($item['guid']),
-		'$parent_guid' => xmlify($parent['guid']),
+		'$guid' => xmlify($item['mid']),
+		'$parent_guid' => xmlify($parent['mid']),
 		'$target_type' =>xmlify($target_type),
 		'$authorsig' => xmlify($authorsig),
 		'$parentsig' => xmlify($parentauthorsig),
@@ -2615,7 +2622,6 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	));
 
 	logger('diaspora_send_relay: base message: ' . $msg, LOGGER_DATA);
-
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['channel_prvkey'],$contact['xchan_pubkey'],$public_batch)));
 
@@ -2631,7 +2637,7 @@ function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
 	// Check whether the retraction is for a top-level post or whether it's a relayable
-	if( $item['uri'] !== $item['parent-uri'] ) {
+	if( $item['mid'] !== $item['parent_mid'] ) {
 
 		$tpl = get_markup_template('diaspora_relay_retraction.tpl');
 		$target_type = (($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
@@ -2642,13 +2648,13 @@ function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 		$target_type = 'StatusMessage';
 	}
 
-	$signed_text = $item['guid'] . ';' . $target_type;
+	$signed_text = $item['mid'] . ';' . $target_type;
 
 	$msg = replace_macros($tpl, array(
-		'$guid'   => xmlify($item['guid']),
+		'$guid'   => xmlify($item['mid']),
 		'$type'   => xmlify($target_type),
 		'$handle' => xmlify($myaddr),
-		'$signature' => xmlify(base64_encode(rsa_sign($signed_text,$owner['uprvkey'],'sha256')))
+		'$signature' => xmlify(base64_encode(rsa_sign($signed_text,$owner['channel_prvkey'],'sha256')))
 	));
 
 	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['channel_prvkey'],$contact['xchan_pubkey'],$public_batch)));
