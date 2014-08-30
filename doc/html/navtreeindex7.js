@@ -1,5 +1,8 @@
 var NAVTREEINDEX7 =
 {
+"photo__driver_8php.html#a32e2817faa25d7f11f60a8abff565035":[6,0,0,1,0,4],
+"photo__driver_8php.html#a78f5a10c568d2a9bbbb129dc96548887":[6,0,0,1,0,3],
+"photo__gd_8php.html":[6,0,0,1,1],
 "photo__imagick_8php.html":[6,0,0,1,2],
 "php2po_8php.html":[6,0,2,6],
 "php2po_8php.html#a1594a11499d06cc8a789ee7ca0c7a12b":[6,0,2,6,7],
@@ -246,8 +249,5 @@ var NAVTREEINDEX7 =
 "starred_8php.html#a63024fb418c678e49fd535e3752d349a":[6,0,1,113,0],
 "subthread_8php.html":[6,0,1,114],
 "subthread_8php.html#a50368f3d825b77996030528e7fbfa3d3":[6,0,1,114,0],
-"suggest_8php.html":[6,0,1,115],
-"suggest_8php.html#a58748a8235d4523f8333847f3e42dd91":[6,0,1,115,0],
-"suggest_8php.html#a696acf1dd8070e479adcc80c63c6718c":[6,0,1,115,1],
-"system__unavailable_8php.html":[6,0,0,74]
+"suggest_8php.html":[6,0,1,115]
 };
