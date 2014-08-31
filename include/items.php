@@ -114,6 +114,9 @@ function collect_recipients($item,&$private_envelope) {
  * remove them from any privacy groups (collections) that were included in a post.
  * They can still be addressed individually.
  * Networks may need to be added or removed from this list as circumstances change.
+ *
+ * Update: this may need to be the default, which will force people to opt-in to sending stuff
+ * privately to insecure platforms. 
  */
 
 function filter_insecure($channel_id,$arr) {
