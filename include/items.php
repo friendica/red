@@ -19,7 +19,9 @@ function collect_recipients($item,&$private_envelope) {
 		// it is private
 
 		$allow_people = expand_acl($item['allow_cid']);
+
 		$allow_groups = expand_groups(expand_acl($item['allow_gid']));
+		$allow_groups = filter_insecure($item['uid'],$allow_groups);
 
 		$recipients = array_unique(array_merge($allow_people,$allow_groups));
 
@@ -44,7 +46,13 @@ function collect_recipients($item,&$private_envelope) {
 		$deny_groups  = expand_groups(expand_acl($item['deny_gid']));
 
 		$deny = array_unique(array_merge($deny_people,$deny_groups));
-		$recipients = array_diff($recipients,$deny);
+
+		// Don't deny anybody if nobody was allowed (e.g. they were all filtered out)
+		// That would lead to array_diff doing the wrong thing.
+		// This will result in a private post that won't be delivered to anybody.
+
+		if($recipients && $deny)
+			$recipients = array_diff($recipients,$deny);
 		$private_envelope = true;
 	}
 	else {
@@ -98,6 +106,37 @@ function collect_recipients($item,&$private_envelope) {
 
 	return $recipients;
 
+}
+
+/**
+ * If channel is configured to filter insecure members of privacy groups
+ * (those whose networks leak privacy via email notifications or other criteria)
+ * remove them from any privacy groups (collections) that were included in a post.
+ * They can still be addressed individually.
+ * Networks may need to be added or removed from this list as circumstances change.
+ */
+
+function filter_insecure($channel_id,$arr) {
+	$insecure_nets = " and not xchan_network in ('diaspora', 'friendica-over-diaspora') ";
+
+	$ret = array();
+
+	if((! intval(get_config($channel_id,'system','filter_insecure_collections'))) || (! $arr))
+		return $arr;
+
+	$str = '';
+	foreach($arr as $rr) {
+		if(strlen($str))
+			$str .= ',';
+		$str .= "'" . dbesc($rr) . "'";
+	}
+	$r = q("select xchan_hash from xchan where xchan_hash in ($str) $insecure_nets ");
+	if($r) {
+		foreach($r as $rr) {
+			$ret[] = $rr['xchan_hash'];
+		}
+	}
+	return $ret;
 }
 
 
