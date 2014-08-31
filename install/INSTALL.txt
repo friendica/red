@@ -173,7 +173,7 @@ one shown, substituting for your unique paths and settings:
 
 You can generally find the location of PHP by executing "which php". If you 
 have troubles with this section please contact your hosting provider for 
-assistance. Friendica will not work correctly if you cannot perform this step.
+assistance. The RedMatrix will not work correctly if you cannot perform this step.
 
 You should also be sure that $a->config['system']['php_path'] is set correctly, it should
 look like (changing it to the correct PHP location)
@@ -220,7 +220,7 @@ generally be world-readable.
 
 	Ensure that mod-rewite is installed and working, and that your
 .htaccess file is being used. To verify the latter, create a file test.out
-containing the word "test" in the top directory of Friendica, make it world 
+containing the word "test" in the top directory of the RedMatrix, make it world 
 readable and point your web browser to
 
 http://yoursitenamehere.com/test.out
