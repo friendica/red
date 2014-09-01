@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-29 00:03-0700\n"
-"PO-Revision-Date: 2014-09-01 12:26+0000\n"
+"PO-Revision-Date: 2014-09-01 12:59+0000\n"
 "Last-Translator: tuscanhobbit <pynolo@tarine.net>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/red-matrix/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -142,7 +142,7 @@ msgstr "Poke"
 
 #: ../../include/apps.php:141 ../../include/nav.php:110
 msgid "Chat"
-msgstr "Chat"
+msgstr "Area chat"
 
 #: ../../include/apps.php:142 ../../include/nav.php:169
 #: ../../include/text.php:815 ../../include/text.php:829
