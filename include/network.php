@@ -938,6 +938,9 @@ function discover_by_url($url,$arr = null) {
 	if($r)
 		return true;
 
+	if(! $photo)
+		$photo = z_root() . '/images/rss_icon.png';
+
 	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_pubkey, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_instance_url, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 		dbesc($guid),
 		dbesc($guid),
@@ -950,9 +953,9 @@ function discover_by_url($url,$arr = null) {
 		dbesc(datetime_convert())
 	);
 
-	$photos = import_profile_photo($photo,$profile);
+	$photos = import_profile_photo($photo,$guid);
 	$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s' limit 1",
-		dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
+		dbesc(datetime_convert()),
 		dbesc($photos[0]),
 		dbesc($photos[1]),
 		dbesc($photos[2]),
