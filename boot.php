@@ -304,7 +304,7 @@ define ( 'ABOOK_FLAG_ARCHIVED'   , 0x0008);
 define ( 'ABOOK_FLAG_PENDING'    , 0x0010);
 define ( 'ABOOK_FLAG_UNCONNECTED', 0x0020);
 define ( 'ABOOK_FLAG_SELF'       , 0x0080);
-
+define ( 'ABOOK_FLAG_FEED'       , 0x0100);
 
 
 define ( 'MAIL_DELETED',       0x0001);

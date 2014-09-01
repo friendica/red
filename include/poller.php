@@ -244,7 +244,7 @@ function poller_run($argv, $argc){
 		$sql_extra 
 		AND (( abook_flags & %d ) OR  ( abook_flags = %d )) 
 		AND (( account_flags = %d ) OR ( account_flags = %d )) $abandon_sql ORDER BY RAND()",
-		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_UNCONNECTED),
+		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_UNCONNECTED|ABOOK_FLAG_FEED),
 		intval(0),
 		intval(ACCOUNT_OK),
 		intval(ACCOUNT_UNVERIFIED)     // FIXME
@@ -259,6 +259,19 @@ function poller_run($argv, $argc){
 
 			$t = $contact['abook_updated'];
 			$c = $contact['abook_connected'];
+
+			if($contact['abook_flags'] & ABOOK_FLAG_FEED) {
+				$min = intval(get_config('system','minimum_feedcheck_minutes'));
+				if(! $min)
+					$min = 60;
+				$x = datetime_convert('UTC','UTC',"now - $min minutes");
+				if($c < $x) {
+					proc_run('php','include/onepoll.php',$contact['abook_id']);
+					if($interval)
+						@time_sleep_until(microtime(true) + (float) $interval);
+				}
+				continue;
+			}
 
 
 			if($c == $t) {

@@ -38,7 +38,7 @@ function onepoll_run($argv, $argc){
 		AND NOT ( abook_flags & %d )
 		AND (( account_flags = %d ) OR ( account_flags = %d )) limit 1",
 		intval($contact_id),
-		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_UNCONNECTED),
+		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_UNCONNECTED|ABOOK_FLAG_FEED),
 		intval(0),
 		intval(ABOOK_FLAG_ARCHIVED|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_IGNORED),
 		intval(ACCOUNT_OK),
@@ -71,6 +71,19 @@ function onepoll_run($argv, $argc){
 		? datetime_convert('UTC','UTC','now - 7 days')
 		: datetime_convert('UTC','UTC',$contact['abook_updated'] . ' - 2 days')
 	);
+
+	if($contact['xchan_network'] === 'rss') {
+		logger('onepoll: processing feed ' . $contact['xchan_name'], LOGGER_DEBUG);
+		handle_feed($importer['channel_id'],$contact_id,$contact['xchan_hash']);
+		q("update abook set abook_connected = '%s' where abook_id = %d limit 1",
+			dbesc(datetime_convert()),
+			intval($contact['abook_id'])
+		);
+		return;
+	}
+	
+	if($contact['xchan_network'] !== 'zot')
+		return;
 
 	// update permissions
 
@@ -130,10 +143,8 @@ function onepoll_run($argv, $argc){
 		}
 	}
 			
-
 	// fetch some items
 	// set last updated timestamp
-
 
 	if($contact['xchan_connurl']) {	
 		$r = q("SELECT xlink_id from xlink 

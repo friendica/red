@@ -204,11 +204,12 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		);		
 	}
 	else {
-		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated )
-			values( %d, %d, '%s', %d, %d, '%s', '%s' ) ",
+		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_flags, abook_their_perms, abook_my_perms, abook_created, abook_updated )
+			values( %d, %d, '%s', %d, %d, %d, '%s', '%s' ) ",
 			intval($aid),
 			intval($uid),
 			dbesc($xchan_hash),
+			intval(($is_http) ? ABOOK_FLAG_FEED : 0),
 			intval($their_perms),
 			intval($my_perms),
 			dbesc(datetime_convert()),

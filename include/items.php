@@ -1558,7 +1558,7 @@ function get_atom_elements($feed,$item,&$author) {
 				$termurl = unxmlify(substr($scheme,9));
 			}
 			else {
-				$termtype = TERM_UNKNOWN;
+				$termtype = TERM_CATEGORY;
 			}
 			$termterm = notags(trim(unxmlify($term)));
 
