@@ -1865,6 +1865,11 @@ function xchan_query(&$items,$abook = true) {
 			$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
 				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )");
 		}
+		$xchans = q("select * from xchan where xchan_hash in (" . implode(',',$arr) . ") and xchan_network in ('rss','unknown')");
+		if(! $chans)
+			$chans = $xchans;
+		else
+			$chans = array_merge($xchans,$chans); 
 	}
 	if($items && count($items) && $chans && count($chans)) {
 		for($x = 0; $x < count($items); $x ++) {
