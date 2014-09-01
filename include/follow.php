@@ -176,6 +176,11 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	}
 
 	if($is_http) {
+		if(! intval(get_config('system','feed_contacts'))) {
+			$result['message'] = t('Protocol disabled.');
+			return $result;
+		}
+
 		$r = q("select count(*) as total from abook where abook_account = %d and abook_network = 'rss'",
 			intval($aid)
 		);
