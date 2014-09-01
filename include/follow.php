@@ -35,10 +35,10 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	if($arr['channel']['success']) 
 		$ret = $arr['channel'];
-	else
+	elseif(strpos($url,'://') === false)
 		$ret = zot_finger($url,$channel);
 
-	if($ret['success']) {
+	if($ret && $ret['success']) {
 		$is_red = true;
 		$j = json_decode($ret['body'],true);
 	}
@@ -120,8 +120,10 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		$my_perms = 0;
 		$their_perms = 0;
 		$xchan_hash = '';
+		$is_http = false;
 
-		$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		$r = q("select * from xchan where xchan_hash = '%s' or xchan_url = '%s' limit 1",
+			dbesc($url),
 			dbesc($url)
 		);
 
@@ -130,9 +132,19 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			if(strpos($url,'@')) {
 				$r = discover_by_webbie($url);
 			}
+			elseif(strpos($url,'://')) {
+				$r = discover_by_url($url);
+				$is_http = true;
+			}
+			if($r) {
+				$r = q("select * from xchan where xchan_hash = '%s' or xchan_url = '%s' limit 1",
+					dbesc($url),
+					dbesc($url)
+				);
+			}
 		}
 		if($r) {
-			$xchan_hash = $url;
+			$xchan_hash = $r[0]['xchan_hash'];
 			$their_perms = 0;
 			$my_perms = PERMS_W_STREAM|PERMS_W_MAIL;
 		}
@@ -150,7 +162,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		$hash = get_observer_hash();
 		$ch = $a->get_channel();
 		$default_group = $ch['channel_default_group'];
-
 	}
 	else {
 		$r = q("select * from channel where channel_id = %d limit 1",
