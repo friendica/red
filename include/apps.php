@@ -124,7 +124,7 @@ function translate_system_apps(&$arr) {
 		'Bookmarks' => t('Bookmarks'),
 		'Address Book' => t('Address Book'),
 		'Login' => t('Login'),
-		'Channel Select' => t('Channel Select'), 
+		'Channel Manager' => t('Channel Manager'), 
 		'Matrix' => t('Matrix'), 
 		'Settings' => t('Settings'),
 		'Files' => t('Files'),
@@ -468,3 +468,35 @@ function papp_encode($papp) {
 	return chunk_split(base64_encode(json_encode($papp)),72,"\n");
 
 }
+
+
+/**
+ * install a shared design element (layout, webpage, block, menu, whatever)
+ *
+ */
+
+function element_install($channel,$s) {
+
+	$ret = array('success' => false);
+
+	$s = str_replace(array('[element]','[/element]'),array('',''),$s);
+	$s = base64url_decode($s);
+	if(! $s)
+		return $ret;
+	$x = json_decode($s,true);
+	if(! $x)
+		return $ret;
+
+	$d = array();
+
+
+
+
+
+
+
+
+	$result = item_store($d);
+
+}
+

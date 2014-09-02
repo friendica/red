@@ -311,6 +311,20 @@ CREATE TABLE IF NOT EXISTS `config` (
   UNIQUE KEY `access` (`cat`,`k`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `conv` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `guid` char(255) NOT NULL,
+  `recips` mediumtext NOT NULL,
+  `uid` int(11) NOT NULL,
+  `creator` char(255) NOT NULL,
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `subject` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created` (`created`),
+  KEY `updated` (`updated`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
@@ -442,6 +456,7 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_guid_sig` text NOT NULL,
   `hubloc_hash` char(255) NOT NULL,
   `hubloc_addr` char(255) NOT NULL DEFAULT '',
+  `hubloc_network` char(32) NOT NULL DEFAULT '',
   `hubloc_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `hubloc_status` int(10) unsigned NOT NULL DEFAULT '0',
   `hubloc_url` char(255) NOT NULL DEFAULT '',
@@ -459,6 +474,7 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   KEY `hubloc_connect` (`hubloc_connect`),
   KEY `hubloc_host` (`hubloc_host`),
   KEY `hubloc_addr` (`hubloc_addr`),
+  KEY `hubloc_network` (`hubloc_network`),
   KEY `hubloc_updated` (`hubloc_updated`),
   KEY `hubloc_connected` (`hubloc_connected`),
   KEY `hubloc_status` (`hubloc_status`)
@@ -495,6 +511,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `commented` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `received` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `changed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `comments_closed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `owner_xchan` char(255) NOT NULL DEFAULT '',
   `author_xchan` char(255) NOT NULL DEFAULT '',
   `source_xchan` char(255) NOT NULL DEFAULT '',
@@ -537,6 +554,8 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `received` (`received`),
   KEY `uid_commented` (`uid`,`commented`),
   KEY `uid_created` (`uid`,`created`),
+  KEY `changed` (`changed`),
+  KEY `comments_closed` (`comments_closed`),
   KEY `aid` (`aid`),
   KEY `owner_xchan` (`owner_xchan`),
   KEY `author_xchan` (`author_xchan`),
@@ -599,6 +618,7 @@ CREATE TABLE IF NOT EXISTS `likes` (
 
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `convid` int(10) unsigned NOT NULL DEFAULT '0',
   `mail_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `from_xchan` char(255) NOT NULL DEFAULT '',
   `to_xchan` char(255) NOT NULL DEFAULT '',
@@ -612,6 +632,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
+  KEY `convid` (`convid`),
   KEY `created` (`created`),
   KEY `mail_flags` (`mail_flags`),
   KEY `account_id` (`account_id`),
@@ -807,6 +828,7 @@ CREATE TABLE IF NOT EXISTS `profdef` (
   `field_type` char(16) NOT NULL DEFAULT '',
   `field_desc` char(255) NOT NULL DEFAULT '',
   `field_help` char(255) NOT NULL DEFAULT '',
+  `field_inputs` mediumtext NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `field_name` (`field_name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -933,6 +955,18 @@ CREATE TABLE IF NOT EXISTS `shares` (
   KEY `share_target` (`share_target`),
   KEY `share_xchan` (`share_xchan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `sign` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `iid` int(10) unsigned NOT NULL DEFAULT '0',
+  `retract_iid` int(10) unsigned NOT NULL DEFAULT '0',
+  `signed_text` mediumtext NOT NULL,
+  `signature` text NOT NULL,
+  `signer` char(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `iid` (`iid`),
+  KEY `retract_iid` (`retract_iid`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `site` (
   `site_url` char(255) NOT NULL,

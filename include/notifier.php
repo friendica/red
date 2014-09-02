@@ -103,28 +103,33 @@ function notifier_run($argv, $argc){
 		);
 		if($r) {
 			// Get the sender
-			$s = q("select * from channel where channel_id = %d limit 1",
+			$s = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_id = %d limit 1",
 				intval($r[0]['abook_channel'])
 			);
 			if($s) {
-
-				// send a refresh message to each hub they have registered here	
-				$h = q("select * from hubloc where hubloc_hash = '%s'",
-					dbesc($r[0]['hubloc_hash'])
-				);
-				if($h) {
-					foreach($h as $hh) {
-						$data = zot_build_packet($s[0],'refresh',array(array(
-							'guid' => $hh['hubloc_guid'],
-							'guid_sig' => $hh['hubloc_guid_sig'],
-							'url' => $hh['hubloc_url'])
-						));
-						if($data) {
-							$result = zot_zot($hh['hubloc_callback'],$data);
+				if($r[0]['hubloc_network'] === 'diaspora' || $r[0]['hubloc_network'] === 'friendica-over-diaspora') {
+					require_once('include/diaspora.php');
+					diaspora_share($s[0],$r[0]);
+				}
+				else {
+					// send a refresh message to each hub they have registered here	
+					$h = q("select * from hubloc where hubloc_hash = '%s'",
+						dbesc($r[0]['hubloc_hash'])
+					);
+					if($h) {
+						foreach($h as $hh) {
+							$data = zot_build_packet($s[0],'refresh',array(array(
+								'guid' => $hh['hubloc_guid'],
+								'guid_sig' => $hh['hubloc_guid_sig'],
+								'url' => $hh['hubloc_url'])
+							));
+							if($data) {
+								$result = zot_zot($hh['hubloc_callback'],$data);
 // zot_queue_item is not yet written
 //							if(! $result['success'])
 //								zot_queue_item();
 
+							}
 						}	
 					}
 				}
@@ -366,6 +371,8 @@ function notifier_run($argv, $argc){
 
 	}
 
+	$walltowall = (($top_level_post && $channel['xchan_hash'] === $target_item['author_xchan']) ? true : false); 
+
 	// Generic delivery section, we have an encoded item and recipients
 	// Now start the delivery process
 
@@ -382,7 +389,7 @@ function notifier_run($argv, $argc){
 
 	$env_recips = (($private) ? array() : null);
 
-	$details = q("select xchan_hash, xchan_instance_url, xchan_addr, xchan_guid, xchan_guid_sig from xchan where xchan_hash in (" . implode(',',$recipients) . ")");
+	$details = q("select xchan_hash, xchan_instance_url, xchan_network, xchan_addr, xchan_guid, xchan_guid_sig from xchan where xchan_hash in (" . implode(',',$recipients) . ")");
 
 	$recip_list = array();
 
@@ -405,7 +412,7 @@ function notifier_run($argv, $argc){
 
 			$recip_list[] = $d['xchan_addr'] . ' (' . $d['xchan_hash'] . ')'; 
 			if($private)
-				$env_recips[] = array('guid' => $d['xchan_guid'],'guid_sig' => $d['xchan_guid_sig']);
+				$env_recips[] = array('guid' => $d['xchan_guid'],'guid_sig' => $d['xchan_guid_sig'],'hash' => $d['xchan_hash']);
 		}
 	}
 
@@ -438,11 +445,11 @@ function notifier_run($argv, $argc){
 		// aren't the owner or author.  
 
 
-		$r = q("select hubloc_sitekey, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
 			where hubloc_hash in (" . implode(',',$recipients) . ") group by hubloc_sitekey order by hubloc_connected desc limit 1");
 	} 
 	else {
-		$r = q("select hubloc_sitekey, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
 			where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_sitekey");
 	}
 
@@ -484,6 +491,42 @@ function notifier_run($argv, $argc){
 				continue;
 			}
 		}
+
+
+		if($hub['hubloc_network'] === 'diaspora' || $hub['hubloc_network'] === 'friendica-over-diaspora') {
+			if(! get_config('system','diaspora_enabled'))
+				continue;
+
+			require_once('include/diaspora.php');
+
+			diaspora_process_outbound(array(
+				'channel' => $channel,
+				'env_recips' => $env_recips,
+				'recipients' => $recipients,
+				'item' => $item,
+				'target_item' => $target_item,
+				'hub' => $hub,
+				'top_level_post' => $top_level_post,
+				'private' => $private,
+				'followup' => $followup,
+				'relay_to_owner' => $relay_to_owner,
+				'uplink' => $uplink,
+				'cmd' => $cmd,
+				'expire' =>	$expire,
+				'mail' => $mail,
+				'fsuggest' => $fsuggest,
+				'normal_mode' => $normal_mode,
+				'packet_type' => $packet_type,
+				'walltowall' => $walltowall
+			));
+
+			continue;
+
+		}
+
+
+		// default: zot protocol
+
 
 		$hash = random_string();
 		if($packet_type === 'refresh' || $packet_type === 'purge') {

@@ -19,13 +19,16 @@ function viewsrc_content(&$a) {
 	}
 
 	if(local_user() && $item_id) {
-		$r = q("select body from item where item_restrict = 0 and uid = %d and id = %d limit 1",
+		$r = q("select item_flags, body from item where item_restrict = 0 and uid = %d and id = %d limit 1",
 			intval(local_user()),
 			intval($item_id)
 		);
 
-		if($r)
+		if($r) {
+			if($r[0]['item_flags'] & ITEM_OBSCURED) 
+				$r[0]['body'] = crypto_unencapsulate(json_decode($r[0]['body'],true),get_config('system','prvkey')); 
 			$o = (($json) ? json_encode($r[0]['body']) : str_replace("\n",'<br />',$r[0]['body']));
+		}
 	}
 
 	if(is_ajax()) {

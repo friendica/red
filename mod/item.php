@@ -768,9 +768,9 @@ function item_post(&$a) {
 		$key = get_config('system','pubkey');
 		$datarray['item_flags'] = $datarray['item_flags'] | ITEM_OBSCURED;
 		if($datarray['title'])
-			$datarray['title'] = json_encode(aes_encapsulate($datarray['title'],$key));
+			$datarray['title'] = json_encode(crypto_encapsulate($datarray['title'],$key));
 		if($datarray['body'])
-			$datarray['body']  = json_encode(aes_encapsulate($datarray['body'],$key));
+			$datarray['body']  = json_encode(crypto_encapsulate($datarray['body'],$key));
 	}
 
 	if($orig_post) {
@@ -789,7 +789,6 @@ function item_post(&$a) {
 	}
 	else
 		$post_id = 0;
-
 
 	$post = item_store($datarray,$execflag);
 
@@ -852,6 +851,11 @@ function item_post(&$a) {
 		// NOTREACHED
 	}
 
+	if($parent) {
+		// Store the comment signature information in case we need to relay to Diaspora
+//FIXME
+		store_diaspora_comment_sig($datarray,$channel,$parent_item, $post_id);
+	}
 
 	update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);
 
@@ -1313,3 +1317,4 @@ function item_check_service_class($channel_id,$iswebpage) {
 	$ret['success'] = true;
 	return $ret;
 }
+

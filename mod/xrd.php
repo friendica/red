@@ -22,7 +22,20 @@ function xrd_init(&$a) {
 	if(! $r) 
 		killme();
 
-//	$salmon_key = salmon_key($r[0]['pubkey']);
+	if(get_config('system','diaspora_enabled')) {
+		$tpl = get_markup_template('xrd_diaspora.tpl');
+		$dspr = replace_macros($tpl,array(
+			'$baseurl' => $a->get_baseurl(),
+			'$dspr_guid' => $r[0]['channel_guid'],
+			'$dspr_key' => base64_encode(pemtorsa($r[0]['channel_pubkey']))
+		));
+	}
+	else
+		$dspr = '';
+
+
+
+	$salmon_key = salmon_key($r[0]['channel_pubkey']);
 
 	header('Access-Control-Allow-Origin: *');
 	header("Content-type: text/xml");
@@ -34,15 +47,15 @@ function xrd_init(&$a) {
 		'$nick'        => $r[0]['channel_address'],
 		'$accturi'     => $uri,
 		'$profile_url' => $a->get_baseurl() . '/channel/'       . $r[0]['channel_address'],
-//		'$hcard_url'   => $a->get_baseurl() . '/hcard/'         . $r[0]['channel_address'],
+		'$hcard_url'   => $a->get_baseurl() . '/hcard/'         . $r[0]['channel_address'],
 		'$atom'        => $a->get_baseurl() . '/feed/'          . $r[0]['channel_address'],
 		'$zot_post'    => $a->get_baseurl() . '/post/'          . $r[0]['channel_address'],
 		'$poco_url'    => $a->get_baseurl() . '/poco/'          . $r[0]['channel_address'],
 		'$photo'       => $a->get_baseurl() . '/photo/profile/l/' . $r[0]['channel_id'],
-//		'$dspr'        => $dspr,
+		'$dspr'        => $dspr,
 //		'$salmon'      => $a->get_baseurl() . '/salmon/'        . $r[0]['channel_address'],
 //		'$salmen'      => $a->get_baseurl() . '/salmon/'        . $r[0]['channel_address'] . '/mention',
-//		'$modexp'      => 'data:application/magic-public-key,'  . $salmon_key,
+		'$modexp'      => 'data:application/magic-public-key,'  . $salmon_key,
 //		'$bigkey'      =>  salmon_key($r[0]['pubkey'])
 	));
 

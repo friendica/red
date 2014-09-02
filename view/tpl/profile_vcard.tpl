@@ -2,7 +2,7 @@
 
 	{{if $profile.edit}}
 	<div class="dropdown">
-	<a class="profile-edit-side-link dropdown-toggle" data-toggle="dropdown" title="{{$profile.edit.3}}" href="#" ><i class="icon-pencil btn btn-default btn-xs" title="{{$profile.edit.1}}" ></i></a>
+	<a class="profile-edit-side-link dropdown-toggle" data-toggle="dropdown" title="{{$profile.edit.3}}" href="#" ><i class="icon-pencil" title="{{$profile.edit.1}}" ></i></a>
 	<ul class="dropdown-menu" role="menu">
 		{{foreach $profile.menu.entries as $e}}
 		<li>
@@ -15,7 +15,7 @@
 	</div>
 	{{/if}}
 
-	<div class="fn label">{{$profile.name}}{{if $profile.online}} <i class="icon-asterisk online-now" title="{{$profile.online}}"></i>{{/if}}</div>
+	<div class="fn">{{$profile.name}}{{if $profile.online}} <i class="icon-asterisk online-now" title="{{$profile.online}}"></i>{{/if}}</div>
 		
 	{{if $pdesc}}<div class="title">{{$profile.pdesc}}</div>{{/if}}
 	<div id="profile-photo-wrapper"><img class="photo" width="175" height="175" src="{{$profile.photo}}?rev={{$profile.picdate}}" alt="{{$profile.name}}"></div>
@@ -43,6 +43,9 @@
 
 	{{if $homepage}}<dl class="homepage"><dt class="homepage-label">{{$homepage}}</dt><dd class="homepage-url"><a href="{{$profile.homepage}}" >{{$profile.homepage}}</a></dd></dl>{{/if}}
 
+	{{if $diaspora}}
+	{{include file="diaspora_vcard.tpl"}}
+	{{/if}}
 
 {{if $connect}}
 <a href="{{$connect_url}}" class="rconnect"><i class="icon-plus connect-icon"></i> {{$connect}}</a>

@@ -254,6 +254,7 @@ function profiles_post(&$a) {
 //			$month = 1; $day = 1;
 //		}
 
+
 		$dob = '0000-00-00';
 		$dob = sprintf('%04d-%02d-%02d',$year,$month,$day);
 
@@ -262,6 +263,9 @@ function profiles_post(&$a) {
 
 		if($orig[0]['name'] != $name)
 			$namechanged = true;
+
+
+
 
 
 		$pdesc        = escape_tags(trim($_POST['pdesc']));
@@ -344,9 +348,41 @@ function profiles_post(&$a) {
 				$with = $orig[0]['with'];
 		}
 
+		$profile_fields_basic    = get_profile_fields_basic();
+		$profile_fields_advanced = get_profile_fields_advanced();
+		$advanced = ((feature_enabled(local_user(),'advanced_profiles')) ? true : false);
+		if($advanced)
+			$fields = $profile_fields_advanced;
+		else
+			$fields = $profile_fields_basic;
 
-
-
+		$z = q("select * from profdef where true");
+		if($z) {
+			foreach($z as $zz) {
+				if(array_key_exists($zz['field_name'],$fields)) {
+					$w = q("select * from profext where channel_id = %d and hash = '%s' and k = '%s' limit 1",
+						intval(local_user()),
+						dbesc($orig[0]['profile_guid']),
+						dbesc($zz['field_name'])
+					);
+					if($w) {
+						q("update profext set v = '%s' where id = %d limit 1",
+							dbesc(escape_tags(trim($_POST[$zz['field_name']]))),
+							intval($w[0]['id'])
+						);
+					}
+					else {
+						q("insert into profext ( channel_id, hash, k, v ) values ( %d, '%s', '%s', '%s') ",
+							intval(local_user()),
+							dbesc($orig[0]['profile_guid']),
+							dbesc($zz['field_name']),
+							dbesc(escape_tags(trim($_POST[$zz['field_name']])))
+						);
+					}
+				}
+			}
+		}
+													
 		$changes = array();
 		$value = '';
 		if($is_default) {
@@ -568,6 +604,24 @@ function profiles_content(&$a) {
 			'$no_selected'  => (($r[0]['hide_friends'] == 0) ? " checked=\"checked\" " : "")
 		));
 
+		$q = q("select * from profdef where true");
+		if($q) {
+			$extra_fields = array();
+
+			foreach($q as $qq) {
+				$mine = q("select v from profext where k = '%s' and hash = '%s' and channel_id = %d limit 1",
+					dbesc($qq['field_name']),					
+					dbesc($r[0]['profile_guid']),
+					intval(local_user())
+				);
+
+				if(array_key_exists($qq['field_name'],$fields)) {
+					$extra_fields[] = array($qq['field_name'],$qq['field_desc'],(($mine) ? $mine[0]['v'] : ''), $qq['field_help']);
+				}
+			}
+		}
+
+logger('extra_fields: ' . print_r($extra_fields,true));
 
 		$f = get_config('system','birthday_input_format');
 		if(! $f)
@@ -674,6 +728,7 @@ function profiles_content(&$a) {
 			'$education'    => $r[0]['education'],
 			'$contact'      => $r[0]['contact'],
 			'$channels'     => $r[0]['channels'],
+			'$extra_fields' => $extra_fields,
 		));
 
 		$arr = array('profile' => $r[0], 'entry' => $o);

@@ -7,6 +7,7 @@ var searchData=
   ['feed_5fsalmonlinks',['feed_salmonlinks',['../text_8php.html#a89929fa6f70a8ba54d5273fcf622b665',1,'text.php']]],
   ['fetch_5flrdd_5ftemplate',['fetch_lrdd_template',['../include_2network_8php.html#a8d5a3afb51cc932032b5dcc159efaae0',1,'network.php']]],
   ['fetch_5fpost_5ftags',['fetch_post_tags',['../items_8php.html#adf980098b6de9c3993bc3ff26a8dd6f9',1,'items.php']]],
+  ['fetch_5fxrd_5flinks',['fetch_xrd_links',['../include_2network_8php.html#a850ed5307c6a18076f4b80addc99602d',1,'network.php']]],
   ['field_5ftimezone',['field_timezone',['../datetime_8php.html#a03900dcf0f9e3c58793a031673a70326',1,'datetime.php']]],
   ['file_5ftag_5fdecode',['file_tag_decode',['../taxonomy_8php.html#a08df5164926d2b31b8e9fcfe919de2b6',1,'taxonomy.php']]],
   ['file_5ftag_5fencode',['file_tag_encode',['../taxonomy_8php.html#a3299482ac20e9d79453048dd52881d37',1,'taxonomy.php']]],
@@ -49,8 +50,6 @@ var searchData=
   ['format_5fmentions',['format_mentions',['../text_8php.html#ad8c6e13d6accf057136c5f30a23a5f08',1,'text.php']]],
   ['format_5fnotification',['format_notification',['../include_2notify_8php.html#a0e61728e487df50c72e6434f911a57d3',1,'notify.php']]],
   ['format_5fterm_5ffor_5fdisplay',['format_term_for_display',['../taxonomy_8php.html#adfead45e3b8a3dfb2b4a4b9281d0dbe1',1,'taxonomy.php']]],
-  ['frphotos_5fcontent',['frphotos_content',['../frphotos_8php.html#a6536248e7dda3f06cf37838064b961a4',1,'frphotos.php']]],
-  ['frphotos_5finit',['frphotos_init',['../frphotos_8php.html#a4a33fadb181497eff301ee5132ec61d1',1,'frphotos.php']]],
   ['fsuggest_5fcontent',['fsuggest_content',['../fsuggest_8php.html#aa6c49ed4b50a387f1845f36844dd7998',1,'fsuggest.php']]],
   ['fsuggest_5fpost',['fsuggest_post',['../fsuggest_8php.html#a61ecfe10ce937ed526614f8fd3de3c7d',1,'fsuggest.php']]],
   ['ftosmarty',['fToSmarty',['../namespacefriendica-to-smarty-tpl.html#a89388ea9b2826e8218ed480e917d8105',1,'friendica-to-smarty-tpl']]]

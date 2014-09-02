@@ -17,7 +17,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	$a = get_app();
 	$is_red = false;
-
+	$is_http = ((strpos($url,'://') !== false) ? true : false);
 
 	if(! allowed_url($url)) {
 		$result['message'] = t('Channel is blocked on this site.');
@@ -29,16 +29,32 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		return $result;
 	}
 
+
+	// check service class limits
+
+	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d) ",
+		intval($uid),
+		intval(ABOOK_FLAG_SELF)
+	);
+	if($r)
+		$total_channels = $r[0]['total'];
+
+	if(! service_class_allows($uid,'total_channels',$total_channels)) {
+		$result['message'] = upgrade_message();
+		return $result;
+	}
+
+
 	$arr = array('url' => $url, 'channel' => array());
 
 	call_hooks('follow', $arr);
 
 	if($arr['channel']['success']) 
 		$ret = $arr['channel'];
-	else
+	elseif(! $is_http)
 		$ret = zot_finger($url,$channel);
 
-	if($ret['success']) {
+	if($ret && $ret['success']) {
 		$is_red = true;
 		$j = json_decode($ret['body'],true);
 	}
@@ -60,20 +76,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 		if(array_key_exists('connect_url',$j) && (! $confirm))
 			goaway(zid($j['connect_url']));
-
-		// check service class limits
-
-		$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d) ",
-			intval($uid),
-			intval(ABOOK_FLAG_SELF)
-		);
-		if($r)
-			$total_channels = $r[0]['total'];
-
-		if(! service_class_allows($uid,'total_channels',$total_channels)) {
-			$result['message'] = upgrade_message();
-			return $result;
-		}
 
 
 		// do we have an xchan and hubloc?
@@ -117,15 +119,35 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	}
 	else {
 
-		// attempt network auto-discovery
-		
 		$my_perms = 0;
 		$their_perms = 0;
 		$xchan_hash = '';
-		
 
+		$r = q("select * from xchan where xchan_hash = '%s' or xchan_url = '%s' limit 1",
+			dbesc($url),
+			dbesc($url)
+		);
 
-
+		if(! $r) {
+			// attempt network auto-discovery
+			if(strpos($url,'@')) {
+				$r = discover_by_webbie($url);
+			}
+			elseif($is_http) {
+				$r = discover_by_url($url);
+			}
+			if($r) {
+				$r = q("select * from xchan where xchan_hash = '%s' or xchan_url = '%s' limit 1",
+					dbesc($url),
+					dbesc($url)
+				);
+			}
+		}
+		if($r) {
+			$xchan_hash = $r[0]['xchan_hash'];
+			$their_perms = 0;
+			$my_perms = PERMS_W_STREAM|PERMS_W_MAIL;
+		}
 	}
 
 	if(! $xchan_hash) {
@@ -139,7 +161,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		$hash = get_observer_hash();
 		$ch = $a->get_channel();
 		$default_group = $ch['channel_default_group'];
-
 	}
 	else {
 		$r = q("select * from channel where channel_id = %d limit 1",
@@ -153,7 +174,25 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		$hash = $r[0]['channel_hash'];			
 		$default_group = $r[0]['channel_default_group'];
 	}
-	
+
+	if($is_http) {
+		if(! intval(get_config('system','feed_contacts'))) {
+			$result['message'] = t('Protocol disabled.');
+			return $result;
+		}
+
+		$r = q("select count(*) as total from abook where abook_account = %d and ( abook_flags & ABOOK_FLAG_FEED )",
+			intval($aid)
+		);
+		if($r)
+			$total_feeds = $r[0]['total'];
+
+		if(! service_class_allows($uid,'total_feeds',$total_feeds)) {
+			$result['message'] = upgrade_message();
+			return $result;
+		}
+	}
+
 	if($hash == $xchan_hash) {
 		$result['message'] = t('Cannot connect to yourself.');
 		return $result;
@@ -170,11 +209,12 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		);		
 	}
 	else {
-		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated )
-			values( %d, %d, '%s', %d, %d, '%s', '%s' ) ",
+		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_flags, abook_their_perms, abook_my_perms, abook_created, abook_updated )
+			values( %d, %d, '%s', %d, %d, %d, '%s', '%s' ) ",
 			intval($aid),
 			intval($uid),
 			dbesc($xchan_hash),
+			intval(($is_http) ? ABOOK_FLAG_FEED : 0),
 			intval($their_perms),
 			intval($my_perms),
 			dbesc(datetime_convert()),

@@ -26,9 +26,8 @@ function follow_init(&$a) {
 
 	// If we can view their stream, pull in some posts
 
-	if($result['abook']['abook_their_perms'] & PERMS_R_STREAM)
+	if(($result['abook']['abook_their_perms'] & PERMS_R_STREAM) || ($result['abook']['xchan_network'] === 'rss'))
 		proc_run('php','include/onepoll.php',$result['abook']['abook_id']);
-
 
 	goaway(z_root() . '/connedit/' . $result['abook']['abook_id'] . '?f=&follow=1');
 

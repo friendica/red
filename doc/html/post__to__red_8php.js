@@ -18,7 +18,6 @@ var post__to__red_8php =
     [ "post_to_red_settings_link", "post__to__red_8php.html#a906be8f72cf1aa2e199c0683ea6a4017", null ],
     [ "red_comment", "post__to__red_8php.html#a085c250d4ceff5e4f10052f3d2039823", null ],
     [ "red_xmlrpc_methods", "post__to__red_8php.html#a3a2af6ad845239f26e86fccabf8639e1", null ],
-    [ "xpost_to_html2bbcode", "post__to__red_8php.html#af2713018a2dc97e88f121fc6215beb66", null ],
     [ "$plugin", "post__to__red_8php.html#ada8a7130088351710bb02ed622d6bf65", null ],
     [ "$plugin_dir", "post__to__red_8php.html#a99811555b30bde504a863e44015f2f19", null ],
     [ "post_to_red_acct_name", "post__to__red_8php.html#a588cea66afe0b32f27f2713d44940119", null ],

@@ -1,4 +1,4 @@
 url: $baseurl/manage
 requires: local_user
-name: Channel Select
+name: Channel Manager
 photo: $baseurl/app/manage.png

@@ -265,50 +265,12 @@ function admin_page_site_post(&$a){
 	$delivery_interval	=	((x($_POST,'delivery_interval'))? intval(trim($_POST['delivery_interval']))		: 0);
 	$poll_interval	=	((x($_POST,'poll_interval'))? intval(trim($_POST['poll_interval']))		: 0);
 	$maxloadavg	=	((x($_POST,'maxloadavg'))? intval(trim($_POST['maxloadavg']))		: 50);
-//	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
-/*
-	if($ssl_policy != intval(get_config('system','ssl_policy'))) {
-		if($ssl_policy == SSL_POLICY_FULL) {
-			q("update `contact` set 
-				`url`     = replace(`url`    , 'http:' , 'https:'),
-				`photo`   = replace(`photo`  , 'http:' , 'https:'),
-				`thumb`   = replace(`thumb`  , 'http:' , 'https:'),
-				`micro`   = replace(`micro`  , 'http:' , 'https:'),
-				`request` = replace(`request`, 'http:' , 'https:'),
-				`notify`  = replace(`notify` , 'http:' , 'https:'),
-				`poll`    = replace(`poll`   , 'http:' , 'https:'),
-				`confirm` = replace(`confirm`, 'http:' , 'https:'),
-				`poco`    = replace(`poco`   , 'http:' , 'https:')
-				where `self` = 1"
-			);
-			q("update `profile` set 
-				`photo`   = replace(`photo`  , 'http:' , 'https:'),
-				`thumb`   = replace(`thumb`  , 'http:' , 'https:')
-				where 1 "
-			);
-		}
-		elseif($ssl_policy == SSL_POLICY_SELFSIGN) {
-			q("update `contact` set 
-				`url`     = replace(`url`    , 'https:' , 'http:'),
-				`photo`   = replace(`photo`  , 'https:' , 'http:'),
-				`thumb`   = replace(`thumb`  , 'https:' , 'http:'),
-				`micro`   = replace(`micro`  , 'https:' , 'http:'),
-				`request` = replace(`request`, 'https:' , 'http:'),
-				`notify`  = replace(`notify` , 'https:' , 'http:'),
-				`poll`    = replace(`poll`   , 'https:' , 'http:'),
-				`confirm` = replace(`confirm`, 'https:' , 'http:'),
-				`poco`    = replace(`poco`   , 'https:' , 'http:')
-				where `self` = 1"
-			);
-			q("update `profile` set 
-				`photo`   = replace(`photo`  , 'https:' , 'http:'),
-				`thumb`   = replace(`thumb`  , 'https:' , 'http:')
-				where 1 "
-			);
-		}
-	}
-*/
-//	set_config('system','ssl_policy',$ssl_policy);
+	$feed_contacts = ((x($_POST,'feed_contacts')) ? intval($_POST['feed_contacts']) : 0);
+	$diaspora_enabled = ((x($_POST,'diaspora_enabled')) ? intval($_POST['diaspora_enabled']) : 0);
+
+
+	set_config('system','feed_contacts',$feed_contacts);
+	set_config('system','diaspora_enabled',$diaspora_enabled);
 	set_config('system','delivery_interval',$delivery_interval);
 	set_config('system','poll_interval',$poll_interval);
 	set_config('system','maxloadavg',$maxloadavg);
@@ -464,7 +426,8 @@ function admin_page_site(&$a) {
 		'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),
 		'$theme_accessibility' 	=> array('theme_accessibility', t("Accessibility system theme"), get_config('system','accessibility_theme'), t("Accessibility theme"), $theme_choices_accessibility),
 		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
-//		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
+		'$diaspora_enabled'  => array('diaspora_enabled',t('Enable Diaspora Protocol'), get_config('system','diaspora_enabled'), t('Communicate with Diaspora and Friendica - experimental')),
+		'$feed_contacts'    => array('feed_contacts', t('Allow Feeds as Connections'),get_config('system','feed_contacts'),t('(Heavy system resource usage)')), 
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), intval(get_config('system','maximagesize')), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Does this site allow new member registration?"), get_config('system','register_policy'), "", $register_choices),
 		'$access_policy'	=> array('access_policy', t("Which best describes the types of account offered by this hub?"), get_config('system','access_policy'), "This is displayed on the public server site list.", $access_choices),
@@ -1328,11 +1291,74 @@ readable.");
 
 function admin_page_profs_post(&$a) {
 
+	if($_REQUEST['id']) {
+		$r = q("update profdef set field_name = '%s', field_type = '%s', field_desc = '%s' field_help = '%s', field_inputs = '%s' where id = %d limit 1",
+			dbesc($_REQUEST['field_name']),
+			dbesc($_REQUEST['field_type']),
+			dbesc($_REQUEST['field_desc']),
+			dbesc($_REQUEST['field_help']),
+			dbesc($_REQUEST['field_inputs']),
+			intval($_REQUEST['id'])
+		);
+	}
+	else {
+		$r = q("insert into profdef ( field_name, field_type, field_desc, field_help, field_inputs ) values ( '%s' , '%s', '%s', '%s', '%s' )",
+			dbesc($_REQUEST['field_name']),
+			dbesc($_REQUEST['field_type']),
+			dbesc($_REQUEST['field_desc']),
+			dbesc($_REQUEST['field_help']),
+			dbesc($_REQUEST['field_inputs'])
+		);
+	}
+
+	// add to chosen array basic or advanced
+
+	goaway(z_root() . '/admin/profs');
 
 }
 
 function admin_page_profs(&$a) {
 
+	if((argc() > 3) && argv(2) == 'drop' && intval(argv(3))) {
+		$r = q("delete from profdef where id = %d limit 1",
+			intval(argv(3))
+		);
+		// remove from allowed fields
+
+		goaway(z_root() . '/admin/profs');	
+	}
+
+	if((argc() > 2) && argv(2) === 'new') {
+		return replace_macros(get_markup_template('profdef_edit.tpl'),array(
+			'$header' => t('New Profile Field'),
+			'$field_name' => array('field_name',t('Field nickname'),$_REQUEST['field_name'],t('System name of field')),
+			'$field_type' => array('field_type',t('Input type'),(($_REQUEST['field_type']) ? $_REQUEST['field_type'] : 'text'),''),
+			'$field_desc' => array('field_desc',t('Field Name'),$_REQUEST['field_desc'],t('Label on profile pages')),
+			'$field_help' => array('field_help',t('Help text'),$_REQUEST['field_help'],t('Additional info (optional)')),
+			'$submit' => t('Save')
+		));
+
+	}
+
+	if((argc() > 2) && intval(argv(2))) {
+		$r = q("select * from profdef where id = %d limit 1",
+			intval(argv(2))
+		);
+		if(! $r) {
+			notice( t('Field definition not found') . EOL);
+			goaway(z_root() . '/admin/profs');
+		}
+
+		return replace_macros(get_markup_template('profdef_edit.tpl'),array(
+			'$id' => intval($r[0]['id']),
+			'$header' => t('Edit Profile Field'),
+			'$field_name' => array('field_name',t('Field nickname'),$r[0]['field_name'],t('System name of field')),
+			'$field_type' => array('field_type',t('Input type'),$r[0]['field_type'],''),
+			'$field_desc' => array('field_desc',t('Field Name'),$r[0]['field_desc'],t('Label on profile pages')),
+			'$field_help' => array('field_help',t('Help text'),$r[0]['field_help'],t('Additional info (optional)')),
+			'$submit' => t('Save')
+		));
+	}
 
 }
 

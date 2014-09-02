@@ -45,14 +45,10 @@ function blocks_content(&$a) {
                 return;
         }
 
-//        if(local_user() && local_user() == $owner) {
-  //          $a->set_widget('design',design_tools());
-    //    }
-
-
 
 // Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
-// Nickname is set to the observers xchan, and profile_uid to the owners.  This lets you post pages at other people's channels.
+// Nickname is set to the observers xchan, and profile_uid to the owners.  
+// This lets you post pages at other people's channels.
 require_once ('include/conversation.php');
 		$x = array(
 			'webpage' => ITEM_BUILDBLOCK,
@@ -66,6 +62,15 @@ require_once ('include/conversation.php');
 			'ptlabel' => t('Block Name'),
 			'profile_uid' => intval($owner),
 		);
+
+		if($_REQUEST['title'])
+			$x['title'] = $_REQUEST['title'];
+		if($_REQUEST['body'])
+			$x['body'] = $_REQUEST['body'];
+		if($_REQUEST['pagetitle'])
+			$x['pagetitle'] = $_REQUEST['pagetitle'];
+
+
 
 		$o .= status_editor($a,$x);
 

@@ -47,7 +47,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1123  );
+define ( 'DB_UPDATE_VERSION',       1128  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -304,7 +304,7 @@ define ( 'ABOOK_FLAG_ARCHIVED'   , 0x0008);
 define ( 'ABOOK_FLAG_PENDING'    , 0x0010);
 define ( 'ABOOK_FLAG_UNCONNECTED', 0x0020);
 define ( 'ABOOK_FLAG_SELF'       , 0x0080);
-
+define ( 'ABOOK_FLAG_FEED'       , 0x0100);
 
 
 define ( 'MAIL_DELETED',       0x0001);
@@ -358,11 +358,6 @@ define ( 'MAX_LIKERS',    10);
 
 define ( 'ZCURL_TIMEOUT' , (-1));
 
-/**
- * Hours before chat lines are deleted
- */
-
-define ( 'MAX_CHATROOM_HOURS' , 36);
 
 /**
  * email notification options

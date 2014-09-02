@@ -46,11 +46,11 @@ function webpages_content(&$a) {
 //		}
 
 
-	$mimetype = get_config('system','page_mimetype');
+	$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_config('system','page_mimetype'));
 	if(! $mimetype)
 		$mimetype = 'choose';
 
-	$layout = get_config('system','page_layout');
+	$layout = (($_REQUEST['layout']) ? $_REQUEST['layout'] : get_config('system','page_layout'));
 	if(! $layout)
 		$layout = 'choose';
 
@@ -90,6 +90,13 @@ function webpages_content(&$a) {
 		'mimetype' => $mimetype,
 		'layout' => $layout,
 	);
+
+	if($_REQUEST['title'])
+		$x['title'] = $_REQUEST['title'];
+	if($_REQUEST['body'])
+		$x['body'] = $_REQUEST['body'];
+	if($_REQUEST['pagetitle'])
+		$x['pagetitle'] = $_REQUEST['pagetitle'];
 
 	$o .= status_editor($a,$x);
 

@@ -203,7 +203,7 @@ function zfinger_init(&$a) {
 			$permissions['connected'] = true;
 	}
 
-	$ret['permissions'] = (($ztarget && $zkey) ? aes_encapsulate(json_encode($permissions),$zkey) : $permissions);
+	$ret['permissions'] = (($ztarget && $zkey) ? crypto_encapsulate(json_encode($permissions),$zkey) : $permissions);
 
 	if($permissions['view_profile'])
 		$ret['profile']  = $profile;

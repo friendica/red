@@ -2,12 +2,14 @@
 /* Easiest way to indent the widget body - indent the entire widget and then shift the header label back to the left */
 
 .widget {
-	margin-left: 10px;
-	padding: 0 8px 8px 8px;
+	margin-bottom: 10px;
+	padding: 10px 10px 10px 20px;
 }
 
 .widget h3 {
 	margin-left: -10px;
+	margin-top: 0px;
+	margin-bottom: 10px;
 }
 
 /* suggest */
@@ -109,32 +111,8 @@
 
 /* group */
 
-#group-sidebar {
+#sidebar-group-list {
 	margin-bottom: 10px;
-}
-
-#sidebar-new-group {
-	margin-bottom: 10px;
-}
-
-#sidebar-group-list .icon, #sidebar-group-list .iconspacer {
-	display: inline-block;
-	height: 12px;
-	width: 12px;
-}
-
-.sidebar-group-name {
-	display: block;
-	width: 170px;
-	overflow: hidden;
-}
-
-#sidebar-group-ul {
-	margin-bottom: 10px;
-}
-
-#sidebar-group-list li {
-	margin-top: 3px;
 }
 
 .sidebar-group-li input {

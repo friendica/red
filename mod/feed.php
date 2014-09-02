@@ -11,6 +11,7 @@ function feed_init(&$a) {
 	$params['end']       = ((x($_REQUEST,'date_end'))   ? $_REQUEST['date_end']        : '');
 	$params['type']      = ((stristr(argv(0),'json'))   ? 'json'                       : 'xml');
 	$params['pages']     = ((x($_REQUEST,'pages'))      ? intval($_REQUEST['pages'])   : 0);
+	$params['top']       = ((x($_REQUEST,'top'))        ? intval($_REQUEST['top'])     : 0);
 
 	$channel = '';
 	if(argc() > 1) {
