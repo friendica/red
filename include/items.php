@@ -1592,8 +1592,8 @@ function get_atom_elements($feed,$item,&$author) {
 				$title = ' ';
 			if(! $type)
 				$type = 'application/octet-stream';
+			$res['attach'][] = array('href' => $link, 'length' => $len, 'type' => $type, 'title' => $title );
 		}
-		$res['attach'][] = array('href' => $link, 'length' => $len, 'type' => $type, 'title' => $title );
 	}
 
 	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');

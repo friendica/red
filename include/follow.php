@@ -181,7 +181,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			return $result;
 		}
 
-		$r = q("select count(*) as total from abook where abook_account = %d and abook_network = 'rss'",
+		$r = q("select count(*) as total from abook where abook_account = %d and ( abook_flags & ABOOK_FLAG_FEED )",
 			intval($aid)
 		);
 		if($r)
