@@ -30,6 +30,26 @@ function find_upstream_directory($dirmode) {
 	return array('url' => $preferred);
 }
 
+function check_upstream_directory() {
+	/**
+	* Directories may come and go over time.  We will need to check that our 
+	* directory server is still valid occasionally, and reset to something that
+	* is if our directory has gone offline for any reason
+	*/
+	$directory = get_config('system','directory_server');
+	if ($directory) {
+		$r = q("select * from site where site_url = '%s' and (site_flags & %d) ",
+			dbesc($directory),
+			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY|DIRECTORY_MODE_STANDALONE)
+		);
+	}
+	// If we've got something, it's still a directory.  If we haven't, we need to reset and let find_upstream_directory() fix it
+		if (! $r) {
+			set_config('system','directory_server','');
+		}
+	return;
+}
+	
 function dir_sort_links() {
 
 	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(

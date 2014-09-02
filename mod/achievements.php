@@ -1,6 +1,9 @@
 <?php
 
 function achievements_content(&$a) {
+	// This doesn't work, so
+	if (! is_developer())
+		return;
 
 	if(argc() > 1)
 		$which = argv(1);
@@ -27,6 +30,9 @@ function achievements_content(&$a) {
 		notice( t('Permission denied.') . EOL);
 	return;
     }
+
+	$newmembertext = t('Some blurb about what to do when you\'re new here');
+
 
 //	By default, all badges are false
 	$contactbadge = false;
@@ -70,15 +76,12 @@ function achievements_content(&$a) {
 	if($r)
 		$keywordsbadge = 1;
 
-// FIXME - stick ths in a template, and make it look pretty.
-	$o .= "Template not implemented";
-	$o .= "If this is one, you get the profile badge" . $profilebadge . "<br>";
-	$o .= "If this is one, you get the contact badge" . $contactbadge . "<br>";
-	$o .= "If this is one you get the keywords badge" . $keywordsbadge . "<br>";
-	$o .= "I haven't done the top level posts badge yet" . $toplevelpostsbadge . "<br>";
-	$o .= "I haven't done the number of channels badge yet" . $channelsbadge;
-	
-	
-return $o;
+    return replace_macros(get_markup_template("achievements.tpl"), array(
+                '$newmembertext' => $newmembertext,
+                '$profilebadge' => $profilebadge,
+                '$contactbadge' => $contactbadge,
+                '$keywordsbadge' => $keywordsbadge,
+                '$channelsbadge' => $channelsbadge
+));
 
 }

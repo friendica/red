@@ -111,6 +111,9 @@ function poller_run($argv, $argc){
 
 	if(($d2 != $d1) && ($h1 == $h2)) {
 
+	require_once('include/dir_fns.php');
+	check_upstream_directory();
+
 		call_hooks('cron_daily',datetime_convert());
 
 
