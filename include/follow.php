@@ -51,7 +51,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	if($arr['channel']['success']) 
 		$ret = $arr['channel'];
-	elseif($is_http)
+	elseif(! $is_http)
 		$ret = zot_finger($url,$channel);
 
 	if($ret && $ret['success']) {
