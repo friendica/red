@@ -74,15 +74,19 @@ function chanview_content(&$a) {
 	}
 
 	if(! $a->poi) {
-		notice( t('Channel not found.') . EOL);
-		return;
+//		We don't know who this is, and we can't figure it out from the URL
+//		On the plus side, there's a good chance we know somebody else at that 
+//		hub so sending them there with a Zid will probably work anyway.
+		$url = ($_REQUEST['url']);
+		if($observer)
+			$url = zid($url);
 	}
 
-
+	if ($a->poi) {
 	$url = $a->poi['xchan_url'];
 	if($observer)
 		$url = zid($url);
-
+	}
 	// let somebody over-ride the iframed viewport presentation
 	// or let's just declare this a failed experiment.
 
