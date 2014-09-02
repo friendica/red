@@ -4,7 +4,9 @@ Diaspora protocol compatibility is presently considered an ***experimental*** fe
 
 Private mail is currently not working. Eventually this will be fixed. Posts and comments are partially working. 
 
-Private mail retraction will not be possible on Diaspora. 
+Private mail retraction (unsend) will not be possible on Diaspora. 
+
+Private posts and their associated comments are sent in plaintext email notifications in Diaspora and Friendica. This is a major privacy issue and affects any private communications you have where *any* member of the conversation is on another network. Be aware of it. 
 
 Access control only works on posts and comments. Diaspora members will get permission denied trying to access any other access controlled redmatrix objects such as files, photos, webpages, chatrooms, etc. In the case of private photos that are linked to posts, they will see a "prohibited sign" instead of the photo. Diaspora has no concept of private media. There is no workaround except to make your media resources public (to everybody on the internet).
 
@@ -29,14 +31,16 @@ Community tags will not work. We will send a tagging activity as a comment. It w
 
 Forum tags (@forum+) and privacy tags (@!somebody) will not be available to Diaspora members. These tags may have to be stripped or obscured to prevent them from being hijacked - which could result in privacy issues.  
 
+It is possible for a Diaspora member to become a member of a forum, but they cannot initiate conversations. This requires the ability to plus-tag the channel or authenticate to post on the channel wall. Once a conversation is initiated, Diaspora members can comment and take part in the dicussion. 
+
 Premium channel redirects will not be sent. If you allow Diaspora connections, they will not see that you have a premium channel. 
 
 You cannot use Diaspora channels as channel sources. 
 
 
-Dislikes of posts will be converted to comments and you will have the option to send these as comments or not send them to Diaspora (which does not provide dislike).
+Dislikes of posts will be converted to comments and you will have the option to send these as comments or not send them to Diaspora (which does not provide dislike). Currently they are not sent.
 
-We will do the same for both likes and dislikes of comments. They can either be sent as comments or you will have the ability to prevent them from being transmitted to Diaspora.
+We will do the same for both likes and dislikes of comments. They can either be sent as comments or you will have the ability to prevent them from being transmitted to Diaspora. Currently they are not sent. 
 
 
 "observer tags" will be converted to empty text. 
