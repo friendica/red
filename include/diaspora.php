@@ -2584,18 +2584,22 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	 *
 	 */
 
-	$handle = diaspora_handle_from_contact($item['author_xchan']);
+	if($item['author_xchan'] === $owner['channel_hash']) 
+		$handle = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	else
+		$handle = diaspora_handle_from_contact($item['author_xchan']);
+
 	if(! $handle) {
 		logger('diaspora_send_relay: no handle');
 		return;
 	}
 
 	if($relay_retract)
-		$sender_signed_text = $item['guid'] . ';' . $target_type;
+		$sender_signed_text = $item['mid'] . ';' . $target_type;
 	elseif($like)
-		$sender_signed_text = $item['guid'] . ';' . $target_type . ';' . $parent['guid'] . ';' . $positive . ';' . $handle;
+		$sender_signed_text = $item['mid'] . ';' . $target_type . ';' . $parent['mid'] . ';' . $positive . ';' . $handle;
 	else
-		$sender_signed_text = $item['guid'] . ';' . $parent['guid'] . ';' . $text . ';' . $handle;
+		$sender_signed_text = $item['mid'] . ';' . $parent['mid'] . ';' . $text . ';' . $handle;
 
 	// Sign the relayable with the top-level owner's signature
 	//
