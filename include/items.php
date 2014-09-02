@@ -4056,7 +4056,7 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 	}
 
 	if($mindate != '0000-00-00 00:00:00') {
-		$sql_extra .= " and created > '$mindate' ";
+		$sql_extra .= " and ( created > '$mindate' or edited > '$mindate' ) ";
 		$limit = "";
 	}
 	else

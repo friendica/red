@@ -61,7 +61,7 @@ function externals_run($argv, $argc){
 
 		if($url) {
 			if($r[0]['site_pull'] !== '0000-00-00 00:00:00')
-				$mindate = urlencode($r[0]['site_pull']);
+				$mindate = urlencode(datetime_convert('','',$r[0]['site_pull'] . ' - 1 day'));
 			else {
 				$days = get_config('externals','since_days');
 				if($days === false)
