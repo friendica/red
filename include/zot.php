@@ -1791,8 +1791,6 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 
 function process_profile_delivery($sender,$arr,$deliveries) {
 
-	// deliveries is irrelevant, what to do about birthday notification....?
-
 	logger('process_profile_delivery', LOGGER_DEBUG);
 
 	$r = q("select xchan_addr from xchan where xchan_hash = '%s' limit 1",
@@ -1864,7 +1862,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 		$update = false;
 		foreach($r[0] as $k => $v) {
 			if((array_key_exists($k,$arr)) && ($arr[$k] != $v)) {
-				logger('import_directory_profile: update' . $k . ' => ' . $arr[$k]);
+				logger('import_directory_profile: update ' . $k . ' => ' . $arr[$k]);
 				$update = true;
 				break;
 			}
@@ -1906,7 +1904,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 	}
 	else {
 		$update = true;
-		logger('import_directory_profile: new profile');
+		logger('import_directory_profile: new profile ');
 		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_age, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country, xprof_about, xprof_homepage, xprof_hometown, xprof_keywords) values ('%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 			dbesc($arr['xprof_hash']),
 			dbesc($arr['xprof_desc']),

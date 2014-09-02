@@ -1499,6 +1499,9 @@ function get_atom_elements($feed,$item,&$author) {
 	if($d2 > $d3)
 		$res['edited'] = datetime_convert();
 
+	$res['created'] = datetime_convert('UTC','UTC',$res['created']);
+	$res['edited'] = datetime_convert('UTC','UTC',$res['edited']);
+
 	$rawowner = $item->get_item_tags(NAMESPACE_DFRN, 'owner');
 	if(! $rawowner)
 		$rawowner = $item->get_item_tags(NAMESPACE_ZOT,'owner');
@@ -1555,12 +1558,12 @@ function get_atom_elements($feed,$item,&$author) {
 				$termurl = unxmlify(substr($scheme,9));
 			}
 			else {
-				$termtype = TERM_UNKNOWN;
+				$termtype = TERM_CATEGORY;
 			}
 			$termterm = notags(trim(unxmlify($term)));
 
 			if($termterm) {
-				$terms = array(
+				$terms[] = array(
 					'otype' => TERM_OBJ_POST,
 					'type'  => $termtype,
 					'url'   => $termurl,
@@ -1568,7 +1571,7 @@ function get_atom_elements($feed,$item,&$author) {
 				);
 			}		
 		}
-		$res['term'] =  implode(',', $tag_arr);
+		$res['term'] =  $terms;
 	}
 
 	$attach = $item->get_enclosures();
@@ -1662,6 +1665,9 @@ function get_atom_elements($feed,$item,&$author) {
 
 		$res['target'] = $obj;
 	}
+
+	$res['public_policy'] = 'specific';
+	$res['comment_policy'] = 'none';
 
 	$arr = array('feed' => $feed, 'item' => $item, 'result' => $res);
 
@@ -3207,14 +3213,14 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				$datarray['uid'] = $importer['channel_id'];
 
 //FIXME
-				$datarray['author_xchan'] = $contact['xchan_hash'];
+				$datarray['owner_xchan'] = $datarray['author_xchan'] = $contact['xchan_hash'];
 
 				// FIXME pull out the author and owner
 
 
 				logger('consume_feed: ' . print_r($datarray,true),LOGGER_DATA);
 
-//				$xx = item_store($datarray);
+				$xx = item_store($datarray);
 				$r = $xx['item_id'];
 				continue;
 			}
@@ -3267,18 +3273,21 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				$datarray['parent_mid'] = $item_id;
 				$datarray['uid'] = $importer['channel_id'];
 //FIXME
-				$datarray['author_xchan'] = $contact['author_xchan'];
-
+				$datarray['owner_xchan'] = $datarray['author_xchan'] = $contact['xchan_hash'];
+				
 				if(! link_compare($author['owner_link'],$contact['xchan_url'])) {
 					logger('consume_feed: Correcting item owner.', LOGGER_DEBUG);
-					$author['owner-name']   = $contact['name'];
-					$author['owner-link']   = $contact['url'];
-					$author['owner-avatar'] = $contact['thumb'];
+					$author['owner_name']   = $contact['name'];
+					$author['owner_link']   = $contact['url'];
+					$author['owner_avatar'] = $contact['thumb'];
 				}
+
+				logger('consume_feed: author ' . print_r($author,true)); 
+
 
 				logger('consume_feed: ' . print_r($datarray,true),LOGGER_DATA);
 
-//				$xx = item_store($datarray);
+				$xx = item_store($datarray);
 				$r = $xx['item_id'];
 				continue;
 
@@ -3311,7 +3320,7 @@ function handle_feed($uid,$abook_id,$url) {
 	$recurse = 0;
 	$z = z_fetch_url($url,false,$recurse,array('novalidate' => true));
 
-logger('handle_feed:' . print_r($z,true));
+//logger('handle_feed:' . print_r($z,true));
 
 	if($z['success']) {
 		consume_feed($z['body'],$channel,$x[0],0);

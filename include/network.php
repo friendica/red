@@ -819,6 +819,153 @@ function email_send($addr, $subject, $headers, $item) {
 }
 
 
+
+function discover_by_url($url,$arr = null) {
+	require_once('library/HTML5/Parser.php');
+
+	$x = scrape_feed($url);
+	if(! $x) {
+		if(! $arr)
+			return false;
+		$network = (($arr['network']) ? $arr['network'] : 'unknown');
+		$name = (($arr['name']) ? $arr['name'] : 'unknown');
+		$photo = (($arr['photo']) ? $arr['photo'] : '');
+		$addr = (($arr['addr']) ? $arr['addr'] : '');
+		$guid = $url;
+	}
+
+	$profile = $url;
+
+	logger('scrape_feed results: ' . print_r($x,true));
+
+	if($x['feed_atom'])
+		$guid = $x['feed_atom'];
+	if($x['feed_rss'])
+		$guid = $x['feed_rss'];
+
+	if(! $guid)
+		return false;
+
+
+	// try and discover stuff from the feeed
+
+	require_once('library/simplepie/simplepie.inc');
+	$feed = new SimplePie();
+	$level = 0;
+    $x = z_fetch_url($guid,false,$level,array('novalidate' => true));
+	if(! $x['success']) {
+		logger('probe_url: feed fetch failed for ' . $poll);
+		return false;
+	}
+	$xml = $x['body'];
+	logger('probe_url: fetch feed: ' . $guid . ' returns: ' . $xml, LOGGER_DATA);
+	logger('probe_url: scrape_feed: headers: ' . $x['header'], LOGGER_DATA);
+
+	// Don't try and parse an empty string
+	$feed->set_raw_data(($xml) ? $xml : '<?xml version="1.0" encoding="utf-8" ?><xml></xml>');
+
+	$feed->init();
+	if($feed->error())
+		logger('probe_url: scrape_feed: Error parsing XML: ' . $feed->error());
+
+	$photo = $feed->get_image_url();
+	$author = $feed->get_author();
+
+	if($author) {
+		$name = unxmlify(trim($author->get_name()));
+		if(! $name)
+			$name = trim(unxmlify($author->get_email()));
+		if(strpos($name,'@') !== false)
+			$name = substr($name,0,strpos($name,'@'));
+		if(! $profile && $author->get_link())
+			$profile = trim(unxmlify($author->get_link()));
+		if(! $photo) {
+			$rawtags = $feed->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+			if($rawtags) {
+				$elems = $rawtags[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10];
+				if((x($elems,'link')) && ($elems['link'][0]['attribs']['']['rel'] === 'photo'))
+					$photo = $elems['link'][0]['attribs']['']['href'];
+			}
+		}
+	}
+	else {
+		$item = $feed->get_item(0);
+		if($item) {
+			$author = $item->get_author();
+			if($author) {
+				$name = trim(unxmlify($author->get_name()));
+				if(! $name)
+					$name = trim(unxmlify($author->get_email()));
+				if(strpos($name,'@') !== false)
+					$name = substr($name,0,strpos($name,'@'));
+				if(! $profile && $author->get_link())
+					$profile = trim(unxmlify($author->get_link()));
+			}
+			if(! $photo) {
+				$rawmedia = $item->get_item_tags('http://search.yahoo.com/mrss/','thumbnail');
+				if($rawmedia && $rawmedia[0]['attribs']['']['url'])
+					$photo = unxmlify($rawmedia[0]['attribs']['']['url']);
+			}
+			if(! $photo) {
+				$rawtags = $item->get_item_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+				if($rawtags) {
+					$elems = $rawtags[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10];
+					if((x($elems,'link')) && ($elems['link'][0]['attribs']['']['rel'] === 'photo'))
+						$photo = $elems['link'][0]['attribs']['']['href'];
+				}
+			}
+		}
+	}
+	if($poll === $profile)
+		$lnk = $feed->get_permalink();
+	if(isset($lnk) && strlen($lnk))
+		$profile = $lnk;
+
+	if(! $network) {
+		$network = 'rss';
+	}
+	if(! $name)
+		$name = notags($feed->get_title());
+	if(! $name)
+		$name = notags($feed->get_description());
+
+	if(! $guid)
+		return false;
+
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($guid)
+	);
+	if($r)
+		return true;
+
+	if(! $photo)
+		$photo = z_root() . '/images/rss_icon.png';
+
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_pubkey, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_instance_url, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+		dbesc($guid),
+		dbesc($guid),
+		dbesc($pubkey),
+		dbesc($addr),
+		dbesc($profile),
+		dbesc($name),
+		dbesc($network),
+		dbesc(z_root()),
+		dbesc(datetime_convert())
+	);
+
+	$photos = import_profile_photo($photo,$guid);
+	$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s' limit 1",
+		dbesc(datetime_convert()),
+		dbesc($photos[0]),
+		dbesc($photos[1]),
+		dbesc($photos[2]),
+		dbesc($photos[3]),
+		dbesc($guid)
+	);
+	return true;
+
+}
+
 function discover_by_webbie($webbie) {
 	require_once('library/HTML5/Parser.php');
 
@@ -882,14 +1029,12 @@ function discover_by_webbie($webbie) {
 			}
 		}
 
-		if($diaspora && $diaspora_base && $diaspora_guid) {
+		if($diaspora && $diaspora_base && $diaspora_guid && intval(get_config('system','diaspora_enabled'))) {
 			$guid = $diaspora_guid;
 			$diaspora_base = trim($diaspora_base,'/');
 
 			$notify = $diaspora_base . '/receive';
 
-//			// '/users/' . $diaspora_guid;
-//			$batch  = $diaspora_base . '/receive/public' ;
 			if(strpos($webbie,'@')) {
 				$addr = str_replace('acct:', '', $webbie);
 				$hostname = substr($webbie,strpos($webbie,'@')+1);
@@ -988,23 +1133,23 @@ function discover_by_webbie($webbie) {
 
 Array
 (
-    [name] => Mike Macgirvin
-    [nick] => macgirvin
-    [guid] => a9174a618f8d269a
-    [url] => https://joindiaspora.com/u/macgirvin
-    [hostname] => joindiaspora.com
-    [addr] => macgirvin@joindiaspora.com
-    [batch] => 
-    [notify] => https://joindiaspora.com/receive
-    [poll] => https://joindiaspora.com/public/macgirvin.atom
-    [request] => 
-    [confirm] => 
-    [poco] => 
-    [photo] => https://joindiaspora.s3.amazonaws.com/uploads/images/thumb_large_fec4e6eef13ae5e56207.jpg
-    [priority] => 
-    [network] => diaspora
-    [alias] => 
-    [pubkey] => -----BEGIN PUBLIC KEY-----
+	[name] => Mike Macgirvin
+	[nick] => macgirvin
+	[guid] => a9174a618f8d269a
+	[url] => https://joindiaspora.com/u/macgirvin
+	[hostname] => joindiaspora.com
+	[addr] => macgirvin@joindiaspora.com
+	[batch] => 
+	[notify] => https://joindiaspora.com/receive
+	[poll] => https://joindiaspora.com/public/macgirvin.atom
+	[request] => 
+	[confirm] => 
+	[poco] => 
+	[photo] => https://joindiaspora.s3.amazonaws.com/uploads/images/thumb_large_fec4e6eef13ae5e56207.jpg
+	[priority] => 
+	[network] => diaspora
+	[alias] => 
+	[pubkey] => -----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtihtyIuRDWkDpCA+I1UaQ
 jI4S7k625+A7EEJm+pL2ZVSJxeCKiFeEgHBQENjLMNNm8l8F6blxgQqE6ZJ9Spa7f
 tlaXYTRCrfxKzh02L3hR7sNA+JS/nXJaUAIo+IwpIEspmcIRbD9GB7Wv/rr+M28uH
