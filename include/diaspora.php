@@ -2568,6 +2568,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		// Author signature information (for likes, comments, and retractions of likes or comments,
 		// whether from Diaspora or Friendica) must be placed in the `sign` table before this 
 		// function is called
+		$authorsig = $item['sig'];
 		logger('diaspora_send_relay: original author signature not found, cannot send relayable');
 // ignore - see below
 //		return;
