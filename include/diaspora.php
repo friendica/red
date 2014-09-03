@@ -269,8 +269,8 @@ function diaspora_handle_from_contact($contact_hash) {
 
 	logger("diaspora_handle_from_contact: contact id is " . $contact_hash, LOGGER_DEBUG);
 
-	$r = q("SELECT * from abook left join xchan on abook_xchan = xchan_hash where abook_xchan = '%s' limit 1",
-		intval($contact_hash)
+	$r = q("SELECT xchan_addr from xchan where xchan_hash = '%s' limit 1",
+		dbesc($contact_hash)
 	);
 	if($r) {
 		return $r[0]['xchan_addr'];
