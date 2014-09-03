@@ -868,15 +868,18 @@ function discover_by_url($url,$arr = null) {
 	if($feed->error())
 		logger('probe_url: scrape_feed: Error parsing XML: ' . $feed->error());
 
+	$name = unxmlify(trim($feed->get_title()));
 	$photo = $feed->get_image_url();
 	$author = $feed->get_author();
 
 	if($author) {
-		$name = unxmlify(trim($author->get_name()));
 		if(! $name)
+			$name = unxmlify(trim($author->get_name()));
+		if(! $name) {
 			$name = trim(unxmlify($author->get_email()));
-		if(strpos($name,'@') !== false)
-			$name = substr($name,0,strpos($name,'@'));
+			if(strpos($name,'@') !== false)
+				$name = substr($name,0,strpos($name,'@'));
+		}
 		if(! $profile && $author->get_link())
 			$profile = trim(unxmlify($author->get_link()));
 		if(! $photo) {
@@ -924,8 +927,7 @@ function discover_by_url($url,$arr = null) {
 	if(! $network) {
 		$network = 'rss';
 	}
-	if(! $name)
-		$name = notags($feed->get_title());
+
 	if(! $name)
 		$name = notags($feed->get_description());
 

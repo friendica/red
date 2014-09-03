@@ -77,6 +77,25 @@ function share_unshield($m) {
 }
 
 
+function diaspora_mention_callback($matches) {
+
+	$webbie = $matches[2];
+	$link = '';
+	if($webbie) {
+		$r = q("select * from hubloc left join xchan on hubloc_hash = xchan_hash where hubloc_addr = '%s' limit 1",
+			dbesc($webbie)
+		);
+		if($r)
+			$link = $r[0]['xchan_url'];
+	}
+	if(! $link)
+		$link = 'https://' . $matches[3] . '/u/' . $matches[2];
+
+	return '@[url=' . $link . ']' . trim($matches[1]) . '[/url]';
+
+}
+
+
 
 // we don't want to support a bbcode specific markdown interpreter
 // and the markdown library we have is pretty good, but provides HTML output.
@@ -97,7 +116,10 @@ function diaspora2bb($s,$use_zrl = false) {
 	$s = str_replace("<br/>","<br />",$s);
 	$s = str_replace("\n","<br />",$s);
 
-	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
+
+//	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
+
+	$s = preg_replace_callback('/\@\{(.+?)\; (.+?)\@(.+?)\}/','diaspora_mention_callback',$s);
 
 	// Escaping the hash tags - doesn't always seem to work
 	// $s = preg_replace('/\#([^\s\#])/','\\#$1',$s);
