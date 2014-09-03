@@ -774,22 +774,17 @@ logger('online: ' . $profile['online']);
 		? trim(substr($profile['channel_name'],0,strpos($profile['channel_name'],' '))) : $profile['channel_name']);
 	$lastname = (($firstname === $profile['channel_name']) ? '' : trim(substr($profile['channel_name'],strlen($firstname))));
 
-	if(get_config('system','diaspora_enabled')) {
-	    $diaspora = array(
-			'podloc'     => z_root(),
-			'searchable' => (($block) ? 'false' : 'true'),
-			'nickname'   => $profile['channel_address'],
-			'fullname'   => $profile['channel_name'],
-			'firstname'  => $firstname,
-			'lastname'   => $lastname,
-			'photo300'   => z_root() . '/photo/profile/300/' . $profile['uid'] . '.jpg',
-			'photo100'   => z_root() . '/photo/profile/100/' . $profile['uid'] . '.jpg',
-			'photo50'    => z_root() . '/photo/profile/50/'  . $profile['uid'] . '.jpg',
-		);
-	}
-	else
-		$diaspora = null;
-
+    $diaspora = array(
+		'podloc'     => z_root(),
+		'searchable' => (($block) ? 'false' : 'true'),
+		'nickname'   => $profile['channel_address'],
+		'fullname'   => $profile['channel_name'],
+		'firstname'  => $firstname,
+		'lastname'   => $lastname,
+		'photo300'   => z_root() . '/photo/profile/300/' . $profile['uid'] . '.jpg',
+		'photo100'   => z_root() . '/photo/profile/100/' . $profile['uid'] . '.jpg',
+		'photo50'    => z_root() . '/photo/profile/50/'  . $profile['uid'] . '.jpg',
+	);
 
 	$contact_block = contact_block();
 

@@ -795,7 +795,7 @@ function get_item_elements($x) {
 
 	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
 
-	
+	$arr['diaspora_meta'] = (($x['diaspora_meta']) ? $x['diaspora_meta'] : '');	
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
 
@@ -1194,6 +1194,7 @@ function encode_mail($item) {
 	$x['message_parent'] = $item['parent_mid'];
 	$x['created']        = $item['created'];
 	$x['expires']        = $item['expires'];
+	$x['diaspora_meta']  = $item['diaspora_meta'];
 	$x['title']          = $item['title'];
 	$x['body']           = $item['body'];
 	$x['from']           = encode_item_xchan($item['from']);
@@ -1748,6 +1749,7 @@ function item_store($arr,$allow_exec = false) {
 	$arr['title'] = ((array_key_exists('title',$arr) && strlen($arr['title']))  ? trim($arr['title']) : '');
 	$arr['body']  = ((array_key_exists('body',$arr) && strlen($arr['body']))    ? trim($arr['body'])  : '');
 
+	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : '');
 	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
 	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
@@ -2236,6 +2238,8 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['commented']     = $orig[0]['commented'];
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
+
+	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : $orig[0]['diaspora_meta']);
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : $orig[0]['location']);
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : $orig[0]['coord']);
 	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : $orig[0]['verb']);
@@ -2369,6 +2373,13 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id)
 		$authorsig = base64_encode(rsa_sign($signed_text,$channel['channel_prvkey'],'sha256'));
 	else
 		$authorsig = '';
+
+	$x = array('signer' => $diaspora_handle, 'body' => $signed_body, 'signed_text' => $signed_text, 'signature' => base64_encode($authorsig));
+
+	$r = q("update item set diaspora_meta = '%s' where id = %d limit 1",
+		dbesc(json_encode($x)),
+		intval($post_id) 
+	);
 
 	$r = q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 		intval($post_id),

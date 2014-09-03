@@ -1343,6 +1343,11 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['body'] = $body;
 
 	$datarray['app']  = 'Diaspora';
+	
+	if(! $parent_author_signature) {
+		$datarray['diaspora_meta'] = array('signer' => $diaspora_handle, 'body' => $text, 
+		'signed_text' => $signed_data, 'signature' => base64_encode($author_signature));
+	}
 
 	$result = item_store($datarray);
 
@@ -1907,6 +1912,12 @@ EOT;
 	$arr['visible'] = 1;
 	$arr['unseen'] = 1;
 	$arr['last-child'] = 0;
+
+	if(! $parent_author_signature) {
+		$datarray['diaspora_meta'] = array('signer' => $diaspora_handle, 'body' => $text, 
+		'signed_text' => $signed_data, 'signature' => base64_encode($author_signature));
+	}
+
 
 	$message_id = item_store($arr);
 
@@ -2551,28 +2562,15 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		$tpl = get_markup_template('diaspora_comment_relay.tpl');
 	}
 
-
-	// fetch the original signature	if the relayable was created by a Diaspora, Friendica-over Diaspora,
-	// or zot user. Relayables for other networks are not supported.
-
-	$r = q("select * from sign where " . $sql_sign_id . " = %d limit 1",
-		intval($item['id'])
-	);
-	if($r) { 
-		$orig_sign = $r[0];
-		$signed_text = $orig_sign['signed_text'];
-		$authorsig = $orig_sign['signature'];
-		$handle = $orig_sign['signer'];
+	$diaspora_meta = (($item['diaspora_meta']) ? json_decode($item['diaspora_meta'],true) : '');
+	if($diaspora_meta) {
+		$sender_signed_text = $diaspora_meta['signed_text'];
+		$authorsig = $diaspora_meta['signature'];
+		$handle = $diaspora_meta['signer'];
+		$text = $diaspora_meta['body'];
 	}
-	else {
-		// Author signature information (for likes, comments, and retractions of likes or comments,
-		// whether from Diaspora or Friendica) must be placed in the `sign` table before this 
-		// function is called
-//		$authorsig = $item['sig'];
+	else
 		logger('diaspora_send_relay: original author signature not found');
-// ignore - see below
-//		return;
-	}
 
 	/* Since the author signature is only checked by the parent, not by the relay recipients,
 	 * I think it may not be necessary for us to do so much work to preserve all the original
@@ -2585,7 +2583,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	 *
 	 *
 	 */
-
+// bug - nomadic identity may/will affect diaspora_handle_from_contact
 	if(! $handle) {
 		if($item['author_xchan'] === $owner['channel_hash']) 
 			$handle = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
@@ -2597,12 +2595,14 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		return;
 	}
 
-	if($relay_retract)
-		$sender_signed_text = $item['mid'] . ';' . $target_type;
-	elseif($like)
-		$sender_signed_text = $item['mid'] . ';' . $target_type . ';' . $parent['mid'] . ';' . $positive . ';' . $handle;
-	else
-		$sender_signed_text = $item['mid'] . ';' . $parent['mid'] . ';' . $text . ';' . $handle;
+	if(! $sender_signed_text) {
+		if($relay_retract)
+			$sender_signed_text = $item['mid'] . ';' . $target_type;
+		elseif($like)
+			$sender_signed_text = $item['mid'] . ';' . $target_type . ';' . $parent['mid'] . ';' . $positive . ';' . $handle;
+		else
+			$sender_signed_text = $item['mid'] . ';' . $parent['mid'] . ';' . $text . ';' . $handle;
+	}
 
 	// Sign the relayable with the top-level owner's signature
 	//
