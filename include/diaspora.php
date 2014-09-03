@@ -2558,7 +2558,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	$r = q("select * from sign where " . $sql_sign_id . " = %d limit 1",
 		intval($item['id'])
 	);
-	if(count($r)) { 
+	if($r) { 
 		$orig_sign = $r[0];
 		$signed_text = $orig_sign['signed_text'];
 		$authorsig = $orig_sign['signature'];
@@ -2569,7 +2569,8 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		// whether from Diaspora or Friendica) must be placed in the `sign` table before this 
 		// function is called
 		logger('diaspora_send_relay: original author signature not found, cannot send relayable');
-		return;
+// ignore - see below
+//		return;
 	}
 
 	/* Since the author signature is only checked by the parent, not by the relay recipients,
@@ -2584,11 +2585,12 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	 *
 	 */
 
-	if($item['author_xchan'] === $owner['channel_hash']) 
-		$handle = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
-	else
-		$handle = diaspora_handle_from_contact($item['author_xchan']);
-
+	if(! $handle) {
+		if($item['author_xchan'] === $owner['channel_hash']) 
+			$handle = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+		else
+			$handle = diaspora_handle_from_contact($item['author_xchan']);
+	}
 	if(! $handle) {
 		logger('diaspora_send_relay: no handle');
 		return;
