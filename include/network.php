@@ -896,11 +896,13 @@ function discover_by_url($url,$arr = null) {
 		if($item) {
 			$author = $item->get_author();
 			if($author) {
-				$name = trim(unxmlify($author->get_name()));
-				if(! $name)
-					$name = trim(unxmlify($author->get_email()));
-				if(strpos($name,'@') !== false)
-					$name = substr($name,0,strpos($name,'@'));
+				if(! $name) {
+					$name = trim(unxmlify($author->get_name()));
+					if(! $name)
+						$name = trim(unxmlify($author->get_email()));
+					if(strpos($name,'@') !== false)
+						$name = substr($name,0,strpos($name,'@'));
+				}
 				if(! $profile && $author->get_link())
 					$profile = trim(unxmlify($author->get_link()));
 			}
