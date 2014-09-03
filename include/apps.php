@@ -470,33 +470,3 @@ function papp_encode($papp) {
 }
 
 
-/**
- * install a shared design element (layout, webpage, block, menu, whatever)
- *
- */
-
-function element_install($channel,$s) {
-
-	$ret = array('success' => false);
-
-	$s = str_replace(array('[element]','[/element]'),array('',''),$s);
-	$s = base64url_decode($s);
-	if(! $s)
-		return $ret;
-	$x = json_decode($s,true);
-	if(! $x)
-		return $ret;
-
-	$d = array();
-
-
-
-
-
-
-
-
-	$result = item_store($d);
-
-}
-
