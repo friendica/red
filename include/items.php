@@ -871,6 +871,8 @@ function import_author_xchan($x) {
 	if((! array_key_exists('network', $x)) || ($x['network'] === 'zot')) {
 		$y = import_author_zot($x);
 	}
+	if(! $y)
+		$y = import_author_diaspora($x);
 
 	if($x['network'] === 'rss') {
 		$y = import_author_rss($x);
@@ -878,6 +880,21 @@ function import_author_xchan($x) {
 
 	return(($y) ? $y : false);
 }
+
+
+function import_author_diaspora($x) {
+	if(! $x['address'])
+		return false;
+	if(discover_by_webbie($x['address'])) {
+		$r = q("select xchan_hash from xchan where xchan_addr = '%s' limit 1",
+			dbesc($x['address'])
+		);
+		if($r)
+			return $r[0]['xchan_hash'];
+	}
+	return false;
+}
+
 
 function import_author_rss($x) {
 

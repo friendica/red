@@ -1033,7 +1033,7 @@ function discover_by_webbie($webbie) {
 			}
 		}
 
-		if($diaspora && $diaspora_base && $diaspora_guid && intval(get_config('system','diaspora_enabled'))) {
+		if($diaspora && $diaspora_base && $diaspora_guid) {
 			$guid = $diaspora_guid;
 			$diaspora_base = trim($diaspora_base,'/');
 
