@@ -29,9 +29,9 @@ Tags are converted into "un-hijackable" tags by default and will link back to yo
 
 Community tags will not work. We will send a tagging activity as a comment. It won't do anything.  
 
-Forum tags (@forum+) and privacy tags (@!somebody) will not be available to Diaspora members. These tags may have to be stripped or obscured to prevent them from being hijacked - which could result in privacy issues.  
+Privacy tags (@!somebody) will not be available to Diaspora members. These tags may have to be stripped or obscured to prevent them from being hijacked - which could result in privacy issues.  
 
-It is possible for a Diaspora member to become a member of a forum, but they cannot initiate conversations. This requires the ability to plus-tag the channel or authenticate to post on the channel wall. Once a conversation is initiated, Diaspora members can comment and take part in the dicussion. 
+Plus-tagged redmatrix forums should work from Diaspora. If not today, it's very close to working. 
 
 Premium channel redirects will not be sent. If you allow Diaspora connections, they will not see that you have a premium channel. 
 
