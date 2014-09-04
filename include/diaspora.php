@@ -2278,20 +2278,29 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 		$body = str_replace("\n\n\n", "\n\n", $body);
 	} while ($oldbody != $body);
 
+	if($item['diaspora_meta']) {
+		$j = json_decode($item['diaspora_meta'],true);
+		if($j && $j['body']) {
+			$body = xmlify($j['body']);
+		}
+	}
+	else {
+		$body = xmlify(html_entity_decode(bb2diaspora($body)));
 
-	// convert to markdown
-	$body = xmlify(html_entity_decode(bb2diaspora($body)));
 
-	// Adding the title
-	if(strlen($title))
-		$body = "## ".html_entity_decode($title)."\n\n".$body;
+		// convert to markdown
 
-	if($item['attach']) {
-		$cnt = preg_match_all('/href=\"(.*?)\"(.*?)title=\"(.*?)\"/ism',$item['attach'],$matches,PREG_SET_ORDER);
-		if(cnt) {
-			$body .= "\n" . t('Attachments:') . "\n";
-			foreach($matches as $mtch) {
-				$body .= '[' . $mtch[3] . '](' . $mtch[1] . ')' . "\n";
+		// Adding the title
+		if(strlen($title))
+			$body = "## ".html_entity_decode($title)."\n\n".$body;
+
+		if($item['attach']) {
+			$cnt = preg_match_all('/href=\"(.*?)\"(.*?)title=\"(.*?)\"/ism',$item['attach'],$matches,PREG_SET_ORDER);
+			if(cnt) {
+				$body .= "\n" . t('Attachments:') . "\n";
+				foreach($matches as $mtch) {
+					$body .= '[' . $mtch[3] . '](' . $mtch[1] . ')' . "\n";
+				}
 			}
 		}
 	}
