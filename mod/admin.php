@@ -608,13 +608,11 @@ function admin_page_users_post(&$a){
 	}
 	
 	if (x($_POST,'page_users_approve')){
-		require_once('include/account.php');
 		foreach($pending as $hash){
 			user_allow($hash);
 		}
 	}
 	if (x($_POST,'page_users_deny')){
-		require_once('include/account.php');
 		foreach($pending as $hash){
 			user_deny($hash);
 		}

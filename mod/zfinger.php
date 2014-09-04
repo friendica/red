@@ -273,7 +273,6 @@ function zfinger_init(&$a) {
 		if($access_policy == ACCESS_TIERED)
 			$ret['site']['access_policy'] = 'tiered';
 
-		require_once('include/account.php');
 		$ret['site']['accounts'] = account_total();
 	
 		require_once('include/identity.php');

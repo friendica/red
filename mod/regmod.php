@@ -1,6 +1,5 @@
 <?php
 
-require_once('include/account.php');
 
 function regmod_content(&$a) {
 

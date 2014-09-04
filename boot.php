@@ -41,6 +41,7 @@ require_once('include/features.php');
 require_once('include/taxonomy.php');
 require_once('include/identity.php');
 require_once('include/Contact.php');
+require_once('include/account.php');
 
 
 define ( 'RED_PLATFORM',            'Red Matrix' );

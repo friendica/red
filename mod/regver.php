@@ -1,7 +1,5 @@
 <?php
 
-require_once('include/account.php');
-
 function regver_content(&$a) {
 
 	global $lang;

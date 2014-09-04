@@ -151,7 +151,6 @@ function poller_run($argv, $argc){
 		q("delete from notify where seen = 1 and date < UTC_TIMESTAMP() - INTERVAL 30 DAY");
 
 		// expire any expired accounts
-		require_once('include/account.php');
 		downgrade_accounts();
 
 		// If this is a directory server, request a sync with an upstream
@@ -264,7 +263,9 @@ function poller_run($argv, $argc){
 			$c = $contact['abook_connected'];
 
 			if($contact['abook_flags'] & ABOOK_FLAG_FEED) {
-				$min = intval(get_config('system','minimum_feedcheck_minutes'));
+				$min = service_class_fetch($contact['abook_channel'],'minimum_feedcheck_minutes');
+				if(! $min)
+					$min = intval(get_config('system','minimum_feedcheck_minutes'));
 				if(! $min)
 					$min = 60;
 				$x = datetime_convert('UTC','UTC',"now - $min minutes");
