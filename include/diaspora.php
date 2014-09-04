@@ -2224,7 +2224,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 	$images = array();
 
 	$title = $item['title'];
-	$body = $item['body'];
+	$body = bb2diaspora_itembody($item);
 
 /*
 	// We're trying to match Diaspora's split message/photo protocol but
@@ -2250,61 +2250,6 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 */
 
 
-	$body = str_ireplace("[quote", "\n\n[quote", $body);
-	$body = str_ireplace("[/quote]", "[/quote]\n\n", $body);
-
-	// strip bookmark indicators
-
-	$body = preg_replace('/\#\^\[([zu])rl/i', '[$1rl', $body);
-	$body = preg_replace('/\#\^http/i', 'http', $body);
-
-	// protect tags and mentions from hijacking
-
-	if(! intval(get_pconfig($owner['channel_id'],'system','allow_tag_hijacking'))) {
-		$new_tag	 = html_entity_decode('&#x22d5;',ENT_COMPAT,'UTF-8');
-		$new_mention = html_entity_decode('&#xff20;',ENT_COMPAT,'UTF-8');
-
-		// #-tags
-		$body = preg_replace('/\#\[url/i', $new_tag . '[url', $body);
-		$body = preg_replace('/\#\[zrl/i', $new_tag . '[zrl', $body);
-		// @-mentions
-		$body = preg_replace('/\@\[url/i', $new_mention . '[url', $body);
-		$body = preg_replace('/\@\[zrl/i', $new_mention . '[zrl', $body);
-	}
-
-	// remove multiple newlines
-	do {
-		$oldbody = $body;
-		$body = str_replace("\n\n\n", "\n\n", $body);
-	} while ($oldbody != $body);
-
-	if($item['diaspora_meta']) {
-		$j = json_decode($item['diaspora_meta'],true);
-		if($j && $j['body']) {
-			$body = xmlify($j['body']);
-		}
-	}
-	else {
-		$body = xmlify(html_entity_decode(bb2diaspora($body)));
-
-
-		// convert to markdown
-
-		// Adding the title
-		if(strlen($title))
-			$body = "## ".html_entity_decode($title)."\n\n".$body;
-
-		if($item['attach']) {
-			$cnt = preg_match_all('/href=\"(.*?)\"(.*?)title=\"(.*?)\"/ism',$item['attach'],$matches,PREG_SET_ORDER);
-			if(cnt) {
-				$body .= "\n" . t('Attachments:') . "\n";
-				foreach($matches as $mtch) {
-					$body .= '[' . $mtch[3] . '](' . $mtch[1] . ')' . "\n";
-				}
-			}
-		}
-	}
-
 	$public = (($item['item_private']) ? 'false' : 'true');
 
 	require_once('include/datetime.php');
@@ -2326,7 +2271,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 	} else {
 		$tpl = get_markup_template('diaspora_post.tpl');
 		$msg = replace_macros($tpl, array(
-			'$body' => $body,
+			'$body' => xmlify($body),
 			'$guid' => $item['mid'],
 			'$handle' => xmlify($myaddr),
 			'$public' => $public,
@@ -2480,16 +2425,28 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 		$like = false;
 	}
 
-	$text = html_entity_decode(bb2diaspora($item['body']));
+	if($item['diaspora_meta'] && ! $like) {
+		$j = json_decode($item['diaspora_meta'],true);
+		if($j) {
+			$signed_text = $j['signed_text'];
+			$text = $j['body'];
+			$signer = $j['signer'];
+			$authorsig = $j['signature'];
+		}
+	}
+	else {
+		$text = bb2diaspora_itembody($item);
 
-	// sign it
+		// sign it
 
-	if($like)
-		$signed_text = $item['mid'] . ';' . $target_type . ';' . $parent['mid'] . ';' . $positive . ';' . $myaddr;
-	else
-		$signed_text = $item['mid'] . ';' . $parent['mid'] . ';' . $text . ';' . $myaddr;
+		if($like)
+			$signed_text = $item['mid'] . ';' . $target_type . ';' . $parent['mid'] . ';' . $positive . ';' . $myaddr;
+		else
+			$signed_text = $item['mid'] . ';' . $parent['mid'] . ';' . $text . ';' . $myaddr;
 
-	$authorsig = base64_encode(rsa_sign($signed_text,$owner['channel_prvkey'],'sha256'));
+		$authorsig = base64_encode(rsa_sign($signed_text,$owner['channel_prvkey'],'sha256'));
+
+	}
 
 	$msg = replace_macros($tpl,array(
 		'$guid' => xmlify($item['mid']),
@@ -2516,9 +2473,9 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	$a = get_app();
 	$myaddr = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
+	$text = bb2diaspora_itembody($item);
 
-	$body = $item['body'];
-	$text = html_entity_decode(bb2diaspora($body));
+	$body = $text;
 
 	// Diaspora doesn't support threaded comments, but some
 	// versions of Diaspora (i.e. Diaspora-pistos) support

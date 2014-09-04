@@ -252,6 +252,7 @@ function bb2diaspora_itembody($item) {
 	if($item['diaspora_meta']) {
 		$j = json_decode($item['diaspora_meta'],true);
 		if($j && $j['body']) {
+			logger('bb2diaspora_itembody: cached ');
 			return $j['body'];
 		}
 	}
@@ -299,6 +300,8 @@ function bb2diaspora_itembody($item) {
 		}
 	}
 
+	logger('bb2diaspora_itembody : ' . $body);
+
 	return html_entity_decode($body);
 
 }
@@ -316,10 +319,7 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 		'return \'#\'. str_replace(\' \', \'_\', $match[3]);'
 	), $Text);
 
-	$Text = preg_replace_callback('/#\^\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/[(zu)]rl\]/i', create_function('$match',
-		'return str_replace(\' \', \'_\', $match[3]);'
-	), $Text);
-
+	$Text = preg_replace('/#\^\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/([zu])rl\]/i', '[$1rl=$2]$3[/$4rl]', $Text);
 
 	$Text = preg_replace_callback('/\@\!?\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/([zu])rl\]/i', 'bb2dmention_callback', $Text);
 
