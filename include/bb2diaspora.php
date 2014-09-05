@@ -257,6 +257,8 @@ function bb2diaspora_itembody($item) {
 		}
 	}
 
+	$body = $item['body'];
+
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
 		$key = get_config('system','prvkey');
 		$title = (($item['title']) ? crypto_unencapsulate(json_decode($item['title'],true),$key) : '');
