@@ -11,6 +11,9 @@
 <input type="hidden" name="xchan" value="{{$xchan}}" />
 <input type="hidden" name="mid" value="{{$mid}}" />
 
+<div id="event-summary-text">{{$t_text}}</div>
+<input type="text" id="event-summary" name="summary" value="{{$t_orig}}" />
+
 <div id="event-start-text">{{$s_text}}</div>
 {{if $bootstrap}}
 <i class="icon-calendar btn btn-default" onclick="eventGetStart(); return false;" /></i> <input type="text" name="start_text" id="start-text" value="{{$stext}}" />
@@ -20,17 +23,18 @@
 
 <div class="clear"></div><br />
 
-<input type="checkbox" name="nofinish" value="1" id="event-nofinish-checkbox" {{$n_checked}} /> <div id="event-nofinish-text">{{$n_text}}</div>
+<input type="checkbox" name="nofinish" value="1" id="event-nofinish-checkbox" {{$n_checked}} onclick="showHideFinishDate(); return true;" /> <div id="event-nofinish-text">{{$n_text}}</div>
 
 <div id="event-nofinish-break"></div>
 
-
+<div id="event-finish-wrapper">
 <div id="event-finish-text">{{$f_text}}</div>
 {{if $bootstrap}}
 <i class="icon-calendar btn btn-default" onclick="eventGetFinish(); return false;" /></i> <input type="text" name="finish_text" id="finish-text" value="{{$ftext}}" />
 {{else}}
 {{$f_dsel}} {{$f_tsel}}
 {{/if}}
+</div>
 
 <div id="event-datetime-break"></div>
 
@@ -39,8 +43,16 @@
 
 <div id="event-adjust-break"></div>
 
-<div id="event-summary-text">{{$t_text}}</div>
-<input type="text" id="event-summary" name="summary" value="{{$t_orig}}" />
+
+
+{{if $catsenabled}}
+<div id="event-category-wrap">
+	<input name="category" id="event-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" class="jothidden" style="display:none" />
+</div>
+{{/if}}
+
+
+
 
 
 <div id="event-desc-text">{{$d_text}}</div>

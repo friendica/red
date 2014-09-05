@@ -470,6 +470,7 @@ function events_content(&$a) {
 		$shour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'H') : 0);
 		$sminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'i') : 0);
 		$stext = datetime_convert('UTC',$tz,$sdt);
+		$stext = substr($stext,0,14) . "00:00";
 
 		$fyear = datetime_convert('UTC', $tz, $fdt, 'Y');
 		$fmonth = datetime_convert('UTC', $tz, $fdt, 'm');
@@ -478,6 +479,7 @@ function events_content(&$a) {
 		$fhour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'H') : 0);
 		$fminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'i') : 0);
 		$ftext = datetime_convert('UTC',$tz,$fdt);
+		$ftext = substr($ftext,0,14) . "00:00";
 
 		$f = get_config('system','event_input_format');
 		if(! $f)
