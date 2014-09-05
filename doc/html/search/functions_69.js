@@ -5,6 +5,7 @@ var searchData=
   ['identity_5fselector',['identity_selector',['../identity_8php.html#a2ab5172eabd375869060c9ad68323f5c',1,'identity.php']]],
   ['ids_5fto_5fquerystr',['ids_to_querystr',['../text_8php.html#a436a8de00c942364c2d0fcfc7e1f4b5a',1,'text.php']]],
   ['imagestring',['imageString',['../classphoto__driver.html#abc9f73ad90923772d52b9fcc4eb117dd',1,'photo_driver\imageString()'],['../classphoto__gd.html#a0795fc029be382557ae3f6e285f40e00',1,'photo_gd\imageString()'],['../classphoto__imagick.html#a70adbef31128c0ac8cbc5dcf34cdb019',1,'photo_imagick\imageString()']]],
+  ['import_5fauthor_5fdiaspora',['import_author_diaspora',['../items_8php.html#a2c3f97b2109c05df86d97449b3c78ebc',1,'items.php']]],
   ['import_5fauthor_5frss',['import_author_rss',['../items_8php.html#a6bee35961f2e32905f20367a9309d627',1,'items.php']]],
   ['import_5fauthor_5fxchan',['import_author_xchan',['../items_8php.html#ae73794179b62d39bb597ff670ab1c1e5',1,'items.php']]],
   ['import_5fauthor_5fzot',['import_author_zot',['../zot_8php.html#ad149f1e98c0c5b88ff9147e6ee3f330d',1,'zot.php']]],

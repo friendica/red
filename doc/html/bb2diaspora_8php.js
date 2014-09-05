@@ -1,8 +1,11 @@
 var bb2diaspora_8php =
 [
     [ "bb2diaspora", "bb2diaspora_8php.html#a4f10e0876b27373c762bc1abbe745f5c", null ],
+    [ "bb2diaspora_itembody", "bb2diaspora_8php.html#a2052c66bc1006a42b4c230320c269e47", null ],
+    [ "bb2dmention_callback", "bb2diaspora_8php.html#a5258d2f1addeb0a2a6b54c4f9e7d0f34", null ],
     [ "bb_tag_preg_replace", "bb2diaspora_8php.html#ad0abe1a7ee50aa0736a233df0a422eba", null ],
     [ "diaspora2bb", "bb2diaspora_8php.html#ac9061ee10fcfcdac69566b649614e625", null ],
+    [ "diaspora_mention_callback", "bb2diaspora_8php.html#a4a27604f0745f1efda672966aaca9a3b", null ],
     [ "diaspora_ol", "bb2diaspora_8php.html#a8b96bd45884fa1c40b942939354197d4", null ],
     [ "diaspora_ul", "bb2diaspora_8php.html#adc92ccda5f85ed27e64fcc17712c89cc", null ],
     [ "format_event_diaspora", "bb2diaspora_8php.html#a29a2ad41f5826f3975fa9a49934ff863", null ],
