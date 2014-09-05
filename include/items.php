@@ -2844,7 +2844,6 @@ function tgroup_check($uid,$item) {
 function start_delivery_chain($channel,$item,$item_id,$parent) {
 
 
-
 	// Change this copy of the post to a forum head message and deliver to all the tgroup members
 	// also reset all the privacy bits to the forum default permissions
 
@@ -2857,6 +2856,11 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 		$private = 1;
 
 	$flag_bits = $item['item_flags'] | ITEM_WALL|ITEM_ORIGIN;
+
+	// unset the nocomment bit if it's there. 
+
+	if($flag_bits & ITEM_NOCOMMENT)
+		$flag_bits = $flag_bits ^ ITEM_NOCOMMENT;
 
 	// maintain the original source, which will be the original item owner and was stored in source_xchan
 	// when we created the delivery fork
@@ -2944,6 +2948,7 @@ function check_item_source($uid,$item) {
 		dbesc(($item['source_xchan']) ?  $item['source_xchan'] : $item['owner_xchan'])
 	);
 
+
 	if(! $r)
 		return false;
 
@@ -2951,9 +2956,11 @@ function check_item_source($uid,$item) {
 		intval($uid),
 		dbesc($item['owner_xchan'])
 	);
+
 			
 	if(! $x)
 		return false;
+
 
 	if(! ($x[0]['abook_their_perms'] & PERMS_A_REPUBLISH))
 		return false;
