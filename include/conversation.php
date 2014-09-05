@@ -1417,7 +1417,7 @@ function network_tabs() {
 	if(! get_config('system','disable_discover_tab')) {
 		$tabs[] = array(
 			'label' => t('Discover'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&fh=1' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
+			'url'=>z_root() . '/' . $cmd . '?f=&fh=1' ,
 			'sel'=> $public_active,
 			'title'=> t('Imported public streams'),
 		);
@@ -1425,14 +1425,14 @@ function network_tabs() {
 
 	$tabs[] = array(
 		'label' => t('Commented Order'),
-		'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
+		'url'=>z_root() . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
 		'sel'=>$all_active,
 		'title'=> t('Sort by Comment Date'),
 	);
 	
 	$tabs[] = array(
 		'label' => t('Posted Order'),
-		'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
+		'url'=>z_root() . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
 		'sel'=>$postord_active,
 		'title' => t('Sort by Post Date'),
 	);
@@ -1440,7 +1440,7 @@ function network_tabs() {
 	if(feature_enabled(local_user(),'personal_tab')) {
 		$tabs[] = array(
 			'label' => t('Personal'),
-			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&conv=1',
+			'url' => z_root() . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&conv=1',
 			'sel' => $conv_active,
 			'title' => t('Posts that mention or involve you'),
 		);
@@ -1449,7 +1449,7 @@ function network_tabs() {
 	if(feature_enabled(local_user(),'new_tab')) { 
 		$tabs[] = array(
 			'label' => t('New'),
-			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&new=1' . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
+			'url' => z_root() . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&new=1' . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
 			'sel' => $new_active,
 			'title' => t('Activity Stream - by date'),
 		);
@@ -1458,7 +1458,7 @@ function network_tabs() {
 	if(feature_enabled(local_user(),'star_posts')) {
 		$tabs[] = array(
 			'label' => t('Starred'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
+			'url'=>z_root() . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
 			'sel'=>$starred_active,
 			'title' => t('Favourite Posts'),
 		);
@@ -1468,7 +1468,7 @@ function network_tabs() {
 	if(feature_enabled(local_user(),'spam_filter')) {
 		$tabs[] = array(
 			'label' => t('Spam'),
-			'url'=>$a->get_baseurl(true) . '/network?f=&spam=1',
+			'url'=> z_root() . '/network?f=&spam=1',
 			'sel'=> $spam_active,
 			'title' => t('Posts flagged as SPAM'),
 		);
