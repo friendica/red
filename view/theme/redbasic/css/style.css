@@ -666,8 +666,8 @@ aside li {
 */
   position: absolute;
   display: block;
-  max-width: 100%;
-  max-height: 100%;
+/*  max-width: 100%;
+  max-height: 100%; */
   left: 0;
   right: 0;
   top: 0;
@@ -676,7 +676,7 @@ aside li {
 }
 
 .photo-top-image-wrapper, .photo-album-image-wrapper {
-	width: 300px;
+	width: 240px;
 }
 
 .photo-top-photo-link, .photo-album-photo-link {
