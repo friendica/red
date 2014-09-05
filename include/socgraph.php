@@ -167,7 +167,7 @@ function poco_load($xchan = '',$url = null) {
 					}
 				}
 				else {
-					$x = import_author_diaspora($address);
+					$x = import_author_diaspora(array('address' => $address));
 					if(! $x) {
 						continue;
 					}
