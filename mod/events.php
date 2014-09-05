@@ -14,6 +14,10 @@ function events_post(&$a) {
 	$event_id = ((x($_POST,'event_id')) ? intval($_POST['event_id']) : 0);
 	$xchan = ((x($_POST,'xchan')) ? dbesc($_POST['xchan']) : '');
 	$uid      = local_user();
+
+	$start_text = escape_tags($_REQUEST['start_text']);
+	$finish_text = escape_tags($_REQUEST['finish_text']);
+
 	$startyear = intval($_POST['startyear']);
 	$startmonth = intval($_POST['startmonth']);
 	$startday = intval($_POST['startday']);
@@ -37,12 +41,23 @@ function events_post(&$a) {
 	// The default setting for the `private` field in event_store() is false, so mirror that	
 	$private_event = false;
 
+	if($start_text) {
+		$start = $start_text;
+	}
+	else {
+		$start = sprintf('%d-%d-%d %d:%d:0',$startyear,$startmonth,$startday,$starthour,$startminute);
+	}
 
-	$start    = sprintf('%d-%d-%d %d:%d:0',$startyear,$startmonth,$startday,$starthour,$startminute);
-	if($nofinish)
+	if($nofinish) {
 		$finish = '0000-00-00 00:00:00';
-	else
-		$finish    = sprintf('%d-%d-%d %d:%d:0',$finishyear,$finishmonth,$finishday,$finishhour,$finishminute);
+	}
+
+	if($finish_text) {
+		$finish = $finish_text;
+	}
+	else {
+		$finish = sprintf('%d-%d-%d %d:%d:0',$finishyear,$finishmonth,$finishday,$finishhour,$finishminute);
+	}
 
 	if($adjust) {
 		$start = datetime_convert(date_default_timezone_get(),'UTC',$start);
@@ -451,8 +466,10 @@ function events_content(&$a) {
 		$smonth = datetime_convert('UTC', $tz, $sdt, 'm');
 		$sday = datetime_convert('UTC', $tz, $sdt, 'd');
 
+
 		$shour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'H') : 0);
 		$sminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'i') : 0);
+		$stext = datetime_convert('UTC',$tz,$sdt);
 
 		$fyear = datetime_convert('UTC', $tz, $fdt, 'Y');
 		$fmonth = datetime_convert('UTC', $tz, $fdt, 'm');
@@ -460,6 +477,7 @@ function events_content(&$a) {
 
 		$fhour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'H') : 0);
 		$fminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'i') : 0);
+		$ftext = datetime_convert('UTC',$tz,$fdt);
 
 		$f = get_config('system','event_input_format');
 		if(! $f)
@@ -487,9 +505,15 @@ function events_content(&$a) {
 			'$mid' => $mid,
 	
 			'$title' => t('Event details'),
-			'$desc' => sprintf( t('Format is %s %s. Starting date and Title are required.'),$dateformat,$timeformat),
+			'$format_desc' => sprintf( t('Format is %s %s.'),$dateformat,$timeformat),
+			'$desc' => t('Starting date and Title are required.'),
 			
 			'$s_text' => t('Event Starts:') . ' <span class="required" title="' . t('Required') . '">*</span>',
+			'$bootstrap' => 1,
+			'$stext' => $stext,
+			'$ftext' => $ftext,
+			'$ModalCANCEL' => t('Cancel'),
+			'$ModalOK' => t('OK'),
 			'$s_dsel' => datesel($f,'start',$syear+5,$syear,false,$syear,$smonth,$sday),
 			'$s_tsel' => timesel('start',$shour,$sminute),
 			'$n_text' => t('Finish date/time is not known or not relevant'),
