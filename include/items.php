@@ -2938,9 +2938,6 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 
 function check_item_source($uid,$item) {
 
-	if($item['item_private'])
-		return false;
-	
 
 	$r = q("select * from source where src_channel_id = %d and ( src_xchan = '%s' || src_xchan = '*' ) limit 1",
 		intval($uid),
@@ -2950,7 +2947,7 @@ function check_item_source($uid,$item) {
 	if(! $r)
 		return false;
 
-	$x = q("select abook_their_perms from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
+	$x = q("select abook_their_perms, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
 		intval($uid),
 		dbesc($item['owner_xchan'])
 	);
@@ -2960,6 +2957,10 @@ function check_item_source($uid,$item) {
 
 	if(! ($x[0]['abook_their_perms'] & PERMS_A_REPUBLISH))
 		return false;
+
+	if($item['item_private'] && (! ($x[0]['abook_flags'] & ABOOK_FLAG_FEED)))
+		return false;
+
 
 	if($r[0]['src_channel_xchan'] === $item['owner_xchan'])
 		return false;
