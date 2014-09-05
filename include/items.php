@@ -910,9 +910,10 @@ function import_author_rss($x) {
 	}
 	$name = trim($x['name']);
 
-	$r = q("insert into xchan ( xchan_hash, xchan_url, xchan_name, xchan_network ) 
-		values ( '%s', '%s', '%s', '%s' )",
-		dbesc($x['url']),
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_url, xchan_name, xchan_network ) 
+		values ( '%s', '%s', '%s', '%s', '%s' )",
+		dbesc($x['guid']),
+		dbesc($x['guid']),
 		dbesc($x['url']),
 		dbesc(($name) ? $name : t('(Unknown)')),
 		dbesc('rss')
@@ -1068,7 +1069,7 @@ function encode_item_xchan($xchan) {
 	$ret = array();
 	$ret['name']     = $xchan['xchan_name'];
 	$ret['address']  = $xchan['xchan_addr'];
-	$ret['url']      = $xchan['hubloc_url'];
+	$ret['url']      = (($xchan['hubloc_url']) ? $xchan['hubloc_url'] : $xchan['xchan_url']);
 	$ret['network']  = $xchan['xchan_network'];
 	$ret['photo']    = array('mimetype' => $xchan['xchan_photo_mimetype'], 'src' => $xchan['xchan_photo_m']);
 	$ret['guid']     = $xchan['xchan_guid'];
