@@ -508,8 +508,14 @@ function logger($msg,$level = 0) {
 
 	if((! $debugging) || (! $logfile) || ($level > $loglevel))
 		return;
-	
-	@file_put_contents($logfile, datetime_convert() . ':' . session_id() . ' ' . $msg . "\n", FILE_APPEND);
+
+	$where = '';
+	if(version_compare(PHP_VERSION,'5.4.0') >= 0) {
+		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,2);	
+		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
+	}
+
+	@file_put_contents($logfile, datetime_convert() . ':' . session_id() . ' ' . $where . $msg . "\n", FILE_APPEND);
 	return;
 }
 
