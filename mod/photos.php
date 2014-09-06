@@ -730,7 +730,7 @@ function photos_content(&$a) {
 				      $rel=("photo");
 //				}
       
-				$o .= "<script> var page_query = '" . $a->query_string . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
+				$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
 
 				$tmp = replace_macros($tpl,array(
 					'$id' => $rr['id'],
@@ -1223,7 +1223,7 @@ function photos_content(&$a) {
 		killme();
 	}
 	else {
-		$o .= "<script> var page_query = '" . $a->query_string . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
+		$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
 		$tpl = get_markup_template('photos_recent.tpl'); 
 		$o .= replace_macros($tpl, array(
 			'$title' => t('Recent Photos'),
