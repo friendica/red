@@ -224,10 +224,11 @@ function directory_content(&$a) {
 							'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
 							'$entries' => $entries,
 							'$dirlbl' => t('Directory'),
-							'$submit' => t('Find')
+							'$submit' => t('Find'),
+							'$next' => alt_pager($a,$j['records'], t('next page'), t('previous page'))
+
 						));
 
-//						$o .= alt_pager($a,$j['records'], t('next page'), t('previous page'));
 
 					}
 
