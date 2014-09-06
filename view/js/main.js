@@ -285,7 +285,7 @@
 					scroll_next = true;
 					loadingPage = true;
 
-					if($('.directory-end').length == 0)
+					if(($('.directory-end').length == 0) && ($('.photos-end').length == 0))
 						liveUpdate();
 					else
 						pageUpdate();
