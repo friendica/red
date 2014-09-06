@@ -7,5 +7,8 @@
 {{foreach $photos as $photo}}
 	{{include file="photo_top.tpl"}}
 {{/foreach}}
+<div id="page-end"></div>
 </div>
 <div class="photos-end"></div>
+<script>$(document).ready(function() { loadingPage = false;});</script>
+<div id="page-spinner"></div>

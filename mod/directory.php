@@ -216,7 +216,7 @@ function directory_content(&$a) {
 					}
 					else {
 
-						$o .= "<script> var page_query_args = '" . $a->query_string . "'; </script>";
+						$o .= "<script> var page_query = '" . $a->query_string . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
 						$o .= replace_macros($tpl, array(
 							'$search' => $search,
 							'$desc' => t('Find'),

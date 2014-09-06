@@ -2033,4 +2033,18 @@ function normalise_openid($s) {
 	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
 }
 
+// used in ajax endless scroll request to find out all the args that the master page was viewing
 
+
+function extra_query_args() {
+	$s = '';
+	if(count($_REQUEST)) {
+		foreach($_REQUEST as $k => $v) {
+			// these are request vars we don't want to duplicate
+			if(! in_array($k, array('q','f','zid','page','PHPSESSID'))) {
+				$s .= '&' . $k . '=' . $v;
+			}
+		}
+	}
+	return $s;
+}
