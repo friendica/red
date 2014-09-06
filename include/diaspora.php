@@ -805,6 +805,12 @@ function diaspora_post($importer,$xml,$msg) {
 
 	$body = diaspora2bb($xml->raw_message);
 
+	if($xml->photo) {
+		$body = '[img]' . $xml->photo->remote_photo_path . $xml->photo->remote_photo_name . '[/img]' . "\n\n" . $body;
+		$body = scale_external_images($body);
+	}
+
+
 //WTF? FIXME
 	// Add OEmbed and other information to the body
 //	$body = add_page_info_to_body($body, false, true);
