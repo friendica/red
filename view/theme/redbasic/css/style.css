@@ -2184,6 +2184,10 @@ img.mail-list-sender-photo {
 	background-color: $abookself_bgcolour;
 }
 
+.abook-pending-contact, .abook-permschange {
+	background: $abook_changebg;
+}
+
 .online-now {
 	color: red;
 	cursor: pointer;
