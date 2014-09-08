@@ -702,6 +702,9 @@ function photos_content(&$a) {
 		$tpl = get_markup_template('photo_album.tpl');
 		if(count($r)) {
 			$twist = 'rotright';
+			$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
+			$o .= '<div id="photo-album-contents">';
+
 			foreach($r as $rr) {
 
 				if($twist == 'rotright')
@@ -730,7 +733,6 @@ function photos_content(&$a) {
 				      $rel=("photo");
 //				}
       
-				$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
 
 				$tmp = replace_macros($tpl,array(
 					'$id' => $rr['id'],
@@ -758,6 +760,7 @@ function photos_content(&$a) {
 		}
 
 		$o .= '<div id="page-end"></div>';
+		$o .= '</div>';    // photo-album-contents
 		$o .= '<div id="photo-album-end"></div>';
 		$o .= '<script>$(document).ready(function() { loadingPage = false;});</script>';
 		$o .= '<div id="page-spinner"></div>';
