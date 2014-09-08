@@ -276,6 +276,8 @@ if(! $a->install) {
 		$dirpopup_txtcol="";
 	if (!$dirpopup_linkcol)
 		$dirpopup_linkcol="";
+	if (!$abook_changebg)
+		$abook_changebg="orange";
 
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
@@ -400,6 +402,7 @@ $options = array (
 '$admintable_hoverbgcol' => $admintable_hoverbgcol,
 '$dirpopup_txtcol' => $dirpopup_txtcol,
 '$dirpopup_linkcol' => $dirpopup_linkcol,
+'$abook_changebg' => $abook_changebg,
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    

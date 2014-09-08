@@ -154,15 +154,15 @@
 		$abookself_bgcolour = "#251111";
 	if(! $infomess_bgcolour)
 		$infomess_bgcolour = "#333";
-        if(! $advperm_bgcolour)
+   if(! $advperm_bgcolour)
                 $advperm_bgcolour = "#1E1E1E";
-        if(! $advperm_bordercol)
+   if(! $advperm_bordercol)
                 $advperm_bordercol = "#222";
-        if(! $advperm_gradientcol)
+   if(! $advperm_gradientcol)
                 $advperm_gradientcol = "#111";
-        if(! $cal_bgcolour)
+   if(! $cal_bgcolour)
                  $cal_bgcolour = "#333";
-        if(! $fancybox_bgcolour)
+   if(! $fancybox_bgcolour)
                 $fancybox_bgcolour = "#1E1E1E";
 	if (!$admintable_hoverbgcol)
 		$admintable_hoverbgcol="#222";
@@ -170,3 +170,5 @@
 		$dirpopup_txtcol="#111";
 	if (!$dirpopup_linkcol)
 		$dirpopup_linkcol="#000";
+	if (!$abook_changebg)
+		$abook_changebg="#402900";
