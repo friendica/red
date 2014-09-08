@@ -33,6 +33,10 @@ function events_post(&$a) {
 	$adjust   = intval($_POST['adjust']);
 	$nofinish = intval($_POST['nofinish']);
 
+	$categories = escape_tags(trim($_POST['category']));
+
+
+
 	// only allow editing your own events. 
 
 	if(($xchan) && ($xchan !== get_observer_hash()))
@@ -138,6 +142,22 @@ function events_post(&$a) {
 		}
 	}
 
+	$post_tags = array();
+	$channel = $a->get_channel();
+
+	if(strlen($categories)) {
+		$cats = explode(',',$categories);
+		foreach($cats as $cat) {
+			$post_tags[] = array(
+				'uid'   => $profile_uid, 
+				'type'  => TERM_CATEGORY,
+				'otype' => TERM_OBJ_POST,
+				'term'  => trim($cat),
+				'url'   => $channel['xchan_url'] . '?f=&cat=' . urlencode(trim($cat))
+			); 				
+		}
+	}
+
 	$datarray = array();
 	$datarray['start'] = $start;
 	$datarray['finish'] = $finish;
@@ -160,6 +180,11 @@ function events_post(&$a) {
 	$datarray['edited'] = $edited;
 
 	$event = event_store_event($datarray);
+
+
+	if($post_tags)	
+		$datarray['term'] = $post_tags;
+
 	$item_id = event_store_item($datarray,$event);
 
 	if($share)
@@ -485,6 +510,28 @@ function events_content(&$a) {
 		if(! $f)
 			$f = 'ymd';
 
+		$catsenabled = feature_enabled(local_user(),'categories');
+
+		$category = '';
+
+		if($catsenabled && x($orig_event)){
+			$itm = q("select * from item where resource_type = 'event' and resource_id = '%s' and uid = %d limit 1",
+				dbesc($orig_event['event_hash']),
+				intval(local_user())
+			);
+			$itm = fetch_post_tags($itm);
+			if($itm) {
+				$cats = get_terms_oftype($itm[0]['term'], TERM_CATEGORY);
+				foreach ($cats as $cat) {
+					if(strlen($category))
+						$category .= ', ';
+					$category .= $cat['term'];
+            	}
+			}
+		}
+
+
+
 		$dateformat = datesel_format($f);
 		$timeformat = t('hour:minute');
 
@@ -509,7 +556,9 @@ function events_content(&$a) {
 			'$title' => t('Event details'),
 			'$format_desc' => sprintf( t('Format is %s %s.'),$dateformat,$timeformat),
 			'$desc' => t('Starting date and Title are required.'),
-			
+			'$catsenabled' => $catsenabled,
+			'$placeholdercategory' => t('Categories (comma-separated list)'),
+			'$category' => $category,
 			'$s_text' => t('Event Starts:') . ' <span class="required" title="' . t('Required') . '">*</span>',
 			'$bootstrap' => 1,
 			'$stext' => $stext,

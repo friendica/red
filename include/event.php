@@ -374,6 +374,26 @@ function event_store_item($arr,$event) {
 			intval($arr['uid'])
 		);
 
+
+		$s = q("delete from term where oid = %d and otype = %d",
+			intval($r[0]['id']),
+			intval(TERM_OBJ_POST)
+		);
+
+		if(($arr['term']) && (is_array($arr['term']))) {
+			foreach($arr['term'] as $t) {
+				q("insert into term (uid,oid,otype,type,term,url)
+					values(%d,%d,%d,%d,'%s','%s') ",
+					intval($arr['uid']),
+					intval($r[0]['id']),
+					intval(TERM_OBJ_POST),
+					intval($t['type']),
+					dbesc($t['term']),
+					dbesc($t['url'])
+				);
+			}
+		}	
+
 		$item_id = $r[0]['id'];
 		call_hooks('event_updated', $event['id']);
 		return $item_id;
@@ -423,6 +443,10 @@ function event_store_item($arr,$event) {
 		$item_arr['deny_gid']      = $arr['deny_gid'];
 		$item_arr['item_private']  = $private;
 		$item_arr['verb']          = ACTIVITY_POST;
+
+
+		if(array_key_exists('term',$arr))
+			$item_arr['term'] = $arr['term']; 
 
 		$item_arr['resource_type'] = 'event';
 		$item_arr['resource_id']   = $event['event_hash'];
