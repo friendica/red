@@ -5,7 +5,7 @@ require_once('include/widgets.php');
 
 
 function directory_init(&$a) {
-	$a->set_pager_itemspage(80);
+	$a->set_pager_itemspage(60);
 
 }
 
