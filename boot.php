@@ -807,7 +807,7 @@ class App {
 		 */
 
 		$this->pager['page'] = ((x($_GET,'page') && intval($_GET['page']) > 0) ? intval($_GET['page']) : 1);
-		$this->pager['itemspage'] = 50;
+		$this->pager['itemspage'] = 60;
 		$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
 		if($this->pager['start'] < 0)
 			$this->pager['start'] = 0;
