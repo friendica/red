@@ -918,9 +918,9 @@ function import_author_rss($x) {
 		dbesc(($name) ? $name : t('(Unknown)')),
 		dbesc('rss')
 	);
-	if($r) {
+	if($r && $x['photo']) {
 
-		$photos = import_profile_photo($x['photo'],$x['url']);
+		$photos = import_profile_photo($x['photo']['src'],$x['url']);
 
 		if($photos) {
 			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_url = '%s' and xchan_network = 'rss' limit 1",
