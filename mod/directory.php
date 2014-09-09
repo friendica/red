@@ -5,7 +5,7 @@ require_once('include/widgets.php');
 
 
 function directory_init(&$a) {
-	$a->set_pager_itemspage(80);
+	$a->set_pager_itemspage(60);
 
 }
 
@@ -216,7 +216,7 @@ function directory_content(&$a) {
 					}
 					else {
 
-						$o .= "<script> var page_query_args = '" . $a->query_string . "'; </script>";
+						$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
 						$o .= replace_macros($tpl, array(
 							'$search' => $search,
 							'$desc' => t('Find'),
@@ -224,10 +224,11 @@ function directory_content(&$a) {
 							'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
 							'$entries' => $entries,
 							'$dirlbl' => t('Directory'),
-							'$submit' => t('Find')
+							'$submit' => t('Find'),
+							'$next' => alt_pager($a,$j['records'], t('next page'), t('previous page'))
+
 						));
 
-//						$o .= alt_pager($a,$j['records'], t('next page'), t('previous page'));
 
 					}
 

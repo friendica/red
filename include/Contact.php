@@ -484,7 +484,7 @@ function contact_remove($channel_id, $abook_id) {
 	);
 	if($r) {
 		foreach($r as $rr) {
-			drop_item($rr,false);
+			drop_item($rr['id'],false);
 		}
 	}
 	

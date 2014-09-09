@@ -22,18 +22,11 @@ function xrd_init(&$a) {
 	if(! $r) 
 		killme();
 
-	if(get_config('system','diaspora_enabled')) {
-		$tpl = get_markup_template('xrd_diaspora.tpl');
-		$dspr = replace_macros($tpl,array(
-			'$baseurl' => $a->get_baseurl(),
-			'$dspr_guid' => $r[0]['channel_guid'],
-			'$dspr_key' => base64_encode(pemtorsa($r[0]['channel_pubkey']))
-		));
-	}
-	else
-		$dspr = '';
-
-
+	$dspr = replace_macros(get_markup_template('xrd_diaspora.tpl'),array(
+		'$baseurl' => $a->get_baseurl(),
+		'$dspr_guid' => $r[0]['channel_guid'],
+		'$dspr_key' => base64_encode(pemtorsa($r[0]['channel_pubkey']))
+	));
 
 	$salmon_key = salmon_key($r[0]['channel_pubkey']);
 

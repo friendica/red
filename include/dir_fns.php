@@ -107,7 +107,7 @@ function sync_directories($dirmode) {
 		$r = array(
 			'site_url' => DIRECTORY_FALLBACK_MASTER,
 			'site_flags' => DIRECTORY_MODE_PRIMARY,
-			'site_update' => '0000-00-00 00:00:00', 
+			'site_update' => NULL_DATE, 
 			'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch',
 			'site_realm' => DIRECTORY_REALM
 		);
@@ -137,7 +137,7 @@ function sync_directories($dirmode) {
 
 		// for brand new directory servers, only load the last couple of days. Everything before that will be repeats.
 
-		$syncdate = (($rr['site_sync'] === '0000-00-00 00:00:00') ? datetime_convert('UTC','UTC','now - 2 days') : $rr['site_sync']);
+		$syncdate = (($rr['site_sync'] === NULL_DATE) ? datetime_convert('UTC','UTC','now - 2 days') : $rr['site_sync']);
 		$x = z_fetch_url($rr['site_directory'] . '?f=&sync=' . urlencode($syncdate));
 
 		if(! $x['success'])

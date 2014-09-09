@@ -90,6 +90,10 @@ class Item extends BaseObject {
 			: false);
 		$shareable = ((($conv->get_profile_owner() == local_user()) && ($item['item_private'] != 1)) ? true : false);
 
+		// allow an exemption for sharing stuff from your private feeds
+		if($item['author']['xchan_network'] === 'rss')
+			$shareable = true;
+
 		$mode = $conv->get_mode();
 
 		if(local_user() && $observer['xchan_hash'] === $item['author_xchan'])
@@ -207,9 +211,10 @@ class Item extends BaseObject {
 		if($this->is_commentable()) {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
 			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
-			if ($shareable)
-				$share = array( t('Share This'), t('share'));
 		}
+
+		if ($shareable)
+			$share = array( t('Share This'), t('share'));
 
 		if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
 			$indent .= ' shiny';
@@ -251,7 +256,7 @@ class Item extends BaseObject {
 			'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 			'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 			'editedtime' => (($item['edited'] != $item['created']) ? sprintf( t('last edited: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['edited'], 'r')) : ''),
-			'expiretime' => (($item['expires'] !== '0000-00-00 00:00:00') ? sprintf( t('Expires: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['expires'], 'r')):''),
+			'expiretime' => (($item['expires'] !== NULL_DATE) ? sprintf( t('Expires: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['expires'], 'r')):''),
 			'lock' => $lock,
 			'verified' => $verified,
 			'unverified' => $unverified,

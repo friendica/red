@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1128 );
+define( 'UPDATE_VERSION' , 1129 );
 
 /**
  *
@@ -1448,3 +1448,12 @@ ADD INDEX ( `comments_closed` ), ADD INDEX ( `changed` ) ");
 	return UPDATE_FAILED;
 
 }
+
+function update_r1128() {
+	$r = q("ALTER TABLE `item` ADD `diaspora_meta` MEDIUMTEXT NOT NULL DEFAULT '' AFTER `sig` ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+

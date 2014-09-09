@@ -23,7 +23,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		$subject = t('[no subject]');
 
 //	if(! $expires)
-//		$expires = '0000-00-00 00:00:00';
+//		$expires = NULL_DATE;
 //	else
 //		$expires = datetime_convert(date_default_timezone_get(),'UTC',$expires);
 

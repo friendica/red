@@ -10,7 +10,6 @@ var include_2apps_8php =
     [ "app_render", "include_2apps_8php.html#a1b2e737f477a2e0d9d11ef14adc5aa66", null ],
     [ "app_store", "include_2apps_8php.html#a15626f24069c18816f7cdaf4735f58f9", null ],
     [ "app_update", "include_2apps_8php.html#aeab6a62d2f3dfaa86ed043a006305f46", null ],
-    [ "element_install", "include_2apps_8php.html#a7c8bf17bd61a310bacb21ba9ad7a061b", null ],
     [ "get_system_apps", "include_2apps_8php.html#ae64f72eb4f126e03b4eb65ed1702a3ca", null ],
     [ "papp_encode", "include_2apps_8php.html#ad6ba3f254003f69f8f3f94ca5bda0680", null ],
     [ "parse_app_description", "include_2apps_8php.html#a32fe4ed9666228fd4b67dc487cc57a83", null ],

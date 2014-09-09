@@ -14,10 +14,12 @@ function share_init(&$a) {
 		killme();
 
 
-	$r = q("SELECT * from item WHERE id = %d  LIMIT 1",
+	$r = q("SELECT * from item left join xchan on author_xchan = xchan_hash WHERE id = %d  LIMIT 1",
 		intval($post_id)
 	);
-	if((! $r) || $r[0]['item_private'])
+	if(! $r)
+		killme();
+	if(($r[0]['item_private']) && ($r[0]['xchan_network'] !== 'rss'))
 		killme();
 
 	$sql_extra = item_permissions_sql($r[0]['uid']);

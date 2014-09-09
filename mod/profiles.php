@@ -304,7 +304,7 @@ function profiles_post(&$a) {
 		$with         = ((x($_POST,'with')) ? escape_tags(trim($_POST['with'])) : '');
 
 		if(! strlen($howlong))
-			$howlong = '0000-00-00 00:00:00';
+			$howlong = NULL_DATE;
 		else
 			$howlong = datetime_convert(date_default_timezone_get(),'UTC',$howlong);
  
@@ -707,7 +707,7 @@ logger('extra_fields: ' . print_r($extra_fields,true));
 			'$marital'      => marital_selector($r[0]['marital']),
 			'$marital_min'      => marital_selector_min($r[0]['marital']),
 			'$with'         => $r[0]['with'],
-			'$howlong'      => ($r[0]['howlong'] === '0000-00-00 00:00:00' ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong'])),
+			'$howlong'      => ($r[0]['howlong'] === NULL_DATE ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong'])),
 			'$sexual'       => sexpref_selector($r[0]['sexual']),
 			'$sexual_min'       => sexpref_selector_min($r[0]['sexual']),
 			'$about'        => $r[0]['about'],

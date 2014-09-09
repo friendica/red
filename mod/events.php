@@ -14,6 +14,10 @@ function events_post(&$a) {
 	$event_id = ((x($_POST,'event_id')) ? intval($_POST['event_id']) : 0);
 	$xchan = ((x($_POST,'xchan')) ? dbesc($_POST['xchan']) : '');
 	$uid      = local_user();
+
+	$start_text = escape_tags($_REQUEST['start_text']);
+	$finish_text = escape_tags($_REQUEST['finish_text']);
+
 	$startyear = intval($_POST['startyear']);
 	$startmonth = intval($_POST['startmonth']);
 	$startday = intval($_POST['startday']);
@@ -29,6 +33,10 @@ function events_post(&$a) {
 	$adjust   = intval($_POST['adjust']);
 	$nofinish = intval($_POST['nofinish']);
 
+	$categories = escape_tags(trim($_POST['category']));
+
+
+
 	// only allow editing your own events. 
 
 	if(($xchan) && ($xchan !== get_observer_hash()))
@@ -37,12 +45,23 @@ function events_post(&$a) {
 	// The default setting for the `private` field in event_store() is false, so mirror that	
 	$private_event = false;
 
+	if($start_text) {
+		$start = $start_text;
+	}
+	else {
+		$start = sprintf('%d-%d-%d %d:%d:0',$startyear,$startmonth,$startday,$starthour,$startminute);
+	}
 
-	$start    = sprintf('%d-%d-%d %d:%d:0',$startyear,$startmonth,$startday,$starthour,$startminute);
-	if($nofinish)
-		$finish = '0000-00-00 00:00:00';
-	else
-		$finish    = sprintf('%d-%d-%d %d:%d:0',$finishyear,$finishmonth,$finishday,$finishhour,$finishminute);
+	if($nofinish) {
+		$finish = NULL_DATE;
+	}
+
+	if($finish_text) {
+		$finish = $finish_text;
+	}
+	else {
+		$finish = sprintf('%d-%d-%d %d:%d:0',$finishyear,$finishmonth,$finishday,$finishhour,$finishminute);
+	}
 
 	if($adjust) {
 		$start = datetime_convert(date_default_timezone_get(),'UTC',$start);
@@ -123,6 +142,22 @@ function events_post(&$a) {
 		}
 	}
 
+	$post_tags = array();
+	$channel = $a->get_channel();
+
+	if(strlen($categories)) {
+		$cats = explode(',',$categories);
+		foreach($cats as $cat) {
+			$post_tags[] = array(
+				'uid'   => $profile_uid, 
+				'type'  => TERM_CATEGORY,
+				'otype' => TERM_OBJ_POST,
+				'term'  => trim($cat),
+				'url'   => $channel['xchan_url'] . '?f=&cat=' . urlencode(trim($cat))
+			); 				
+		}
+	}
+
 	$datarray = array();
 	$datarray['start'] = $start;
 	$datarray['finish'] = $finish;
@@ -145,6 +180,11 @@ function events_post(&$a) {
 	$datarray['edited'] = $edited;
 
 	$event = event_store_event($datarray);
+
+
+	if($post_tags)	
+		$datarray['term'] = $post_tags;
+
 	$item_id = event_store_item($datarray,$event);
 
 	if($share)
@@ -451,8 +491,11 @@ function events_content(&$a) {
 		$smonth = datetime_convert('UTC', $tz, $sdt, 'm');
 		$sday = datetime_convert('UTC', $tz, $sdt, 'd');
 
+
 		$shour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'H') : 0);
 		$sminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'i') : 0);
+		$stext = datetime_convert('UTC',$tz,$sdt);
+		$stext = substr($stext,0,14) . "00:00";
 
 		$fyear = datetime_convert('UTC', $tz, $fdt, 'Y');
 		$fmonth = datetime_convert('UTC', $tz, $fdt, 'm');
@@ -460,10 +503,34 @@ function events_content(&$a) {
 
 		$fhour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'H') : 0);
 		$fminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'i') : 0);
+		$ftext = datetime_convert('UTC',$tz,$fdt);
+		$ftext = substr($ftext,0,14) . "00:00";
 
 		$f = get_config('system','event_input_format');
 		if(! $f)
 			$f = 'ymd';
+
+		$catsenabled = feature_enabled(local_user(),'categories');
+
+		$category = '';
+
+		if($catsenabled && x($orig_event)){
+			$itm = q("select * from item where resource_type = 'event' and resource_id = '%s' and uid = %d limit 1",
+				dbesc($orig_event['event_hash']),
+				intval(local_user())
+			);
+			$itm = fetch_post_tags($itm);
+			if($itm) {
+				$cats = get_terms_oftype($itm[0]['term'], TERM_CATEGORY);
+				foreach ($cats as $cat) {
+					if(strlen($category))
+						$category .= ', ';
+					$category .= $cat['term'];
+            	}
+			}
+		}
+
+
 
 		$dateformat = datesel_format($f);
 		$timeformat = t('hour:minute');
@@ -487,9 +554,17 @@ function events_content(&$a) {
 			'$mid' => $mid,
 	
 			'$title' => t('Event details'),
-			'$desc' => sprintf( t('Format is %s %s. Starting date and Title are required.'),$dateformat,$timeformat),
-			
+			'$format_desc' => sprintf( t('Format is %s %s.'),$dateformat,$timeformat),
+			'$desc' => t('Starting date and Title are required.'),
+			'$catsenabled' => $catsenabled,
+			'$placeholdercategory' => t('Categories (comma-separated list)'),
+			'$category' => $category,
 			'$s_text' => t('Event Starts:') . ' <span class="required" title="' . t('Required') . '">*</span>',
+			'$bootstrap' => 1,
+			'$stext' => $stext,
+			'$ftext' => $ftext,
+			'$ModalCANCEL' => t('Cancel'),
+			'$ModalOK' => t('OK'),
 			'$s_dsel' => datesel($f,'start',$syear+5,$syear,false,$syear,$smonth,$sday),
 			'$s_tsel' => timesel('start',$shour,$sminute),
 			'$n_text' => t('Finish date/time is not known or not relevant'),

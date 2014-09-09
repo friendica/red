@@ -167,8 +167,11 @@ function poco_init(&$a) {
 					$entry['displayName'] = $rr['xchan_name'];
 				if($fields_ret['urls']) {
 					$entry['urls'] = array(array('value' => $rr['xchan_url'], 'type' => 'profile'));
+					$network = $rr['xchan_network'];
+					if(strpos($network,'friendica') !== false)
+						$network = 'friendica';
 					if($rr['xchan_addr'])
-						$entry['urls'][] = array('value' => 'acct:' . $rr['xchan_addr'], 'type' => 'zot');  
+						$entry['urls'][] = array('value' => 'acct:' . $rr['xchan_addr'], 'type' => $network);  
 				}
 				if($fields_ret['preferredUsername'])
 					$entry['preferredUsername'] = substr($rr['xchan_addr'],0,strpos($rr['xchan_addr'],'@'));

@@ -23,13 +23,8 @@ var plugin_8php =
     [ "register_hook", "plugin_8php.html#a425472c5f3afc137268b2ad45652b209", null ],
     [ "reload_plugins", "plugin_8php.html#af9ac19004dca49adae1ac7a0d9f3b025", null ],
     [ "script_path", "plugin_8php.html#a0e8c2ea50bfdbc39e17ccccaea21ddc3", null ],
-    [ "service_class_allows", "plugin_8php.html#a030cec6793b909c439c0336ba39b1571", null ],
-    [ "service_class_fetch", "plugin_8php.html#a905b54e10704b283ac64680a8abc0971", null ],
     [ "theme_include", "plugin_8php.html#a65fedcffbe03562ef844cabee37d34e2", null ],
     [ "uninstall_plugin", "plugin_8php.html#a093a9cb98f51e3643634bd8bc6ed6e76", null ],
     [ "unload_plugin", "plugin_8php.html#a90538627db68605aeb6db17a8ead6523", null ],
-    [ "unregister_hook", "plugin_8php.html#a56f71fe5adf9586ce950523d8180443e", null ],
-    [ "upgrade_bool_message", "plugin_8php.html#a754d7f53b3abc557b753c057dc4e021d", null ],
-    [ "upgrade_link", "plugin_8php.html#a4fc13e528367f510fcb6d8bbfc559040", null ],
-    [ "upgrade_message", "plugin_8php.html#a901657dd078e070516cf97285e0bada7", null ]
+    [ "unregister_hook", "plugin_8php.html#a56f71fe5adf9586ce950523d8180443e", null ]
 ];

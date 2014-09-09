@@ -51,7 +51,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	if($arr['channel']['success']) 
 		$ret = $arr['channel'];
-	elseif($is_http)
+	elseif(! $is_http)
 		$ret = zot_finger($url,$channel);
 
 	if($ret && $ret['success']) {
@@ -118,6 +118,12 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		}
 	}
 	else {
+		if(! ($is_http)) {
+			if(! intval(get_config('system','diaspora_enabled'))) {
+				$result['message'] = t('Protocol disabled.');
+				return $result;
+			}
+		}
 
 		$my_perms = 0;
 		$their_perms = 0;
@@ -181,7 +187,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			return $result;
 		}
 
-		$r = q("select count(*) as total from abook where abook_account = %d and abook_network = 'rss'",
+		$r = q("select count(*) as total from abook where abook_account = %d and ( abook_flags & ABOOK_FLAG_FEED )",
 			intval($aid)
 		);
 		if($r)
@@ -215,7 +221,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			intval($uid),
 			dbesc($xchan_hash),
 			intval(($is_http) ? ABOOK_FLAG_FEED : 0),
-			intval($their_perms),
+			intval(($is_http) ? $their_perms|PERMS_R_STREAM|PERMS_A_REPUBLISH : $their_perms),
 			intval($my_perms),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert())

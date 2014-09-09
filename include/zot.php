@@ -384,7 +384,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 				$next_birthday = datetime_convert('UTC','UTC',$j['profile']['next_birthday']);
 			}
 			else {
-				$next_birthday = '0000-00-00 00:00:00';
+				$next_birthday = NULL_DATE;
 			}
 
 			if($r) {
@@ -1024,7 +1024,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 	$realm = get_directory_realm();
 	if(array_key_exists('site',$arr) 
 		&& array_key_exists('realm',$arr['site']) 
-		&& (strpos($arr['site']['realm'],$realm) !== false))
+		&& (strpos($arr['site']['realm'],$realm) === false))
 		$other_realm = true;
 
 	if($dirmode != DIRECTORY_MODE_NORMAL) {
