@@ -35,12 +35,15 @@ function poller_run($argv, $argc){
 
 	// expire any expired mail
 
-	q("delete from mail where expires != NULL_DATE and expires < UTC_TIMESTAMP() ");
+	q("delete from mail where expires != '%s' and expires < UTC_TIMESTAMP() ",
+		dbesc(NULL_DATE)
+	);
 
 	// expire any expired items
 
-	$r = q("select id from item where expires != NULL_DATE and expires < UTC_TIMESTAMP() 
+	$r = q("select id from item where expires != '%s' and expires < UTC_TIMESTAMP() 
 		and not ( item_restrict & %d ) ",
+		dbesc(NULL_DATE),
 		intval(ITEM_DELETED)
 	);
 	if($r) {
