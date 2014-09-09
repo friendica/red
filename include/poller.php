@@ -35,11 +35,11 @@ function poller_run($argv, $argc){
 
 	// expire any expired mail
 
-	q("delete from mail where expires != '0000-00-00 00:00:00' and expires < UTC_TIMESTAMP() ");
+	q("delete from mail where expires != NULL_DATE and expires < UTC_TIMESTAMP() ");
 
 	// expire any expired items
 
-	$r = q("select id from item where expires != '0000-00-00 00:00:00' and expires < UTC_TIMESTAMP() 
+	$r = q("select id from item where expires != NULL_DATE and expires < UTC_TIMESTAMP() 
 		and not ( item_restrict & %d ) ",
 		intval(ITEM_DELETED)
 	);
@@ -285,7 +285,7 @@ function poller_run($argv, $argc){
 			else {
 				// if we've never connected with them, start the mark for death countdown from now
 
-				if($c == '0000-00-00 00:00:00') {
+				if($c == NULL_DATE) {
 					$r = q("update abook set abook_connected = '%s'  where abook_id = %d limit 1",
 						dbesc(datetime_convert()),
 						intval($contact['abook_id'])
@@ -338,7 +338,7 @@ function poller_run($argv, $argc){
 	}
 
 	if($dirmode == DIRECTORY_MODE_SECONDARY || $dirmode == DIRECTORY_MODE_PRIMARY) {
-		$r = q("select distinct ud_addr, updates.* from updates where not ( ud_flags & %d ) and ud_addr != '' and ( ud_last = '0000-00-00 00:00:00' OR ud_last > UTC_TIMESTAMP() - INTERVAL 7 DAY ) group by ud_addr ",
+		$r = q("select distinct ud_addr, updates.* from updates where not ( ud_flags & %d ) and ud_addr != '' and ( ud_last = NULL_DATE OR ud_last > UTC_TIMESTAMP() - INTERVAL 7 DAY ) group by ud_addr ",
 			intval(UPDATE_FLAGS_UPDATED)
 		);
 		if($r) {
@@ -347,7 +347,7 @@ function poller_run($argv, $argc){
 				// If they didn't respond when we attempted before, back off to once a day
 				// After 7 days we won't bother anymore
 
-				if($rr['ud_last'] != '0000-00-00 00:00:00')
+				if($rr['ud_last'] != NULL_DATE)
 					if($rr['ud_last'] > datetime_convert('UTC','UTC', 'now - 1 day'))
 						continue;
 				proc_run('php','include/onedirsync.php',$rr['ud_id']);

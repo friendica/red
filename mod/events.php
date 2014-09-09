@@ -53,7 +53,7 @@ function events_post(&$a) {
 	}
 
 	if($nofinish) {
-		$finish = '0000-00-00 00:00:00';
+		$finish = NULL_DATE;
 	}
 
 	if($finish_text) {

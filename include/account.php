@@ -108,7 +108,7 @@ function create_account($arr) {
 	$parent      = ((x($arr,'parent'))        ? intval($arr['parent'])             : 0 );
 	$flags       = ((x($arr,'account_flags')) ? intval($arr['account_flags'])      : ACCOUNT_OK);
 	$roles       = ((x($arr,'account_roles')) ? intval($arr['account_roles'])      : 0 );
-	$expires     = ((x($arr,'expires'))       ? intval($arr['expires'])            : '0000-00-00 00:00:00');
+	$expires     = ((x($arr,'expires'))       ? intval($arr['expires'])            : NULL_DATE);
 	
 	$default_service_class = get_config('system','default_service_class');
 
@@ -511,8 +511,9 @@ function user_approve($hash) {
 function downgrade_accounts() {
 
 	$r = q("select * from account where not ( account_flags & %d ) 
-		and account_expires != '0000-00-00 00:00:00' 
+		and account_expires != '%s' 
 		and account_expires < UTC_TIMESTAMP() ",
+		dbesc(NULL_DATE),
 		intval(ACCOUNT_EXPIRED)
 	);
 
@@ -528,7 +529,7 @@ function downgrade_accounts() {
 			$x = q("UPDATE account set account_service_class = '%s', account_expires = '%s'
 				where account_id = %d limit 1",
 				dbesc($basic),
-				dbesc('0000-00-00 00:00:00'),
+				dbesc(NULL_DATE),
 				intval($rr['account_id'])
 			);
 			$ret = array('account' => $rr);

@@ -7,7 +7,7 @@ function feed_init(&$a) {
 
 	$params = array();
 
-	$params['begin']     = ((x($_REQUEST,'date_begin')) ? $_REQUEST['date_begin']      : '0000-00-00 00:00:00');
+	$params['begin']     = ((x($_REQUEST,'date_begin')) ? $_REQUEST['date_begin']      : NULL_DATE);
 	$params['end']       = ((x($_REQUEST,'date_end'))   ? $_REQUEST['date_end']        : '');
 	$params['type']      = ((stristr(argv(0),'json'))   ? 'json'                       : 'xml');
 	$params['pages']     = ((x($_REQUEST,'pages'))      ? intval($_REQUEST['pages'])   : 0);

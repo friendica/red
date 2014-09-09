@@ -144,7 +144,7 @@ function filter_insecure($channel_id,$arr) {
 
 
 function comments_are_now_closed($item) {
-	if($item['comments_closed'] !== '0000-00-00 00:00:00') {
+	if($item['comments_closed'] !== NULL_DATE) {
 		$d = datetime_convert();
 		if($d > $item['comments_closed'])
 			return true;
@@ -448,7 +448,7 @@ function post_activity_item($arr) {
 function get_public_feed($channel,$params) {
 
 	$type      = 'xml';
-	$begin     = '0000-00-00 00:00:00';
+	$begin     = NULL_DATE;
 	$end       = '';
 	$start     = 0;
 	$records   = 40;
@@ -459,7 +459,7 @@ function get_public_feed($channel,$params) {
 		$params = array();
 
 	$params['type']      = ((x($params,'type'))      ? $params['type']          : 'xml');
-	$params['begin']     = ((x($params,'begin'))     ? $params['begin']         : '0000-00-00 00:00:00');
+	$params['begin']     = ((x($params,'begin'))     ? $params['begin']         : NULL_DATE);
 	$params['end']       = ((x($params,'end'))       ? $params['end']           : datetime_convert('UTC','UTC','now'));
 	$params['start']     = ((x($params,'start'))     ? $params['start']         : 0);
 	$params['records']   = ((x($params,'records'))   ? $params['records']       : 40);
@@ -758,14 +758,14 @@ function get_item_elements($x) {
 
 	$arr['expires']      = ((x($x,'expires') && $x['expires']) 
 								? datetime_convert('UTC','UTC',$x['expires']) 
-								: '0000-00-00 00:00:00');
+								: NULL_DATE);
 
 	$arr['commented']    = ((x($x,'commented') && $x['commented']) 
 								? datetime_convert('UTC','UTC',$x['commented']) 
 								: $arr['created']);
 	$arr['comments_closed']    = ((x($x,'comments_closed') && $x['comments_closed']) 
 								? datetime_convert('UTC','UTC',$x['comments_closed']) 
-								: '0000-00-00 00:00:00');
+								: NULL_DATE);
 
 	$arr['title']        = (($x['title'])          ? htmlspecialchars($x['title'],          ENT_COMPAT,'UTF-8',false) : '');
 
@@ -1003,7 +1003,7 @@ function encode_item($item) {
 	if($y = encode_item_flags($item))
 		$x['flags']       = $y;
 
-	if($item['comments_closed'] !== '0000-00-00 00:00:00')
+	if($item['comments_closed'] !== NULL_DATE)
 		$x['comments_closed'] = $item['comments_closed'];
 
 	$x['public_scope']    = $scope;
@@ -1242,8 +1242,8 @@ function get_mail_elements($x) {
 	$arr['title']        = (($x['title'])? htmlspecialchars($x['title'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
-	if((! array_key_exists('expires',$x)) || ($x['expires'] === '0000-00-00 00:00:00'))
-		$arr['expires'] = '0000-00-00 00:00:00';
+	if((! array_key_exists('expires',$x)) || ($x['expires'] === NULL_DATE))
+		$arr['expires'] = NULL_DATE;
 	else
 		$arr['expires']      = datetime_convert('UTC','UTC',$x['expires']);
 
@@ -1839,9 +1839,9 @@ function item_store($arr,$allow_exec = false) {
 	$arr['owner_xchan']   = ((x($arr,'owner_xchan'))   ? notags(trim($arr['owner_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
-	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : '0000-00-00 00:00:00');
+	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : NULL_DATE);
 	$arr['commented']     = ((x($arr,'commented')  !== false) ? datetime_convert('UTC','UTC',$arr['commented'])  : datetime_convert());
-	$arr['comments_closed'] = ((x($arr,'comments_closed')  !== false) ? datetime_convert('UTC','UTC',$arr['comments_closed'])  : '0000-00-00 00:00:00');
+	$arr['comments_closed'] = ((x($arr,'comments_closed')  !== false) ? datetime_convert('UTC','UTC',$arr['comments_closed'])  : NULL_DATE);
 
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
@@ -2248,7 +2248,7 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
 	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : $orig[0]['expires']);
 
-	if(array_key_exists('comments_closed',$arr) && $arr['comments_closed'] != '0000-00-00 00:00:00')
+	if(array_key_exists('comments_closed',$arr) && $arr['comments_closed'] != NULL_DATE)
 		$arr['comments_closed'] = datetime_convert('UTC','UTC',$arr['comments_closed']);
 	else
 		$arr['comments_closed'] = $orig[0]['comments_closed'];
@@ -3018,7 +3018,7 @@ function mail_store($arr) {
 	$arr['from_xchan']    = ((x($arr,'from_xchan'))  ? notags(trim($arr['from_xchan']))  : '');
 	$arr['to_xchan']   = ((x($arr,'to_xchan'))   ? notags(trim($arr['to_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
-	$arr['expires']       = ((x($arr,'expires') !== false) ? datetime_convert('UTC','UTC',$arr['expires']) : '0000-00-00 00:00:00');
+	$arr['expires']       = ((x($arr,'expires') !== false) ? datetime_convert('UTC','UTC',$arr['expires']) : NULL_DATE);
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
@@ -4076,7 +4076,7 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 	$result = array();
 	$mindate = datetime_convert('UTC','UTC',$mindate);
 	if(! $mindate)
-		$mindate = '0000-00-00 00:00:00';
+		$mindate = NULL_DATE;
 
 	$mindate = dbesc($mindate);
 
@@ -4092,7 +4092,7 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 		$sql_extra = item_permissions_sql($uid);
 	}
 
-	if($mindate != '0000-00-00 00:00:00') {
+	if($mindate != NULL_DATE) {
 		$sql_extra .= " and ( created > '$mindate' or edited > '$mindate' ) ";
 		$limit = "";
 	}

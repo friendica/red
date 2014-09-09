@@ -384,7 +384,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 				$next_birthday = datetime_convert('UTC','UTC',$j['profile']['next_birthday']);
 			}
 			else {
-				$next_birthday = '0000-00-00 00:00:00';
+				$next_birthday = NULL_DATE;
 			}
 
 			if($r) {

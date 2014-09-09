@@ -1042,7 +1042,7 @@ function advanced_profile(&$a) {
 
 		if($a->profile['with']) $profile['marital']['with'] = bbcode($a->profile['with']);
 
-		if(strlen($a->profile['howlong']) && $a->profile['howlong'] !== '0000-00-00 00:00:00') {
+		if(strlen($a->profile['howlong']) && $a->profile['howlong'] !== NULL_DATE) {
 				$profile['howlong'] = relative_date($a->profile['howlong'], t('for %1$d %2$s'));
 		}
 

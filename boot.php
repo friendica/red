@@ -50,9 +50,9 @@ define ( 'ZOT_REVISION',            1     );
 
 define ( 'DB_UPDATE_VERSION',       1129  );
 
-define ( 'EOL',                    '<br />' . "\r\n"     );
-define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
-
+define ( 'EOL',                    '<br />' . "\r\n"      );
+define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z'       );
+define ( 'NULL_DATE',              '0000-00-00 00:00:00'  );
 define ( 'TEMPLATE_BUILD_PATH',    'store/[data]/smarty3' );
 
 define ( 'DIRECTORY_MODE_NORMAL',      0x0000);  // This is technically DIRECTORY_MODE_TERTIARY, but it's the default, hence 0x0000

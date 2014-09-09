@@ -384,13 +384,13 @@ function item_post(&$a) {
 	}
 	
 
-	$expires = '0000-00-00 00:00:00';
+	$expires = NULL_DATE;
 
 	if(feature_enabled($profile_uid,'content_expire')) {
 		if(x($_REQUEST,'expire')) {
 			$expires = datetime_convert(date_default_timezone_get(),'UTC', $_REQUEST['expire']);
 			if($expires <= datetime_convert())
-				$expires = '0000-00-00 00:00:00';
+				$expires = NULL_DATE;
 		}
 	}
 

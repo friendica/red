@@ -700,7 +700,7 @@ function diaspora_request($importer,$xml) {
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
-		dbesc('0000-00-00 00:00:00'),
+		dbesc(NULL_DATE),
 		intval(($default_perms) ? 0 : ABOOK_FLAG_PENDING)
 	);
 		
