@@ -341,8 +341,9 @@ function poller_run($argv, $argc){
 	}
 
 	if($dirmode == DIRECTORY_MODE_SECONDARY || $dirmode == DIRECTORY_MODE_PRIMARY) {
-		$r = q("select distinct ud_addr, updates.* from updates where not ( ud_flags & %d ) and ud_addr != '' and ( ud_last = NULL_DATE OR ud_last > UTC_TIMESTAMP() - INTERVAL 7 DAY ) group by ud_addr ",
-			intval(UPDATE_FLAGS_UPDATED)
+		$r = q("select distinct ud_addr, updates.* from updates where not ( ud_flags & %d ) and ud_addr != '' and ( ud_last = '%s' OR ud_last > UTC_TIMESTAMP() - INTERVAL 7 DAY ) group by ud_addr ",
+			intval(UPDATE_FLAGS_UPDATED),
+			dbesc(NULL_DATE)
 		);
 		if($r) {
 			foreach($r as $rr) {
