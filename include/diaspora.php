@@ -939,7 +939,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 	}
 	logger('diaspora_reshare: source: ' . $x['body']);
 
-	$source_xml = parse_xml_string($x,false);
+	$source_xml = parse_xml_string($x['body'],false);
 
 	if($source_xml->post->status_message) {
 		$body = diaspora2bb($source_xml->post->status_message->raw_message);
@@ -987,7 +987,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 		. "' link='" . $orig_url
 		. "' posted='" . datetime_convert('UTC','UTC',unxmlify($sourcexml->post->status_message->created_at))
 		. "' message_id='" . unxmlify($source_xml->post->status_message->guid)
- 		. "]" . $body . "[/share]";
+ 		. "]" . $newbody . "[/share]";
 
 
 	$created = unxmlify($xml->created_at);
