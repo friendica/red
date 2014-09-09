@@ -1684,36 +1684,29 @@ function diaspora_photo($importer,$xml,$msg,$attempt=1) {
 		return 202;
 	}
 
-	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `mid` = '%s' LIMIT 1",
 		intval($importer['channel_id']),
 		dbesc($status_message_guid)
 	);
-	if(! count($r)) {
-		if($attempt <= 3) {
-			q("INSERT INTO dsprphotoq (uid, msg, attempt) VALUES (%d, '%s', %d)",
-			   intval($importer['channel_id']),
-			   dbesc(serialize($msg)),
-			   intval($attempt + 1)
-			);
-		}
+	if(! $r) {
 		logger('diaspora_photo: attempt = ' . $attempt . '; status message not found: ' . $status_message_guid . ' for photo: ' . $guid);
 		return;
 	}
 
-	$parent_item = $r[0];
+//	$parent_item = $r[0];
 
-	$link_text = '[img]' . $remote_photo_path . $remote_photo_name . '[/img]' . "\n";
+//	$link_text = '[img]' . $remote_photo_path . $remote_photo_name . '[/img]' . "\n";
 
-	$link_text = scale_external_images($link_text, true,
-									   array($remote_photo_name, 'scaled_full_' . $remote_photo_name));
+//	$link_text = scale_external_images($link_text, true,
+//									   array($remote_photo_name, 'scaled_full_' . $remote_photo_name));
 
-	if(strpos($parent_item['body'],$link_text) === false) {
-		$r = q("update item set `body` = '%s', `visible` = 1 where `id` = %d and `uid` = %d",
-			dbesc($link_text . $parent_item['body']),
-			intval($parent_item['id']),
-			intval($parent_item['uid'])
-		);
-	}
+//	if(strpos($parent_item['body'],$link_text) === false) {
+//		$r = q("update item set `body` = '%s', `visible` = 1 where `id` = %d and `uid` = %d",
+//			dbesc($link_text . $parent_item['body']),
+//			intval($parent_item['id']),
+//			intval($parent_item['uid'])
+//		);
+//	}
 
 	return;
 }
@@ -1750,7 +1743,7 @@ function diaspora_like($importer,$xml,$msg) {
 		return 202;
 	}
 
-	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `mid` = '%s' LIMIT 1",
 		intval($importer['channel_id']),
 		dbesc($parent_guid)
 	);
@@ -1761,7 +1754,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 	$parent_item = $r[0];
 
-	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `guid` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `item` WHERE `uid` = %d AND `mid` = '%s' LIMIT 1",
 		intval($importer['channel_id']),
 		dbesc($guid)
 	);
