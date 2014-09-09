@@ -1776,6 +1776,13 @@ function diaspora_like($importer,$xml,$msg) {
 			return;
 		}
 	}
+
+	$i = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($parent_item['author_xchan'])
+	);
+	if($i)
+		$item_author = $i[0];
+
 	// Note: I don't think "Like" objects with positive = "false" are ever actually used
 	// It looks like "RelayableRetractions" are used for "unlike" instead
 	if($positive === 'false') {
@@ -1808,12 +1815,12 @@ function diaspora_like($importer,$xml,$msg) {
 		$parent_author_signature = base64_decode($parent_author_signature);
 
 		if(! rsa_verify($signed_data,$parent_author_signature,$key,'sha256')) {
-			if (intval(get_config('system','ignore_diaspora_like_signature')))
+//			if (intval(get_config('system','ignore_diaspora_like_signature')))
 				logger('diaspora_like: top-level owner verification failed. Proceeding anyway.');
-			else {
-				logger('diaspora_like: top-level owner verification failed.');
-				return;
-			}
+//			else {
+//				logger('diaspora_like: top-level owner verification failed.');
+//				return;
+//			}
 		}
 	}
 	else {
@@ -1825,12 +1832,12 @@ function diaspora_like($importer,$xml,$msg) {
 		$author_signature = base64_decode($author_signature);
 
 		if(! rsa_verify($signed_data,$author_signature,$key,'sha256')) {
-			if (intval(get_config('system','ignore_diaspora_like_signature')))
+//			if (intval(get_config('system','ignore_diaspora_like_signature')))
 				logger('diaspora_like: like creator verification failed. Proceeding anyway');
-			else {
-				logger('diaspora_like: like creator verification failed.');
-				return;
-			}
+//			else {
+//				logger('diaspora_like: like creator verification failed.');
+//				return;
+//			}
 		}
 	}
 
@@ -1853,93 +1860,75 @@ function diaspora_like($importer,$xml,$msg) {
 	$uri = $diaspora_handle . ':' . $guid;
 
 	$activity = ACTIVITY_LIKE;
-	$post_type = (($parent_item['resource-id']) ? t('photo') : t('status'));
-	$objtype = (($parent_item['resource-id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
-	$link = xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $parent_item['id'] . '" />' . "\n") ;
+
+	$post_type = (($parent_item['resource_type'] === 'photo') ? t('photo') : t('status'));
+
+	$links = array(array('rel' => 'alternate','type' => 'text/html', 'href' => $parent_item['plink']));
+	$objtype = (($parent_item['resource_type'] === 'photo') ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE );
+
 	$body = $parent_item['body'];
 
-	$obj = <<< EOT
 
-	<object>
-		<type>$objtype</type>
-		<local>1</local>
-		<id>{$parent_item['uri']}</id>
-		<link>$link</link>
-		<title></title>
-		<content>$body</content>
-	</object>
-EOT;
+	$object = json_encode(array(
+		'type'    => $post_type,
+		'id'	  => $parent_item['mid'],
+		'parent'  => (($parent_item['thr_parent']) ? $parent_item['thr_parent'] : $parent_item['parent_mid']),
+		'link'	=> $links,
+		'title'   => $parent_item['title'],
+		'content' => $parent_item['body'],
+		'created' => $parent_item['created'],
+		'edited'  => $parent_item['edited'],
+		'author'  => array(
+			'name'	 => $item_author['xchan_name'],
+			'address'  => $item_author['xchan_addr'],
+			'guid'	 => $item_author['xchan_guid'],
+			'guid_sig' => $item_author['xchan_guid_sig'],
+			'link'	 => array(
+				array('rel' => 'alternate', 'type' => 'text/html', 'href' => $item_author['xchan_url']),
+				array('rel' => 'photo', 'type' => $item_author['xchan_photo_mimetype'], 'href' => $item_author['xchan_photo_m'])),
+			),
+		));
+
+
 	$bodyverb = t('%1$s likes %2$s\'s %3$s');
 
 	$arr = array();
 
 	$arr['uri'] = $uri;
 	$arr['uid'] = $importer['channel_id'];
-	$arr['guid'] = $guid;
-	$arr['network']  = NETWORK_DIASPORA;
-	$arr['contact-id'] = $contact['id'];
-	$arr['type'] = 'activity';
-	$arr['wall'] = $parent_item['wall'];
-	$arr['gravity'] = GRAVITY_LIKE;
-	$arr['parent'] = $parent_item['id'];
-	$arr['parent-uri'] = $parent_item['uri'];
-
-	$arr['owner-name'] = $parent_item['name'];
-	$arr['owner-link'] = $parent_item['url'];
-	//$arr['owner-avatar'] = $parent_item['thumb'];
-	$arr['owner-avatar'] = ((x($parent_item,'thumb')) ? $parent_item['thumb'] : $parent_item['photo']);
-
-	$arr['author-name'] = $person['name'];
-	$arr['author-link'] = $person['url'];
-	$arr['author-avatar'] = ((x($person,'thumb')) ? $person['thumb'] : $person['photo']);
+	$arr['aid'] = $importer['channel_account_id'];
+	$arr['mid'] = $guid;
+	$arr['parent_mid'] = $parent_item['mid'];
+	$arr['owner_xchan'] = $parent_item['owner_xchan'];
+	$arr['author_xchan'] = $person['xchan_hash'];
 
 	$ulink = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
 	$alink = '[url=' . $parent_item['author-link'] . ']' . $parent_item['author-name'] . '[/url]';
-	//$plink = '[url=' . $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $parent_item['id'] . ']' . $post_type . '[/url]';
-	$plink = '[url='.$a->get_baseurl().'/display/'.$guid.']'.$post_type.'[/url]';
+	$plink = '[url='. z_root() .'/display/'.$guid.']'.$post_type.'[/url]';
 	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink );
 
 	$arr['app']  = 'Diaspora';
 
-	$arr['private'] = $parent_item['private'];
+	$arr['item_private'] = $parent_item['item_private'];
 	$arr['verb'] = $activity;
 	$arr['object-type'] = $objtype;
-	$arr['object'] = $obj;
-	$arr['visible'] = 1;
-	$arr['unseen'] = 1;
-	$arr['last-child'] = 0;
+	$arr['object'] = $object;
 
 	if(! $parent_author_signature) {
 		$datarray['diaspora_meta'] = array('signer' => $diaspora_handle, 'body' => $text, 
 		'signed_text' => $signed_data, 'signature' => base64_encode($author_signature));
 	}
 
+	$x = item_store($arr);
 
-	$message_id = item_store($arr);
-
-
-	//if($message_id) {
-	//	q("update item set plink = '%s' where id = %d",
-	//		//dbesc($a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $message_id),
-	//		dbesc($a->get_baseurl().'/display/'.$guid),
-	//		intval($message_id)
-	//	);
-	//}
-
-	if(! $parent_author_signature) {
-		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-			intval($message_id),
-			dbesc($signed_data),
-			dbesc(base64_encode($author_signature)),
-			dbesc($diaspora_handle)
-		);
-	}
+	if($x)
+		$message_id = $x['item_id'];
 
 	// if the message isn't already being relayed, notify others
 	// the existence of parent_author_signature means the parent_author or owner
 	// is already relaying. The parent_item['origin'] indicates the message was created on our system
 
-	if(($parent_item['origin']) && (! $parent_author_signature))
+	if(($parent_item['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature))
 		proc_run('php','include/notifier.php','comment-import',$message_id);
 
 	return;
