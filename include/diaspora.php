@@ -939,23 +939,13 @@ function diaspora_reshare($importer,$xml,$msg) {
 	}
 	logger('diaspora_reshare: source: ' . $x['body']);
 
-	$x = str_replace(array('<activity_streams-photo>','</activity_streams-photo>'),array('<asphoto>','</asphoto>'),$x['body']);
-
 	$source_xml = parse_xml_string($x,false);
 
-	if(strlen($source_xml->post->asphoto->objectId) && ($source_xml->post->asphoto->objectId != 0) && ($source_xml->post->asphoto->image_url)) {
-		$body = '[url=' . notags(unxmlify($source_xml->post->asphoto->image_url)) . '][img]' . notags(unxmlify($source_xml->post->asphoto->objectId)) . '[/img][/url]' . "\n";
-		$body = scale_external_images($body,false);
-	}
-	elseif($source_xml->post->asphoto->image_url) {
-		$body = '[img]' . notags(unxmlify($source_xml->post->asphoto->image_url)) . '[/img]' . "\n";
-		$body = scale_external_images($body);
-	}
-	elseif($source_xml->post->status_message) {
+	if($source_xml->post->status_message) {
 		$body = diaspora2bb($source_xml->post->status_message->raw_message);
 
 		// Checking for embedded pictures
-		if($source_xml->post->status_message->photo->remote_photo_path AND
+		if($source_xml->post->status_message->photo->remote_photo_path &&
 			$source_xml->post->status_message->photo->remote_photo_name) {
 
 			$remote_photo_path = notags(unxmlify($source_xml->post->status_message->photo->remote_photo_path));
@@ -985,12 +975,19 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 	$person = find_diaspora_person_by_handle($orig_author);
 
-	/*if(is_array($person) && x($person,'name') && x($person,'url'))
-		$details = '[url=' . $person['url'] . ']' . $person['name'] . '[/url]';
-	else
-		$details = $orig_author;
+	if($person) {
+		$orig_author_name = $person['xchan_name'];
+		$orig_author_link = $person['xchan_url'];
+		$orig_author_photo = $person['xchan_photo_m'];
+	}
 
-	$prefix = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8') . $details . "\n";*/
+	$newbody = "[share author='" . urlencode($orig_author_name) 
+		. "' profile='" . $orig_author_link 
+		. "' avatar='" . $orig_author_photo 
+		. "' link='" . $orig_url
+		. "' posted='" . datetime_convert('UTC','UTC',unxmlify($sourcexml->post->status_message->created_at))
+		. "' message_id='" . unxmlify($source_xml->post->status_message->guid)
+ 		. "]" . $body . "[/share]";
 
 
 	$created = unxmlify($xml->created_at);
@@ -1000,7 +997,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 	$str_tags = '';
 
-	$tags = get_tags($body);
+	$tags = get_tags($newbody);
 
 
 	if(count($tags)) {
@@ -1014,13 +1011,13 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 				// don't link tags that are already embedded in links
 
-				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$body))
+				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$newbody))
 					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$body))
+				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$newbody))
 					continue;
 
 				$basetag = str_replace('_',' ',substr($tag,1));
-				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
+				$newbody = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$newbody);
 
 				$datarray['term'][] = array(
 					'uid'   => $importer['channel_id'],
@@ -1033,7 +1030,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 		}
 	}
 
-	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
+	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$newbody,$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
 			$datarray['term'][] = array(
@@ -1055,9 +1052,9 @@ function diaspora_reshare($importer,$xml,$msg) {
 	$datarray['item_private'] = $private;
 	$datarray['plink'] = $plink;
 	$datarray['owner_xchan'] = $contact['xchan_hash'];
-	$datarray['author_xchan'] = $person['xchan_hash'];
+	$datarray['author_xchan'] = $contact['xchan_hash'];
 
-	$datarray['body'] = $body;
+	$datarray['body'] = $newbody;
 	$datarray['app']  = 'Diaspora';
 
 
