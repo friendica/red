@@ -132,6 +132,35 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 }
 
 
+/**
+ * @function z_fetch_url
+ * @param string $url
+ *    URL to fetch
+ * @param mixed $params
+ *   The full data to post in a HTTP "POST" operation. To post a file, 
+ *   prepend a filename with @ and use the full path. The filetype can
+ *   be explicitly specified by following the filename with the type in 
+ *   the format ';type=mimetype'. This parameter can either be passed 
+ *   as a urlencoded string like 'para1=val1&para2=val2&...' or as an 
+ *   array with the field name as key and field data as value. If value 
+ *   is an array, the Content-Type header will be set to multipart/form-data. 
+ *   As of PHP 5.2.0, value must be an array if files are passed to this 
+ *   option with the @ prefix. As of PHP 5.5.0, the @ prefix is deprecated 
+ *   and files can be sent using CURLFile.
+ * @param int $redirects = 0
+ *    internal use, recursion counter
+ * @param array $opts (optional parameters)
+ *    'accept_content' => supply Accept: header with 'accept_content' as the value
+ *    'timeout' => int seconds, default system config value or 60 seconds
+ *    'http_auth' => username:password
+ *    'novalidate' => do not validate SSL certs, default is to validate using our CA list
+ *    
+ * @returns array
+ *    'return_code' => HTTP return code or 0 if timeout or failure
+ *    'success' => boolean true (if HTTP 2xx result) or false
+ *    'header' => HTTP headers
+ *    'body' => fetched content
+ */
 
 
 function z_post_url($url,$params, $redirects = 0, $opts = array()) {
