@@ -1335,7 +1335,7 @@ function get_atom_elements($feed,$item,&$author) {
 		$author['author_link'] = unxmlify($feed->get_permalink());
 	}
 
-	$res['mid'] = unxmlify($item->get_id());
+	$res['mid'] = base64url_encode(unxmlify($item->get_id()));
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
 	$res['plink'] = unxmlify($item->get_link(0));
@@ -3169,7 +3169,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 			if($deleted && is_array($contact)) {
 				$r = q("SELECT * from item where mid = '%s' and author_xchan = '%s' and uid = %d limit 1",
-					dbesc($mid),
+					dbesc(base64url_encode($mid)),
 					dbesc($contact['xchan_hash']),
 					intval($importer['channel_id'])
 				);
@@ -3178,7 +3178,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 					$item = $r[0];
 
 					if(! ($item['item_restrict'] & ITEM_DELETED)) {
-						logger('consume_feed: deleting item ' . $item['id'] . ' mid=' . $item['mid'], LOGGER_DEBUG);
+						logger('consume_feed: deleting item ' . $item['id'] . ' mid=' . base64url_decode($item['mid']), LOGGER_DEBUG);
 						drop_item($item['id'],false);
 					}
 				}	
@@ -3197,14 +3197,14 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 		foreach($items as $item) {
 
 			$is_reply = false;
-			$item_id = $item->get_id();
+			$item_id = base64url_encode($item->get_id());
 
 			logger('consume_feed: processing ' . $item_id, LOGGER_DEBUG);
 
 			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
-				$parent_mid = $rawthread[0]['attribs']['']['ref'];
+				$parent_mid = base64url_encode($rawthread[0]['attribs']['']['ref']);
 			}
 
 			if($is_reply) {
@@ -3215,7 +3215,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 				// Have we seen it? If not, import it.
 
-				$item_id  = $item->get_id();
+				$item_id  = base64url_encode($item->get_id());
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
@@ -3266,7 +3266,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 				// Head post of a conversation. Have we seen it? If not, import it.
 
-				$item_id  = $item->get_id();
+				$item_id  = base64url_encode($item->get_id());
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
@@ -3337,8 +3337,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 function update_feed_item($uid,$datarray) {
 
-	logger('update_feed_item: ' . $uid . ' ' . print_r($datarray,true), LOGGER_DATA);
-
+	logger('update_feed_item: not implemented! ' . $uid . ' ' . print_r($datarray,true), LOGGER_DATA);
 
 }
 
