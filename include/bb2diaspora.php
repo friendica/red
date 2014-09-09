@@ -91,7 +91,7 @@ function diaspora_mention_callback($matches) {
 	if(! $link)
 		$link = 'https://' . $matches[3] . '/u/' . $matches[2];
 
-	return '@[url=' . $link . ']' . trim($matches[1]) . '[/url]';
+	return '@[url=' . $link . ']' . trim($matches[1]) . ((substr($mentions[0],-1,1) === '+') ? '+' : '') . '[/url]' ;
 
 }
 
@@ -119,6 +119,8 @@ function diaspora2bb($s,$use_zrl = false) {
 
 //	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
 
+	// first try plustags
+	$s = preg_replace_callback('/\@\{(.+?)\; (.+?)\@(.+?)\}\+/','diaspora_mention_callback',$s);
 	$s = preg_replace_callback('/\@\{(.+?)\; (.+?)\@(.+?)\}/','diaspora_mention_callback',$s);
 
 	// Escaping the hash tags - doesn't always seem to work
