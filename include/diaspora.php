@@ -708,7 +708,7 @@ function diaspora_request($importer,$xml) {
 	if($r) {
 		logger("New Diaspora introduction received for {$importer['channel_name']}");
 
-		$new_connection = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and abook_xchan = '%s' order by abook_created desc limit 1",
+		$new_connection = q("select * from abook left join xchan on abook_xchan = xchan_hash left join hubloc on hubloc_hash = xchan_hash where abook_channel = %d and abook_xchan = '%s' order by abook_created desc limit 1",
 			intval($importer['channel_id']),
 			dbesc($ret['xchan_hash'])
 		);
@@ -723,7 +723,7 @@ function diaspora_request($importer,$xml) {
 
 			if($default_perms) {
 				// Send back a sharing notification to them
-				diaspora_share($importer['channel_id'],$new_connection[0]);
+				diaspora_share($importer,$new_connection[0]);
 		
 			}
 		}
@@ -2156,9 +2156,9 @@ function diaspora_profile($importer,$xml,$msg) {
 
 }
 
-function diaspora_share($me,$contact) {
+function diaspora_share($owner,$contact) {
 	$a = get_app();
-	$myaddr = $me['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
 	if(! array_key_exists('xchan_hash',$contact)) {
 		$c = q("select * from xchan left join hubloc on xchan_hash = hubloc_hash where xchan_hash = '%s' limit 1",
@@ -2179,23 +2179,23 @@ function diaspora_share($me,$contact) {
 		'$recipient' => $theiraddr
 	));
 
-	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['channel_prvkey'],$contact['xchan_pubkey'])));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['channel_prvkey'],$contact['xchan_pubkey'])));
 	return(diaspora_transmit($owner,$contact,$slap, false));
 }
 
-function diaspora_unshare($me,$contact) {
+function diaspora_unshare($owner,$contact) {
 
 	$a = get_app();
-	$myaddr = $me['channel_address'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['channel_address'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
 	$tpl = get_markup_template('diaspora_retract.tpl');
 	$msg = replace_macros($tpl, array(
-		'$guid'   => $me['channel_guid'],
+		'$guid'   => $owner['channel_guid'],
 		'$type'   => 'Person',
 		'$handle' => $myaddr
 	));
 
-	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$me,$contact,$me['channel_prvkey'],$contact['xchan_pubkey'])));
+	$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($msg,$owner,$contact,$owner['channel_prvkey'],$contact['xchan_pubkey'])));
 
 	return(diaspora_transmit($owner,$contact,$slap, false));
 }
