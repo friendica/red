@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-05 00:03-0700\n"
-"PO-Revision-Date: 2014-09-10 14:02+0000\n"
+"PO-Revision-Date: 2014-09-10 13:48+0000\n"
 "Last-Translator: jeroenpraat <jeroenpraat@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -3695,7 +3695,7 @@ msgstr "Wijzigen"
 
 #: ../../mod/achievements.php:34
 msgid "Some blurb about what to do when you're new here"
-msgstr "Welkom op de RedMatrix. Klik op de tab ontdekken of klik rechtsboven op de <a href=\"directory\">kanalengids</a>, om kanalen te vinden. Rechtsboven vind je ook onze <a href=\"directory\">apps</a>, waar je vrijwel alles van de RedMatrix kan vinden. Voor <a href=\"directory\">hulp</a> met de RedMatrix klik je op het vraagteken of als je meer vragen hebt stel je die in het <a href=\"https://zothost.me/channel/support\">supportkanaal</a> (liefst in het Engels)."
+msgstr "Welkom op de RedMatrix. Klik op de tab ontdekken of klik rechtsboven op de <a href="directory">kanalengids</a>, om kanalen te vinden. Rechtsboven vind je ook onze <a href="directory">apps</a>, waar je vrijwel alles van de RedMatrix kan vinden. Voor <a href="directory">hulp</a> met de RedMatrix klik je op het vraagteken of als je meer vragen hebt stel je die in het <a href="https://zothost.me/channel/support">supportkanaal</a> (liefst in het Engels)."
 
 #: ../../mod/ping.php:237
 msgid "sent you a private message"
