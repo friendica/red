@@ -1804,7 +1804,15 @@ function diaspora_like($importer,$xml,$msg) {
 	     who sent the salmon
 	*/
 
-	$signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
+//	$signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
+
+	// 2014-09-10 let's try this: signatures are failing. I'll try and make a signable string from
+	// the parameters in the order they were presented in the post. This is how D* creates the signable string.
+
+
+	$signed_data = $positive . ';' . $guid . ';' . $target_type . ';' . $parent_guid . ';' . $diaspora_handle;
+
+
 
 	$key = $msg['key'];
 
@@ -1841,6 +1849,9 @@ function diaspora_like($importer,$xml,$msg) {
 //			}
 		}
 	}
+	
+
+	logger('diaspora_like: signature check complete.',LOGGER_DEBUG);
 
 	// Phew! Everything checks out. Now create an item.
 
