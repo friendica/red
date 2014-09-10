@@ -63,15 +63,15 @@ function account_verify_password($email,$pass) {
 
 
 	if($record['account_flags'] & ACCOUNT_UNVERIFIED)
-		logger('Account is unverified.');
+		logger('Account is unverified. account_flags = ' . $record['account_flags']);
 	if($record['account_flags'] & ACCOUNT_BLOCKED)
-		logger('Account is blocked.');
+		logger('Account is blocked. account_flags = ' . $record['account_flags']);
 	if($record['account_flags'] & ACCOUNT_EXPIRED)
-		logger('Account is expired.');
+		logger('Account is expired. account_flags = ' . $record['account_flags']);
 	if($record['account_flags'] & ACCOUNT_REMOVED)
-		logger('Account is removed.');
+		logger('Account is removed. account_flags = ' . $record['account_flags']);
 	if($record['account_flags'] & ACCOUNT_PENDING)
-		logger('Account is pending.');
+		logger('Account is pending. account_flags = ' . $record['account_flags']);
 
 	// Also log failed logins to a separate auth log to reduce overhead for server side intrusion prevention
 	$authlog = get_config('system', 'authlog');
