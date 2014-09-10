@@ -79,7 +79,7 @@ function share_unshield($m) {
 
 function diaspora_mention_callback($matches) {
 
-	$webbie = $matches[2];
+	$webbie = $matches[2] . '@' . $matches[3];
 	$link = '';
 	if($webbie) {
 		$r = q("select * from hubloc left join xchan on hubloc_hash = xchan_hash where hubloc_addr = '%s' limit 1",
@@ -99,7 +99,10 @@ function diaspora_mention_callback($matches) {
 	if(! $link)
 		$link = 'https://' . $matches[3] . '/u/' . $matches[2];
 
-	return '@[url=' . $link . ']' . trim($matches[1]) . ((substr($matches[0],-1,1) === '+') ? '+' : '') . '[/url]' ;
+	if($r && $r[0]['hubloc_network'] === 'zot')
+		return '@[zrl=' . $link . ']' . trim($matches[1]) . ((substr($matches[0],-1,1) === '+') ? '+' : '') . '[/zrl]' ;
+	else
+		return '@[url=' . $link . ']' . trim($matches[1]) . ((substr($matches[0],-1,1) === '+') ? '+' : '') . '[/url]' ;
 
 }
 
