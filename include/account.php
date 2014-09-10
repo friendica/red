@@ -513,8 +513,8 @@ function downgrade_accounts() {
 	$r = q("select * from account where not ( account_flags & %d ) 
 		and account_expires != '%s' 
 		and account_expires < UTC_TIMESTAMP() ",
-		dbesc(NULL_DATE),
-		intval(ACCOUNT_EXPIRED)
+		intval(ACCOUNT_EXPIRED),
+		dbesc(NULL_DATE)
 	);
 
 	if(! $r)
