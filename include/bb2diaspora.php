@@ -85,13 +85,21 @@ function diaspora_mention_callback($matches) {
 		$r = q("select * from hubloc left join xchan on hubloc_hash = xchan_hash where hubloc_addr = '%s' limit 1",
 			dbesc($webbie)
 		);
+		if(! $r) {
+			$x = discover_by_webbie($webbie);
+			if($x) {
+				$r = q("select * from hubloc left join xchan on hubloc_hash = xchan_hash where hubloc_addr = '%s' limit 1",
+					dbesc($webbie)
+				);
+			}
+		}
 		if($r)
 			$link = $r[0]['xchan_url'];
 	}
 	if(! $link)
 		$link = 'https://' . $matches[3] . '/u/' . $matches[2];
 
-	return '@[url=' . $link . ']' . trim($matches[1]) . ((substr($mentions[0],-1,1) === '+') ? '+' : '') . '[/url]' ;
+	return '@[url=' . $link . ']' . trim($matches[1]) . ((substr($matches[0],-1,1) === '+') ? '+' : '') . '[/url]' ;
 
 }
 
