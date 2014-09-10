@@ -706,21 +706,23 @@ function updateConvItems(mode,data) {
 	}
 
 	function justifyPhotos() {
-		loadingPage = true;
-		$('#photo-album-contents').justifiedGallery({
-			lastRow : 'nojustify',
-			captions: true,
-			margins: 3,
-			rowHeight : 150,
-			sizeRangeSuffixes : {
-				'lt100': '',
-				'lt240': '',
-				'lt320': '',
-				'lt500': '',
-				'lt640': '',
-				'lt1024': ''
-			}
-		}).on('jg.complete', function(e){ loadingPage = false; });
+		if($('#photo-album-contents').length > 0) {
+			loadingPage = true;
+			$('#photo-album-contents').justifiedGallery({
+				lastRow : 'nojustify',
+				captions: true,
+				margins: 3,
+				rowHeight : 150,
+				sizeRangeSuffixes : {
+					'lt100': '',
+					'lt240': '',
+					'lt320': '',
+					'lt500': '',
+					'lt640': '',
+					'lt1024': ''
+				}
+			}).on('jg.complete', function(e){ loadingPage = false; });
+		}
 	}
 
 	function notify_popup_loader(notifyType) {
