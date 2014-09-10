@@ -1805,6 +1805,7 @@ function diaspora_like($importer,$xml,$msg) {
 	*/
 
 	$signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
+
 	$key = $msg['key'];
 
 	if($parent_author_signature) {
@@ -1894,7 +1895,6 @@ function diaspora_like($importer,$xml,$msg) {
 
 	$arr = array();
 
-	$arr['uri'] = $uri;
 	$arr['uid'] = $importer['channel_id'];
 	$arr['aid'] = $importer['channel_account_id'];
 	$arr['mid'] = $guid;
