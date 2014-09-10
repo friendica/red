@@ -3,7 +3,7 @@
 <a id="photo-top-upload-link" href="{{$upload.1}}">{{$upload.0}}</a>
 {{/if}}
 
-<div id="photo-album-contents">
+<div id="photo-album-contents" class="photos">
 {{foreach $photos as $photo}}
 	{{include file="photo_top.tpl"}}
 {{/foreach}}
