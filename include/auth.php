@@ -60,6 +60,19 @@ function account_verify_password($email,$pass) {
 	}
 	$error = 'password failed for ' . $email;
 	logger($error);
+
+
+	if($record['account_flags'] & ACCOUNT_UNVERIFIED)
+		logger('Account is unverified.');
+	if($record['account_flags'] & ACCOUNT_BLOCKED)
+		logger('Account is blocked.');
+	if($record['account_flags'] & ACCOUNT_EXPIRED)
+		logger('Account is expired.');
+	if($record['account_flags'] & ACCOUNT_REMOVED)
+		logger('Account is removed.');
+	if($record['account_flags'] & ACCOUNT_PENDING)
+		logger('Account is pending.');
+
 	// Also log failed logins to a separate auth log to reduce overhead for server side intrusion prevention
 	$authlog = get_config('system', 'authlog');
 	if ($authlog)
