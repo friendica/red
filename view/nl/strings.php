@@ -871,7 +871,7 @@ $a->strings["Menu item deleted."] = "Menu-item verwijderd.";
 $a->strings["Menu item could not be deleted."] = "Menu-item kon niet worden verwijderd.";
 $a->strings["Edit Menu Element"] = "Menu-element bewerken";
 $a->strings["Modify"] = "Wijzigen";
-$a->strings["Some blurb about what to do when you're new here"] = "Welkom op de RedMatrix. Klik op de tab ontdekken of klik rechtsboven op de <a href="directory">kanalengids</a>, om kanalen te vinden. Rechtsboven vind je ook onze <a href="directory">apps</a>, waar je vrijwel alles van de RedMatrix kan vinden. Voor <a href="directory">hulp</a> met de RedMatrix klik je op het vraagteken of als je meer vragen hebt stel je die in het <a href="https://zothost.me/channel/support">supportkanaal</a> (liefst in het Engels).";
+$a->strings["Some blurb about what to do when you're new here"] = "Welkom op de RedMatrix. Klik op de tab ontdekken of klik rechtsboven op de <a href=\"directory\">kanalengids</a>, om kanalen te vinden. Rechtsboven vind je ook onze <a href=\"directory\">apps</a>, waar je vrijwel alles van de RedMatrix kan vinden. Voor <a href=\"directory\">hulp</a> met de RedMatrix klik je op het vraagteken of als je meer vragen hebt stel je die in het <a href=\"https://zothost.me/channel/support\">supportkanaal</a> (liefst in het Engels).";
 $a->strings["sent you a private message"] = "stuurde jou een privébericht";
 $a->strings["added your channel"] = "voegde jouw kanaal toe";
 $a->strings["posted an event"] = "plaatste een gebeurtenis";
