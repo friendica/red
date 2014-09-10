@@ -864,6 +864,20 @@ function diaspora_post($importer,$xml,$msg) {
 		}
 	}
 
+	$cnt = preg_match_all('/@\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $mtch[2],
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+
 	// this won't work for Friendica or Redmatrix but it's probably the best we can do.
 	$plink = 'https://'.substr($diaspora_handle,strpos($diaspora_handle,'@')+1).'/posts/'.$guid;
 
