@@ -1783,10 +1783,7 @@ function diaspora_like($importer,$xml,$msg) {
 		// It looks like "RelayableRetractions" are used for "unlike" instead
 		if($positive === 'false') {
 			logger('diaspora_like: received a like with positive set to "false"...ignoring');
-/*			q("UPDATE `item` SET `deleted` = 1 WHERE `id` = %d AND `uid` = %d",
-				intval($r[0]['id']),
-				intval($importer['channel_id'])
-			);*/
+			// perhaps call drop_item()
 			// FIXME--actually don't unless it turns out that Diaspora does indeed send out "false" likes
 			//  send notification via proc_run()
 			return;
@@ -1820,15 +1817,11 @@ function diaspora_like($importer,$xml,$msg) {
 	     who sent the salmon
 	*/
 
-//	$signed_data = $guid . ';' . $target_type . ';' . $parent_guid . ';' . $positive . ';' . $diaspora_handle;
-
 	// 2014-09-10 let's try this: signatures are failing. I'll try and make a signable string from
 	// the parameters in the order they were presented in the post. This is how D* creates the signable string.
 
 
 	$signed_data = $positive . ';' . $guid . ';' . $target_type . ';' . $parent_guid . ';' . $diaspora_handle;
-
-
 
 	$key = $msg['key'];
 
@@ -1840,12 +1833,12 @@ function diaspora_like($importer,$xml,$msg) {
 		$parent_author_signature = base64_decode($parent_author_signature);
 
 		if(! rsa_verify($signed_data,$parent_author_signature,$key,'sha256')) {
-//			if (intval(get_config('system','ignore_diaspora_like_signature')))
+			if (intval(get_config('system','ignore_diaspora_like_signature')))
 				logger('diaspora_like: top-level owner verification failed. Proceeding anyway.');
-//			else {
-//				logger('diaspora_like: top-level owner verification failed.');
-//				return;
-//			}
+			else {
+				logger('diaspora_like: top-level owner verification failed.');
+				return;
+			}
 		}
 	}
 	else {
@@ -1857,16 +1850,15 @@ function diaspora_like($importer,$xml,$msg) {
 		$author_signature = base64_decode($author_signature);
 
 		if(! rsa_verify($signed_data,$author_signature,$key,'sha256')) {
-//			if (intval(get_config('system','ignore_diaspora_like_signature')))
+			if (intval(get_config('system','ignore_diaspora_like_signature')))
 				logger('diaspora_like: like creator verification failed. Proceeding anyway');
-//			else {
-//				logger('diaspora_like: like creator verification failed.');
-//				return;
-//			}
+			else {
+				logger('diaspora_like: like creator verification failed.');
+				return;
+			}
 		}
 	}
 	
-
 	logger('diaspora_like: signature check complete.',LOGGER_DEBUG);
 
 	// Phew! Everything checks out. Now create an item.
@@ -2577,7 +2569,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		if($relay_retract)
 			$sender_signed_text = $item['mid'] . ';' . $target_type;
 		elseif($like)
-			$sender_signed_text = $item['mid'] . ';' . $target_type . ';' . $parent['mid'] . ';' . $positive . ';' . $handle;
+			$sender_signed_text = $positive . ';' . $item['mid'] . ';' . $target_type . ';' . $parent['mid'] . ';' . $handle;
 		else
 			$sender_signed_text = $item['mid'] . ';' . $parent['mid'] . ';' . $text . ';' . $handle;
 	}
