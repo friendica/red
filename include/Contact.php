@@ -323,7 +323,7 @@ function mark_orphan_hubsxchans() {
 		return;
 
     $r = q("update hubloc set hubloc_status = (hubloc_status | %d) where not (hubloc_status & %d) 
-		and hubloc_network != 'zot' and hubloc_connected < utc_timestamp() - interval 36 day",
+		and hubloc_network = 'zot' and hubloc_connected < utc_timestamp() - interval 36 day",
         intval(HUBLOC_OFFLINE),
         intval(HUBLOC_OFFLINE)
     );
