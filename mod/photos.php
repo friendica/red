@@ -753,8 +753,11 @@ function photos_content(&$a) {
 			}
 		}
 		if($_REQUEST['aj']) {
-			if(! $r)
+			if(! $r) {
 				$ajaxout .= '<div id="content-complete"></div>';
+				echo $ajaxout;
+				killme();
+			}
 
 			echo '<div id="photo-album-contents-' . $a->pager['page'] . '">';
 			echo $ajaxout;
