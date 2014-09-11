@@ -49,6 +49,7 @@ var searchData=
   ['check_5fphp',['check_php',['../setup_8php.html#a14d208682a88632290c895d20da6e7d6',1,'setup.php']]],
   ['check_5fsmarty3',['check_smarty3',['../setup_8php.html#afd8b0b3ade1507c45325caf377bf459d',1,'setup.php']]],
   ['check_5fstore',['check_store',['../setup_8php.html#ab4b71369a25021d59247c917e98d8246',1,'setup.php']]],
+  ['check_5fupstream_5fdirectory',['check_upstream_directory',['../dir__fns_8php.html#a2f7d74bb2aea8bcd2537aee5c6708a16',1,'dir_fns.php']]],
   ['check_5fwall_5fto_5fwall',['check_wall_to_wall',['../classItem.html#abcdb0ea9bcd1576bc99bba9b8f700bb8',1,'Item']]],
   ['check_5fwebbie',['check_webbie',['../text_8php.html#a0c65597bb4aed3a039eb795ff540e5e3',1,'text.php']]],
   ['childexists',['childExists',['../classRedDirectory.html#a5e3fc08b2bf9f61cea4d2ccae0495bec',1,'RedDirectory']]],

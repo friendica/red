@@ -225,6 +225,11 @@ function acl_init(&$a){
 
 	if(count($r)) {
 		foreach($r as $g){
+
+			// remove RSS feeds from ACLs - they are inaccessible
+			if(strpos($g['hash'],'/'))
+				continue;
+
 			if(($g['abook_their_perms'] & PERMS_W_TAGWALL) && $type == 'c') {
 				$contacts[] = array(
 					"type"     => "c",

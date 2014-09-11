@@ -256,7 +256,7 @@ function import_post(&$a) {
 			require_once('include/photo/photo_driver.php');
 			$photos = import_profile_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
 			if($photos[4])
-				$photodate = '0000-00-00 00:00:00';
+				$photodate = NULL_DATE;
 			else
 				$photodate = $xchan['xchan_photo_date'];
 

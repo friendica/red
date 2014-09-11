@@ -46,11 +46,16 @@ function webpages_content(&$a) {
 //		}
 
 
-	$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_config('system','page_mimetype'));
-	if(! $mimetype)
-		$mimetype = 'choose';
+	if(feature_enabled($owner,'expert_mode')) {
+		$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
+		if(! $mimetype)
+			$mimetype = 'choose';	
+	}
+	else {
+		$mimetype = 'text/bbcode';
+	}
 
-	$layout = (($_REQUEST['layout']) ? $_REQUEST['layout'] : get_config('system','page_layout'));
+	$layout = (($_REQUEST['layout']) ? $_REQUEST['layout'] : get_pconfig($owner,'system','page_layout'));
 	if(! $layout)
 		$layout = 'choose';
 

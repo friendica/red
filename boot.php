@@ -41,17 +41,18 @@ require_once('include/features.php');
 require_once('include/taxonomy.php');
 require_once('include/identity.php');
 require_once('include/Contact.php');
+require_once('include/account.php');
 
 
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1128  );
+define ( 'DB_UPDATE_VERSION',       1129  );
 
-define ( 'EOL',                    '<br />' . "\r\n"     );
-define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
-
+define ( 'EOL',                    '<br />' . "\r\n"      );
+define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z'       );
+define ( 'NULL_DATE',              '0000-00-00 00:00:00'  );
 define ( 'TEMPLATE_BUILD_PATH',    'store/[data]/smarty3' );
 
 define ( 'DIRECTORY_MODE_NORMAL',      0x0000);  // This is technically DIRECTORY_MODE_TERTIARY, but it's the default, hence 0x0000
@@ -806,7 +807,7 @@ class App {
 		 */
 
 		$this->pager['page'] = ((x($_GET,'page') && intval($_GET['page']) > 0) ? intval($_GET['page']) : 1);
-		$this->pager['itemspage'] = 50;
+		$this->pager['itemspage'] = 60;
 		$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
 		if($this->pager['start'] < 0)
 			$this->pager['start'] = 0;

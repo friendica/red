@@ -118,6 +118,12 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		}
 	}
 	else {
+		if(! ($is_http)) {
+			if(! intval(get_config('system','diaspora_enabled'))) {
+				$result['message'] = t('Protocol disabled.');
+				return $result;
+			}
+		}
 
 		$my_perms = 0;
 		$their_perms = 0;
@@ -215,7 +221,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			intval($uid),
 			dbesc($xchan_hash),
 			intval(($is_http) ? ABOOK_FLAG_FEED : 0),
-			intval($their_perms),
+			intval(($is_http) ? $their_perms|PERMS_R_STREAM|PERMS_A_REPUBLISH : $their_perms),
 			intval($my_perms),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert())

@@ -44,6 +44,7 @@ var boot_8php =
     [ "$DIRECTORY_FALLBACK_SERVERS", "boot_8php.html#a107d53f96acf5319905a34b1870db09a", null ],
     [ "ABOOK_FLAG_ARCHIVED", "boot_8php.html#a222395aa223cfbff6166fab0b4e2e1d5", null ],
     [ "ABOOK_FLAG_BLOCKED", "boot_8php.html#a52b599cd13e152ebc80d7e4413683195", null ],
+    [ "ABOOK_FLAG_FEED", "boot_8php.html#ae0d9527117cd87dcba11986047ae336e", null ],
     [ "ABOOK_FLAG_HIDDEN", "boot_8php.html#a34c756469ebed32e2fc987bcde62d382", null ],
     [ "ABOOK_FLAG_IGNORED", "boot_8php.html#aa3425e2de85b08f7041656d3a8502cb6", null ],
     [ "ABOOK_FLAG_PENDING", "boot_8php.html#a68eebe493e6f729ffd1aeda7a4b11155", null ],

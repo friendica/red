@@ -65,6 +65,7 @@
 	
 	<h3>{{$corporate}}</h3>
 	{{include file="field_checkbox.tpl" field=$block_public}}
+	{{include file="field_checkbox.tpl" field=$verify_email}}
 	{{include file="field_checkbox.tpl" field=$diaspora_enabled}}
 	{{include file="field_checkbox.tpl" field=$feed_contacts}}
 	{{include file="field_checkbox.tpl" field=$force_publish}}

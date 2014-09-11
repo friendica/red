@@ -132,6 +132,29 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 }
 
 
+/**
+ * @function z_post_url
+ * @param string $url
+ *    URL to post
+ * @param mixed $params
+ *   The full data to post in a HTTP "POST" operation. This parameter can 
+ *   either be passed as a urlencoded string like 'para1=val1&para2=val2&...' 
+ *   or as an array with the field name as key and field data as value. If value 
+ *   is an array, the Content-Type header will be set to multipart/form-data. 
+ * @param int $redirects = 0
+ *    internal use, recursion counter
+ * @param array $opts (optional parameters)
+ *    'accept_content' => supply Accept: header with 'accept_content' as the value
+ *    'timeout' => int seconds, default system config value or 60 seconds
+ *    'http_auth' => username:password
+ *    'novalidate' => do not validate SSL certs, default is to validate using our CA list
+ *    
+ * @returns array
+ *    'return_code' => HTTP return code or 0 if timeout or failure
+ *    'success' => boolean true (if HTTP 2xx result) or false
+ *    'header' => HTTP headers
+ *    'body' => fetched content
+ */
 
 
 function z_post_url($url,$params, $redirects = 0, $opts = array()) {
@@ -868,15 +891,18 @@ function discover_by_url($url,$arr = null) {
 	if($feed->error())
 		logger('probe_url: scrape_feed: Error parsing XML: ' . $feed->error());
 
+	$name = unxmlify(trim($feed->get_title()));
 	$photo = $feed->get_image_url();
 	$author = $feed->get_author();
 
 	if($author) {
-		$name = unxmlify(trim($author->get_name()));
 		if(! $name)
+			$name = unxmlify(trim($author->get_name()));
+		if(! $name) {
 			$name = trim(unxmlify($author->get_email()));
-		if(strpos($name,'@') !== false)
-			$name = substr($name,0,strpos($name,'@'));
+			if(strpos($name,'@') !== false)
+				$name = substr($name,0,strpos($name,'@'));
+		}
 		if(! $profile && $author->get_link())
 			$profile = trim(unxmlify($author->get_link()));
 		if(! $photo) {
@@ -893,11 +919,13 @@ function discover_by_url($url,$arr = null) {
 		if($item) {
 			$author = $item->get_author();
 			if($author) {
-				$name = trim(unxmlify($author->get_name()));
-				if(! $name)
-					$name = trim(unxmlify($author->get_email()));
-				if(strpos($name,'@') !== false)
-					$name = substr($name,0,strpos($name,'@'));
+				if(! $name) {
+					$name = trim(unxmlify($author->get_name()));
+					if(! $name)
+						$name = trim(unxmlify($author->get_email()));
+					if(strpos($name,'@') !== false)
+						$name = substr($name,0,strpos($name,'@'));
+				}
 				if(! $profile && $author->get_link())
 					$profile = trim(unxmlify($author->get_link()));
 			}
@@ -924,8 +952,7 @@ function discover_by_url($url,$arr = null) {
 	if(! $network) {
 		$network = 'rss';
 	}
-	if(! $name)
-		$name = notags($feed->get_title());
+
 	if(! $name)
 		$name = notags($feed->get_description());
 
@@ -1029,7 +1056,7 @@ function discover_by_webbie($webbie) {
 			}
 		}
 
-		if($diaspora && $diaspora_base && $diaspora_guid && intval(get_config('system','diaspora_enabled'))) {
+		if($diaspora && $diaspora_base && $diaspora_guid) {
 			$guid = $diaspora_guid;
 			$diaspora_base = trim($diaspora_base,'/');
 

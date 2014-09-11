@@ -144,7 +144,7 @@ function filter_insecure($channel_id,$arr) {
 
 
 function comments_are_now_closed($item) {
-	if($item['comments_closed'] !== '0000-00-00 00:00:00') {
+	if($item['comments_closed'] !== NULL_DATE) {
 		$d = datetime_convert();
 		if($d > $item['comments_closed'])
 			return true;
@@ -448,7 +448,7 @@ function post_activity_item($arr) {
 function get_public_feed($channel,$params) {
 
 	$type      = 'xml';
-	$begin     = '0000-00-00 00:00:00';
+	$begin     = NULL_DATE;
 	$end       = '';
 	$start     = 0;
 	$records   = 40;
@@ -459,7 +459,7 @@ function get_public_feed($channel,$params) {
 		$params = array();
 
 	$params['type']      = ((x($params,'type'))      ? $params['type']          : 'xml');
-	$params['begin']     = ((x($params,'begin'))     ? $params['begin']         : '0000-00-00 00:00:00');
+	$params['begin']     = ((x($params,'begin'))     ? $params['begin']         : NULL_DATE);
 	$params['end']       = ((x($params,'end'))       ? $params['end']           : datetime_convert('UTC','UTC','now'));
 	$params['start']     = ((x($params,'start'))     ? $params['start']         : 0);
 	$params['records']   = ((x($params,'records'))   ? $params['records']       : 40);
@@ -518,13 +518,13 @@ function get_feed_for($channel, $observer_hash, $params) {
 	$atom .= replace_macros($feed_template, array(
 		'$version'      => xmlify(RED_VERSION),
 		'$red'          => xmlify(RED_PLATFORM),
-		'$feed_id'      => xmlify($channel['channel_url']),
+		'$feed_id'      => xmlify($channel['xchan_url']),
 		'$feed_title'   => xmlify($channel['channel_name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now' , ATOM_TIME)) ,
 		'$hub'          => '', // feed_hublinks(),
 		'$salmon'       => '', // feed_salmonlinks($channel['channel_address']),
 		'$name'         => xmlify($channel['channel_name']),
-		'$profile_page' => xmlify($channel['channel_url']),
+		'$profile_page' => xmlify($channel['xchan_url']),
 		'$mimephoto'    => xmlify($channel['xchan_photo_mimetype']),
 		'$photo'        => xmlify($channel['xchan_photo_l']),
 		'$thumb'        => xmlify($channel['xchan_photo_m']),
@@ -758,14 +758,14 @@ function get_item_elements($x) {
 
 	$arr['expires']      = ((x($x,'expires') && $x['expires']) 
 								? datetime_convert('UTC','UTC',$x['expires']) 
-								: '0000-00-00 00:00:00');
+								: NULL_DATE);
 
 	$arr['commented']    = ((x($x,'commented') && $x['commented']) 
 								? datetime_convert('UTC','UTC',$x['commented']) 
 								: $arr['created']);
 	$arr['comments_closed']    = ((x($x,'comments_closed') && $x['comments_closed']) 
 								? datetime_convert('UTC','UTC',$x['comments_closed']) 
-								: '0000-00-00 00:00:00');
+								: NULL_DATE);
 
 	$arr['title']        = (($x['title'])          ? htmlspecialchars($x['title'],          ENT_COMPAT,'UTF-8',false) : '');
 
@@ -795,7 +795,7 @@ function get_item_elements($x) {
 
 	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
 
-	
+	$arr['diaspora_meta'] = (($x['diaspora_meta']) ? $x['diaspora_meta'] : '');	
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
 
@@ -871,6 +871,8 @@ function import_author_xchan($x) {
 	if((! array_key_exists('network', $x)) || ($x['network'] === 'zot')) {
 		$y = import_author_zot($x);
 	}
+	if(! $y)
+		$y = import_author_diaspora($x);
 
 	if($x['network'] === 'rss') {
 		$y = import_author_rss($x);
@@ -878,6 +880,21 @@ function import_author_xchan($x) {
 
 	return(($y) ? $y : false);
 }
+
+
+function import_author_diaspora($x) {
+	if(! $x['address'])
+		return false;
+	if(discover_by_webbie($x['address'])) {
+		$r = q("select xchan_hash from xchan where xchan_addr = '%s' limit 1",
+			dbesc($x['address'])
+		);
+		if($r)
+			return $r[0]['xchan_hash'];
+	}
+	return false;
+}
+
 
 function import_author_rss($x) {
 
@@ -893,16 +910,17 @@ function import_author_rss($x) {
 	}
 	$name = trim($x['name']);
 
-	$r = q("insert into xchan ( xchan_hash, xchan_url, xchan_name, xchan_network ) 
-		values ( '%s', '%s', '%s', '%s' )",
-		dbesc($x['url']),
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_url, xchan_name, xchan_network ) 
+		values ( '%s', '%s', '%s', '%s', '%s' )",
+		dbesc($x['guid']),
+		dbesc($x['guid']),
 		dbesc($x['url']),
 		dbesc(($name) ? $name : t('(Unknown)')),
 		dbesc('rss')
 	);
-	if($r) {
+	if($r && $x['photo']) {
 
-		$photos = import_profile_photo($x['photo'],$x['url']);
+		$photos = import_profile_photo($x['photo']['src'],$x['url']);
 
 		if($photos) {
 			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_url = '%s' and xchan_network = 'rss' limit 1",
@@ -985,7 +1003,7 @@ function encode_item($item) {
 	if($y = encode_item_flags($item))
 		$x['flags']       = $y;
 
-	if($item['comments_closed'] !== '0000-00-00 00:00:00')
+	if($item['comments_closed'] !== NULL_DATE)
 		$x['comments_closed'] = $item['comments_closed'];
 
 	$x['public_scope']    = $scope;
@@ -1051,7 +1069,7 @@ function encode_item_xchan($xchan) {
 	$ret = array();
 	$ret['name']     = $xchan['xchan_name'];
 	$ret['address']  = $xchan['xchan_addr'];
-	$ret['url']      = $xchan['hubloc_url'];
+	$ret['url']      = (($xchan['hubloc_url']) ? $xchan['hubloc_url'] : $xchan['xchan_url']);
 	$ret['network']  = $xchan['xchan_network'];
 	$ret['photo']    = array('mimetype' => $xchan['xchan_photo_mimetype'], 'src' => $xchan['xchan_photo_m']);
 	$ret['guid']     = $xchan['xchan_guid'];
@@ -1194,6 +1212,7 @@ function encode_mail($item) {
 	$x['message_parent'] = $item['parent_mid'];
 	$x['created']        = $item['created'];
 	$x['expires']        = $item['expires'];
+	$x['diaspora_meta']  = $item['diaspora_meta'];
 	$x['title']          = $item['title'];
 	$x['body']           = $item['body'];
 	$x['from']           = encode_item_xchan($item['from']);
@@ -1223,8 +1242,8 @@ function get_mail_elements($x) {
 	$arr['title']        = (($x['title'])? htmlspecialchars($x['title'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
-	if((! array_key_exists('expires',$x)) || ($x['expires'] === '0000-00-00 00:00:00'))
-		$arr['expires'] = '0000-00-00 00:00:00';
+	if((! array_key_exists('expires',$x)) || ($x['expires'] === NULL_DATE))
+		$arr['expires'] = NULL_DATE;
 	else
 		$arr['expires']      = datetime_convert('UTC','UTC',$x['expires']);
 
@@ -1316,7 +1335,7 @@ function get_atom_elements($feed,$item,&$author) {
 		$author['author_link'] = unxmlify($feed->get_permalink());
 	}
 
-	$res['mid'] = unxmlify($item->get_id());
+	$res['mid'] = base64url_encode(unxmlify($item->get_id()));
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
 	$res['plink'] = unxmlify($item->get_link(0));
@@ -1748,6 +1767,7 @@ function item_store($arr,$allow_exec = false) {
 	$arr['title'] = ((array_key_exists('title',$arr) && strlen($arr['title']))  ? trim($arr['title']) : '');
 	$arr['body']  = ((array_key_exists('body',$arr) && strlen($arr['body']))    ? trim($arr['body'])  : '');
 
+	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : '');
 	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
 	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
@@ -1819,9 +1839,9 @@ function item_store($arr,$allow_exec = false) {
 	$arr['owner_xchan']   = ((x($arr,'owner_xchan'))   ? notags(trim($arr['owner_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
-	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : '0000-00-00 00:00:00');
+	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : NULL_DATE);
 	$arr['commented']     = ((x($arr,'commented')  !== false) ? datetime_convert('UTC','UTC',$arr['commented'])  : datetime_convert());
-	$arr['comments_closed'] = ((x($arr,'comments_closed')  !== false) ? datetime_convert('UTC','UTC',$arr['comments_closed'])  : '0000-00-00 00:00:00');
+	$arr['comments_closed'] = ((x($arr,'comments_closed')  !== false) ? datetime_convert('UTC','UTC',$arr['comments_closed'])  : NULL_DATE);
 
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
@@ -2228,7 +2248,7 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
 	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : $orig[0]['expires']);
 
-	if(array_key_exists('comments_closed',$arr) && $arr['comments_closed'] != '0000-00-00 00:00:00')
+	if(array_key_exists('comments_closed',$arr) && $arr['comments_closed'] != NULL_DATE)
 		$arr['comments_closed'] = datetime_convert('UTC','UTC',$arr['comments_closed']);
 	else
 		$arr['comments_closed'] = $orig[0]['comments_closed'];
@@ -2236,6 +2256,8 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['commented']     = $orig[0]['commented'];
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
+
+	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : $orig[0]['diaspora_meta']);
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : $orig[0]['location']);
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : $orig[0]['coord']);
 	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : $orig[0]['verb']);
@@ -2369,6 +2391,16 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id)
 		$authorsig = base64_encode(rsa_sign($signed_text,$channel['channel_prvkey'],'sha256'));
 	else
 		$authorsig = '';
+
+	$x = array('signer' => $diaspora_handle, 'body' => $signed_body, 'signed_text' => $signed_text, 'signature' => base64_encode($authorsig));
+
+	$key = get_config('system','pubkey');
+	$y = crypto_encapsulate(json_encode($x),$key);
+
+	$r = q("update item set diaspora_meta = '%s' where id = %d limit 1",
+		dbesc(json_encode($y)),
+		intval($post_id) 
+	);
 
 	$r = q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
 		intval($post_id),
@@ -2816,7 +2848,6 @@ function tgroup_check($uid,$item) {
 function start_delivery_chain($channel,$item,$item_id,$parent) {
 
 
-
 	// Change this copy of the post to a forum head message and deliver to all the tgroup members
 	// also reset all the privacy bits to the forum default permissions
 
@@ -2829,6 +2860,11 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 		$private = 1;
 
 	$flag_bits = $item['item_flags'] | ITEM_WALL|ITEM_ORIGIN;
+
+	// unset the nocomment bit if it's there. 
+
+	if($flag_bits & ITEM_NOCOMMENT)
+		$flag_bits = $flag_bits ^ ITEM_NOCOMMENT;
 
 	// maintain the original source, which will be the original item owner and was stored in source_xchan
 	// when we created the delivery fork
@@ -2910,28 +2946,32 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 
 function check_item_source($uid,$item) {
 
-	if($item['item_private'])
-		return false;
-	
 
 	$r = q("select * from source where src_channel_id = %d and ( src_xchan = '%s' || src_xchan = '*' ) limit 1",
 		intval($uid),
 		dbesc(($item['source_xchan']) ?  $item['source_xchan'] : $item['owner_xchan'])
 	);
 
+
 	if(! $r)
 		return false;
 
-	$x = q("select abook_their_perms from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
+	$x = q("select abook_their_perms, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
 		intval($uid),
 		dbesc($item['owner_xchan'])
 	);
+
 			
 	if(! $x)
 		return false;
 
+
 	if(! ($x[0]['abook_their_perms'] & PERMS_A_REPUBLISH))
 		return false;
+
+	if($item['item_private'] && (! ($x[0]['abook_flags'] & ABOOK_FLAG_FEED)))
+		return false;
+
 
 	if($r[0]['src_channel_xchan'] === $item['owner_xchan'])
 		return false;
@@ -2981,7 +3021,7 @@ function mail_store($arr) {
 	$arr['from_xchan']    = ((x($arr,'from_xchan'))  ? notags(trim($arr['from_xchan']))  : '');
 	$arr['to_xchan']   = ((x($arr,'to_xchan'))   ? notags(trim($arr['to_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
-	$arr['expires']       = ((x($arr,'expires') !== false) ? datetime_convert('UTC','UTC',$arr['expires']) : '0000-00-00 00:00:00');
+	$arr['expires']       = ((x($arr,'expires') !== false) ? datetime_convert('UTC','UTC',$arr['expires']) : NULL_DATE);
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
@@ -3132,7 +3172,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 			if($deleted && is_array($contact)) {
 				$r = q("SELECT * from item where mid = '%s' and author_xchan = '%s' and uid = %d limit 1",
-					dbesc($mid),
+					dbesc(base64url_encode($mid)),
 					dbesc($contact['xchan_hash']),
 					intval($importer['channel_id'])
 				);
@@ -3141,7 +3181,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 					$item = $r[0];
 
 					if(! ($item['item_restrict'] & ITEM_DELETED)) {
-						logger('consume_feed: deleting item ' . $item['id'] . ' mid=' . $item['mid'], LOGGER_DEBUG);
+						logger('consume_feed: deleting item ' . $item['id'] . ' mid=' . base64url_decode($item['mid']), LOGGER_DEBUG);
 						drop_item($item['id'],false);
 					}
 				}	
@@ -3160,14 +3200,14 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 		foreach($items as $item) {
 
 			$is_reply = false;
-			$item_id = $item->get_id();
+			$item_id = base64url_encode($item->get_id());
 
 			logger('consume_feed: processing ' . $item_id, LOGGER_DEBUG);
 
 			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
-				$parent_mid = $rawthread[0]['attribs']['']['ref'];
+				$parent_mid = base64url_encode($rawthread[0]['attribs']['']['ref']);
 			}
 
 			if($is_reply) {
@@ -3178,7 +3218,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 				// Have we seen it? If not, import it.
 
-				$item_id  = $item->get_id();
+				$item_id  = base64url_encode($item->get_id());
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
@@ -3229,7 +3269,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 				// Head post of a conversation. Have we seen it? If not, import it.
 
-				$item_id  = $item->get_id();
+				$item_id  = base64url_encode($item->get_id());
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
@@ -3300,8 +3340,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 function update_feed_item($uid,$datarray) {
 
-	logger('update_feed_item: ' . $uid . ' ' . print_r($datarray,true), LOGGER_DATA);
-
+	logger('update_feed_item: not implemented! ' . $uid . ' ' . print_r($datarray,true), LOGGER_DATA);
 
 }
 
@@ -4039,7 +4078,7 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 	$result = array();
 	$mindate = datetime_convert('UTC','UTC',$mindate);
 	if(! $mindate)
-		$mindate = '0000-00-00 00:00:00';
+		$mindate = NULL_DATE;
 
 	$mindate = dbesc($mindate);
 
@@ -4055,7 +4094,7 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 		$sql_extra = item_permissions_sql($uid);
 	}
 
-	if($mindate != '0000-00-00 00:00:00') {
+	if($mindate != NULL_DATE) {
 		$sql_extra .= " and ( created > '$mindate' or edited > '$mindate' ) ";
 		$limit = "";
 	}

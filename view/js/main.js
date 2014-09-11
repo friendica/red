@@ -285,7 +285,7 @@
 					scroll_next = true;
 					loadingPage = true;
 
-					if($('.directory-end').length == 0)
+					if(($('.directory-end').length == 0) && ($('.photos-end').length == 0))
 						liveUpdate();
 					else
 						pageUpdate();
@@ -689,7 +689,7 @@ function updateConvItems(mode,data) {
 			bParam_page = 1;
 		}
 
-		update_url = baseurl + '/directory/?f=&aj=1&page=' + bParam_page;
+		update_url = baseurl + '/' + page_query + '/?f=&aj=1&page=' + bParam_page + extra_args ;
 
 		$("#page-spinner").spin('small');
 		update_mode = 'append';

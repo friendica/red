@@ -1,6 +1,5 @@
 <?php
 
-require_once('include/account.php');
 
 function register_init(&$a) {
 

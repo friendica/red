@@ -1,0 +1,4 @@
+url: https://github.com/friendica/red/issues
+requires:  local_user
+name: Bug Report
+photo: $baseurl/app/bugreport.png

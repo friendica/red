@@ -384,13 +384,13 @@ function item_post(&$a) {
 	}
 	
 
-	$expires = '0000-00-00 00:00:00';
+	$expires = NULL_DATE;
 
 	if(feature_enabled($profile_uid,'content_expire')) {
 		if(x($_REQUEST,'expire')) {
 			$expires = datetime_convert(date_default_timezone_get(),'UTC', $_REQUEST['expire']);
 			if($expires <= datetime_convert())
-				$expires = '0000-00-00 00:00:00';
+				$expires = NULL_DATE;
 		}
 	}
 
@@ -1190,6 +1190,10 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny) {
 
+	if(get_pconfig($uid,'system','force_public_uploads')) {
+		$str_contact_allow = $str_group_allow = $str_contact_deny = $str_group_deny = '';
+	}
+
 	$match = null;
 	// match img and zmg image links
 	if(preg_match_all("/\[[zi]mg(.*?)\](.*?)\[\/[zi]mg\]/",$body,$match)) {
@@ -1259,6 +1263,10 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 function fix_attached_file_permissions($channel,$observer_hash,$body,
 		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny) {
 
+	if(get_pconfig($channel['channel_id'],'system','force_public_uploads')) {
+		$str_contact_allow = $str_group_allow = $str_contact_deny = $str_group_deny = '';
+	}
+
 	$match = false;
 
 	if(preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",$body,$match)) {
@@ -1279,6 +1287,7 @@ function fix_attached_file_permissions($channel,$observer_hash,$body,
 		}
 	}
 }
+
 function item_check_service_class($channel_id,$iswebpage) {
 	$ret = array('success' => false, $message => '');
 	if ($iswebpage) {

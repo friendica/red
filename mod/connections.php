@@ -369,7 +369,7 @@ function connections_content(&$a) {
 			if($rr['xchan_url']) {
 				$contacts[] = array(
 					'img_hover' => sprintf( t('%1$s [%2$s]'),$rr['xchan_name'],$rr['xchan_url']),
-					'edit_hover' => t('Edit contact'),
+					'edit_hover' => t('Edit connection'),
 					'id' => $rr['abook_id'],
 					'alt_text' => $alt_text,
 					'dir_icon' => $dir_icon,
@@ -378,6 +378,7 @@ function connections_content(&$a) {
 					'username' => $rr['xchan_name'],
 					'classes' => (($rr['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? 'archived' : ''),
 					'link' => z_root() . '/connedit/' . $rr['abook_id'],
+					'edit' => t('Edit'),
 					'url' => chanlink_url($rr['xchan_url']),
 					'network' => network_to_name($rr['network']),
 				);
@@ -385,20 +386,40 @@ function connections_content(&$a) {
 		}
 	}
 	
-	$o .= replace_macros(get_markup_template('connections.tpl'),array(
-		'$header' => t('Connections') . (($head) ? ' - ' . $head : ''),
-		'$tabs' => $t,
-		'$total' => $total,
-		'$search' => $search_hdr,
-		'$desc' => t('Search your connections'),
-		'$finding' => (($searching) ? t('Finding: ') . "'" . $search . "'" : ""),
-		'$submit' => t('Find'),
-		'$edit' => t('Edit'),
-		'$cmd' => $a->cmd,
-		'$contacts' => $contacts,
-		'$paginate' => paginate($a),
 
-	)); 
-	
+	if($_REQUEST['aj']) {
+		if($contacts) {
+			$o = replace_macros(get_markup_template('contactsajax.tpl'),array(
+				'$contacts' => $contacts,
+				'$edit' => t('Edit'),
+			));
+		}
+		else {
+			$o = '<div id="content-complete"></div>';
+		}
+		echo $o;
+		killme();
+	}
+	else {
+		$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
+		$o .= replace_macros(get_markup_template('connections.tpl'),array(
+			'$header' => t('Connections') . (($head) ? ' - ' . $head : ''),
+			'$tabs' => $t,
+			'$total' => $total,
+			'$search' => $search_hdr,
+			'$desc' => t('Search your connections'),
+			'$finding' => (($searching) ? t('Finding: ') . "'" . $search . "'" : ""),
+			'$submit' => t('Find'),
+			'$edit' => t('Edit'),
+			'$cmd' => $a->cmd,
+			'$contacts' => $contacts,
+			'$paginate' => paginate($a),
+
+		)); 
+	}
+
+	if(! $contacts)
+		$o .= '<div id="content-complete"></div>';
+
 	return $o;
 }

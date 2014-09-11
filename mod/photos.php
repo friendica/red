@@ -635,7 +635,7 @@ function photos_content(&$a) {
 		);
 		if(count($r)) {
 			$a->set_pager_total(count($r));
-			$a->set_pager_itemspage(40);
+			$a->set_pager_itemspage(60);
 		}
 
 		if($_GET['order'] === 'posted')
@@ -697,9 +697,14 @@ function photos_content(&$a) {
 			$o .= '<div class="photos-upload-link" ><a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album) . '" >' . t('Upload New Photos') . '</a></div>';
 		}
 
+		$ajaxout = '';
+
 		$tpl = get_markup_template('photo_album.tpl');
-		if(count($r))
+		if(count($r)) {
 			$twist = 'rotright';
+			$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
+			$o .= '<div id="photo-album-contents">';
+
 			foreach($r as $rr) {
 
 				if($twist == 'rotright')
@@ -728,7 +733,8 @@ function photos_content(&$a) {
 				      $rel=("photo");
 //				}
       
-				$o .= replace_macros($tpl,array(
+
+				$tmp = replace_macros($tpl,array(
 					'$id' => $rr['id'],
 					'$twist' => ' ' . $twist . rand(2,4),
 					'$photolink' => $imagelink,
@@ -740,10 +746,25 @@ function photos_content(&$a) {
 					'$ext' => $ext,
 					'$hash'=> $rr['resource_id'],
 				));
-
+				if($_REQUEST['aj'])
+					$ajaxout .= $tmp;
+				else
+					$o .= $tmp;
+			}
 		}
+		if($_REQUEST['aj']) {
+			if(! $r)
+				$ajaxout .= '<div id="content-complete"></div>';
+			echo $ajaxout;
+			killme();
+		}
+
+		$o .= '<div id="page-end"></div>';
+		$o .= '</div>';    // photo-album-contents
 		$o .= '<div id="photo-album-end"></div>';
-		$o .= paginate($a);
+		$o .= '<script>$(document).ready(function() { loadingPage = false;});</script>';
+		$o .= '<div id="page-spinner"></div>';
+//		$o .= paginate($a);
 
 		return $o;
 
@@ -1138,7 +1159,7 @@ function photos_content(&$a) {
 	);
 	if(count($r)) {
 		$a->set_pager_total(count($r));
-		$a->set_pager_itemspage(20);
+		$a->set_pager_itemspage(60);
 	}
 
 	$r = q("SELECT `resource_id`, `id`, `filename`, type, `album`, max(`scale`) AS `scale` FROM `photo`
@@ -1192,16 +1213,37 @@ function photos_content(&$a) {
 		}
 	}
 	
-	$tpl = get_markup_template('photos_recent.tpl'); 
-	$o .= replace_macros($tpl, array(
-		'$title' => t('Recent Photos'),
-		'$can_post' => $can_post,
-		'$upload' => array(t('Upload New Photos'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
-		'$photos' => $photos,
-	));
+	if($_REQUEST['aj']) {
+		if($photos) {
+			$o = replace_macros(get_markup_template('photosajax.tpl'),array(
+				'$photos' => $photos
+			));
+		}
+		else {
+			$o = '<div id="content-complete"></div>';
+		}
+		echo $o;
+		killme();
+	}
+	else {
+		$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
+		$tpl = get_markup_template('photos_recent.tpl'); 
+		$o .= replace_macros($tpl, array(
+			'$title' => t('Recent Photos'),
+			'$can_post' => $can_post,
+			'$upload' => array(t('Upload New Photos'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
+			'$photos' => $photos,
+		));
 
-	
-	$o .= paginate($a);
+	}
+
+	if((! $photos) && ($_REQUEST['aj'])) {
+		$o .= '<div id="content-complete"></div>';
+		echo $o;
+		killme();
+	}
+
+//	$o .= paginate($a);
 	return $o;
 }
 

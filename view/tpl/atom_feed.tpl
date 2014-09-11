@@ -15,6 +15,7 @@
   <title>{{$feed_title}}</title>
   <generator uri="http://getzot.com" version="{{$version}}">{{$red}}</generator>
   <link rel="license" href="http://creativecommons.org/licenses/by/3.0/" />
+  <link rel="alternate" type="text/html" href="{{$profile_page}}" />
 {{if $hub}}
   {{$hub}}
 {{/if}}

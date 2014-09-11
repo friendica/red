@@ -22,7 +22,7 @@ Zot is the great new communicaton protocol invented especially for the Red Matri
 [zrl=[baseurl]/help/connecting_to_channels]Connecting To Other Channels[/zrl]
 [zrl=[baseurl]/help/permissions]Permissions And Encryption: You Are In Control[/zrl]
 [zrl=[baseurl]/help/cloud]Cloud Storage[/zrl]
-[zrl=[baseurl]/help/remove_account]Remove Account[/zrl]
+[zrl=[baseurl]/help/remove_account]Remove Channel or Account[/zrl]
 
 [size=large][b]Using the Red Matrix[/b][/size]
 [zrl=[baseurl]/help/tags_and_mentions]Tags and Mentions[/zrl]
