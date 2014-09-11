@@ -182,3 +182,7 @@
 	margin-left: 200px;
 }
 
+div[id^='photo-album-contents-'] {
+	margin-bottom: 3px;
+}
+

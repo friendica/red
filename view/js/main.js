@@ -704,6 +704,22 @@ function updateConvItems(mode,data) {
 
 	}
 
+	function justifyPhotos(bParam_page) {
+		$('#photo-album-contents-' + bParam_page).justifiedGallery({
+			lastRow : 'nojustify',
+			captions: true,
+			margins: 3,
+			rowHeight : 150,
+			sizeRangeSuffixes : {
+				'lt100': '',
+				'lt240': '',
+				'lt320': '',
+				'lt500': '',
+				'lt640': '',
+				'lt1024': ''
+			}
+		});
+	}
 
 	function notify_popup_loader(notifyType) {
 
@@ -1050,7 +1066,6 @@ function previewTheme(elm) {
 }
 
 $(document).ready(function() {
-
 	jQuery.timeago.settings.strings = {
 		prefixAgo     : aStr['t01'],
 		prefixFromNow : aStr['t02'],
@@ -1089,7 +1104,7 @@ $(document).ready(function() {
 
 
 
-$(window).scroll(function () {                 
+$(window).scroll(function () {
 	if(typeof buildCmd == 'function') {
 		// This is a content page with items and/or conversations
 		$('#more').hide();                 
@@ -1099,8 +1114,8 @@ $(window).scroll(function () {
 			$('#more').css("top","400");
 			$('#more').show();
 		}
-	
-		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+
+		if($(window).scrollTop() + $(window).height() == $(document).height()) {
 			if((pageHasMoreContent) && (! loadingPage)) {
 				$('#more').hide();
 				$('#no-more').hide();
@@ -1120,7 +1135,7 @@ $(window).scroll(function () {
 			$('#more').show();
 		}
 	
-		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+		if($(window).scrollTop() + $(window).height() == $(document).height()) {
 			if((pageHasMoreContent) && (! loadingPage)) {
 				$('#more').hide();
 				$('#no-more').hide();
