@@ -13,13 +13,16 @@
 
 {{$tabs}}
 
-
+<div id="connections-wrapper">
 {{foreach $contacts as $contact}}
 	{{include file="connection_template.tpl"}}
 {{/foreach}}
+<div id="page-end"></div>
+</div>
 <div id="contact-edit-end"></div>
+<script>$(document).ready(function() { loadingPage = false;});</script>
+<div id="page-spinner"></div>
 
-{{$paginate}}
 
 
 
