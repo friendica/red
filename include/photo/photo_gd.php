@@ -10,7 +10,7 @@ class photo_gd extends photo_driver {
 		$t = array();
 		$t['image/jpeg'] ='jpg';
 		if (imagetypes() & IMG_PNG) $t['image/png'] = 'png';
-
+		if (imagetypes() & IMG_GIF) $t['image/gif'] = 'gif';
 		return $t;
 
 	}
