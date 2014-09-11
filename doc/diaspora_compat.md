@@ -19,6 +19,8 @@ Post expiration is not supported on Diaspora. We will provide you an option to n
 
 End-to-end encryption is not supported. We will translate these posts into a lock icon, which can never be unlocked from the Diaspora side. 
 
+Wall-to-wall posts may have the wrong attribution on Diaspora (sent as wall owner rather than original author). We may need to create fake "reshared" posts from wall-to-wall posts in order to retain the correct author info. 
+
 Message verification will eventually be supported. 
 
 Multiple profiles are not supported. Diaspora members can only see your default profile.
