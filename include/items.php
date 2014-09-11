@@ -2394,8 +2394,11 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id)
 
 	$x = array('signer' => $diaspora_handle, 'body' => $signed_body, 'signed_text' => $signed_text, 'signature' => base64_encode($authorsig));
 
+	$key = get_config('system','pubkey');
+	$y = crypto_encapsulate(json_encode($x),$key);
+
 	$r = q("update item set diaspora_meta = '%s' where id = %d limit 1",
-		dbesc(json_encode($x)),
+		dbesc(json_encode($y)),
 		intval($post_id) 
 	);
 

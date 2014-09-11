@@ -263,10 +263,19 @@ function bb2dmention_callback($match) {
 function bb2diaspora_itembody($item) {
 
 	if($item['diaspora_meta']) {
-		$j = json_decode($item['diaspora_meta'],true);
-		if($j && $j['body']) {
-			logger('bb2diaspora_itembody: cached ');
-			return $j['body'];
+		$diaspora_meta = json_decode($item['diaspora_meta'],true);
+		if($diaspora_meta) {
+			if(array_key_exists('iv',$diaspora_meta)) {
+				$key = get_config('system','prvkey');
+				$meta = json_decode(crypto_unencapsulate($diaspora_meta,$key),true);
+			}
+			else {
+				$meta = $diaspora_meta;
+			}
+			if($meta) {
+				logger('bb2diaspora_itembody: cached ');
+				return $meta['body'];
+			}
 		}
 	}
 

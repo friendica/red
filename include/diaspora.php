@@ -1364,8 +1364,10 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['app']  = 'Diaspora';
 	
 	if(! $parent_author_signature) {
-		$datarray['diaspora_meta'] = array('signer' => $diaspora_handle, 'body' => $text, 
-		'signed_text' => $signed_data, 'signature' => base64_encode($author_signature));
+		$key = get_config('system','pubkey');
+		$x = array('signer' => $diaspora_handle, 'body' => $text, 
+			'signed_text' => $signed_data, 'signature' => base64_encode($author_signature));
+		$datarray['diaspora_meta'] = json_encode(crypto_encapsulate(json_encode($x),$key));
 	}
 
 	$result = item_store($datarray);
@@ -1934,8 +1936,10 @@ function diaspora_like($importer,$xml,$msg) {
 	$arr['object'] = $object;
 
 	if(! $parent_author_signature) {
-		$datarray['diaspora_meta'] = array('signer' => $diaspora_handle, 'body' => $text, 
-		'signed_text' => $signed_data, 'signature' => base64_encode($author_signature));
+		$key = get_config('system','pubkey');
+		$x = array('signer' => $diaspora_handle, 'body' => $text, 
+			'signed_text' => $signed_data, 'signature' => base64_encode($author_signature));
+		$arr['diaspora_meta'] = json_encode(crypto_encapsulate(json_encode($x),$key));
 	}
 
 	$x = item_store($arr);
@@ -2430,13 +2434,19 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 	}
 
 	if($item['diaspora_meta'] && ! $like) {
-		$j = json_decode($item['diaspora_meta'],true);
-		if($j) {
-			$signed_text = $j['signed_text'];
-			$text = $j['body'];
-			$signer = $j['signer'];
-			$authorsig = $j['signature'];
+		$diaspora_meta = json_decode($item['diaspora_meta'],true);
+		if($diaspora_meta) {
+			if(array_key_exists('iv',$diaspora_meta)) {
+				$key = get_config('system','prvkey');
+				$meta = json_decode(crypto_unencapsulate($diaspora_meta,$key),true);
+			}
+			else
+				$meta = $diaspora_meta;
 		}
+		$signed_text = $meta['signed_text'];
+		$authorsig = $meta['signature'];
+		$signer = $meta['signer'];
+		$text = $meta['body'];
 	}
 	else {
 		$text = bb2diaspora_itembody($item);
@@ -2534,10 +2544,16 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 
 	$diaspora_meta = (($item['diaspora_meta']) ? json_decode($item['diaspora_meta'],true) : '');
 	if($diaspora_meta) {
-		$sender_signed_text = $diaspora_meta['signed_text'];
-		$authorsig = $diaspora_meta['signature'];
-		$handle = $diaspora_meta['signer'];
-		$text = $diaspora_meta['body'];
+		if(array_key_exists('iv',$diaspora_meta)) {
+			$key = get_config('system','prvkey');
+			$meta = json_decode(crypto_unencapsulate($diaspora_meta,$key),true);
+		}
+		else
+			$meta = $diaspora_meta;
+		$sender_signed_text = $meta['signed_text'];
+		$authorsig = $meta['signature'];
+		$handle = $meta['signer'];
+		$text = $meta['body'];
 	}
 	else
 		logger('diaspora_send_relay: original author signature not found');
