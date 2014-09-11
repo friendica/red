@@ -160,8 +160,6 @@ function diaspora_process_outbound($arr) {
 			$target_item['body'] = crypto_unencapsulate(json_decode($target_item['body'],true),$key);
 	}
 
-	if($arr['walltowall'])
-		return;
 
 	if($arr['env_recips']) {
 		$hashes = array();
@@ -759,8 +757,6 @@ function diaspora_post($importer,$xml,$msg) {
 	$guid = notags(unxmlify($xml->guid));
 	$diaspora_handle = notags(unxmlify($xml->diaspora_handle));
 	$app = notags(xmlify($xml->provider_display_name));
-
-
 
 
 	if($diaspora_handle != $msg['author']) {

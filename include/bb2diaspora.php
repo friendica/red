@@ -259,6 +259,18 @@ function bb2dmention_callback($match) {
 }
 
 
+function bb2diaspora_itemwallwall(&$item) {
+
+	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author']))) {
+		logger('bb2diaspora_itemwallwall: wall to wall post',LOGGER_DEBUG);
+		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
+		$item['body'] = "\n\n" 
+			. '[img]' . $item['author']['photo']['src'] . '[/img]' 
+			. '[url=' . $item['author']['url'] . ']' . $item['author']['name'] . '[/url]' . "\n\n" 
+			. $item['body'];
+	}
+}
+
 
 function bb2diaspora_itembody($item) {
 
@@ -274,20 +286,25 @@ function bb2diaspora_itembody($item) {
 			}
 			if($meta) {
 				logger('bb2diaspora_itembody: cached ');
-				return $meta['body'];
+				$newitem = $item;
+				$newitem['body'] = $meta['body'];
+				bb2diaspora_itemwallwall($newitem);
+				return $newitem['body'];
 			}
 		}
 	}
 
-	$body = $item['body'];
+	$newitem = $item;
 
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
 		$key = get_config('system','prvkey');
-		$title = (($item['title']) ? crypto_unencapsulate(json_decode($item['title'],true),$key) : '');
-		$body  = (($item['body'])  ? crypto_unencapsulate(json_decode($item['body'],true),$key) : '');
+		$newitem['title'] = (($item['title']) ? crypto_unencapsulate(json_decode($item['title'],true),$key) : '');
+		$newitem['body']  = (($item['body'])  ? crypto_unencapsulate(json_decode($item['body'],true),$key) : '');
 	}
 
-	$body = preg_replace('/\#\^http/i', 'http', $body);
+	bb2diaspora_itemwallwall($newitem);
+
+	$body = preg_replace('/\#\^http/i', 'http', $newitem['body']);
 
 	// protect tags and mentions from hijacking
 
