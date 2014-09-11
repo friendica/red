@@ -635,7 +635,7 @@ function photos_content(&$a) {
 		);
 		if(count($r)) {
 			$a->set_pager_total(count($r));
-			$a->set_pager_itemspage(60);
+			$a->set_pager_itemspage(30);
 		}
 
 		if($_GET['order'] === 'posted')
@@ -703,7 +703,7 @@ function photos_content(&$a) {
 		if(count($r)) {
 			$twist = 'rotright';
 			$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
-			$o .= '<div id="photo-album-contents">';
+			$o .= '<div id="photo-album-contents-' . $a->pager['page'] . '">';
 
 			foreach($r as $rr) {
 
@@ -755,12 +755,18 @@ function photos_content(&$a) {
 		if($_REQUEST['aj']) {
 			if(! $r)
 				$ajaxout .= '<div id="content-complete"></div>';
+
+			echo '<div id="photo-album-contents-' . $a->pager['page'] . '">';
 			echo $ajaxout;
+			echo '<div>';
+			echo '<script>justifyPhotos(' . $a->pager['page'] . ');</script>';
 			killme();
 		}
 
-		$o .= '<div id="page-end"></div>';
+
 		$o .= '</div>';    // photo-album-contents
+		$o .= '<script>justifyPhotos(' . $a->pager['page'] . ');</script>';
+		$o .= '<div id="page-end"></div>';
 		$o .= '<div id="photo-album-end"></div>';
 		$o .= '<script>$(document).ready(function() { loadingPage = false;});</script>';
 		$o .= '<div id="page-spinner"></div>';
@@ -1159,7 +1165,7 @@ function photos_content(&$a) {
 	);
 	if(count($r)) {
 		$a->set_pager_total(count($r));
-		$a->set_pager_itemspage(60);
+		$a->set_pager_itemspage(30);
 	}
 
 	$r = q("SELECT `resource_id`, `id`, `filename`, type, `album`, max(`scale`) AS `scale` FROM `photo`
@@ -1216,7 +1222,8 @@ function photos_content(&$a) {
 	if($_REQUEST['aj']) {
 		if($photos) {
 			$o = replace_macros(get_markup_template('photosajax.tpl'),array(
-				'$photos' => $photos
+				'$photos' => $photos,
+				'$page' => $a->pager['page']
 			));
 		}
 		else {
@@ -1233,6 +1240,7 @@ function photos_content(&$a) {
 			'$can_post' => $can_post,
 			'$upload' => array(t('Upload New Photos'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
 			'$photos' => $photos,
+			'$page' => $a->pager['page']
 		));
 
 	}
@@ -1243,7 +1251,7 @@ function photos_content(&$a) {
 		killme();
 	}
 
-//	$o .= paginate($a);
+//	paginate($a);
 	return $o;
 }
 

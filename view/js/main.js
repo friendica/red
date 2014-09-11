@@ -700,29 +700,25 @@ function updateConvItems(mode,data) {
 			updatePageItems(update_mode,data);
 			$("#page-spinner").spin(false);
 			in_progress = false;
-			justifyPhotos();
 		});
 
 	}
 
-	function justifyPhotos() {
-		if($('#photo-album-contents').length > 0) {
-			loadingPage = true;
-			$('#photo-album-contents').justifiedGallery({
-				lastRow : 'nojustify',
-				captions: true,
-				margins: 3,
-				rowHeight : 150,
-				sizeRangeSuffixes : {
-					'lt100': '',
-					'lt240': '',
-					'lt320': '',
-					'lt500': '',
-					'lt640': '',
-					'lt1024': ''
-				}
-			}).on('jg.complete', function(e){ loadingPage = false; });
-		}
+	function justifyPhotos(bParam_page) {
+		$('#photo-album-contents-' + bParam_page).justifiedGallery({
+			lastRow : 'nojustify',
+			captions: true,
+			margins: 3,
+			rowHeight : 150,
+			sizeRangeSuffixes : {
+				'lt100': '',
+				'lt240': '',
+				'lt320': '',
+				'lt500': '',
+				'lt640': '',
+				'lt1024': ''
+			}
+		});
 	}
 
 	function notify_popup_loader(notifyType) {
@@ -1092,8 +1088,6 @@ $(document).ready(function() {
 
 
 	$(".autotime").timeago();
-
-	justifyPhotos();
 
 });
 
