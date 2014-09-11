@@ -45,6 +45,11 @@ $a->config['system']['register_policy'] = REGISTER_OPEN;
 $a->config['system']['register_text'] = '';
 $a->config['system']['admin_email'] = '{{$adminmail}}';
 
+// Recommend you leave this set to 1. Set to 0 to let people register without 
+// proving they own the email address they register with.
+
+$a->config['system']['verify_email'] = 1;
+
 
 // Site access restrictions. By default we will create private sites.
 // Your choices are ACCESS_PRIVATE, ACCESS_PAID, ACCESS_TIERED, and ACCESS_FREE.

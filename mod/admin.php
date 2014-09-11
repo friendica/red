@@ -267,7 +267,7 @@ function admin_page_site_post(&$a){
 	$maxloadavg	=	((x($_POST,'maxloadavg'))? intval(trim($_POST['maxloadavg']))		: 50);
 	$feed_contacts = ((x($_POST,'feed_contacts')) ? intval($_POST['feed_contacts']) : 0);
 	$diaspora_enabled = ((x($_POST,'diaspora_enabled')) ? intval($_POST['diaspora_enabled']) : 0);
-
+	$verify_email      =    ((x($_POST,'verify_email'))     ? 1 : 0);
 
 	set_config('system','feed_contacts',$feed_contacts);
 	set_config('system','diaspora_enabled',$diaspora_enabled);
@@ -276,6 +276,7 @@ function admin_page_site_post(&$a){
 	set_config('system','maxloadavg',$maxloadavg);
 	set_config('system','sitename',$sitename);
 	set_config('system','no_login_on_homepage',$no_login_on_homepage);
+	set_config('system','verify_email',$verify_email);
 
 	if ($banner=="") {
 		del_config('system','banner');
@@ -436,6 +437,7 @@ function admin_page_site(&$a) {
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
 		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
+		'$verify_email'		=> array('verify_email', t("Verify Email Addresses"), get_config('system','verify_email'), t("Check to verify email addresses used in account registration (recommended).")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
 		'$disable_discover_tab'	=> array('disable_discover_tab', t("Disable discovery tab"), get_config('system','disable_discover_tab'), t("Remove the tab in the network view with public content pulled from sources chosen for this site.")),
 		'$no_login_on_homepage'	=> array('no_login_on_homepage', t("No login on Homepage"), get_config('system','no_login_on_homepage'), t("Check to hide the login form from your sites homepage when visitors arrive who are not logged in (e.g. when you put the content of the homepage in via the site channel).")),
