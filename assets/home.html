@@ -139,7 +139,8 @@ $(document).ready(function() {
 	var known = {
 	    en: true, // ENGLISH
 	    fr: true, // FRENCH
-	    nl: true  // NETHERLANDS
+	    nl: true,  // NETHERLANDS
+	    it: true // ITALIAN
                       // ADD YOUR LANGUAGE HERE.
 	};
 	// Figure out the language, default to English because that's
@@ -196,7 +197,53 @@ $(document).ready(function() {
 			"Code Source Ouvert",
 			"Gratuit",
 			null);
-
+	if(lang=="it") // ITALIAN TRANSLATION
+		terms = new Array("Social Network",
+			"Rete decentralizzata",
+			"Login unico",
+			"Album fotografici",
+			"File condivisi in rete",
+			"Possiedi i tuoi dati",
+			"Crea i tuoi blog",
+			"Crittografia da persona a persona",
+			"Chat",
+			"App condivisibili",
+			"Diritti utente tra siti diversi",
+			"Privacy per gruppi di utenti",
+			"Ritira le email inviate",
+			"Pagine web personali",
+			"Gestione contenuti",
+			"Messaggi e articoli a scadenza",
+			"Giochi e utilità",
+			"Forum",
+			"Mi piace + Non mi piace",
+			"Condividi tutto ciò che è digitale",
+			"Communicazione",
+			"Contenuti personalizzati sull'utente",
+			"Pseudonimi",
+			"Identità multiple",
+			"Niente pubblicità",
+			"Calendario condivisibile",
+			"Segnalibri condivisibili",
+			"#hashtag",
+			"Elenco utenti distribuito",
+			"Identità nomadica",
+			"Canali derivati",
+			"Crittografia personalizzabile",
+			"Profili multipli",
+			"Licenza open source MIT",
+			"Suggerimenti su amici",
+			"Riconoscimento utenti tra siti",
+			"Temi e skin",
+			"Componenti aggiuntivi",
+			"API esterna",
+			"App esterne",
+			"Codice libero e gratuito",
+			"Privacy globale",
+			"Autonomia",
+			"Filtro per affinità",
+			null);
+			
 	// Find all <div>s with a class of "wrapper" and lang attribute equal
 	// to `lang` and make them visibile.
 	$('div.wrapper[lang=' + lang + ']').show();
@@ -315,6 +362,36 @@ De RedMatrix is ideaal voor groepen mensen van welke omvang dan ook, van kleine 
 </div>
 <div style="margin-top: 15px; margin-bottom: 15px;"><a href="pubsites">Andere openbare hubs</a> | <a href="https://redmatrix.me">Projectwebsite</a> | <a href="https://github.com/friendica/red">Broncode</a> | <a href="https://zothub.com/channel/one">Ontwikkelaars</a></div>
 </div>
+
+<!-- ITALIAN VERSION STARTS HERE -->
+
+<div lang="it" class="wrapper" style="display: none;">
+<div class="tr" style="font-size:1.4em;color:#666;margin-left:75px;margin-right:75px;">
+<strong>Red Matrix</strong> (per gli amici  "<span style="color:#c60032;">red</span>") &egrave; una piattaforma open source per comunicare, condividere e pubblicare in modo <strong>decentralizzato</strong>.
+</div>
+
+<br /><div class="tr" style="font-size:1.4em;color:#666;margin-left:75px;margin-right:75px;">
+<strong>Red Matrix</strong> combina la multimedialit&agrave; e la comunicazione, ma quel che la rende unica &egrave; la <i>"magic authentication"</i>. L'autenticazione magica si basa su una funzionalit&agrave; unica e sorprendente che rende le identit&agrave; degli utenti sganciate da un sito di appartenenza. Cos&igrave; le barriere tra tutti i server <strong>Red Matrix</strong> scompaiono e l'utente pu&ograve; navigare in quello che sembra un singolo super-sito.
+</div>
+
+<br /><div class="tr" style="font-size:1.4em;color:#666;margin-left:75px;margin-right:75px;">
+Le tecnologie di <strong>Red Matrix</strong> sono efficaci soprattutto per quanto riguarda la privacy. Senza parlare della sua utilit&agrave; nei paesi in cui i siti con libert&agrave; di parola diventano improvvisamente... <i>inaccessibili!</i> Infatti &egrave; veramente facile spostare il proprio account da un server all'altro senza che i tuoi contatti notino la differenza.
+</div>
+
+<br /><br /><div class="tr" style="font-size:1.4em;color:#666;margin-left:75px;margin-right:75px;">
+<iframe src="//player.vimeo.com/video/104092034?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="350" height="197" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<iframe src="//player.vimeo.com/video/104833020?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="350" height="197" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+</div><br />
+
+<br /><div class="tr" style="font-size:1.4em;color:#666;margin-left:75px;margin-right:75px;">
+Puoi usare <strong>Red Matrix</strong> per il social, per il business, come disco remoto condiviso o per pubblicare multimedia... il limite &egrave; solo la fantasia.
+</div>
+<br /><div style="font-size:1.4em;"><a href="pubsites" style="color:#FFFFFF;padding:10px;background-color:#c60032;">Registrati adesso!</a></div>
+
+<div style="margin-top:15px;margin-bottom:15px;"><a href="pubsites">Siti pubblici</a> | <a href="https://redmatrix.me">Il progetto</a> | <a href="https://github.com/friendica/red">Il codice libero</a> | <a href="https://zothub.com/channel/one">Il team di sviluppo</a></div></center>
+</div>
+
 <!-- INSERT NEW TRANSLATIONS HERE -->
 
 <!-- DO NOT REMOVE THE 2 LINES BELOW -->
