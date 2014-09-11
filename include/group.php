@@ -280,6 +280,7 @@ function group_side($every="connections",$each="group",$edit = false, $group_id 
 			
 			$groups[] = array(
 				'id'		=> $rr['id'],
+				'enc_cid'   => base64url_encode($cid),
 				'cid'		=> $cid,
 				'text' 		=> $rr['name'],
 				'selected' 	=> $selected,

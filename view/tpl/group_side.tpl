@@ -9,7 +9,7 @@
 				{{if $group.cid}}
 					<input type="checkbox" 
 						class="{{if $group.selected}}ticked{{else}}unticked {{/if}} action" 
-						onclick="contactgroupChangeMember('{{$group.id}}','{{$group.cid}}');return true;"
+						onclick="contactgroupChangeMember('{{$group.id}}','{{$group.enc_cid}}');return true;"
 						{{if $group.ismember}}checked="checked"{{/if}}
 					/>
 				{{/if}}			
