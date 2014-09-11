@@ -758,7 +758,7 @@ function photos_content(&$a) {
 
 			echo '<div id="photo-album-contents-' . $a->pager['page'] . '">';
 			echo $ajaxout;
-			echo '<div>';
+			echo '</div>';
 			echo '<script>justifyPhotos(' . $a->pager['page'] . ');</script>';
 			killme();
 		}
