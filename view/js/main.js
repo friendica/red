@@ -705,7 +705,6 @@ function updateConvItems(mode,data) {
 	}
 
 	function justifyPhotos(bParam_page) {
-		loadingPage = true;
 		$('#photo-album-contents-' + bParam_page).justifiedGallery({
 			lastRow : 'nojustify',
 			captions: true,
@@ -719,7 +718,7 @@ function updateConvItems(mode,data) {
 				'lt640': '',
 				'lt1024': ''
 			}
-		}).on('jg.complete', function(e){ loadingPage = false; });
+		});
 	}
 
 	function notify_popup_loader(notifyType) {
