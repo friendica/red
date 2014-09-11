@@ -131,7 +131,11 @@ function diaspora2bb($s,$use_zrl = false) {
 //	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
 
 	// first try plustags
-	$s = preg_replace_callback('/\@\{(.+?)\; (.+?)\@(.+?)\}\+/','diaspora_mention_callback',$s);
+	// nope don't do it. This will cause mis-attributed messages and runaway delivery chains -
+	// Diaspora doesn't have sufficient delivery loop detection.
+	// Leave the next line commented and leave this description here so future readers will know why.
+	//	$s = preg_replace_callback('/\@\{(.+?)\; (.+?)\@(.+?)\}\+/','diaspora_mention_callback',$s);
+
 	$s = preg_replace_callback('/\@\{(.+?)\; (.+?)\@(.+?)\}/','diaspora_mention_callback',$s);
 
 	// Escaping the hash tags - doesn't always seem to work
