@@ -15,7 +15,7 @@
 					<div class="wall-item-photo-end" style="clear:both"></div>
 				</div>
 				{{if $item.title}}
-				<div class="wall-item-title" id="wall-item-title-{{$item.id}}"><h3>{{$item.title}}</h3></div>
+				<div class="wall-item-title" id="wall-item-title-{{$item.id}}"><h3>{{if $item.plink}}<a href="{{$item.plink.href}}" title="{{$item.title}} ({{$item.plink.title}})">{{/if}}{{$item.title}}{{if $item.plink}}</a>{{/if}}</h3></div>
 				{{/if}}
 				{{if $item.lock}}
 				<div class="wall-item-lock dropdown">
