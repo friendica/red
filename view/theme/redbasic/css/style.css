@@ -2273,11 +2273,11 @@ h1, h2 {
 }
 
 h3, h4 {
-		font-size: 0.9rem;
+		font-size: $font_size;
 }
 
 h5, h6 {
-		font-size: 0.75rem;	
+		font-size: $body_font_size;	
 }
 
 .dropdown-menu {
