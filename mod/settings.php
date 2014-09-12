@@ -590,8 +590,9 @@ function settings_content(&$a) {
 		$settings_addons = "";
 		
 		$r = q("SELECT * FROM `hook` WHERE `hook` = 'plugin_settings' ");
-		if(! count($r))
-			$settings_addons = t('No feature settings configured');
+	// FIXME: This is always 0, even if there are plugin settings on this page 
+	//	if(! count($r))
+	//		$settings_addons = t('No feature settings configured');
 
 		call_hooks('feature_settings', $settings_addons);
 		
