@@ -20,6 +20,12 @@ function siteinfo_init(&$a) {
 			$admin = false;
 		}
 
+		$def_service_class = get_config('system','default_service_class');
+		if($def_service_class)
+			$service_class = get_config('service_class',$def_service_class);
+		else
+			$service_class = false;
+
 		$visible_plugins = array();
 		if(is_array($a->plugins) && count($a->plugins)) {
 			$r = q("select * from addon where hidden = 0");
@@ -44,6 +50,7 @@ function siteinfo_init(&$a) {
 			'register_policy' =>  $register_policy[$a->config['system']['register_policy']],
 			'diaspora_emulation' => get_config('system','diaspora_enabled'),
 			'rss_connections' => get_config('system','feed_contacts'),
+			'default_service_restrictions' => $service_class,
 			'admin' => $admin,
 			'site_name' => (($site_name) ? $site_name : ''),
 			'platform' => RED_PLATFORM,
