@@ -1135,7 +1135,7 @@ $(window).scroll(function () {
 			$('#more').css("top","400");
 			$('#more').show();
 		}
-	
+
 		if($(window).scrollTop() + $(window).height() == $(document).height()) {
 			if((pageHasMoreContent) && (! loadingPage) && (! justifiedGalleryActive)) {
 				$('#more').hide();
