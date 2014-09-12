@@ -878,6 +878,10 @@ function import_author_xchan($x) {
 		$y = import_author_rss($x);
 	}
 
+	if($x['network'] === 'unknown') {
+		$y = import_author_unknown($x);
+	}
+
 	return(($y) ? $y : false);
 }
 
@@ -924,6 +928,51 @@ function import_author_rss($x) {
 
 		if($photos) {
 			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_url = '%s' and xchan_network = 'rss' limit 1",
+				dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
+				dbesc($photos[0]),
+				dbesc($photos[1]),
+				dbesc($photos[2]),
+				dbesc($photos[3]),
+				dbesc($x['url'])
+			);
+			if($r)
+				return $x['url'];
+		}
+	}
+
+	return false;
+	
+}
+
+function import_author_unknown($x) {
+
+	if(! $x['url'])
+		return false;
+
+	$r = q("select xchan_hash from xchan where xchan_network = 'unknown' and xchan_url = '%s' limit 1",
+		dbesc($x['url'])
+	);
+	if($r) {
+		logger('import_author_unknown: in cache' , LOGGER_DEBUG);
+		return $r[0]['xchan_hash'];
+	}
+
+	$name = trim($x['name']);
+
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_url, xchan_name, xchan_network ) 
+		values ( '%s', '%s', '%s', '%s', '%s' )",
+		dbesc($x['url']),
+		dbesc($x['url']),
+		dbesc($x['url']),
+		dbesc(($name) ? $name : t('(Unknown)')),
+		dbesc('unknown')
+	);
+	if($r && $x['photo']) {
+
+		$photos = import_profile_photo($x['photo']['src'],$x['url']);
+
+		if($photos) {
+			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_url = '%s' and xchan_network = 'unknown' limit 1",
 				dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
 				dbesc($photos[0]),
 				dbesc($photos[1]),
@@ -1381,6 +1430,16 @@ function get_atom_elements($feed,$item,&$author) {
 			}
 		}
 	}
+
+	// check for a yahoo media element (github etc.)
+
+	if(! $author['author_photo']) {
+		$rawmedia = $item->get_item_tags(NAMESPACE_YMEDIA,'thumbnail');
+		if($rawmedia && $rawmedia[0]['attribs']['']['url']) {
+			$author['author_photo'] = strip_tags(unxmlify($rawmedia[0]['attribs']['']['url']));
+		}
+	}		   
+
 
 	// No photo/profile-link on the item - look at the feed level
 
@@ -3229,6 +3288,21 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				if(! x($author,'author_photo')) 
 					$author['author_photo'] = $contact['xchan_photo_m'];
 
+				$datarray['author_xchan'] = '';
+
+				if($author['author_link'] != $contact['xchan_url']) {
+					$x = import_author_unkown(array('name' => $author['author_name'],'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
+					if($x) 
+						$datarray['author_xchan'] = $x;
+					
+				}
+				if(! $datarray['author_xchan'])
+					$datarray['author_xchan'] = $contact['xchan_hash'];
+
+
+				$datarray['owner_xchan'] = $contact['xchan_hash'];
+
+
 				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['channel_id'])
@@ -3252,10 +3326,6 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				$datarray['parent_mid'] = $parent_mid;
 				$datarray['uid'] = $importer['channel_id'];
 
-//FIXME
-				$datarray['owner_xchan'] = $datarray['author_xchan'] = $contact['xchan_hash'];
-
-				// FIXME pull out the author and owner
 
 
 				logger('consume_feed: ' . print_r($datarray,true),LOGGER_DATA);
@@ -3287,6 +3357,20 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 					continue;
 				}
 
+				$datarray['author_xchan'] = '';
+
+				if($author['author_link'] != $contact['xchan_url']) {
+					$x = import_author_unkown(array('name' => $author['author_name'],'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
+					if($x) 
+						$datarray['author_xchan'] = $x;
+					
+				}
+				if(! $datarray['author_xchan'])
+					$datarray['author_xchan'] = $contact['xchan_hash'];
+
+
+				$datarray['owner_xchan'] = $contact['xchan_hash'];
+
 
 				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
 					dbesc($item_id),
@@ -3312,9 +3396,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 
 				$datarray['parent_mid'] = $item_id;
 				$datarray['uid'] = $importer['channel_id'];
-//FIXME
-				$datarray['owner_xchan'] = $datarray['author_xchan'] = $contact['xchan_hash'];
-				
+
 				if(! link_compare($author['owner_link'],$contact['xchan_url'])) {
 					logger('consume_feed: Correcting item owner.', LOGGER_DEBUG);
 					$author['owner_name']   = $contact['name'];
@@ -3322,7 +3404,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 					$author['owner_avatar'] = $contact['thumb'];
 				}
 
-				logger('consume_feed: author ' . print_r($author,true)); 
+				logger('consume_feed: author ' . print_r($author,true),LOGGER_DEBUG); 
 
 
 				logger('consume_feed: ' . print_r($datarray,true),LOGGER_DATA);
