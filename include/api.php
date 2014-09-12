@@ -582,7 +582,40 @@ require_once('include/items.php');
 	api_register_func('api/red/photos','api_photos', true);
 
 
+	function api_group_members(&$a,$type) {
+		if(api_user() === false)
+			return false;
 
+		if($_REQUEST['group_id']) {
+			$r = q("select * from groups where uid = %d and id = %d limit 1",
+				intval(api_user()),
+				intval($_REQUEST['group_id'])
+			);
+			if($r) {
+				$x = q("select * from group_member left join xchan on group_member.xchan = xchan.xchan_hash 
+					left join abook on abook_xchan = xchan_hash where gid = %d",
+					intval($_REQUEST['group_id'])
+				);
+				json_return_and_die($x);
+			}
+		}
+	}
+
+	api_register_func('api/red/group_members','api_group_members', true);
+
+
+
+
+	function api_group(&$a,$type) {
+		if(api_user() === false)
+			return false;
+
+		$r = q("select * from groups where uid = %d",
+			intval(api_user())
+		);
+		json_return_and_die($r);
+	}
+	api_register_func('api/red/group','api_group', true);
 
 
 
