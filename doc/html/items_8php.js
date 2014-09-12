@@ -40,6 +40,7 @@ var items_8php =
     [ "has_permissions", "items_8php.html#a77051724d1784074ff187e73a4db93fe", null ],
     [ "import_author_diaspora", "items_8php.html#a2c3f97b2109c05df86d97449b3c78ebc", null ],
     [ "import_author_rss", "items_8php.html#a6bee35961f2e32905f20367a9309d627", null ],
+    [ "import_author_unknown", "items_8php.html#a37f79991f36811cf847446ff60e8e11f", null ],
     [ "import_author_xchan", "items_8php.html#ae73794179b62d39bb597ff670ab1c1e5", null ],
     [ "item_add_cid", "items_8php.html#a02ca33c31ed535d24894f8a9a91ce9df", null ],
     [ "item_expire", "items_8php.html#a6f7e1334af5d684a987fa6a3eb37f4cc", null ],

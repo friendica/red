@@ -24,6 +24,8 @@ var include_2api_8php =
     [ "api_friendica_version", "include_2api_8php.html#a53b0680b682ae6078f2e1ed18cfb3f74", null ],
     [ "api_friends_ids", "include_2api_8php.html#acafd2899309a005fcb725289173dc7fe", null ],
     [ "api_get_user", "include_2api_8php.html#aa40bae797bcd9ccacffdce5a3b5a1afa", null ],
+    [ "api_group", "include_2api_8php.html#ad5fe62d6c25c86999f627b2e6cfde536", null ],
+    [ "api_group_members", "include_2api_8php.html#ae46f964e5a9c80b96dc78df61c09ed3a", null ],
     [ "api_help_test", "include_2api_8php.html#ac5a64cc81d70ff3cf866093ea9721d23", null ],
     [ "api_item_get_user", "include_2api_8php.html#aa49741342ad8ba285737eea1209a37e1", null ],
     [ "api_login", "include_2api_8php.html#afe534f826e4282b72d66e8cadca7bb73", null ],

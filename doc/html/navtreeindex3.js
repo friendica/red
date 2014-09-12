@@ -1,5 +1,8 @@
 var NAVTREEINDEX3 =
 {
+"classdba__mysql.html#a1887338627ce0e28786839363014bd0b":[5,0,10,1],
+"classdba__mysql.html#a850586714ef897bd25f643c89b4ef76e":[5,0,10,0],
+"classdba__mysql.html#a99a7691ea6cb1300031fb6549379066e":[5,0,10,2],
 "classdba__mysql.html#ac3fd60c278f400907322dac578754a99":[5,0,10,3],
 "classdba__mysqli.html":[5,0,11],
 "classdba__mysqli.html#a27d6a748af7f80028801306e7ea33f64":[5,0,11,2],
@@ -208,6 +211,7 @@ var NAVTREEINDEX3 =
 "diaspora_8php.html#a586d5a3ba92d35cee14f879f290072aa":[6,0,0,29,17],
 "diaspora_8php.html#a5d57518545baa31cf8a85a937a267681":[6,0,0,29,10],
 "diaspora_8php.html#a5ed66b910d7b0284f9b3ee04e72306ff":[6,0,0,29,7],
+"diaspora_8php.html#a69f250b078a46e405647428ec3399a16":[6,0,0,29,27],
 "diaspora_8php.html#a6f0a67b6b17503c125af32763be931b7":[6,0,0,29,4],
 "diaspora_8php.html#a71fe9bb66626b4197ae018a230778bb2":[6,0,0,29,13],
 "diaspora_8php.html#a7cff2f8f11044c1b3a360f20e1bbee46":[6,0,0,29,11],
@@ -217,17 +221,16 @@ var NAVTREEINDEX3 =
 "diaspora_8php.html#a938c7ee808d38725c0988fa6006805b9":[6,0,0,29,20],
 "diaspora_8php.html#a9bf7ef4094e0e14f6e2b7fe76ab7ad2e":[6,0,0,29,32],
 "diaspora_8php.html#aa34d2748bb97e9e193cacd572f335055":[6,0,0,29,28],
-"diaspora_8php.html#aa4b1cc0bca5c3fe8d11557685e0238a9":[6,0,0,29,30],
 "diaspora_8php.html#aa704d6aa2ac77be345c0f501168e6e56":[6,0,0,29,29],
 "diaspora_8php.html#aa8e551a53fcce34be3942d0c3e20d1f4":[6,0,0,29,6],
 "diaspora_8php.html#aade0c165fcdded71352c7a67bf6ce37b":[6,0,0,29,31],
+"diaspora_8php.html#ab736d6f32b5de31c97cb579fc730e200":[6,0,0,29,30],
 "diaspora_8php.html#ab99505944728d46585b8312989de533d":[6,0,0,29,5],
 "diaspora_8php.html#ac1ab782a34552a7c6b4dc961754ed598":[6,0,0,29,18],
 "diaspora_8php.html#ad9985cc4214bdfc14878785c838c8690":[6,0,0,29,9],
 "diaspora_8php.html#adef30b6fac948baedcc7194d5d155b5f":[6,0,0,29,2],
 "diaspora_8php.html#ae6f52efd81fe515cd9912bc8293abf5b":[6,0,0,29,22],
 "diaspora_8php.html#aeb2bb78f620dbf51d9335e6eb7444f2c":[6,0,0,29,23],
-"diaspora_8php.html#af3a7f9879c14fec761dcc5563fb39bac":[6,0,0,29,27],
 "diaspora_8php.html#af4698b165766f83d89ec1ea964bc92cc":[6,0,0,29,21],
 "dir_032dd9e2cfe278a2cfa5eb9547448eb9.html":[6,0,3,1,3,0],
 "dir_05f4fba29266e8fd7869afcd6cefb5cb.html":[6,0,3,1,0,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX3 =
 "dir_922c77e958c99a98db92d38a3a349bf2.html":[6,0,3,1,1],
 "dir_92d6b429199666aa3765c8a934db5e14.html":[6,0,3,1,1,1],
 "dir__fns_8php.html":[6,0,0,30],
-"dir__fns_8php.html#a2f7d74bb2aea8bcd2537aee5c6708a16":[6,0,0,30,0],
-"dir__fns_8php.html#a44062d4b471d1e83f92f6c184585aa13":[6,0,0,30,6],
-"dir__fns_8php.html#a8c15aa69da12f2d3476b9e93b82b337d":[6,0,0,30,3],
-"dir__fns_8php.html#aa666e7df6ca8c332f4081c9b66b4bdf6":[6,0,0,30,5]
+"dir__fns_8php.html#a2f7d74bb2aea8bcd2537aee5c6708a16":[6,0,0,30,0]
 };

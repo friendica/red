@@ -24,5 +24,6 @@ var searchData=
   ['expand_5facl',['expand_acl',['../text_8php.html#ae4282a39492caa23ccbc2ce98e54f110',1,'text.php']]],
   ['expand_5fgroups',['expand_groups',['../include_2group_8php.html#a22a81875259c7d3d64d4848afea6b345',1,'group.php']]],
   ['expire_5frun',['expire_run',['../expire_8php.html#a444e45c9b67727b27db4c779fd51a298',1,'expire.php']]],
-  ['externals_5frun',['externals_run',['../externals_8php.html#a4df44079e6f915286088b7a0d44db926',1,'externals.php']]]
+  ['externals_5frun',['externals_run',['../externals_8php.html#a4df44079e6f915286088b7a0d44db926',1,'externals.php']]],
+  ['extra_5fquery_5fargs',['extra_query_args',['../text_8php.html#a3ba47b4dd1248e7e51095572e7b814dc',1,'text.php']]]
 ];

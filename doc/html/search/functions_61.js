@@ -70,6 +70,8 @@ var searchData=
   ['api_5ffriendica_5fversion',['api_friendica_version',['../include_2api_8php.html#a53b0680b682ae6078f2e1ed18cfb3f74',1,'api.php']]],
   ['api_5ffriends_5fids',['api_friends_ids',['../include_2api_8php.html#acafd2899309a005fcb725289173dc7fe',1,'api.php']]],
   ['api_5fget_5fuser',['api_get_user',['../include_2api_8php.html#aa40bae797bcd9ccacffdce5a3b5a1afa',1,'api.php']]],
+  ['api_5fgroup',['api_group',['../include_2api_8php.html#ad5fe62d6c25c86999f627b2e6cfde536',1,'api.php']]],
+  ['api_5fgroup_5fmembers',['api_group_members',['../include_2api_8php.html#ae46f964e5a9c80b96dc78df61c09ed3a',1,'api.php']]],
   ['api_5fhelp_5ftest',['api_help_test',['../include_2api_8php.html#ac5a64cc81d70ff3cf866093ea9721d23',1,'api.php']]],
   ['api_5fitem_5fget_5fuser',['api_item_get_user',['../include_2api_8php.html#aa49741342ad8ba285737eea1209a37e1',1,'api.php']]],
   ['api_5flogin',['api_login',['../include_2api_8php.html#afe534f826e4282b72d66e8cadca7bb73',1,'api.php']]],

@@ -3360,7 +3360,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				$datarray['author_xchan'] = '';
 
 				if($author['author_link'] != $contact['xchan_url']) {
-					$x = import_author_unkown(array('name' => $author['author_name'],'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
+					$x = import_author_unknown(array('name' => $author['author_name'],'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
 					if($x) 
 						$datarray['author_xchan'] = $x;
 					

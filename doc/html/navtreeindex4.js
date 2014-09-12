@@ -1,5 +1,8 @@
 var NAVTREEINDEX4 =
 {
+"dir__fns_8php.html#a44062d4b471d1e83f92f6c184585aa13":[6,0,0,30,6],
+"dir__fns_8php.html#a8c15aa69da12f2d3476b9e93b82b337d":[6,0,0,30,3],
+"dir__fns_8php.html#aa666e7df6ca8c332f4081c9b66b4bdf6":[6,0,0,30,5],
 "dir__fns_8php.html#acd37b17dce3bdec6d5a6344a20598c1e":[6,0,0,30,4],
 "dir__fns_8php.html#acf621621e929d49441da30aad76a58cf":[6,0,0,30,1],
 "dir__fns_8php.html#ae56881d69bb6f8e828c9e35454386774":[6,0,0,30,2],
@@ -206,8 +209,8 @@ var NAVTREEINDEX4 =
 "globals_func_0x77.html":[6,1,1,23],
 "globals_func_0x78.html":[6,1,1,24],
 "globals_func_0x7a.html":[6,1,1,25],
-"globals_vars.html":[6,1,2],
 "globals_vars.html":[6,1,2,0],
+"globals_vars.html":[6,1,2],
 "globals_vars_0x61.html":[6,1,2,1],
 "globals_vars_0x63.html":[6,1,2,2],
 "globals_vars_0x64.html":[6,1,2,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX4 =
 "hostxrd_8php.html#aa37ffc8e7900bc76c4828bd25916db92":[6,0,1,43,0],
 "html2bbcode_8php.html":[6,0,0,40],
 "html2bbcode_8php.html#a39c662b19d318990fee2ba795a55d7a7":[6,0,0,40,3],
-"html2bbcode_8php.html#a5ad726995ac4070213abdb3bd09f4837":[6,0,0,40,1],
-"html2bbcode_8php.html#a71a07f135d196ec5943b13f7b2e6a9b2":[6,0,0,40,0],
-"html2bbcode_8php.html#ad174afe0ccbd8c475e48f8a6ee2f27d8":[6,0,0,40,2],
-"html2plain_8php.html":[6,0,0,41]
+"html2bbcode_8php.html#a5ad726995ac4070213abdb3bd09f4837":[6,0,0,40,1]
 };

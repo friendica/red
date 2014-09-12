@@ -19,6 +19,7 @@ var text_8php =
     [ "dlogger", "text_8php.html#a0a1f7c0e97f9ecbebf3e5834582b014c", null ],
     [ "escape_tags", "text_8php.html#aa5148a0dfea2a1ca64c3d52f10aa2d64", null ],
     [ "expand_acl", "text_8php.html#ae4282a39492caa23ccbc2ce98e54f110", null ],
+    [ "extra_query_args", "text_8php.html#a3ba47b4dd1248e7e51095572e7b814dc", null ],
     [ "feed_hublinks", "text_8php.html#a8d8c4a11e53461caca21181ebd72daca", null ],
     [ "feed_salmonlinks", "text_8php.html#a89929fa6f70a8ba54d5273fcf622b665", null ],
     [ "find_xchan_in_array", "text_8php.html#ace3c98538c63e09b70a363210b414112", null ],

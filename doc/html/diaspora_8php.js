@@ -27,10 +27,10 @@ var diaspora_8php =
     [ "diaspora_send_relay", "diaspora_8php.html#a0b3628a5e53332c3d3196b689fe2b94d", null ],
     [ "diaspora_send_retraction", "diaspora_8php.html#a1704748aa2384c73e43f10e71defd31a", null ],
     [ "diaspora_send_status", "diaspora_8php.html#a33ae0c4606a7df4d801c05507d87f668", null ],
-    [ "diaspora_share", "diaspora_8php.html#af3a7f9879c14fec761dcc5563fb39bac", null ],
+    [ "diaspora_share", "diaspora_8php.html#a69f250b078a46e405647428ec3399a16", null ],
     [ "diaspora_signed_retraction", "diaspora_8php.html#aa34d2748bb97e9e193cacd572f335055", null ],
     [ "diaspora_transmit", "diaspora_8php.html#aa704d6aa2ac77be345c0f501168e6e56", null ],
-    [ "diaspora_unshare", "diaspora_8php.html#aa4b1cc0bca5c3fe8d11557685e0238a9", null ],
+    [ "diaspora_unshare", "diaspora_8php.html#ab736d6f32b5de31c97cb579fc730e200", null ],
     [ "find_diaspora_person_by_handle", "diaspora_8php.html#aade0c165fcdded71352c7a67bf6ce37b", null ],
     [ "get_diaspora_key", "diaspora_8php.html#a9bf7ef4094e0e14f6e2b7fe76ab7ad2e", null ]
 ];

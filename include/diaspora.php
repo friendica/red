@@ -1928,7 +1928,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 	$arr['item_private'] = $parent_item['item_private'];
 	$arr['verb'] = $activity;
-	$arr['object-type'] = $objtype;
+	$arr['obj_type'] = $objtype;
 	$arr['object'] = $object;
 
 	if(! $parent_author_signature) {

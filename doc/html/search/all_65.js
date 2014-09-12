@@ -40,5 +40,6 @@ var searchData=
   ['ext',['ext',['../namespacefriendica-to-smarty-tpl.html#aecf730e0884bb4ddc6c0deb1ef85f8eb',1,'friendica-to-smarty-tpl']]],
   ['externals_2ephp',['externals.php',['../externals_8php.html',1,'']]],
   ['externals_5frun',['externals_run',['../externals_8php.html#a4df44079e6f915286088b7a0d44db926',1,'externals.php']]],
+  ['extra_5fquery_5fargs',['extra_query_args',['../text_8php.html#a3ba47b4dd1248e7e51095572e7b814dc',1,'text.php']]],
   ['extract_2ephp',['extract.php',['../extract_8php.html',1,'']]]
 ];

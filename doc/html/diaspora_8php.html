@@ -158,10 +158,10 @@ Functions</h2></td></tr>
 <tr class="separator:aa34d2748bb97e9e193cacd572f335055"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a900abf51398b2ef26cd2cd31c52f1b0f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="diaspora_8php.html#a900abf51398b2ef26cd2cd31c52f1b0f">diaspora_profile</a> ($importer, $xml, $msg)</td></tr>
 <tr class="separator:a900abf51398b2ef26cd2cd31c52f1b0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3a7f9879c14fec761dcc5563fb39bac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="diaspora_8php.html#af3a7f9879c14fec761dcc5563fb39bac">diaspora_share</a> ($me, $contact)</td></tr>
-<tr class="separator:af3a7f9879c14fec761dcc5563fb39bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4b1cc0bca5c3fe8d11557685e0238a9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="diaspora_8php.html#aa4b1cc0bca5c3fe8d11557685e0238a9">diaspora_unshare</a> ($me, $contact)</td></tr>
-<tr class="separator:aa4b1cc0bca5c3fe8d11557685e0238a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69f250b078a46e405647428ec3399a16"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="diaspora_8php.html#a69f250b078a46e405647428ec3399a16">diaspora_share</a> ($owner, $contact)</td></tr>
+<tr class="separator:a69f250b078a46e405647428ec3399a16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab736d6f32b5de31c97cb579fc730e200"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="diaspora_8php.html#ab736d6f32b5de31c97cb579fc730e200">diaspora_unshare</a> ($owner, $contact)</td></tr>
+<tr class="separator:ab736d6f32b5de31c97cb579fc730e200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33ae0c4606a7df4d801c05507d87f668"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="diaspora_8php.html#a33ae0c4606a7df4d801c05507d87f668">diaspora_send_status</a> ($item, $owner, $contact, $public_batch=false)</td></tr>
 <tr class="separator:a33ae0c4606a7df4d801c05507d87f668"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9985cc4214bdfc14878785c838c8690"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="diaspora_8php.html#ad9985cc4214bdfc14878785c838c8690">diaspora_is_reshare</a> ($body)</td></tr>
@@ -577,7 +577,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="diaspora_8php.html#af4698b165766f83d89ec1ea964bc92cc">diaspora_send_followup()</a>, <a class="el" href="diaspora_8php.html#ae6f52efd81fe515cd9912bc8293abf5b">diaspora_send_images()</a>, <a class="el" href="diaspora_8php.html#aeb2bb78f620dbf51d9335e6eb7444f2c">diaspora_send_mail()</a>, <a class="el" href="diaspora_8php.html#a0b3628a5e53332c3d3196b689fe2b94d">diaspora_send_relay()</a>, <a class="el" href="diaspora_8php.html#a1704748aa2384c73e43f10e71defd31a">diaspora_send_retraction()</a>, <a class="el" href="diaspora_8php.html#a33ae0c4606a7df4d801c05507d87f668">diaspora_send_status()</a>, <a class="el" href="diaspora_8php.html#af3a7f9879c14fec761dcc5563fb39bac">diaspora_share()</a>, and <a class="el" href="diaspora_8php.html#aa4b1cc0bca5c3fe8d11557685e0238a9">diaspora_unshare()</a>.</p>
+<p>Referenced by <a class="el" href="diaspora_8php.html#af4698b165766f83d89ec1ea964bc92cc">diaspora_send_followup()</a>, <a class="el" href="diaspora_8php.html#ae6f52efd81fe515cd9912bc8293abf5b">diaspora_send_images()</a>, <a class="el" href="diaspora_8php.html#aeb2bb78f620dbf51d9335e6eb7444f2c">diaspora_send_mail()</a>, <a class="el" href="diaspora_8php.html#a0b3628a5e53332c3d3196b689fe2b94d">diaspora_send_relay()</a>, <a class="el" href="diaspora_8php.html#a1704748aa2384c73e43f10e71defd31a">diaspora_send_retraction()</a>, <a class="el" href="diaspora_8php.html#a33ae0c4606a7df4d801c05507d87f668">diaspora_send_status()</a>, <a class="el" href="diaspora_8php.html#a69f250b078a46e405647428ec3399a16">diaspora_share()</a>, and <a class="el" href="diaspora_8php.html#ab736d6f32b5de31c97cb579fc730e200">diaspora_unshare()</a>.</p>
 
 </div>
 </div>
@@ -1084,7 +1084,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="af3a7f9879c14fec761dcc5563fb39bac"></a>
+<a class="anchor" id="a69f250b078a46e405647428ec3399a16"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1092,7 +1092,7 @@ Functions</h2></td></tr>
           <td class="memname">diaspora_share </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$me</em>, </td>
+          <td class="paramname"><em>$owner</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1188,11 +1188,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="diaspora_8php.html#af4698b165766f83d89ec1ea964bc92cc">diaspora_send_followup()</a>, <a class="el" href="diaspora_8php.html#ae6f52efd81fe515cd9912bc8293abf5b">diaspora_send_images()</a>, <a class="el" href="diaspora_8php.html#aeb2bb78f620dbf51d9335e6eb7444f2c">diaspora_send_mail()</a>, <a class="el" href="diaspora_8php.html#a0b3628a5e53332c3d3196b689fe2b94d">diaspora_send_relay()</a>, <a class="el" href="diaspora_8php.html#a1704748aa2384c73e43f10e71defd31a">diaspora_send_retraction()</a>, <a class="el" href="diaspora_8php.html#a33ae0c4606a7df4d801c05507d87f668">diaspora_send_status()</a>, <a class="el" href="diaspora_8php.html#af3a7f9879c14fec761dcc5563fb39bac">diaspora_share()</a>, and <a class="el" href="diaspora_8php.html#aa4b1cc0bca5c3fe8d11557685e0238a9">diaspora_unshare()</a>.</p>
+<p>Referenced by <a class="el" href="diaspora_8php.html#af4698b165766f83d89ec1ea964bc92cc">diaspora_send_followup()</a>, <a class="el" href="diaspora_8php.html#ae6f52efd81fe515cd9912bc8293abf5b">diaspora_send_images()</a>, <a class="el" href="diaspora_8php.html#aeb2bb78f620dbf51d9335e6eb7444f2c">diaspora_send_mail()</a>, <a class="el" href="diaspora_8php.html#a0b3628a5e53332c3d3196b689fe2b94d">diaspora_send_relay()</a>, <a class="el" href="diaspora_8php.html#a1704748aa2384c73e43f10e71defd31a">diaspora_send_retraction()</a>, <a class="el" href="diaspora_8php.html#a33ae0c4606a7df4d801c05507d87f668">diaspora_send_status()</a>, <a class="el" href="diaspora_8php.html#a69f250b078a46e405647428ec3399a16">diaspora_share()</a>, and <a class="el" href="diaspora_8php.html#ab736d6f32b5de31c97cb579fc730e200">diaspora_unshare()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aa4b1cc0bca5c3fe8d11557685e0238a9"></a>
+<a class="anchor" id="ab736d6f32b5de31c97cb579fc730e200"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1200,7 +1200,7 @@ Functions</h2></td></tr>
           <td class="memname">diaspora_unshare </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$me</em>, </td>
+          <td class="paramname"><em>$owner</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
