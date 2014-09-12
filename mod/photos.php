@@ -635,7 +635,7 @@ function photos_content(&$a) {
 		);
 		if(count($r)) {
 			$a->set_pager_total(count($r));
-			$a->set_pager_itemspage(60);
+			$a->set_pager_itemspage(5);
 		}
 
 		if($_GET['order'] === 'posted')
@@ -1168,7 +1168,7 @@ function photos_content(&$a) {
 	);
 	if(count($r)) {
 		$a->set_pager_total(count($r));
-		$a->set_pager_itemspage(60);
+		$a->set_pager_itemspage(5);
 	}
 
 	$r = q("SELECT `resource_id`, `id`, `filename`, type, `album`, max(`scale`) AS `scale` FROM `photo`
