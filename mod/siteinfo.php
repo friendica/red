@@ -6,16 +6,17 @@ function siteinfo_init(&$a) {
 		$register_policy = Array('REGISTER_CLOSED', 'REGISTER_APPROVE', 'REGISTER_OPEN');
 
 		$sql_extra = '';
-		if(x($a->config,'admin_nickname')) {
-			$sql_extra = sprintf(" AND nickname = '%s' ",dbesc($a->config['admin_nickname']));
+
+		$r = q("select * from channel left join account on account_id = channel_account_id where ( account_roles & 4096 ) and account_default_channel = channel_id");
+
+
+		if($r) {
+			$admin = array();
+			foreach($r as $rr) {
+				$admin[] = array( 'name' => $rr['channel_name'], 'address' => $rr['channel_address'] . '@' . get_app()->get_hostname(), 'channel' => z_root() . '/channel/' . $rr['channel_address']);
+			}
 		}
-		if (isset($a->config['admin_email']) && $a->config['admin_email']!=''){
-			$r = q("SELECT username, nickname FROM user WHERE email='%s' $sql_extra", dbesc($a->config['admin_email']));
-			$admin = array(
-				'name' => $r[0]['username'],
-				'profile'=> $a->get_baseurl().'/channel/'.$r[0]['nickname'],
-			);
-		} else {
+		else {
 			$admin = false;
 		}
 
@@ -28,9 +29,12 @@ function siteinfo_init(&$a) {
 		}
 
 		if(@is_dir('.git') && function_exists('shell_exec'))
-			$commit = @shell_exec('git log -1 --format="%h"');
+			$commit = trim(@shell_exec('git log -1 --format="%h"'));
 		if(! isset($commit) || strlen($commit) > 16)
 			$commit = '';
+
+		$site_info = get_config('system','info');
+		$site_name = get_config('system','sitename');
 
 		$data = Array(
 			'version' => RED_VERSION,
@@ -38,14 +42,15 @@ function siteinfo_init(&$a) {
 			'url' => z_root(),
 			'plugins' => $visible_plugins,
 			'register_policy' =>  $register_policy[$a->config['system']['register_policy']],
+			'diaspora_emulation' => get_config('system','diaspora_enabled'),
+			'rss_connections' => get_config('system','feed_contacts'),
 			'admin' => $admin,
-			'site_name' => $a->config['sitename'],
+			'site_name' => (($site_name) ? $site_name : ''),
 			'platform' => RED_PLATFORM,
-			'info' => ((x($a->config,'info')) ? $a->config['info'] : '')			
+			'info' => (($site_info) ? $site_info : '')
 		);
 
-		echo json_encode($data);
-		killme();
+		json_return_and_die($data);
 	}
 }
 
