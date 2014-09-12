@@ -705,6 +705,7 @@ function updateConvItems(mode,data) {
 	}
 
 	function justifyPhotos(bParam_page) {
+		justifiedGalleryActive = true;
 		$('#photo-album-contents-' + bParam_page).justifiedGallery({
 			lastRow : 'nojustify',
 			captions: true,
@@ -718,7 +719,7 @@ function updateConvItems(mode,data) {
 				'lt640': '',
 				'lt1024': ''
 			}
-		});
+		}).on('jg.complete', function(e){ justifiedGalleryActive = false; });
 	}
 
 	function notify_popup_loader(notifyType) {
@@ -1134,9 +1135,9 @@ $(window).scroll(function () {
 			$('#more').css("top","400");
 			$('#more').show();
 		}
-	
+
 		if($(window).scrollTop() + $(window).height() == $(document).height()) {
-			if((pageHasMoreContent) && (! loadingPage)) {
+			if((pageHasMoreContent) && (! loadingPage) && (! justifiedGalleryActive)) {
 				$('#more').hide();
 				$('#no-more').hide();
 

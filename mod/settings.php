@@ -589,7 +589,7 @@ function settings_content(&$a) {
 	if((argc() > 1) && (argv(1) === 'featured')) {
 		$settings_addons = "";
 		
-		$r = q("SELECT * FROM `hook` WHERE `hook` = 'plugin_settings' ");
+		$r = q("SELECT * FROM `hook` WHERE `hook` = 'feature_settings' ");
 		if(! count($r))
 			$settings_addons = t('No feature settings configured');
 
