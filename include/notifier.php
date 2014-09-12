@@ -432,6 +432,8 @@ function notifier_run($argv, $argc){
 
 	$sql_extra = (($private) ? "" : " or hubloc_url = '" . dbesc(z_root()) . "' ");
 
+	logger('notifier: hub choice: ' . intval($relay_to_owner) . ' ' . intval($private) . ' ' . $cmd, LOGGER_DEBUG);
+
 	if($relay_to_owner && (! $private) && ($cmd !== 'relay')) {
 
 		// If sending a followup to the post owner, only send it to one channel clone - to avoid race conditions.
