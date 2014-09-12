@@ -46,6 +46,12 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 
 	if(($a->module !== 'home') && x($_SESSION,'login_return_url') && strlen($_SESSION['login_return_url'])) {
 		$return_url = $_SESSION['login_return_url'];
+
+		// don't let members get redirected to a raw ajax page update - this can happen
+		// if DHCP changes the IP address at an unfortunate time and paranoia is turned on
+		if(strstr($return_url,'update_'))
+			$return_url = '';
+
 		unset($_SESSION['login_return_url']);
 		goaway($a->get_baseurl() . '/' . $return_url);
 	}
