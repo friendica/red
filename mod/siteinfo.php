@@ -33,6 +33,7 @@ function siteinfo_init(&$a) {
 				foreach($r as $rr)
 					$visible_plugins[] = $rr['name'];
 		}
+		sort($visible_plugins);
 
 		if(@is_dir('.git') && function_exists('shell_exec'))
 			$commit = trim(@shell_exec('git log -1 --format="%h"'));
