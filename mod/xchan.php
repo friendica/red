@@ -15,16 +15,28 @@ function xchan_content(&$a) {
 	if(x($_GET,'addr')) {
 		$addr = trim($_GET['addr']);
 
-		$r = q("select xchan_name from xchan where xchan_hash like '%s%%'",
+		$r = q("select * from xchan where xchan_hash like '%s%%'",
 			dbesc($addr)
 		);
 
 		if($r) {
 			foreach($r as $rr)
-				$o .= $rr['xchan_name'] . EOL;
+				$o .= str_replace("\n","<br />",print_r($rr,true)) . EOL;
 		}
 		else
 			notice( t('Not found.') . EOL);
+
+		$r = q("select * from hubloc where hubloc_hash like '%s%%'",
+			dbesc($addr)
+		);
+
+		if($r) {
+			foreach($r as $rr)
+				$o .= str_replace("\n","<br />",print_r($rr,true)) . EOL;
+
+		}
+
+
 	}	
 	return $o;
 }
