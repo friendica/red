@@ -33,7 +33,7 @@ Community tags will not work. We will send a tagging activity as a comment. It w
 
 Privacy tags (@!somebody) will not be available to Diaspora members. These tags may have to be stripped or obscured to prevent them from being hijacked - which could result in privacy issues.  
 
-Plus-tagged redmatrix forums should work from Diaspora. If not today, it's very close to working. 
+Plus-tagged redmatrix forums should work from Diaspora. If not today, it's very close to working. Update: these were working but presented a number of issues with mis-attributed posts and potential recursive delivery (Diaspora has no source route detection). This ability has been disabled until we can investigate these issues in detail. 
 
 Premium channel redirects will not be sent. If you allow Diaspora connections, they will not see that you have a premium channel. 
 
