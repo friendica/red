@@ -46,7 +46,7 @@ function webpages_content(&$a) {
 //		}
 
 
-	if(feature_enabled($owner,'expert_mode')) {
+	if(feature_enabled($owner,'expert')) {
 		$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
 		if(! $mimetype)
 			$mimetype = 'choose';	
