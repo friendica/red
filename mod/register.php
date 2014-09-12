@@ -196,13 +196,13 @@ function register_content(&$a) {
 	$invite_code  = ((x($_REQUEST,'invite_code')) ? strip_tags(trim($_REQUEST['invite_code'])) :  "" );
 
 
-
+	require_once('include/bbcode.php');
 
 	$o = replace_macros(get_markup_template('register.tpl'), array(
 
 		'$title'        => t('Registration'),
 		'$reg_is'       => $registration_is,
-		'$registertext' => get_config('system','register_text'),
+		'$registertext' => bbcode(get_config('system','register_text')),
 		'$other_sites'  => $other_sites,
 		'$invitations'  => get_config('system','invitation_only'),
 		'$invite_desc'  => t('Membership on this site is by invitation only.'),
