@@ -675,10 +675,6 @@ aside li {
   margin: auto;
 }
 
-.photo-top-image-wrapper, .photo-album-image-wrapper {
-	width: 240px;
-}
-
 .photo-top-photo-link, .photo-album-photo-link {
   display: block;
   width: 100%;
@@ -686,15 +682,6 @@ aside li {
   height: 0;
   padding: 75% 0 0 0;
   overflow: hidden;
-}
-
-.photo-album-image-wrapper .caption {
- 	background-color: $acpopup_bgcolour;
- 	border-bottom: 2px solid $acpopup_bordercolour;
-}
-
-.photo-top-album-name {
- 	background-color: $acpopup_bgcolour;
 }
 
 #photos-upload-perms-menu, #photos-upload-perms-menu:visited, #photos-upload-perms-menu:link {

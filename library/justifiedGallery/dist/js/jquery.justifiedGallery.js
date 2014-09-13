@@ -444,6 +444,7 @@
 		}
 
 		return this.each(function (index, gallery) {
+
 			var $gallery = $(gallery);
 			$gallery.addClass('justified-gallery');
 
@@ -492,14 +493,13 @@
 			} else if (arg === 'norewind') {
 				// In this case we don't rewind, and analyze all the images
 			} else {
-			//redmatrix - this makes the gallery jump back to top after new content is loaded
 				context.settings = $.extend({}, context.settings, arg);
 				rewind(context);
 			}
 			
 			checkSettings(context);
 
-			context.entries = $gallery.find('> a').toArray();
+			context.entries = $gallery.find('> a, > div').toArray();
 			if (context.entries.length === 0) return;
 
 			// Randomize
@@ -533,6 +533,7 @@
 					//DEBUG// console.log('listed ' + $image.attr('alt'));
 
 					imagesToLoad = true;
+
 					// Spinner start
 					if (context.spinner.active === false) {
 						context.spinner.active = true;
