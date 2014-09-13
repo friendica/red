@@ -415,8 +415,8 @@ function post_init(&$a) {
  * }
  *} 
  *
- * Currently defined message types are 'activity', 'mail', 'profile' and 'channel_sync', which each have 
- * different content schemas.
+ * Currently defined message types are 'activity', 'mail', 'profile', 'location' and 'channel_sync', 
+ * which each have different content schemas.
  *
  * Ping packet:
  * A ping packet does not require any parameters except the type. It may or may not be encrypted.

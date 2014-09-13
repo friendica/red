@@ -1189,7 +1189,8 @@ function zot_fetch($arr) {
  *       we will verify the sender and url in each returned message structure and also verify
  *       that all the messages returned match the site url that we are currently processing.
  * 
- * The message types handled here are 'activity' (e.g. posts), 'mail' , 'profile', and 'channel_sync'
+ * The message types handled here are 'activity' (e.g. posts), 'mail' , 'profile', 'location', 
+ * and 'channel_sync'
  * 
  * @returns array => array ( [0] => string $channel_hash, [1] => string $delivery_status, [2] => string $address )
  *    suitable for logging remotely, enumerating the processing results of each message/recipient combination.
@@ -1348,7 +1349,7 @@ function zot_import($arr, $sender_url) {
 
 				}
 				elseif($i['message']['type'] === 'channel_sync') {
-//					$arr = get_channelsync_elements($i['message']);
+					// $arr = get_channelsync_elements($i['message']);
 
 					$arr = $i['message'];
 
@@ -1357,6 +1358,15 @@ function zot_import($arr, $sender_url) {
 					
 					$result = process_channel_sync_delivery($i['notify']['sender'],$arr,$deliveries);
 				}
+				elseif($i['message']['type'] === 'location') {
+					$arr = $i['message'];
+
+					logger('Location message received: ' . print_r($arr,true), LOGGER_DATA);
+					logger('Location messaeg recipients: ' . print_r($deliveries,true), LOGGER_DATA);
+					
+					$result = process_location_delivery($i['notify']['sender'],$arr,$deliveries);
+				}
+
 			}
 			if($result){
 				$return = array_merge($return,$result);
@@ -1798,6 +1808,194 @@ function process_profile_delivery($sender,$arr,$deliveries) {
 	);
 	if($r)
 		import_directory_profile($sender['hash'],$arr,$r[0]['xchan_addr'], UPDATE_FLAGS_UPDATED, 0);
+}
+
+function process_location_delivery($sender,$arr,$deliveries) {
+
+	// deliveries is irrelevant
+	logger('process_location_delivery', LOGGER_DEBUG);
+//	sync_locations($sender,$arr,true);
+}
+
+// We need to merge this code with that in the import_xchan function so as to make it 
+// easier to maintain changes.
+
+function sync_locations($sender,$arr,$absolute = false) {
+
+// fix sender stuff
+
+	if($arr['locations']) {
+
+		$xisting = q("select hubloc_id, hubloc_url, hubloc_sitekey from hubloc where hubloc_hash = '%s'",
+			dbesc($sender['hash'])
+		);
+
+		// See if a primary is specified
+
+		$has_primary = false;
+		foreach($arr['locations'] as $location) {
+			if($location['primary']) {
+				$has_primary = true;
+				break;
+			}
+		}
+
+		foreach($arr['locations'] as $location) {
+			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$sender['key'])) {
+				logger('import_xchan: Unable to verify site signature for ' . $location['url']);
+				$ret['message'] .= sprintf( t('Unable to verify site signature for %s'), $location['url']) . EOL;
+				continue;
+			}
+
+			// Ensure that they have one primary hub
+
+			if(! $has_primary)
+				$location['primary'] = true;
+
+
+			for($x = 0; $x < count($xisting); $x ++) {
+				if(($xisting[$x]['hubloc_url'] === $location['url']) && ($xisting[$x]['hubloc_sitekey'] === $location['sitekey'])) {
+					$xisting[$x]['updated'] = true;
+				}
+			}
+
+			if(! $location['sitekey']) {
+				logger('import_xchan: empty hubloc sitekey. ' . print_r($location,true));
+				continue;
+			}
+
+			// Catch some malformed entries from the past which still exist
+
+			if(strpos($location['address'],'/') !== false)
+				$location['address'] = substr($location['address'],0,strpos($location['address'],'/'));
+
+			// match as many fields as possible in case anything at all changed. 
+
+			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' ",
+				dbesc($sender['hash']),
+				dbesc($sender['guid']),
+				dbesc($sender['guid_sig']),
+				dbesc($location['url']),
+				dbesc($location['url_sig']),
+				dbesc($location['host']),
+				dbesc($location['address']),
+				dbesc($location['callback']),
+				dbesc($location['sitekey'])
+			);
+			if($r) {
+				logger('import_xchan: hub exists: ' . $location['url']);
+				// update connection timestamp if this is the site we're talking to
+				if(array_key_exists('site',$arr) && $location['url'] == $arr['site']['url']) {
+					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d limit 1",
+						dbesc(datetime_convert()),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+				}
+				if($r[0]['hubloc_status'] & HUBLOC_OFFLINE) {
+					q("update hubloc set hubloc_status = (hubloc_status ^ %d) where hubloc_id = %d limit 1",
+						intval(HUBLOC_OFFLINE),
+						intval($r[0]['hubloc_id'])
+					);
+					if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
+						q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
+							intval(HUBLOC_FLAGS_ORPHANCHECK),
+							intval($r[0]['hubloc_id'])
+						);
+					}
+					q("update xchan set xchan_flags = (xchan_flags ^ %d) where (xchan_flags & %d) and xchan_hash = '%s' limit 1",
+						intval(XCHAN_FLAGS_ORPHAN),
+						intval(XCHAN_FLAGS_ORPHAN),
+						dbesc($sender['hash'])
+					);
+
+				} 
+
+				// Remove pure duplicates
+				if(count($r) > 1) {
+					for($h = 1; $h < count($r); $h ++) {
+						q("delete from hubloc where hubloc_id = %d limit 1",
+							intval($r[$h]['hubloc_id'])
+						);
+					}
+				}
+
+				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
+					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
+					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
+						intval(HUBLOC_FLAGS_PRIMARY),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+					$what = 'primary_hub ';
+					$changed = true;
+				}
+				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted']))
+					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && ($location['deleted']))) {
+					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
+						intval(HUBLOC_FLAGS_DELETED),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+					$what = 'delete_hub ';
+					$changed = true;
+				}
+				continue;
+			}
+
+			// new hub claiming to be primary. Make it so.
+
+			if(intval($location['primary'])) {
+				$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_hash = '%s' and (hubloc_flags & %d )",
+					intval(HUBLOC_FLAGS_PRIMARY),
+					dbesc(datetime_convert()),
+					dbesc($sender['hash']),
+					intval(HUBLOC_FLAGS_PRIMARY)
+				);
+			}
+			logger('location_delivery: new hub: ' . $location['url']);
+			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_updated, hubloc_connected)
+					values ( '%s','%s','%s','%s', '%s', %d ,'%s','%s','%s','%s','%s','%s','%s')",
+				dbesc($sender['guid']),
+				dbesc($sender['guid_sig']),
+				dbesc($sender['hash']),
+				dbesc($location['address']),
+				dbesc('zot'),
+				intval((intval($location['primary'])) ? HUBLOC_FLAGS_PRIMARY : 0),
+				dbesc($location['url']),
+				dbesc($location['url_sig']),
+				dbesc($location['host']),
+				dbesc($location['callback']),
+				dbesc($location['sitekey']),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert())
+			);
+			$what .= 'newhub ';
+			$changed = true;
+
+		}
+
+		// get rid of any hubs we have for this channel which weren't reported.
+
+		if($absolute && $xisting) {
+			foreach($xisting as $x) {
+				if(! array_key_exists('updated',$x)) {
+					logger('import_xchan: removing unreferenced hub location ' . $x['hubloc_url']);
+					$r = q("delete from hubloc where hubloc_id = %d limit 1",
+						intval($x['hubloc_id'])
+					);
+					$what .= 'removed_hub';
+					$changed = true;
+				}
+			}
+		}
+	}
+
+	$ret['change_message'] = $what;
+	$ret['changed'] = $changed;
+
+	return $ret;
+
 }
 
 
