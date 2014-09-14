@@ -1814,7 +1814,14 @@ function process_location_delivery($sender,$arr,$deliveries) {
 
 	// deliveries is irrelevant
 	logger('process_location_delivery', LOGGER_DEBUG);
-//	sync_locations($sender,$arr,true);
+
+	$r = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
+			dbesc($sender['hash'])
+	);
+	if($r)
+		$sender['key'] = $r[0]['xchan_pubkey'];
+
+	sync_locations($sender,$arr,true);
 }
 
 // We need to merge this code with that in the import_xchan function so as to make it 
@@ -1822,7 +1829,7 @@ function process_location_delivery($sender,$arr,$deliveries) {
 
 function sync_locations($sender,$arr,$absolute = false) {
 
-// fix sender stuff
+	$ret = array();
 
 	if($arr['locations']) {
 
@@ -1842,7 +1849,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 
 		foreach($arr['locations'] as $location) {
 			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$sender['key'])) {
-				logger('import_xchan: Unable to verify site signature for ' . $location['url']);
+				logger('sync_locations: Unable to verify site signature for ' . $location['url']);
 				$ret['message'] .= sprintf( t('Unable to verify site signature for %s'), $location['url']) . EOL;
 				continue;
 			}
@@ -1852,15 +1859,15 @@ function sync_locations($sender,$arr,$absolute = false) {
 			if(! $has_primary)
 				$location['primary'] = true;
 
-
 			for($x = 0; $x < count($xisting); $x ++) {
-				if(($xisting[$x]['hubloc_url'] === $location['url']) && ($xisting[$x]['hubloc_sitekey'] === $location['sitekey'])) {
+				if(($xisting[$x]['hubloc_url'] === $location['url']) 
+					&& ($xisting[$x]['hubloc_sitekey'] === $location['sitekey'])) {
 					$xisting[$x]['updated'] = true;
 				}
 			}
 
 			if(! $location['sitekey']) {
-				logger('import_xchan: empty hubloc sitekey. ' . print_r($location,true));
+				logger('sync_locations: empty hubloc sitekey. ' . print_r($location,true));
 				continue;
 			}
 
@@ -1883,8 +1890,11 @@ function sync_locations($sender,$arr,$absolute = false) {
 				dbesc($location['sitekey'])
 			);
 			if($r) {
-				logger('import_xchan: hub exists: ' . $location['url']);
+				logger('sync_locations: hub exists: ' . $location['url'], LOGGER_DEBUG);
+
 				// update connection timestamp if this is the site we're talking to
+				// This only happens when called from import_xchan
+
 				if(array_key_exists('site',$arr) && $location['url'] == $arr['site']['url']) {
 					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d limit 1",
 						dbesc(datetime_convert()),
@@ -1892,6 +1902,11 @@ function sync_locations($sender,$arr,$absolute = false) {
 						intval($r[0]['hubloc_id'])
 					);
 				}
+				
+				// if it's marked offline/dead, bring it back
+				// Should we do this? It's basically saying that the channel knows better than
+				// the directory server if the site is alive.
+
 				if($r[0]['hubloc_status'] & HUBLOC_OFFLINE) {
 					q("update hubloc set hubloc_status = (hubloc_status ^ %d) where hubloc_id = %d limit 1",
 						intval(HUBLOC_OFFLINE),
@@ -1908,7 +1923,6 @@ function sync_locations($sender,$arr,$absolute = false) {
 						intval(XCHAN_FLAGS_ORPHAN),
 						dbesc($sender['hash'])
 					);
-
 				} 
 
 				// Remove pure duplicates
@@ -1927,7 +1941,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
-					$what = 'primary_hub ';
+					$what .= 'primary_hub ';
 					$changed = true;
 				}
 				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted']))
@@ -1937,7 +1951,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
-					$what = 'delete_hub ';
+					$what .= 'delete_hub ';
 					$changed = true;
 				}
 				continue;
@@ -1997,6 +2011,33 @@ function sync_locations($sender,$arr,$absolute = false) {
 	return $ret;
 
 }
+
+
+function zot_encode_locations($channel) {
+	$ret = array();
+
+	$x = zot_get_hublocs($channel['channel_hash']);
+	if($x && count($x)) {
+		foreach($x as $hub) {
+			if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {
+				$ret[] = array(
+					'host'     => $hub['hubloc_host'],
+					'address'  => $hub['hubloc_addr'],
+					'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
+					'url'      => $hub['hubloc_url'],
+					'url_sig'  => $hub['hubloc_url_sig'],
+					'callback' => $hub['hubloc_callback'],
+					'sitekey'  => $hub['hubloc_sitekey'],
+					'deleted'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED) ? true : false)
+				);
+			}
+		}
+	}
+	return $ret;
+}
+
+
+
 
 
 /*
