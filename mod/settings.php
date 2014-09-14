@@ -136,7 +136,8 @@ function settings_post(&$a) {
 		$theme = ((x($_POST,'theme')) ? notags(trim($_POST['theme']))  : $a->channel['channel_theme']);
 		$mobile_theme = ((x($_POST,'mobile_theme')) ? notags(trim($_POST['mobile_theme']))  : '');
 		$user_scalable = ((x($_POST,'user_scalable')) ? intval($_POST['user_scalable'])  : 0);
-		$nosmile = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0);  
+		$nosmile = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0); 
+		$title_tosource = ((x($_POST,'title_tosource')) ? intval($_POST['title_tosource'])  : 0);		 
 		$browser_update   = ((x($_POST,'browser_update')) ? intval($_POST['browser_update']) : 0);
 		$browser_update   = $browser_update * 1000;
 		if($browser_update < 10000)
@@ -156,6 +157,7 @@ function settings_post(&$a) {
 		set_pconfig(local_user(),'system','update_interval', $browser_update);
 		set_pconfig(local_user(),'system','itemspage', $itemspage);
 		set_pconfig(local_user(),'system','no_smilies',$nosmile);
+		set_pconfig(local_user(),'system','title_tosource',$title_tosource);
 //		set_pconfig(local_user(),'system','chanview_full',$chanview_full);
 
 
@@ -742,6 +744,9 @@ function settings_content(&$a) {
 		$nosmile = get_pconfig(local_user(),'system','no_smilies');
 		$nosmile = (($nosmile===false)? '0': $nosmile); // default if not set: 0
 
+		$title_tosource = get_pconfig(local_user(),'system','title_tosource');
+		$title_tosource = (($title_tosource===false)? '0': $title_tosource); // default if not set: 0
+
 		$theme_config = "";
 		if( ($themeconfigfile = get_theme_config_file($theme_selected)) != null){
 			require_once($themeconfigfile);
@@ -762,6 +767,7 @@ function settings_content(&$a) {
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
 			'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, ''),
+			'$title_tosource'	=> array('title_tosource', t("Link post titles to source"), $title_tosource, ''),		
 			'$layout_editor' => t('System Page Layout Editor - (advanced)'),
 			'$theme_config' => $theme_config,
 			'$expert' => feature_enabled(local_user(),'expert'),
