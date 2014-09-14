@@ -708,14 +708,12 @@ function updateConvItems(mode,data) {
 		justifiedGalleryActive = true;
 		$('#photo-album-contents-' + bParam_page).justifiedGallery({
 			lastRow : 'nojustify',
-			captions: true,
 			margins: 3,
-			rowHeight : 150,
 			sizeRangeSuffixes : {
 				'lt100': '-2',
 				'lt240': '-2',
 				'lt320': '-2',
-				'lt500': '-1',
+				'lt500': '-0',
 				'lt640': '-1',
 				'lt1024': '-0'
 			}
