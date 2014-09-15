@@ -68,13 +68,31 @@ function collect_recipients($item,&$private_envelope) {
 		$private_envelope = false;
 
 		if(array_key_exists('public_policy',$item) && $item['public_policy'] !== 'self') {
-			$r = q("select abook_xchan from abook where abook_channel = %d and not (abook_flags & %d) ",
+			$r = q("select abook_xchan, xchan_network from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d) ",
 				intval($item['uid']),
 				intval(ABOOK_FLAG_SELF|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
 			);
 			if($r) {
+
+				// filter out restrictive public_policy settings from remote networks
+				// which don't have this concept and will treat them as public.
+
+				$policy = substr($item['public_policy'],0,3);
 				foreach($r as $rr) {
-					$recipients[] = $rr['abook_xchan'];
+					switch($policy) {
+						case 'net':
+						case 'aut':
+						case 'sit':		
+						case 'any':
+						case 'con':
+							if($rr['xchan_network'] != 'zot')
+								break;
+						case 'pub':
+						case '':
+						default:
+							$recipients[] = $rr['abook_xchan'];
+							break;
+					}
 				}
 			}
 		}
