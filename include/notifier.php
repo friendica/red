@@ -455,8 +455,8 @@ function notifier_run($argv, $argc){
 
 	
 	// for public posts always include our own hub
-
-	$sql_extra = (($private) ? "" : " or hubloc_url = '" . dbesc(z_root()) . "' ");
+// this shouldn't be needed any more. collect_recipients should take care of it.
+//	$sql_extra = (($private) ? "" : " or hubloc_url = '" . dbesc(z_root()) . "' ");
 
 	logger('notifier: hub choice: ' . intval($relay_to_owner) . ' ' . intval($private) . ' ' . $cmd, LOGGER_DEBUG);
 
@@ -478,7 +478,9 @@ function notifier_run($argv, $argc){
 	} 
 	else {
 		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_sitekey");
+			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)  group by hubloc_sitekey",
+			intval(HUBLOC_FLAGS_DELETED)
+		);
 	}
 
 	if(! $r) {
@@ -493,6 +495,7 @@ function notifier_run($argv, $argc){
 	foreach($hubs as $hub) {
 		// don't try to deliver to deleted hublocs - and inexplicably SQL "distinct" and "group by"
 		// both return records with duplicate keys in rare circumstances
+// FIXME this is probably redundant now.
 		if((! ($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && (! in_array($hub['hubloc_sitekey'],$keys))) {
 			$hublist[] = $hub['hubloc_host'];
 			$keys[] = $hub['hubloc_sitekey'];
