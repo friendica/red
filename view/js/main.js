@@ -713,7 +713,7 @@ function updateConvItems(mode,data) {
 				'lt100': '-2',
 				'lt240': '-2',
 				'lt320': '-2',
-				'lt500': '-0',
+				'lt500': '-1',
 				'lt640': '-1',
 				'lt1024': '-0'
 			}

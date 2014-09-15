@@ -142,12 +142,17 @@ function diaspora_process_outbound($arr) {
 				'cmd' => $cmd,
 				'expire' =>	$expire,
 				'mail' => $mail,
+				'location' => $location,
 				'fsuggest' => $fsuggest,
 				'normal_mode' => $normal_mode,
 				'packet_type' => $packet_type,
 				'walltowall' => $walltowall,
 			));
 */
+
+
+	if($arr['location'])
+		return;
 
 
 	$target_item = $arr['target_item'];
@@ -159,6 +164,7 @@ function diaspora_process_outbound($arr) {
 		if($target_item['body'])
 			$target_item['body'] = crypto_unencapsulate(json_decode($target_item['body'],true),$key);
 	}
+
 
 
 	if($arr['env_recips']) {

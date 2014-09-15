@@ -1121,6 +1121,11 @@ function zot_import($arr, $sender_url) {
 
 				$deliveries = allowed_public_recips($i);
 
+				if($i['message'] && array_key_exists('type',$i['message']) && $i['message']['type'] === 'location') {
+					$sys = get_sys_channel();
+					$deliveries = array(array('hash' => $sys['xchan_hash']));
+				}
+
 				// if the scope is anything but 'public' we're going to store it as private regardless
 				// of the private flag on the post. 
 
@@ -1206,7 +1211,7 @@ function zot_import($arr, $sender_url) {
 					$arr = $i['message'];
 
 					logger('Location message received: ' . print_r($arr,true), LOGGER_DATA);
-					logger('Location messaeg recipients: ' . print_r($deliveries,true), LOGGER_DATA);
+					logger('Location message recipients: ' . print_r($deliveries,true), LOGGER_DATA);
 					
 					$result = process_location_delivery($i['notify']['sender'],$arr,$deliveries);
 				}
@@ -1665,7 +1670,8 @@ function process_location_delivery($sender,$arr,$deliveries) {
 	if($r)
 		$sender['key'] = $r[0]['xchan_pubkey'];
 
-	sync_locations($sender,$arr,true);
+	$x = sync_locations($sender,$arr,true);
+	logger('process_location_delivery: results: ' . print_r($x,true), LOGGER_DATA);
 }
 
 // We need to merge this code with that in the import_xchan function so as to make it 

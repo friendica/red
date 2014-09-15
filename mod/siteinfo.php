@@ -13,7 +13,13 @@ function siteinfo_init(&$a) {
 		if($r) {
 			$admin = array();
 			foreach($r as $rr) {
-				$admin[] = array( 'name' => $rr['channel_name'], 'address' => $rr['channel_address'] . '@' . get_app()->get_hostname(), 'channel' => z_root() . '/channel/' . $rr['channel_address']);
+				if($rr['channel_pageflags'] & PAGE_HUBADMIN)
+					$admin[] = array( 'name' => $rr['channel_name'], 'address' => $rr['channel_address'] . '@' . get_app()->get_hostname(), 'channel' => z_root() . '/channel/' . $rr['channel_address']);
+			}
+			if(! $admin) {
+				foreach($r as $rr) {
+					$admin[] = array( 'name' => $rr['channel_name'], 'address' => $rr['channel_address'] . '@' . get_app()->get_hostname(), 'channel' => z_root() . '/channel/' . $rr['channel_address']);
+				}
 			}
 		}
 		else {
