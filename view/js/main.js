@@ -708,16 +708,14 @@ function updateConvItems(mode,data) {
 		justifiedGalleryActive = true;
 		$('#photo-album-contents-' + bParam_page).justifiedGallery({
 			lastRow : 'nojustify',
-			captions: true,
 			margins: 3,
-			rowHeight : 150,
 			sizeRangeSuffixes : {
-				'lt100': '',
-				'lt240': '',
-				'lt320': '',
-				'lt500': '',
-				'lt640': '',
-				'lt1024': ''
+				'lt100': '-2',
+				'lt240': '-2',
+				'lt320': '-2',
+				'lt500': '-0',
+				'lt640': '-1',
+				'lt1024': '-0'
 			}
 		}).on('jg.complete', function(e){ justifiedGalleryActive = false; });
 	}
