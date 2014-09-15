@@ -239,7 +239,7 @@ function admin_page_site_post(&$a){
 	$theme				=	((x($_POST,'theme'))			? notags(trim($_POST['theme']))				: '');
 	$theme_mobile			=	((x($_POST,'theme_mobile'))		? notags(trim($_POST['theme_mobile']))			: '');
 	$theme_accessibility		=	((x($_POST,'theme_accessibility'))	? notags(trim($_POST['theme_accessibility']))		: '');
-	$site_channel			=	((x($_POST,'site_channel'))	? notags(trim($_POST['site_channel']))				: '');
+//	$site_channel			=	((x($_POST,'site_channel'))	? notags(trim($_POST['site_channel']))				: '');
 	$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))				:  0);
 	
 	
@@ -304,7 +304,7 @@ function admin_page_site_post(&$a){
 		set_config('system','accessibility_theme', $theme_accessibility);
         }
       
-	set_config('system','site_channel', $site_channel);
+//	set_config('system','site_channel', $site_channel);
 	set_config('system','maximagesize', $maximagesize);
 	
 	set_config('system','register_policy', $register_policy);
@@ -426,7 +426,7 @@ function admin_page_site(&$a) {
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 		'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),
 		'$theme_accessibility' 	=> array('theme_accessibility', t("Accessibility system theme"), get_config('system','accessibility_theme'), t("Accessibility theme"), $theme_choices_accessibility),
-		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
+//		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
 		'$diaspora_enabled'  => array('diaspora_enabled',t('Enable Diaspora Protocol'), get_config('system','diaspora_enabled'), t('Communicate with Diaspora and Friendica - experimental')),
 		'$feed_contacts'    => array('feed_contacts', t('Allow Feeds as Connections'),get_config('system','feed_contacts'),t('(Heavy system resource usage)')), 
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), intval(get_config('system','maximagesize')), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),

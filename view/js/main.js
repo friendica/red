@@ -705,20 +705,19 @@ function updateConvItems(mode,data) {
 	}
 
 	function justifyPhotos(bParam_page) {
+		justifiedGalleryActive = true;
 		$('#photo-album-contents-' + bParam_page).justifiedGallery({
 			lastRow : 'nojustify',
-			captions: true,
 			margins: 3,
-			rowHeight : 150,
 			sizeRangeSuffixes : {
-				'lt100': '',
-				'lt240': '',
-				'lt320': '',
-				'lt500': '',
-				'lt640': '',
-				'lt1024': ''
+				'lt100': '-2',
+				'lt240': '-2',
+				'lt320': '-2',
+				'lt500': '-1',
+				'lt640': '-1',
+				'lt1024': '-0'
 			}
-		});
+		}).on('jg.complete', function(e){ justifiedGalleryActive = false; });
 	}
 
 	function notify_popup_loader(notifyType) {
@@ -1134,9 +1133,9 @@ $(window).scroll(function () {
 			$('#more').css("top","400");
 			$('#more').show();
 		}
-	
+
 		if($(window).scrollTop() + $(window).height() == $(document).height()) {
-			if((pageHasMoreContent) && (! loadingPage)) {
+			if((pageHasMoreContent) && (! loadingPage) && (! justifiedGalleryActive)) {
 				$('#more').hide();
 				$('#no-more').hide();
 

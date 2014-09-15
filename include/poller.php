@@ -171,6 +171,9 @@ function poller_run($argv, $argc){
 		proc_run('php','include/expire.php');
 		proc_run('php','include/cli_suggest.php');
 
+		require_once('include/hubloc.php');
+		remove_obsolete_hublocs();
+
 		/**
 		 * End Cron Daily
 		 */

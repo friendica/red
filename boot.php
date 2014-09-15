@@ -73,7 +73,6 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://zotid.net', 
 	'https://redmatrix.nl', 
 	'https://whogotzot.com', 
-	'https://red.mariovavti.com',
 	'https://red.zottel.red',
 	'https://red.pixelbits.de'
 );
@@ -217,8 +216,9 @@ define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for director
 define ( 'PAGE_PREMIUM',           0x0010 );
 define ( 'PAGE_ADULT',             0x0020 );
 define ( 'PAGE_CENSORED',          0x0040 ); // Site admin has blocked this channel from appearing in casual search results and site feeds
-
 define ( 'PAGE_SYSTEM',            0x1000 );
+define ( 'PAGE_HUBADMIN',          0x2000 ); // set this to indicate a preferred admin channel rather than the 
+											 // default channel of any accounts with the admin role.
 define ( 'PAGE_REMOVED',           0x8000 );
 
 

@@ -142,12 +142,17 @@ function diaspora_process_outbound($arr) {
 				'cmd' => $cmd,
 				'expire' =>	$expire,
 				'mail' => $mail,
+				'location' => $location,
 				'fsuggest' => $fsuggest,
 				'normal_mode' => $normal_mode,
 				'packet_type' => $packet_type,
 				'walltowall' => $walltowall,
 			));
 */
+
+
+	if($arr['location'])
+		return;
 
 
 	$target_item = $arr['target_item'];
@@ -159,6 +164,7 @@ function diaspora_process_outbound($arr) {
 		if($target_item['body'])
 			$target_item['body'] = crypto_unencapsulate(json_decode($target_item['body'],true),$key);
 	}
+
 
 
 	if($arr['env_recips']) {
@@ -1966,19 +1972,16 @@ function diaspora_retraction($importer,$xml) {
 
 	if($type === 'Person') {
 		require_once('include/Contact.php');
-		contact_remove($contact['id']);
+		contact_remove($importer['channel_id'],$contact['abook_id']);
 	}
 	elseif($type === 'Post') {
-		$r = q("select * from item where guid = '%s' and uid = %d and not file like '%%[%%' limit 1",
+		$r = q("select * from item where mid = '%s' and uid = %d limit 1",
 			dbesc('guid'),
 			intval($importer['channel_id'])
 		);
 		if(count($r)) {
-			if(link_compare($r[0]['author-link'],$contact['url'])) {
-				q("update item set `deleted` = 1, `changed` = '%s' where `id` = %d",
-					dbesc(datetime_convert()),
-					intval($r[0]['id'])
-				);
+			if(link_compare($r[0]['author_xchan'],$contact['xchan_hash'])) {
+				drop_item($r[0]['id'],false);
 			}
 		}
 	}

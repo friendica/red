@@ -1,11 +1,3 @@
-
-
-.photo-top-photo, .photo-album-photo {
-    padding: 10px;
-    max-width: 300px;
-}
-
-
 .photos-end {
 	clear: both;
 	margin-bottom: 25px;
@@ -30,49 +22,9 @@
 	clear: both;
 }
 
-.photo-album-image-wrapper {
-	float: left;
-	margin-top: 15px;
-	margin-right: 15px;
-	margin-left: 15px;
-}
-.photo-album-image-wrapper .caption {
-	display: none; 
- 	width: 100%;
- 	bottom: 0px; 
- 	padding: 0.5em 0.5em 0px 0.5em;
- 	margin: 0px;
-}
-.photo-album-image-wrapper a:hover .caption {
-	display:block;
-}
-
 #photo-album-end {
 	clear: both;
 	margin-bottom: 25px;
-}
-
-.photo-top-image-wrapper {
-	float: left;
-	margin-top: 15px;
-	margin-right: 15px;
-	margin-left: 15px;
-	margin-bottom: 15px;
-}
-.photo-top-album-name {
- 	width: 100%;
- 	min-height: 2em;
- 	bottom: 0px; 
- 	padding: 0px 3px;
- 	padding-top: 0.5em;
-}
-#photo-top-end {
-	clear: both;
-}
-
-#photo-top-links {
-	margin-bottom: 30px;
-	margin-left: 30px;
 }
 
 #photos-upload-newalbum-div {
@@ -83,6 +35,7 @@
 #photos-upload-noshare {
 	margin-bottom: 10px;
 }
+
 #photos-upload-existing-album-text {
 	float: left;
 	width: 175px;
