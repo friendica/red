@@ -57,6 +57,7 @@ require_once('include/html2plain.php');
  *       purge_all              channel_id
  *       expire                 channel_id
  *       relay					item_id (item was relayed to owner, we will deliver it as owner)
+ *       location               channel_id
  *
  */
 
@@ -144,6 +145,7 @@ function notifier_run($argv, $argc){
 	$mail = false;
 	$fsuggest = false;
 	$top_level = false;
+	$location  = false;
 	$recipients = array();
 	$url_recipients = array();
 	$normal_mode = true;
@@ -229,6 +231,30 @@ function notifier_run($argv, $argc){
 		}
 		$private = false;
 		$packet_type = 'refresh';
+	}
+	elseif($cmd === 'location') {
+		logger('notifier: location: ' . $item_id);
+		$s = q("select * from channel where channel_id = %d limit 1",
+			intval($item_id)
+		);
+		if($s)
+			$channel = $s[0];
+		$uid = $item_id;
+		$recipients = array();
+		$r = q("select abook_xchan from abook where abook_channel = %d",
+			intval($item_id)
+		);
+		if($r) {
+			foreach($r as $rr) {
+				$recipients[] = $rr['abook_xchan'];
+			}
+		}
+
+		$encoded_item = array('locations' => zot_encode_locations($channel),'type' => 'location', 'encoding' => 'zot');
+		$target_item = array('aid' => $channel['channel_account_id'],'uid' => $channel['channel_id']);
+		$private = false;
+		$packet_type = 'location';
+		$location = true;
 	}
 	elseif($cmd === 'purge_all') {
 		logger('notifier: purge_all: ' . $item_id);
@@ -516,6 +542,7 @@ function notifier_run($argv, $argc){
 				'cmd' => $cmd,
 				'expire' =>	$expire,
 				'mail' => $mail,
+				'location' => $location,
 				'fsuggest' => $fsuggest,
 				'normal_mode' => $normal_mode,
 				'packet_type' => $packet_type,
