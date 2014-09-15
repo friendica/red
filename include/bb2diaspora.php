@@ -296,7 +296,8 @@ function bb2diaspora_itembody($item) {
 				logger('bb2diaspora_itembody: cached ');
 				$newitem = $item;
 				$newitem['body'] = $meta['body'];
-				bb2diaspora_itemwallwall($newitem);
+// this won't work - the post is now in markdown
+//				bb2diaspora_itemwallwall($newitem);
 				return $newitem['body'];
 			}
 		}
