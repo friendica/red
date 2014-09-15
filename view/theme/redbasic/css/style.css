@@ -2060,11 +2060,11 @@ img.mail-list-sender-photo {
 
 .wall-item-ago {
 	color: #777;
-	font-size: 0.8em;
+	font-size: 0.833em;
 }
 
 .wall-item-ago i {
-	font-size: 0.8em;
+	font-size: 0.833em;
 }
 
 .wall-item-content {
@@ -2082,7 +2082,7 @@ img.mail-list-sender-photo {
 }
 
 .comment-icon {
-	font-size: 0.8em;
+	font-size: 0.833em;
 	color: $toolicon_colour;
 }
 
@@ -2256,15 +2256,27 @@ blockquote {
 }
 
 h1, h2 {
-	font-size: 1.15rem;
+   font-size: 1.583em;
 }
 
 h3, h4 {
-		font-size: 1rem;
+   font-size: 1.334em;
 }
 
 h5, h6 {
-		font-size: 0.75rem;
+   font-size: 0.75rem; 
+}
+
+.wall-item-content h1,  .wall-item-content h2 {
+   font-size: 1.319em;
+}
+
+.wall-item-title {
+   font-size: $font_size;
+}
+
+.wall-item-title h3, .wall-item-content h3,  .wall-item-content h4 {
+   font-size: 1.112em;
 }
 
 .dropdown-menu {

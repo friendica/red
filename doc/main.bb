@@ -49,8 +49,8 @@ Zot is the great new communicaton protocol invented especially for the Red Matri
 [zrl=[baseurl]/help/faq_admins]FAQ For Admins[/zrl]
 
 [size=large][b]Technical Documentation[/b][/size]
-[zrl=[baseurl]/help/Zot---A-High-Level-Overview.md[/zrl]A high level overview of Zot[/zrl]
-[zrl=[baseurl]/help/zot]An introduction to Zot/zrl]
+[zrl=[baseurl]/help/Zot---A-High-Level-Overview]A high level overview of Zot[/zrl]
+[zrl=[baseurl]/help/zot]An introduction to Zot[/zrl]
 [zrl=[baseurl]/help/zot_structures]Zot Stuctures[/zrl]
 [zrl=[baseurl]/help/comanche]Comanche Page Descriptions[/zrl]
 [zrl=[baseurl]/help/Creating-Templates]Creating Comanche Templates[/zrl]
