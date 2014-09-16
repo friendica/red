@@ -379,28 +379,23 @@ function import_post(&$a) {
 //FIXME just a note here for when folks want to import content - be very careful to unset ITEM_ORIGIN on all imported content. Or you could end up with a nasty routing loop when somebody tries to reply to one of those posts. 
 
 
-
-
-
 // FIXME - ensure we have a self entry if somebody is trying to pull a fast one
 
-	if($seize) {
-		// notify old server that it is no longer primary.
-		
-	}
+	// send out refresh requests
+	// notify old server that it may no longer be primary.
+
+	proc_run('php','include/notifier.php','location',$channel['channel_id']);
 
 	// This will indirectly perform a refresh_all *and* update the directory
 
 	proc_run('php', 'include/directory.php', $channel['channel_id']);
 
-	// send out refresh requests
 
 	notice( t('Import completed.') . EOL);
 
 	change_channel($channel['channel_id']);
 
 	goaway(z_root() . '/network' );
-
 
 }
 
