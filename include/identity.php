@@ -489,18 +489,12 @@ function identity_basic_export($channel_id, $items = false) {
 		intval($channel_id)
 	);
 	if($r) {
-		for($x = 0; $x < count($r); $x ++) {
-			if($r[$x]['diaspora_meta'])
-				$r[$x]['diaspora_meta'] = crypto_unencapsulate(json_decode($r[$x]['diaspora_meta'],true),$key);
-			if($r[$x]['item_flags'] & ITEM_OBSCURED) {
-				$r[$x]['item_flags'] = $r[$x]['item_flags'] ^ ITEM_OBSCURED;
-				if($r[$x]['title'])
-					$r[$x]['title'] = crypto_unencapsulate(json_decode($r[$x]['title'],true),$key);
-				if($r[$x]['body'])
-					$r[$x]['body'] = crypto_unencapsulate(json_decode($r[$x]['body'],true),$key);
-			}
-		}
-		$ret['item'] = $r;
+		$ret['item'] = array();
+		xchan_query($r);
+		$r = fetch_post_tags($r,true);
+		foreach($r as $rr)
+			$ret['item'][] = encode_item($rr,true);
+
 	}
 	return $ret;
 

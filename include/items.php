@@ -1007,8 +1007,7 @@ function import_author_unknown($x) {
 	
 }
 
-
-function encode_item($item) {
+function encode_item($item,$mirror = false) {
 	$x = array();
 	$x['type'] = 'activity';
 	$x['encoding'] = 'zot';
@@ -1030,12 +1029,35 @@ function encode_item($item) {
 
 	$c_scope = map_scope($comment_scope);
 
+	$key = get_config('system','prvkey');
+
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
-		$key = get_config('system','prvkey');
 		if($item['title'])
 			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
 			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+	}
+
+	// If we're trying to backup an item so that it's recoverable or for export/imprt, 
+	// add all the attributes we need to recover it
+
+	if($mirror) {
+		$x['id'] = $item['id'];
+		$x['parent'] = $item['parent'];
+		$x['uid'] = $item['uid'];
+		$x['allow_cid'] = $item['allow_cid'];
+		$x['allow_gid'] = $item['allow_gid'];
+		$x['deny_cid'] = $item['deny_cid'];
+		$x['deny_gid'] = $item['deny_gid'];
+		$x['revision'] = $item['revision'];
+		$x['layout_mid'] = $item['layout_mid'];
+		$x['postopts'] = $item['postopts'];
+		$x['resource_id'] = $item['resource_id'];
+		$x['resource_type'] = $item['resource_type'];
+		$x['item_restrict'] = $item['item_restrict'];
+		$x['item_flags'] = $item['item_flags'];
+		$x['diaspora_meta'] = crypto_unencapsulate(json_decode($item['diaspora_meta'],true),$key);
+		$x['attach'] = $item['attach'];
 	}
 
 
