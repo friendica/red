@@ -2336,7 +2336,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 // FIXME - this will sync red structures (channel, pconfig and abook). Eventually we need to make this application agnostic.
-// TODO: missing group membership changes
+
 
 	$result = array();
 	
@@ -2351,6 +2351,10 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 		}
 
 		$channel = $r[0];
+
+	    $max_friends = service_class_fetch($channel['channel_id'],'total_channels');
+    	$max_feeds = account_service_class_fetch($channel['channel_account_id'],'total_feeds');
+
 
 		if($channel['channel_hash'] != $sender['hash']) {
 			logger('process_channel_sync_delivery: possible forgery. Sender ' . $sender['hash'] . ' is not ' . $channel['channel_hash']);
@@ -2385,6 +2389,19 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 
 		if(array_key_exists('abook',$arr) && is_array($arr['abook']) && count($arr['abook'])) {
+			$total_friends = 0;
+			$total_feeds = 0;
+
+			$r = q("select abook_id, abook_flags from abook where abook_channel = %d",
+				intval($channel['channel_id'])
+			);
+			if($r) {
+				// don't count yourself
+				$total_friends = ((count($r) > 0) ? $count($r) - 1 : 0);
+				foreach($r as $rr)
+					if($rr['abook_flags'] & ABOOK_FLAG_FEED)
+						$total_feeds ++;
+			}
 
 			$disallowed = array('abook_id','abook_account','abook_channel');
 
@@ -2395,14 +2412,18 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);
 					require_once('include/Contact.php');
 					
-					$r = q("select abook_id from abook where abook_xchan = '%s' and abook_channel = %d and not ( abook_flags & %d ) limit 1",
+					$r = q("select abook_id, abook_flags from abook where abook_xchan = '%s' and abook_channel = %d and not ( abook_flags & %d ) limit 1",
 						dbesc($abook['abook_xchan']),
 						intval($channel['channel_id']),
 						intval(ABOOK_FLAG_SELF)
 					);
-					if($r)
+					if($r) {
 						contact_remove($channel['channel_id'],$r[0]['abook_id']);
-
+						if($total_friends)
+							$total_friends --;
+						if($r[0]['abook_flags'] & ABOOK_FLAG_FEED)
+							$total_feeds --;
+					}
 					continue;
 				}
 
@@ -2449,10 +2470,21 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 				// make sure we have an abook entry for this xchan on this system
 
 				if(! $r) {
+					if($max_friends !== false && $total_friends > $max_friends) {
+						logger('process_channel_sync_delivery: total_channels service class limit exceeded');
+						continue;
+					}
+					if($max_feeds !== false && ($clean['abook_flags'] & ABOOK_FLAG_FEED) && $total_feeds > $max_feeds) {
+						logger('process_channel_sync_delivery: total_feeds service class limit exceeded');
+						continue; 
+					}
 					q("insert into abook ( abook_xchan, abook_channel ) values ('%s', %d ) ",
 						dbesc($clean['abook_xchan']),
 						intval($channel['channel_id'])
 					);
+					$total_friends ++;
+					if($clean['abook_flags'] & ABOOK_FLAG_FEED)
+						$total_feeds ++;
 				} 
 
 				if(count($clean)) {
