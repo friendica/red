@@ -52,7 +52,7 @@
     [li]chatroom - data for the actual chat room[/li]
     [li]clients - OAuth usage[/li]
     [li]config - main configuration storage[/li]
-    [li]conv - [/li]
+    [li]conv - Diaspora private messages[/li]
     [li]event - Events[/li]
     [li]fcontact - friend suggestion stuff[/li]
     [li]ffinder - friend suggestion stuff[/li]

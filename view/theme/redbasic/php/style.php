@@ -64,7 +64,7 @@ if(! $a->install) {
 		// should leave it for admins to define for themselves.
 			if (! $schema) {
 			      if(file_exists('view/theme/redbasic/schema/default.php')) {
-				    $schemefile = 'view/theme/redbasic/schema/' . 'default.php';
+				    $schemefile = 'view/theme/redbasic/schema/default.php';
 				    require_once ($schemefile);
 				    }
 			}
