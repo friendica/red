@@ -376,6 +376,12 @@ function import_post(&$a) {
 		}
 	}
 
+//FIXME just a note here for when folks want to import content - be very careful to unset ITEM_ORIGIN on all imported content. Or you could end up with a nasty routing loop when somebody tries to reply to one of those posts. 
+
+
+
+
+
 // FIXME - ensure we have a self entry if somebody is trying to pull a fast one
 
 	if($seize) {

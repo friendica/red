@@ -396,7 +396,7 @@ function set_default_login_identity($account_id,$channel_id,$force = true) {
  *
  */
 
-function identity_basic_export($channel_id) {
+function identity_basic_export($channel_id, $items = false) {
 
 	/*
 	 * Red basic channel export
@@ -468,8 +468,42 @@ function identity_basic_export($channel_id) {
 		$ret['photo'] = array('type' => $r[0]['type'], 'data' => base64url_encode($r[0]['data']));
 	}
 
+	if(! $items)
+		return $ret;
 
+
+	$r = q("select * from item_id where uid = %d",
+		intval($channel_id)
+	);
+	
+	if($r)
+		$ret['item_id'] = $r;	
+
+	$key = get_config('system','prvkey');
+
+	// warning: this may run into memory limits on smaller systems
+
+	$r = q("select * from item where (item_flags & %d) and not (item_restrict & %d) and uid = %d",
+		intval(ITEM_WALL),
+		intval(ITEM_DELETED),
+		intval($channel_id)
+	);
+	if($r) {
+		for($x = 0; $x < count($r); $x ++) {
+			if($r[$x]['diaspora_meta'])
+				$r[$x]['diaspora_meta'] = crypto_unencapsulate(json_decode($r[$x]['diaspora_meta'],true),$key);
+			if($r[$x]['item_flags'] & ITEM_OBSCURED) {
+				$r[$x]['item_flags'] = $r[$x]['item_flags'] ^ ITEM_OBSCURED;
+				if($r[$x]['title'])
+					$r[$x]['title'] = crypto_unencapsulate(json_decode($r[$x]['title'],true),$key);
+				if($r[$x]['body'])
+					$r[$x]['body'] = crypto_unencapsulate(json_decode($r[$x]['body'],true),$key);
+			}
+		}
+		$ret['item'] = $r;
+	}
 	return $ret;
+
 }
 
 
