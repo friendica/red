@@ -814,6 +814,7 @@ function admin_page_channels(&$a){
 					intval(PAGE_CENSORED),
 					intval( $uid )
 				);
+				proc_run('php','include/directory.php',$uid,'nopush');
 
 				notice( sprintf( (($channel[0]['channel_pageflags'] & PAGE_CENSORED) ? t("Channel '%s' uncensored"): t("Channel '%s' censored")) , $channel[0]['channel_name'] . ' (' . $channel[0]['channel_address'] . ')' ) . EOL);
 			}; break;
