@@ -124,6 +124,10 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	}
 	$ret['body'] = substr($s,strlen($header));
 	$ret['header'] = $header;
+
+	if(x($opts,'debug')) {
+		$ret['debug'] = $curl_info;
+	}
 	
 	@curl_close($ch);
 	return($ret);
@@ -251,10 +255,23 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
 	$ret['body'] = substr($s,strlen($header));
 	$ret['header'] = $header;
+
+	if(x($opts,'debug')) {
+		$ret['debug'] = $curl_info;
+	}
+
+
 	curl_close($ch);
 	return($ret);
 }
 
+
+function z_post_url_json($url,$params,$redirects = 0, $opts = array()) {
+
+	$opts = array_merge($opts,array('headers' => array('Content-Type: application/json')));
+	return z_post_url($url,json_encode($params),$redirects,$opts);
+
+}
 
 
 function json_return_and_die($x) {
