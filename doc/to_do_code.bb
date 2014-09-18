@@ -14,6 +14,8 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]implement oembed provider interface[/li]
 
+[li]refactor the oembed client interface so that we can safely sandbox remote content[/li]
+
 [li]implement openid server interface[/li]
 
 [li]Write more webpage layouts[/li]
