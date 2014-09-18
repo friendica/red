@@ -219,13 +219,15 @@ function create_identity($arr) {
 	$perms_sql = '';
 
 	$role_permissions = null;
+	$global_perms = get_perms();
 
 	if(array_key_exists('permissions_role',$arr) && $arr['permissions_role']) {
 		$role_permissions = get_role_perms($arr['permissions_role']);
+
 		if($role_permissions) {
 			foreach($role_permissions as $p => $v) {
 				if(strpos($p,'channel_') !== false) {
-					$perms_keys .= ', ' . $global_perms[$p][0];
+					$perms_keys .= ', ' . $p;
 					$perms_vals .= ', ' . intval($v);
 				}
 				if($p === 'directory_publish')
@@ -235,16 +237,16 @@ function create_identity($arr) {
 	}
 	else {
 		$defperms = site_default_perms();
-		$global_perms = get_perms();
 		foreach($defperms as $p => $v) {
 			$perms_keys .= ', ' . $global_perms[$p][0];
 			$perms_vals .= ', ' . intval($v);
 		}
 	}
 
+
 	$expire = get_config('system', 'default_expire_days');
 	$expire = (($expire===false)? '0': $expire);
-	
+
 	$r = q("insert into channel ( channel_account_id, channel_primary, 
 		channel_name, channel_address, channel_guid, channel_guid_sig,
 		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags, channel_expire_days $perms_keys )
@@ -263,8 +265,6 @@ function create_identity($arr) {
 		intval($expire)
 	);
 			
-
-
 
 	$r = q("select * from channel where channel_account_id = %d 
 		and channel_guid = '%s' limit 1",
@@ -361,14 +361,18 @@ function create_identity($arr) {
 
 		// Save our permissions role so we can perhaps call it up and modify it later.
 
-		if($role_permissions)
+		if($role_permissions) {
 			set_pconfig($newuid,'system','permissions_role',$arr['permissions_role']);
+			if(array_key_exists('online',$role_permissions))
+				set_pconfig('system','hide_presence',1-intval($role_permissions['online']));
+		}
 
-		// Create a group with no members. This allows somebody to use it 
+		// Create a group with yourself as a member. This allows somebody to use it 
 		// right away as a default group for new contacts. 
 
 		require_once('include/group.php');
 		group_add($newuid, t('Friends'));
+		group_add_member($newuid,t('Friends'),$ret['channel']['channel_hash']);
 
 		// if our role_permissions indicate that we're using a default collection ACL, add it.
 

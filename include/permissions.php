@@ -440,6 +440,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = false;
 			$ret['directory_publish'] = true;
+			$ret['online'] = true;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
@@ -471,6 +472,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = true;
 			$ret['directory_publish'] = true;
+			$ret['online'] = true;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
@@ -502,6 +504,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = true;
 			$ret['directory_publish'] = false;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
@@ -528,10 +531,11 @@ function get_role_perms($role) {
 			
 			break;
 
-		case 'forum_public':
+		case 'forum':
 			$ret['perms_auto'] = true;
 			$ret['default_collection'] = false;
 			$ret['directory_publish'] = true;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE|PERMS_W_TAGWALL;
@@ -562,6 +566,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = true;
 			$ret['directory_publish'] = true;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE|PERMS_W_TAGWALL;
@@ -593,6 +598,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = true;
 			$ret['directory_publish'] = false;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
@@ -623,6 +629,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = true;
 			$ret['default_collection'] = false;
 			$ret['directory_publish'] = true;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
@@ -654,6 +661,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = true;
 			$ret['directory_publish'] = false;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
@@ -684,6 +692,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = true;
 			$ret['default_collection'] = false;
 			$ret['directory_publish'] = true;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
 			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
@@ -718,4 +727,29 @@ function get_role_perms($role) {
 	return $ret;
 }
 
+
+function role_selector($current) {
+	$roles = array(
+		'social' => array( t('Social Networking'), 
+			array('social' => t('Mostly Public'), 'social_restricted' => t('Restricted'), 'social_private' => t('Private'))),
+		'forum' => array( t('Community Forum'), 
+			array('forum' => t('Mostly Public'), 'forum_restricted' => t('Restricted'), 'forum_private' => t('Private'))),
+		'feed' => array( t('Feed Republish'), 
+			array('feed' => t('Mostly Public'), 'feed_restricted' => t('Restricted'))),
+		'soapbox' => array( t('Celebrity/Soapbox'),
+			array('soapbox' => t('Mostly Public'))),
+		'other' => array( t('Other'),
+			array('custom' => t('Custom/Expert Mode'))));
+	$o = '<select name="permissions_role" id="privacy-role-select">';
+	foreach($roles as $k => $v) {
+		$o .= '<optgroup label="'. htmlspecialchars($v[0]) . '" >';
+		foreach($v[1] as $kk => $vv) {
+			$selected = (($kk === $current)	? ' selected="selected" ' : '');
+			$o .= '<option value="' . $kk . '" ' . $selected . '>' . htmlspecialchars($vv) . '</option>';
+		}
+		$o .= '<optgroup>';
+	}
+	$o .= '</select>';
+	return $o;
+}	
 
