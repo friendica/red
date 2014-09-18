@@ -1114,7 +1114,7 @@ $(window).scroll(function () {
 			$('#more').show();
 		}
 
-		if($(window).scrollTop() + $(window).height() == $(document).height()) {
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
 			if((pageHasMoreContent) && (! loadingPage)) {
 				$('#more').hide();
 				$('#no-more').hide();
@@ -1134,7 +1134,7 @@ $(window).scroll(function () {
 			$('#more').show();
 		}
 
-		if($(window).scrollTop() + $(window).height() == $(document).height()) {
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
 			if((pageHasMoreContent) && (! loadingPage) && (! justifiedGalleryActive)) {
 				$('#more').hide();
 				$('#no-more').hide();

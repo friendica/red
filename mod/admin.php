@@ -768,7 +768,7 @@ function admin_page_channels_post(&$a){
 				);
 			proc_run('php','include/directory.php',$uid,'nopush');
 		}
-		notice( sprintf( tt("%s channel censored/uncensored", "%s channelss censored/uncensored", count($channels)), count($channels)) );
+		notice( sprintf( tt("%s channel censored/uncensored", "%s channels censored/uncensored", count($channels)), count($channels)) );
 	}
 	if (x($_POST,'page_channels_delete')){
 		require_once("include/Contact.php");
@@ -814,6 +814,7 @@ function admin_page_channels(&$a){
 					intval(PAGE_CENSORED),
 					intval( $uid )
 				);
+				proc_run('php','include/directory.php',$uid,'nopush');
 
 				notice( sprintf( (($channel[0]['channel_pageflags'] & PAGE_CENSORED) ? t("Channel '%s' uncensored"): t("Channel '%s' censored")) , $channel[0]['channel_name'] . ' (' . $channel[0]['channel_address'] . ')' ) . EOL);
 			}; break;

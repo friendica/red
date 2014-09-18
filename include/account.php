@@ -616,6 +616,29 @@ function service_class_fetch($uid,$property) {
 	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
 }
 
+// like service_class_fetch but queries by account rather than channel
+
+function account_service_class_fetch($aid,$property) {
+
+	$r = q("select account_service_class as service_class from account where account_id = %d limit 1",
+		intval($aid)
+	);
+	if($r !== false && count($r)) {
+		$service_class = $r[0]['service_class'];
+	}
+
+	if(! x($service_class))
+		return false; // everything is allowed
+
+	$arr = get_config('service_class',$service_class);
+
+	if(! is_array($arr) || (! count($arr)))
+		return false;
+
+	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
+}
+
+
 function upgrade_link($bbcode = false) {
 	$l = get_config('service_class','upgrade_link');
 	if(! $l)
