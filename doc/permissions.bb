@@ -66,7 +66,7 @@ This permission determines who can write to your wall when clicking through to y
 
 [i]Can comment on my posts.[/i]
 
-This permission determines who can comment on posts you create. Normally, you would want this to match your &quot;can view my public pages&quot; permission
+This permission determines who can comment on posts you create. Normally, you would want this to match your &quot;can view my public stream and posts&quot; permission
 
 [i]Can send me private mail messages.[/i]
 

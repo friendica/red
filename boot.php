@@ -982,9 +982,9 @@ class App {
 		if ($user_scalable === false)
 			$user_scalable = 1;
 
-		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
+		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 80000);
 		if($interval < 10000)
-			$interval = 40000;
+			$interval = 80000;
 
 		if(! x($this->page,'title'))
 			$this->page['title'] = $this->config['system']['sitename'];
