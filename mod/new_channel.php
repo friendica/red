@@ -1,6 +1,8 @@
 <?php
 
 require_once('include/identity.php');
+require_once('include/permissions.php');
+
 
 function new_channel_init(&$a) {
 
@@ -100,7 +102,7 @@ function new_channel_content(&$a) {
 
 	$name         = ((x($_REQUEST,'name'))         ? $_REQUEST['name']         :  "" );
 	$nickname     = ((x($_REQUEST,'nickname'))     ? $_REQUEST['nickname']     :  "" );
-
+	$privacy_role = ((x($_REQUEST,'permissions_role')) ? $_REQUEST['permissions_role'] :  "" );
 
 	$o = replace_macros(get_markup_template('new_channel.tpl'), array(
 
@@ -113,6 +115,9 @@ function new_channel_content(&$a) {
 		'$nick_desc'    => t('Your nickname will be used to create an easily remembered channel address (like an email address) which you can share with others.'),
 		'$label_import' => t('Or <a href="import">import an existing channel</a> from another location'),
 		'$name'         => $name,
+		'$label_role'   => t('Channel Type'),
+		'$help_role'   => t('Please choose a channel role (such as social networking or community forum) and privacy requirements so we can select the best permissions for you'),
+		'$role_select'  => role_selector(($privacy_role) ? $privacy_role : 'social'),
 		'$nickname'     => $nickname,
 		'$submit'       => t('Create')
 	));
