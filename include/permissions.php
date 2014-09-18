@@ -465,6 +465,251 @@ function get_role_perms($role) {
 			$ret['channel_w_like']      = PERMS_NETWORK;
 			
 			break;
+
+
+		case 'social_restricted':
+			$ret['perms_auto'] = false;
+			$ret['default_collection'] = true;
+			$ret['directory_publish'] = true;
+			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
+			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
+			$ret['channel_r_stream']    = PERMS_PUBLIC;
+			$ret['channel_r_profile']   = PERMS_PUBLIC;
+			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_abook']     = PERMS_PUBLIC;
+			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_wall']      = PERMS_CONTACTS;
+			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
+			$ret['channel_w_comment']   = PERMS_CONTACTS;
+			$ret['channel_w_mail']      = PERMS_CONTACTS;
+			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_chat']      = PERMS_CONTACTS;
+			$ret['channel_a_delegate']  = 0;
+			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_r_pages']     = PERMS_PUBLIC;
+			$ret['channel_w_pages']     = 0;
+			$ret['channel_a_republish'] = PERMS_SPECIFIC;
+			$ret['channel_w_like']      = PERMS_CONTACTS;
+			
+			break;
+
+
+		case 'social_private':
+			$ret['perms_auto'] = false;
+			$ret['default_collection'] = true;
+			$ret['directory_publish'] = false;
+			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
+			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
+			$ret['channel_r_stream']    = PERMS_PUBLIC;
+			$ret['channel_r_profile']   = PERMS_PUBLIC;
+			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_abook']     = PERMS_CONTACTS;
+			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_wall']      = PERMS_CONTACTS;
+			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
+			$ret['channel_w_comment']   = PERMS_CONTACTS;
+			$ret['channel_w_mail']      = PERMS_SPECIFIC;
+			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_chat']      = PERMS_SPECIFIC;
+			$ret['channel_a_delegate']  = 0;
+			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_r_pages']     = PERMS_PUBLIC;
+			$ret['channel_w_pages']     = 0;
+			$ret['channel_a_republish'] = PERMS_SPECIFIC;
+			$ret['channel_w_like']      = PERMS_CONTACTS;
+			
+			break;
+
+		case 'forum_public':
+			$ret['perms_auto'] = true;
+			$ret['default_collection'] = false;
+			$ret['directory_publish'] = true;
+			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE|PERMS_W_TAGWALL;
+			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE|PERMS_W_TAGWALL;
+			$ret['channel_r_stream']    = PERMS_PUBLIC;
+			$ret['channel_r_profile']   = PERMS_PUBLIC;
+			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_abook']     = PERMS_PUBLIC;
+			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_wall']      = PERMS_CONTACTS;
+			$ret['channel_w_tagwall']   = PERMS_CONTACTS;
+			$ret['channel_w_comment']   = PERMS_CONTACTS;
+			$ret['channel_w_mail']      = PERMS_CONTACTS;
+			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_chat']      = PERMS_CONTACTS;
+			$ret['channel_a_delegate']  = 0;
+			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_r_pages']     = PERMS_PUBLIC;
+			$ret['channel_w_pages']     = 0;
+			$ret['channel_a_republish'] = PERMS_SPECIFIC;
+			$ret['channel_w_like']      = PERMS_NETWORK;
+			
+			break;
+
+		case 'forum_restricted':
+			$ret['perms_auto'] = false;
+			$ret['default_collection'] = true;
+			$ret['directory_publish'] = true;
+			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE|PERMS_W_TAGWALL;
+			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE|PERMS_W_TAGWALL;
+			$ret['channel_r_stream']    = PERMS_PUBLIC;
+			$ret['channel_r_profile']   = PERMS_PUBLIC;
+			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_abook']     = PERMS_PUBLIC;
+			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_wall']      = PERMS_CONTACTS;
+			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
+			$ret['channel_w_comment']   = PERMS_CONTACTS;
+			$ret['channel_w_mail']      = PERMS_CONTACTS;
+			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_chat']      = PERMS_CONTACTS;
+			$ret['channel_a_delegate']  = 0;
+			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_r_pages']     = PERMS_PUBLIC;
+			$ret['channel_w_pages']     = 0;
+			$ret['channel_a_republish'] = PERMS_SPECIFIC;
+			$ret['channel_w_like']      = PERMS_CONTACTS;
+			
+			break;
+
+
+		case 'forum_private':
+			$ret['perms_auto'] = false;
+			$ret['default_collection'] = true;
+			$ret['directory_publish'] = false;
+			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
+			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
+			$ret['channel_r_stream']    = PERMS_PUBLIC;
+			$ret['channel_r_profile']   = PERMS_CONTACTS;
+			$ret['channel_r_photos']    = PERMS_CONTACTS; 			
+			$ret['channel_r_abook']     = PERMS_CONTACTS;
+			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_wall']      = PERMS_CONTACTS;
+			$ret['channel_w_tagwall']   = 0;
+			$ret['channel_w_comment']   = PERMS_CONTACTS;
+			$ret['channel_w_mail']      = PERMS_SPECIFIC;
+			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_chat']      = PERMS_SPECIFIC;
+			$ret['channel_a_delegate']  = 0;
+			$ret['channel_r_storage']   = PERMS_CONTACTS;
+			$ret['channel_r_pages']     = PERMS_CONTACTS;
+			$ret['channel_w_pages']     = 0;
+			$ret['channel_a_republish'] = PERMS_SPECIFIC;
+			$ret['channel_w_like']      = PERMS_CONTACTS;
+			
+			break;
+
+		case 'feed':
+			$ret['perms_auto'] = true;
+			$ret['default_collection'] = false;
+			$ret['directory_publish'] = true;
+			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
+			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
+			$ret['channel_r_stream']    = PERMS_PUBLIC;
+			$ret['channel_r_profile']   = PERMS_PUBLIC;
+			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_abook']     = PERMS_PUBLIC;
+			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_wall']      = PERMS_CONTACTS;
+			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
+			$ret['channel_w_comment']   = PERMS_CONTACTS;
+			$ret['channel_w_mail']      = PERMS_CONTACTS;
+			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_chat']      = PERMS_CONTACTS;
+			$ret['channel_a_delegate']  = 0;
+			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_r_pages']     = PERMS_PUBLIC;
+			$ret['channel_w_pages']     = 0;
+			$ret['channel_a_republish'] = PERMS_NETWORK;
+			$ret['channel_w_like']      = PERMS_NETWORK;
+			
+			break;
+
+		case 'feed_restricted':
+
+			$ret['perms_auto'] = false;
+			$ret['default_collection'] = true;
+			$ret['directory_publish'] = false;
+			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
+			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
+			$ret['channel_r_stream']    = PERMS_PUBLIC;
+			$ret['channel_r_profile']   = PERMS_PUBLIC;
+			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_abook']     = PERMS_PUBLIC;
+			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_wall']      = PERMS_CONTACTS;
+			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
+			$ret['channel_w_comment']   = PERMS_CONTACTS;
+			$ret['channel_w_mail']      = PERMS_CONTACTS;
+			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_chat']      = PERMS_CONTACTS;
+			$ret['channel_a_delegate']  = 0;
+			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_r_pages']     = PERMS_PUBLIC;
+			$ret['channel_w_pages']     = 0;
+			$ret['channel_a_republish'] = PERMS_SPECIFIC;
+			$ret['channel_w_like']      = PERMS_NETWORK;
+			
+			break;
+
+		case 'soapbox':
+			$ret['perms_auto'] = true;
+			$ret['default_collection'] = false;
+			$ret['directory_publish'] = true;
+			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
+			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
+			$ret['channel_r_stream']    = PERMS_PUBLIC;
+			$ret['channel_r_profile']   = PERMS_PUBLIC;
+			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_abook']     = PERMS_PUBLIC;
+			$ret['channel_w_stream']    = 0;
+			$ret['channel_w_wall']      = 0;
+			$ret['channel_w_tagwall']   = 0;
+			$ret['channel_w_comment']   = 0;
+			$ret['channel_w_mail']      = 0;
+			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_chat']      = 0;
+			$ret['channel_a_delegate']  = 0;
+			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_r_pages']     = PERMS_PUBLIC;
+			$ret['channel_w_pages']     = 0;
+			$ret['channel_a_republish'] = PERMS_SPECIFIC;
+			$ret['channel_w_like']      = PERMS_NETWORK;
+			
+			break;
+
+		default:
+			break;
 	
 	}
 
