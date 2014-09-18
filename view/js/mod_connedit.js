@@ -6,11 +6,18 @@ function abook_perms_msg() {
 }
 
 $(document).ready(function() {
-	if(typeof(after_following) !== 'undefined' && after_following)
-		connectFullShare();
+	if(typeof(after_following) !== 'undefined' && after_following) {
+		if(typeof(connectDefaultShare) !== 'undefined')
+			connectDefaultShare();
+		else
+			connectFullShare();
+	}
 
 	$('#id_pending').click(function() {
-		connectFullShare();
+		if(typeof(connectDefaultShare) !== 'undefined')
+			connectDefaultShare();
+		else
+			connectFullShare();
 	});
 
 	$('.abook-edit-me').click(function() {

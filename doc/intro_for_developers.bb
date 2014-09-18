@@ -16,13 +16,9 @@
 
 [install] Installation and upgrade files and DB schema
 
-[js] core required javascript
-
 [library] Third party modules (must be license compatible)
 
 [mod] Controller modules based on URL pathname (e.g. #^[url=http://sitename/foo]http://sitename/foo[/url] loads mod/foo.php)
-
-[spec] protocol specifications
 
 [util] translation tools, main English string database and other miscellaneous utilities
 
@@ -44,15 +40,14 @@
     [li]app - peronal app data[/li]
     [li]attach - file attachments[/li]
     [li]auth_codes - OAuth usage[/li]
-    [li]cache - TBD[/li]
-    [li]challenge - old DFRN structure, may re-use or may deprecate[/li]
+    [li]cache - OEmbed cache[/li]
     [li]channel - replaces Friendica 'user'[/li]
     [li]chat - chat room content[/li]
     [li]chatpresence - channel presence information for chat[/li]
     [li]chatroom - data for the actual chat room[/li]
     [li]clients - OAuth usage[/li]
     [li]config - main configuration storage[/li]
-    [li]conv - [/li]
+    [li]conv - Diaspora private messages[/li]
     [li]event - Events[/li]
     [li]fcontact - friend suggestion stuff[/li]
     [li]ffinder - friend suggestion stuff[/li]
@@ -62,7 +57,6 @@
     [li]group_member - privacy groups[/li]
     [li]hook - plugin hook registry[/li]
     [li]hubloc - Red location storage, ties a location to an xchan[/li]
-    [li]intro - DFRN introductions, may be obsolete[/li]
     [li]item - posts[/li]
     [li]item_id - other identifiers on other services for posts[/li]
     [li]likes - likes of 'things'[/li]

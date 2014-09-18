@@ -38,6 +38,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		return false;
 
 	@curl_setopt($ch, CURLOPT_HEADER, true);
+	@curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 	@curl_setopt($ch, CURLOPT_CAINFO, get_capath());
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 	@curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
@@ -47,11 +48,8 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	if($ciphers)
 		@curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, $ciphers);
 
-	if (x($opts,'accept_content')){
-		@curl_setopt($ch,CURLOPT_HTTPHEADER, array (
-			"Accept: " . $opts['accept_content']
-		));
-	}
+	if(x($opts,'headers'))
+		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
@@ -126,6 +124,10 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	}
 	$ret['body'] = substr($s,strlen($header));
 	$ret['header'] = $header;
+
+	if(x($opts,'debug')) {
+		$ret['debug'] = $curl_info;
+	}
 	
 	@curl_close($ch);
 	return($ret);
@@ -166,6 +168,7 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 		return ret;
 
 	@curl_setopt($ch, CURLOPT_HEADER, true);
+	@curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 	@curl_setopt($ch, CURLOPT_CAINFO, get_capath());
 	@curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	@curl_setopt($ch, CURLOPT_POST,1);
@@ -176,12 +179,6 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	if($ciphers)
 		@curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, $ciphers);
 
-
-	if (x($opts,'accept_content')){
-		@curl_setopt($ch,CURLOPT_HTTPHEADER, array (
-			"Accept: " . $opts['accept_content']
-		));
-	}
 	if(x($opts,'headers'))
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
 
@@ -258,10 +255,23 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
 	$ret['body'] = substr($s,strlen($header));
 	$ret['header'] = $header;
+
+	if(x($opts,'debug')) {
+		$ret['debug'] = $curl_info;
+	}
+
+
 	curl_close($ch);
 	return($ret);
 }
 
+
+function z_post_url_json($url,$params,$redirects = 0, $opts = array()) {
+
+	$opts = array_merge($opts,array('headers' => array('Content-Type: application/json')));
+	return z_post_url($url,json_encode($params),$redirects,$opts);
+
+}
 
 
 function json_return_and_die($x) {

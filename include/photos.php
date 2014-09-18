@@ -266,6 +266,7 @@ function photo_upload($channel, $observer, $args) {
 		proc_run('php', "include/notifier.php", 'wall-new', $item_id);
 
 	$ret['success'] = true;
+	$ret['item'] = $arr;
 	$ret['body'] = $arr['body'];
 	$ret['resource_id'] = $photo_hash;
 	$ret['photoitem_id'] = $item_id;

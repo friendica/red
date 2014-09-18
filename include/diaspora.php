@@ -2043,35 +2043,33 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 	}
 
 	if($type === 'StatusMessage' || $type === 'Comment' || $type === 'Like') {
-		$r = q("select * from item where guid = '%s' and uid = %d and not file like '%%[%%' limit 1",
+		$r = q("select * from item where mid = '%s' and uid = %d limit 1",
 			dbesc($guid),
 			intval($importer['channel_id'])
 		);
-		if(count($r)) {
-			if(link_compare($r[0]['author-link'],$contact['url'])) {
-				q("update item set `deleted` = 1, `edited` = '%s', `changed` = '%s', `body` = '' , `title` = '' where `id` = %d",
-					dbesc(datetime_convert()),
-					dbesc(datetime_convert()),
-					intval($r[0]['id'])
-				);
+		if($r) {
+			if($r[0]['author_xchan'] == $contact['xchan_hash']) {
+
+				drop_item($r[0]['id'],false, DROPITEM_PHASE1);
 
 				// Now check if the retraction needs to be relayed by us
 				//
 				// The first item in the `item` table with the parent id is the parent. However, MySQL doesn't always
 				// return the items ordered by `item`.`id`, in which case the wrong item is chosen as the parent.
 				// The only item with `parent` and `id` as the parent id is the parent item.
-				$p = q("select origin from item where parent = %d and id = %d limit 1",
+				$p = q("select item_flags from item where parent = %d and id = %d limit 1",
 					$r[0]['parent'],
 					$r[0]['parent']
 				);
-				if(count($p)) {
-					if(($p[0]['origin']) && (! $parent_author_signature)) {
-						q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-							$r[0]['id'],
-							dbesc($signed_data),
-							dbesc($sig),
-							dbesc($diaspora_handle)
-						);
+				if($p) {
+					if(($p[0]['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature)) {
+// FIXME so we can relay this
+//						q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+//							$r[0]['id'],
+//							dbesc($signed_data),
+//							dbesc($sig),
+//							dbesc($diaspora_handle)
+//						);
 
 						// the existence of parent_author_signature would have meant the parent_author or owner
 						// is already relaying.

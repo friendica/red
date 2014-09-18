@@ -85,7 +85,7 @@
 					<i class="icon-eye-open jot-icons" ></i>
 				</button>
 				{{/if}}
-				<button class="btn btn-primary btn-sm" type="submit" name="submit">{{$share}}</button>
+				<button class="btn btn-primary btn-sm" type="submit" name="button-submit">{{$share}}</button>
 			</div>
 			<div id="profile-jot-perms-end"></div>
 			<div id="profile-jot-plugin-wrapper">

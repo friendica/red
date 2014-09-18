@@ -58,7 +58,7 @@
 							<i class="icon-eye-open comment-icon" ></i>
 						</button>
 						{{/if}}
-						<button id="comment-edit-submit-{{$id}}" class="btn btn-primary btn-xs" type="submit" name="submit" onclick="post_comment({{$id}}); return false;">{{$submit}}</button>
+						<button id="comment-edit-submit-{{$id}}" class="btn btn-primary btn-xs" type="submit" name="button-submit" onclick="post_comment({{$id}}); return false;">{{$submit}}</button>
 					</div>
 				</div>
 				<div class="clear"></div>

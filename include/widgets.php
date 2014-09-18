@@ -481,11 +481,11 @@ function widget_settings_menu($arr) {
 			'selected' => ''
 		),
 
-//		array(
-//			'label' => t('Export account'),
-//			'url' => $a->get_baseurl(true) . '/uexport/complete',
-//			'selected' => ''
-//		),
+		array(
+			'label' => t('Export content'),
+			'url' => $a->get_baseurl(true) . '/uexport/complete',
+			'selected' => ''
+		),
 
 		array(
 			'label' => t('Automatic Permissions (Advanced)'),
