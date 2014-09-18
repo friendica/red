@@ -736,7 +736,7 @@ function settings_content(&$a) {
 		$user_scalable = (($user_scalable===false)? '1': $user_scalable); // default if not set: 1
 		
 		$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
-		$browser_update = (($browser_update == 0) ? 40 : $browser_update / 1000); // default if not set: 40 seconds
+		$browser_update = (($browser_update == 0) ? 80 : $browser_update / 1000); // default if not set: 40 seconds
 
 		$itemspage = intval(get_pconfig(local_user(), 'system','itemspage'));
 		$itemspage = (($itemspage > 0 && $itemspage < 101) ? $itemspage : 20); // default if not set: 20 items
