@@ -4,6 +4,8 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Documentation - see Red Documentation Project To-Do List[/li]
 
+[li]Include TOS link in registration/verification email[/li]
+
 [li]Finish the anti-spam bayesian engine[/li]
 
 [li]If DAV folders exist, add an option to the Settings page to set a default folder for attachment uploads.[/li] 
@@ -38,7 +40,21 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Uploads - integrate #^[url=https://github.com/blueimp/jQuery-File-Upload]https://github.com/blueimp/jQuery-File-Upload[/url][/li]
 
+[li]Import/export - include items, events, things, etc.[/li]
+
+[li]Import channel from Diaspora/Friendica[/li]
+
+[li]MediaGoblin photo "crosspost" connector[/li]
+
+[li]Create management page/UI for extensible profile fields[/li]
+
+[li]Create interface to include/exclude and re-order standard profile fields[/li]
+
+[li]Provide a mechanism to share page design elements in posts (just like apps)[/li]
+
 [li]App taxonomy[/li]
+
+[li]Customisable App collection pages[/li]
 
 [li]replace the tinymce visual editor and/or make the visual editor pluggable and responsive to different output formats. We probably want library/bbedit for bbcode. This needs a fair bit of work to catch up with our &quot;enhanced bbcode&quot;, but start with images, links, bold and highlight and work from there.[/li]
 

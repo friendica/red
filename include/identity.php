@@ -215,13 +215,31 @@ function create_identity($arr) {
 	if(array_key_exists('primary', $arr))
 		$primary = intval($arr['primary']);
 
+
 	$perms_sql = '';
 
-	$defperms = site_default_perms();
-	$global_perms = get_perms();
-	foreach($defperms as $p => $v) {
-		$perms_keys .= ', ' . $global_perms[$p][0];
-		$perms_vals .= ', ' . intval($v);
+	$role_permissions = null;
+
+	if(array_key_exists('permissions_role',$arr) && $arr['permissions_role']) {
+		$role_permissions = get_role_perms($arr['permissions_role']);
+		if($role_permissions) {
+			foreach($role_permissions as $p => $v) {
+				if(strpos($p,'channel_') !== false) {
+					$perms_keys .= ', ' . $global_perms[$p][0];
+					$perms_vals .= ', ' . intval($v);
+				}
+				if($p === 'directory_publish')
+					$publish = intval($v);
+			}
+		}
+	}
+	else {
+		$defperms = site_default_perms();
+		$global_perms = get_perms();
+		foreach($defperms as $p => $v) {
+			$perms_keys .= ', ' . $global_perms[$p][0];
+			$perms_vals .= ', ' . intval($v);
+		}
 	}
 
 	$expire = get_config('system', 'default_expire_days');
@@ -322,24 +340,51 @@ function create_identity($arr) {
 		dbesc($a->get_baseurl() . "/photo/profile/m/{$newuid}")
 	);
 
-	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_closeness, abook_created, abook_updated, abook_flags )
-		values ( %d, %d, '%s', %d, '%s', '%s', %d ) ",
+	$myperms = 0;
+	if($role_permissions) {
+		$myperms = ((array_key_exists('perms_auto',$role_permissions) && $role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0);
+	}
+
+	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_closeness, abook_created, abook_updated, abook_flags, abook_my_perms )
+		values ( %d, %d, '%s', %d, '%s', '%s', %d, %d ) ",
 		intval($ret['channel']['channel_account_id']),
 		intval($newuid),
 		dbesc($hash),
 		intval(0),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
-		intval(ABOOK_FLAG_SELF)
+		intval(ABOOK_FLAG_SELF),
+		intval($myperms)
 	);
 
 	if(intval($ret['channel']['channel_account_id'])) {
+
+		// Save our permissions role so we can perhaps call it up and modify it later.
+
+		if($role_permissions)
+			set_pconfig($newuid,'system','permissions_role',$arr['permissions_role']);
 
 		// Create a group with no members. This allows somebody to use it 
 		// right away as a default group for new contacts. 
 
 		require_once('include/group.php');
 		group_add($newuid, t('Friends'));
+
+		// if our role_permissions indicate that we're using a default collection ACL, add it.
+
+		if(is_array($role_permissions) && $role_permissions['default_collection']) {
+			$r = q("select hash from groups where uid = %d and name = '%s' limit 1",
+				intval($newuid),
+				dbesc( t('Friends') )
+			);
+			if($r) {
+				q("update channel set channel_allow_gid = '%s' where channel_id = %d limit 1",
+					dbesc('<' . $r[0]['hash'] . '>'),
+					intval($newuid)
+				);
+			}
+		}
+
 
 		call_hooks('register_account', $newuid);
 	

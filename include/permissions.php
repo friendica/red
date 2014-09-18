@@ -419,11 +419,12 @@ function site_default_perms() {
  * 
  *   Given a string for the channel role ('social','forum', etc)
  * return an array of all permission fields pre-filled for this role.
- * This includes the channel permission scope indicators as well as
- *    perms_auto:   The permissions to apply automatically on receipt of a connection request
+ * This includes the channel permission scope indicators (anything beginning with 'channel_') as well as
+ *    perms_auto:   true or false to create auto-permissions for this channel
  *    perms_follow: The permissions to apply when initiating a connection request to another channel
  *    perms_accept: The permissions to apply when accepting a connection request from another channel (not automatic)
- *
+ *    default_collection: true or false to make the default ACL include the channel's default collection 
+ *    directory_publish: true or false to publish this channel in the directory
  * Any attributes may be extended (new roles defined) and modified (specific permissions altered) by plugins
  *
  */
@@ -436,7 +437,9 @@ function get_role_perms($role) {
 
 	switch($role) {
 		case 'social':
-			$ret['perms_auto'] = 0;
+			$ret['perms_auto'] = false;
+			$ret['default_collection'] = false;
+			$ret['directory_publish'] = true;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;

@@ -255,6 +255,28 @@ function connedit_content(&$a) {
 		return login();
 	}
 
+	$my_perms = 0;
+	$role = get_pconfig(local_user(),'system','permissions_role');
+	if($role) {
+		$x = get_role_perms($role);
+		if($x['perms_accept'])
+			$my_perms = $x['perms_accept'];
+	}
+	if($my_perms) {
+		$o .= "<script>function connectDefaultShare() {
+		\$('.abook-edit-me').each(function() {
+			if(! $(this).is(':disabled'))
+				$(this).removeAttr('checked');
+		});\n\n";
+		$perms = get_perms();
+		foreach($perms as $p => $v) {
+			if($my_perms & $v[1]) {
+				$o .= "\$('#me_id_perms_" . $p . "').attr('checked','checked'); \n";
+			}
+		}
+		$o .= "abook_perms_msg(); }\n</script>\n";
+	}
+
 	if(argc() == 3) {
 
 		$contact_id = intval(argv(1));
