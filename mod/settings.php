@@ -935,6 +935,10 @@ function settings_content(&$a) {
 			}
 		}
 
+
+		$permissions_role = get_pconfig(local_user(),'system','permissions_role');
+		$permissions_set = (($permissions_role && $permissions_role != 'custom') ? true : false);
+
 		$o .= replace_macros($stpl,array(
 			'$ptitle' 	=> t('Channel Settings'),
 
@@ -955,6 +959,8 @@ function settings_content(&$a) {
 			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel frequently or regularly publishes adult content. (Please tag any adult material and/or nudity with #NSFW)')),
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
+			'$permissions_set' => $permissions_set,
+			'$perms_set_msg' => t('Your permissions are already configured. Click to view/adjust'),
 
 			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online')),
 
