@@ -440,6 +440,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = false;
 			$ret['directory_publish'] = true;
+			$ret['online'] = true;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
@@ -471,6 +472,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = true;
 			$ret['directory_publish'] = true;
+			$ret['online'] = true;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
@@ -502,6 +504,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = true;
 			$ret['directory_publish'] = false;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
@@ -532,6 +535,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = true;
 			$ret['default_collection'] = false;
 			$ret['directory_publish'] = true;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE|PERMS_W_TAGWALL;
@@ -562,6 +566,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = true;
 			$ret['directory_publish'] = true;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE|PERMS_W_TAGWALL;
@@ -593,6 +598,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = true;
 			$ret['directory_publish'] = false;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
@@ -623,6 +629,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = true;
 			$ret['default_collection'] = false;
 			$ret['directory_publish'] = true;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
@@ -654,6 +661,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = true;
 			$ret['directory_publish'] = false;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
@@ -684,6 +692,7 @@ function get_role_perms($role) {
 			$ret['perms_auto'] = true;
 			$ret['default_collection'] = false;
 			$ret['directory_publish'] = true;
+			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
 			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK

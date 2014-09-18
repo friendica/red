@@ -361,14 +361,18 @@ function create_identity($arr) {
 
 		// Save our permissions role so we can perhaps call it up and modify it later.
 
-		if($role_permissions)
+		if($role_permissions) {
 			set_pconfig($newuid,'system','permissions_role',$arr['permissions_role']);
+			if(array_key_exists('online',$role_permissions))
+				set_pconfig('system','hide_presence',1-intval($role_permissions['online']));
+		}
 
-		// Create a group with no members. This allows somebody to use it 
+		// Create a group with yourself as a member. This allows somebody to use it 
 		// right away as a default group for new contacts. 
 
 		require_once('include/group.php');
 		group_add($newuid, t('Friends'));
+		group_add_member($newuid,t('Friends'),$ret['channel']['channel_hash']);
 
 		// if our role_permissions indicate that we're using a default collection ACL, add it.
 
