@@ -27,3 +27,5 @@ $a->strings["Do you want to authorize this application to access your posts and 
 $a->strings["If your certificate is not recognized, members of other sites (who may themselves have valid certificates) will get a warning message on their own site complaining about security issues."] = "If your certificate is not recognised, members of other sites (who may themselves have valid certificates) will get a warning message on their own site complaining about security issues.";
 $a->strings["This is a hub of the Red Matrix - a global cooperative network of decentralized privacy enhanced websites."] = "This is a hub of the Red Matrix - a global cooperative network of decentralised privacy enhanced websites.";
 $a->strings["You are cordially invited to join me and some other close friends on the Red Matrix - a revolutionary new decentralized communication and information tool."] = "You are cordially invited to join me and some other close friends on the Red Matrix - a revolutionary new decentralised communication and information tool.";
+$a->strings["l F d, Y \\@ g:i A"] = "l j F, Y \\@ G:i";
+$a->strings["D, d M Y - g:i A"] = "D, d M Y - G:i"];
