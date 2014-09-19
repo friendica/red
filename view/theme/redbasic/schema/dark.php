@@ -154,16 +154,24 @@
 		$abookself_bgcolour = "#251111";
 	if(! $infomess_bgcolour)
 		$infomess_bgcolour = "#333";
+	if(! $alert_txtcolour)
+      $alert_txtcolour = "#CCC";	
+	if(! $alert_bgcolour)
+      $alert_bgcolour = "#333";
+   if(! $alert_bordercol)
+      $alert_bordercol = "#444";
+   if(! $alert_gradientcol)
+      $alert_gradientcol = "#333";		
    if(! $advperm_bgcolour)
-                $advperm_bgcolour = "#1E1E1E";
+      $advperm_bgcolour = "#222";
    if(! $advperm_bordercol)
-                $advperm_bordercol = "#222";
+      $advperm_bordercol = "#333";
    if(! $advperm_gradientcol)
-                $advperm_gradientcol = "#111";
+      $advperm_gradientcol = "#222";
    if(! $cal_bgcolour)
-                 $cal_bgcolour = "#333";
+      $cal_bgcolour = "#333";
    if(! $fancybox_bgcolour)
-                $fancybox_bgcolour = "#1E1E1E";
+      $fancybox_bgcolour = "#1E1E1E";
 	if (!$admintable_hoverbgcol)
 		$admintable_hoverbgcol="#222";
 	if (!$dirpopup_txtcol)
