@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-19 00:03-0700\n"
-"PO-Revision-Date: 2014-09-19 15:51+0000\n"
+"PO-Revision-Date: 2014-09-19 20:33+0000\n"
 "Last-Translator: jeroenpraat <jeroenpraat@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -339,7 +339,7 @@ msgstr "Nieuwe foto's uploaden"
 
 #: ../../include/acl_selectors.php:240
 msgid "Visible to your default audience"
-msgstr "Voor iedereen zichtbaar, zoals dit van te voren is ingesteld"
+msgstr "Voor iedereen zichtbaar, mits niet anders ingesteld"
 
 #: ../../include/acl_selectors.php:241
 msgid "Show"
@@ -2912,7 +2912,7 @@ msgstr "Kanaal exporteren"
 
 #: ../../include/widgets.php:485
 msgid "Export content"
-msgstr "Exporteer gegevens"
+msgstr "Inhoud exporteren"
 
 #: ../../include/widgets.php:491
 msgid "Automatic Permissions (Advanced)"
@@ -3585,7 +3585,7 @@ msgstr "Sociaal netwerk"
 #: ../../include/permissions.php:734 ../../include/permissions.php:736
 #: ../../include/permissions.php:738 ../../include/permissions.php:740
 msgid "Mostly Public"
-msgstr "Grotendeels voor iedereen zichtbaar"
+msgstr "Vrijwel alles openbaar"
 
 #: ../../include/permissions.php:734 ../../include/permissions.php:736
 #: ../../include/permissions.php:738
@@ -3594,7 +3594,7 @@ msgstr "Beperkt zichtbaar"
 
 #: ../../include/permissions.php:734 ../../include/permissions.php:736
 msgid "Private"
-msgstr "Privé"
+msgstr "Verborgen kanaal"
 
 #: ../../include/permissions.php:735
 msgid "Community Forum"
@@ -3610,7 +3610,7 @@ msgstr "Beroemdheid/alleen volgen"
 
 #: ../../include/permissions.php:742
 msgid "Custom/Expert Mode"
-msgstr "Aangepaste /expertmodus"
+msgstr "Expertmodus/handmatig aanpassen"
 
 #: ../../mod/mood.php:132
 msgid "Set your current mood and tell your friends"
@@ -7707,7 +7707,7 @@ msgstr "Kanaaltype"
 msgid ""
 "Please choose a channel type (such as social networking or community forum) "
 "and privacy requirements so we can select the best permissions for you"
-msgstr "Kies een kanaaltype (zoals voor een sociaal netwerk of groepsforum) en een privacybehoefte, zodat wij voor jou de beste permissies kunnen kiezen"
+msgstr "Kies een kanaaltype (bijv. een persoonlijk kanaal voor een sociaal netwerk of eentje voor een groepsforum) en jouw behoefte aan privacy, zodat wij voor jou de beste permissies kunnen kiezen."
 
 #: ../../mod/home.php:46
 msgid "Red Matrix - &quot;The Network&quot;"
