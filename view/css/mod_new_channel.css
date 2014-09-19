@@ -53,14 +53,14 @@ h2 {
 * Hide lists on page load
 ---------------------------------------------------------*/
 
-#privacy-role-select .SSContainerDivWrapper {
+.stylish-select .SSContainerDivWrapper {
 	left:-9999px;
 }
 
 /*
 * Red example
 ---------------------------------------------------------*/
-#privacy-role-select .SSContainerDivWrapper {
+.stylish-select .SSContainerDivWrapper {
 	margin:0;
 	padding:0;
 	width:290px;
@@ -70,7 +70,7 @@ h2 {
 	z-index:2;
 }
 
-#privacy-role-select ul.newList {
+.stylish-select ul.newList {
 	margin:0;
 	padding:0;
 	list-style:none;
@@ -80,20 +80,20 @@ h2 {
 	overflow:auto;
 }
 
-#privacy-role-select ul.newList * {
+.stylish-select ul.newList * {
 	margin:0;
 	padding:0;
 }
 
 
-#privacy-role-select ul.newList a {
+.stylish-select ul.newList a {
 	color: #000;
 	text-decoration:none;
 	display:block;
 	padding:3px 8px;
 }
 
-#privacy-role-select .newListSelected {
+.stylish-select .newListSelected {
 	width:285px;
 	color:#000;
 	height:19px;
@@ -102,60 +102,60 @@ h2 {
 	background:url(select-bg.png) no-repeat;
 }
 
-#privacy-role-select ul.newList li a:focus {
+.stylish-select ul.newList li a:focus {
 	-moz-outline-style: none;
 }
 
-#privacy-role-select .selectedTxt {
+.stylish-select .selectedTxt {
 	width:258px;
 	overflow:hidden;
 	height:16px;
 	padding:0 23px 0 0;
 }
 
-#privacy-role-select .hiLite {
+.stylish-select .hiLite {
 	background:#650101!important;
 	color:#fff!important;
 }
 
-#privacy-role-select .newListHover {
+.stylish-select .newListHover {
 	background:#ccc!important;
 	color:#000!important;
 	cursor:default;
 }
 
-#privacy-role-select .newListDisabled {
+.stylish-select .newListDisabled {
 	opacity: 0.6;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
 	filter: alpha(opacity=60);
 }
 
-#privacy-role-select .newListItemDisabled {
+.stylish-select .newListItemDisabled {
 	opacity: 0.6;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
 	filter: alpha(opacity=60);
 }
 
-#privacy-role-select .newListOptionDisabled {
+.stylish-select .newListOptionDisabled {
 	opacity: 0.6;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
 	filter: alpha(opacity=60);
 }
 
-#privacy-role-select .newListSelHover,
-#privacy-role-select .newListSelFocus {
+.stylish-select .newListSelHover,
+.stylish-select .newListSelFocus {
 	background-position:0 -22px;
 	cursor:default;
 }
 
-#privacy-role-select .newListOptionTitle {
+.stylish-select .newListOptionTitle {
 	font-weight:bold;
 }
 
-#privacy-role-select .newListOptionTitle ul {
+.stylish-select .newListOptionTitle ul {
 	margin:3px 0 0;
 }
 
-#privacy-role-select .newListOptionTitle li {
+.stylish-select .newListOptionTitle li {
 	font-weight:normal;
 }

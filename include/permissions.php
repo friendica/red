@@ -747,7 +747,7 @@ function role_selector($current) {
 			$selected = (($kk === $current)	? ' selected="selected" ' : '');
 			$o .= '<option value="' . $kk . '" ' . $selected . '>' . htmlspecialchars($vv) . '</option>';
 		}
-		$o .= '<optgroup>';
+		$o .= '</optgroup>';
 	}
 	$o .= '</select>';
 	return $o;
