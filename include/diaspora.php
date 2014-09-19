@@ -58,7 +58,7 @@ function diaspora_dispatch($importer,$msg,$attempt=1) {
 
 	$xmlbase = $parsed_xml->post;
 
-	logger('diaspora_dispatch: ' . print_r($xmlbase,true), LOGGER_DEBUG);
+	logger('diaspora_dispatch: ' . print_r($xmlbase,true), LOGGER_DATA);
 
 
 	if($xmlbase->request) {
@@ -545,7 +545,7 @@ function diaspora_decode($importer,$xml) {
 		 *  </decrypted_header>
 		 */
 
-		logger('decrypted: ' . $decrypted, LOGGER_DEBUG);
+		logger('decrypted: ' . $decrypted, LOGGER_DATA);
 		$idom = parse_xml_string($decrypted,false);
 
 		$inner_iv = base64_decode($idom->iv);
@@ -912,7 +912,7 @@ function diaspora_post($importer,$xml,$msg) {
 
 function diaspora_reshare($importer,$xml,$msg) {
 
-	logger('diaspora_reshare: init: ' . print_r($xml,true));
+	logger('diaspora_reshare: init: ' . print_r($xml,true), LOGGER_DATA);
 
 	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
@@ -955,7 +955,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 		logger('diaspora_reshare: unable to fetch source url ' . $source_url);
 		return;
 	}
-	logger('diaspora_reshare: source: ' . $x['body']);
+	logger('diaspora_reshare: source: ' . $x['body'], LOGGER_DATA);
 
 	$source_xml = parse_xml_string($x['body'],false);
 

@@ -58,7 +58,7 @@ function receive_post(&$a) {
 
 	logger('mod-diaspora: decoded', LOGGER_DEBUG);
 
-	logger('mod-diaspora: decoded msg: ' . print_r($msg,true), LOGGER_DEBUG);
+	logger('mod-diaspora: decoded msg: ' . print_r($msg,true), LOGGER_DATA);
 
 	if(! is_array($msg))
 		http_status_exit(500);

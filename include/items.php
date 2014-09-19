@@ -2469,18 +2469,10 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id)
 		return;
 	}
 
-	$body = $datarray['body'];
-	if(array_key_exists('item_flags',$datarray) && ($datarray['item_flags'] & ITEM_OBSCURED)) {
-		$key = get_config('system','prvkey');
-		if($datarray['body'])
-			$body = crypto_unencapsulate(json_decode($datarray['body'],true),$key);
-	}
+	require_once('include/bb2diaspora.php');
+	$signed_body = bb2diaspora_itembody($datarray);
 
 	logger('mod_item: storing diaspora comment signature',LOGGER_DEBUG);
-
-	require_once('include/bb2diaspora.php');
-
-	$signed_body = html_entity_decode(bb2diaspora($body));
 
 	$diaspora_handle = $channel['channel_address'] . '@' . get_app()->get_hostname();
 
