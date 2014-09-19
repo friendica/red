@@ -163,11 +163,11 @@
    if(! $alert_gradientcol)
       $alert_gradientcol = "#333";		
    if(! $advperm_bgcolour)
-      $advperm_bgcolour = "#222";
+      $advperm_bgcolour = "#1E1E1E";
    if(! $advperm_bordercol)
-      $advperm_bordercol = "#333";
+      $advperm_bordercol = "#222";
    if(! $advperm_gradientcol)
-      $advperm_gradientcol = "#222";
+      $advperm_gradientcol = "#1E1E1E";
    if(! $cal_bgcolour)
       $cal_bgcolour = "#333";
    if(! $fancybox_bgcolour)
