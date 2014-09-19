@@ -24,5 +24,6 @@ var include_2network_8php =
     [ "xml2array", "include_2network_8php.html#a99353baabbc3e0584b85eb79ee802cff", null ],
     [ "xml_status", "include_2network_8php.html#a9e9da2aafb806c98ecdc318604e60dc6", null ],
     [ "z_fetch_url", "include_2network_8php.html#aafd06c0a75402aefb06cfb9f9740fa37", null ],
-    [ "z_post_url", "include_2network_8php.html#a9129fd55e7fc175b4ea9a195cccc16bc", null ]
+    [ "z_post_url", "include_2network_8php.html#a9129fd55e7fc175b4ea9a195cccc16bc", null ],
+    [ "z_post_url_json", "include_2network_8php.html#a984708e60d531b31b2d1f88b5f408f7b", null ]
 ];

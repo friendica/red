@@ -219,6 +219,7 @@ var boot_8php =
     [ "PAGE_CENSORED", "boot_8php.html#a36003bebe4ce860c6652bcc3e09b2214", null ],
     [ "PAGE_DIRECTORY_CHANNEL", "boot_8php.html#a5b8484922918946d041e5e0515dbe718", null ],
     [ "PAGE_HIDDEN", "boot_8php.html#a5e322a2a2d0f51924c0b2e874988e640", null ],
+    [ "PAGE_HUBADMIN", "boot_8php.html#afbb21ecccac9819aa65397e816868a5f", null ],
     [ "PAGE_NORMAL", "boot_8php.html#a09532c3f750ae8c4527e63b2b790cbf3", null ],
     [ "PAGE_PREMIUM", "boot_8php.html#ab3920c2f3cd64802c0b7ff625c3b2ea8", null ],
     [ "PAGE_REMOVED", "boot_8php.html#a4edce16cb7f21cdafa1e85bf63d713e6", null ],
