@@ -704,20 +704,24 @@ function updateConvItems(mode,data) {
 
 	}
 
-	function justifyPhotos(bParam_page) {
+	function justifyPhotos() {
 		justifiedGalleryActive = true;
-		$('#photo-album-contents-' + bParam_page).justifiedGallery({
-			lastRow : 'nojustify',
+		$('#photo-album-contents').justifiedGallery({
 			margins: 3,
-			sizeRangeSuffixes : {
+			sizeRangeSuffixes: {
 				'lt100': '-2',
 				'lt240': '-2',
 				'lt320': '-2',
-				'lt500': '-1',
+				'lt500': '',
 				'lt640': '-1',
 				'lt1024': '-0'
 			}
 		}).on('jg.complete', function(e){ justifiedGalleryActive = false; });
+	}
+
+	function justifyPhotosAjax() {
+		justifiedGalleryActive = true;
+		$('#photo-album-contents').justifiedGallery('norewind').on('jg.complete', function(e){ justifiedGalleryActive = false; });
 	}
 
 	function notify_popup_loader(notifyType) {

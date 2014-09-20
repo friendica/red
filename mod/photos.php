@@ -703,7 +703,7 @@ function photos_content(&$a) {
 		if(count($r)) {
 			$twist = 'rotright';
 			$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
-			$o .= '<div id="photo-album-contents-' . $a->pager['page'] . '">';
+			$o .= '<div id="photo-album-contents">';
 
 			foreach($r as $rr) {
 
@@ -758,20 +758,15 @@ function photos_content(&$a) {
 				echo $ajaxout;
 				killme();
 			}
-
-			echo '<div id="photo-album-contents-' . $a->pager['page'] . '">';
 			echo $ajaxout;
-			echo '</div>';
-			echo '<script>justifyPhotos(' . $a->pager['page'] . ');</script>';
+			echo '<script>justifyPhotosAjax();</script>';
 			killme();
 		}
 
-
-		$o .= '</div>';    // photo-album-contents
-		$o .= '<script>justifyPhotos(' . $a->pager['page'] . ');</script>';
 		$o .= '<div id="page-end"></div>';
+		$o .= '</div>';    // photo-album-contents
 		$o .= '<div id="photo-album-end"></div>';
-		$o .= '<script>$(document).ready(function() { loadingPage = false;});</script>';
+		$o .= '<script>$(document).ready(function() { loadingPage = false; justifyPhotos(); });</script>';
 		$o .= '<div id="page-spinner"></div>';
 //		$o .= paginate($a);
 
@@ -1226,7 +1221,6 @@ function photos_content(&$a) {
 		if($photos) {
 			$o = replace_macros(get_markup_template('photosajax.tpl'),array(
 				'$photos' => $photos,
-				'$page' => $a->pager['page']
 			));
 		}
 		else {
@@ -1243,7 +1237,6 @@ function photos_content(&$a) {
 			'$can_post' => $can_post,
 			'$upload' => array(t('Upload New Photos'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
 			'$photos' => $photos,
-			'$page' => $a->pager['page']
 		));
 
 	}
