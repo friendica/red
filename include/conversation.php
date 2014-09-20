@@ -989,7 +989,11 @@ function like_puller($a,$item,&$arr,$mode) {
 	$verb = (($mode === 'like') ? ACTIVITY_LIKE : ACTIVITY_DISLIKE);
 
 	if((activity_match($item['verb'],$verb)) && ($item['id'] != $item['parent'])) {
-		$url = chanlink_url($item['author']['xchan_url']);
+
+		if($item['author']['xchan_url'])
+			$url = chanlink_url($item['author']['xchan_url']);
+		else
+			$url = z_root();
 
 		if(! $item['thr_parent'])
 			$item['thr_parent'] = $item['parent_mid'];
@@ -1000,7 +1004,10 @@ function like_puller($a,$item,&$arr,$mode) {
 			$arr[$item['thr_parent']] = 1;
 		else
 			$arr[$item['thr_parent']] ++;
-		$arr[$item['thr_parent'] . '-l'][] = '<a href="'. $url . '">' . $item['author']['xchan_name'] . '</a>';
+
+		$name = (($item['author']['xchan_name']) ? $item['author']['xchan_name'] : t('Unknown'));
+
+		$arr[$item['thr_parent'] . '-l'][] = '<a href="'. $url . '">' . $name . '</a>';
 	}
 	return;
 }
