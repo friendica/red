@@ -743,7 +743,7 @@ function updateConvItems(mode,data) {
 
 
 			if(data.notify.length==0){
-				$("#nav-" + notifyType + "-menu").html(notifications_empty);
+				$("#nav-" + notifyType + "-menu").html(aStr[nothingnew]);
 
 			} else {
 				$("#nav-" + notifyType + "-menu").html(notifications_all + notifications_mark);
