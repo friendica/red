@@ -1556,7 +1556,9 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		);
 	}
 
-	if($is_owner) {
+	require_once('include/menu.php');
+	$has_bookmarks = menu_list_count(local_user(),'',MENU_BOOKMARK) + menu_list_count(local_user(),'',MENU_SYSTEM|MENU_BOOKMARK);
+	if($is_owner && $has_bookmarks) {
 		$tabs[] = array(
 			'label' => t('Bookmarks'),
 			'url'	=> $a->get_baseurl() . '/bookmarks',
