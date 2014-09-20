@@ -105,8 +105,8 @@ EOT;
 		$nav['usermenu'][] = Array('cloud/' . $channel['channel_address'],t('Files'),"",t('Your files'));
 
 		require_once('include/chat.php');
-		$chats = chatroom_list(local_user());
-		if (count($chats)) {
+		$has_chats = chatroom_list_count(local_user());
+		if($has_chats) {
 			$nav['usermenu'][] = Array('chat/' . $channel['channel_address'],t('Chat'),"",t('Your chatrooms'));
 		}
 

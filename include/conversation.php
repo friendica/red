@@ -1545,8 +1545,8 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 	}
 
 	require_once('include/chat.php');
-	$chats = chatroom_list($uid);
-	if (count($chats)) {
+	$has_chats = chatroom_list_count($uid);
+	if (count($has_chats)) {
 		$tabs[] = array(
 			'label' => t('Chatrooms'),
 			'url'	=> $a->get_baseurl() . '/chat/' . $nickname,
