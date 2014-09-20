@@ -687,7 +687,9 @@ function admin_page_users(&$a){
 	$order = " order by account_email asc ";
 	if($_REQUEST['order'] === 'expires')
 		$order = " order by account_expires desc ";
-
+    if($_REQUEST['order'] === 'created')
+		$order = " order by account_created desc ";
+		
 	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d ) > 0 as `blocked`, " .
 			"(SELECT GROUP_CONCAT( ch.channel_address SEPARATOR ' ') FROM channel as ch " .
 			"WHERE ch.channel_account_id = ac.account_id and not (ch.channel_pageflags & %d )) as `channels` " .

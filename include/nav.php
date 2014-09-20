@@ -105,14 +105,19 @@ EOT;
 		$nav['usermenu'][] = Array('cloud/' . $channel['channel_address'],t('Files'),"",t('Your files'));
 
 		require_once('include/chat.php');
-		$chats = chatroom_list(local_user());
-		if (count($chats)) {
+		$has_chats = chatroom_list_count(local_user());
+		if($has_chats) {
 			$nav['usermenu'][] = Array('chat/' . $channel['channel_address'],t('Chat'),"",t('Your chatrooms'));
 		}
 
-		$nav['usermenu'][] = Array('bookmarks', t('Bookmarks'), "", t('Your bookmarks'));
+		require_once('include/menu.php');
+		$has_bookmarks = menu_list_count(local_user(),'',MENU_BOOKMARK) + menu_list_count(local_user(),'',MENU_SYSTEM|MENU_BOOKMARK);
+		if($has_bookmarks) {
+			$nav['usermenu'][] = Array('bookmarks', t('Bookmarks'), "", t('Your bookmarks'));
+		}
+
 		if(feature_enabled($channel['channel_id'],'webpages'))
-			$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'));	
+			$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'));
 	}
 	else {
 		if(! get_account_id()) 

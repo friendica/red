@@ -1552,8 +1552,8 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 	}
 
 	require_once('include/chat.php');
-	$chats = chatroom_list($uid);
-	if (count($chats)) {
+	$has_chats = chatroom_list_count($uid);
+	if ($has_chats) {
 		$tabs[] = array(
 			'label' => t('Chatrooms'),
 			'url'	=> $a->get_baseurl() . '/chat/' . $nickname,
@@ -1563,7 +1563,9 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		);
 	}
 
-	if($is_owner) {
+	require_once('include/menu.php');
+	$has_bookmarks = menu_list_count(local_user(),'',MENU_BOOKMARK) + menu_list_count(local_user(),'',MENU_SYSTEM|MENU_BOOKMARK);
+	if($is_owner && $has_bookmarks) {
 		$tabs[] = array(
 			'label' => t('Bookmarks'),
 			'url'	=> $a->get_baseurl() . '/bookmarks',
