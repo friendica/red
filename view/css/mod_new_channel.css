@@ -67,7 +67,13 @@ h2 {
 	position:absolute;
 	top:22px;
 	left:0;
-	z-index:2;
+	z-index:9999;
+	font-size: 60%;
+	line-height: 1.1;
+}
+
+.stylish-select a {
+	font-weight: normal !important;
 }
 
 .stylish-select ul.newList {
@@ -109,7 +115,8 @@ h2 {
 .stylish-select .selectedTxt {
 	width:258px;
 	overflow:hidden;
-	height:16px;
+	height:18px;
+	font-size: 90%;
 	padding:0 23px 0 0;
 }
 
