@@ -440,7 +440,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 			for($x = 0; $x < count($arr_blocked); $x ++)
 				$arr_blocked[$x] = trim($arr_blocked[$x]);
 		}
-
 	}
 
 
@@ -458,59 +457,53 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 		$profile_owner = local_user();
 		$page_writeable = true;
 
-       if(!$update) {
-            // The special div is needed for liveUpdate to kick in for this page.
-            // We only launch liveUpdate if you aren't filtering in some incompatible
-            // way and also you aren't writing a comment (discovered in javascript).
+		if(!$update) {
+			// The special div is needed for liveUpdate to kick in for this page.
+			// We only launch liveUpdate if you aren't filtering in some incompatible
+			// way and also you aren't writing a comment (discovered in javascript).
 
-            $live_update_div = '<div id="live-network"></div>' . "\r\n"
-                . "<script> var profile_uid = " . $_SESSION['uid']
-                . "; var netargs = '" . substr($a->cmd,8)
-                . '?f='
-                . ((x($_GET,'cid'))    ? '&cid='    . $_GET['cid']    : '')
-                . ((x($_GET,'search')) ? '&search=' . $_GET['search'] : '')
-                . ((x($_GET,'star'))   ? '&star='   . $_GET['star']   : '')
-                . ((x($_GET,'order'))  ? '&order='  . $_GET['order']  : '')
-                . ((x($_GET,'bmark'))  ? '&bmark='  . $_GET['bmark']  : '')
-                . ((x($_GET,'liked'))  ? '&liked='  . $_GET['liked']  : '')
-                . ((x($_GET,'conv'))   ? '&conv='   . $_GET['conv']   : '')
-                . ((x($_GET,'spam'))   ? '&spam='   . $_GET['spam']   : '')
-                . ((x($_GET,'nets'))   ? '&nets='   . $_GET['nets']   : '')
-                . ((x($_GET,'cmin'))   ? '&cmin='   . $_GET['cmin']   : '')
-                . ((x($_GET,'cmax'))   ? '&cmax='   . $_GET['cmax']   : '')
-                . ((x($_GET,'file'))   ? '&file='   . $_GET['file']   : '')
-                . ((x($_GET,'uri'))    ? '&uri='    . $_GET['uri']   : '')
-
-                . "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
-        }
-
-
+			$live_update_div = '<div id="live-network"></div>' . "\r\n"
+				. "<script> var profile_uid = " . $_SESSION['uid']
+				. "; var netargs = '" . substr($a->cmd,8)
+				. '?f='
+				. ((x($_GET,'cid'))    ? '&cid='    . $_GET['cid']    : '')
+				. ((x($_GET,'search')) ? '&search=' . $_GET['search'] : '')
+				. ((x($_GET,'star'))   ? '&star='   . $_GET['star']   : '')
+				. ((x($_GET,'order'))  ? '&order='  . $_GET['order']  : '')
+				. ((x($_GET,'bmark'))  ? '&bmark='  . $_GET['bmark']  : '')
+				. ((x($_GET,'liked'))  ? '&liked='  . $_GET['liked']  : '')
+				. ((x($_GET,'conv'))   ? '&conv='   . $_GET['conv']   : '')
+				. ((x($_GET,'spam'))   ? '&spam='   . $_GET['spam']   : '')
+				. ((x($_GET,'nets'))   ? '&nets='   . $_GET['nets']   : '')
+				. ((x($_GET,'cmin'))   ? '&cmin='   . $_GET['cmin']   : '')
+				. ((x($_GET,'cmax'))   ? '&cmax='   . $_GET['cmax']   : '')
+				. ((x($_GET,'file'))   ? '&file='   . $_GET['file']   : '')
+				. ((x($_GET,'uri'))    ? '&uri='    . $_GET['uri']   : '')
+				. "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+		}
 	}
 
 	elseif($mode === 'channel') {
 		$profile_owner = $a->profile['profile_uid'];
 		$page_writeable = ($profile_owner == local_user());
 
-        if(!$update) {
-            $tab = notags(trim($_GET['tab']));
-            if($tab === 'posts') {
-                // This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
-                // because browser prefetching might change it on us. We have to deliver it with the page.
+		if(!$update) {
+			$tab = notags(trim($_GET['tab']));
+			if($tab === 'posts') {
+				// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
+				// because browser prefetching might change it on us. We have to deliver it with the page.
 
-                $live_update_div = '<div id="live-channel"></div>' . "\r\n"
-                    . "<script> var profile_uid = " . $a->profile['profile_uid']
-                    . "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
-            }
-        }
-
+				$live_update_div = '<div id="live-channel"></div>' . "\r\n"
+					. "<script> var profile_uid = " . $a->profile['profile_uid']
+					. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+			}
+		}
 	}
 
 	elseif($mode === 'display') {
 		$profile_owner = local_user();
 		$page_writeable = false;
-
-	      $live_update_div = '<div id="live-display"></div>' . "\r\n";
-
+		$live_update_div = '<div id="live-display"></div>' . "\r\n";
 	}
 
 	elseif($mode === 'page') {
@@ -519,10 +512,10 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 		$live_update_div = '<div id="live-page"></div>' . "\r\n";
 	}
 
+	elseif($mode === 'search') {
+		$live_update_div = '<div id="live-search"></div>' . "\r\n";
+	}
 
-    elseif($mode === 'search') {
-        $live_update_div = '<div id="live-search"></div>' . "\r\n";
-    }
 	elseif($mode === 'photos') {
 		$profile_onwer = $a->profile['profile_uid'];
 		$page_writeable = ($profile_owner == local_user());
@@ -554,7 +547,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 	$alike = array();
 	$dlike = array();
-
 
 	// array with html for each thread (parent+comments)
 	$threads = array();
@@ -603,12 +595,11 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				}
 				else
 					$nickname = $a->user['nickname'];
-				
+
 				$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
 				if($item['author-link'] && (! $item['author-name']))
 					$profile_name = $item['author-link'];
 
-				
 
 				$tags=array();
 				$hashtags = array();
@@ -630,7 +621,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$profile_name = $item['author']['xchan_name'];
 				$profile_link = $item['author']['xchan_url'];
 				$profile_avatar = $item['author']['xchan_photo_m'];
-
 
 				$location = format_location($item);
 
@@ -663,7 +653,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$unverified = '';
 
 
-
 				$tags=array();
 				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN));
 				if(count($terms))
@@ -694,12 +683,11 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'verified' => $verified,
 					'unverified' => $unverified,
 					'txt_cats' => t('Categories:'),
-                    'txt_folders' => t('Filed under:'),
-                    'has_cats' => ((count($categories)) ? 'true' : ''),
-                    'has_folders' => ((count($folders)) ? 'true' : ''),
-                    'categories' => $categories,
-                    'folders' => $folders,
-
+					'txt_folders' => t('Filed under:'),
+					'has_cats' => ((count($categories)) ? 'true' : ''),
+					'has_folders' => ((count($folders)) ? 'true' : ''),
+					'categories' => $categories,
+					'folders' => $folders,
 					'text' => strip_tags($body),
 					'ago' => relative_date($item['created']),
 					'app' => $item['app'],
@@ -743,10 +731,10 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 			// Normal View
 //			logger('conv: items: ' . print_r($items,true));
 
-            require_once('include/ConversationObject.php');
-            require_once('include/ItemObject.php');
+			require_once('include/ConversationObject.php');
+			require_once('include/ItemObject.php');
 
-            $conv = new Conversation($mode, $preview, $prepared_item);
+			$conv = new Conversation($mode, $preview, $prepared_item);
 
 			// In the display mode we don't have a profile owner. 
 
@@ -754,12 +742,12 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$conv->set_profile_owner($items[0]['uid']);
 
 
-            // get all the topmost parents
-            // this shouldn't be needed, as we should have only them in our array
-            // But for now, this array respects the old style, just in case
+			// get all the topmost parents
+			// this shouldn't be needed, as we should have only them in our array
+			// But for now, this array respects the old style, just in case
 
-            $threads = array();
-            foreach($items as $item) {
+			$threads = array();
+			foreach($items as $item) {
 
 				// Check for any blocked authors
 
@@ -774,7 +762,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					if($blocked)
 						continue;
 				}
-							
+
 				// Check all the kids too
 
 				if($arr_blocked && $item['children']) {
@@ -786,46 +774,43 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					}
 				}
 
+				like_puller($a, $item, $alike, 'like');
 
+				if(feature_enabled($profile_owner, 'dislike'))
+					like_puller($a, $item, $dlike, 'dislike');
 
-                like_puller($a,$item,$alike,'like');
+				if(! visible_activity($item)) {
+					continue;
+				}
 
-				if(feature_enabled($profile_owner,'dislike'))
-	                like_puller($a,$item,$dlike,'dislike');
+				$item['pagedrop'] = $page_dropping;
 
-                if(! visible_activity($item)) {
-                    continue;
-                }
-
-                $item['pagedrop'] = $page_dropping;
-
-                if($item['id'] == $item['parent']) {
+				if($item['id'] == $item['parent']) {
 //					$tx1 = dba_timer();
-                    $item_object = new Item($item);
-                    $conv->add_thread($item_object);
+					$item_object = new Item($item);
+					$conv->add_thread($item_object);
 					if($page_mode === 'list') 
 						$item_object->set_template('conv_list.tpl');
 
 //					$tx2 = dba_timer();
 //					if($mode === 'network')
 //						profiler($tx1,$tx2,'add thread ' . $item['id']);
-                }
-            }
+				}
+			}
 			$t2 = dba_timer();
-            $threads = $conv->get_template_data($alike, $dlike);
-            if(!$threads) {
-                logger('[ERROR] conversation : Failed to get template data.', LOGGER_DEBUG);
-                $threads = array();
-            }
+			$threads = $conv->get_template_data($alike, $dlike);
+			if(!$threads) {
+				logger('[ERROR] conversation : Failed to get template data.', LOGGER_DEBUG);
+				$threads = array();
+			}
 			$t3 = dba_timer();
 			if($mode === 'network') {
 				profiler($t1,$t2,'Conversation prepare');
 				profiler($t2,$t3,'Conversation get_template');
 			}
-				
-        }
-    }
 
+		}
+	}
 
 	if($page_mode === 'traditional' || $page_mode === 'preview') {
 		$page_template = get_markup_template("threaded_conversation.tpl");
@@ -867,8 +852,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 	if($page_mode === 'preview')
 		logger('preview: ' . $o);
 
-    return $o;
-
+	return $o;
 
 }
 
@@ -981,25 +965,32 @@ function item_photo_menu($item){
 	return $o;
 }
 
-
-function like_puller($a,$item,&$arr,$mode) {
+/**
+ * @brief Returns a like/dislike entry.
+ * It gives back a HTML link to the channel that liked/disliked.
+ *
+ * @param array $a (not used)
+ * @param array $item
+ * @param array &$arr
+ * @param string $mode like/dislike
+ * @return void
+ */
+function like_puller($a, $item, &$arr, $mode) {
 
 	$url = '';
-	$sparkle = '';
 	$verb = (($mode === 'like') ? ACTIVITY_LIKE : ACTIVITY_DISLIKE);
 
-	if((activity_match($item['verb'],$verb)) && ($item['id'] != $item['parent'])) {
+	if((activity_match($item['verb'], $verb)) && ($item['id'] != $item['parent'])) {
 
 		if($item['author']['xchan_url'])
 			$url = chanlink_url($item['author']['xchan_url']);
-		else
-			$url = z_root();
 
 		if(! $item['thr_parent'])
 			$item['thr_parent'] = $item['parent_mid'];
 
 		if(! ((isset($arr[$item['thr_parent'] . '-l'])) && (is_array($arr[$item['thr_parent'] . '-l']))))
 			$arr[$item['thr_parent'] . '-l'] = array();
+
 		if(! isset($arr[$item['thr_parent']]))
 			$arr[$item['thr_parent']] = 1;
 		else
@@ -1007,7 +998,10 @@ function like_puller($a,$item,&$arr,$mode) {
 
 		$name = (($item['author']['xchan_name']) ? $item['author']['xchan_name'] : t('Unknown'));
 
-		$arr[$item['thr_parent'] . '-l'][] = '<a href="'. $url . '">' . $name . '</a>';
+		if($url)
+			$arr[$item['thr_parent'] . '-l'][] = '<a href="'. $url . '">' . $name . '</a>';
+		else
+			$arr[$item['thr_parent'] . '-l'][] = '<a href="#" class="disabled">' . $name . '</a>';
 	}
 	return;
 }
