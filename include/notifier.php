@@ -478,8 +478,9 @@ function notifier_run($argv, $argc){
 	} 
 	else {
 		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)  group by hubloc_sitekey",
-			intval(HUBLOC_FLAGS_DELETED)
+			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)  and not (hubloc_status & %d) group by hubloc_sitekey",
+			intval(HUBLOC_FLAGS_DELETED),
+			intval(HUBLOC_OFFLINE)
 		);
 	}
 
