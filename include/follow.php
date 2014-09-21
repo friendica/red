@@ -143,7 +143,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 		if(! $r) {
 			// attempt network auto-discovery
-			if(strpos($url,'@')) {
+			if(strpos($url,'@') && (! $is_http)) {
 				$r = discover_by_webbie($url);
 			}
 			elseif($is_http) {

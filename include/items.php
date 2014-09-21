@@ -1791,6 +1791,7 @@ function get_atom_elements($feed,$item,&$author) {
 
 	call_hooks('parse_atom', $arr);
 	logger('get_atom_elements: author: ' . print_r($author,true),LOGGER_DATA);
+
 	logger('get_atom_elements: ' . print_r($res,true),LOGGER_DATA);
 
 	return $res;
