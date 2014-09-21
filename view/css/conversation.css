@@ -232,3 +232,9 @@
 	display: none;
 	margin-top: 7px;
 }
+
+/* disable link handling for unknown entries */
+.dropdown-menu > li > a.disabled {
+	pointer-events: none;
+	cursor: default;
+}
