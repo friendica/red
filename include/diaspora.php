@@ -1431,7 +1431,8 @@ function diaspora_conversation($importer,$xml,$msg) {
 		return;
 	}
 
-	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+
+	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_mail')) {
 		logger('diaspora_conversation: Ignoring this author.');
 		return 202;
 	}
@@ -1531,7 +1532,7 @@ function diaspora_conversation($importer,$xml,$msg) {
 			continue;
 		}
 
-		q("insert into mail ( `uid`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s')",
+		q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s')",
 			intval($importer['channel_id']),
 			intval($conversation['id']),
 			dbesc($person['xchan_hash']),
@@ -1645,19 +1646,15 @@ function diaspora_message($importer,$xml,$msg) {
 		return;
 	}
 
-	q("insert into mail ( `uid`, `guid`, `convid`, `from-name`,`from-photo`,`from-url`,`contact-id`,`title`,`body`,`seen`,`reply`,`uri`,`parent-uri`,`created`) values ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, '%s','%s','%s')",
+	q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', '%d','%s','%s','%s')",
 		intval($importer['channel_id']),
-		dbesc($msg_guid),
 		intval($conversation['id']),
-		dbesc($person['name']),
-		dbesc($person['photo']),
-		dbesc($person['url']),
-		intval($contact['id']),	 
+		dbesc($person['xchan_hash']),
+		dbesc($importer['xchan_hash']),
 		dbesc($conversation['subject']),
 		dbesc($body),
 		0,
-		1,
-		dbesc($message_id),
+		dbesc($msg_guid),
 		dbesc($parent_uri),
 		dbesc($msg_created_at)
 	);
