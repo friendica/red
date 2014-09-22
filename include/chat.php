@@ -189,6 +189,17 @@ function chatroom_list($uid) {
 	return $r;
 }
 
+function chatroom_list_count($uid) {
+	require_once('include/security.php');
+	$sql_extra = permissions_sql($uid);
+
+	$r = q("select count(*) as total from chatroom where cr_uid = %d $sql_extra",
+		intval($uid)
+	);
+
+	return $r[0]['total'];
+}
+
 /**
  * create a chat message via API.
  * It is the caller's responsibility to enter the room.

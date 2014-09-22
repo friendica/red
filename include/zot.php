@@ -661,6 +661,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 	}
 
 	$xchan_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
+	$arr['hash'] = $xchan_hash;
+
 	$import_photos = false;
 
 	if(! rsa_verify($arr['guid'],base64url_decode($arr['guid_sig']),$arr['key'])) {
@@ -843,174 +845,16 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 	// what we are missing for true hub independence is for any changes in the primary hub to 
 	// get reflected not only in the hublocs, but also to update the URLs and addr in the appropriate xchan
 
-	if($arr['locations']) {
 
-		$xisting = q("select hubloc_id, hubloc_url, hubloc_sitekey from hubloc where hubloc_hash = '%s'",
-			dbesc($xchan_hash)
-		);
+	$s = sync_locations($arr,$arr);
 
-		// See if a primary is specified
-
-		$has_primary = false;
-		foreach($arr['locations'] as $location) {
-			if($location['primary']) {
-				$has_primary = true;
-				break;
-			}
-		}
-
-		foreach($arr['locations'] as $location) {
-			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$arr['key'])) {
-				logger('import_xchan: Unable to verify site signature for ' . $location['url']);
-				$ret['message'] .= sprintf( t('Unable to verify site signature for %s'), $location['url']) . EOL;
-				continue;
-			}
-
-			// Ensure that they have one primary hub
-
-			if(! $has_primary)
-				$location['primary'] = true;
-
-
-			for($x = 0; $x < count($xisting); $x ++) {
-				if(($xisting[$x]['hubloc_url'] === $location['url']) && ($xisting[$x]['hubloc_sitekey'] === $location['sitekey'])) {
-					$xisting[$x]['updated'] = true;
-				}
-			}
-
-			if(! $location['sitekey']) {
-				logger('import_xchan: empty hubloc sitekey. ' . print_r($location,true));
-				continue;
-			}
-
-			// Catch some malformed entries from the past which still exist
-
-			if(strpos($location['address'],'/') !== false)
-				$location['address'] = substr($location['address'],0,strpos($location['address'],'/'));
-
-			// match as many fields as possible in case anything at all changed. 
-
-			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' ",
-				dbesc($xchan_hash),
-				dbesc($arr['guid']),
-				dbesc($arr['guid_sig']),
-				dbesc($location['url']),
-				dbesc($location['url_sig']),
-				dbesc($location['host']),
-				dbesc($location['address']),
-				dbesc($location['callback']),
-				dbesc($location['sitekey'])
-			);
-			if($r) {
-				logger('import_xchan: hub exists: ' . $location['url']);
-				// update connection timestamp if this is the site we're talking to
-				if($location['url'] == $arr['site']['url']) {
-					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d limit 1",
-						dbesc(datetime_convert()),
-						dbesc(datetime_convert()),
-						intval($r[0]['hubloc_id'])
-					);
-				}
-				if($r[0]['hubloc_status'] & HUBLOC_OFFLINE) {
-					q("update hubloc set hubloc_status = (hubloc_status ^ %d) where hubloc_id = %d limit 1",
-						intval(HUBLOC_OFFLINE),
-						intval($r[0]['hubloc_id'])
-					);
-					if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
-						q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
-							intval(HUBLOC_FLAGS_ORPHANCHECK),
-							intval($r[0]['hubloc_id'])
-						);
-					}
-					q("update xchan set xchan_flags = (xchan_flags ^ %d) where (xchan_flags & %d) and xchan_hash = '%s' limit 1",
-						intval(XCHAN_FLAGS_ORPHAN),
-						intval(XCHAN_FLAGS_ORPHAN),
-						dbesc($xchan_hash)
-					);
-
-				} 
-
-				// Remove pure duplicates
-				if(count($r) > 1) {
-					for($h = 1; $h < count($r); $h ++) {
-						q("delete from hubloc where hubloc_id = %d limit 1",
-							intval($r[$h]['hubloc_id'])
-						);
-					}
-				}
-
-				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
-					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
-					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
-						intval(HUBLOC_FLAGS_PRIMARY),
-						dbesc(datetime_convert()),
-						intval($r[0]['hubloc_id'])
-					);
-					$what = 'primary_hub ';
-					$changed = true;
-				}
-				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted']))
-					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && ($location['deleted']))) {
-					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
-						intval(HUBLOC_FLAGS_DELETED),
-						dbesc(datetime_convert()),
-						intval($r[0]['hubloc_id'])
-					);
-					$what = 'delete_hub ';
-					$changed = true;
-				}
-				continue;
-			}
-
-			// new hub claiming to be primary. Make it so.
-
-			if(intval($location['primary'])) {
-				$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_hash = '%s' and (hubloc_flags & %d )",
-					intval(HUBLOC_FLAGS_PRIMARY),
-					dbesc(datetime_convert()),
-					dbesc($xchan_hash),
-					intval(HUBLOC_FLAGS_PRIMARY)
-				);
-			}
-			logger('import_xchan: new hub: ' . $location['url']);
-			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_updated, hubloc_connected)
-					values ( '%s','%s','%s','%s', '%s', %d ,'%s','%s','%s','%s','%s','%s','%s')",
-				dbesc($arr['guid']),
-				dbesc($arr['guid_sig']),
-				dbesc($xchan_hash),
-				dbesc($location['address']),
-				dbesc('zot'),
-				intval((intval($location['primary'])) ? HUBLOC_FLAGS_PRIMARY : 0),
-				dbesc($location['url']),
-				dbesc($location['url_sig']),
-				dbesc($location['host']),
-				dbesc($location['callback']),
-				dbesc($location['sitekey']),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert())
-			);
-			$what .= 'newhub ';
-			$changed = true;
-
-		}
-
-		// get rid of any hubs we have for this channel which weren't reported.
-		// This was needed at one time to resolve complicated cross-site inconsistencies, but can cause sync conflict.
-		// currently disabled.
-
-//		if($xisting) {
-//			foreach($xisting as $x) {
-//				if(! array_key_exists('updated',$x)) {
-//					logger('import_xchan: removing unreferenced hub location ' . $x['hubloc_url']);
-//					$r = q("delete from hubloc where hubloc_id = %d limit 1",
-//						intval($x['hubloc_id'])
-//					);
-//					$what .= 'removed_hub';
-//					$changed = true;
-//				}
-//			}
-//		}
-
+	if($s) {
+		if($s['change_message'])
+			$what .= $s['change_message'];
+		if($s['changed'])
+			$changed = $s['changed'];
+		if($s['message'])
+			$ret['message'] .= $s['message'];
 	}
 
 	// Which entries in the update table are we interested in updating?
@@ -1189,7 +1033,8 @@ function zot_fetch($arr) {
  *       we will verify the sender and url in each returned message structure and also verify
  *       that all the messages returned match the site url that we are currently processing.
  * 
- * The message types handled here are 'activity' (e.g. posts), 'mail' , 'profile', and 'channel_sync'
+ * The message types handled here are 'activity' (e.g. posts), 'mail' , 'profile', 'location', 
+ * and 'channel_sync'
  * 
  * @returns array => array ( [0] => string $channel_hash, [1] => string $delivery_status, [2] => string $address )
  *    suitable for logging remotely, enumerating the processing results of each message/recipient combination.
@@ -1276,6 +1121,11 @@ function zot_import($arr, $sender_url) {
 
 				$deliveries = allowed_public_recips($i);
 
+				if($i['message'] && array_key_exists('type',$i['message']) && $i['message']['type'] === 'location') {
+					$sys = get_sys_channel();
+					$deliveries = array(array('hash' => $sys['xchan_hash']));
+				}
+
 				// if the scope is anything but 'public' we're going to store it as private regardless
 				// of the private flag on the post. 
 
@@ -1348,7 +1198,7 @@ function zot_import($arr, $sender_url) {
 
 				}
 				elseif($i['message']['type'] === 'channel_sync') {
-//					$arr = get_channelsync_elements($i['message']);
+					// $arr = get_channelsync_elements($i['message']);
 
 					$arr = $i['message'];
 
@@ -1357,6 +1207,15 @@ function zot_import($arr, $sender_url) {
 					
 					$result = process_channel_sync_delivery($i['notify']['sender'],$arr,$deliveries);
 				}
+				elseif($i['message']['type'] === 'location') {
+					$arr = $i['message'];
+
+					logger('Location message received: ' . print_r($arr,true), LOGGER_DATA);
+					logger('Location message recipients: ' . print_r($deliveries,true), LOGGER_DATA);
+					
+					$result = process_location_delivery($i['notify']['sender'],$arr,$deliveries);
+				}
+
 			}
 			if($result){
 				$return = array_merge($return,$result);
@@ -1799,6 +1658,238 @@ function process_profile_delivery($sender,$arr,$deliveries) {
 	if($r)
 		import_directory_profile($sender['hash'],$arr,$r[0]['xchan_addr'], UPDATE_FLAGS_UPDATED, 0);
 }
+
+function process_location_delivery($sender,$arr,$deliveries) {
+
+	// deliveries is irrelevant
+	logger('process_location_delivery', LOGGER_DEBUG);
+
+	$r = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
+			dbesc($sender['hash'])
+	);
+	if($r)
+		$sender['key'] = $r[0]['xchan_pubkey'];
+
+	$x = sync_locations($sender,$arr,true);
+	logger('process_location_delivery: results: ' . print_r($x,true), LOGGER_DATA);
+}
+
+// We need to merge this code with that in the import_xchan function so as to make it 
+// easier to maintain changes.
+
+function sync_locations($sender,$arr,$absolute = false) {
+
+	$ret = array();
+
+	if($arr['locations']) {
+
+		$xisting = q("select hubloc_id, hubloc_url, hubloc_sitekey from hubloc where hubloc_hash = '%s'",
+			dbesc($sender['hash'])
+		);
+
+		// See if a primary is specified
+
+		$has_primary = false;
+		foreach($arr['locations'] as $location) {
+			if($location['primary']) {
+				$has_primary = true;
+				break;
+			}
+		}
+
+		foreach($arr['locations'] as $location) {
+			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$sender['key'])) {
+				logger('sync_locations: Unable to verify site signature for ' . $location['url']);
+				$ret['message'] .= sprintf( t('Unable to verify site signature for %s'), $location['url']) . EOL;
+				continue;
+			}
+
+			// Ensure that they have one primary hub
+
+			if(! $has_primary)
+				$location['primary'] = true;
+
+			for($x = 0; $x < count($xisting); $x ++) {
+				if(($xisting[$x]['hubloc_url'] === $location['url']) 
+					&& ($xisting[$x]['hubloc_sitekey'] === $location['sitekey'])) {
+					$xisting[$x]['updated'] = true;
+				}
+			}
+
+			if(! $location['sitekey']) {
+				logger('sync_locations: empty hubloc sitekey. ' . print_r($location,true));
+				continue;
+			}
+
+			// Catch some malformed entries from the past which still exist
+
+			if(strpos($location['address'],'/') !== false)
+				$location['address'] = substr($location['address'],0,strpos($location['address'],'/'));
+
+			// match as many fields as possible in case anything at all changed. 
+
+			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' ",
+				dbesc($sender['hash']),
+				dbesc($sender['guid']),
+				dbesc($sender['guid_sig']),
+				dbesc($location['url']),
+				dbesc($location['url_sig']),
+				dbesc($location['host']),
+				dbesc($location['address']),
+				dbesc($location['callback']),
+				dbesc($location['sitekey'])
+			);
+			if($r) {
+				logger('sync_locations: hub exists: ' . $location['url'], LOGGER_DEBUG);
+
+				// update connection timestamp if this is the site we're talking to
+				// This only happens when called from import_xchan
+
+				if(array_key_exists('site',$arr) && $location['url'] == $arr['site']['url']) {
+					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d limit 1",
+						dbesc(datetime_convert()),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+				}
+				
+				// if it's marked offline/dead, bring it back
+				// Should we do this? It's basically saying that the channel knows better than
+				// the directory server if the site is alive.
+
+				if($r[0]['hubloc_status'] & HUBLOC_OFFLINE) {
+					q("update hubloc set hubloc_status = (hubloc_status ^ %d) where hubloc_id = %d limit 1",
+						intval(HUBLOC_OFFLINE),
+						intval($r[0]['hubloc_id'])
+					);
+					if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
+						q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
+							intval(HUBLOC_FLAGS_ORPHANCHECK),
+							intval($r[0]['hubloc_id'])
+						);
+					}
+					q("update xchan set xchan_flags = (xchan_flags ^ %d) where (xchan_flags & %d) and xchan_hash = '%s' limit 1",
+						intval(XCHAN_FLAGS_ORPHAN),
+						intval(XCHAN_FLAGS_ORPHAN),
+						dbesc($sender['hash'])
+					);
+				} 
+
+				// Remove pure duplicates
+				if(count($r) > 1) {
+					for($h = 1; $h < count($r); $h ++) {
+						q("delete from hubloc where hubloc_id = %d limit 1",
+							intval($r[$h]['hubloc_id'])
+						);
+					}
+				}
+
+				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
+					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
+					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
+						intval(HUBLOC_FLAGS_PRIMARY),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+					$what .= 'primary_hub ';
+					$changed = true;
+				}
+				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted']))
+					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && ($location['deleted']))) {
+					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
+						intval(HUBLOC_FLAGS_DELETED),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+					$what .= 'delete_hub ';
+					$changed = true;
+				}
+				continue;
+			}
+
+			// new hub claiming to be primary. Make it so.
+
+			if(intval($location['primary'])) {
+				$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_hash = '%s' and (hubloc_flags & %d )",
+					intval(HUBLOC_FLAGS_PRIMARY),
+					dbesc(datetime_convert()),
+					dbesc($sender['hash']),
+					intval(HUBLOC_FLAGS_PRIMARY)
+				);
+			}
+			logger('sync_locations: new hub: ' . $location['url']);
+			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_updated, hubloc_connected)
+					values ( '%s','%s','%s','%s', '%s', %d ,'%s','%s','%s','%s','%s','%s','%s')",
+				dbesc($sender['guid']),
+				dbesc($sender['guid_sig']),
+				dbesc($sender['hash']),
+				dbesc($location['address']),
+				dbesc('zot'),
+				intval((intval($location['primary'])) ? HUBLOC_FLAGS_PRIMARY : 0),
+				dbesc($location['url']),
+				dbesc($location['url_sig']),
+				dbesc($location['host']),
+				dbesc($location['callback']),
+				dbesc($location['sitekey']),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert())
+			);
+			$what .= 'newhub ';
+			$changed = true;
+
+		}
+
+		// get rid of any hubs we have for this channel which weren't reported.
+
+		if($absolute && $xisting) {
+			foreach($xisting as $x) {
+				if(! array_key_exists('updated',$x)) {
+					logger('sync_locations: deleting unreferenced hub location ' . $x['hubloc_url']);
+					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
+						intval(HUBLOC_FLAGS_DELETED),
+						dbesc(datetime_convert()),
+						intval($x['hubloc_id'])
+					);
+					$what .= 'removed_hub';
+					$changed = true;
+				}
+			}
+		}
+	}
+
+	$ret['change_message'] = $what;
+	$ret['changed'] = $changed;
+
+	return $ret;
+
+}
+
+
+function zot_encode_locations($channel) {
+	$ret = array();
+
+	$x = zot_get_hublocs($channel['channel_hash']);
+	if($x && count($x)) {
+		foreach($x as $hub) {
+			if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {
+				$ret[] = array(
+					'host'     => $hub['hubloc_host'],
+					'address'  => $hub['hubloc_addr'],
+					'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
+					'url'      => $hub['hubloc_url'],
+					'url_sig'  => $hub['hubloc_url_sig'],
+					'callback' => $hub['hubloc_callback'],
+					'sitekey'  => $hub['hubloc_sitekey'],
+					'deleted'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED) ? true : false)
+				);
+			}
+		}
+	}
+	return $ret;
+}
+
+
+
 
 
 /*
@@ -2247,7 +2338,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 // FIXME - this will sync red structures (channel, pconfig and abook). Eventually we need to make this application agnostic.
-// TODO: missing group membership changes
+
 
 	$result = array();
 	
@@ -2262,6 +2353,10 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 		}
 
 		$channel = $r[0];
+
+	    $max_friends = service_class_fetch($channel['channel_id'],'total_channels');
+    	$max_feeds = account_service_class_fetch($channel['channel_account_id'],'total_feeds');
+
 
 		if($channel['channel_hash'] != $sender['hash']) {
 			logger('process_channel_sync_delivery: possible forgery. Sender ' . $sender['hash'] . ' is not ' . $channel['channel_hash']);
@@ -2296,6 +2391,19 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 
 		if(array_key_exists('abook',$arr) && is_array($arr['abook']) && count($arr['abook'])) {
+			$total_friends = 0;
+			$total_feeds = 0;
+
+			$r = q("select abook_id, abook_flags from abook where abook_channel = %d",
+				intval($channel['channel_id'])
+			);
+			if($r) {
+				// don't count yourself
+				$total_friends = ((count($r) > 0) ? $count($r) - 1 : 0);
+				foreach($r as $rr)
+					if($rr['abook_flags'] & ABOOK_FLAG_FEED)
+						$total_feeds ++;
+			}
 
 			$disallowed = array('abook_id','abook_account','abook_channel');
 
@@ -2306,14 +2414,18 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);
 					require_once('include/Contact.php');
 					
-					$r = q("select abook_id from abook where abook_xchan = '%s' and abook_channel = %d and not ( abook_flags & %d ) limit 1",
+					$r = q("select abook_id, abook_flags from abook where abook_xchan = '%s' and abook_channel = %d and not ( abook_flags & %d ) limit 1",
 						dbesc($abook['abook_xchan']),
 						intval($channel['channel_id']),
 						intval(ABOOK_FLAG_SELF)
 					);
-					if($r)
+					if($r) {
 						contact_remove($channel['channel_id'],$r[0]['abook_id']);
-
+						if($total_friends)
+							$total_friends --;
+						if($r[0]['abook_flags'] & ABOOK_FLAG_FEED)
+							$total_feeds --;
+					}
 					continue;
 				}
 
@@ -2360,10 +2472,21 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 				// make sure we have an abook entry for this xchan on this system
 
 				if(! $r) {
+					if($max_friends !== false && $total_friends > $max_friends) {
+						logger('process_channel_sync_delivery: total_channels service class limit exceeded');
+						continue;
+					}
+					if($max_feeds !== false && ($clean['abook_flags'] & ABOOK_FLAG_FEED) && $total_feeds > $max_feeds) {
+						logger('process_channel_sync_delivery: total_feeds service class limit exceeded');
+						continue; 
+					}
 					q("insert into abook ( abook_xchan, abook_channel ) values ('%s', %d ) ",
 						dbesc($clean['abook_xchan']),
 						intval($channel['channel_id'])
 					);
+					$total_friends ++;
+					if($clean['abook_flags'] & ABOOK_FLAG_FEED)
+						$total_feeds ++;
 				} 
 
 				if(count($clean)) {

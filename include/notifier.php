@@ -57,6 +57,7 @@ require_once('include/html2plain.php');
  *       purge_all              channel_id
  *       expire                 channel_id
  *       relay					item_id (item was relayed to owner, we will deliver it as owner)
+ *       location               channel_id
  *
  */
 
@@ -144,6 +145,7 @@ function notifier_run($argv, $argc){
 	$mail = false;
 	$fsuggest = false;
 	$top_level = false;
+	$location  = false;
 	$recipients = array();
 	$url_recipients = array();
 	$normal_mode = true;
@@ -229,6 +231,30 @@ function notifier_run($argv, $argc){
 		}
 		$private = false;
 		$packet_type = 'refresh';
+	}
+	elseif($cmd === 'location') {
+		logger('notifier: location: ' . $item_id);
+		$s = q("select * from channel where channel_id = %d limit 1",
+			intval($item_id)
+		);
+		if($s)
+			$channel = $s[0];
+		$uid = $item_id;
+		$recipients = array();
+		$r = q("select abook_xchan from abook where abook_channel = %d",
+			intval($item_id)
+		);
+		if($r) {
+			foreach($r as $rr) {
+				$recipients[] = $rr['abook_xchan'];
+			}
+		}
+
+		$encoded_item = array('locations' => zot_encode_locations($channel),'type' => 'location', 'encoding' => 'zot');
+		$target_item = array('aid' => $channel['channel_account_id'],'uid' => $channel['channel_id']);
+		$private = false;
+		$packet_type = 'location';
+		$location = true;
 	}
 	elseif($cmd === 'purge_all') {
 		logger('notifier: purge_all: ' . $item_id);
@@ -429,8 +455,10 @@ function notifier_run($argv, $argc){
 
 	
 	// for public posts always include our own hub
+// this shouldn't be needed any more. collect_recipients should take care of it.
+//	$sql_extra = (($private) ? "" : " or hubloc_url = '" . dbesc(z_root()) . "' ");
 
-	$sql_extra = (($private) ? "" : " or hubloc_url = '" . dbesc(z_root()) . "' ");
+	logger('notifier: hub choice: ' . intval($relay_to_owner) . ' ' . intval($private) . ' ' . $cmd, LOGGER_DEBUG);
 
 	if($relay_to_owner && (! $private) && ($cmd !== 'relay')) {
 
@@ -450,7 +478,10 @@ function notifier_run($argv, $argc){
 	} 
 	else {
 		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_sitekey");
+			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)  and not (hubloc_status & %d) group by hubloc_sitekey",
+			intval(HUBLOC_FLAGS_DELETED),
+			intval(HUBLOC_OFFLINE)
+		);
 	}
 
 	if(! $r) {
@@ -465,6 +496,7 @@ function notifier_run($argv, $argc){
 	foreach($hubs as $hub) {
 		// don't try to deliver to deleted hublocs - and inexplicably SQL "distinct" and "group by"
 		// both return records with duplicate keys in rare circumstances
+// FIXME this is probably redundant now.
 		if((! ($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && (! in_array($hub['hubloc_sitekey'],$keys))) {
 			$hublist[] = $hub['hubloc_host'];
 			$keys[] = $hub['hubloc_sitekey'];
@@ -514,6 +546,7 @@ function notifier_run($argv, $argc){
 				'cmd' => $cmd,
 				'expire' =>	$expire,
 				'mail' => $mail,
+				'location' => $location,
 				'fsuggest' => $fsuggest,
 				'normal_mode' => $normal_mode,
 				'packet_type' => $packet_type,

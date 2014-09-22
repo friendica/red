@@ -136,7 +136,8 @@ function settings_post(&$a) {
 		$theme = ((x($_POST,'theme')) ? notags(trim($_POST['theme']))  : $a->channel['channel_theme']);
 		$mobile_theme = ((x($_POST,'mobile_theme')) ? notags(trim($_POST['mobile_theme']))  : '');
 		$user_scalable = ((x($_POST,'user_scalable')) ? intval($_POST['user_scalable'])  : 0);
-		$nosmile = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0);  
+		$nosmile = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0); 
+		$title_tosource = ((x($_POST,'title_tosource')) ? intval($_POST['title_tosource'])  : 0);		 
 		$browser_update   = ((x($_POST,'browser_update')) ? intval($_POST['browser_update']) : 0);
 		$browser_update   = $browser_update * 1000;
 		if($browser_update < 10000)
@@ -156,6 +157,7 @@ function settings_post(&$a) {
 		set_pconfig(local_user(),'system','update_interval', $browser_update);
 		set_pconfig(local_user(),'system','itemspage', $itemspage);
 		set_pconfig(local_user(),'system','no_smilies',$nosmile);
+		set_pconfig(local_user(),'system','title_tosource',$title_tosource);
 //		set_pconfig(local_user(),'system','chanview_full',$chanview_full);
 
 
@@ -589,10 +591,9 @@ function settings_content(&$a) {
 	if((argc() > 1) && (argv(1) === 'featured')) {
 		$settings_addons = "";
 		
-		$r = q("SELECT * FROM `hook` WHERE `hook` = 'plugin_settings' ");
-	// FIXME: This is always 0, even if there are plugin settings on this page 
-	//	if(! count($r))
-	//		$settings_addons = t('No feature settings configured');
+		$r = q("SELECT * FROM `hook` WHERE `hook` = 'feature_settings' ");
+		if(! count($r))
+			$settings_addons = t('No feature settings configured');
 
 		call_hooks('feature_settings', $settings_addons);
 		
@@ -735,13 +736,16 @@ function settings_content(&$a) {
 		$user_scalable = (($user_scalable===false)? '1': $user_scalable); // default if not set: 1
 		
 		$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
-		$browser_update = (($browser_update == 0) ? 40 : $browser_update / 1000); // default if not set: 40 seconds
+		$browser_update = (($browser_update == 0) ? 80 : $browser_update / 1000); // default if not set: 40 seconds
 
 		$itemspage = intval(get_pconfig(local_user(), 'system','itemspage'));
 		$itemspage = (($itemspage > 0 && $itemspage < 101) ? $itemspage : 20); // default if not set: 20 items
 		
 		$nosmile = get_pconfig(local_user(),'system','no_smilies');
 		$nosmile = (($nosmile===false)? '0': $nosmile); // default if not set: 0
+
+		$title_tosource = get_pconfig(local_user(),'system','title_tosource');
+		$title_tosource = (($title_tosource===false)? '0': $title_tosource); // default if not set: 0
 
 		$theme_config = "";
 		if( ($themeconfigfile = get_theme_config_file($theme_selected)) != null){
@@ -763,6 +767,7 @@ function settings_content(&$a) {
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
 			'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, ''),
+			'$title_tosource'	=> array('title_tosource', t("Link post titles to source"), $title_tosource, ''),		
 			'$layout_editor' => t('System Page Layout Editor - (advanced)'),
 			'$theme_config' => $theme_config,
 			'$expert' => feature_enabled(local_user(),'expert'),
@@ -930,6 +935,10 @@ function settings_content(&$a) {
 			}
 		}
 
+
+		$permissions_role = get_pconfig(local_user(),'system','permissions_role');
+		$permissions_set = (($permissions_role && $permissions_role != 'custom') ? true : false);
+
 		$o .= replace_macros($stpl,array(
 			'$ptitle' 	=> t('Channel Settings'),
 
@@ -950,6 +959,8 @@ function settings_content(&$a) {
 			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel frequently or regularly publishes adult content. (Please tag any adult material and/or nudity with #NSFW)')),
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
+			'$permissions_set' => $permissions_set,
+			'$perms_set_msg' => t('Your permissions are already configured. Click to view/adjust'),
 
 			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online')),
 

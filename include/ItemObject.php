@@ -250,6 +250,7 @@ class Item extends BaseObject {
 			'osparkle' => $osparkle,
 			'sparkle' => $sparkle,
 			'title' => $item['title'],
+			'title_tosource' => get_pconfig($conv->get_profile_owner(),'system','title_tosource'),
 			'ago' => relative_date($item['created']),
 			'app' => $item['app'],
 			'str_app' => sprintf( t(' from %s'), $item['app']),

@@ -58,7 +58,7 @@ function diaspora_dispatch($importer,$msg,$attempt=1) {
 
 	$xmlbase = $parsed_xml->post;
 
-	logger('diaspora_dispatch: ' . print_r($xmlbase,true), LOGGER_DEBUG);
+	logger('diaspora_dispatch: ' . print_r($xmlbase,true), LOGGER_DATA);
 
 
 	if($xmlbase->request) {
@@ -142,12 +142,17 @@ function diaspora_process_outbound($arr) {
 				'cmd' => $cmd,
 				'expire' =>	$expire,
 				'mail' => $mail,
+				'location' => $location,
 				'fsuggest' => $fsuggest,
 				'normal_mode' => $normal_mode,
 				'packet_type' => $packet_type,
 				'walltowall' => $walltowall,
 			));
 */
+
+
+	if($arr['location'])
+		return;
 
 
 	$target_item = $arr['target_item'];
@@ -159,6 +164,7 @@ function diaspora_process_outbound($arr) {
 		if($target_item['body'])
 			$target_item['body'] = crypto_unencapsulate(json_decode($target_item['body'],true),$key);
 	}
+
 
 
 	if($arr['env_recips']) {
@@ -539,7 +545,7 @@ function diaspora_decode($importer,$xml) {
 		 *  </decrypted_header>
 		 */
 
-		logger('decrypted: ' . $decrypted, LOGGER_DEBUG);
+		logger('decrypted: ' . $decrypted, LOGGER_DATA);
 		$idom = parse_xml_string($decrypted,false);
 
 		$inner_iv = base64_decode($idom->iv);
@@ -906,7 +912,7 @@ function diaspora_post($importer,$xml,$msg) {
 
 function diaspora_reshare($importer,$xml,$msg) {
 
-	logger('diaspora_reshare: init: ' . print_r($xml,true));
+	logger('diaspora_reshare: init: ' . print_r($xml,true), LOGGER_DATA);
 
 	$a = get_app();
 	$guid = notags(unxmlify($xml->guid));
@@ -949,7 +955,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 		logger('diaspora_reshare: unable to fetch source url ' . $source_url);
 		return;
 	}
-	logger('diaspora_reshare: source: ' . $x['body']);
+	logger('diaspora_reshare: source: ' . $x['body'], LOGGER_DATA);
 
 	$source_xml = parse_xml_string($x['body'],false);
 
@@ -1425,7 +1431,8 @@ function diaspora_conversation($importer,$xml,$msg) {
 		return;
 	}
 
-	if(($contact['rel'] == CONTACT_IS_FOLLOWER) || ($contact['blocked']) || ($contact['readonly'])) { 
+
+	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_mail')) {
 		logger('diaspora_conversation: Ignoring this author.');
 		return 202;
 	}
@@ -1525,7 +1532,7 @@ function diaspora_conversation($importer,$xml,$msg) {
 			continue;
 		}
 
-		q("insert into mail ( `uid`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s')",
+		q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s')",
 			intval($importer['channel_id']),
 			intval($conversation['id']),
 			dbesc($person['xchan_hash']),
@@ -1639,19 +1646,15 @@ function diaspora_message($importer,$xml,$msg) {
 		return;
 	}
 
-	q("insert into mail ( `uid`, `guid`, `convid`, `from-name`,`from-photo`,`from-url`,`contact-id`,`title`,`body`,`seen`,`reply`,`uri`,`parent-uri`,`created`) values ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, '%s','%s','%s')",
+	q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', '%d','%s','%s','%s')",
 		intval($importer['channel_id']),
-		dbesc($msg_guid),
 		intval($conversation['id']),
-		dbesc($person['name']),
-		dbesc($person['photo']),
-		dbesc($person['url']),
-		intval($contact['id']),	 
+		dbesc($person['xchan_hash']),
+		dbesc($importer['xchan_hash']),
 		dbesc($conversation['subject']),
 		dbesc($body),
 		0,
-		1,
-		dbesc($message_id),
+		dbesc($msg_guid),
 		dbesc($parent_uri),
 		dbesc($msg_created_at)
 	);
@@ -1966,19 +1969,16 @@ function diaspora_retraction($importer,$xml) {
 
 	if($type === 'Person') {
 		require_once('include/Contact.php');
-		contact_remove($contact['id']);
+		contact_remove($importer['channel_id'],$contact['abook_id']);
 	}
 	elseif($type === 'Post') {
-		$r = q("select * from item where guid = '%s' and uid = %d and not file like '%%[%%' limit 1",
+		$r = q("select * from item where mid = '%s' and uid = %d limit 1",
 			dbesc('guid'),
 			intval($importer['channel_id'])
 		);
 		if(count($r)) {
-			if(link_compare($r[0]['author-link'],$contact['url'])) {
-				q("update item set `deleted` = 1, `changed` = '%s' where `id` = %d",
-					dbesc(datetime_convert()),
-					intval($r[0]['id'])
-				);
+			if(link_compare($r[0]['author_xchan'],$contact['xchan_hash'])) {
+				drop_item($r[0]['id'],false);
 			}
 		}
 	}
@@ -2040,35 +2040,33 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 	}
 
 	if($type === 'StatusMessage' || $type === 'Comment' || $type === 'Like') {
-		$r = q("select * from item where guid = '%s' and uid = %d and not file like '%%[%%' limit 1",
+		$r = q("select * from item where mid = '%s' and uid = %d limit 1",
 			dbesc($guid),
 			intval($importer['channel_id'])
 		);
-		if(count($r)) {
-			if(link_compare($r[0]['author-link'],$contact['url'])) {
-				q("update item set `deleted` = 1, `edited` = '%s', `changed` = '%s', `body` = '' , `title` = '' where `id` = %d",
-					dbesc(datetime_convert()),
-					dbesc(datetime_convert()),
-					intval($r[0]['id'])
-				);
+		if($r) {
+			if($r[0]['author_xchan'] == $contact['xchan_hash']) {
+
+				drop_item($r[0]['id'],false, DROPITEM_PHASE1);
 
 				// Now check if the retraction needs to be relayed by us
 				//
 				// The first item in the `item` table with the parent id is the parent. However, MySQL doesn't always
 				// return the items ordered by `item`.`id`, in which case the wrong item is chosen as the parent.
 				// The only item with `parent` and `id` as the parent id is the parent item.
-				$p = q("select origin from item where parent = %d and id = %d limit 1",
+				$p = q("select item_flags from item where parent = %d and id = %d limit 1",
 					$r[0]['parent'],
 					$r[0]['parent']
 				);
-				if(count($p)) {
-					if(($p[0]['origin']) && (! $parent_author_signature)) {
-						q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-							$r[0]['id'],
-							dbesc($signed_data),
-							dbesc($sig),
-							dbesc($diaspora_handle)
-						);
+				if($p) {
+					if(($p[0]['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature)) {
+// FIXME so we can relay this
+//						q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
+//							$r[0]['id'],
+//							dbesc($signed_data),
+//							dbesc($sig),
+//							dbesc($diaspora_handle)
+//						);
 
 						// the existence of parent_author_signature would have meant the parent_author or owner
 						// is already relaying.

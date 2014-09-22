@@ -266,11 +266,15 @@ function bb2dmention_callback($match) {
 function bb2diaspora_itemwallwall(&$item) {
 
 	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author']))) {
+		logger('bb2diaspora_itemwallwall: author: ' . print_r($item['author'],true), LOGGER_DEBUG);
+	}
+
+	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_m']) {
 		logger('bb2diaspora_itemwallwall: wall to wall post',LOGGER_DEBUG);
 		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
 		$item['body'] = "\n\n" 
-			. '[img]' . $item['author']['photo']['src'] . '[/img]' 
-			. '[url=' . $item['author']['url'] . ']' . $item['author']['name'] . '[/url]' . "\n\n" 
+			. '[img]' . $item['author']['xchan_photo_m'] . '[/img]' 
+			. '[url=' . $item['author']['xchan_url'] . ']' . $item['author']['xchan_name'] . '[/url]' . "\n\n" 
 			. $item['body'];
 	}
 }
@@ -292,7 +296,8 @@ function bb2diaspora_itembody($item) {
 				logger('bb2diaspora_itembody: cached ');
 				$newitem = $item;
 				$newitem['body'] = $meta['body'];
-				bb2diaspora_itemwallwall($newitem);
+// this won't work - the post is now in markdown
+//				bb2diaspora_itemwallwall($newitem);
 				return $newitem['body'];
 			}
 		}

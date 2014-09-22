@@ -208,28 +208,11 @@ function zfinger_init(&$a) {
 	if($permissions['view_profile'])
 		$ret['profile']  = $profile;
 
-
 	// array of (verified) hubs this channel uses
 
-	$ret['locations'] = array();
-
-	$x = zot_get_hublocs($e['channel_hash']);
-	if($x && count($x)) {
-		foreach($x as $hub) {
-			if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {
-				$ret['locations'][] = array(
-					'host'     => $hub['hubloc_host'],
-					'address'  => $hub['hubloc_addr'],
-					'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
-					'url'      => $hub['hubloc_url'],
-					'url_sig'  => $hub['hubloc_url_sig'],
-					'callback' => $hub['hubloc_callback'],
-					'sitekey'  => $hub['hubloc_sitekey'],
-					'deleted'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED) ? true : false)
-				);
-			}
-		}
-	}
+	$x = zot_encode_locations($e);
+	if($x)
+		$ret['locations'] = $x;
 
 	$ret['site'] = array();
 	$ret['site']['url'] = z_root();

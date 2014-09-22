@@ -44,7 +44,7 @@ require_once('include/Contact.php');
 require_once('include/account.php');
 
 
-define ( 'RED_PLATFORM',            'Red Matrix' );
+define ( 'RED_PLATFORM',            'redmatrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
@@ -73,7 +73,6 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://zotid.net', 
 	'https://redmatrix.nl', 
 	'https://whogotzot.com', 
-	'https://red.mariovavti.com',
 	'https://red.zottel.red',
 	'https://red.pixelbits.de'
 );
@@ -217,8 +216,9 @@ define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for director
 define ( 'PAGE_PREMIUM',           0x0010 );
 define ( 'PAGE_ADULT',             0x0020 );
 define ( 'PAGE_CENSORED',          0x0040 ); // Site admin has blocked this channel from appearing in casual search results and site feeds
-
 define ( 'PAGE_SYSTEM',            0x1000 );
+define ( 'PAGE_HUBADMIN',          0x2000 ); // set this to indicate a preferred admin channel rather than the 
+											 // default channel of any accounts with the admin role.
 define ( 'PAGE_REMOVED',           0x8000 );
 
 
@@ -982,9 +982,9 @@ class App {
 		if ($user_scalable === false)
 			$user_scalable = 1;
 
-		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
+		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 80000);
 		if($interval < 10000)
-			$interval = 40000;
+			$interval = 80000;
 
 		if(! x($this->page,'title'))
 			$this->page['title'] = $this->config['system']['sitename'];

@@ -85,6 +85,8 @@ function display_content(&$a, $update = 0, $load = false) {
 		$target_item = $r[0];
 	}
 
+	$r = null;
+
 	if($target_item['item_restrict'] & ITEM_WEBPAGE) {
 		$x = q("select * from channel where channel_id = %d limit 1",
 			intval($target_item['uid'])

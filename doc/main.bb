@@ -35,8 +35,8 @@ Zot is the great new communicaton protocol invented especially for the Red Matri
 [zrl=[baseurl]/help/nomadic-identity]Got Zot? Nomadic Identity, Channel Cloning And More[/zrl]
 [zrl=[baseurl]/help/diaspora_compat]Diaspora Communications Compatibility (Diaspora and Friendica)[/zrl]
 
-[size=large][b]Frequently Asked Questions For Users[/b][/size]
-[zrl=[baseurl]/help/faq_users]FAQ For Users[/zrl]
+[size=large][b]Frequently Asked Questions For Members[/b][/size]
+[zrl=[baseurl]/help/faq_users]FAQ For Members[/zrl]
 
 [size=large][b]For Hub Administrators[/b][/size]
 [zrl=[baseurl]/help/install]Install[/zrl]
@@ -49,6 +49,9 @@ Zot is the great new communicaton protocol invented especially for the Red Matri
 [zrl=[baseurl]/help/faq_admins]FAQ For Admins[/zrl]
 
 [size=large][b]Technical Documentation[/b][/size]
+[zrl=[baseurl]/help/Zot---A-High-Level-Overview]A high level overview of Zot[/zrl]
+[zrl=[baseurl]/help/zot]An introduction to Zot[/zrl]
+[zrl=[baseurl]/help/zot_structures]Zot Stuctures[/zrl]
 [zrl=[baseurl]/help/comanche]Comanche Page Descriptions[/zrl]
 [zrl=[baseurl]/help/Creating-Templates]Creating Comanche Templates[/zrl]
 [zrl=[baseurl]/help/Widgets]Core Widgets[/zrl]

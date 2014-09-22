@@ -704,21 +704,24 @@ function updateConvItems(mode,data) {
 
 	}
 
-	function justifyPhotos(bParam_page) {
-		$('#photo-album-contents-' + bParam_page).justifiedGallery({
-			lastRow : 'nojustify',
-			captions: true,
+	function justifyPhotos() {
+		justifiedGalleryActive = true;
+		$('#photo-album-contents').justifiedGallery({
 			margins: 3,
-			rowHeight : 150,
-			sizeRangeSuffixes : {
-				'lt100': '',
-				'lt240': '',
-				'lt320': '',
+			sizeRangeSuffixes: {
+				'lt100': '-2',
+				'lt240': '-2',
+				'lt320': '-2',
 				'lt500': '',
-				'lt640': '',
-				'lt1024': ''
+				'lt640': '-1',
+				'lt1024': '-0'
 			}
-		});
+		}).on('jg.complete', function(e){ justifiedGalleryActive = false; });
+	}
+
+	function justifyPhotosAjax() {
+		justifiedGalleryActive = true;
+		$('#photo-album-contents').justifiedGallery('norewind').on('jg.complete', function(e){ justifiedGalleryActive = false; });
 	}
 
 	function notify_popup_loader(notifyType) {
@@ -740,7 +743,7 @@ function updateConvItems(mode,data) {
 
 
 			if(data.notify.length==0){
-				$("#nav-" + notifyType + "-menu").html(notifications_empty);
+				$("#nav-" + notifyType + "-menu").html(aStr[nothingnew]);
 
 			} else {
 				$("#nav-" + notifyType + "-menu").html(notifications_all + notifications_mark);
@@ -1115,7 +1118,7 @@ $(window).scroll(function () {
 			$('#more').show();
 		}
 
-		if($(window).scrollTop() + $(window).height() == $(document).height()) {
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
 			if((pageHasMoreContent) && (! loadingPage)) {
 				$('#more').hide();
 				$('#no-more').hide();
@@ -1134,9 +1137,9 @@ $(window).scroll(function () {
 			$('#more').css("top","400");
 			$('#more').show();
 		}
-	
-		if($(window).scrollTop() + $(window).height() == $(document).height()) {
-			if((pageHasMoreContent) && (! loadingPage)) {
+
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+			if((pageHasMoreContent) && (! loadingPage) && (! justifiedGalleryActive)) {
 				$('#more').hide();
 				$('#no-more').hide();
 

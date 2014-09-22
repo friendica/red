@@ -47,7 +47,6 @@
 	{{include file="field_select.tpl" field=$theme}}
     {{include file="field_select.tpl" field=$theme_mobile}}
     {{include file="field_select.tpl" field=$theme_accessibility}}
-    {{include file="field_input.tpl" field=$site_channel}}
     {{include file="field_checkbox.tpl" field=$no_login_on_homepage}}
 
 	

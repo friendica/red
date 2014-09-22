@@ -9,9 +9,24 @@ require_once('include/identity.php');
 
 function import_post(&$a) {
 
-	if(! get_account_id()) {
+	$account_id = get_account_id();
+	if(! $account_id)
 		return;
+
+	$max_identities = account_service_class_fetch($account_id,'total_identities');
+	$max_friends = account_service_class_fetch($account_id,'total_channels');
+	$max_feeds = account_service_class_fetch($account_id,'total_feeds');
+
+	if($max_identities !== false) {
+		$r = q("select channel_id from channel where channel_account_id = %d",
+			intval($account_id)
+		);
+		if($r && count($r) > $max_identities) {
+			notice( sprintf( t('Your service plan only allows %d channels.'), $max_identities) . EOL);
+			return;
+		}
 	}
+
 
 	$data     = null;
 	$seize    = ((x($_REQUEST,'make_primary')) ? intval($_REQUEST['make_primary']) : 0);
@@ -276,10 +291,18 @@ function import_post(&$a) {
 // FIXME - ensure we have an xchan if somebody is trying to pull a fast one
 
 	
+	$friends = 0;
+	$feeds = 0;
+
 	// import contacts
 	$abooks = $data['abook'];
 	if($abooks) {
 		foreach($abooks as $abook) {
+			if($max_friends !== false && $friends > $max_friends)
+				continue;
+			if($max_feeds !== false && ($abook['abook_flags'] & ABOOK_FLAG_FEED) && $feeds > $max_feeds)
+				continue;
+
 			unset($abook['abook_id']);
 			$abook['abook_account'] = get_account_id();
 			$abook['abook_channel'] = $channel['channel_id'];
@@ -289,6 +312,10 @@ function import_post(&$a) {
 				. "`) VALUES ('" 
 				. implode("', '", array_values($abook)) 
 				. "')" );
+
+			$friends ++;
+			if($abook['abook_flags'] & ABOOK_FLAG_FEED)
+				$feeds ++;
 		}
 	}
 
@@ -349,25 +376,26 @@ function import_post(&$a) {
 		}
 	}
 
+//FIXME just a note here for when folks want to import content - be very careful to unset ITEM_ORIGIN on all imported content. Or you could end up with a nasty routing loop when somebody tries to reply to one of those posts. 
+
+
 // FIXME - ensure we have a self entry if somebody is trying to pull a fast one
 
-	if($seize) {
-		// notify old server that it is no longer primary.
-		
-	}
+	// send out refresh requests
+	// notify old server that it may no longer be primary.
+
+	proc_run('php','include/notifier.php','location',$channel['channel_id']);
 
 	// This will indirectly perform a refresh_all *and* update the directory
 
 	proc_run('php', 'include/directory.php', $channel['channel_id']);
 
-	// send out refresh requests
 
 	notice( t('Import completed.') . EOL);
 
 	change_channel($channel['channel_id']);
 
 	goaway(z_root() . '/network' );
-
 
 }
 

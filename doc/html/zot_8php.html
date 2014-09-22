@@ -154,6 +154,12 @@ Functions</h2></td></tr>
 <tr class="separator:aa6ae96db8cbbdbb10e6876d206bbf7cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a57b40669351c9791126b925cb7ef3b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a9a57b40669351c9791126b925cb7ef3b">process_profile_delivery</a> ($sender, $arr, $deliveries)</td></tr>
 <tr class="separator:a9a57b40669351c9791126b925cb7ef3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eeefdb0dad4c436bea9d1c06c0a7988"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a8eeefdb0dad4c436bea9d1c06c0a7988">process_location_delivery</a> ($sender, $arr, $deliveries)</td></tr>
+<tr class="separator:a8eeefdb0dad4c436bea9d1c06c0a7988"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab15c04e7e5f44edf45ec50dd7d183254"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#ab15c04e7e5f44edf45ec50dd7d183254">sync_locations</a> ($sender, $arr, $absolute=false)</td></tr>
+<tr class="separator:ab15c04e7e5f44edf45ec50dd7d183254"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae26ce9f1ad74139193fb6319beac5fca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#ae26ce9f1ad74139193fb6319beac5fca">zot_encode_locations</a> ($channel)</td></tr>
+<tr class="separator:ae26ce9f1ad74139193fb6319beac5fca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20750dd2c36961013fd382fb34e1366c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a20750dd2c36961013fd382fb34e1366c">import_directory_profile</a> ($hash, $profile, $addr, $ud_flags=<a class="el" href="boot_8php.html#a9690d73434125ce594a1f5e7c2a4f7c0">UPDATE_FLAGS_UPDATED</a>, $suppress_update=0)</td></tr>
 <tr class="separator:a20750dd2c36961013fd382fb34e1366c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3bf11286c2619b4ca28e49d5b5ab374a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a3bf11286c2619b4ca28e49d5b5ab374a">import_directory_keywords</a> ($hash, $keywords)</td></tr>
@@ -551,6 +557,40 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a8eeefdb0dad4c436bea9d1c06c0a7988"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">process_location_delivery </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$sender</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$arr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$deliveries</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="zot_8php.html#aeea071f17e306fe3d0c488551906bfab">zot_import()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="aa6ae96db8cbbdbb10e6876d206bbf7cc"></a>
 <div class="memitem">
 <div class="memproto">
@@ -668,6 +708,40 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="zot_8php.html#a4d9e6ca295e443b740d9960c304b3474">process_delivery()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab15c04e7e5f44edf45ec50dd7d183254"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sync_locations </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$sender</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$arr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$absolute</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="zot_8php.html#a528e97ca5d69c3b7f35c5d954afde315">import_xchan()</a>, and <a class="el" href="zot_8php.html#a8eeefdb0dad4c436bea9d1c06c0a7988">process_location_delivery()</a>.</p>
 
 </div>
 </div>
@@ -803,6 +877,24 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ae26ce9f1ad74139193fb6319beac5fca"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">zot_encode_locations </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$channel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="notifier_8php.html#a568c502f626cff95e344c0748938b85d">notifier_run()</a>, and <a class="el" href="zfinger_8php.html#a8139b83a22ef98869adc10aa224027a0">zfinger_init()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a61cdc1ec843663c423ed2d8160ae5aea"></a>
 <div class="memitem">
 <div class="memproto">
@@ -900,7 +992,7 @@ which will be processed and delivered before this function ultimately returns.
 </dl>
 <p>Only search for active hublocs - e.g. those that haven't been marked deleted </p>
 
-<p>Referenced by <a class="el" href="zot_8php.html#ac301c67864917c35922257950ae0f95c">process_channel_sync_delivery()</a>, and <a class="el" href="zfinger_8php.html#a8139b83a22ef98869adc10aa224027a0">zfinger_init()</a>.</p>
+<p>Referenced by <a class="el" href="zot_8php.html#ac301c67864917c35922257950ae0f95c">process_channel_sync_delivery()</a>, and <a class="el" href="zot_8php.html#ae26ce9f1ad74139193fb6319beac5fca">zot_encode_locations()</a>.</p>
 
 </div>
 </div>
@@ -963,7 +1055,7 @@ which will be processed and delivered before this function ultimately returns.
   </table>
   </dd>
 </dl>
-<p>The message types handled here are 'activity' (e.g. posts), 'mail' , 'profile', and 'channel_sync'</p>
+<p>The message types handled here are 'activity' (e.g. posts), 'mail' , 'profile', 'location', and 'channel_sync'</p>
 <dl class="section return"><dt>Returns</dt><dd>array =&gt; array ( [0] =&gt; string $channel_hash, [1] =&gt; string $delivery_status, [2] =&gt; string $address ) suitable for logging remotely, enumerating the processing results of each message/recipient combination. </dd></dl>
 
 <p>Referenced by <a class="el" href="deliver_8php.html#a397afcb9afecf0c1816b0951189dd346">deliver_run()</a>, and <a class="el" href="zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea">zot_fetch()</a>.</p>

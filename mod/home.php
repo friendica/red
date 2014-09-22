@@ -39,21 +39,35 @@ function home_content(&$a) {
 	if(x($_SESSION,'mobile_theme'))
 		unset($_SESSION['mobile_theme']);
 
-	$channel_address = get_config("system", "site_channel" );
-    if ($channel_address){
 
-		// We can do better, but until we figure out auto-linkification, let's keep things simple
+	if(get_config('system','projecthome')) {
+		$o .= file_get_contents('assets/home.html');
+		$a->page['template'] = 'full';
+		$a->page['title'] = t('Red Matrix - &quot;The Network&quot;');
+		return $o;
+	}
+
+
+// Deprecated
+    $channel_address = get_config("system", "site_channel" );
+    
+// See if the sys channel set a homepage
+    if (! $channel_address) {
+            $u = get_sys_channel();
+                if ($u) {
+                $u = array($u);
+                // change to channel_id when below deprecated and skip the $u=...
+                $channel_address = $u[0]['channel_address'];
+                }
+    }
+
+    if ($channel_address){
 
 		$page_id = 'home';
 
 		$u = q("select channel_id from channel where channel_address = '%s' limit 1",
 			dbesc($channel_address)
 		);
-
-		if(! $u) {
-			notice( t('Channel not found.') . EOL);
-			return;
-		}
 
 		$r = q("select item.* from item left join item_id on item.id = item_id.iid
 			where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
@@ -63,31 +77,24 @@ function home_content(&$a) {
 			intval(ITEM_WEBPAGE)
 		);
 
-		if(! $r) {
-			notice( t('Item not found.') . EOL);
-			return;
-		}
-
+		if($r) {
 		xchan_query($r);
 		$r = fetch_post_tags($r,true);
 		$a->profile = array('profile_uid' => $u[0]['channel_id']);
 		$o .= prepare_page($r[0]);
 		return $o;
+		}
+
 	}
 
-	if(get_config('system','projecthome')) {
-		$o .= file_get_contents('assets/home.html');
-		$a->page['template'] = 'full';
-		$a->page['title'] = t('Red Matrix - &quot;The Network&quot;');
-		return $o;
-	}
+// Nope, we didn't find an item.  Let's see if there's any html
 
 	if(file_exists('home.html')) {
 		$o .= file_get_contents('home.html');
 	}
 	else {
 
-		// If there's no site channel or home contents configured, fallback to the old behaviour
+		// If there's nothing special happening, just spit out a login box
 
 		$sitename = get_config('system','sitename');
 		if($sitename) 

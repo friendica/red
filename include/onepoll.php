@@ -135,7 +135,7 @@ function onepoll_run($argv, $argc){
 				foreach($j['messages'] as $message) {
 					$results = process_delivery(array('hash' => $contact['xchan_hash']), get_item_elements($message),
 						array(array('hash' => $importer['xchan_hash'])), false);
-					logger('onepoll: feed_update: process_delivery: ' . print_r($results,true));
+					logger('onepoll: feed_update: process_delivery: ' . print_r($results,true), LOGGER_DATA);
 					$total ++;
 				}
 				logger("onepoll: $total messages processed");

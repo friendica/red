@@ -18,7 +18,7 @@ var items_8php =
     [ "delete_item_lowlevel", "items_8php.html#aac8c9eb4338e2a996c43914392c6cfdb", null ],
     [ "drop_item", "items_8php.html#a555762e1022a4b8e3c3abd32e7812408", null ],
     [ "drop_items", "items_8php.html#a668ece2c37f05cc3abe538eb0dabfe55", null ],
-    [ "encode_item", "items_8php.html#a82955cc578f0fa600acec84475026194", null ],
+    [ "encode_item", "items_8php.html#a56b0f5d2cb36eb8f4bfca84813884f86", null ],
     [ "encode_item_flags", "items_8php.html#a5f690fc2484abec07840b4f9dd525bd9", null ],
     [ "encode_item_terms", "items_8php.html#ac6673627d289ee4f547de0fe3b7acd0a", null ],
     [ "encode_item_xchan", "items_8php.html#a566c601726697e044e75284af7fb6f17", null ],

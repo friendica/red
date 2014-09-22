@@ -24,7 +24,6 @@
 
 {{include file="field_checkbox.tpl" field=$hide_presence}}
 
-
 <h3 id="settings-privacy-macros">{{$lbl_pmacro}}</h3>
 <ul id="settings-privacy-macros">
 <li><a href="#" onclick="channel_privacy_macro(2); return false" id="settings_pmacro2">{{$pmacro2}}</a></li>

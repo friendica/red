@@ -18,7 +18,7 @@ function uexport_init(&$a) {
 	}
 
 	if(argc() > 1 && argv(1) === 'complete') {
-		echo json_encode('not yet implemented');
+		echo json_encode(identity_basic_export(local_user(),true));
 		killme();
 	}
 	

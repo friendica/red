@@ -63,6 +63,13 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 		$my_perms = PERMS_W_STREAM|PERMS_W_MAIL;
 
+		$role = get_pconfig($uid,'system','permissions_role');
+		if($role) {
+			$x = get_role_perms($role);
+			if($x['perms_follow'])
+				$my_perms = $x['perms_follow'];
+		}
+
 		logger('follow: ' . $url . ' ' . print_r($j,true), LOGGER_DEBUG);
 
 
@@ -136,7 +143,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 		if(! $r) {
 			// attempt network auto-discovery
-			if(strpos($url,'@')) {
+			if(strpos($url,'@') && (! $is_http)) {
 				$r = discover_by_webbie($url);
 			}
 			elseif($is_http) {
@@ -153,6 +160,12 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			$xchan_hash = $r[0]['xchan_hash'];
 			$their_perms = 0;
 			$my_perms = PERMS_W_STREAM|PERMS_W_MAIL;
+			$role = get_pconfig($uid,'system','permissions_role');
+			if($role) {
+				$x = get_role_perms($role);
+				if($x['perms_follow'])
+					$my_perms = $x['perms_follow'];
+			}
 		}
 	}
 

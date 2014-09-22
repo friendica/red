@@ -68,13 +68,31 @@ function collect_recipients($item,&$private_envelope) {
 		$private_envelope = false;
 
 		if(array_key_exists('public_policy',$item) && $item['public_policy'] !== 'self') {
-			$r = q("select abook_xchan from abook where abook_channel = %d and not (abook_flags & %d) ",
+			$r = q("select abook_xchan, xchan_network from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d) ",
 				intval($item['uid']),
 				intval(ABOOK_FLAG_SELF|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
 			);
 			if($r) {
+
+				// filter out restrictive public_policy settings from remote networks
+				// which don't have this concept and will treat them as public.
+
+				$policy = substr($item['public_policy'],0,3);
 				foreach($r as $rr) {
-					$recipients[] = $rr['abook_xchan'];
+					switch($policy) {
+						case 'net':
+						case 'aut':
+						case 'sit':		
+						case 'any':
+						case 'con':
+							if($rr['xchan_network'] != 'zot')
+								break;
+						case 'pub':
+						case '':
+						default:
+							$recipients[] = $rr['abook_xchan'];
+							break;
+					}
 				}
 			}
 		}
@@ -989,8 +1007,7 @@ function import_author_unknown($x) {
 	
 }
 
-
-function encode_item($item) {
+function encode_item($item,$mirror = false) {
 	$x = array();
 	$x['type'] = 'activity';
 	$x['encoding'] = 'zot';
@@ -1012,12 +1029,35 @@ function encode_item($item) {
 
 	$c_scope = map_scope($comment_scope);
 
+	$key = get_config('system','prvkey');
+
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
-		$key = get_config('system','prvkey');
 		if($item['title'])
 			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
 			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+	}
+
+	// If we're trying to backup an item so that it's recoverable or for export/imprt, 
+	// add all the attributes we need to recover it
+
+	if($mirror) {
+		$x['id'] = $item['id'];
+		$x['parent'] = $item['parent'];
+		$x['uid'] = $item['uid'];
+		$x['allow_cid'] = $item['allow_cid'];
+		$x['allow_gid'] = $item['allow_gid'];
+		$x['deny_cid'] = $item['deny_cid'];
+		$x['deny_gid'] = $item['deny_gid'];
+		$x['revision'] = $item['revision'];
+		$x['layout_mid'] = $item['layout_mid'];
+		$x['postopts'] = $item['postopts'];
+		$x['resource_id'] = $item['resource_id'];
+		$x['resource_type'] = $item['resource_type'];
+		$x['item_restrict'] = $item['item_restrict'];
+		$x['item_flags'] = $item['item_flags'];
+		$x['diaspora_meta'] = crypto_unencapsulate(json_decode($item['diaspora_meta'],true),$key);
+		$x['attach'] = $item['attach'];
 	}
 
 
@@ -1751,6 +1791,7 @@ function get_atom_elements($feed,$item,&$author) {
 
 	call_hooks('parse_atom', $arr);
 	logger('get_atom_elements: author: ' . print_r($author,true),LOGGER_DATA);
+
 	logger('get_atom_elements: ' . print_r($res,true),LOGGER_DATA);
 
 	return $res;
@@ -2429,18 +2470,10 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id)
 		return;
 	}
 
-	$body = $datarray['body'];
-	if(array_key_exists('item_flags',$datarray) && ($datarray['item_flags'] & ITEM_OBSCURED)) {
-		$key = get_config('system','prvkey');
-		if($datarray['body'])
-			$body = crypto_unencapsulate(json_decode($datarray['body'],true),$key);
-	}
+	require_once('include/bb2diaspora.php');
+	$signed_body = bb2diaspora_itembody($datarray);
 
 	logger('mod_item: storing diaspora comment signature',LOGGER_DEBUG);
-
-	require_once('include/bb2diaspora.php');
-
-	$signed_body = html_entity_decode(bb2diaspora($body));
 
 	$diaspora_handle = $channel['channel_address'] . '@' . get_app()->get_hostname();
 
