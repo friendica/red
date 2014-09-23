@@ -177,11 +177,11 @@ class Conversation extends BaseObject {
 			}
 		}
 		require_once('include/identity.php');
-		$sys = get_sys_channel();
+//		$sys = get_sys_channel();
 
-		if($sys && $item->get_data_value('uid') == $sys['channel_id']) {
-			$item->set_commentable(false);
-		}
+//		if($sys && $item->get_data_value('uid') == $sys['channel_id']) {
+//			$item->set_commentable(false);
+//		}
 
 		$item->set_conversation($this);
 		$this->threads[] = $item;

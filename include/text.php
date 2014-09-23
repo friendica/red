@@ -1183,7 +1183,11 @@ function theme_attachments(&$item) {
 				$title = t('unknown.???');
 			$title .= ' ' . $r['length'] . ' ' . t('bytes');
 
-			$url = z_root() . '/magic?f=&hash=' . $item['author_xchan'] . '&dest=' . $r['href'] . '/' . $r['revision'];
+			require_once('include/identity.php');
+			if(is_foreigner($item['author_xchan']))
+				$url = $r['href'];
+			else
+				$url = z_root() . '/magic?f=&hash=' . $item['author_xchan'] . '&dest=' . $r['href'] . '/' . $r['revision'];
 			$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
 			$attaches[] = array('title' => $title, 'url' => $url, 'icon' => $icon );
 
