@@ -2132,15 +2132,9 @@ function diaspora_profile($importer,$xml,$msg) {
 		$image_url = "http://" . $handle_parts[1] . $image_url;
 	}
 
-/*	$r = q("SELECT DISTINCT ( `resource-id` ) FROM `photo` WHERE  `uid` = %d AND `contact-id` = %d AND `album` = 'Contact Photos' ",
-		intval($importer['channel_id']),
-		intval($contact['id'])
-	);
-	$oldphotos = ((count($r)) ? $r : null);*/
+	require_once('include/photo/photo_driver.php');
 
-	require_once('include/Photo.php');
-
-	$images = import_profile_photo($image_url,$importer['channel_id'],$contact['id']);
+	$images = import_profile_photo($image_url,$contact['xchan_hash']);
 	
 	// Generic birthday. We don't know the timezone. The year is irrelevant. 
 
@@ -2157,7 +2151,7 @@ function diaspora_profile($importer,$xml,$msg) {
 	// TODO: update name on item['author-name'] if the name changed. See consume_feed()
 	// Not doing this currently because D* protocol is scheduled for revision soon. 
 
-	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' , `bd` = '%s' WHERE `id` = %d AND `uid` = %d",
+/*	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' , `bd` = '%s' WHERE `id` = %d AND `uid` = %d",
 		dbesc($name),
 		dbesc(datetime_convert()),
 		dbesc($images[0]),
@@ -2168,7 +2162,7 @@ function diaspora_profile($importer,$xml,$msg) {
 		intval($contact['id']),
 		intval($importer['channel_id'])
 	); 
-
+*/
 /*	if($r) {
 		if($oldphotos) {
 			foreach($oldphotos as $ph) {
