@@ -405,7 +405,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			xchan_query($items);
 			$items = fetch_post_tags($items,true);
-			$items = conv_sort($items,$ordering);
+			$items = conv_sort($items,$ordering,(($firehose) ? local_user() : 0));
 		} 
 		else {
 			$items = array();
