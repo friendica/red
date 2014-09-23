@@ -22,7 +22,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/connecting_to_channels]Sich mit anderen Kanälen verbinden[/zrl]
 [zrl=[baseurl]/help/permissions]Zugriffsrechte und Verschlüsselung: Du hast alles unter Kontrolle[/zrl]
 [zrl=[baseurl]/help/cloud]Cloud-Speicher[/zrl]
-[zrl=[baseurl]/help/remove_account]Konto löschen[/zrl]
+[zrl=[baseurl]/help/remove_account]Einen Kanal oder das ganze Konto löschen[/zrl]
 
 [size=large][b]Nutzung der Red-Matrix[/b][/size]
 [zrl=[baseurl]/help/tags_and_mentions]Tags und Erwähnungen[/zrl]
@@ -33,6 +33,8 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/AdvancedSearch]Fortgeschrittene Suche im Kanalverzeichnis[/zrl]
 [zrl=[baseurl]/help/addons]Hilfe zu Addons[/zrl]
 [zrl=[baseurl]/help/nomadic-identity]Got Zot? Nomadische Identität, Kanal-Klone und mehr[/zrl]
+[zrl=[baseurl]/help/diaspora_compat]Kompatibilität zum Diaspora-Protokoll (zur Kommunikation mit Kontakten aus Diaspora und Friendica)[/zrl]
+
 
 [size=large][b]Häufig gestellte Fragen für Nutzer[/b][/size]
 [zrl=[baseurl]/help/faq_users]FAQ für Nutzer[/zrl]
@@ -44,15 +46,18 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/problems-following-an-update]Probleme nach einem Software-Update[/zrl]
 [zrl=[baseurl]/help/troubleshooting]Troubleshooting-Tipps[/zrl]
 
-[size=large][b]Häufig gestellte Fragen für Sever-Admins[/b][/size]
+[size=large][b]Häufig gestellte Fragen für Hub-Admins[/b][/size]
 [zrl=[baseurl]/help/faq_admins]FAQ für Admins[/zrl]
 
 [size=large][b]Technische Dokumentation[/b][/size]
+[zrl=[baseurl]/help/Zot---A-High-Level-Overview]Zot – ein erster Überblick[/zrl]
+[zrl=[baseurl]/help/zot]Eine Einführung ins Zot-Protokoll[/zrl]
+[zrl=[baseurl]/help/zot_structures]Zot-Strukturen[/zrl]
 [zrl=[baseurl]/help/comanche]Seitenbeschreibung in Comanche[/zrl]
 [zrl=[baseurl]/help/Creating-Templates]Vorlagen erstellen mit Comanche[/zrl]
 [zrl=[baseurl]/help/Widgets]Widgets, die Teil der Standardinstallation sind[/zrl]
 [zrl=[baseurl]/help/plugins]Plugins[/zrl]
-[zrl=[baseurl]/help/DerivedTheme1]Ein Theme basierend auf einem anderen erstellen[/zrl]
+[zrl=[baseurl]/help/DerivedTheme1]Einen Theme basierend auf einem anderen erstellen[/zrl]
 [zrl=[baseurl]/help/schema_development]Schemata[/zrl]
 [zrl=[baseurl]/help/Translations]Übersetzungen[/zrl]
 [zrl=[baseurl]/help/developers]Entwickler[/zrl]
