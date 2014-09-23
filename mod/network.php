@@ -403,9 +403,9 @@ function network_content(&$a, $update = 0, $load = false) {
 				dbesc($parents_str)
 			);
 
-			xchan_query($items);
+			xchan_query($items,true,(($firehose) ? local_user() : 0));
 			$items = fetch_post_tags($items,true);
-			$items = conv_sort($items,$ordering,(($firehose) ? local_user() : 0));
+			$items = conv_sort($items,$ordering);
 		} 
 		else {
 			$items = array();

@@ -1230,18 +1230,10 @@ function add_children_to_list($children, &$arr) {
 	}
 }
 
-function conv_sort($arr,$order,$uid = 0) {
+function conv_sort($arr,$order) {
 
 	if((!(is_array($arr) && count($arr))))
 		return array();
-
-	if($uid) {
-		for($x = 0; $x < count($arr); $x ++) {
-			$arr[$x]['real_uid'] = $arr[$x]['uid'];
-			$arr[$x]['uid'] = $uid;
-		}
-	}
-
 
 	$parents = array();
 	$children = array();

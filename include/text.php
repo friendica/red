@@ -1851,9 +1851,17 @@ function ids_to_querystr($arr,$idx = 'id') {
 // author_xchan and owner_xchan. If $abook is true also include the abook info. 
 // This is needed in the API to save extra per item lookups there.
 
-function xchan_query(&$items,$abook = true) {
+function xchan_query(&$items,$abook = true,$effective_uid = 0) {
 	$arr = array();
 	if($items && count($items)) {
+
+		if($effective_uid) {
+			for($x = 0; $x < count($items); $x ++) {
+				$items[$x]['real_uid'] = $items[$x]['uid'];
+				$items[$x]['uid'] = $effective_uid;
+			}
+		}
+
 		foreach($items as $item) {
 			if($item['owner_xchan'] && (! in_array($item['owner_xchan'],$arr)))
 				$arr[] = "'" . dbesc($item['owner_xchan']) . "'";
