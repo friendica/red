@@ -158,7 +158,7 @@ function notifier_run($argv, $argc){
 		$message = q("SELECT * FROM `mail` WHERE `id` = %d LIMIT 1",
 				intval($item_id)
 		);
-		if(! count($message)){
+		if(! $message) {
 			return;
 		}
 		xchan_mail_query($message[0]);

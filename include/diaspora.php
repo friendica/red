@@ -2668,7 +2668,7 @@ function diaspora_send_mail($item,$owner,$contact) {
 
 	$r = q("select * from conv where id = %d and uid = %d limit 1",
 		intval($item['convid']),
-		intval($item['uid'])
+		intval($item['channel_id'])
 	);
 
 	if(! count($r)) {
@@ -2684,6 +2684,15 @@ function diaspora_send_mail($item,$owner,$contact) {
 		'diaspora_handle' => xmlify($cnv['creator']),
 		'participant_handles' => xmlify($cnv['recips'])
 	);
+
+	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
+		$key = get_config('system','prvkey');
+//		if($item['title'])
+//			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
+		if($item['body'])
+			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+	}
+
 
 	$body = bb2diaspora($item['body']);
 	$created = datetime_convert('UTC','UTC',$item['created'],'Y-m-d H:i:s \U\T\C');

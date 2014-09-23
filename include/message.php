@@ -284,9 +284,7 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 		$r[$k]['to']   = find_xchan_in_array($rr['to_xchan'],$c);
 		$r[$k]['seen'] = (($rr['mail_flags'] & MAIL_SEEN) ? 1 : 0);
 		if($r[$k]['mail_flags'] & MAIL_OBSCURED) {
-			logger('unencrypting');
 			$key = get_config('system','prvkey');
-
 			if($r[$k]['title'])
 				$r[$k]['title'] = crypto_unencapsulate(json_decode_plus($r[$k]['title']),$key);
 			if($r[$k]['body'])
