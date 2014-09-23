@@ -27,6 +27,9 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 //	else
 //		$expires = datetime_convert(date_default_timezone_get(),'UTC',$expires);
 
+
+
+
 	if($uid) {
 		$r = q("select * from channel where channel_id = %d limit 1",
 			intval($uid)
@@ -42,6 +45,59 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		$ret['message'] = t('Unable to determine sender.');
 		return $ret;
 	}
+
+
+	// look for any existing conversation structure
+
+	if(strlen($replyto)) {
+		$r = q("select convid from mail where uid = %d and ( mid = '%s' or parent_mid = '%s' ) limit 1",
+			intval(local_user()),
+			dbesc($replyto),
+			dbesc($replyto)
+		);
+		if($r)
+			$convid = $r[0]['convid'];
+	}		
+
+	if(! $convid) {
+
+		// create a new conversation
+
+		$conv_guid = random_string();
+
+		$recip = q("select * from xchan where xchan_hash = '%s' limit 1",
+			dbesc($recipient)
+		);
+		if($recip)
+			$recip_handle = $recip[0]['xchan_addr'];
+
+		$sender_handle = $channel['channel_address'] . '@' . get_app()->get_hostname();
+
+		$handles = $recip_handle . ';' . $sender_handle;
+
+		$r = q("insert into conv (uid,guid,creator,created,updated,subject,recips) values(%d, '%s', '%s', '%s', '%s', '%s', '%s') ",
+			intval(local_user()),
+			dbesc($conv_guid),
+			dbesc($sender_handle),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc($subject),
+			dbesc($handles)
+		);
+
+		$r = q("select * from conv where guid = '%s' and uid = %d limit 1",
+			dbesc($conv_guid),
+			intval(local_user())
+		);
+		if($r)
+			$convid = $r[0]['id'];
+	}
+
+	if(! $convid) {
+		$ret['message'] = 'conversation not found';
+		return $ret;
+	}
+
 
 	// generate a unique message_id
 
@@ -115,9 +171,10 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	
 
 
-	$r = q("INSERT INTO mail ( account_id, mail_flags, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created, expires )
-		VALUES ( %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+	$r = q("INSERT INTO mail ( account_id, convid, mail_flags, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created, expires )
+		VALUES ( %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($channel['channel_account_id']),
+		intval($convid),
 		intval(MAIL_OBSCURED),
 		intval($channel['channel_id']),
 		dbesc($channel['channel_hash']),

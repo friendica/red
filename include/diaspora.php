@@ -1532,6 +1532,12 @@ function diaspora_conversation($importer,$xml,$msg) {
 			continue;
 		}
 
+		$key = get_config('system','pubkey');
+		if($subject)
+			$subject = json_encode(crypto_encapsulate($subject,$key));
+		if($body)
+			$body  = json_encode(crypto_encapsulate($body,$key));
+
 		q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s')",
 			intval($importer['channel_id']),
 			intval($conversation['id']),
@@ -1539,7 +1545,7 @@ function diaspora_conversation($importer,$xml,$msg) {
 			dbesc($importer['channel_hash']),
 			dbesc($subject),
 			dbesc($body),
-			0,
+			intval(MAIL_OBSCURED),
 			dbesc($msg_guid),
 			dbesc($parent_uri),
 			dbesc($msg_created_at)
@@ -1588,7 +1594,7 @@ function diaspora_message($importer,$xml,$msg) {
 	$msg_diaspora_handle = notags(unxmlify($xml->diaspora_handle));
 	$msg_conversation_guid = notags(unxmlify($xml->conversation_guid));
 
-	$parent_uri = $diaspora_handle . ':' . $msg_parent_guid;
+	$parent_uri = $msg_parent_guid;
  
 	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$msg_diaspora_handle);
 	if(! $contact) {
@@ -1607,7 +1613,7 @@ function diaspora_message($importer,$xml,$msg) {
 		intval($importer['channel_id']),
 		dbesc($msg_conversation_guid)
 	);
-	if(count($c))
+	if($c)
 		$conversation = $c[0];
 	else {
 		logger('diaspora_message: conversation not available.');
@@ -1637,14 +1643,20 @@ function diaspora_message($importer,$xml,$msg) {
 		return;
 	}
 
-	$r = q("select id from mail where `uri` = '%s' and uid = %d limit 1",
+	$r = q("select id from mail where mid = '%s' and uid = %d limit 1",
 		dbesc($message_id),
 		intval($importer['channel_id'])
 	);
-	if(count($r)) {
+	if($r) {
 		logger('diaspora_message: duplicate message already delivered.', LOGGER_DEBUG);
 		return;
 	}
+
+	$key = get_config('system','pubkey');
+	if($subject)
+		$subject = json_encode(crypto_encapsulate($subject,$key));
+	if($body)
+		$body  = json_encode(crypto_encapsulate($body,$key));
 
 	q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', '%d','%s','%s','%s')",
 		intval($importer['channel_id']),
@@ -1653,7 +1665,7 @@ function diaspora_message($importer,$xml,$msg) {
 		dbesc($importer['xchan_hash']),
 		dbesc($conversation['subject']),
 		dbesc($body),
-		0,
+		intval(MAIL_OBSCURED),
 		dbesc($msg_guid),
 		dbesc($parent_uri),
 		dbesc($msg_created_at)
