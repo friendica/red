@@ -1581,28 +1581,27 @@ function get_atom_elements($feed,$item,&$author) {
 		$res['body'] = escape_tags($res['body']);
 	}
 
-	if(get_config('system','feedlinks')) {
-		if($res['plink'] && $res['title']) {
-			$res['body'] = '#^[url=' . $res['plink'] . ']' . $res['title'] . '[/url]' . "\n\n" . $res['body'];
-			$terms = array();
-			$terms[] = array(
-				'otype' => TERM_OBJ_POST,
-				'type'  => TERM_BOOKMARK,
-				'url'   => $res['plink'],
-				'term'  => $res['title'],
-			);
-		}
-		elseif($res['plink']) {
-			$res['body'] = '#^[url]' . $res['plink'] . '[/url]' . "\n\n" . $res['body'];
-			$terms = array();
-			$terms[] = array(
-				'otype' => TERM_OBJ_POST,
-				'type'  => TERM_BOOKMARK,
-				'url'   => $res['plink'],
-				'term'  => $res['plink'],
-			);
-		}
+	if($res['plink'] && $res['title']) {
+		$res['body'] = '#^[url=' . $res['plink'] . ']' . $res['title'] . '[/url]' . "\n\n" . $res['body'];
+		$terms = array();
+		$terms[] = array(
+			'otype' => TERM_OBJ_POST,
+			'type'  => TERM_BOOKMARK,
+			'url'   => $res['plink'],
+			'term'  => $res['title'],
+		);
 	}
+	elseif($res['plink']) {
+		$res['body'] = '#^[url]' . $res['plink'] . '[/url]' . "\n\n" . $res['body'];
+		$terms = array();
+		$terms[] = array(
+			'otype' => TERM_OBJ_POST,
+			'type'  => TERM_BOOKMARK,
+			'url'   => $res['plink'],
+			'term'  => $res['plink'],
+		);
+	}
+
 
 	$private = $item->get_item_tags(NAMESPACE_DFRN,'private');
 	if($private && intval($private[0]['data']) > 0)
