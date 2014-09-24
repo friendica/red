@@ -1583,10 +1583,24 @@ function get_atom_elements($feed,$item,&$author) {
 
 	if(get_config('system','feedlinks')) {
 		if($res['plink'] && $res['title']) {
-			$res['body'] = '[url=' . $res['plink'] . ']' . $res['title'] . '[/url]' . "\n\n" . $res['body'];
+			$res['body'] = '#^[url=' . $res['plink'] . ']' . $res['title'] . '[/url]' . "\n\n" . $res['body'];
+			$terms = array();
+			$terms[] = array(
+				'otype' => TERM_OBJ_POST,
+				'type'  => TERM_BOOKMARK,
+				'url'   => $res['plink'],
+				'term'  => $res['title'],
+			);
 		}
 		elseif($res['plink']) {
-			$res['body'] = '[url]' . $res['plink'] . '[/url]' . "\n\n" . $res['body'];
+			$res['body'] = '#^[url]' . $res['plink'] . '[/url]' . "\n\n" . $res['body'];
+			$terms = array();
+			$terms[] = array(
+				'otype' => TERM_OBJ_POST,
+				'type'  => TERM_BOOKMARK,
+				'url'   => $res['plink'],
+				'term'  => $res['plink'],
+			);
 		}
 	}
 
@@ -1678,7 +1692,8 @@ function get_atom_elements($feed,$item,&$author) {
 
 	$cats = $item->get_categories();
 	if($cats) {
-		$terms = array();
+		if(is_null($terms))
+			$terms = array();
 		foreach($cats as $cat) {
 			$term = $cat->get_term();
 			if(! $term)
