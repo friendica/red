@@ -1418,10 +1418,12 @@ function get_atom_elements($feed,$item,&$author) {
 	if($found_author) { 
 		$author['author_name'] = unxmlify($found_author->get_name());
 		$author['author_link'] = unxmlify($found_author->get_link());
+		$author['author_is_feed'] = false;
 	}
 	else {
 		$author['author_name'] = unxmlify($feed->get_title());
 		$author['author_link'] = unxmlify($feed->get_permalink());
+		$author['author_is_feed'] = true;
 	}
 
 	if(substr($author['author_link'],-1,1) == '/')
@@ -1493,8 +1495,10 @@ function get_atom_elements($feed,$item,&$author) {
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
 			$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 			foreach($base as $link) {
-				if($link['attribs']['']['rel'] === 'alternate' && (! $author['author_link']))
+				if($link['attribs']['']['rel'] === 'alternate' && (! $author['author_link'])) {
 					$author['author_link'] = unxmlify($link['attribs']['']['href']);
+					$author['author_is_feed'] = true;
+				}
 				if(! $author['author_photo']) {
 					if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
 						$author['author_photo'] = unxmlify($link['attribs']['']['href']);
@@ -3343,11 +3347,11 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
-				if(! x($author,'author_name'))
+				if((! x($author,'author_name')) || ($author['author_is_feed']))
 					$author['author_name'] = $contact['xchan_name'];
-				if(! x($author,'author_link'))
+				if((! x($author,'author_link')) || ($author['author_is_feed']))
 					$author['author_link'] = $contact['xchan_url'];
-				if(! x($author,'author_photo')) 
+				if((! x($author,'author_photo'))|| ($author['author_is_feed'])) 
 					$author['author_photo'] = $contact['xchan_photo_m'];
 
 				$datarray['author_xchan'] = '';
@@ -3406,11 +3410,11 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				$datarray = get_atom_elements($feed,$item,$author);
 
 				if(is_array($contact)) {
-					if(! x($author,'author_name'))
+					if((! x($author,'author_name')) || ($author['author_is_feed']))
 						$author['author_name'] = $contact['xchan_name'];
-					if(! x($author,'author_link'))
+					if((! x($author,'author_link')) || ($author['author_is_feed']))
 						$author['author_link'] = $contact['xchan_url'];
-					if(! x($author,'author_photo'))
+					if((! x($author,'author_photo'))|| ($author['author_is_feed'])) 
 						$author['author_photo'] = $contact['xchan_photo_m'];
 				}
 
