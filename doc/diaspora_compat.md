@@ -2,8 +2,6 @@
 
 Diaspora protocol compatibility is presently considered an ***experimental*** feature. It may not be available on all sites and presents some serious compatibility issues with redmatrix. At the moment these compatibility issues will be shared with "Friendica-over-Diaspora" protocol communications. 
 
-Private mail is currently not working. Eventually this will be fixed. Posts and comments are partially working. 
-
 Private mail retraction (unsend) will not be possible on Diaspora. 
 
 Private posts and their associated comments are sent in plaintext email notifications in Diaspora and Friendica. This is a major privacy issue and affects any private communications you have where *any* member of the conversation is on another network. Be aware of it. 
@@ -19,21 +17,19 @@ Post expiration is not supported on Diaspora. We will provide you an option to n
 
 End-to-end encryption is not supported. We will translate these posts into a lock icon, which can never be unlocked from the Diaspora side. 
 
-Wall-to-wall posts may have the wrong attribution on Diaspora (sent as wall owner rather than original author). We may need to create fake "reshared" posts from wall-to-wall posts in order to retain the correct author info. 
-
 Message verification will eventually be supported. 
 
 Multiple profiles are not supported. Diaspora members can only see your default profile.
 
 Birthday events will not appear in Diaspora. Other events will be translated and sent as a post, but all times will either be in the origination channel's timezone or in GMT. We do not know the recipient's timezone because Diaspora doesn't have this concept. 
 
-Tags are converted into "un-hijackable" tags by default and will link back to your redmatrix resources. We will provide an option to allow you to let the other end of the network hijack your tags and point them at its own resources. 
+We currently allow tags to be hijacked by default. We will provide an option to allow you to prevent the other end of the network from hijacking your tags and point them at its own resources. 
 
 Community tags will not work. We will send a tagging activity as a comment. It won't do anything.  
 
 Privacy tags (@!somebody) will not be available to Diaspora members. These tags may have to be stripped or obscured to prevent them from being hijacked - which could result in privacy issues.  
 
-Plus-tagged redmatrix forums should work from Diaspora. If not today, it's very close to working. Update: these were working but presented a number of issues with mis-attributed posts and potential recursive delivery (Diaspora has no source route detection). This ability has been disabled until we can investigate these issues in detail. 
+Plus-tagged redmatrix forums should work from Diaspora. 
 
 Premium channel redirects will not be sent. If you allow Diaspora connections, they will not see that you have a premium channel. 
 
@@ -53,15 +49,10 @@ Embedded apps will be translated into links.
 
 Embedded page design elements (work in progress) will be either stripped or converted to an error message. 
 
-
 Diaspora members will not appear in the directory. 
 
 
 There are differences in oembed compatibility between the networks. Some embedded resources will turn into a link on one side or the other.  
-
-
-On the bright side, pokes should work. 
-
 
 
 

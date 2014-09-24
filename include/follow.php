@@ -19,6 +19,9 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	$is_red = false;
 	$is_http = ((strpos($url,'://') !== false) ? true : false);
 
+	if($is_http && substr($url,-1,1) === '/')
+		$url = substr($url,0,-1);
+
 	if(! allowed_url($url)) {
 		$result['message'] = t('Channel is blocked on this site.');
 		return $result;

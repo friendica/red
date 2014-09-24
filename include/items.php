@@ -1424,6 +1424,9 @@ function get_atom_elements($feed,$item,&$author) {
 		$author['author_link'] = unxmlify($feed->get_permalink());
 	}
 
+	if(substr($author['author_link'],-1,1) == '/')
+		$author['author_link'] = substr($author['author_link'],0,-1);
+
 	$res['mid'] = base64url_encode(unxmlify($item->get_id()));
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
