@@ -1581,6 +1581,15 @@ function get_atom_elements($feed,$item,&$author) {
 		$res['body'] = escape_tags($res['body']);
 	}
 
+	if(get_config('system','feedlinks')) {
+		if($res['plink'] && $res['title']) {
+			$res['body'] = '[url=' . $res['plink'] . ']' . $res['title'] . '[/url]' . "\n\n" . $res['body'];
+		}
+		elseif($res['plink']) {
+			$res['body'] = '[url]' . $res['plink'] . '[/url]' . "\n\n" . $res['body'];
+		}
+	}
+
 	$private = $item->get_item_tags(NAMESPACE_DFRN,'private');
 	if($private && intval($private[0]['data']) > 0)
 		$res['item_private'] = ((intval($private[0]['data'])) ? 1 : 0);
