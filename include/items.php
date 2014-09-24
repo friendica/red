@@ -1428,6 +1428,8 @@ function get_atom_elements($feed,$item,&$author) {
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
 	$res['plink'] = unxmlify($item->get_link(0));
+	$res['item_flags'] = ITEM_RSS;
+
 
 	// removing the content of the title if its identically to the body
 	// This helps with auto generated titles e.g. from tumblr
@@ -3194,7 +3196,6 @@ function mail_store($arr) {
 	call_hooks('post_mail_end',$arr);
 	return $current_post;
 }
-
 
 
 /**

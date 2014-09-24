@@ -1622,6 +1622,7 @@ function diaspora_message($importer,$xml,$msg) {
 
 	$reply = 0;
 
+	$subject = $conversation['subject']; 
 	$body = diaspora2bb($msg_text);
 	$message_id = $msg_diaspora_handle . ':' . $msg_guid;
 
@@ -1631,8 +1632,8 @@ function diaspora_message($importer,$xml,$msg) {
 	$author_signature = base64_decode($msg_author_signature);
 
 	$person = find_diaspora_person_by_handle($msg_diaspora_handle);	
-	if(is_array($person) && x($person,'pubkey'))
-		$key = $person['pubkey'];
+	if(is_array($person) && x($person,'xchan_pubkey'))
+		$key = $person['xchan_pubkey'];
 	else {
 		logger('diaspora_message: unable to find author details');
 		return;
@@ -1643,7 +1644,7 @@ function diaspora_message($importer,$xml,$msg) {
 		return;
 	}
 
-	$r = q("select id from mail where mid = '%s' and uid = %d limit 1",
+	$r = q("select id from mail where mid = '%s' and channel_id = %d limit 1",
 		dbesc($message_id),
 		intval($importer['channel_id'])
 	);
@@ -1663,7 +1664,7 @@ function diaspora_message($importer,$xml,$msg) {
 		intval($conversation['id']),
 		dbesc($person['xchan_hash']),
 		dbesc($importer['xchan_hash']),
-		dbesc($conversation['subject']),
+		dbesc($subject),
 		dbesc($body),
 		intval(MAIL_OBSCURED),
 		dbesc($msg_guid),
@@ -2394,7 +2395,7 @@ function diaspora_send_images($item,$owner,$contact,$images,$public_batch = fals
 function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 
 	$a = get_app();
-	$myaddr = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['channel_address'] . '@' . get_app()->get_hostname();
 	$theiraddr = $contact['xchan_addr'];
 
 	// Diaspora doesn't support threaded comments, but some
@@ -2485,7 +2486,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 
 
 	$a = get_app();
-	$myaddr = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['channel_address'] . '@' . get_app()->get_hostname();
 
 	$text = bb2diaspora_itembody($item);
 
@@ -2627,7 +2628,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 
 	$a = get_app();
-	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['channel_address'] . '@' .  get_app()->get_hostname();
 
 	// Check whether the retraction is for a top-level post or whether it's a relayable
 	if( $item['mid'] !== $item['parent_mid'] ) {
@@ -2658,7 +2659,7 @@ function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 function diaspora_send_mail($item,$owner,$contact) {
 
 	$a = get_app();
-	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['channel_address'] . '@' .  get_app()->get_hostname();
 
 	$r = q("select * from conv where id = %d and uid = %d limit 1",
 		intval($item['convid']),
@@ -2691,13 +2692,13 @@ function diaspora_send_mail($item,$owner,$contact) {
 	$body = bb2diaspora($item['body']);
 	$created = datetime_convert('UTC','UTC',$item['created'],'Y-m-d H:i:s \U\T\C');
  
-	$signed_text =  $item['guid'] . ';' . $cnv['guid'] . ';' . $body .  ';' 
+	$signed_text =  $item['mid'] . ';' . $cnv['guid'] . ';' . $body .  ';' 
 		. $created . ';' . $myaddr . ';' . $cnv['guid'];
 
 	$sig = base64_encode(rsa_sign($signed_text,$owner['channel_prvkey'],'sha256'));
 
 	$msg = array(
-		'guid' => xmlify($item['guid']),
+		'guid' => xmlify($item['mid']),
 		'parent_guid' => xmlify($cnv['guid']),
 		'parent_author_signature' => (($item['reply']) ? null : xmlify($sig)),
 		'author_signature' => xmlify($sig),
