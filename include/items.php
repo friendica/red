@@ -1718,8 +1718,10 @@ function get_atom_elements($feed,$item,&$author) {
 				);
 			}		
 		}
-		$res['term'] =  $terms;
 	}
+
+	if(! is_null($terms))
+		$res['term'] =  $terms;
 
 	$attach = $item->get_enclosures();
 	if($attach) {
