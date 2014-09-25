@@ -2435,6 +2435,13 @@ h5, h6 {
     	text-decoration: none;
 }
 
+.alert-info {
+	color: $alert_txtcolour;
+	background-color:$alert_bgcolour;
+	border-color: $alert_bordercol;
+	background-image: linear-gradient(to bottom, $alert_bgcolour 0px, $alert_gradientcol 100%);
+}
+
 .well {
 	background-color: $advperm_bgcolour;
 	border: 1px solid $advperm_bordercol;

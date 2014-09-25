@@ -2399,7 +2399,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 			);
 			if($r) {
 				// don't count yourself
-				$total_friends = ((count($r) > 0) ? $count($r) - 1 : 0);
+				$total_friends = ((count($r) > 0) ? count($r) - 1 : 0);
 				foreach($r as $rr)
 					if($rr['abook_flags'] & ABOOK_FLAG_FEED)
 						$total_feeds ++;
@@ -2407,9 +2407,9 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 			$disallowed = array('abook_id','abook_account','abook_channel');
 
-			$clean = array();
 			foreach($arr['abook'] as $abook) {
 
+				$clean = array();
 				if($abook['abook_xchan'] && $abook['entry_deleted']) {
 					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);
 					require_once('include/Contact.php');

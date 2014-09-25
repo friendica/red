@@ -250,16 +250,24 @@ if(! $a->install) {
 		$reply_photo = '32px';
 	if(! $infomess_bgcolour)
 		$infomess_bgcolour = "#F0F0F0";
-       	if(! $advperm_bgcolour)
-                $advperm_bgcolour = "#F5F5F5";
-        if(! $advperm_bordercol)
-                $advperm_bordercol = "#E3E3E3";
-        if(! $advperm_gradientcol)
-                $advperm_gradientcol = "#E8E8E8";
-        if(! $cal_bgcolour)
-		 $cal_bgcolour = "#FCF8E3";
-        if(! $fancybox_bgcolour)
-                $fancybox_bgcolour = "#FFF";
+	if(! $alert_txtcolour)
+      $alert_txtcolour = "#31708F";	
+	if(! $alert_bgcolour)
+      $alert_bgcolour = "#D9EDF7";
+   if(! $alert_bordercol)
+      $alert_bordercol = "#BCE8F1";
+   if(! $alert_gradientcol)
+      $alert_gradientcol = "#B9DEF0";		
+	if(! $advperm_bgcolour)
+      $advperm_bgcolour = "#F5F5F5";
+   if(! $advperm_bordercol)
+      $advperm_bordercol = "#E3E3E3";
+   if(! $advperm_gradientcol)
+      $advperm_gradientcol = "#E8E8E8";
+   if(! $cal_bgcolour)
+		$cal_bgcolour = "#FCF8E3";
+   if(! $fancybox_bgcolour)
+      $fancybox_bgcolour = "#FFF";
 	if (!$comment_padding)
 		$comment_padding="0px";	
 	if (!$comment_border_left)
@@ -384,6 +392,10 @@ $options = array (
 '$top_photo' => $top_photo,
 '$reply_photo' => $reply_photo,
 '$infomess_bgcolour' => $infomess_bgcolour,
+'$alert_txtcolour' => $alert_txtcolour,
+'$alert_bgcolour' => $alert_bgcolour,
+'$alert_bordercol' => $alert_bordercol,
+'$alert_gradientcol' => $alert_gradientcol,
 '$advperm_bgcolour' => $advperm_bgcolour,
 '$advperm_bordercol' => $advperm_bordercol,
 '$advperm_gradientcol' => $advperm_gradientcol,

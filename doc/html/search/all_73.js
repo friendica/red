@@ -119,8 +119,8 @@ var searchData=
   ['stringify_5farray_5felms',['stringify_array_elms',['../text_8php.html#a8796f6a9ca592ecdce7b3afc3462aa13',1,'text.php']]],
   ['strip_5fzids',['strip_zids',['../text_8php.html#a2f2585385530cb935a6325c809d84a4d',1,'text.php']]],
   ['stripdcode_5fbr_5fcb',['stripdcode_br_cb',['../bb2diaspora_8php.html#a180b0e3a7d702998be19e3c3b44b0e93',1,'bb2diaspora.php']]],
-  ['style_2ephp',['style.php',['../mytheme_2php_2style_8php.html',1,'']]],
   ['style_2ephp',['style.php',['../redbasic_2php_2style_8php.html',1,'']]],
+  ['style_2ephp',['style.php',['../mytheme_2php_2style_8php.html',1,'']]],
   ['style_2ephp',['style.php',['../apw_2php_2style_8php.html',1,'']]],
   ['subthread_2ephp',['subthread.php',['../subthread_8php.html',1,'']]],
   ['subthread_5fcontent',['subthread_content',['../subthread_8php.html#a50368f3d825b77996030528e7fbfa3d3',1,'subthread.php']]],
@@ -130,6 +130,7 @@ var searchData=
   ['suggestion_5fquery',['suggestion_query',['../socgraph_8php.html#a76e6fca3d2bc842dcd9e710bb87c8329',1,'socgraph.php']]],
   ['supportedtypes',['supportedTypes',['../classphoto__driver.html#a6eee8e36eaf9339f4faf80ddd43162da',1,'photo_driver\supportedTypes()'],['../classphoto__gd.html#a16f3dd7d3559f715aa2fe3f7880836dd',1,'photo_gd\supportedTypes()'],['../classphoto__imagick.html#a27596faca6108d9d563674d1b654a0b7',1,'photo_imagick\supportedTypes()']]],
   ['sync_5fdirectories',['sync_directories',['../dir__fns_8php.html#aa666e7df6ca8c332f4081c9b66b4bdf6',1,'dir_fns.php']]],
+  ['sync_5flocations',['sync_locations',['../zot_8php.html#ab15c04e7e5f44edf45ec50dd7d183254',1,'zot.php']]],
   ['system_5fdown',['system_down',['../system__unavailable_8php.html#a73751a6bcc17ad3ca503496e2fb020fa',1,'system_unavailable.php']]],
   ['system_5funavailable',['system_unavailable',['../boot_8php.html#ac608a34f3bc180e7724192e0fd31f9b0',1,'boot.php']]],
   ['system_5funavailable_2ephp',['system_unavailable.php',['../system__unavailable_8php.html',1,'']]]

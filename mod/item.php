@@ -854,7 +854,9 @@ function item_post(&$a) {
 	if($parent) {
 		// Store the comment signature information in case we need to relay to Diaspora
 //FIXME
-		store_diaspora_comment_sig($datarray,$channel,$parent_item, $post_id);
+		$ditem = $datarray;
+		$ditem['author'] = $observer;
+		store_diaspora_comment_sig($ditem,$channel,$parent_item, $post_id);
 	}
 
 	update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);

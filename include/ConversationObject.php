@@ -52,14 +52,14 @@ class Conversation extends BaseObject {
 
 		switch($mode) {
 			case 'network':
-				if(array_key_exists('firehose',$a->data) && intval($a->data['firehose'])) {
-					$this->profile_owner = intval($a->data['firehose']);
-					$this->writable = false;
-				}
-				else {
+//				if(array_key_exists('firehose',$a->data) && intval($a->data['firehose'])) {
+//					$this->profile_owner = intval($a->data['firehose']);
+//					$this->writable = false;
+//				}
+//				else {
 					$this->profile_owner = local_user();
 					$this->writable = true;
-				}
+//				}
 				break;
 			case 'channel':
 				$this->profile_owner = $a->profile['profile_uid'];
@@ -177,11 +177,11 @@ class Conversation extends BaseObject {
 			}
 		}
 		require_once('include/identity.php');
-		$sys = get_sys_channel();
+//		$sys = get_sys_channel();
 
-		if($sys && $item->get_data_value('uid') == $sys['channel_id']) {
-			$item->set_commentable(false);
-		}
+//		if($sys && $item->get_data_value('uid') == $sys['channel_id']) {
+//			$item->set_commentable(false);
+//		}
 
 		$item->set_conversation($this);
 		$this->threads[] = $item;

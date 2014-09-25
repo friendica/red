@@ -15,7 +15,7 @@ var identity_8php =
     [ "get_profile_fields_basic", "identity_8php.html#a4ff59df0f0a668a06a8411f87496aa21", null ],
     [ "get_sys_channel", "identity_8php.html#aaff86ee3b5984821e7a256c2da5f1a51", null ],
     [ "get_theme_uid", "identity_8php.html#aaeb666872995e3ab8da8f7bc5f3b2bd3", null ],
-    [ "identity_basic_export", "identity_8php.html#a3570a4eb77332b292d394c4132cb8f03", null ],
+    [ "identity_basic_export", "identity_8php.html#afaedbc8e2d2a70ec8b006162baac5249", null ],
     [ "identity_check_service_class", "identity_8php.html#ac9fcd5c4c371998790b5c55c3d0f4633", null ],
     [ "identity_selector", "identity_8php.html#a2ab5172eabd375869060c9ad68323f5c", null ],
     [ "is_foreigner", "identity_8php.html#ae2b140df652a55ca11bb6a99005fce35", null ],

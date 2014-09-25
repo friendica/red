@@ -5,6 +5,8 @@ function viewsrc_content(&$a) {
 
 	$o = '';
 
+	$sys = get_sys_channel();
+
 	$item_id = ((argc() > 1) ? intval(argv(1)) : 0);
 	$json    = ((argc() > 2 && argv(2) === 'json') ? true : false);
 
@@ -19,8 +21,9 @@ function viewsrc_content(&$a) {
 	}
 
 	if(local_user() && $item_id) {
-		$r = q("select item_flags, body from item where item_restrict = 0 and uid = %d and id = %d limit 1",
+		$r = q("select item_flags, body from item where item_restrict = 0 and uid in (%d , %d) and id = %d limit 1",
 			intval(local_user()),
+			intval($sys['channel_id']),
 			intval($item_id)
 		);
 

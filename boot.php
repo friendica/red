@@ -553,6 +553,7 @@ define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
 define ( 'ITEM_OBSCURED',        0x1000);  // bit-mangled to protect from casual browsing by site admin
 define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was successful
 define ( 'ITEM_RETAINED',        0x4000);  // We looked at this item once to decide whether or not to expire it, and decided not to.
+define ( 'ITEM_RSS',             0x8000);  // Item comes from a feed. Use this to decide whether to link the title
 										   // Don't make us evaluate this same item again.
 /**
  *
@@ -982,9 +983,9 @@ class App {
 		if ($user_scalable === false)
 			$user_scalable = 1;
 
-		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
+		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 80000);
 		if($interval < 10000)
-			$interval = 40000;
+			$interval = 80000;
 
 		if(! x($this->page,'title'))
 			$this->page['title'] = $this->config['system']['sitename'];

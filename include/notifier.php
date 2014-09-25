@@ -158,7 +158,7 @@ function notifier_run($argv, $argc){
 		$message = q("SELECT * FROM `mail` WHERE `id` = %d LIMIT 1",
 				intval($item_id)
 		);
-		if(! count($message)){
+		if(! $message) {
 			return;
 		}
 		xchan_mail_query($message[0]);
@@ -477,10 +477,13 @@ function notifier_run($argv, $argc){
 			where hubloc_hash in (" . implode(',',$recipients) . ") group by hubloc_sitekey order by hubloc_connected desc limit 1");
 	} 
 	else {
+
 		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)  group by hubloc_sitekey",
-			intval(HUBLOC_FLAGS_DELETED)
+			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)  and not (hubloc_status & %d) group by hubloc_sitekey",
+			intval(HUBLOC_FLAGS_DELETED),
+			intval(HUBLOC_OFFLINE)
 		);
+
 	}
 
 	if(! $r) {

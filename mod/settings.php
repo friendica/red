@@ -736,7 +736,7 @@ function settings_content(&$a) {
 		$user_scalable = (($user_scalable===false)? '1': $user_scalable); // default if not set: 1
 		
 		$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
-		$browser_update = (($browser_update == 0) ? 40 : $browser_update / 1000); // default if not set: 40 seconds
+		$browser_update = (($browser_update == 0) ? 80 : $browser_update / 1000); // default if not set: 40 seconds
 
 		$itemspage = intval(get_pconfig(local_user(), 'system','itemspage'));
 		$itemspage = (($itemspage > 0 && $itemspage < 101) ? $itemspage : 20); // default if not set: 20 items
@@ -935,6 +935,10 @@ function settings_content(&$a) {
 			}
 		}
 
+
+		$permissions_role = get_pconfig(local_user(),'system','permissions_role');
+		$permissions_set = (($permissions_role && $permissions_role != 'custom') ? true : false);
+
 		$o .= replace_macros($stpl,array(
 			'$ptitle' 	=> t('Channel Settings'),
 
@@ -955,6 +959,8 @@ function settings_content(&$a) {
 			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel frequently or regularly publishes adult content. (Please tag any adult material and/or nudity with #NSFW)')),
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
+			'$permissions_set' => $permissions_set,
+			'$perms_set_msg' => t('Your permissions are already configured. Click to view/adjust'),
 
 			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online')),
 

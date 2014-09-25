@@ -118,6 +118,8 @@ Functions</h2></td></tr>
 <tr class="separator:aafd06c0a75402aefb06cfb9f9740fa37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9129fd55e7fc175b4ea9a195cccc16bc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#a9129fd55e7fc175b4ea9a195cccc16bc">z_post_url</a> ($url, $params, $redirects=0, $opts=array())</td></tr>
 <tr class="separator:a9129fd55e7fc175b4ea9a195cccc16bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a984708e60d531b31b2d1f88b5f408f7b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#a984708e60d531b31b2d1f88b5f408f7b">z_post_url_json</a> ($url, $params, $redirects=0, $opts=array())</td></tr>
+<tr class="separator:a984708e60d531b31b2d1f88b5f408f7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c5d50079e089168d9248427018fffd4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#a4c5d50079e089168d9248427018fffd4">json_return_and_die</a> ($<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>)</td></tr>
 <tr class="separator:a4c5d50079e089168d9248427018fffd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e9da2aafb806c98ecdc318604e60dc6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#a9e9da2aafb806c98ecdc318604e60dc6">xml_status</a> ($st, $message= '')</td></tr>
@@ -796,7 +798,45 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array 'return_code' =&gt; HTTP return code or 0 if timeout or failure 'success' =&gt; boolean true (if HTTP 2xx result) or false 'header' =&gt; HTTP headers 'body' =&gt; fetched content </dd></dl>
 
-<p>Referenced by <a class="el" href="deliver_8php.html#a397afcb9afecf0c1816b0951189dd346">deliver_run()</a>, <a class="el" href="oexchange_8php.html#a2d8b785cd7d041a4e6274f5af370cf26">oexchange_content()</a>, <a class="el" href="queue_8php.html#af8c93de86d866c3200174c8450a0f341">queue_run()</a>, <a class="el" href="share_8php.html#afeb26046bdd02567ecd29ab5f188b249">share_init()</a>, <a class="el" href="zot_8php.html#a95528377d7303131958c9f0b7158fdce">zot_finger()</a>, <a class="el" href="zot_8php.html#a7ac30ff51274bf0b6d3eade37972145c">zot_refresh()</a>, and <a class="el" href="zot_8php.html#ab3e9b99ddb11353f37f265a05bb42142">zot_zot()</a>.</p>
+<p>Referenced by <a class="el" href="deliver_8php.html#a397afcb9afecf0c1816b0951189dd346">deliver_run()</a>, <a class="el" href="oexchange_8php.html#a2d8b785cd7d041a4e6274f5af370cf26">oexchange_content()</a>, <a class="el" href="queue_8php.html#af8c93de86d866c3200174c8450a0f341">queue_run()</a>, <a class="el" href="share_8php.html#afeb26046bdd02567ecd29ab5f188b249">share_init()</a>, <a class="el" href="include_2network_8php.html#a984708e60d531b31b2d1f88b5f408f7b">z_post_url_json()</a>, <a class="el" href="zot_8php.html#a95528377d7303131958c9f0b7158fdce">zot_finger()</a>, <a class="el" href="zot_8php.html#a7ac30ff51274bf0b6d3eade37972145c">zot_refresh()</a>, and <a class="el" href="zot_8php.html#ab3e9b99ddb11353f37f265a05bb42142">zot_zot()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a984708e60d531b31b2d1f88b5f408f7b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">z_post_url_json </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$url</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$redirects</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$opts</em> = <code>array()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

@@ -104,6 +104,7 @@ var searchData=
   ['suggestion_5fquery',['suggestion_query',['../socgraph_8php.html#a76e6fca3d2bc842dcd9e710bb87c8329',1,'socgraph.php']]],
   ['supportedtypes',['supportedTypes',['../classphoto__driver.html#a6eee8e36eaf9339f4faf80ddd43162da',1,'photo_driver\supportedTypes()'],['../classphoto__gd.html#a16f3dd7d3559f715aa2fe3f7880836dd',1,'photo_gd\supportedTypes()'],['../classphoto__imagick.html#a27596faca6108d9d563674d1b654a0b7',1,'photo_imagick\supportedTypes()']]],
   ['sync_5fdirectories',['sync_directories',['../dir__fns_8php.html#aa666e7df6ca8c332f4081c9b66b4bdf6',1,'dir_fns.php']]],
+  ['sync_5flocations',['sync_locations',['../zot_8php.html#ab15c04e7e5f44edf45ec50dd7d183254',1,'zot.php']]],
   ['system_5fdown',['system_down',['../system__unavailable_8php.html#a73751a6bcc17ad3ca503496e2fb020fa',1,'system_unavailable.php']]],
   ['system_5funavailable',['system_unavailable',['../boot_8php.html#ac608a34f3bc180e7724192e0fd31f9b0',1,'boot.php']]]
 ];
