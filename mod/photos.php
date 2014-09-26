@@ -652,9 +652,10 @@ function photos_content(&$a) {
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
-
-		$o .= '<h3>' . $album . '</h3>';
 		
+		$o .= '<div class="section-title-wrapper">';
+		$o .= '<h3>' . $album . '</h3>';
+		$o .= '<div class="section-title-submenu">';
 		if($cmd === 'edit') {		
 			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
@@ -680,22 +681,24 @@ function photos_content(&$a) {
 		else {
 			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
-					$o .= '<div id="album-edit-link"><a href="'. $a->get_baseurl() . '/photos/' 
-						. $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '/edit' . '">' 
-						. t('Edit Album') . '</a></div>';
+					$o .= '<a href="'. $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '/edit' . '">' . t('Edit Album') . '</a>';
  				}
 			}
 		}
 
 		if($_GET['order'] === 'posted')
-			$o .=  '<div class="photos-upload-link" ><a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '" >' . t('Show Newest First') . '</a></div>';
+			$o .=  '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '" >' . t('Show Newest First') . '</a>';
 		else
-			$o .= '<div class="photos-upload-link" ><a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '?f=&order=posted" >' . t('Show Oldest First') . '</a></div>';
+			$o .= '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '?f=&order=posted" >' . t('Show Oldest First') . '</a>';
 
-
+		/*
 		if($can_post) {
-			$o .= '<div class="photos-upload-link" ><a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album) . '" >' . t('Upload New Photos') . '</a></div>';
+			$o .= '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album) . '" >' . t('Upload New Photos') . '</<a>';
 		}
+		*/
+
+		$o .= '</div>'; // section-title-submenu
+		$o .= '</div>'; // section-title-wrapper
 
 		$ajaxout = '';
 
