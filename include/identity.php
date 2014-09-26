@@ -431,14 +431,15 @@ function set_default_login_identity($account_id,$channel_id,$force = true) {
 }
 
 /**
- * @function identity_basic_export($channel_id)
+ * @function identity_basic_export($channel_id,$items = false)
  *     Create an array representing the important channel information
  * which would be necessary to create a nomadic identity clone. This includes
  * most channel resources and connection information with the exception of content.
  *
  * @param int $channel_id
  *     Channel_id to export
- *
+ * @param boolean $items
+ *     Include channel posts (wall items), default false
  *
  * @returns array
  *     See function for details
@@ -521,7 +522,7 @@ function identity_basic_export($channel_id, $items = false) {
 		return $ret;
 
 
-	$r = q("select * from item_id where uid = %d",
+	$r = q("select item_id.*, item.mid from item_id left join item on item_id.iid = item.id where item_id.uid = %d",
 		intval($channel_id)
 	);
 	

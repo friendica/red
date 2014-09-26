@@ -42,7 +42,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Uploads - integrate #^[url=https://github.com/blueimp/jQuery-File-Upload]https://github.com/blueimp/jQuery-File-Upload[/url][/li]
 
-[li]Import/export - include items, events, things, etc.[/li]
+[li]Import/export - include events, things, etc.[/li]
 
 [li]Import channel from Diaspora/Friendica[/li]
 

@@ -865,13 +865,35 @@ function get_item_elements($x) {
 	// We have to do that here because we need to cleanse the input and prevent bad stuff from getting in,
 	// and we need plaintext to do that. 
 
+	$key = get_config('system','pubkey');
+
+
 	if(intval($arr['item_private'])) {
 		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
-		$key = get_config('system','pubkey');
 		if($arr['title'])
 			$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 		if($arr['body'])
 			$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
+	}
+
+
+	if(array_key_exists('revision',$x)) {
+		// extended export encoding
+
+		$arr['revision'] = $x['revision'];
+		$arr['allow_cid'] = $x['allow_cid'];
+		$arr['allow_gid'] = $x['allow_gid'];
+		$arr['deny_cid'] = $x['deny_cid'];
+		$arr['deny_gid'] = $x['deny_gid'];
+		$arr['layout_mid'] = $x['layout_mid'];
+		$arr['postopts'] = $x['postopts'];
+		$arr['resource_id'] = $x['resource_id'];
+		$arr['resource_type'] = $x['resource_type'];
+		$arr['item_restrict'] = $x['item_restrict'];
+		$arr['item_flags'] = $x['item_flags'];
+		$arr['diaspora_meta'] = (($x['diaspora_meta']) ? json_encode(crypto_encapsulate($x['diaspora_meta'],$key)) : '');
+		$arr['attach'] = $x['attach'];
+
 	}
 
 	return $arr;
@@ -3357,7 +3379,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				$datarray['author_xchan'] = '';
 
 				if($author['author_link'] != $contact['xchan_url']) {
-					$x = import_author_unkown(array('name' => $author['author_name'],'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
+					$x = import_author_unknown(array('name' => $author['author_name'],'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
 					if($x) 
 						$datarray['author_xchan'] = $x;
 					

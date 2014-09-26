@@ -430,7 +430,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="classConversation.html#a8335cdd43f1836e3c255638e61a09e16">Conversation\add_thread()</a>, <a class="el" href="boot_8php.html#a4c02d88e66852a01bd5a1feecb7c3ce3">check_config()</a>, <a class="el" href="identity_8php.html#a1cf83ac2b645de12868edaa3a5718f05">create_sys_channel()</a>, <a class="el" href="display_8php.html#a37137c98d47bf3306f4c2bb9f5b60de0">display_content()</a>, <a class="el" href="expire_8php.html#a444e45c9b67727b27db4c779fd51a298">expire_run()</a>, <a class="el" href="externals_8php.html#a4df44079e6f915286088b7a0d44db926">externals_run()</a>, <a class="el" href="identity_8php.html#aaeb666872995e3ab8da8f7bc5f3b2bd3">get_theme_uid()</a>, <a class="el" href="home_8php.html#aa1cf697851a646755baf537f75334c46">home_content()</a>, <a class="el" href="like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538">like_content()</a>, <a class="el" href="mod_2network_8php.html#a43f2f29b90c5e29072c561934bc8f8b4">network_content()</a>, <a class="el" href="notifier_8php.html#a568c502f626cff95e344c0748938b85d">notifier_run()</a>, <a class="el" href="search_8php.html#ab2568591359edde5b483a6cd9a24b2cc">search_content()</a>, <a class="el" href="subthread_8php.html#a50368f3d825b77996030528e7fbfa3d3">subthread_content()</a>, <a class="el" href="zot_8php.html#aeea071f17e306fe3d0c488551906bfab">zot_import()</a>, and <a class="el" href="zotfeed_8php.html#a24dfc23d366e7f840cf2847d0c1c8eac">zotfeed_init()</a>.</p>
+<p>Referenced by <a class="el" href="boot_8php.html#a4c02d88e66852a01bd5a1feecb7c3ce3">check_config()</a>, <a class="el" href="identity_8php.html#a1cf83ac2b645de12868edaa3a5718f05">create_sys_channel()</a>, <a class="el" href="display_8php.html#a37137c98d47bf3306f4c2bb9f5b60de0">display_content()</a>, <a class="el" href="expire_8php.html#a444e45c9b67727b27db4c779fd51a298">expire_run()</a>, <a class="el" href="externals_8php.html#a4df44079e6f915286088b7a0d44db926">externals_run()</a>, <a class="el" href="identity_8php.html#aaeb666872995e3ab8da8f7bc5f3b2bd3">get_theme_uid()</a>, <a class="el" href="home_8php.html#aa1cf697851a646755baf537f75334c46">home_content()</a>, <a class="el" href="like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538">like_content()</a>, <a class="el" href="mod_2network_8php.html#a43f2f29b90c5e29072c561934bc8f8b4">network_content()</a>, <a class="el" href="notifier_8php.html#a568c502f626cff95e344c0748938b85d">notifier_run()</a>, <a class="el" href="search_8php.html#ab2568591359edde5b483a6cd9a24b2cc">search_content()</a>, <a class="el" href="subthread_8php.html#a50368f3d825b77996030528e7fbfa3d3">subthread_content()</a>, <a class="el" href="viewsrc_8php.html#a6eff3d0c1d7d14b335c4edb785cd60a4">viewsrc_content()</a>, <a class="el" href="zot_8php.html#aeea071f17e306fe3d0c488551906bfab">zot_import()</a>, and <a class="el" href="zotfeed_8php.html#a24dfc23d366e7f840cf2847d0c1c8eac">zotfeed_init()</a>.</p>
 
 </div>
 </div>
@@ -472,10 +472,11 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>identity_basic_export($channel_id) Create an array representing the important channel information which would be necessary to create a nomadic identity clone. This includes most channel resources and connection information with the exception of content.</p>
+<p>identity_basic_export($channel_id,$items = false) Create an array representing the important channel information which would be necessary to create a nomadic identity clone. This includes most channel resources and connection information with the exception of content.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$channel_id</td><td>Channel_id to export</td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$channel_id</td><td>Channel_id to export </td></tr>
+    <tr><td class="paramtype">boolean</td><td class="paramname">$items</td><td>Include channel posts (wall items), default false</td></tr>
   </table>
   </dd>
 </dl>
@@ -548,7 +549,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>boolean true or false </dd></dl>
 
-<p>Referenced by <a class="el" href="identity_8php.html#a9637c557e13d9671f3eeb124ab98212a">is_member()</a>.</p>
+<p>Referenced by <a class="el" href="identity_8php.html#a9637c557e13d9671f3eeb124ab98212a">is_member()</a>, and <a class="el" href="text_8php.html#af9c9ac3f74c82dc60acfa404d0e9dc53">theme_attachments()</a>.</p>
 
 </div>
 </div>

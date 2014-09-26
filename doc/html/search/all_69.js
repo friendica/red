@@ -82,6 +82,7 @@ var searchData=
   ['item_5frelay',['ITEM_RELAY',['../boot_8php.html#a2958a2bd5422b85329d7c36c06dbc221',1,'boot.php']]],
   ['item_5fremove_5fcid',['item_remove_cid',['../items_8php.html#a5ed782ff5b9cf050bec931e06de12c00',1,'items.php']]],
   ['item_5fretained',['ITEM_RETAINED',['../boot_8php.html#a11cfe7d99b4dac0454d0de8873989f81',1,'boot.php']]],
+  ['item_5frss',['ITEM_RSS',['../boot_8php.html#ac4d1c93dabcace711ffb4931204c336b',1,'boot.php']]],
   ['item_5fspam',['ITEM_SPAM',['../boot_8php.html#a40d885b2cfd736aab4234ae641ca4dfb',1,'boot.php']]],
   ['item_5fstarred',['ITEM_STARRED',['../boot_8php.html#a7af107fab8d62b9a73801713b774ed30',1,'boot.php']]],
   ['item_5fstore',['item_store',['../items_8php.html#a2541e6861a56d145c9281877cc501615',1,'items.php']]],
