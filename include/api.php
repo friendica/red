@@ -546,8 +546,8 @@ require_once('include/items.php');
 		}
 
 		require_once('include/identity.php');
-
-		json_return_and_die(identity_basic_export(api_user()));	
+		
+		json_return_and_die(identity_basic_export(api_user(),(($_REQUEST['posts']) ? intval($_REQUEST['posts']) : 0 )));	
 	}
 	api_register_func('api/export/basic','api_export_basic', true);
 	api_register_func('api/red/channel/export/basic','api_export_basic', true);

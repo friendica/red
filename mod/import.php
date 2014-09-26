@@ -30,7 +30,7 @@ function import_post(&$a) {
 
 	$data     = null;
 	$seize    = ((x($_REQUEST,'make_primary')) ? intval($_REQUEST['make_primary']) : 0);
-
+	$import_posts = ((x($_REQUEST,'import_posts')) ? intval($_REQUEST['import_posts']) : 0);
 	$src      = $_FILES['filename']['tmp_name'];
 	$filename = basename($_FILES['filename']['name']);
 	$filesize = intval($_FILES['filename']['size']);
@@ -60,6 +60,8 @@ function import_post(&$a) {
 
 		$scheme = 'https://';
 		$api_path = '/api/red/channel/export/basic?f=&channel=' . $channelname;
+		if($import_posts)
+			$api_path .= '&posts=1';
 		$binary = false;
 		$redirects = 0;
 		$opts = array('http_auth' => $email . ':' . $password);
@@ -376,7 +378,57 @@ function import_post(&$a) {
 		}
 	}
 
-//FIXME just a note here for when folks want to import content - be very careful to unset ITEM_ORIGIN on all imported content. Or you could end up with a nasty routing loop when somebody tries to reply to one of those posts. 
+	if($import_posts && array_key_exists('item',$data) && $data['item']) {
+		foreach($data['item'] as $i) {
+			$item = get_item_elements($i);
+
+			$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
+				dbesc($item['mid']),
+				intval($channel['channel_id'])
+			);
+			if($r) {
+				if($item['edited'] > $r[0]['edited']) {
+					$item['id'] = $r[0]['id'];
+					$item['uid'] = $channel['channel_id'];
+					item_store_update($item);
+					continue;
+				}	
+			}
+			else {
+				$item['aid'] = $channel['channel_account_id'];
+				$item['uid'] = $channel['channel_id'];
+				$item_result = item_store($item);
+			}
+
+		}
+
+	}
+
+	if(array_key_exists('item_id',$data) && $data['item_id']) {
+		foreach($data['item_id'] as $i) {
+			$r = q("select id from item where mid = '%s' and uid = %d limit 1",
+				dbesc($i['mid']),
+				intval($channel['channel_id'])
+			);
+			if(! $r)
+				continue;
+			$z = q("select * from item_id where service = '%s' and sid = '%s' and iid = %d and uid = %d limit 1",
+				dbesc($i['service']),
+				dbesc($i['sid']),
+				intval($r[0]['id']),
+				intval($channel['channel_id'])
+			);
+			if(! $z) {
+				q("insert into item_id (iid,uid,sid,service) values(%d,%d,'%s','%s')",
+					intval($r[0]['id']),
+					intval($channel['channel_id']),
+					dbesc($i['sid']),
+					dbesc($i['service'])
+				);
+			}
+		}
+	}
+
 
 
 // FIXME - ensure we have a self entry if somebody is trying to pull a fast one
@@ -417,6 +469,7 @@ function import_content(&$a) {
 		'$label_old_pass' => t('Your old login password'),
 		'$common' => t('For either option, please choose whether to make this hub your new primary address, or whether your old location should continue this role. You will be able to post from either location, but only one can be marked as the primary location for files, photos, and media.'),
 		'$label_import_primary' => t('Make this hub my primary location'),
+		'$label_import_posts' => t('Import existing posts if possible'),
 		'$email' => '',
 		'$pass' => '',
 		'$submit' => t('Submit')
