@@ -107,6 +107,18 @@
 	overflow: auto;
 }
 
+.wall-item-content h1,  .wall-item-content h2 {
+   font-size: 1.319em;
+}
+
+.wall-item-title {
+   font-size: $font_size;
+}
+
+.wall-item-title h3, .wall-item-content h3,  .wall-item-content h4 {
+   font-size: 1.112em;
+}
+
 .wall-item-content img {
     max-width: 95%;
 }

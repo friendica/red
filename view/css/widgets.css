@@ -2,6 +2,7 @@
 /* Easiest way to indent the widget body - indent the entire widget and then shift the header label back to the left */
 
 .widget {
+	word-wrap: break-word;
 	margin-bottom: 10px;
 	padding: 10px 10px 10px 20px;
 }
