@@ -1,5 +1,5 @@
 <div id="side-bar-photos-albums" class="widget">
-	<h3><a href="{{$baseurl}}/photos/{{$nick}}" title="{{$title}}" >{{$title}}</a></h3>
+	<h3>{{$title}}</h3>
 	{{if $albums}}
 	<ul class="nav nav-pills nav-stacked">
 		{{foreach $albums as $al}}

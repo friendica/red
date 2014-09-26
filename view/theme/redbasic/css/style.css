@@ -115,13 +115,7 @@ pre {
 	border:1px solid $pre_borderc;
 }
 
-blockquote {
-	background-color: $blockquote_bgcolour;
-	border-left: 4px solid $blockquote_bordercolour;
-	padding: 0.4em;
-	color: $blockquote_colour;
-	margin-left: 20px;
-}
+
 
 .ccollapse-wrapper {
 	border: 1px solid #CCC;
@@ -2248,6 +2242,18 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 }
 
 /* bootstrap overrides */
+
+
+blockquote {
+	font-size: $font_size;
+	font-style: italic;
+	background-color: $blockquote_bgcolour;
+	border-left: 3px solid $blockquote_bordercolour;
+	padding: 0.4em;
+	color: $blockquote_colour;
+	margin: 0px 0px 0px 20px;
+}
+
 .badge {
 	border-radius: $radiuspx;
 }
