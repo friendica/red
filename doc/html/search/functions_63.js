@@ -27,6 +27,7 @@ var searchData=
   ['chatroom_5fenter',['chatroom_enter',['../include_2chat_8php.html#a2c95b545e46bfee64faa05ecf0afea91',1,'chat.php']]],
   ['chatroom_5fleave',['chatroom_leave',['../include_2chat_8php.html#a1ee1360f7d2549c7549ae07cb5190f0f',1,'chat.php']]],
   ['chatroom_5flist',['chatroom_list',['../include_2chat_8php.html#aedcb532a0627b8644001a2fadab4e87a',1,'chat.php']]],
+  ['chatroom_5flist_5fcount',['chatroom_list_count',['../include_2chat_8php.html#a26abdccc2a278a59899896dbbfc6f049',1,'chat.php']]],
   ['chatsvc_5fcontent',['chatsvc_content',['../chatsvc_8php.html#a7032784215e1f6747cf385a6598770f9',1,'chatsvc.php']]],
   ['chatsvc_5finit',['chatsvc_init',['../chatsvc_8php.html#a28d248b056fa47452e28ed01130e9116',1,'chatsvc.php']]],
   ['chatsvc_5fpost',['chatsvc_post',['../chatsvc_8php.html#a7c9a9b9c24a2b02eed8efd6b09632d03',1,'chatsvc.php']]],

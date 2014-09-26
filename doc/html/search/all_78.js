@@ -11,7 +11,7 @@ var searchData=
   ['xchan_5fflags_5fselfcensored',['XCHAN_FLAGS_SELFCENSORED',['../boot_8php.html#a5a681a672e007cdc22b43345d71f07c6',1,'boot.php']]],
   ['xchan_5fflags_5fsystem',['XCHAN_FLAGS_SYSTEM',['../boot_8php.html#afef254290febac854c85fc698d9483a6',1,'boot.php']]],
   ['xchan_5fmail_5fquery',['xchan_mail_query',['../text_8php.html#a543447c5ed766535221e2d9636b379ee',1,'text.php']]],
-  ['xchan_5fquery',['xchan_query',['../text_8php.html#a36a2e5d418ee81140f25c4233cfecd1f',1,'text.php']]],
+  ['xchan_5fquery',['xchan_query',['../text_8php.html#a905c3895feb6f276df23f07f16f9bb52',1,'text.php']]],
   ['xml2array',['xml2array',['../include_2network_8php.html#a99353baabbc3e0584b85eb79ee802cff',1,'network.php']]],
   ['xml_5fstatus',['xml_status',['../include_2network_8php.html#a9e9da2aafb806c98ecdc318604e60dc6',1,'network.php']]],
   ['xmlify',['xmlify',['../text_8php.html#aaed4413ed8918838b517e3b2fafaea0d',1,'text.php']]],

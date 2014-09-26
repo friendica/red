@@ -86,7 +86,7 @@ var text_8php =
     [ "unxmlify", "text_8php.html#a1360fed7f918d859daaca1c9f384f9af", null ],
     [ "valid_email", "text_8php.html#a6a3d80a6c6fb234fd0bac44203b828eb", null ],
     [ "xchan_mail_query", "text_8php.html#a543447c5ed766535221e2d9636b379ee", null ],
-    [ "xchan_query", "text_8php.html#a36a2e5d418ee81140f25c4233cfecd1f", null ],
+    [ "xchan_query", "text_8php.html#a905c3895feb6f276df23f07f16f9bb52", null ],
     [ "xmlify", "text_8php.html#aaed4413ed8918838b517e3b2fafaea0d", null ],
     [ "z_input_filter", "text_8php.html#a324c58f37f6acdf9cd1922aa76077d9f", null ],
     [ "zidify_callback", "text_8php.html#a405afe814a23f3bd94d826101aa168ab", null ],

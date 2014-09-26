@@ -1,5 +1,8 @@
 var NAVTREEINDEX6 =
 {
+"include_2probe_8php.html#a2daa857942aceca01f956016dbbd139c":[6,0,0,63,1],
+"include_2probe_8php.html#a3c02c7a23e8335a79c3c0f5331d11a85":[6,0,0,63,8],
+"include_2probe_8php.html#a471851151d8cd7fbb79703e9522eeea8":[6,0,0,63,0],
 "include_2probe_8php.html#a950a200372393f706851103cd3fffcba":[6,0,0,63,6],
 "include_2probe_8php.html#a9b5eca1e01e52b3e65d64db0c92181e0":[6,0,0,63,2],
 "include_2probe_8php.html#aa748dc73a6686c13826b1ee9d16c800d":[6,0,0,63,7],
@@ -195,8 +198,8 @@ var NAVTREEINDEX6 =
 "mytheme_2php_2style_8php.html":[6,0,3,1,2,0,1],
 "mytheme_2php_2theme_8php.html":[6,0,3,1,2,0,2],
 "mytheme_2php_2theme_8php.html#a6ce5df8ece6acc09c1fddaccbeb244e8":[6,0,3,1,2,0,2,0],
-"namespaceFriendica.html":[4,0,1],
 "namespaceFriendica.html":[5,0,1],
+"namespaceFriendica.html":[4,0,1],
 "namespaceacl__selectors.html":[4,0,0],
 "namespaceacl__selectors.html":[5,0,0],
 "namespacefriendica-to-smarty-tpl.html":[5,0,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX6 =
 "opensearch_8php.html#ad13034877a496565ac7d99e9fc6f55e9":[6,0,1,73,0],
 "page_8php.html":[6,0,1,74],
 "page_8php.html#a4d89800c0366a239191b1692c09635cf":[6,0,1,74,1],
-"page_8php.html#a91a5f649f68406149108bded1dc90b22":[6,0,1,74,0],
-"page__widgets_8php.html":[6,0,0,58],
-"page__widgets_8php.html#a1a1e729da27f252cab6678288a17958f":[6,0,0,58,1],
-"page__widgets_8php.html#a39d547771c5f12a17c097436c82f0fa2":[6,0,0,58,0]
+"page_8php.html#a91a5f649f68406149108bded1dc90b22":[6,0,1,74,0]
 };
