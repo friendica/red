@@ -142,11 +142,11 @@ if(! $a->install) {
 	if (! $widget_brdrcolour)
 		$widget_brdrcolour = "rgba(238,238,238,0.8)";
 	if (! $blockquote_colour)
-		$blockquote_colour = "#000";
+		$blockquote_colour = "#4d4d4d";
 	if (! $blockquote_bgcolour)
-		$blockquote_bgcolour = "#f4f8f9";
+		$blockquote_bgcolour = "";
 	if (! $blockquote_bordercolour)
-		$blockquote_bordercolour = "#dae4ee";
+		$blockquote_bordercolour = "#ccc";
 	if (! $code_borderc)
 		$code_borderc = "#444";
 	if (! $code_bgcolour)
