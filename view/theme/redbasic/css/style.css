@@ -23,6 +23,19 @@ body {
 	margin: 0px;
 	height: 100%;
 }
+
+h1, h2 {
+	font-size: 1.583em;
+}
+
+h3, h4 {
+	font-size: 1.334em;
+}
+
+h5, h6 {
+	font-size: 0.75rem;
+}
+
 .jslider {
 	font-family: arial,freesans,sans-serif;
 }
@@ -1965,6 +1978,10 @@ img.mail-list-sender-photo {
 }
 
 /* conversation */
+
+.wall-item-title {
+   font-size: $font_size;
+}
 
 .hide-comments-outer,
 .thread-wrapper .wall-item-comment-wrapper,
