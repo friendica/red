@@ -24,15 +24,15 @@ body {
 	height: 100%;
 }
 
-h1, h2 {
-	font-size: 1.583em;
+h1, .h1, h2, .h2 {
+	font-size: 1.667em;
 }
 
-h3, h4 {
+h3, .h3, h4, .h4 {
 	font-size: 1.334em;
 }
 
-h5, h6 {
+h5, .h5, h6, .h6 {
 	font-size: 0.75rem;
 }
 
@@ -73,6 +73,15 @@ a:hover, .fakelink:hover { color: $link_colour; text-decoration: underline; }
 	cursor: pointer;
 }
 
+a.btn-default {
+	color: #333;
+
+}
+
+a.btn-success {
+	color: #fff;
+font-weight: normal;
+}
 
 input[type="text"],
 input[type="password"],
@@ -2415,16 +2424,16 @@ blockquote {
 .btn-default {
     	background-color: $editbuttons_bgcolour;
     	border-color: $editbuttons_bordercolour;
-		color: $editbuttons_colour;
+	color: $editbuttons_colour;
     	text-shadow: none;
     	box-shadow: none;
 }
 
 .btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
-    	background-color: $editbuttons_bghover;
-		border-color: $editbuttons_bordercolourhover;
-		color: $input_colourhover;
-		text-decoration: $input_decohover;
+	background-color: $editbuttons_bghover;
+	border-color: $editbuttons_bordercolourhover;
+	color: $input_colourhover;
+	text-decoration: $input_decohover;
 }
 
 .btn-default.btn-sm:hover, .btn-default.btn-sm:focus, .btn-default.btn-sm:active .btn-default.btn-sm.active {
@@ -2451,7 +2460,7 @@ blockquote {
 	margin-bottom: 10px;
 }
 
-.section-title-wrapper h3 {
+.section-title-wrapper h2 {
 	margin-top: 0px;
 	margin-bottom: 0px;
 }
@@ -2463,6 +2472,7 @@ blockquote {
 .section-title-submenu a {
 	margin-right: 10px;
 }
+
 
 @media screen and (max-width: 767px) {
 	aside#region_1 {

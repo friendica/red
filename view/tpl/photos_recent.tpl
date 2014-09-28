@@ -1,5 +1,9 @@
 <div class="section-title-wrapper">
-	<h3>{{$title}}</h3>
+	{{if $can_post}}
+	<a class="btn btn-xs btn-success pull-right" href="{{$upload.1}}"><i class="icon-upload"></i>&nbsp;{{$upload.0}}</a>
+	{{/if}}
+	<h2>{{$title}}</h2>
+	<div class="clear"></div>
 </div>
 <div id="photo-album-contents">
 	{{foreach $photos as $photo}}
