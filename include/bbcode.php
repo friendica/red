@@ -610,7 +610,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// Check for [spoiler=Author] text
 
-	$t_wrote = t('$1 wrote:');
+	$t_wrote = t('$1 spoiler');
 
 	// handle nested quotes
 	$endlessloop = 0;
