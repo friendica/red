@@ -1,17 +1,5 @@
 /* override some bootstrap settings */
 
-h1, h2 {
-   font-size: 1.583em;
-}
-
-h3, h4 {
-   font-size: 1.334em;
-}
-
-h5, h6 {
-   font-size: 0.75rem;
-}
-
 /* nav overrides */
 
 nav .badge {
@@ -73,9 +61,4 @@ nav .navbar-collapse .navbar-right {
 
 code {
 	white-space: normal;
-}
-
-
-blockquote {
-	font-size: 1em;
 }
