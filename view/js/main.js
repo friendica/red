@@ -113,7 +113,7 @@
 	}
 
 	function viewsrc(id) {
-		$.colorbox({href: 'viewsrc/' + id });
+		$.colorbox({href: 'viewsrc/' + id, maxWidth: '80%', maxHeight: '80%' });
 	}
 
 	function qCommentInsert(obj,id) {

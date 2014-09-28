@@ -9,6 +9,7 @@
 /* generals */
 html {
 	height: 100%;
+	font-size: 100%;
 }
 
 body {
@@ -2206,10 +2207,6 @@ nav ul li {
 	max-height: 50px
 }
 
-nav .badge {
-	border-radius: $radiuspx;
-}
-
 nav .dropdown-menu {
 	font-size: $body_font_size;
 	border-top-right-radius: 0px;
@@ -2251,32 +2248,8 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 }
 
 /* bootstrap overrides */
-blockquote {
-	font-size: 1em;
-}
-
-h1, h2 {
-   font-size: 1.583em;
-}
-
-h3, h4 {
-   font-size: 1.334em;
-}
-
-h5, h6 {
-   font-size: 0.75rem; 
-}
-
-.wall-item-content h1,  .wall-item-content h2 {
-   font-size: 1.319em;
-}
-
-.wall-item-title {
-   font-size: $font_size;
-}
-
-.wall-item-title h3, .wall-item-content h3,  .wall-item-content h4 {
-   font-size: 1.112em;
+.badge {
+	border-radius: $radiuspx;
 }
 
 .dropdown-menu {
@@ -2446,6 +2419,26 @@ h5, h6 {
 	background-color: $advperm_bgcolour;
 	border: 1px solid $advperm_bordercol;
 	background-image: linear-gradient(to bottom, $advperm_gradientcol 0px, $advperm_bgcolour 100%);
+}
+
+.section-title-wrapper {
+	padding: 7px 10px;
+	background-color: $item_colour;
+	border-radius: $radiuspx;
+	margin-bottom: 10px;
+}
+
+.section-title-wrapper h3 {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.section-title-submenu {
+	margin-top: 10px;
+}
+
+.section-title-submenu a {
+	margin-right: 10px;
 }
 
 @media screen and (max-width: 767px) {

@@ -101,10 +101,18 @@ class Item extends BaseObject {
 		else
 			$edpost = false;
 
+
 		if($observer['xchan_hash'] == $this->get_data_value('author_xchan') 
 			|| $observer['xchan_hash'] == $this->get_data_value('owner_xchan') 
 			|| $this->get_data_value('uid') == local_user())
 			$dropping = true;
+
+
+		if(array_key_exists('real_uid',$item)) {
+			$edpost = false;
+			$dropping = false;
+		}
+
 
 		if($dropping) {
 			$drop = array(
@@ -119,7 +127,7 @@ class Item extends BaseObject {
 			);
 		}
 
-		$filer = (($conv->get_profile_owner() == local_user()) ? t("Save to Folder") : false);
+		$filer = ((($conv->get_profile_owner() == local_user()) && (! array_key_exists('real_uid',$item))) ? t("Save to Folder") : false);
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
 		$profile_link   = chanlink_url($item['author']['xchan_url']);
@@ -163,7 +171,7 @@ class Item extends BaseObject {
 		
 		if($this->is_toplevel()) {
 			// FIXME check this permission
-			if($conv->get_profile_owner() == local_user()) {
+			if(($conv->get_profile_owner() == local_user()) && (! array_key_exists('real_uid',$item))) {
 
 // FIXME we don't need all this stuff, some can be done in the template
 

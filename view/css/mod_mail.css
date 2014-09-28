@@ -45,8 +45,8 @@ img.mail-list-sender-photo {
 #prvmail-rotator-wrapper {
 	float: left;
 	margin-top: 10px;
-	margin-right: 10px;
-	width: 24px;
+/*	margin-right: 10px;
+	width: 24px; */
 	cursor: pointer;
 }
 

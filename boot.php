@@ -553,6 +553,7 @@ define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
 define ( 'ITEM_OBSCURED',        0x1000);  // bit-mangled to protect from casual browsing by site admin
 define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was successful
 define ( 'ITEM_RETAINED',        0x4000);  // We looked at this item once to decide whether or not to expire it, and decided not to.
+define ( 'ITEM_RSS',             0x8000);  // Item comes from a feed. Use this to decide whether to link the title
 										   // Don't make us evaluate this same item again.
 /**
  *

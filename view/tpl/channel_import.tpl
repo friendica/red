@@ -22,6 +22,11 @@
 	<input type="password" name="password" id="import-old-pass" class="import-input" value="{{$pass}}" />
 	<div id="import-old-pass-end" class="import-field-end"></div>
 
+	<input type="checkbox" name="import_posts" id="import-posts" value="1" />
+	<label for="import-posts" id="label-import-posts">{{$label_import_posts}}</label>
+	<div id="import-posts-end" class="import-field-end"></div>
+
+
 	<div id="import-common-desc" class="descriptive-paragraph">{{$common}}</div>
 
 	<input type="checkbox" name="make_primary" id="import-make-primary" value="1" />

@@ -865,13 +865,35 @@ function get_item_elements($x) {
 	// We have to do that here because we need to cleanse the input and prevent bad stuff from getting in,
 	// and we need plaintext to do that. 
 
+	$key = get_config('system','pubkey');
+
+
 	if(intval($arr['item_private'])) {
 		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
-		$key = get_config('system','pubkey');
 		if($arr['title'])
 			$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 		if($arr['body'])
 			$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
+	}
+
+
+	if(array_key_exists('revision',$x)) {
+		// extended export encoding
+
+		$arr['revision'] = $x['revision'];
+		$arr['allow_cid'] = $x['allow_cid'];
+		$arr['allow_gid'] = $x['allow_gid'];
+		$arr['deny_cid'] = $x['deny_cid'];
+		$arr['deny_gid'] = $x['deny_gid'];
+		$arr['layout_mid'] = $x['layout_mid'];
+		$arr['postopts'] = $x['postopts'];
+		$arr['resource_id'] = $x['resource_id'];
+		$arr['resource_type'] = $x['resource_type'];
+		$arr['item_restrict'] = $x['item_restrict'];
+		$arr['item_flags'] = $x['item_flags'];
+		$arr['diaspora_meta'] = (($x['diaspora_meta']) ? json_encode(crypto_encapsulate($x['diaspora_meta'],$key)) : '');
+		$arr['attach'] = $x['attach'];
+
 	}
 
 	return $arr;
@@ -1418,16 +1440,23 @@ function get_atom_elements($feed,$item,&$author) {
 	if($found_author) { 
 		$author['author_name'] = unxmlify($found_author->get_name());
 		$author['author_link'] = unxmlify($found_author->get_link());
+		$author['author_is_feed'] = false;
 	}
 	else {
 		$author['author_name'] = unxmlify($feed->get_title());
 		$author['author_link'] = unxmlify($feed->get_permalink());
+		$author['author_is_feed'] = true;
 	}
+
+	if(substr($author['author_link'],-1,1) == '/')
+		$author['author_link'] = substr($author['author_link'],0,-1);
 
 	$res['mid'] = base64url_encode(unxmlify($item->get_id()));
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
 	$res['plink'] = unxmlify($item->get_link(0));
+	$res['item_flags'] = ITEM_RSS;
+
 
 	// removing the content of the title if its identically to the body
 	// This helps with auto generated titles e.g. from tumblr
@@ -1488,8 +1517,10 @@ function get_atom_elements($feed,$item,&$author) {
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
 			$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 			foreach($base as $link) {
-				if($link['attribs']['']['rel'] === 'alternate' && (! $author['author_link']))
+				if($link['attribs']['']['rel'] === 'alternate' && (! $author['author_link'])) {
 					$author['author_link'] = unxmlify($link['attribs']['']['href']);
+					$author['author_is_feed'] = true;
+				}
 				if(! $author['author_photo']) {
 					if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
 						$author['author_photo'] = unxmlify($link['attribs']['']['href']);
@@ -1575,6 +1606,28 @@ function get_atom_elements($feed,$item,&$author) {
 
 		$res['body'] = escape_tags($res['body']);
 	}
+
+	if($res['plink'] && $res['title']) {
+		$res['body'] = '#^[url=' . $res['plink'] . ']' . $res['title'] . '[/url]' . "\n\n" . $res['body'];
+		$terms = array();
+		$terms[] = array(
+			'otype' => TERM_OBJ_POST,
+			'type'  => TERM_BOOKMARK,
+			'url'   => $res['plink'],
+			'term'  => $res['title'],
+		);
+	}
+	elseif($res['plink']) {
+		$res['body'] = '#^[url]' . $res['plink'] . '[/url]' . "\n\n" . $res['body'];
+		$terms = array();
+		$terms[] = array(
+			'otype' => TERM_OBJ_POST,
+			'type'  => TERM_BOOKMARK,
+			'url'   => $res['plink'],
+			'term'  => $res['plink'],
+		);
+	}
+
 
 	$private = $item->get_item_tags(NAMESPACE_DFRN,'private');
 	if($private && intval($private[0]['data']) > 0)
@@ -1664,7 +1717,8 @@ function get_atom_elements($feed,$item,&$author) {
 
 	$cats = $item->get_categories();
 	if($cats) {
-		$terms = array();
+		if(is_null($terms))
+			$terms = array();
 		foreach($cats as $cat) {
 			$term = $cat->get_term();
 			if(! $term)
@@ -1689,8 +1743,10 @@ function get_atom_elements($feed,$item,&$author) {
 				);
 			}		
 		}
-		$res['term'] =  $terms;
 	}
+
+	if(! is_null($terms))
+		$res['term'] =  $terms;
 
 	$attach = $item->get_enclosures();
 	if($attach) {
@@ -3196,7 +3252,6 @@ function mail_store($arr) {
 }
 
 
-
 /**
  *
  * consume_feed - process atom feed and update anything/everything we might need to update
@@ -3314,17 +3369,17 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
-				if(! x($author,'author_name'))
+				if((! x($author,'author_name')) || ($author['author_is_feed']))
 					$author['author_name'] = $contact['xchan_name'];
-				if(! x($author,'author_link'))
+				if((! x($author,'author_link')) || ($author['author_is_feed']))
 					$author['author_link'] = $contact['xchan_url'];
-				if(! x($author,'author_photo')) 
+				if((! x($author,'author_photo'))|| ($author['author_is_feed'])) 
 					$author['author_photo'] = $contact['xchan_photo_m'];
 
 				$datarray['author_xchan'] = '';
 
 				if($author['author_link'] != $contact['xchan_url']) {
-					$x = import_author_unkown(array('name' => $author['author_name'],'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
+					$x = import_author_unknown(array('name' => $author['author_name'],'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
 					if($x) 
 						$datarray['author_xchan'] = $x;
 					
@@ -3377,11 +3432,11 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				$datarray = get_atom_elements($feed,$item,$author);
 
 				if(is_array($contact)) {
-					if(! x($author,'author_name'))
+					if((! x($author,'author_name')) || ($author['author_is_feed']))
 						$author['author_name'] = $contact['xchan_name'];
-					if(! x($author,'author_link'))
+					if((! x($author,'author_link')) || ($author['author_is_feed']))
 						$author['author_link'] = $contact['xchan_url'];
-					if(! x($author,'author_photo'))
+					if((! x($author,'author_photo'))|| ($author['author_is_feed'])) 
 						$author['author_photo'] = $contact['xchan_photo_m'];
 				}
 

@@ -1532,6 +1532,12 @@ function diaspora_conversation($importer,$xml,$msg) {
 			continue;
 		}
 
+		$key = get_config('system','pubkey');
+		if($subject)
+			$subject = json_encode(crypto_encapsulate($subject,$key));
+		if($body)
+			$body  = json_encode(crypto_encapsulate($body,$key));
+
 		q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s')",
 			intval($importer['channel_id']),
 			intval($conversation['id']),
@@ -1539,7 +1545,7 @@ function diaspora_conversation($importer,$xml,$msg) {
 			dbesc($importer['channel_hash']),
 			dbesc($subject),
 			dbesc($body),
-			0,
+			intval(MAIL_OBSCURED),
 			dbesc($msg_guid),
 			dbesc($parent_uri),
 			dbesc($msg_created_at)
@@ -1588,7 +1594,7 @@ function diaspora_message($importer,$xml,$msg) {
 	$msg_diaspora_handle = notags(unxmlify($xml->diaspora_handle));
 	$msg_conversation_guid = notags(unxmlify($xml->conversation_guid));
 
-	$parent_uri = $diaspora_handle . ':' . $msg_parent_guid;
+	$parent_uri = $msg_parent_guid;
  
 	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$msg_diaspora_handle);
 	if(! $contact) {
@@ -1607,7 +1613,7 @@ function diaspora_message($importer,$xml,$msg) {
 		intval($importer['channel_id']),
 		dbesc($msg_conversation_guid)
 	);
-	if(count($c))
+	if($c)
 		$conversation = $c[0];
 	else {
 		logger('diaspora_message: conversation not available.');
@@ -1616,6 +1622,7 @@ function diaspora_message($importer,$xml,$msg) {
 
 	$reply = 0;
 
+	$subject = $conversation['subject']; 
 	$body = diaspora2bb($msg_text);
 	$message_id = $msg_diaspora_handle . ':' . $msg_guid;
 
@@ -1625,8 +1632,8 @@ function diaspora_message($importer,$xml,$msg) {
 	$author_signature = base64_decode($msg_author_signature);
 
 	$person = find_diaspora_person_by_handle($msg_diaspora_handle);	
-	if(is_array($person) && x($person,'pubkey'))
-		$key = $person['pubkey'];
+	if(is_array($person) && x($person,'xchan_pubkey'))
+		$key = $person['xchan_pubkey'];
 	else {
 		logger('diaspora_message: unable to find author details');
 		return;
@@ -1637,23 +1644,29 @@ function diaspora_message($importer,$xml,$msg) {
 		return;
 	}
 
-	$r = q("select id from mail where `uri` = '%s' and uid = %d limit 1",
+	$r = q("select id from mail where mid = '%s' and channel_id = %d limit 1",
 		dbesc($message_id),
 		intval($importer['channel_id'])
 	);
-	if(count($r)) {
+	if($r) {
 		logger('diaspora_message: duplicate message already delivered.', LOGGER_DEBUG);
 		return;
 	}
+
+	$key = get_config('system','pubkey');
+	if($subject)
+		$subject = json_encode(crypto_encapsulate($subject,$key));
+	if($body)
+		$body  = json_encode(crypto_encapsulate($body,$key));
 
 	q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', '%d','%s','%s','%s')",
 		intval($importer['channel_id']),
 		intval($conversation['id']),
 		dbesc($person['xchan_hash']),
 		dbesc($importer['xchan_hash']),
-		dbesc($conversation['subject']),
+		dbesc($subject),
 		dbesc($body),
-		0,
+		intval(MAIL_OBSCURED),
 		dbesc($msg_guid),
 		dbesc($parent_uri),
 		dbesc($msg_created_at)
@@ -2120,15 +2133,9 @@ function diaspora_profile($importer,$xml,$msg) {
 		$image_url = "http://" . $handle_parts[1] . $image_url;
 	}
 
-/*	$r = q("SELECT DISTINCT ( `resource-id` ) FROM `photo` WHERE  `uid` = %d AND `contact-id` = %d AND `album` = 'Contact Photos' ",
-		intval($importer['channel_id']),
-		intval($contact['id'])
-	);
-	$oldphotos = ((count($r)) ? $r : null);*/
+	require_once('include/photo/photo_driver.php');
 
-	require_once('include/Photo.php');
-
-	$images = import_profile_photo($image_url,$importer['channel_id'],$contact['id']);
+	$images = import_profile_photo($image_url,$contact['xchan_hash']);
 	
 	// Generic birthday. We don't know the timezone. The year is irrelevant. 
 
@@ -2145,7 +2152,7 @@ function diaspora_profile($importer,$xml,$msg) {
 	// TODO: update name on item['author-name'] if the name changed. See consume_feed()
 	// Not doing this currently because D* protocol is scheduled for revision soon. 
 
-	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' , `bd` = '%s' WHERE `id` = %d AND `uid` = %d",
+/*	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' , `bd` = '%s' WHERE `id` = %d AND `uid` = %d",
 		dbesc($name),
 		dbesc(datetime_convert()),
 		dbesc($images[0]),
@@ -2156,7 +2163,7 @@ function diaspora_profile($importer,$xml,$msg) {
 		intval($contact['id']),
 		intval($importer['channel_id'])
 	); 
-
+*/
 /*	if($r) {
 		if($oldphotos) {
 			foreach($oldphotos as $ph) {
@@ -2388,7 +2395,7 @@ function diaspora_send_images($item,$owner,$contact,$images,$public_batch = fals
 function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 
 	$a = get_app();
-	$myaddr = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['channel_address'] . '@' . get_app()->get_hostname();
 	$theiraddr = $contact['xchan_addr'];
 
 	// Diaspora doesn't support threaded comments, but some
@@ -2479,7 +2486,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 
 
 	$a = get_app();
-	$myaddr = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['channel_address'] . '@' . get_app()->get_hostname();
 
 	$text = bb2diaspora_itembody($item);
 
@@ -2621,7 +2628,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 
 	$a = get_app();
-	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['channel_address'] . '@' .  get_app()->get_hostname();
 
 	// Check whether the retraction is for a top-level post or whether it's a relayable
 	if( $item['mid'] !== $item['parent_mid'] ) {
@@ -2652,11 +2659,11 @@ function diaspora_send_retraction($item,$owner,$contact,$public_batch = false) {
 function diaspora_send_mail($item,$owner,$contact) {
 
 	$a = get_app();
-	$myaddr = $owner['nickname'] . '@' .  substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
+	$myaddr = $owner['channel_address'] . '@' .  get_app()->get_hostname();
 
 	$r = q("select * from conv where id = %d and uid = %d limit 1",
 		intval($item['convid']),
-		intval($item['uid'])
+		intval($item['channel_id'])
 	);
 
 	if(! count($r)) {
@@ -2673,16 +2680,25 @@ function diaspora_send_mail($item,$owner,$contact) {
 		'participant_handles' => xmlify($cnv['recips'])
 	);
 
+	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
+		$key = get_config('system','prvkey');
+//		if($item['title'])
+//			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
+		if($item['body'])
+			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+	}
+
+
 	$body = bb2diaspora($item['body']);
 	$created = datetime_convert('UTC','UTC',$item['created'],'Y-m-d H:i:s \U\T\C');
  
-	$signed_text =  $item['guid'] . ';' . $cnv['guid'] . ';' . $body .  ';' 
+	$signed_text =  $item['mid'] . ';' . $cnv['guid'] . ';' . $body .  ';' 
 		. $created . ';' . $myaddr . ';' . $cnv['guid'];
 
 	$sig = base64_encode(rsa_sign($signed_text,$owner['channel_prvkey'],'sha256'));
 
 	$msg = array(
-		'guid' => xmlify($item['guid']),
+		'guid' => xmlify($item['mid']),
 		'parent_guid' => xmlify($cnv['guid']),
 		'parent_author_signature' => (($item['reply']) ? null : xmlify($sig)),
 		'author_signature' => xmlify($sig),

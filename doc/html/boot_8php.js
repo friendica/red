@@ -140,6 +140,7 @@ var boot_8php =
     [ "ITEM_PENDING_REMOVE", "boot_8php.html#a028380b2902a86ba32198f6d3b5d10bb", null ],
     [ "ITEM_RELAY", "boot_8php.html#a2958a2bd5422b85329d7c36c06dbc221", null ],
     [ "ITEM_RETAINED", "boot_8php.html#a11cfe7d99b4dac0454d0de8873989f81", null ],
+    [ "ITEM_RSS", "boot_8php.html#ac4d1c93dabcace711ffb4931204c336b", null ],
     [ "ITEM_SPAM", "boot_8php.html#a40d885b2cfd736aab4234ae641ca4dfb", null ],
     [ "ITEM_STARRED", "boot_8php.html#a7af107fab8d62b9a73801713b774ed30", null ],
     [ "ITEM_THREAD_TOP", "boot_8php.html#a749144d8dd9c1366596a0213c277d050", null ],
