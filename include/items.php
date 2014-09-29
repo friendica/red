@@ -1568,7 +1568,7 @@ function get_atom_elements($feed,$item,&$author) {
 		// We could probably turn these old Friendica bbcode bookmarks into bookmark tags but we'd have to 
 		// create a term table item for them. For now just make sure they stay as links.
 
-		$res['body'] = preg_replace('/\[bookmark(.*?)\](.*?)\[\/bookmark\]','[url$1]$2[/url]',$res['body']);
+		$res['body'] = preg_replace('/\[bookmark(.*?)\](.*?)\[\/bookmark\]/','[url$1]$2[/url]',$res['body']);
 
 	}
 
