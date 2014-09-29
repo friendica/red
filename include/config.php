@@ -248,7 +248,7 @@ function load_pconfig($uid) {
  * @return mixed Stored value or false if it does not exist
  */
 function get_pconfig($uid, $family, $key, $instore = false) {
-	logger('include/config.php: get_pconfig() deprecated instore param used', LOGGER_DEBUG);
+//	logger('include/config.php: get_pconfig() deprecated instore param used', LOGGER_DEBUG);
 	global $a;
 
 	if($uid === false)
