@@ -518,8 +518,24 @@ function identity_basic_export($channel_id, $items = false) {
 		$ret['photo'] = array('type' => $r[0]['type'], 'data' => base64url_encode($r[0]['data']));
 	}
 
+	$r = q("select * from obj where obj_channel = %d",
+		intval($channel_id)
+	);
+
+	if($r)
+		$ret['obj'] = $r;
+
+
 	if(! $items)
 		return $ret;
+
+
+	$r = q("select likes.*, item.mid from likes left join item on likes.iid = item.id where likes.channel_id = %d",
+		intval($channel_id)
+	);
+
+	if($r)
+		$ret['likes'] = $r;
 
 
 	$r = q("select item_id.*, item.mid from item_id left join item on item_id.iid = item.id where item_id.uid = %d",
