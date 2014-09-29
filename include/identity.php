@@ -364,7 +364,7 @@ function create_identity($arr) {
 		if($role_permissions) {
 			set_pconfig($newuid,'system','permissions_role',$arr['permissions_role']);
 			if(array_key_exists('online',$role_permissions))
-				set_pconfig('system','hide_presence',1-intval($role_permissions['online']));
+				set_pconfig($newuid,'system','hide_presence',1-intval($role_permissions['online']));
 		}
 
 		// Create a group with yourself as a member. This allows somebody to use it 
