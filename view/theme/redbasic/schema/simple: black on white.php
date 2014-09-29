@@ -21,7 +21,7 @@
 	if (! $navmenu_bgimage)
 		$navmenu_bgimage = "background-image: none;";
 	if (! $navtabs_borderc)
-		$navtabs_borderc = "#111";
+		$navtabs_borderc = "#000";
 	if (! $navtabs_fontcolour)
 		$navtabs_fontcolour = "#000";
 	if (! $navtabs_bgcolour)
@@ -65,15 +65,15 @@
 	if (! $blockquote_bgcolour)
 		$blockquote_bgcolour = "#fff";
 	if (! $blockquote_bordercolour)
-		$blockquote_bordercolour = "#111";
+		$blockquote_bordercolour = "#000";
 	if (! $code_borderc)
-		$code_borderc = "#111";
+		$code_borderc = "#000";
 	if (! $code_bgcolour)
 		$code_bgcolour = "#fff";
 	if (! $code_txtcolour)
-		$code_txtcolour = "#111";
+		$code_txtcolour = "#000";
 	if (! $pre_borderc)
-		$pre_borderc = "#111";
+		$pre_borderc = "#000";
 	if (! $pre_bgcolour)
 		$pre_bgcolour = "#fff";
 	if (! $pre_txtcolour)
@@ -87,7 +87,7 @@
 	if (! $acpopup_bgcolour)
 		$acpopup_bgcolour = "#fff";
 	if (! $acpopup_bordercolour)
-		$acpopup_bordercolour = "#111";
+		$acpopup_bordercolour = "#000";
 	if (! $acpopup_tgbl_bgcolour)
 		$acpopup_tgbl_bgcolour = "#fff";
 	if (! $acpopup_hovercolour)
@@ -95,7 +95,7 @@
 	if (! $editbuttons_bgcolour)
 		$editbuttons_bgcolour = "#fff";
 	if (! $editbuttons_bordercolour)
-		$editbuttons_bordercolour = "#fff";
+		$editbuttons_bordercolour = "#000";
 	if (! $editbuttons_colour)
 		$editbuttons_colour = "#111";
 	if (! $editbuttons_bghover)
@@ -139,7 +139,7 @@
 	if (! $input_linksubmit)
 		$input_linksubmit = "#000";
 	if (! $input_border)
-		$input_border = "#fff";
+		$input_border = "#000";
 	if (! $input_colourhover)
 		$input_colourhover = "#000";
 	if (! $input_decohover)
@@ -159,13 +159,13 @@
 	if(! $alert_bgcolour)
       $alert_bgcolour = "#fff";
    if(! $alert_bordercol)
-      $alert_bordercol = "#fff";
+      $alert_bordercol = "#000";
    if(! $alert_gradientcol)
       $alert_gradientcol = "#fff";		
    if(! $advperm_bgcolour)
       $advperm_bgcolour = "#fff";
    if(! $advperm_bordercol)
-      $advperm_bordercol = "#fff";
+      $advperm_bordercol = "#000";
    if(! $advperm_gradientcol)
       $advperm_gradientcol = "#fff";
    if(! $cal_bgcolour)
