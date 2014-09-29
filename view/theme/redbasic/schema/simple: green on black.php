@@ -65,7 +65,7 @@
 	if (! $blockquote_bgcolour)
 		$blockquote_bgcolour = "#000";
 	if (! $blockquote_bordercolour)
-		$blockquote_bordercolour = "#32962D";
+		$blockquote_bordercolour = "#143D12";
 	if (! $code_borderc)
 		$code_borderc = "#143D12";
 	if (! $code_bgcolour)
@@ -95,7 +95,7 @@
 	if (! $editbuttons_bgcolour)
 		$editbuttons_bgcolour = "#000";
 	if (! $editbuttons_bordercolour)
-		$editbuttons_bordercolour = "#000";
+		$editbuttons_bordercolour = "#143D12";
 	if (! $editbuttons_colour)
 		$editbuttons_colour = "#32962D";
 	if (! $editbuttons_bghover)

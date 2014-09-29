@@ -21,7 +21,7 @@
 	if (! $navmenu_bgimage)
 		$navmenu_bgimage = "background-image: none;";
 	if (! $navtabs_borderc)
-		$navtabs_borderc = "#eee";
+		$navtabs_borderc = "#fff";
 	if (! $navtabs_fontcolour)
 		$navtabs_fontcolour = "#fff";
 	if (! $navtabs_bgcolour)
@@ -65,7 +65,7 @@
 	if (! $blockquote_bgcolour)
 		$blockquote_bgcolour = "#000";
 	if (! $blockquote_bordercolour)
-		$blockquote_bordercolour = "#eee";
+		$blockquote_bordercolour = "#fff";
 	if (! $code_borderc)
 		$code_borderc = "#eee";
 	if (! $code_bgcolour)
@@ -73,7 +73,7 @@
 	if (! $code_txtcolour)
 		$code_txtcolour = "#eee";
 	if (! $pre_borderc)
-		$pre_borderc = "#eee";
+		$pre_borderc = "#fff";
 	if (! $pre_bgcolour)
 		$pre_bgcolour = "#000";
 	if (! $pre_txtcolour)
@@ -87,7 +87,7 @@
 	if (! $acpopup_bgcolour)
 		$acpopup_bgcolour = "#000";
 	if (! $acpopup_bordercolour)
-		$acpopup_bordercolour = "#eee";
+		$acpopup_bordercolour = "#fff";
 	if (! $acpopup_tgbl_bgcolour)
 		$acpopup_tgbl_bgcolour = "#000";
 	if (! $acpopup_hovercolour)
@@ -95,7 +95,7 @@
 	if (! $editbuttons_bgcolour)
 		$editbuttons_bgcolour = "#000";
 	if (! $editbuttons_bordercolour)
-		$editbuttons_bordercolour = "#000";
+		$editbuttons_bordercolour = "#fff";
 	if (! $editbuttons_colour)
 		$editbuttons_colour = "#eee";
 	if (! $editbuttons_bghover)
@@ -139,7 +139,7 @@
 	if (! $input_linksubmit)
 		$input_linksubmit = "#fff";
 	if (! $input_border)
-		$input_border = "#000";
+		$input_border = "#fff";
 	if (! $input_colourhover)
 		$input_colourhover = "#fff";
 	if (! $input_decohover)
@@ -159,13 +159,13 @@
 	if(! $alert_bgcolour)
       $alert_bgcolour = "#000";
    if(! $alert_bordercol)
-      $alert_bordercol = "#000";
+      $alert_bordercol = "#fff";
    if(! $alert_gradientcol)
       $alert_gradientcol = "#000";		
    if(! $advperm_bgcolour)
       $advperm_bgcolour = "#000";
    if(! $advperm_bordercol)
-      $advperm_bordercol = "#000";
+      $advperm_bordercol = "#fff";
    if(! $advperm_gradientcol)
       $advperm_gradientcol = "#000";
    if(! $cal_bgcolour)
