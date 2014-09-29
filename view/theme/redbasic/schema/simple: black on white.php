@@ -47,11 +47,11 @@
 	if (! $bgcolour)
 		$bgcolour = "#fff";
 	if (! $item_colour)
-		$item_colour = "rgb(255,255,255)";
+		$item_colour = "rgba(255,255,255,0.8)";
 	if (! $comment_item_colour)
-		$comment_item_colour = "rgb(255,255,255)";
+		$comment_item_colour = "rgba(255,255,255,0.4)";
 	if (! $comment_border_colour)
-		$comment_border_colour = "rgb(255,255,255)";
+		$comment_border_colour = "rgba(255,255,255,0.8)";
 	if (! $toolicon_colour)
 		$toolicon_colour = '#111';
 	if (! $toolicon_activecolour)
@@ -117,7 +117,7 @@
 	if (! $dropdown_bordercol)
 		$dropdown_bordercol = "#fff";
 	if (! $preview_backgroundimg)
-		$preview_backgroundimg = "gray_and_black_diagonal_stripes_background_seamless.gif";
+		$preview_backgroundimg = "gray_and_white_diagonal_stripes_background_seamless.gif";
 	if (! $notify_bgcolour)
 		$notify_bgcolour = "#fff";
 	if (! $notify_linkcolour)

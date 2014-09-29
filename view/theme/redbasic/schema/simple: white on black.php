@@ -47,11 +47,11 @@
 	if (! $bgcolour)
 		$bgcolour = "#000";
 	if (! $item_colour)
-		$item_colour = "rgb(0,0,0)";
+		$item_colour = "rgba(0,0,0,0.8)";
 	if (! $comment_item_colour)
-		$comment_item_colour = "rgb(0,0,0)";
+		$comment_item_colour = "rgba(0,0,0,0.4)";
 	if (! $comment_border_colour)
-		$comment_border_colour = "rgb(0,0,0)";
+		$comment_border_colour = "rgba(0,0,0,0.8)";
 	if (! $toolicon_colour)
 		$toolicon_colour = '#eee';
 	if (! $toolicon_activecolour)
