@@ -654,7 +654,7 @@ function photos_content(&$a) {
 		);
 		
 		$o .= '<div class="section-title-wrapper">';
-		$o .= '<h3>' . $album . '</h3>';
+		$o .= '<h2>' . $album . '</h2>';
 		$o .= '<div class="section-title-submenu">';
 		if($cmd === 'edit') {		
 			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
@@ -1238,7 +1238,7 @@ function photos_content(&$a) {
 		$o .= replace_macros($tpl, array(
 			'$title' => t('Recent Photos'),
 			'$can_post' => $can_post,
-			'$upload' => array(t('Upload New Photos'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
+			'$upload' => array(t('Upload'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
 			'$photos' => $photos,
 		));
 

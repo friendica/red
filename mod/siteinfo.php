@@ -48,6 +48,51 @@ function siteinfo_init(&$a) {
 
 		$site_info = get_config('system','info');
 		$site_name = get_config('system','sitename');
+		
+		// Statistics (from statistics.json plugin)
+		
+		$r = q("select count(channel_id) as channels_total from channel left join account on account_id = channel_account_id
+			where account_flags = 0 ");
+		if($r)
+			$channels_total = intval($r[0]['channels_total']);
+		
+		$r = q("select channel_id from channel left join account on account_id = channel_account_id
+			where account_flags = 0 and account_lastlog > UTC_TIMESTAMP - INTERVAL 6 MONTH");
+		if($r) {
+			$s = '';
+			foreach($r as $rr) {
+				if($s)
+					$s .= ',';
+				$s .= intval($rr['channel_id']);
+			}
+			$x = q("select uid from item where uid in ( $s ) and (item_flags & %d) and created > UTC_TIMESTAMP - INTERVAL 6 MONTH group by uid",
+				intval(ITEM_WALL)
+			);
+			if($x)
+				$channels_active_halfyear = count($x);
+		}
+
+		$r = q("select channel_id from channel left join account on account_id = channel_account_id
+			where account_flags = 0 and account_lastlog > UTC_TIMESTAMP - INTERVAL 1 MONTH");
+		if($r) {
+			$s = '';
+			foreach($r as $rr) {
+				if($s)
+					$s .= ',';
+				$s .= intval($rr['channel_id']);
+			}
+			$x = q("select uid from item where uid in ( $s ) and ( item_flags & %d ) and created > UTC_TIMESTAMP - INTERVAL 1 MONTH group by uid",
+				intval(ITEM_WALL)
+			);
+			if($x)
+				$channels_active_monthly = count($x);
+		}
+
+		$posts = q("SELECT COUNT(*) AS local_posts FROM `item` WHERE (item_flags & %d) ",
+			intval(ITEM_WALL)
+		);
+		if (is_array($posts))
+			$local_posts = intval($posts[0]["local_posts"]);
 
 		$data = Array(
 			'version' => RED_VERSION,
@@ -61,9 +106,12 @@ function siteinfo_init(&$a) {
 			'admin' => $admin,
 			'site_name' => (($site_name) ? $site_name : ''),
 			'platform' => RED_PLATFORM,
-			'info' => (($site_info) ? $site_info : '')
+			'info' => (($site_info) ? $site_info : ''),
+			'channels_total' => $channels_total,
+			'channels_active_halfyear' => $channels_active_halfyear,
+			'channels_active_monthly' => $channels_active_monthly,
+			'local_posts' => $local_posts
 		);
-
 		json_return_and_die($data);
 	}
 }
