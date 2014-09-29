@@ -1341,8 +1341,10 @@ function prepare_page($item) {
 	// the template will get passed an unobscured title.
 
 	$body = prepare_body($item,true);
-
-	return replace_macros(get_markup_template('page_display.tpl'),array(
+    $tpl = get_pconfig($item['uid'],'system','pagetemplate');
+        if (! $tpl)
+            $tpl = 'page_display.tpl';
+    return replace_macros(get_markup_template($tpl),array(
 		'$author' => (($naked) ? '' : $item['author']['xchan_name']),
 		'$auth_url' => (($naked) ? '' : zid($item['author']['xchan_url'])),
 		'$date' => (($naked) ? '' : datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i')),
