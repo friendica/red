@@ -240,6 +240,11 @@ we will create an argc/argv list for use by your module functions
 	3 whatever
 [/code]
 
+If you want to keep your plugin hidden from the siteinfo page, simply create a file called '.hidden' in your addon directory
+[code]
+	touch addon/<addon name>/.hidden
+[/code]
+
 ***Porting Friendica Plugins***
 
 The Red Matrix uses a similar plugin architecture to the Friendica project. The authentication, identity, and permissions systems are completely different. Many Friendica can be ported reasonably easily by renaming a few functions - and then ensuring that the permissions model is adhered to. The functions which need to be renamed are:
