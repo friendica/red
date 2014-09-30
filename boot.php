@@ -716,10 +716,8 @@ class App {
 
 	function __construct() {
 
-		global $default_timezone;
-		$this->timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
-
-		date_default_timezone_set($this->timezone);
+		// we'll reset this after we read our config file
+		date_default_timezone_set('UTC');
 
 		$this->config = array('system'=>array());
 		$this->page = array();

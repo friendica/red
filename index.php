@@ -27,6 +27,10 @@ $a->install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? fal
 
 @include(".htconfig.php");
 
+$a->timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
+date_default_timezone_set($a->timezone);
+
+
 /**
  *
  * Try to open the database;
