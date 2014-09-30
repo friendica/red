@@ -24,6 +24,7 @@ composer.*
 #ignore documentation, it should be newly built 
 doc/api
 
+doc/sitetis
 #ignore reports, should be generted with every build
 report/
 
@@ -41,3 +42,9 @@ nbproject
 
 #Kdevelop project files
 *.kdev4
+
+# Ignore site TOS
+doc/SiteTOS.md
+
+#Ingore site theme schemas
+view/theme/redbasic/schema/default.php
