@@ -166,6 +166,9 @@
 					<a href="/search" title="{{$nav.search.3}}"><i class="icon-search"></i></a>
 				</li>
 
+			{{if $powered_by}}
+				<div id="powered-by">{{$powered_by}}</div>
+			{{/if}}
 			{{if $nav.directory}}
 				<li class="{{$sel.directory}}">
 					<a class="{{$nav.directory.2}}" href="{{$nav.directory.0}}" title="{{$nav.directory.3}}"><i class="icon-sitemap"></i></a>

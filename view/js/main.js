@@ -1069,6 +1069,7 @@ function previewTheme(elm) {
 }
 
 $(document).ready(function() {
+
 	jQuery.timeago.settings.strings = {
 		prefixAgo     : aStr['t01'],
 		prefixFromNow : aStr['t02'],

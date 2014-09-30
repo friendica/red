@@ -166,6 +166,19 @@ header {
 	filter:alpha(opacity=$nav_percent_min_opacity);
 }
 
+#powered-by {
+	font-size: 0.5rem;
+	position: absolute;
+	top: 50px;
+	left: 16px;
+}
+
+#powered-by img {
+	margin-top: -2px;
+	height: 10px;
+	width: 10px;
+}
+
 .error-message {
 	color: #FF0000;
 	font-size: 1.1em;
