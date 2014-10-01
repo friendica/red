@@ -27,9 +27,12 @@ function identity_check_service_class($account_id) {
 		intval(PAGE_REMOVED)
 	);
 	if(! ($r && count($r))) {
+		$ret['total_identities'] = 0;
 		$ret['message'] = t('Unable to obtain identity information from database');
 		return $ret;
 	} 
+
+	$ret['total_identities'] = intval($r[0]['total']);
 
 	if(! service_class_allows($account_id,'total_identities',$r[0]['total'])) {
 		$result['message'] .= upgrade_message();
@@ -170,6 +173,8 @@ function create_identity($arr) {
 	if (!$ret['success']) { 
 		return $ret;
 	}
+	// save this for auto_friending
+	$total_identities = $ret['total_identities'];
 
 	$nick = mb_strtolower(trim($arr['nickname']));
 	if(! $nick) {
@@ -389,8 +394,13 @@ function create_identity($arr) {
 			}
 		}
 
+		// auto-follow any of the hub's pre-configured channel choices.
+		// Only do this if it's the first channel for this account;
+		// otherwise it could get annoying. Don't make this list too big
+		// or it will impact registration time.
+
 		$accts = get_config('system','auto_follow');
-		if($accts) {
+		if(($accts) && (! $total_identities)) {
 			if(! is_array($accts))
 				$accts = array($accts);
 			foreach($accts as $acct) {
