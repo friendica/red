@@ -328,6 +328,19 @@ function mark_orphan_hubsxchans() {
         intval(HUBLOC_OFFLINE)
     );
 
+//	$realm = get_directory_realm();
+//	if($realm == DIRECTORY_REALM) {
+//		$r = q("select * from site where site_access != 0 and site_register !=0 and ( site_realm = '%s' or site_realm = '') order by rand()",
+//			dbesc($realm)
+//		);
+//	}
+//	else {
+//		$r = q("select * from site where site_access != 0 and site_register !=0 and site_realm = '%s' order by rand()",
+//			dbesc($realm)
+//		);
+//	}
+
+
 	$r = q("select hubloc_id, hubloc_hash from hubloc where (hubloc_status & %d) and not (hubloc_flags & %d)",
 		intval(HUBLOC_OFFLINE),
 		intval(HUBLOC_FLAGS_ORPHANCHECK)

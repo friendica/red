@@ -4,7 +4,8 @@ function siteinfo_init(&$a) {
 
 	if ($a->argv[1]=="json"){
 		$register_policy = Array('REGISTER_CLOSED', 'REGISTER_APPROVE', 'REGISTER_OPEN');
-
+		$directory_mode = Array('DIRECTORY_MODE_NORMAL', 'DIRECTORY_MODE_SECONDARY','DIRECTORY_MODE_PRIMARY', 'DIRECTORY_MODE_STANDALONE');
+		
 		$sql_extra = '';
 
 		$r = q("select * from channel left join account on account_id = channel_account_id where ( account_roles & 4096 ) and account_default_channel = channel_id");
@@ -54,7 +55,7 @@ function siteinfo_init(&$a) {
 		$r = q("select count(channel_id) as channels_total from channel left join account on account_id = channel_account_id
 			where account_flags = 0 ");
 		if($r)
-			$channels_total = $r[0]['channels_total'];
+			$channels_total = intval($r[0]['channels_total']);
 		
 		$r = q("select channel_id from channel left join account on account_id = channel_account_id
 			where account_flags = 0 and account_lastlog > UTC_TIMESTAMP - INTERVAL 6 MONTH");
@@ -92,7 +93,7 @@ function siteinfo_init(&$a) {
 			intval(ITEM_WALL)
 		);
 		if (is_array($posts))
-			$local_posts = $posts[0]["local_posts"];
+			$local_posts = intval($posts[0]["local_posts"]);
 
 		$data = Array(
 			'version' => RED_VERSION,
@@ -100,6 +101,7 @@ function siteinfo_init(&$a) {
 			'url' => z_root(),
 			'plugins' => $visible_plugins,
 			'register_policy' =>  $register_policy[$a->config['system']['register_policy']],
+			'directory_mode' =>  $directory_mode[$a->config['system']['directory_mode']],
 			'diaspora_emulation' => get_config('system','diaspora_enabled'),
 			'rss_connections' => get_config('system','feed_contacts'),
 			'default_service_restrictions' => $service_class,

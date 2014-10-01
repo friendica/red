@@ -364,7 +364,9 @@ function profile_photo_content(&$a) {
 // FIXME - yuk  
 			'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . $a->get_baseurl() . '">' . t('skip this step') . '</a>' : '<a href="'. $a->get_baseurl() . '/photos/' . $a->channel['channel_address'] . '">' . t('select a photo from your photo albums') . '</a>')
 		));
-
+		
+		call_hooks('profile_photo_content_end', $o);
+		
 		return $o;
 	}
 	else {

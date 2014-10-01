@@ -722,6 +722,11 @@ function get_role_perms($role) {
 	
 	}
 
+	$x = get_config('system','role_perms');
+	// let system settings over-ride any or all 
+	if($x && is_array($x) && array_key_exists($role,$x))
+		$ret = array_merge($ret,$x[$role]);
+
 	call_hooks('get_role_perms',$ret);
 
 	return $ret;
