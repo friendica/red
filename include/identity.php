@@ -166,7 +166,7 @@ function create_identity($arr) {
 		$ret['message'] = t('No account identifier');
 		return $ret;
 	}
-	$ret=identity_check_service_class($arr['account_id']);
+	$ret = identity_check_service_class($arr['account_id']);
 	if (!$ret['success']) { 
 		return $ret;
 	}
@@ -389,6 +389,15 @@ function create_identity($arr) {
 			}
 		}
 
+		$accts = get_config('system','auto_follow');
+		if($accts) {
+			if(! is_array($accts))
+				$accts = array($accts);
+			foreach($accts as $acct) {
+				if(trim($acct))
+					new_contact($newuid,trim($acct),$ret['channel'],false);
+			}
+		}
 
 		call_hooks('register_account', $newuid);
 	
