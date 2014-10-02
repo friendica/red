@@ -67,8 +67,6 @@ function thing_init(&$a) {
 
 
 
-
-
 	if($term_hash) {
 		$t = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_type = %d and term_hash = '%s' limit 1",
 			intval(TERM_OBJ_THING),

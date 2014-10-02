@@ -2604,6 +2604,9 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 
 	$parentauthorsig = base64_encode(rsa_sign($sender_signed_text,$owner['channel_prvkey'],'sha256'));
 
+	if(! $text)
+		logger('diaspora_send_relay: no text');
+
 	$msg = replace_macros($tpl,array(
 		'$guid' => xmlify($item['mid']),
 		'$parent_guid' => xmlify($parent['mid']),

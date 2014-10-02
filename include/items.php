@@ -759,6 +759,8 @@ function get_item_elements($x) {
 	$arr = array();
 	$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
+	$key = get_config('system','pubkey');
+
 	$maxlen = get_max_import_size();
 
 	if($maxlen && mb_strlen($arr['body']) > $maxlen) {
@@ -813,7 +815,7 @@ function get_item_elements($x) {
 
 	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
 
-	$arr['diaspora_meta'] = (($x['diaspora_meta']) ? $x['diaspora_meta'] : '');	
+	$arr['diaspora_meta'] = (($x['diaspora_signature']) ? json_encode(crypto_encapsulate($x['diaspora_signature'],$key)) : '');
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
 
@@ -865,7 +867,6 @@ function get_item_elements($x) {
 	// We have to do that here because we need to cleanse the input and prevent bad stuff from getting in,
 	// and we need plaintext to do that. 
 
-	$key = get_config('system','pubkey');
 
 
 	if(intval($arr['item_private'])) {
@@ -891,7 +892,6 @@ function get_item_elements($x) {
 		$arr['resource_type'] = $x['resource_type'];
 		$arr['item_restrict'] = $x['item_restrict'];
 		$arr['item_flags'] = $x['item_flags'];
-		$arr['diaspora_meta'] = (($x['diaspora_meta']) ? json_encode(crypto_encapsulate($x['diaspora_meta'],$key)) : '');
 		$arr['attach'] = $x['attach'];
 
 	}
@@ -1078,7 +1078,6 @@ function encode_item($item,$mirror = false) {
 		$x['resource_type'] = $item['resource_type'];
 		$x['item_restrict'] = $item['item_restrict'];
 		$x['item_flags'] = $item['item_flags'];
-		$x['diaspora_meta'] = crypto_unencapsulate(json_decode($item['diaspora_meta'],true),$key);
 		$x['attach'] = $item['attach'];
 	}
 
@@ -1126,6 +1125,9 @@ function encode_item($item,$mirror = false) {
 
 	if($item['term'])
 		$x['tags']        = encode_item_terms($item['term']);
+
+	if($item['diaspora_meta'])
+		$x['diaspora_signature'] = crypto_unencapsulate(json_decode($item['diaspora_meta'],true),$key);
 
 	logger('encode_item: ' . print_r($x,true), LOGGER_DATA);
 

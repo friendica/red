@@ -537,6 +537,17 @@ function identity_basic_export($channel_id, $items = false) {
 		$ret['photo'] = array('type' => $r[0]['type'], 'data' => base64url_encode($r[0]['data']));
 	}
 
+
+	// All other term types will be included in items, if requested.
+
+	$r = q("select * from term where type in (%d,%d) and uid = %d",
+		intval(TERM_SAVEDSEARCH),
+		intval(TERM_THING),
+		intval($channel_id)
+	);
+	if($r)
+		$ret['term'] = $r;
+
 	$r = q("select * from obj where obj_channel = %d",
 		intval($channel_id)
 	);
