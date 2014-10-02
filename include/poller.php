@@ -149,6 +149,13 @@ function poller_run($argv, $argc){
 
 		update_birthdays();
 
+		//update statistics in config
+		require_once('include/statistics_fns.php');
+		update_channels_total_stat();
+		update_channels_active_halfyear_stat();
+		update_channels_active_monthly_stat();
+		update_local_posts_stat();
+
 		// expire any read notifications over a month old
 
 		q("delete from notify where seen = 1 and date < UTC_TIMESTAMP() - INTERVAL 30 DAY");
