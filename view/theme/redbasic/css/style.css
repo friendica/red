@@ -75,12 +75,12 @@ a:hover, .fakelink:hover { color: $link_colour; text-decoration: underline; }
 
 a.btn-default {
 	color: #333;
-
+	font-weight: normal;
 }
 
 a.btn-success {
 	color: #fff;
-font-weight: normal;
+	font-weight: normal;
 }
 
 input[type="text"],
