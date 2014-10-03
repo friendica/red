@@ -8,8 +8,8 @@ var include_2config_8php =
     [ "get_pconfig", "include_2config_8php.html#ad58a4913937179adb13201c2ee3261ad", null ],
     [ "get_xconfig", "include_2config_8php.html#aa3dc1d3de2d091ac702e675acd3a085e", null ],
     [ "load_config", "include_2config_8php.html#a27559f388c9b9af81c94e48d6889d1d1", null ],
-    [ "load_pconfig", "include_2config_8php.html#ac543813a980b3841cc5a277fcd4a24a6", null ],
-    [ "load_xconfig", "include_2config_8php.html#a55bbed9a014c9109c767486834f3ca33", null ],
+    [ "load_pconfig", "include_2config_8php.html#a559791dda7fef8a4b2394c83e835787b", null ],
+    [ "load_xconfig", "include_2config_8php.html#aee4b619839cf4b64220f34edf5c67b52", null ],
     [ "set_config", "include_2config_8php.html#ad6da879e4fb5b37d1e161d4e9be5c32a", null ],
     [ "set_pconfig", "include_2config_8php.html#a61591371cb18764138655d67dc817ab2", null ],
     [ "set_xconfig", "include_2config_8php.html#afe117b70f1bba2f6348d9300b601f86e", null ]

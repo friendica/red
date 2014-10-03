@@ -43,9 +43,9 @@ var NAVTREEINDEX =
 "dir_92d6b429199666aa3765c8a934db5e14.html",
 "html2bbcode_8php.html",
 "include_2probe_8php.html#a2daa857942aceca01f956016dbbd139c",
-"page__widgets_8php.html",
-"smilies_8php.html#ab43b1e9f33a700a830aff14c7b3a617f",
-"widgets_8php.html#a45ea061dabe9a8372e4ca3b9e5714256"
+"page_8php.html#a4d89800c0366a239191b1692c09635cf",
+"siteinfo_8php.html#a70c09bfb6dd1c86a125a35f62ed53656",
+"widgets_8php.html#a0e2f5179ed1a73b282dfda7270fcabb3"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['p_5finit',['p_init',['../p_8php.html#af9d5530ca0b3dc9409cf591c39e2480e',1,'p.php']]],
   ['page_5fcontent',['page_content',['../page_8php.html#a91a5f649f68406149108bded1dc90b22',1,'page.php']]],
   ['page_5finit',['page_init',['../page_8php.html#a4d89800c0366a239191b1692c09635cf',1,'page.php']]],
   ['pagelist_5fwidget',['pagelist_widget',['../page__widgets_8php.html#a39d547771c5f12a17c097436c82f0fa2',1,'page_widgets.php']]],
