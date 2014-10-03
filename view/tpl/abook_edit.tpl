@@ -58,30 +58,9 @@
 <h3>{{$permlbl}}</h3>
 <div id="perm-desc" class="descriptive-text">{{$permnote}}</div>
 
-
-{{* {{if $noperms}}
-<div id="noperm-msg" class="warning-text">{{$noperms}}</div>
-<div id="noperm-text" class="descriptive-text">{{$noperm_desc}}</div>
-{{/if}}
-*}}
-
-
-
 <br />
-<h3>{{$quick}}</h3>
-<ul>
-{{if $self}}
-<li><span class="fakelink" onclick="connectClear();">{{$clear}}</span></li>
-<li><span class="fakelink" onclick="connectForum();">{{$forum}}</span></li>
-<li><span class="fakelink" onclick="connectSoapBox();">{{$soapbox}}</span></li>
-{{/if}}
-<li><span class="fakelink" onclick="connectFullShare();">{{$full}}</span></li>
-<li><span class="fakelink" onclick="connectCautiousShare();">{{$cautious}}</span></li>
-<li><span class="fakelink" onclick="connectFollowOnly();">{{$follow}}</span></li>
-</ul>
 
 <input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
-
 
 <div id="abook-advanced" class="fakelink" onclick="openClose('abook-advanced-panel');">{{$advanced}}</div>
 
