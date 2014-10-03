@@ -72,7 +72,10 @@ function mail_post(&$a) {
 
 		if(! ($their_perms & PERMS_W_MAIL)) {
  			notice( t('Selected channel has private message restrictions. Send failed.'));
-			return;
+			// reported issue: let's still save the message and continue. We'll just tell them
+			// that nothing useful is likely to happen. They might have spent hours on it.  
+			//			return;
+
 		}
 	}
 
