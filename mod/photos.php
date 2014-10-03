@@ -654,7 +654,7 @@ function photos_content(&$a) {
 		);
 		
 		if($cmd === 'edit') {		
-			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
+			if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
 					if($a->get_template_engine() === 'internal') {
 						$album_e = template_escape($album);
@@ -676,7 +676,7 @@ function photos_content(&$a) {
 			}
 		}
 		else {
-			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
+			if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
 					$edit = array(t('Edit Album'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '/edit');
  				}
