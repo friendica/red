@@ -255,7 +255,7 @@ function create_identity($arr) {
 	$r = q("insert into channel ( channel_account_id, channel_primary, 
 		channel_name, channel_address, channel_guid, channel_guid_sig,
 		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags, channel_expire_days, channel_timezone $perms_keys )
-		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d $perms_vals ) ",
+		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' $perms_vals ) ",
 
 		intval($arr['account_id']),
 		intval($primary),
