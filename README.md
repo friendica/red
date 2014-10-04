@@ -9,3 +9,5 @@ What makes the RedMatrix unique is what we call "magic authentication" - which i
 The RedMatrix is ideal for communities of any size, from private individuals and families to online forums, business websites, and organisations. It can be used by anybody who has communications or web content that they wish to share, but where they desire complete control of whom they share it with.
 
 The Red Matrix is free and open source distributed under the MIT license.
+
+For a list of public hubs see [redmatrix.me/pubsites](https://redmatrix.me/pubsites). For installation instructions see [install/INSTALL.txt](install/INSTALL.txt)
