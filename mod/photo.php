@@ -71,7 +71,7 @@ function photo_init(&$a) {
 		}
 		if(! isset($data)) {
 			$data = file_get_contents($default);
-			$mimetype = 'image/jpeg';
+			$mimetype = 'image/png';
 		}
 	}
 	else {
@@ -176,15 +176,15 @@ function photo_init(&$a) {
 
 				case 4:
 					$data = file_get_contents(get_default_profile_photo());
-					$mimetype = 'image/jpeg';
+					$mimetype = 'image/png';
 					break;
 				case 5:
 					$data = file_get_contents(get_default_profile_photo(80));
-					$mimetype = 'image/jpeg';
+					$mimetype = 'image/png';
 					break;
 				case 6:
 					$data = file_get_contents(get_default_profile_photo(48));
-					$mimetype = 'image/jpeg';
+					$mimetype = 'image/png';
 					break;
 				default:
 					killme();

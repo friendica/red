@@ -623,7 +623,7 @@ function import_profile_photo($photo,$xchan,$thing = false) {
 		$photo = $a->get_baseurl() . '/' . get_default_profile_photo();
 		$thumb = $a->get_baseurl() . '/' . get_default_profile_photo(80);
 		$micro = $a->get_baseurl() . '/' . get_default_profile_photo(48);
-		$type = 'image/jpeg';
+		$type = 'image/png';
 	}
 
 	return(array($photo,$thumb,$micro,$type,$photo_failure));
