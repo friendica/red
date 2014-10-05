@@ -4,7 +4,7 @@ Not all Red Matrix sites allow open registration. If registration is allowed, yo
 
 [b]Your Email Address[/b]
 
-Please provide a valid email address. Your email address is never published. This address will be used to activate your account, to (optionally) send email notifications for incoming messages or items, [/i]and to recover lost passwords[/i].
+Please provide a valid email address. Your email address is never published. This address will be used to activate your account, to (optionally) send email notifications for incoming messages or items, [i]and to recover lost passwords[/i].
 
 [b]Password[/b]
 
