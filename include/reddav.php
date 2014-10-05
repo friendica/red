@@ -9,6 +9,8 @@
  * You find the original SabreDAV classes under @ref vendor/sabre/dav/.
  * We need to use SabreDAV 1.8.x for PHP5.3 compatibility. SabreDAV >= 2.0
  * requires PHP >= 5.4.
+ *
+ * @todo split up the classes into own files.
  */
 
 use Sabre\DAV;
@@ -25,6 +27,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 	/**
 	 * @brief The path inside /cloud
+	 *
+	 * @var string
 	 */
 	private $red_path;
 	private $folder_hash;
@@ -32,6 +36,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @brief The full path as seen in the browser.
 	 * /cloud + $red_path
 	 * @todo I think this is not used anywhere, we always strip '/cloud' and only use it in debug
+	 * @var string
 	 */
 	private $ext_path;
 	private $root_dir = '';
@@ -39,6 +44,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	/**
 	 * @brief The real path on the filesystem.
 	 * The actual path in store/ with the hashed names.
+	 *
+	 * @var string
 	 */
 	private $os_path = '';
 
@@ -107,7 +114,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		if (get_config('system', 'block_public') && (! $this->auth->channel_id) && (! $this->auth->observer)) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
- 
+
 		if (($this->auth->owner_id) && (! perm_is_allowed($this->auth->owner_id, $this->auth->observer, 'view_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
@@ -971,78 +978,111 @@ function RedFileData($file, &$auth, $test = false) {
 
 
 /**
- * RedBasicAuth class.
+ * @brief Authentication backend class for RedDAV.
+ *
+ * This class also contains some data which is not necessary for authentication
+ * like timezone settings.
  *
  */
 class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
 
-	// @fixme mod/cloud.php:61
-	public $channel_name = '';
-	// @fixme mod/cloud.php:62
+	/**
+	 * @brief This variable holds the currently logged-in channel_address.
+	 *
+	 * It is used for building path in filestorage/.
+	 *
+	 * @var string|null
+	 */
+	protected $channel_name = null;
+	/**
+	 * channel_id of the current channel of the logged-in account.
+	 *
+	 * @var int
+	 */
 	public $channel_id = 0;
-	// @fixme mod/cloud.php:63
+	/**
+	 * channel_hash of the current channel of the logged-in account.
+	 *
+	 * @var string
+	 */
 	public $channel_hash = '';
-	// @fixme mod/cloud.php:68
+	/**
+	 * Set in mod/cloud.php to observer_hash.
+	 *
+	 * @var string
+	 */
 	public $observer = '';
-	// @fixme include/reddav.php:51
-	public $browser;
-	// @fixme include/reddav.php:92
-	public $owner_id;
-	// @fixme include/reddav.php:283
-	public $owner_nick = '';
-	// @fixme mod/cloud.php:66
-	public $timezone;
-
 	/**
 	 *
+	 * @see RedBrowser::set_writeable()
+	 * @var DAV\Browser\Plugin
+	 */
+	public $browser;
+	/**
+	 * channel_id of the current visited path. Set in RedDirectory::getDir().
+	 *
+	 * @var int
+	 */
+	public $owner_id = 0;
+	/**
+	 * channel_name of the current visited path. Set in RedDirectory::getDir().
+	 *
+	 * Used for creating the path in cloud/
+	 *
+	 * @var string
+	 */
+	public $owner_nick = '';
+	/**
+	 * Timezone from the visiting channel's channel_timezone.
+	 *
+	 * Used in @ref RedBrowser
+	 *
+	 * @var string
+	 */
+	protected $timezone = '';
+
+
+	/**
+	 * @brief Validates a username and password.
+	 *
+	 * Guest access is granted with the password "+++".
+	 *
+	 * @see DAV\Auth\Backend\AbstractBasic::validateUserPass
 	 * @param string $username
 	 * @param string $password
+	 * @return bool
 	 */
 	protected function validateUserPass($username, $password) {
-
 		if (trim($password) === '+++') {
-			logger('reddav: validateUserPass: guest ' . $username);
+			logger('(DAV): RedBasicAuth::validateUserPass(): guest ' . $username);
 			return true;
 		}
 
 		require_once('include/auth.php');
 		$record = account_verify_password($username, $password);
 		if ($record && $record['account_default_channel']) {
-			$r = q("select * from channel where channel_account_id = %d and channel_id = %d limit 1",
+			$r = q("SELECT * FROM channel WHERE channel_account_id = %d AND channel_id = %d LIMIT 1",
 				intval($record['account_id']),
 				intval($record['account_default_channel'])
 			);
 			if ($r) {
-				$this->currentUser = $r[0]['channel_address'];
-				$this->channel_name = $r[0]['channel_address'];
-				$this->channel_id = $r[0]['channel_id'];
-				$this->channel_hash = $this->observer = $r[0]['channel_hash'];
-				$_SESSION['uid'] = $r[0]['channel_id'];
-				$_SESSION['account_id'] = $r[0]['channel_account_id'];
-				$_SESSION['authenticated'] = true;
-				return true;
+				return $this->setAuthenticated($r[0]);
 			}
 		}
-		$r = q("select * from channel where channel_address = '%s' limit 1",
+		$r = q("SELECT * FROM channel WHERE channel_address = '%s' LIMIT 1",
 			dbesc($username)
 		);
 		if ($r) {
-			$x = q("select * from account where account_id = %d limit 1",
+			$x = q("SELECT account_flags, account_salt, account_password FROM account WHERE account_id = %d LIMIT 1",
 				intval($r[0]['channel_account_id'])
 			);
 			if ($x) {
+				// @fixme this foreach should not be needed?
 				foreach ($x as $record) {
 					if (($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)
 					&& (hash('whirlpool', $record['account_salt'] . $password) === $record['account_password'])) {
 						logger('(DAV) RedBasicAuth: password verified for ' . $username);
-						$this->currentUser = $r[0]['channel_address'];
-						$this->channel_name = $r[0]['channel_address'];
-						$this->channel_id = $r[0]['channel_id'];
-						$this->channel_hash = $this->observer = $r[0]['channel_hash'];
-						$_SESSION['uid'] = $r[0]['channel_id'];
-						$_SESSION['account_id'] = $r[0]['channel_account_id'];
-						$_SESSION['authenticated'] = true;
-						return true;
+						return $this->setAuthenticated($r[0]);
 					}
 				}
 			}
@@ -1051,12 +1091,68 @@ class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
 		return false;
 	}
 
-	public function setCurrentUser($name) {
-		$this->currentUser = $name;
+	/**
+	 * @brief Sets variables and session parameters after successfull authentication.
+	 * 
+	 * @param array $r
+	 *  Array with the values for the authenticated channel.
+	 * @return bool
+	 */
+	protected function setAuthenticated($r) {
+		$this->channel_name = $r['channel_address'];
+		$this->channel_id = $r['channel_id'];
+		$this->channel_hash = $this->observer = $r['channel_hash'];
+		$_SESSION['uid'] = $r['channel_id'];
+		$_SESSION['account_id'] = $r['channel_account_id'];
+		$_SESSION['authenticated'] = true;
+		return true;
 	}
 
 	/**
-	 * @brief Set browser plugin.
+	 * Sets the channel_name from the currently logged-in channel.
+	 *
+	 * @param string $name
+	 *  The channel's name
+	 */
+	public function setCurrentUser($name) {
+		$this->channel_name = $name;
+	}
+	/**
+	 * Returns information about the currently logged-in channel.
+	 *
+	 * If nobody is currently logged in, this method should return null.
+	 *
+	 * @see DAV\Auth\Backend\AbstractBasic::getCurrentUser
+	 * @return string|null
+	 */
+	public function getCurrentUser() {
+		return $this->channel_name;
+	}
+
+	/**
+	 * @brief Sets the timezone from the channel in RedBasicAuth.
+	 *
+	 * Set in mod/cloud.php if the channel has a timezone set.
+	 *
+	 * @param string $timezone
+	 *  The channel's timezone.
+	 * @return void
+	 */
+	public function setTimezone($timezone) {
+		$this->timezone = $timezone;
+	}
+	/**
+	 * @brief Returns the timezone.
+	 *
+	 * @return string
+	 *  Return the channel's timezone.
+	 */
+	public function getTimezone() {
+		return $this->timezone;
+	}
+
+	/**
+	 * @brief Set browser plugin for SabreDAV.
 	 *
 	 * @see RedBrowser::set_writeable()
 	 * @param DAV\Browser\Plugin $browser
@@ -1065,8 +1161,12 @@ class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
 		$this->browser = $browser;
 	}
 
-	// internal? logging function
-	function log() {
+	/**
+	 * Prints out all RedBasicAuth variables to logger().
+	 *
+	 * @return void
+	 */
+	public function log() {
 		logger('dav: auth: channel_name ' . $this->channel_name, LOGGER_DATA);
 		logger('dav: auth: channel_id ' . $this->channel_id, LOGGER_DATA);
 		logger('dav: auth: channel_hash ' . $this->channel_hash, LOGGER_DATA);
@@ -1080,13 +1180,23 @@ class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
 
 
 /**
- * RedBrowser class.
+ * @brief RedBrowser class.
  *
+ * RedBrowser is a SabreDAV server-plugin to provide a view to the DAV in
+ * the browser
  */
 class RedBrowser extends DAV\Browser\Plugin {
 
+	/**
+	 * @var RedBasicAuth
+	 */
 	private $auth;
 
+	/**
+	 * @brief Constructor for RedBrowser.
+	 *
+	 * @param RedBasicAuth &$auth
+	 */
 	function __construct(&$auth) {
 		$this->auth = $auth;
 		$this->enableAssets = false;
@@ -1096,6 +1206,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 	// directory and who the owner and observer are. So we add a pointer to the browser into the auth module and vice 
 	// versa. Then when we've figured out what directory is actually being accessed, we call the following function
 	// to decide whether or not to show web elements which include writeable objects.
+	// @todo Maybe this can be solved with some $server->subscribeEvent()?
 	function set_writeable() {
 		if (! $this->auth->owner_id) {
 			$this->enablePost = false;
@@ -1117,8 +1228,8 @@ class RedBrowser extends DAV\Browser\Plugin {
 		// (owner_id = channel_id) is visitor owner of this directory?
 		$is_owner = ((local_user() && $this->auth->owner_id == local_user()) ? true : false);
 
-		if ($this->auth->timezone)
-			date_default_timezone_set($this->auth->timezone);
+		if ($this->auth->getTimezone())
+			date_default_timezone_set($this->auth->getTimezone());
 
 		require_once('include/conversation.php');
 
@@ -1237,7 +1348,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 
 			// put the array for this file together
 			$ft['attachId'] = $this->findAttachIdByHash($attachHash);
-			$ft['fileStorageUrl'] = substr($fullPath, 0, strpos($fullPath, "cloud/")) . "filestorage/" . $this->auth->channel_name;
+			$ft['fileStorageUrl'] = substr($fullPath, 0, strpos($fullPath, "cloud/")) . "filestorage/" . $this->auth->getCurrentUser();
 			$ft['icon'] = $icon;
 			$ft['attachIcon'] = (($size) ? $attachIcon : '');
 			// @todo Should this be an item value, not a global one?
