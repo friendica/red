@@ -1005,7 +1005,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 		. "' link='" . $orig_url
 		. "' posted='" . datetime_convert('UTC','UTC',unxmlify($sourcexml->post->status_message->created_at))
 		. "' message_id='" . unxmlify($source_xml->post->status_message->guid)
- 		. "]" . $body . "[/share]";
+ 		. "']" . $body . "[/share]";
 
 
 	$created = unxmlify($xml->created_at);
