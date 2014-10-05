@@ -185,7 +185,10 @@ EOT;
 
 	if(local_user()) {
 
-		$nav['network'] = array('network', t('Matrix'), "", t('Your matrix'));
+		$network_options = get_pconfig(local_user(),'system','network_page_default');
+	
+		$nav['network'] = array('network' . (($network_options) ? '?f=&' . $network_options : ''), 
+			t('Matrix'), "", t('Your matrix'));
 		$nav['network']['mark'] = array('', t('Mark all matrix notifications seen'), '','');
 
 		$nav['home'] = array('channel/' . $channel['channel_address'], t('Channel Home'), "", t('Channel home'));
