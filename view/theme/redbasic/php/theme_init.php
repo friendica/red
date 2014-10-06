@@ -11,7 +11,7 @@ require_once('view/php/theme_init.php');
 
 head_add_js('library/bootstrap/js/bootstrap.min.js');
 head_add_js('library/bootstrap/js/bootbox.min.js');
-head_add_js('library/bootstrap-datetimepicker/js/moment.js');
+head_add_js('library/bootstrap-datetimepicker/js/moment.min.js');
 head_add_js('library/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
 //head_add_js('library/colorpicker/js/colorpicker.js');
 head_add_js('library/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js');
