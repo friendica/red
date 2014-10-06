@@ -41,3 +41,9 @@ nbproject
 
 #Kdevelop project files
 *.kdev4
+
+# Ignore site TOS
+doc/SiteTOS.md
+
+#Ingore site theme schemas
+view/theme/redbasic/schema/default.php

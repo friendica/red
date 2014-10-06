@@ -893,7 +893,13 @@ function updateConvItems(mode,data) {
          return true;  
 	}
 
-
+	function importElement(elem) {
+		$.post(  
+             "impel",  
+            { "element" : elem }
+		);
+		return false;  
+	}
 
 	function preview_post() {
 		$("#jot-preview").val("1");
@@ -1069,6 +1075,7 @@ function previewTheme(elm) {
 }
 
 $(document).ready(function() {
+
 	jQuery.timeago.settings.strings = {
 		prefixAgo     : aStr['t01'],
 		prefixFromNow : aStr['t02'],

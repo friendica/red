@@ -75,12 +75,12 @@ a:hover, .fakelink:hover { color: $link_colour; text-decoration: underline; }
 
 a.btn-default {
 	color: #333;
-
+	font-weight: normal;
 }
 
 a.btn-success {
 	color: #fff;
-font-weight: normal;
+	font-weight: normal;
 }
 
 input[type="text"],
@@ -164,6 +164,19 @@ nav,
 header {
 	opacity: $nav_float_min_opacity;
 	filter:alpha(opacity=$nav_percent_min_opacity);
+}
+
+#powered-by {
+	font-size: 0.5rem;
+	position: absolute;
+	top: 50px;
+	left: 16px;
+}
+
+#powered-by img {
+	margin-top: -2px;
+	height: 10px;
+	width: 10px;
 }
 
 .error-message {

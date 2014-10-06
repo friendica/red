@@ -1674,8 +1674,6 @@ function process_location_delivery($sender,$arr,$deliveries) {
 	logger('process_location_delivery: results: ' . print_r($x,true), LOGGER_DATA);
 }
 
-// We need to merge this code with that in the import_xchan function so as to make it 
-// easier to maintain changes.
 
 function sync_locations($sender,$arr,$absolute = false) {
 

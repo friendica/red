@@ -653,11 +653,8 @@ function photos_content(&$a) {
 			intval($a->pager['itemspage'])
 		);
 		
-		$o .= '<div class="section-title-wrapper">';
-		$o .= '<h2>' . $album . '</h2>';
-		$o .= '<div class="section-title-submenu">';
 		if($cmd === 'edit') {		
-			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
+			if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
 					if($a->get_template_engine() === 'internal') {
 						$album_e = template_escape($album);
@@ -679,35 +676,21 @@ function photos_content(&$a) {
 			}
 		}
 		else {
-			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
+			if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
-					$o .= '<a href="'. $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '/edit' . '">' . t('Edit Album') . '</a>';
+					$edit = array(t('Edit Album'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '/edit');
  				}
 			}
 		}
 
 		if($_GET['order'] === 'posted')
-			$o .=  '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '" >' . t('Show Newest First') . '</a>';
+			$order =  array(t('Show Newest First'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album));
 		else
-			$o .= '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '?f=&order=posted" >' . t('Show Oldest First') . '</a>';
+			$order = array(t('Show Oldest First'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '?f=&order=posted');
 
-		/*
-		if($can_post) {
-			$o .= '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album) . '" >' . t('Upload New Photos') . '</<a>';
-		}
-		*/
-
-		$o .= '</div>'; // section-title-submenu
-		$o .= '</div>'; // section-title-wrapper
-
-		$ajaxout = '';
-
-		$tpl = get_markup_template('photo_album.tpl');
+		$photos = array();
 		if(count($r)) {
 			$twist = 'rotright';
-			$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
-			$o .= '<div id="photo-album-contents">';
-
 			foreach($r as $rr) {
 
 				if($twist == 'rotright')
@@ -720,57 +703,58 @@ function photos_content(&$a) {
 				$imgalt_e = $rr['filename'];
 				$desc_e = $rr['description'];
 
+				$imagelink = ($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $rr['resource_id']
+				. (($_GET['order'] === 'posted') ? '?f=&order=posted' : ''));
 
-// prettyphoto has potential license issues, so we can no longer include it in core
-// The following lines would need to be modified so that they are provided in theme specific files
-// instead of core modules for themes that wish to make use of prettyphoto. I would suggest
-// the feature as a per-theme display option and putting the rel line inside a template. 
-        
-//				if(feature_enabled($a->data['channel']['channel_id'],'prettyphoto')){
-//				      $imagelink = ($a->get_baseurl() . '/photo/' . $rr['resource_id'] . '.' . $ext );
-//				      $rel=("prettyPhoto[pp_gal]");
-//				}
-//				else {
-				      $imagelink = ($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $rr['resource_id']
-				      . (($_GET['order'] === 'posted') ? '?f=&order=posted' : ''));
-				      $rel=("photo");
-//				}
-      
+				$rel=("photo");
 
-				$tmp = replace_macros($tpl,array(
-					'$id' => $rr['id'],
-					'$twist' => ' ' . $twist . rand(2,4),
-					'$photolink' => $imagelink,
-					'$rel' => $rel,
-					'$phototitle' => t('View Photo'),
-					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
-					'$imgalt' => $imgalt_e,
-					'$desc'=> $desc_e,
-					'$ext' => $ext,
-					'$hash'=> $rr['resource_id'],
-				));
-				if($_REQUEST['aj'])
-					$ajaxout .= $tmp;
-				else
-					$o .= $tmp;
+				$photos[] = array(
+					'id' => $rr['id'],
+					'twist' => ' ' . $twist . rand(2,4),
+					'link' => $imagelink,
+					'rel' => $rel,
+					'title' => t('View Photo'),
+					'src' => $a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
+					'alt' => $imgalt_e,
+					'desc'=> $desc_e,
+					'ext' => $ext,
+					'hash'=> $rr['resource_id'],
+				);
 			}
 		}
+
 		if($_REQUEST['aj']) {
-			if(! $r) {
-				$ajaxout .= '<div id="content-complete"></div>';
-				echo $ajaxout;
-				killme();
+			if($photos) {
+				$o = replace_macros(get_markup_template('photosajax.tpl'),array(
+					'$photos' => $photos,
+				));
 			}
-			echo $ajaxout;
-			echo '<script>justifyPhotosAjax();</script>';
+			else {
+				$o = '<div id="content-complete"></div>';
+			}
+			echo $o;
+			killme();
+		}
+		else {
+			$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
+			$tpl = get_markup_template('photo_album.tpl');
+			$o .= replace_macros($tpl, array(
+				'$photos' => $photos,
+				'$album' => $album,
+				'$can_post' => $can_post,
+				'$upload' => array(t('Upload'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album)),
+				'$order' => $order,
+				'$edit' => $edit
+			));
+
+		}
+
+		if((! $photos) && ($_REQUEST['aj'])) {
+			$o .= '<div id="content-complete"></div>';
+			echo $o;
 			killme();
 		}
 
-		$o .= '<div id="page-end"></div>';
-		$o .= '</div>';    // photo-album-contents
-		$o .= '<div id="photo-album-end"></div>';
-		$o .= '<script>$(document).ready(function() { loadingPage = false; justifyPhotos(); });</script>';
-		$o .= '<div id="page-spinner"></div>';
 //		$o .= paginate($a);
 
 		return $o;

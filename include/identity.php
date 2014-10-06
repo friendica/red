@@ -27,9 +27,12 @@ function identity_check_service_class($account_id) {
 		intval(PAGE_REMOVED)
 	);
 	if(! ($r && count($r))) {
+		$ret['total_identities'] = 0;
 		$ret['message'] = t('Unable to obtain identity information from database');
 		return $ret;
 	} 
+
+	$ret['total_identities'] = intval($r[0]['total']);
 
 	if(! service_class_allows($account_id,'total_identities',$r[0]['total'])) {
 		$result['message'] .= upgrade_message();
@@ -166,10 +169,12 @@ function create_identity($arr) {
 		$ret['message'] = t('No account identifier');
 		return $ret;
 	}
-	$ret=identity_check_service_class($arr['account_id']);
+	$ret = identity_check_service_class($arr['account_id']);
 	if (!$ret['success']) { 
 		return $ret;
 	}
+	// save this for auto_friending
+	$total_identities = $ret['total_identities'];
 
 	$nick = mb_strtolower(trim($arr['nickname']));
 	if(! $nick) {
@@ -249,8 +254,8 @@ function create_identity($arr) {
 
 	$r = q("insert into channel ( channel_account_id, channel_primary, 
 		channel_name, channel_address, channel_guid, channel_guid_sig,
-		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags, channel_expire_days $perms_keys )
-		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d $perms_vals ) ",
+		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags, channel_expire_days, channel_timezone $perms_keys )
+		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' $perms_vals ) ",
 
 		intval($arr['account_id']),
 		intval($primary),
@@ -262,7 +267,8 @@ function create_identity($arr) {
 		dbesc($key['prvkey']),
 		dbesc($key['pubkey']),
 		intval($pageflags),
-		intval($expire)
+		intval($expire),
+		dbesc($a->timezone)
 	);
 			
 
@@ -389,6 +395,20 @@ function create_identity($arr) {
 			}
 		}
 
+		// auto-follow any of the hub's pre-configured channel choices.
+		// Only do this if it's the first channel for this account;
+		// otherwise it could get annoying. Don't make this list too big
+		// or it will impact registration time.
+
+		$accts = get_config('system','auto_follow');
+		if(($accts) && (! $total_identities)) {
+			if(! is_array($accts))
+				$accts = array($accts);
+			foreach($accts as $acct) {
+				if(trim($acct))
+					new_contact($newuid,trim($acct),$ret['channel'],false);
+			}
+		}
 
 		call_hooks('register_account', $newuid);
 	
@@ -517,6 +537,17 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r) {
 		$ret['photo'] = array('type' => $r[0]['type'], 'data' => base64url_encode($r[0]['data']));
 	}
+
+
+	// All other term types will be included in items, if requested.
+
+	$r = q("select * from term where type in (%d,%d) and uid = %d",
+		intval(TERM_SAVEDSEARCH),
+		intval(TERM_THING),
+		intval($channel_id)
+	);
+	if($r)
+		$ret['term'] = $r;
 
 	$r = q("select * from obj where obj_channel = %d",
 		intval($channel_id)
@@ -1338,7 +1369,7 @@ function get_default_profile_photo($size = 175) {
 		$scheme = get_config('system','default_profile_photo');
 		if(! $scheme)
 			$scheme = 'rainbow_man';
-		return 'images/default_profile_photos/' . $scheme . '/' . $size . '.jpg';
+		return 'images/default_profile_photos/' . $scheme . '/' . $size . '.png';
 }
 
 

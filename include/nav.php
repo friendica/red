@@ -185,7 +185,10 @@ EOT;
 
 	if(local_user()) {
 
-		$nav['network'] = array('network', t('Matrix'), "", t('Your matrix'));
+		$network_options = get_pconfig(local_user(),'system','network_page_default');
+	
+		$nav['network'] = array('network' . (($network_options) ? '?f=&' . $network_options : ''), 
+			t('Matrix'), "", t('Your matrix'));
 		$nav['network']['mark'] = array('', t('Mark all matrix notifications seen'), '','');
 
 		$nav['home'] = array('channel/' . $channel['channel_address'], t('Channel Home'), "", t('Channel home'));
@@ -239,6 +242,12 @@ EOT;
 	$x = array('nav' => $nav, 'usermenu' => $userinfo );
 	call_hooks('nav', $x);
 
+// Not sure the best place to put this on the page. So I'm implementing it but leaving it 
+// turned off until somebody discovers this and figures out a good location for it. 
+$powered_by = '';
+
+//	$powered_by = '<strong>red<img class="smiley" src="' . $a->get_baseurl() . '/images/rm-16.png" alt="r#" />matrix</strong>';
+
 	$tpl = get_markup_template('nav.tpl');
 
 	$a->page['nav'] .= replace_macros($tpl, array(
@@ -250,6 +259,7 @@ EOT;
 		'$userinfo' => $x['usermenu'],
 		'$localuser' => local_user(),
 		'$sel' => 	$a->nav_sel,
+		'$powered_by' => $powered_by,
 		'$pleasewait' => t('Please wait...')
 	));
 

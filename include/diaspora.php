@@ -206,10 +206,7 @@ function diaspora_process_outbound($arr) {
 			if(! $contact['xchan_pubkey'])
 				continue;
 
-			if(activity_match($target_item['verb'],ACTIVITY_DISLIKE)) {
-				continue;
-			}
-			elseif(($target_item['item_restrict'] & ITEM_DELETED) 
+			if(($target_item['item_restrict'] & ITEM_DELETED) 
 				&& (($target_item['mid'] === $target_item['parent_mid']) || $arr['followup'])) {
 				// send both top-level retractions and relayable retractions for owner to relay
 				diaspora_send_retraction($target_item,$arr['channel'],$contact);
@@ -238,11 +235,7 @@ function diaspora_process_outbound($arr) {
 
 		$contact = $arr['hub'];
 
-		if($target_item['verb'] === ACTIVITY_DISLIKE) {
-			// unsupported
-			return;
-		}
-		elseif(($target_item['deleted']) 
+		if(($target_item['deleted']) 
 			&& ($target_item['mid'] === $target_item['parent_mod'])) {
 			// top-level retraction
 			logger('delivery: diaspora retract: ' . $loc);
@@ -256,7 +249,6 @@ function diaspora_process_outbound($arr) {
 			return;
 		}
 		elseif($arr['top_level_post']) {
-			// currently no workable solution for sending walltowall
 			logger('delivery: diaspora status: ' . $loc);
 			diaspora_send_status($target_item,$arr['channel'],$contact,true);
 			return;
@@ -910,6 +902,44 @@ function diaspora_post($importer,$xml,$msg) {
 
 }
 
+
+function get_diaspora_reshare_xml($url,$recurse = 0) {
+
+	$x = z_fetch_url($url);
+	if(! $x['success'])
+		$x = z_fetch_url(str_replace('https://','http://',$source_url));
+	if(! $x['success']) {
+		logger('get_diaspora_reshare_xml: unable to fetch source url ' . $source_url);
+		return;
+	}
+	logger('diaspora_reshare: source: ' . $x['body'], LOGGER_DATA);
+
+	$source_xml = parse_xml_string($x['body'],false);
+
+	if(! $source_xml) {
+		logger('get_diaspora_reshare_xml: unparseable result from ' . $url);
+		return '';
+	}
+
+	if($source_xml->post->status_message) {
+		return $source_xml;
+	}
+
+	// see if it's a reshare of a reshare
+
+	if($source_xml->root_diaspora_id && $source_xml->root_guid && $recurse < 15) {
+		$orig_author = notags(unxmlify($xml->root_diaspora_id));
+		$orig_guid = notags(unxmlify($xml->root_guid));
+		$source_url = 'https://' . substr($orig_author,strpos($orig_author,'@')+1) . '/p/' . $orig_guid . '.xml';
+		$y = get_diaspora_reshare_xml($source_url,$recurse+1);
+		if($y)
+			return $y;
+	}
+	return false;
+}
+
+
+
 function diaspora_reshare($importer,$xml,$msg) {
 
 	logger('diaspora_reshare: init: ' . print_r($xml,true), LOGGER_DATA);
@@ -948,16 +978,8 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 	$source_url = 'https://' . substr($orig_author,strpos($orig_author,'@')+1) . '/p/' . $orig_guid . '.xml';
 	$orig_url = 'https://'.substr($orig_author,strpos($orig_author,'@')+1).'/posts/'.$orig_guid;
-	$x = z_fetch_url($source_url);
-	if(! $x['success'])
-		$x = z_fetch_url(str_replace('https://','http://',$source_url));
-	if(! $x['success']) {
-		logger('diaspora_reshare: unable to fetch source url ' . $source_url);
-		return;
-	}
-	logger('diaspora_reshare: source: ' . $x['body'], LOGGER_DATA);
 
-	$source_xml = parse_xml_string($x['body'],false);
+	$source_xml = get_diaspora_reshare_xml($source_url);
 
 	if($source_xml->post->status_message) {
 		$body = diaspora2bb($source_xml->post->status_message->raw_message);
@@ -1003,9 +1025,9 @@ function diaspora_reshare($importer,$xml,$msg) {
 		. "' profile='" . $orig_author_link 
 		. "' avatar='" . $orig_author_photo 
 		. "' link='" . $orig_url
-		. "' posted='" . datetime_convert('UTC','UTC',unxmlify($sourcexml->post->status_message->created_at))
+		. "' posted='" . datetime_convert('UTC','UTC',unxmlify($source_xml->post->status_message->created_at))
 		. "' message_id='" . unxmlify($source_xml->post->status_message->guid)
- 		. "]" . $body . "[/share]";
+ 		. "']" . $body . "[/share]";
 
 
 	$created = unxmlify($xml->created_at);
@@ -2401,7 +2423,7 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 	// Diaspora doesn't support threaded comments, but some
 	// versions of Diaspora (i.e. Diaspora-pistos) support
 	// likes on comments
-	if($item['verb'] === ACTIVITY_LIKE && $item['thr_parent']) {
+	if(($item['verb'] === ACTIVITY_LIKE || $item['verb'] === ACTIVITY_DISLIKE) && $item['thr_parent']) {
 		$p = q("select mid, parent_mid from item where mid = '%s' limit 1",
 			dbesc($item['thr_parent'])
 		);
@@ -2420,10 +2442,10 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 	else
 		return;
 
-	if($item['verb'] === ACTIVITY_LIKE) {
+	if(($item['verb'] === ACTIVITY_LIKE) && ($parent['mid'] === $parent['parent_mid'])) {
 		$tpl = get_markup_template('diaspora_like.tpl');
 		$like = true;
-		$target_type = ( $parent['mid'] === $parent['parent_mid']  ? 'Post' : 'Comment');
+		$target_type = 'Post';
 		$positive = 'true';
 
 		if(($item_['item_restrict'] & ITEM_DELETED))
@@ -2603,6 +2625,9 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	// in the database, it's hazardous to trust the original $signed_text.
 
 	$parentauthorsig = base64_encode(rsa_sign($sender_signed_text,$owner['channel_prvkey'],'sha256'));
+
+	if(! $text)
+		logger('diaspora_send_relay: no text');
 
 	$msg = replace_macros($tpl,array(
 		'$guid' => xmlify($item['mid']),
