@@ -206,10 +206,7 @@ function diaspora_process_outbound($arr) {
 			if(! $contact['xchan_pubkey'])
 				continue;
 
-			if(activity_match($target_item['verb'],ACTIVITY_DISLIKE)) {
-				continue;
-			}
-			elseif(($target_item['item_restrict'] & ITEM_DELETED) 
+			if(($target_item['item_restrict'] & ITEM_DELETED) 
 				&& (($target_item['mid'] === $target_item['parent_mid']) || $arr['followup'])) {
 				// send both top-level retractions and relayable retractions for owner to relay
 				diaspora_send_retraction($target_item,$arr['channel'],$contact);
@@ -238,11 +235,7 @@ function diaspora_process_outbound($arr) {
 
 		$contact = $arr['hub'];
 
-		if($target_item['verb'] === ACTIVITY_DISLIKE) {
-			// unsupported
-			return;
-		}
-		elseif(($target_item['deleted']) 
+		if(($target_item['deleted']) 
 			&& ($target_item['mid'] === $target_item['parent_mod'])) {
 			// top-level retraction
 			logger('delivery: diaspora retract: ' . $loc);
@@ -256,7 +249,6 @@ function diaspora_process_outbound($arr) {
 			return;
 		}
 		elseif($arr['top_level_post']) {
-			// currently no workable solution for sending walltowall
 			logger('delivery: diaspora status: ' . $loc);
 			diaspora_send_status($target_item,$arr['channel'],$contact,true);
 			return;
@@ -2401,7 +2393,7 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 	// Diaspora doesn't support threaded comments, but some
 	// versions of Diaspora (i.e. Diaspora-pistos) support
 	// likes on comments
-	if($item['verb'] === ACTIVITY_LIKE && $item['thr_parent']) {
+	if(($item['verb'] === ACTIVITY_LIKE || $item['verb'] === ACTIVITY_DISLIKE) && $item['thr_parent']) {
 		$p = q("select mid, parent_mid from item where mid = '%s' limit 1",
 			dbesc($item['thr_parent'])
 		);
@@ -2420,10 +2412,10 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 	else
 		return;
 
-	if($item['verb'] === ACTIVITY_LIKE) {
+	if(($item['verb'] === ACTIVITY_LIKE) && ($parent['mid'] === $parent['parent_mid'])) {
 		$tpl = get_markup_template('diaspora_like.tpl');
 		$like = true;
-		$target_type = ( $parent['mid'] === $parent['parent_mid']  ? 'Post' : 'Comment');
+		$target_type = 'Post';
 		$positive = 'true';
 
 		if(($item_['item_restrict'] & ITEM_DELETED))
