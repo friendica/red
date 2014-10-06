@@ -902,6 +902,44 @@ function diaspora_post($importer,$xml,$msg) {
 
 }
 
+
+function get_diaspora_reshare_xml($url,$recurse = 0) {
+
+	$x = z_fetch_url($url);
+	if(! $x['success'])
+		$x = z_fetch_url(str_replace('https://','http://',$source_url));
+	if(! $x['success']) {
+		logger('get_diaspora_reshare_xml: unable to fetch source url ' . $source_url);
+		return;
+	}
+	logger('diaspora_reshare: source: ' . $x['body'], LOGGER_DATA);
+
+	$source_xml = parse_xml_string($x['body'],false);
+
+	if(! $source_xml) {
+		logger('get_diaspora_reshare_xml: unparseable result from ' . $url);
+		return '';
+	}
+
+	if($source_xml->post->status_message) {
+		return $source_xml;
+	}
+
+	// see if it's a reshare of a reshare
+
+	if($source_xml->root_diaspora_id && $source_xml->root_guid && $recurse < 15) {
+		$orig_author = notags(unxmlify($xml->root_diaspora_id));
+		$orig_guid = notags(unxmlify($xml->root_guid));
+		$source_url = 'https://' . substr($orig_author,strpos($orig_author,'@')+1) . '/p/' . $orig_guid . '.xml';
+		$y = get_diaspora_reshare_xml($source_url,$recurse+1);
+		if($y)
+			return $y;
+	}
+	return false;
+}
+
+
+
 function diaspora_reshare($importer,$xml,$msg) {
 
 	logger('diaspora_reshare: init: ' . print_r($xml,true), LOGGER_DATA);
@@ -940,16 +978,8 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 	$source_url = 'https://' . substr($orig_author,strpos($orig_author,'@')+1) . '/p/' . $orig_guid . '.xml';
 	$orig_url = 'https://'.substr($orig_author,strpos($orig_author,'@')+1).'/posts/'.$orig_guid;
-	$x = z_fetch_url($source_url);
-	if(! $x['success'])
-		$x = z_fetch_url(str_replace('https://','http://',$source_url));
-	if(! $x['success']) {
-		logger('diaspora_reshare: unable to fetch source url ' . $source_url);
-		return;
-	}
-	logger('diaspora_reshare: source: ' . $x['body'], LOGGER_DATA);
 
-	$source_xml = parse_xml_string($x['body'],false);
+	$source_xml = get_diaspora_reshare_xml($source_url);
 
 	if($source_xml->post->status_message) {
 		$body = diaspora2bb($source_xml->post->status_message->raw_message);
@@ -995,7 +1025,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 		. "' profile='" . $orig_author_link 
 		. "' avatar='" . $orig_author_photo 
 		. "' link='" . $orig_url
-		. "' posted='" . datetime_convert('UTC','UTC',unxmlify($sourcexml->post->status_message->created_at))
+		. "' posted='" . datetime_convert('UTC','UTC',unxmlify($source_xml->post->status_message->created_at))
 		. "' message_id='" . unxmlify($source_xml->post->status_message->guid)
  		. "']" . $body . "[/share]";
 
