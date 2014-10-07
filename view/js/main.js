@@ -898,7 +898,10 @@ function updateConvItems(mode,data) {
              "impel",  
             { "element" : elem }
 		);
-		return false;  
+		if(timer) clearTimeout(timer);
+		timer = setTimeout(NavUpdate,10);
+
+		return true;  
 	}
 
 	function preview_post() {

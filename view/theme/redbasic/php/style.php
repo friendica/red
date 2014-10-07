@@ -109,6 +109,10 @@ if(! $a->install) {
 		$navtabs_bgchover = "rgba(238,238,238,0.8)";
 	if (! $link_colour)
 		$link_colour = "#428BCA";
+	if (! $navaside_bghover)
+		$navaside_bghover = "#eee";
+	if (! $link_font_weight)
+		$link_font_weight = "normal";
 	if (! $banner_colour)
 		$banner_colour = "#fff";
 	if (! $search_background)
@@ -320,7 +324,9 @@ $options = array (
 '$navtabs_linkchover' => $navtabs_linkchover,
 '$navtabs_bgchover' => $navtabs_bgchover,
 '$navtabs_decohover' => $navtabs_decohover,
+'$navaside_bghover' => $navaside_bghover,
 '$link_colour' => $link_colour,
+'$link_font_weight' => $link_font_weight,
 '$banner_colour' => $banner_colour,
 '$search_background' => $search_background,
 '$bgcolour' => $bgcolour,

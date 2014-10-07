@@ -96,7 +96,7 @@ directory/path component in the URL) is REQUIRED.
 
     - make sure folders *store/[data]/smarty3* and *store* exist and are writable by webserver
 
-		mkdir -p "store/\[data\]/smarty3"
+		mkdir -p "store/[data]/smarty3"
 
         chmod -R 777 store
 

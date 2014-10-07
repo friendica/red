@@ -62,7 +62,7 @@ abbr {
 }
 
 a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
-	font-weight: bold;
+	font-weight: $link_font_weight;
 	color: $link_colour; 
 	text-decoration: none; 
 }
@@ -75,12 +75,10 @@ a:hover, .fakelink:hover { color: $link_colour; text-decoration: underline; }
 
 a.btn-default {
 	color: #333;
-	font-weight: normal;
 }
 
 a.btn-success {
 	color: #fff;
-	font-weight: normal;
 }
 
 input[type="text"],
@@ -444,7 +442,6 @@ aside li {
 	margin-bottom: 15px;
 }
 
-
 .fn {
 	font-weight: bold;
 	font-size: 16px;
@@ -459,11 +456,6 @@ aside li {
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
 	border-radius: $radiuspx;
-}
-
-.vcard .title {
-	margin-bottom: 10px;
-
 }
 
 .vcard dl  {
@@ -529,6 +521,11 @@ aside li {
 	width: 197px;
 	height: 197px;
 }
+
+#profile-photo-wrapper {
+	margin-top: 10px;
+}
+
 
 #profile-in-dir-yes-label,
 #profile-in-dir-no-label,
@@ -2142,7 +2139,7 @@ img.mail-list-sender-photo {
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
 	text-align: center;
-	font-weight: bold;
+	font-size: $body_font_size;
 	color: $link_colour;
 	cursor: pointer;	
 }
@@ -2312,6 +2309,11 @@ blockquote {
     	color: $dropdown_txtcolhover; 
     	background-color: $dropdown_bgcolhover; 
 	$dropdown_bgimghover
+}
+
+aside .nav > li > a:hover, aside .nav > li > a:focus {
+	 text-decoration: $navtabs_decohover;
+    background-color: $navaside_bghover;
 }
 
 .dropdown-menu img {
@@ -2527,4 +2529,9 @@ blockquote {
 		width: calc(100% - 10px);
 	}
 
+}
+
+.shareable_element_text {
+	height: 300px;
+	width: 300px;
 }

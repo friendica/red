@@ -1,6 +1,8 @@
-<h3>{{$pagename}}</h3>
-
-<div id="photos-usage-message" class="usage-message">{{$usage}}</div>
+<div class="section-title-wrapper">
+	<div id="photos-usage-message" class="pull-right">{{$usage}}</div>
+	<h2>{{$pagename}}</h2>
+	<div class="clear"></div>
+</div>
 
 <form action="photos/{{$nickname}}" enctype="multipart/form-data" method="post" name="photos-upload-form" id="photos-upload-form" >
 	<input type="hidden" id="photos-upload-source" name="source" value="photos" />

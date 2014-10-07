@@ -1,14 +1,9 @@
-
-/* Easiest way to indent the widget body - indent the entire widget and then shift the header label back to the left */
-
 .widget {
-	word-wrap: break-word;
 	margin-bottom: 10px;
-	padding: 10px 10px 10px 20px;
+	padding: 10px;
 }
 
 .widget h3 {
-	margin-left: -10px;
 	margin-top: 0px;
 }
 
@@ -36,12 +31,7 @@
 	height: 150px;
 }
 
-#note-save {
-	margin-top: 10px;
-}
-
 /* saved searches */
-
 
 #netsearch-box #search-submit {
 	margin: 10px 0 7px 0;
@@ -100,31 +90,14 @@
 	margin-left: 10px;
 }
 
-#datebrowse-sidebar select {
-	width: 190px;
-	max-width: 190px;
-	max-height: 150px;
-}
-
 /* categories */
 
 
 /* group */
 
-#sidebar-group-list {
-	margin-bottom: 10px;
-}
-
-.sidebar-group-li input {
-	float: right;
-}
-
-.groupsideedit {
-	float: right;
-}
-
 .group-edit-icon {
 	opacity: 0;
+	z-index: 1;
 }
 
 li:hover .group-edit-icon {
@@ -145,9 +118,6 @@ li:hover .group-edit-icon {
 
 /* photo albums */
 
-#photo-albums-upload-link {
-	margin-top: 10px;
-}
 
 /* Chatrooms */
 

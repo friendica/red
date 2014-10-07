@@ -928,8 +928,8 @@ function get_diaspora_reshare_xml($url,$recurse = 0) {
 	// see if it's a reshare of a reshare
 
 	if($source_xml->root_diaspora_id && $source_xml->root_guid && $recurse < 15) {
-		$orig_author = notags(unxmlify($xml->root_diaspora_id));
-		$orig_guid = notags(unxmlify($xml->root_guid));
+		$orig_author = notags(unxmlify($source_xml->root_diaspora_id));
+		$orig_guid = notags(unxmlify($source_xml->root_guid));
 		$source_url = 'https://' . substr($orig_author,strpos($orig_author,'@')+1) . '/p/' . $orig_guid . '.xml';
 		$y = get_diaspora_reshare_xml($source_url,$recurse+1);
 		if($y)
@@ -983,6 +983,10 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 	if($source_xml->post->status_message) {
 		$body = diaspora2bb($source_xml->post->status_message->raw_message);
+
+		$orig_author = notags(unxmlify($source_xml->post->status_message->diaspora_handle));
+		$orig_guid = notags(unxmlify($source_xml->post->status_message->guid));
+
 
 		// Checking for embedded pictures
 		if($source_xml->post->status_message->photo->remote_photo_path &&

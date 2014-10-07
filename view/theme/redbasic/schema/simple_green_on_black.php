@@ -34,8 +34,12 @@
 		$navtabs_bgchover = "#000";
 	if (! $navtabs_decohover)
 		$navtabs_decohover = "underline";
+if (! $navaside_bghover)
+		$navaside_bghover = "#143D12";
 	if (! $link_colour)
 		$link_colour = "#50f148";
+	if (! $link_font_weight)
+		$link_font_weight = "bold";
 	if (! $selected_active_colour)
 		$selected_active_colour = "#50f148";
 	if (! $selected_active_deco)

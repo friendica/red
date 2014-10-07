@@ -84,7 +84,7 @@
                     <span class="input-group-addon"><!-- <span class="glyphicon glyphicon-calendar"></span> -->
                     <span class="icon-calendar"></span>
                     </span>
-                    <input id="start-date" value='{{$stext}}' type='text' class="form-control" data-format="YYYY-MM-DD HH:mm" size="20"/>
+                    <input id="start-date" value='{{$stext}}' type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm" size="20"/>
                 </div>
             </div>
       <!-- </div> -->
@@ -123,7 +123,7 @@
                     <span class="input-group-addon"><!-- <span class="glyphicon glyphicon-calendar"></span> -->
                     <span class="icon-calendar"></span>
                     </span>
-                    <input id="finish-date" value='{{$ftext}}' type='text' class="form-control" data-format="YYYY-MM-DD HH:mm" size="20"/>
+                    <input id="finish-date" value='{{$ftext}}' type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm" size="20"/>
                 </div>
             </div>
       <!-- </div> -->

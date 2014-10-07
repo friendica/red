@@ -159,6 +159,14 @@ function bb_parse_app($match) {
 
 }
 
+function bb_parse_element($match) {
+	$j = json_decode(base64url_decode($match[1]),true);
+	if($j) {
+		$o = EOL . '<a href="' . z_root() . '" foo="baz" onclick="importElement(\'' . $match[1] . '\'); return false;" >' . t('Install design element: ') . $j['pagetitle'] . '</a>' . EOL; 
+	}
+	return $o;
+}
+
 function bb_qr($match) {
 	return '<img class="zrl" src="' . z_root() . '/photo/qr?f=&qr=' . urlencode($match[1]) . '" alt="' . t('QR code') . '" title="' . htmlspecialchars($match[1],ENT_QUOTES,'UTF-8') . '" />';
 } 	
@@ -698,6 +706,10 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	if(strpos($Text,'[/app]') !== false) {
 		$Text = preg_replace_callback("/\[app\](.*?)\[\/app\]/ism",'bb_parse_app', $Text);
+	}
+
+	if(strpos($Text,'[/element]') !== false) {
+		$Text = preg_replace_callback("/\[element\](.*?)\[\/element\]/ism",'bb_parse_element', $Text);
 	}
 
 
