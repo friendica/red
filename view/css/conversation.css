@@ -93,6 +93,10 @@
 	float: left;
 }
 
+a.wall-item-name-link {
+	font-weight: bold;
+}
+
 .wall-item-author {
 	white-space: nowrap;
 	overflow: hidden;

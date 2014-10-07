@@ -2,7 +2,6 @@
 /* Easiest way to indent the widget body - indent the entire widget and then shift the header label back to the left */
 
 .widget {
-	word-wrap: break-word;
 	margin-bottom: 10px;
 	padding: 10px 10px 10px 20px;
 }
@@ -125,6 +124,7 @@
 
 .group-edit-icon {
 	opacity: 0;
+	z-index: 1;
 }
 
 li:hover .group-edit-icon {
