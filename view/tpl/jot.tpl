@@ -112,7 +112,7 @@
                     <span class="input-group-addon"><!-- <span class="glyphicon glyphicon-calendar"></span> -->
                     <span class="icon-calendar"></span>
                     </span>
-                    <input id="expiration-date" type='text' class="form-control" data-format="YYYY-MM-DD HH:mm" size="20"/>
+                    <input id="expiration-date" type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm" size="20"/>
                 </div>
             </div>
       <!-- </div> -->
