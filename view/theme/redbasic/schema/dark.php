@@ -36,6 +36,8 @@
 		$navtabs_decohover = "underline";
 	if (! $link_colour)
 		$link_colour = "#fff";
+	if (! $link_font_weight)
+		$link_font_weight = "bold";
 	if (! $selected_active_colour)
 		$selected_active_colour = "#fff";
 	if (! $selected_active_deco)

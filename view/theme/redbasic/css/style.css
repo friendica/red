@@ -62,6 +62,7 @@ abbr {
 }
 
 a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
+	font-weight: $link_font_weight;
 	color: $link_colour; 
 	text-decoration: none; 
 }
