@@ -152,6 +152,23 @@ function editblock_content(&$a) {
 	if(($itm[0]['author_xchan'] === $ob) || ($itm[0]['owner_xchan'] === $ob))
 		$o .= '<br /><br /><a class="block-delete-link" href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Block') . '</a><br />';
 
+
+	$x = array(
+		'type' => 'block',
+		'title' => $itm[0]['title'],
+		'body' => $itm[0]['body'],
+		'term' => $itm[0]['term'],
+		'created' => $itm[0]['created'],
+		'edited' => $itm[0]['edited'],
+		'mimetype' => $itm[0]['mimetype'],
+		'pagetitle' => $page_title,
+		'mid' => $itm[0]['mid']
+	);
+
+	$o .= EOL . EOL . t('Share') . EOL . '<textarea onclick="this.select();" class="shareable_element_text" >[element]' . base64url_encode(json_encode($x)) . '[/element]</textarea>' . EOL . EOL; 
+
+
+
 	return $o;
 
 }
