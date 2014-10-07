@@ -7,12 +7,13 @@
  */
 
 use Sabre\DAV;
+use RedMatrix\RedDAV;
 
 // composer autoloader for SabreDAV
 require_once('vendor/autoload.php');
 
 // workaround for HTTP-auth in CGI mode
-if(x($_SERVER, 'REDIRECT_REMOTE_USER')) {
+if (x($_SERVER, 'REDIRECT_REMOTE_USER')) {
  	$userpass = base64_decode(substr($_SERVER["REDIRECT_REMOTE_USER"], 6)) ;
 	if(strlen($userpass)) {
 	 	list($name, $password) = explode(':', $userpass);
@@ -21,7 +22,7 @@ if(x($_SERVER, 'REDIRECT_REMOTE_USER')) {
 	}
 }
 
-if(x($_SERVER, 'HTTP_AUTHORIZATION')) {
+if (x($_SERVER, 'HTTP_AUTHORIZATION')) {
 	$userpass = base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)) ;
 	if(strlen($userpass)) {
 		list($name, $password) = explode(':', $userpass);
@@ -40,7 +41,7 @@ function cloud_init(&$a) {
 	$theme_info_file = "view/theme/" . current_theme() . "/php/theme.php";
 	if (file_exists($theme_info_file)){
 		require_once($theme_info_file);
-		if(function_exists(str_replace('-', '_', current_theme()) . '_init')) {
+		if (function_exists(str_replace('-', '_', current_theme()) . '_init')) {
 			$func = str_replace('-', '_', current_theme()) . '_init';
 			$func($a);
 		}
@@ -48,26 +49,26 @@ function cloud_init(&$a) {
 
 	require_once('include/reddav.php');
 
-	if(! is_dir('store'))
+	if (! is_dir('store'))
 		os_mkdir('store', STORAGE_DEFAULT_PERMISSIONS, false);
 
 	$which = null;
-	if(argc() > 1)
+	if (argc() > 1)
 		$which = argv(1);
 
 	$profile = 0;
 
 	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which . '" />' . "\r\n";
 
-	if($which)
+	if ($which)
 		profile_load($a, $which, $profile);
 
 	$auth = new RedBasicAuth();
 
 	$ob_hash = get_observer_hash();
 
-	if($ob_hash) {
-		if(local_user()) {
+	if ($ob_hash) {
+		if (local_user()) {
 			$channel = $a->get_channel();
 			$auth->setCurrentUser($channel['channel_address']);
 			$auth->channel_id = $channel['channel_id'];
@@ -79,7 +80,7 @@ function cloud_init(&$a) {
 		$auth->observer = $ob_hash;
 	}
 
-	if($_GET['davguest'])
+	if ($_GET['davguest'])
 		$_SESSION['davguest'] = true;
 
 	$_SERVER['QUERY_STRING'] = str_replace(array('?f=', '&f='), array('', ''), $_SERVER['QUERY_STRING']);
@@ -113,7 +114,7 @@ function cloud_init(&$a) {
 	$isapublic_file = false;
 	$davguest = ((x($_SESSION, 'davguest')) ? true : false);
 
-	if((! $auth->observer) && ($_SERVER['REQUEST_METHOD'] === 'GET')) {
+	if ((! $auth->observer) && ($_SERVER['REQUEST_METHOD'] === 'GET')) {
 		try { 
 			$x = RedFileData('/' . $a->cmd, $auth);
 			if($x instanceof RedFile)
@@ -124,7 +125,7 @@ function cloud_init(&$a) {
 		}
 	}
 
-	if((! $auth->observer) && (! $isapublic_file) && (! $davguest)) {
+	if ((! $auth->observer) && (! $isapublic_file) && (! $davguest)) {
 		try {
 			$auth->Authenticate($server, t('RedMatrix - Guests: Username: {your email address}, Password: +++'));
 		}
@@ -134,12 +135,17 @@ function cloud_init(&$a) {
 		}
 	}
 
+	require_once('include/RedDAV/RedBrowser.php');
 	// provide a directory view for the cloud in Red Matrix
-	$browser = new RedBrowser($auth);
+	$browser = new RedDAV\RedBrowser($auth);
 
 	$auth->setBrowserPlugin($browser);
 
 	$server->addPlugin($browser);
+
+	// Experimental QuotaPlugin
+//	require_once('include/RedDAV/QuotaPlugin.php');
+//	$server->addPlugin(new RedDAV\QuotaPlugin($auth));
 
 	// All we need to do now, is to fire up the server
 	$server->exec();
