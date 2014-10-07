@@ -2,8 +2,9 @@
 
 function photo_factory($data, $type = null) {
 	$ph = null;
-
-	if(class_exists('Imagick')) {
+	$ignore_imagick = get_config('system', 'ignore_imagick');
+	if(class_exists('Imagick') && !$ignore_imagick) {
+		logger('photo_factory: using Imagick', LOGGER_DEBUG);
 		require_once('include/photo/photo_imagick.php');
 		$ph = new photo_imagick($data,$type);
 	}
@@ -480,11 +481,11 @@ abstract class photo_driver {
  * Guess image mimetype from filename or from Content-Type header
  *
  * @arg $filename string Image filename
- * @arg $fromcurl boolean Check Content-Type header from curl request
+ * @arg $headers string Headers to check for Content-Type (from curl request)
  */
 
 function guess_image_type($filename, $headers = '') {
-	logger('Photo: guess_image_type: '.$filename . ($fromcurl?' from curl headers':''), LOGGER_DEBUG);
+	logger('Photo: guess_image_type: '.$filename . ($headers?' from curl headers':''), LOGGER_DEBUG);
 	$type = null;
 	if ($headers) {
 		$a = get_app();
@@ -494,13 +495,16 @@ function guess_image_type($filename, $headers = '') {
 			list($k,$v) = array_map("trim", explode(":", trim($l), 2));
 			$hdrs[$k] = $v;
 		}
+		logger('Curl headers: '.var_export($hdrs, true), LOGGER_DEBUG);
 		if (array_key_exists('Content-Type', $hdrs))
 			$type = $hdrs['Content-Type'];
 	}
 	if (is_null($type)){
 // FIXME!!!!
+		$ignore_imagick = get_config('system', 'ignore_imagick');
 		// Guessing from extension? Isn't that... dangerous?
-		if(class_exists('Imagick') && file_exists($filename) && is_readable($filename)) {
+		if(class_exists('Imagick') && !$ignore_imagick) {
+			logger('using imagemagick', LOGGER_DEBUG);
 			/**
 			 * Well, this not much better,
 			 * but at least it comes from the data inside the image,
@@ -552,7 +556,7 @@ function import_profile_photo($photo,$xchan,$thing = false) {
 
 	if($photo) {
 		$filename = basename($photo);
-		$type = guess_image_type($photo,true);
+		$type = guess_image_type($photo);
 
 		if(! $type)
 			$type = 'image/jpeg';
