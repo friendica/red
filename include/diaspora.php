@@ -984,6 +984,10 @@ function diaspora_reshare($importer,$xml,$msg) {
 	if($source_xml->post->status_message) {
 		$body = diaspora2bb($source_xml->post->status_message->raw_message);
 
+		$orig_author = notags(unxmlify($source_xml->post->status_message->diaspora_handle));
+		$orig_guid = notags(unxmlify($source_xml->post->status_message->guid));
+
+
 		// Checking for embedded pictures
 		if($source_xml->post->status_message->photo->remote_photo_path &&
 			$source_xml->post->status_message->photo->remote_photo_name) {
