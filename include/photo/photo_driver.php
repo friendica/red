@@ -2,13 +2,25 @@
 
 function photo_factory($data, $type = null) {
 	$ph = null;
+
 	$ignore_imagick = get_config('system', 'ignore_imagick');
+
 	if(class_exists('Imagick') && !$ignore_imagick) {
-		logger('photo_factory: using Imagick', LOGGER_DEBUG);
-		require_once('include/photo/photo_imagick.php');
-		$ph = new photo_imagick($data,$type);
+		$v = Imagick::getVersion();
+		preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $v['versionString'], $m);
+		if(version_compare($m[1],'6.6.7') >= 0) {
+			require_once('include/photo/photo_imagick.php');
+			$ph = new photo_imagick($data,$type);
+		}
+		else {
+			// earlier imagick versions have issues with scaling png's
+			// don't log this because it will just fill the logfile.
+			// leave this note here so those who are looking for why 
+			// we aren't using imagick can find it
+		}
 	}
-	else {
+
+	if(! $ph) {
 		require_once('include/photo/photo_gd.php');
 		$ph = new photo_gd($data,$type);
 	}
