@@ -532,6 +532,8 @@ function widget_mailmenu($arr) {
 
 	$a = get_app();
 	return replace_macros(get_markup_template('message_side.tpl'), array(
+		'$title' => t('Messages'),
+
 		'$tabs'=> array(),
 
 		'$check'=>array(

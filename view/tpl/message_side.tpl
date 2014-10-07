@@ -1,11 +1,14 @@
-<div id="message-sidebar" class="widget">
-	<div id="message-check" class="btn btn-default"><a href="{{$check.url}}" class="{{if $check.sel}}checkmessage-selected{{/if}}">{{$check.label}}</a> </div>
-	<div id="message-new" class="btn btn-default"><a href="{{$new.url}}" class="{{if $new.sel}}newmessage-selected{{/if}}">{{$new.label}}</a> </div>
-	
-	<ul class="message-ul">
+<div class="widget">
+	<h3>{{$title}}</h3>
+	<ul class="nav nav-pills nav-stacked">
+		<li><a href="{{$check.url}}"{{if $check.sel}} class="checkmessage-selected"{{/if}}>{{$check.label}}</a></li>
+		<li><a href="{{$new.url}}"{{if $new.sel}} class="newmessage-selected"{{/if}}>{{$new.label}}</a></li>
+	</ul>
+	{{if $tabs}}
+	<ul class="nav nav-pills nav-stacked">
 		{{foreach $tabs as $t}}
-			<li class="tool"><a href="{{$t.url}}" class="message-link{{if $t.sel}}message-selected{{/if}}">{{$t.label}}</a></li>
+			<li><a href="{{$t.url}}"{{if $t.sel}} class="message-selected"{{/if}}>{{$t.label}}</a></li>
 		{{/foreach}}
 	</ul>
-	
+	{{/if}}
 </div>
