@@ -2311,6 +2311,11 @@ blockquote {
 	$dropdown_bgimghover
 }
 
+aside .nav > li > a:hover, aside .nav > li > a:focus {
+	 text-decoration: $navtabs_decohover;
+    background-color: $navaside_bghover;
+}
+
 .dropdown-menu img {
 	border-radius: $radiuspx;
 }
