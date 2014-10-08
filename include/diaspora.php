@@ -907,12 +907,12 @@ function get_diaspora_reshare_xml($url,$recurse = 0) {
 
 	$x = z_fetch_url($url);
 	if(! $x['success'])
-		$x = z_fetch_url(str_replace('https://','http://',$source_url));
+		$x = z_fetch_url(str_replace('https://','http://',$url));
 	if(! $x['success']) {
-		logger('get_diaspora_reshare_xml: unable to fetch source url ' . $source_url);
+		logger('get_diaspora_reshare_xml: unable to fetch source url ' . $url);
 		return;
 	}
-	logger('diaspora_reshare: source: ' . $x['body'], LOGGER_DATA);
+	logger('get_diaspora_reshare_xml: source: ' . $x['body'], LOGGER_DEBUG);
 
 	$source_xml = parse_xml_string($x['body'],false);
 
