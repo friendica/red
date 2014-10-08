@@ -138,7 +138,6 @@ function cloud_init(&$a) {
 	require_once('include/RedDAV/RedBrowser.php');
 	// provide a directory view for the cloud in Red Matrix
 	$browser = new RedDAV\RedBrowser($auth);
-
 	$auth->setBrowserPlugin($browser);
 
 	$server->addPlugin($browser);
