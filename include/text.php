@@ -815,28 +815,26 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 function search($s,$id='search-box',$url='/search',$save = false) {
 	$a = get_app();
-	$o  = '<div id="' . $id . '">';
-	$o .= '<form action="' . $a->get_baseurl((stristr($url,'network')) ? true : false) . $url . '" method="get" >';
-	$o .= '<input type="text" class="icon-search" name="search" id="search-text" placeholder="&#xf002;" value="' . $s .'" onclick="this.submit();" />';
-	$o .= '<input class="search-submit btn btn-default" type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
-	if(feature_enabled(local_user(),'savedsearch'))
-		$o .= '<input class="search-save btn btn-default" type="submit" name="save" id="search-save" value="' . t('Save') . '" />'; 
-	$o .= '</form></div>';
-	return $o;
+	return replace_macros(get_markup_template('searchbox.tpl'),array(
+		'$s' => $s,
+		'$id' => $id,
+		'$action_url' => $a->get_baseurl((stristr($url,'network')) ? true : false) . $url,
+		'$search_label' => t('Search'),
+		'$save_label' => t('Save'),
+		'$savedsearch' => feature_enabled(local_user(),'savedsearch')
+	));
 }
 
 
 function searchbox($s,$id='search-box',$url='/search',$save = false) {
-	$a = get_app();
-	$o  = '<div id="' . $id . '">';
-	$o .= '<form action="' . z_root() . '/' . $url . '" method="get" >';
-	$o .= '<input type="hidden" name="f" value="" />';
-	$o .= '<input type="text" class="icon-search" name="search" id="search-text" placeholder="&#xf002;" value="' . $s .'" onclick="this.submit();" />';
-	$o .= '<input type="submit" name="submit" class="btn btn-default" id="search-submit" value="' . t('Search') . '" />'; 
-	if(feature_enabled(local_user(),'savedsearch'))
-		$o .= '<input type="submit" name="searchsave" class="btn btn-default" id="search-save" value="' . t('Save') . '" />'; 
-	$o .= '</form></div>';
-	return $o;
+	return replace_macros(get_markup_template('searchbox.tpl'),array(
+		'$s' => $s,
+		'$id' => $id,
+		'$action_url' => z_root() . '/' . $url,
+		'$search_label' => t('Search'),
+		'$save_label' => t('Save'),
+		'$savedsearch' => feature_enabled(local_user(),'savedsearch')
+	));
 }
 
 

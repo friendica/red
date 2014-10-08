@@ -858,14 +858,6 @@ footer {
 	margin-bottom: 25px;
 }
 
-#search-submit {
-	margin-left: 15px;
-}
-
-#search-box {
-	margin-bottom: 25px;
-}
-
 #nav-searchbar {
 	float: right;
 	margin-top: 2px;
@@ -905,14 +897,9 @@ footer {
 #search-text {
 	border: 1px solid #ccc;
 	font-size: 1em;
-}
-
-#search-text::-webkit-input-placeholder {
-	font-family: FontAwesome;
-}
-
-#search-text::-moz-placeholder {
-	font-family: FontAwesome;
+	height: 22px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
 }
 
 .profile-clear {

@@ -1,5 +1,11 @@
 /* override some bootstrap settings */
 
+/* this might be a bug in bootstrap */
+.input-group-addon,
+.input-group-btn {
+	width: unset;
+}
+
 /* nav overrides */
 
 nav .badge {
