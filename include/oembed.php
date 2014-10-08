@@ -56,6 +56,15 @@ function oembed_fetch_url($embedurl){
 						$txt = $x['body'];
 						break;
 					}
+					// soundcloud is now using text/json+oembed instead of application/json+oembed, 
+					// others may be also
+					$entries = $xpath->query("//link[@type='text/json+oembed']");
+					foreach($entries as $e){
+						$href = $e->getAttributeNode("href")->nodeValue;
+						$x = z_fetch_url($href . '&maxwidth=' . $a->videowidth);
+						$txt = $x['body'];
+						break;
+					}
 				}
 			}
 		}
