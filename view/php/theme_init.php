@@ -33,7 +33,7 @@ head_add_js('library/cryptojs/components/core-min.js');
 head_add_js('library/cryptojs/rollups/aes.js');
 head_add_js('library/cryptojs/rollups/rabbit.js');
 head_add_js('library/cryptojs/rollups/tripledes.js');
-head_add_js('library/stylish_select/jquery.stylish-select.js');
+//head_add_js('library/stylish_select/jquery.stylish-select.js');
 head_add_js('acl.js');
 head_add_js('webtoolkit.base64.js');
 head_add_js('main.js');
