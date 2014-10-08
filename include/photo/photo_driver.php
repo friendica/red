@@ -512,19 +512,30 @@ function guess_image_type($filename, $headers = '') {
 			$type = $hdrs['Content-Type'];
 	}
 	if (is_null($type)){
-// FIXME!!!!
+
 		$ignore_imagick = get_config('system', 'ignore_imagick');
 		// Guessing from extension? Isn't that... dangerous?
 		if(class_exists('Imagick') && !$ignore_imagick) {
-			logger('using imagemagick', LOGGER_DEBUG);
-			/**
-			 * Well, this not much better,
-			 * but at least it comes from the data inside the image,
-			 * we won't be tricked by a manipulated extension
-			 */
-			$image = new Imagick($filename);
-			$type = $image->getImageMimeType();
-		} else {
+			$v = Imagick::getVersion();
+			preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $v['versionString'], $m);
+			if(version_compare($m[1],'6.6.7') >= 0) {
+				/**
+				 * Well, this not much better,
+				 * but at least it comes from the data inside the image,
+				 * we won't be tricked by a manipulated extension
+			 	*/
+				$image = new Imagick($filename);
+				$type = $image->getImageMimeType();
+			}
+			else {
+				// earlier imagick versions have issues with scaling png's
+				// don't log this because it will just fill the logfile.
+				// leave this note here so those who are looking for why 
+				// we aren't using imagick can find it
+			}
+		}
+
+		if(is_null($type)) {
 			$ext = pathinfo($filename, PATHINFO_EXTENSION);
 			$ph = photo_factory('');
 			$types = $ph->supportedTypes();
