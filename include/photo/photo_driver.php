@@ -8,6 +8,7 @@ function photo_factory($data, $type = null) {
 	if(class_exists('Imagick') && !$ignore_imagick) {
 		$v = Imagick::getVersion();
 		preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $v['versionString'], $m);
+		logger('image v='.$v.',v[ver]='.$v['versionString'].',matches='.var_export($m, true), LOGGER_DEBUG);
 		if(version_compare($m[1],'6.6.7') >= 0) {
 			require_once('include/photo/photo_imagick.php');
 			$ph = new photo_imagick($data,$type);
