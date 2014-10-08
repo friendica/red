@@ -897,10 +897,14 @@ footer {
 #search-text {
 	border: 1px solid #ccc;
 	font-size: 1em;
-	height: 30px;
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 }
+
+#netsearch-box .btn-sm {
+	padding: 2.78px 10px;
+}
+
 
 .profile-clear {
 	clear: both;
