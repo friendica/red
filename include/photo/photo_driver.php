@@ -515,7 +515,7 @@ function guess_image_type($filename, $headers = '') {
 
 		$ignore_imagick = get_config('system', 'ignore_imagick');
 		// Guessing from extension? Isn't that... dangerous?
-		if(class_exists('Imagick') && !$ignore_imagick) {
+		if(class_exists('Imagick') && file_exists($filename) && is_readable($filename) && !$ignore_imagick) {
 			$v = Imagick::getVersion();
 			preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $v['versionString'], $m);
 			if(version_compare($m[1],'6.6.7') >= 0) {
