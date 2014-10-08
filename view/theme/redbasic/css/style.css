@@ -272,21 +272,6 @@ footer {
 	margin-bottom: 15px;
 }
 
-aside ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	/* border-left: 1px solid #eee; This and a 5px left border on the li is "interesting" 
-	   to delineate the list from the surrounding bits 
-	*/
-}
-
-aside li {
-	margin-top: 5px;
-	/* in order to achieve consistent indentation cross-browser, set margin-left on the li element e.g. */
-	/* margin-left: 10px; */
-}
-
 /*TODO: we should use one class for all this. */
 .group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
 	color: $selected_active_colour !important;
