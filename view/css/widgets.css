@@ -73,6 +73,10 @@
 	margin: 2px 0px 0px 10px;
 }
 
+#posted-date-selector li:not(:first-child) {
+	margin-top: 2px;
+}
+
 /* categories */
 
 

@@ -1526,6 +1526,7 @@ div.jGrowl div.jGrowl-notification {
 	margin-left: $radiuspx;
 	border: 1px solid #ccc;
 	border-top: none;
+	width: calc(197px - $radiuspx * 2) !important;
 }
 
 #recip-ac .autocomplete,
