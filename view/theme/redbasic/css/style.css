@@ -894,18 +894,6 @@ footer {
 	font-family: FontAwesome;
 }
 
-#search-text {
-	border: 1px solid #ccc;
-	font-size: 1em;
-	border-top-right-radius: 0px;
-	border-bottom-right-radius: 0px;
-}
-
-#netsearch-box .btn-sm {
-	padding: 2.78px 10px;
-}
-
-
 .profile-clear {
 	clear: both;
 }
@@ -2288,12 +2276,12 @@ blockquote {
 }
 
 aside .nav > li > a:hover, aside .nav > li > a:focus {
-	 text-decoration: $navtabs_decohover;
-    background-color: $navaside_bghover;
+	text-decoration: $navtabs_decohover;
+	background-color: $navaside_bghover;
 }
 
 aside .nav-pills > li > a {
-    padding: 6px 10px;
+	padding: 6px 10px;
 }
 
 .dropdown-menu img {
