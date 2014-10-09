@@ -378,7 +378,10 @@ function import_post(&$a) {
 		}
 	}
 
+	$saved_notification_flags = notifications_off($channel['channel_id']);
+
 	if($import_posts && array_key_exists('item',$data) && $data['item']) {
+
 		foreach($data['item'] as $i) {
 			$item = get_item_elements($i);
 
@@ -403,6 +406,8 @@ function import_post(&$a) {
 		}
 
 	}
+
+	notifications_on($channel['channel_id'],$saved_notification_flags);
 
 	if(array_key_exists('item_id',$data) && $data['item_id']) {
 		foreach($data['item_id'] as $i) {

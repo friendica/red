@@ -94,7 +94,7 @@
 }
 
 a.wall-item-name-link {
-	font-weight: bold;
+	font-weight: bold !important;
 }
 
 .wall-item-author {

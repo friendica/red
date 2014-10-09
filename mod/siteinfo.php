@@ -55,6 +55,7 @@ function siteinfo_init(&$a) {
 		$channels_active_halfyear_stat = intval(get_config('system','channels_active_halfyear_stat'));
 		$channels_active_monthly_stat = intval(get_config('system','channels_active_monthly_stat'));
 		$local_posts_stat = intval(get_config('system','local_posts_stat'));
+		$hide_in_statistics = intval(get_config('system','hide_in_statistics'));
 		
 		$data = Array(
 			'version' => RED_VERSION,
@@ -74,7 +75,8 @@ function siteinfo_init(&$a) {
 			'channels_total' => $channels_total_stat,
 			'channels_active_halfyear' => $channels_active_halfyear_stat,
 			'channels_active_monthly' => $channels_active_monthly_stat,
-			'local_posts' => $local_posts_stat
+			'local_posts' => $local_posts_stat,
+			'hide_in_statistics' => $hide_in_statistics
 		);
 		json_return_and_die($data);
 	}

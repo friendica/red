@@ -821,7 +821,7 @@ function diaspora_post($importer,$xml,$msg) {
 
 		foreach($tags as $tag) {
 			if(strpos($tag,'#') === 0) {
-				if(strpos($tag,'[url='))
+				if((strpos($tag,'[url=')) || (strpos($tag,'[zrl')))
 					continue;
 
 				// don't link tags that are already embedded in links
@@ -1050,7 +1050,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 		foreach($tags as $tag) {
 			if(strpos($tag,'#') === 0) {
-				if(strpos($tag,'[url='))
+				if((strpos($tag,'[url=')) || (strpos($tag,'[zrl')))
 					continue;
 
 				// don't link tags that are already embedded in links
@@ -1087,7 +1087,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 		}
 	}
 
-	// This won't work
+	// This won't work on redmatrix
 	$plink = 'https://'.substr($diaspora_handle,strpos($diaspora_handle,'@')+1).'/posts/'.$guid;
 
 	$datarray['uid'] = $importer['channel_id'];
@@ -1337,7 +1337,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 		foreach($tags as $tag) {
 			if(strpos($tag,'#') === 0) {
-				if(strpos($tag,'[url='))
+				if((strpos($tag,'[url=')) || (strpos($tag,'[zrl')))
 					continue;
 
 				// don't link tags that are already embedded in links
