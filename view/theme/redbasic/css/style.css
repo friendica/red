@@ -1861,15 +1861,18 @@ img.mail-list-sender-photo {
 	max-width: $converse_width;
 }
 
-.wall-item-content-wrapper {
+.wall-item-content-wrapper, .generic-content-wrapper {
 	background-color: $item_colour;
 	padding: 10px;
-}
-
-.wall-item-content-wrapper {
 	border-top-right-radius: $radiuspx;
 	border-top-left-radius: $radiuspx;
 }
+
+.generic-content-wrapper {
+	border-bottom-right-radius: $radiuspx;
+	border-bottom-left-radius: $radiuspx;
+}
+
 
 .comment .wall-item-body {
 	padding-left: $comment_padding;

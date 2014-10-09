@@ -1,5 +1,5 @@
+<div class="generic-content-wrapper">
 <h3>{{$header}}</h3>
-
 
 {{if $links}}
 {{foreach $links as $l}}
@@ -30,3 +30,5 @@
 </div>
 
 <div class="channels-end all"></div>
+
+</div>
