@@ -263,8 +263,15 @@ function bb2dmention_callback($match) {
 
 function bb2diaspora_itemwallwall(&$item) {
 
+	$author_exists = true;
 	if(! array_key_exists('author',$item)) {
+		$author_exists = false;
 		logger('bb2diaspora_itemwallwall: no author');
+		$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+			dbesc($item['author_xchan'])
+		);
+		if($r)
+			$item['author'] = $r[0];
 	}
 
 	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author']))) {
@@ -279,6 +286,11 @@ function bb2diaspora_itemwallwall(&$item) {
 			. '[url=' . $item['author']['xchan_url'] . ']' . $item['author']['xchan_name'] . '[/url]' . "\n\n" 
 			. $item['body'];
 	}
+	// $item['author'] might cause a surprise further down the line if it wasn't expected to be here.
+ 
+	if(! $author_exists)
+		$unset($item['author']);
+
 }
 
 

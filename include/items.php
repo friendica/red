@@ -2522,12 +2522,6 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id)
 
 	// since Diaspora doesn't handle edits we can only do this for the original text and not update it.
 
-	$enabled = intval(get_config('system','diaspora_enabled'));
-	if(! $enabled) {
-		logger('mod_item: diaspora support disabled, not storing comment signature', LOGGER_DEBUG);
-		return;
-	}
-
 	require_once('include/bb2diaspora.php');
 	$signed_body = bb2diaspora_itembody($datarray);
 
@@ -2552,12 +2546,6 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id)
 		intval($post_id) 
 	);
 
-	$r = q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-		intval($post_id),
-		dbesc($signed_text),
-		dbesc(base64_encode($authorsig)),
-		dbesc($diaspora_handle)
-	);
 	if(! $r)
 		logger('store_diaspora_comment_sig: DB write failed');
 
