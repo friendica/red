@@ -118,15 +118,11 @@ pre code {
 }
 
 code {
-	font-family: Courier, monospace;
 	font-size: 1em;
-	display: block;
-	overflow: auto;
+	padding: 5px;
 	border: 1px solid $code_borderc;
 	background: $code_bgcolour;
 	color: $code_txtcolour;
-	padding: 10px;
-	margin-top: 20px; 
 }
 
 pre {

@@ -152,11 +152,11 @@ if(! $a->install) {
 	if (! $blockquote_bordercolour)
 		$blockquote_bordercolour = "#ccc";
 	if (! $code_borderc)
-		$code_borderc = "#444";
+		$code_borderc = "#ccc";
 	if (! $code_bgcolour)
-		$code_bgcolour = "#EEE";
+		$code_bgcolour = "#ccc";
 	if (! $code_txtcolour)
-		$code_txtcolour = "#444";
+		$code_txtcolour = "#000";
 	if (! $pre_borderc)
 		$pre_borderc = "#ccc";
 	if (! $pre_bgcolour)
