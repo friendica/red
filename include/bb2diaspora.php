@@ -263,6 +263,10 @@ function bb2dmention_callback($match) {
 
 function bb2diaspora_itemwallwall(&$item) {
 
+	if(! array_key_exists('author',$item)) {
+		logger('bb2diaspora_itemwallwall: no author');
+	}
+
 	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author']))) {
 		logger('bb2diaspora_itemwallwall: author: ' . print_r($item['author'],true), LOGGER_DEBUG);
 	}
