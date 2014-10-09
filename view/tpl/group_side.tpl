@@ -14,7 +14,7 @@
 				{{if $group.edit}}
 				<a class="pull-right group-edit-icon" href="{{$group.edit.href}}" title="{{$edittext}}"><i class="icon-pencil"></i></a>
 				{{/if}}
-				<a class="{{if $group.selected}}group-selected{{/if}}" href="{{$group.href}}">{{$group.text}}</a>
+				<a{{if $group.selected}} class="group-selected"{{/if}} href="{{$group.href}}">{{$group.text}}</a>
 			</li>
 			{{/foreach}}
 			<li>

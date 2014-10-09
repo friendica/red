@@ -33,38 +33,10 @@
 
 /* saved searches */
 
-#netsearch-box #search-submit {
-	margin: 10px 0 7px 0;
+#saved-search-list {
+	margin-top: 2px;
 }
 
-#netsearch-box #search-save {
-	margin: 9px 0 7px 6px;
-}
-.search-save {
-	margin: 7px 0 7px 7px;
-}
-
-.saved-search-li {
-	margin-top: 3px;
-}
-
-.saved-search-li i {
-	opacity: 0;
-}
-
-.saved-search-li:hover i {
-	opacity: 1;
-}
-
-.saved-search-icon {
-	float: right;
-}
-
-.savedsearchterm {
-	display: block;
-	width: 150px;
-	overflow: hidden;
-}
 
 /* peoplefind */
 
@@ -87,7 +59,7 @@
 /* posted date */
 
 .posted-date-selector-months {
-	margin-left: 10px;
+	margin: 2px 0px 0px 10px;
 }
 
 /* categories */

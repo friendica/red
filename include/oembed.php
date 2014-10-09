@@ -56,6 +56,15 @@ function oembed_fetch_url($embedurl){
 						$txt = $x['body'];
 						break;
 					}
+					// soundcloud is now using text/json+oembed instead of application/json+oembed, 
+					// others may be also
+					$entries = $xpath->query("//link[@type='text/json+oembed']");
+					foreach($entries as $e){
+						$href = $e->getAttributeNode("href")->nodeValue;
+						$x = z_fetch_url($href . '&maxwidth=' . $a->videowidth);
+						$txt = $x['body'];
+						break;
+					}
 				}
 			}
 		}
@@ -83,7 +92,8 @@ function oembed_fetch_url($embedurl){
 function oembed_format_object($j){
 	$a = get_app();
     $embedurl = $j->embedurl;
-	$jhtml = oembed_iframe($j->embedurl,(isset($j->width) ? $j->width : null), (isset($j->height) ? $j->height : null) );
+
+	$jhtml = oembed_iframe($j->embedurl,(isset($j->width) ? $j->width : null), (isset($j->height) ? $j->height : null));
 
 	$ret="<span class='oembed ".$j->type."'>";
 	switch ($j->type) {
@@ -118,7 +128,6 @@ function oembed_format_object($j){
 		}; break;
 		case "photo": {
 			$ret.= "<img width='".$j->width."' src='".$j->url."'>";
-			//$ret.= "<img width='".$j->width."' height='".$j->height."' src='".$j->url."'>";
 			$ret.="<br>";
 		}; break;  
 		case "link": {
@@ -154,13 +163,12 @@ function oembed_iframe($src,$width,$height) {
 	$height = intval($height) + 80;
 	$width  = intval($width) + 40;
 
-	$a = get_app();
+	$s = z_root() . '/oembed/' . base64url_encode($src);
 
-	$sandbox = ((strpos($src,get_app()->get_hostname())) ? ' sandbox="allow-scripts" ' : '');
+	// Make sure any children are sandboxed within their own iframe.
 
-	$s = $a->get_baseurl()."/oembed/".base64url_encode($src);
-
-	return '<iframe ' . $sandbox . ' height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' . t('Embedded content') . '</iframe>'; 
+	return '<iframe height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' 
+		. t('Embedded content') . '</iframe>'; 
 
 }
 

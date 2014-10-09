@@ -272,21 +272,6 @@ footer {
 	margin-bottom: 15px;
 }
 
-aside ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	/* border-left: 1px solid #eee; This and a 5px left border on the li is "interesting" 
-	   to delineate the list from the surrounding bits 
-	*/
-}
-
-aside li {
-	margin-top: 5px;
-	/* in order to achieve consistent indentation cross-browser, set margin-left on the li element e.g. */
-	/* margin-left: 10px; */
-}
-
 /*TODO: we should use one class for all this. */
 .group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
 	color: $selected_active_colour !important;
@@ -873,14 +858,6 @@ aside li {
 	margin-bottom: 25px;
 }
 
-#search-submit {
-	margin-left: 15px;
-}
-
-#search-box {
-	margin-bottom: 25px;
-}
-
 #nav-searchbar {
 	float: right;
 	margin-top: 2px;
@@ -920,15 +897,14 @@ aside li {
 #search-text {
 	border: 1px solid #ccc;
 	font-size: 1em;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
 }
 
-#search-text::-webkit-input-placeholder {
-	font-family: FontAwesome;
+#netsearch-box .btn-sm {
+	padding: 2.78px 10px;
 }
 
-#search-text::-moz-placeholder {
-	font-family: FontAwesome;
-}
 
 .profile-clear {
 	clear: both;
@@ -2314,6 +2290,10 @@ blockquote {
 aside .nav > li > a:hover, aside .nav > li > a:focus {
 	 text-decoration: $navtabs_decohover;
     background-color: $navaside_bghover;
+}
+
+aside .nav-pills > li > a {
+    padding: 6px 10px;
 }
 
 .dropdown-menu img {
