@@ -1861,7 +1861,7 @@ img.mail-list-sender-photo {
 	max-width: $converse_width;
 }
 
-.wall-item-content-wrapper, .generic-content-wrapper {
+.wall-item-content-wrapper {
 	background-color: $item_colour;
 	padding: 10px;
 	border-top-right-radius: $radiuspx;
@@ -1869,10 +1869,10 @@ img.mail-list-sender-photo {
 }
 
 .generic-content-wrapper {
-	border-bottom-right-radius: $radiuspx;
-	border-bottom-left-radius: $radiuspx;
+	background-color: $genericcontent_bgcolour;
+	padding: 10px;
+	border-radius: $radiuspx;
 }
-
 
 .comment .wall-item-body {
 	padding-left: $comment_padding;
