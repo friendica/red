@@ -2446,6 +2446,10 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 	else
 		return;
 
+	// set the route to that of the parent so downstream hubs won't reject it.
+
+	$item['route'] = $parent['route'];
+
 	if(($item['verb'] === ACTIVITY_LIKE) && ($parent['mid'] === $parent['parent_mid'])) {
 		$tpl = get_markup_template('diaspora_like.tpl');
 		$like = true;
