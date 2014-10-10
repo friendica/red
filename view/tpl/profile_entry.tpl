@@ -7,4 +7,3 @@
 <div class="profile-listing-visible">{{$visible}}</div>
 </div>
 <div class="profile-listing-end"></div>
-

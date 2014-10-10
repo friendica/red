@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper">
 <h1>{{$header}}</h1>
 <p id="profile-listing-desc" class="btn btn-default" >
 <a href="profile_photo" >{{$chg_photo}}</a>
@@ -7,5 +8,3 @@
 </p>
 <p id="profile-listing-new-link-wrapper" class="btn btn-default" >
 <a href="{{$cr_new_link}}" id="profile-listing-new-link" title="{{$cr_new}}" >{{$cr_new}}</a>
-</div>
-

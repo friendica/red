@@ -1864,11 +1864,14 @@ img.mail-list-sender-photo {
 .wall-item-content-wrapper {
 	background-color: $item_colour;
 	padding: 10px;
-}
-
-.wall-item-content-wrapper {
 	border-top-right-radius: $radiuspx;
 	border-top-left-radius: $radiuspx;
+}
+
+.generic-content-wrapper {
+	background-color: $genericcontent_bgcolour;
+	padding: 10px;
+	border-radius: $radiuspx;
 }
 
 .comment .wall-item-body {

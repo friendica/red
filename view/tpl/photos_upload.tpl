@@ -4,7 +4,7 @@
 	<div class="clear"></div>
 </div>
 
-<form action="photos/{{$nickname}}" enctype="multipart/form-data" method="post" name="photos-upload-form" id="photos-upload-form" >
+<form action="photos/{{$nickname}}" enctype="multipart/form-data" method="post" name="photos-upload-form" id="photos-upload-form" class="generic-content-wrapper">
 	<input type="hidden" id="photos-upload-source" name="source" value="photos" />
 	<div id="photos-upload-new-wrapper" >
 		<div id="photos-upload-newalbum-div">

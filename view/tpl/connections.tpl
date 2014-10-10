@@ -1,3 +1,5 @@
+<div class="generic-content-wrapper">
+
 <h1>{{$header}}{{if $total}} ({{$total}}){{/if}}</h1>
 
 {{if $finding}}<h4>{{$finding}}</h4>{{/if}}
@@ -20,10 +22,6 @@
 <div id="page-end"></div>
 </div>
 <div id="contact-edit-end"></div>
+</div>
 <script>$(document).ready(function() { loadingPage = false;});</script>
 <div id="page-spinner"></div>
-
-
-
-
-

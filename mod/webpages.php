@@ -81,6 +81,8 @@ function webpages_content(&$a) {
 	require_once('include/conversation.php');
 	$o = profile_tabs($a,true);
 
+	$o .= '<div class="generic-content-wrapper">';
+
 	$o .= '<h2>' . t('Webpages') . '</h2>';
 
 	$x = array(
@@ -95,7 +97,7 @@ function webpages_content(&$a) {
 		'mimetype' => $mimetype,
 		'layout' => $layout,
 	);
-
+	
 	if($_REQUEST['title'])
 		$x['title'] = $_REQUEST['title'];
 	if($_REQUEST['body'])
@@ -104,7 +106,6 @@ function webpages_content(&$a) {
 		$x['pagetitle'] = $_REQUEST['pagetitle'];
 
 	$o .= status_editor($a,$x);
-
 
 	// Get a list of webpages.  We can't display all them because endless scroll makes that unusable, so just list titles and an edit link.
 	//TODO - this should be replaced with pagelist_widget
@@ -142,5 +143,6 @@ function webpages_content(&$a) {
 
 ));
 
+	$o .= '</div>'; 
 
 }
