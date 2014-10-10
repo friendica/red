@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper">
 <h1>{{$header}}</h1>
 <table id="cloud-index">
 	<tr>

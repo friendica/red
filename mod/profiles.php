@@ -766,6 +766,9 @@ logger('extra_fields: ' . print_r($extra_fields,true));
 						: '<a href="' . $a->get_baseurl(true) . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}
+			
+			$o .= '</div>';
+			
 		}
 		return $o;
 	}

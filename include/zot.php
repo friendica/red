@@ -1402,6 +1402,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 
 		$perm = (($arr['mid'] == $arr['parent_mid']) ? 'send_stream' : 'post_comments');
 
+
 		// This is our own post, possibly coming from a channel clone
 
 		if($arr['owner_xchan'] == $d['hash']) {
@@ -1420,6 +1421,30 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			continue;
 		}
 	
+		if(($arr['mid'] != $arr['parent_mid']) && (! $relay)) {
+
+			// check source route.
+			// We are only going to accept comments from this sender if the comment has the same route as the top-level-post,
+			// this is so that permissions mismatches between senders apply to the entire conversation
+			// As a side effect we will also do a preliminary check that we have the top-level-post, otherwise
+			// processing it is pointless. 
+
+			$r = q("select route from item where mid = '%s' and uid = %d limit 1",
+				dbesc($arr['parent_mid']),
+				intval($channel['channel_id'])
+			);
+			if(! $r) {
+				$result[] = array($d['hash'],'comment parent not found',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				continue;
+			}
+			$current_route = (($arr['route']) ? $arr['route'] . ',' : '') . $sender['hash'];
+
+			if($r[0]['route'] != $current_route) {
+				$result[] = array($d['hash'],'comment route mismatch',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				continue;
+			}
+		}
+
 		if($arr['item_restrict'] & ITEM_DELETED) {
 
 			// remove_community_tag is a no-op if this isn't a community tag activity
@@ -1446,8 +1471,11 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 				$arr['id'] = $r[0]['id'];
 				$arr['uid'] = $channel['channel_id'];
 				update_imported_item($sender,$arr,$channel['channel_id']);
-			}	
-			$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+			}
+			else {
+				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+			}
 			$item_id = $r[0]['id'];
 		}
 		else {
@@ -1459,7 +1487,9 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 				$item_id = $item_result['item_id'];
 				$parr = array('item_id' => $item_id,'item' => $arr,'sender' => $sender,'channel' => $channel);
 				call_hooks('activity_received',$parr);
-				add_source_route($item_id,$sender['hash']);
+				// don't add a source route if it's a relay or later recipients will get a route mismatch
+				if(! $relay)
+					add_source_route($item_id,$sender['hash']);
 			}
 			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 		}
