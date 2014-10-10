@@ -1472,11 +1472,12 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 				$arr['uid'] = $channel['channel_id'];
 				update_imported_item($sender,$arr,$channel['channel_id']);
 				$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$item_id = $r[0]['id'];
 			}
 			else {
 				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				continue;
 			}
-			$item_id = $r[0]['id'];
 		}
 		else {
 			$arr['aid'] = $channel['channel_account_id'];
