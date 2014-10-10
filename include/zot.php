@@ -1420,8 +1420,8 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			$result[] = array($d['hash'],'permission denied',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 			continue;
 		}
-	
-		if(($arr['mid'] != $arr['parent_mid']) && (! $relay)) {
+
+		if($arr['mid'] != $arr['parent_mid']) {
 
 			// check source route.
 			// We are only going to accept comments from this sender if the comment has the same route as the top-level-post,
@@ -1437,11 +1437,24 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 				$result[] = array($d['hash'],'comment parent not found',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 				continue;
 			}
-			$current_route = (($arr['route']) ? $arr['route'] . ',' : '') . $sender['hash'];
+			if($relay) {
+				// reset the route in case it travelled a great distance upstream
+				// use our parent's route so when we go back downstream we'll match
+				// with whatever route our parent has.
+				$arr['route'] = $r[0]['route'];
+			}
+			else {
 
-			if($r[0]['route'] != $current_route) {
-				$result[] = array($d['hash'],'comment route mismatch',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
-				continue;
+				// going downstream check that we have the same upstream provider that
+				// sent it to us originally. Ignore it if it came from another source
+				// (with potentially different permissions)
+
+				$current_route = (($arr['route']) ? $arr['route'] . ',' : '') . $sender['hash'];
+
+				if($r[0]['route'] != $current_route) {
+					$result[] = array($d['hash'],'comment route mismatch',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+					continue;
+				}
 			}
 		}
 
