@@ -1,4 +1,4 @@
-<div class="generic-content-wrapper">
+<div class="generic-content-wrapper-styled">
 <h3>{{$header}}</h3>
 
 {{if $links}}

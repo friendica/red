@@ -1868,7 +1868,7 @@ img.mail-list-sender-photo {
 	border-top-left-radius: $radiuspx;
 }
 
-.generic-content-wrapper {
+.generic-content-wrapper-styled {
 	background-color: $genericcontent_bgcolour;
 	padding: 10px;
 	border-radius: $radiuspx;

@@ -767,8 +767,6 @@ logger('extra_fields: ' . print_r($extra_fields,true));
 				));
 			}
 			
-			$o .= '</div>';
-			
 		}
 		return $o;
 	}

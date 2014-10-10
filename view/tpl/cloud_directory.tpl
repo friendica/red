@@ -1,4 +1,4 @@
-<div class="generic-content-wrapper">
+<div class="generic-content-wrapper-styled">
 <h1>{{$header}}</h1>
 <table id="cloud-index">
 	<tr>
@@ -42,3 +42,4 @@
 {{if $quota.limit || $quota.used}}
 	<p><strong>{{$total}}</strong> {{$quota.desc}}</p>
 {{/if}}
+</div>
