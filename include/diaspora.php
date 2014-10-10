@@ -1406,13 +1406,6 @@ function diaspora_comment($importer,$xml,$msg) {
 		$message_id = $result['item_id'];
 
 	if(($parent_item['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature)) {
-		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-			intval($message_id),
-			dbesc($signed_data),
-			dbesc(base64_encode($author_signature)),
-			dbesc($diaspora_handle)
-		);
-
 		// if the message isn't already being relayed, notify others
 		// the existence of parent_author_signature means the parent_author or owner
 		// is already relaying.
