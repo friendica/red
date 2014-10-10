@@ -2415,7 +2415,7 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['commented']     = $orig[0]['commented'];
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
-
+	$arr['route']         = ((array_key_exists('route',$arr)) ? trim($arr['route'])          : $orig[0]['route']);
 	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : $orig[0]['diaspora_meta']);
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : $orig[0]['location']);
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : $orig[0]['coord']);
