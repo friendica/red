@@ -121,12 +121,12 @@ if(! $a->install) {
 		$bgcolour = "#fdfdfd";
 	if (! $background_image)
 		$background_image ='';
-	if (! $genericcontent_bgcolour)
-		$genericcontent_bgcolour = $comment_item_colour;
 	if (! $item_colour)
 		$item_colour = "rgba(238,238,238,0.8)";
 	if (! $comment_item_colour)
 		$comment_item_colour = "rgba(254,254,254,0.4)";
+	if (! $genericcontent_bgcolour)
+		$genericcontent_bgcolour = $comment_item_colour;
 	if (! $comment_border_colour)
 		$comment_border_colour = "rgba(238,238,238,0.8)";
 	if (! $toolicon_colour)
