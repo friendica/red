@@ -24,7 +24,6 @@ if(! $a->install) {
 		$background_image = get_pconfig($uid, "redbasic", "background_image");	
 		$toolicon_colour = get_pconfig($uid,'redbasic','toolicon_colour');
 		$toolicon_activecolour = get_pconfig($uid,'redbasic','toolicon_activecolour');
-		$genericcontent_bgcolour = get_pconfig($uid, "redbasic", "genericcontent_bgcolour");
 		$item_colour = get_pconfig($uid, "redbasic", "item_colour");
 		$comment_item_colour = get_pconfig($uid, "redbasic", "comment_item_colour");
 		$comment_border_colour = get_pconfig($uid, "redbasic", "comment_border_colour");
@@ -123,7 +122,7 @@ if(! $a->install) {
 	if (! $background_image)
 		$background_image ='';
 	if (! $genericcontent_bgcolour)
-		$genericcontent_bgcolour ='rgba(254,254,254,0.8)';
+		$genericcontent_bgcolour = $comment_item_colour;
 	if (! $item_colour)
 		$item_colour = "rgba(238,238,238,0.8)";
 	if (! $comment_item_colour)
