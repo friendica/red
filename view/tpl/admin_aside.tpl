@@ -10,6 +10,7 @@
 		});
 	});
 </script>
+<div class="widget">
 <h3>{{$admtxt}}</h3>
 <ul class="nav nav-pills nav-stacked">
 	<li><a href='{{$admin.site.0}}'>{{$admin.site.1}}</a></li>
@@ -20,6 +21,7 @@
 	<li><a href='{{$admin.hubloc.0}}'>{{$admin.hubloc.1}}</a></li>
 	<li><a href='{{$admin.dbsync.0}}'>{{$admin.dbsync.1}}</a></li>
 </ul>
+</div>
 
 {{if $admin.update}}
 <ul class="nav nav-pills nav-stacked">
@@ -29,16 +31,20 @@
 {{/if}}
 
 
-{{if $admin.plugins_admin}}<h3>{{$plugadmtxt}}</h3>{{/if}}
+{{if $admin.plugins_admin}}
+<div class="widget">
+<h3>{{$plugadmtxt}}</h3>
 <ul class="nav nav-pills nav-stacked">
 	{{foreach $admin.plugins_admin as $l}}
 	<li><a href='{{$l.0}}'>{{$l.1}}</a></li>
 	{{/foreach}}
 </ul>
+</div>
+{{/if}}
 	
-	
+<div class="widget">	
 <h3>{{$logtxt}}</h3>
 <ul class="nav nav-pills nav-stacked">
 	<li><a href='{{$admin.logs.0}}'>{{$admin.logs.1}}</a></li>
 </ul>
-
+</div>

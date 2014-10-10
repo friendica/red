@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper-styled">
 <h2>{{$banner}}</h2>
 
 <div id="failed_updates_desc">{{$desc}}</div>
@@ -14,4 +15,4 @@
 <hr />
 {{/foreach}}
 {{/if}}
-
+</div>

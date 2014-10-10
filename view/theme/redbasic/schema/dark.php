@@ -50,12 +50,12 @@
 		$search_background = "#999";
 	if (! $bgcolour)
 		$bgcolour = "#111";
-	if (! $genericcontent_bgcolour)
-		$genericcontent_bgcolour ='rgba(28,28,28,0.8)';
 	if (! $item_colour)
 		$item_colour = "rgba(28,28,28,0.8)";
 	if (! $comment_item_colour)
 		$comment_item_colour = "rgba(18,18,18,0.4)";
+	if (! $genericcontent_bgcolour)
+		$genericcontent_bgcolour = "rgba(28,28,28,0.8)";
 	if (! $comment_border_colour)
 		$comment_border_colour = "rgba(28,28,28,0.8)";
 	if (! $toolicon_colour)

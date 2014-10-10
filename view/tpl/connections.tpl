@@ -1,4 +1,4 @@
-<div class="generic-content-wrapper">
+<div class="generic-content-wrapper-styled">
 
 <h1>{{$header}}{{if $total}} ({{$total}}){{/if}}</h1>
 

@@ -1,4 +1,4 @@
-<div class = "generic-content-wrapper" id='adminpage'>
+<div class = "generic-content-wrapper-styled" id='adminpage'>
 	<h1>{{$title}} - {{$page}}</h1>
 	
 	<p><i class='toggleplugin {{if $status==on}}icon-check{{else}}icon-check-empty{{/if}} admin-icons'></i> {{$info.name}} - {{$info.version}} : <a href="{{$baseurl}}/admin/{{$function}}/{{$plugin}}/?a=t&amp;t={{$form_security_token}}">{{$action}}</a></p>
