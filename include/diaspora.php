@@ -1379,6 +1379,8 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['mid'] = $guid;
 	$datarray['parent_mid'] = $parent_item['mid'];
 
+	// set the route to that of the parent so downstream hubs won't reject it.
+	$datarray['route'] = $parent_item['route'];
 
 	// No timestamps for comments? OK, we'll the use current time.
 	$datarray['changed'] = $datarray['created'] = $datarray['edited'] = datetime_convert();
@@ -1968,6 +1970,9 @@ function diaspora_like($importer,$xml,$msg) {
 
 	$arr['app']  = 'Diaspora';
 
+	// set the route to that of the parent so downstream hubs won't reject it.
+	$arr['route'] = $parent_item['route'];
+
 	$arr['item_private'] = $parent_item['item_private'];
 	$arr['verb'] = $activity;
 	$arr['obj_type'] = $objtype;
@@ -2446,9 +2451,6 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 	else
 		return;
 
-	// set the route to that of the parent so downstream hubs won't reject it.
-
-	$item['route'] = $parent['route'];
 
 	if(($item['verb'] === ACTIVITY_LIKE) && ($parent['mid'] === $parent['parent_mid'])) {
 		$tpl = get_markup_template('diaspora_like.tpl');
