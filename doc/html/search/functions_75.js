@@ -11,10 +11,14 @@ var searchData=
   ['unxmlify',['unxmlify',['../text_8php.html#a1360fed7f918d859daaca1c9f384f9af',1,'text.php']]],
   ['update_5fbirthdays',['update_birthdays',['../datetime_8php.html#af1cd77c97c901d9239cb7a61f97f9826',1,'datetime.php']]],
   ['update_5fchannel_5fcontent',['update_channel_content',['../update__channel_8php.html#aca52a9da500f0db2f0a8666af5bc06ba',1,'update_channel.php']]],
+  ['update_5fchannels_5factive_5fhalfyear_5fstat',['update_channels_active_halfyear_stat',['../statistics__fns_8php.html#a82726229a961d3bd3d543005c61dd8e6',1,'statistics_fns.php']]],
+  ['update_5fchannels_5factive_5fmonthly_5fstat',['update_channels_active_monthly_stat',['../statistics__fns_8php.html#ad2b7b595c039c4c2eb0d6cd57a393dfe',1,'statistics_fns.php']]],
+  ['update_5fchannels_5ftotal_5fstat',['update_channels_total_stat',['../statistics__fns_8php.html#a05858927cce81fd367aedf85a94ed90c',1,'statistics_fns.php']]],
   ['update_5fdirectory_5fentry',['update_directory_entry',['../dir__fns_8php.html#a44062d4b471d1e83f92f6c184585aa13',1,'dir_fns.php']]],
   ['update_5fdisplay_5fcontent',['update_display_content',['../update__display_8php.html#aa36ac524059e209d5d75a03c16206246',1,'update_display.php']]],
   ['update_5ffeed_5fitem',['update_feed_item',['../items_8php.html#a9b449eeae50003414b8b30ca927af434',1,'items.php']]],
   ['update_5fimported_5fitem',['update_imported_item',['../zot_8php.html#a31aad56acf8ff8f2353e6ff8595544df',1,'zot.php']]],
+  ['update_5flocal_5fposts_5fstat',['update_local_posts_stat',['../statistics__fns_8php.html#a9dd516dda693f17f5ce48a94876f7efa',1,'statistics_fns.php']]],
   ['update_5fmodtime',['update_modtime',['../zot_8php.html#ab319d1d9fff9c7775d9daef42d1f33dd',1,'zot.php']]],
   ['update_5fnetwork_5fcontent',['update_network_content',['../update__network_8php.html#a8abf5b9f65af6a27ee2f9d7207ed1b41',1,'update_network.php']]],
   ['update_5fqueue_5ftime',['update_queue_time',['../queue__fn_8php.html#a4c2876181f75a4a61e85b7f00dfdbba1',1,'queue_fn.php']]],
@@ -28,5 +32,5 @@ var searchData=
   ['user_5fapprove',['user_approve',['../account_8php.html#ad07be417ac7eda939768804106ddea3d',1,'account.php']]],
   ['user_5fdeny',['user_deny',['../account_8php.html#ac1653efba62493b9d87513e1b6c04c83',1,'account.php']]],
   ['user_5fremove',['user_remove',['../Contact_8php.html#a2fc191067dd571a79603c66b04b1ca15',1,'Contact.php']]],
-  ['userreadablesize',['userReadableSize',['../classRedBrowser.html#ad3418b8ccad42a1ef4ad0079e15b2e64',1,'RedBrowser']]]
+  ['userreadablesize',['userReadableSize',['../classRedMatrix_1_1RedDAV_1_1RedBrowser.html#a242ce69a2fe5a5fdf9c2b8d3954accfd',1,'RedMatrix::RedDAV::RedBrowser']]]
 ];

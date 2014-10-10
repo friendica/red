@@ -11,7 +11,10 @@ require_once('include/identity.php');
 function get_system_apps() {
 
 	$ret = array();
-	$files = glob('app/*.apd');
+	if(is_dir('apps'))
+		$files = glob('apps/*.apd');
+	else
+		$files = glob('app/*.apd');
 	if($files) {
 		foreach($files as $f) {
 			$x = parse_app_description($f);
