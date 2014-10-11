@@ -10,7 +10,7 @@
 					<td>
 					{{if $edit}}<a href="{{$baseurl}}/{{$item.url}}" title="{{$edit}}"><i class="icon-pencil design-icons design-edit-icon btn btn-default"></i></a> {{/if}}
 					{{if $view}}<a href="page/{{$channel}}/{{$item.pagetitle}}" title="{{$view}}"><i class="icon-external-link design-icons design-view-icon btn btn-default"></i></a> {{/if}}
-					{{if $preview}}<a href="page/{{$channel}}/{{$item.pagetitle}}?iframe=true&width=80%&height=80%" title="{{$preview}}" class="webpage-preview" ><i class="icon-eye-open design-icons design-preview-icon btn btn-default"></i></a> {{/if}}
+					{{if $preview}}<a href="page/{{$channel}}/{{$item.pagetitle}}" title="{{$preview}}" class="webpage-preview" ><i class="icon-eye-open design-icons design-preview-icon btn btn-default"></i></a> {{/if}}
 					</td>
 					<td>
 					{{if $view}}<a href="page/{{$channel}}/{{$item.pagetitle}}" title="{{$view}}">{{$item.pagetitle}}</a>
