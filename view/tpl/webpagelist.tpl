@@ -1,7 +1,7 @@
 {{$listtitle}}
 {{if $pages}}
 
-	   <div id="pagelist-content-wrapper">
+	   <div id="pagelist-content-wrapper" class="generic-content-wrapper-styled">
 		<table class="webpage-list-table">
 		<tr><td>{{$actions_txt}}</td><td>{{$pagelink_txt}}</td><td>{{$title_txt}}</td><td>{{$created_txt}}</td><td>{{$edited_txt}}</td></tr>
 		{{foreach $pages as $key => $items}} 
