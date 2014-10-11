@@ -63,7 +63,7 @@ function cloud_init(&$a) {
 	if ($which)
 		profile_load($a, $which, $profile);
 
-	$auth = new RedBasicAuth();
+	$auth = new RedDAV\RedBasicAuth();
 
 	$ob_hash = get_observer_hash();
 
@@ -91,7 +91,7 @@ function cloud_init(&$a) {
 	$_SERVER['REQUEST_URI'] = strip_zids($_SERVER['REQUEST_URI']);
 	$_SERVER['REQUEST_URI'] = preg_replace('/[\?&]davguest=(.*?)([\?&]|$)/ism', '', $_SERVER['REQUEST_URI']);
 
-	$rootDirectory = new RedDirectory('/', $auth);
+	$rootDirectory = new RedDAV\RedDirectory('/', $auth);
 
 	// A SabreDAV server-object
 	$server = new DAV\Server($rootDirectory);
