@@ -35,8 +35,6 @@ function webpages_content(&$a) {
 	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
 	$perms = get_all_perms($owner,$ob_hash);
-	if ($which == 'sys' && is_site_admin())
-		$perms['write_pages'] = 1;
 
 	if(! $perms['write_pages']) {
 		notice( t('Permission denied.') . EOL);
