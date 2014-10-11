@@ -5,7 +5,7 @@
 	<h2>{{$title}}</h2>
 	<div class="clear"></div>
 </div>
-<div id="photo-album-contents">
+<div id="photo-album-contents" class="generic-content-wrapper">
 	{{foreach $photos as $photo}}
 		{{include file="photo_top.tpl"}}
 	{{/foreach}}

@@ -23,9 +23,20 @@
 	margin-top: 15px;
 }
 
+/* search */
+
+#search-text {
+	border: 1px solid #ccc;
+	padding: 5px;
+	line-height: 1.5;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
 /* notes */ 
 
 #note-text {
+	padding: 5px;
 	width: 100%;
 	resize: vertical;
 	height: 150px;
@@ -60,6 +71,10 @@
 
 .posted-date-selector-months {
 	margin: 2px 0px 0px 10px;
+}
+
+#posted-date-selector li:not(:first-child) {
+	margin-top: 2px;
 }
 
 /* categories */

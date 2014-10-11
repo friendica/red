@@ -1,4 +1,4 @@
-<div class="generic-content-wrapper">
+<div class="generic-content-wrapper-styled">
 <h2>{{$header}}</h2>
 
 <h3>{{$addr}}</h3>

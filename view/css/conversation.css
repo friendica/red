@@ -1,3 +1,11 @@
+/* common */
+
+code {
+	font-family: Courier, monospace;
+	display: block;
+	overflow: auto;
+}
+
 /* jot */
 
 #jot-title,

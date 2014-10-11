@@ -85,6 +85,8 @@ function externals_run($argv, $argc){
 				if($j['success'] && $j['messages']) {
 					$sys = get_sys_channel();
 					foreach($j['messages'] as $message) {
+						// on these posts, clear any route info. 
+						$message['route'] = '';
 						$results = process_delivery(array('hash' => 'undefined'), get_item_elements($message),
 							array(array('hash' => $sys['xchan_hash'])), false, true);
 						$total ++;

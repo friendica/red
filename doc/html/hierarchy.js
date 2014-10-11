@@ -42,10 +42,16 @@ var hierarchy =
       [ "photo_imagick", "classphoto__imagick.html", null ]
     ] ],
     [ "Plugin", null, [
-      [ "RedBrowser", "classRedBrowser.html", null ]
+      [ "RedMatrix\\RedDAV\\RedBrowser", "classRedMatrix_1_1RedDAV_1_1RedBrowser.html", null ]
     ] ],
     [ "ProtoDriver", "classProtoDriver.html", [
       [ "ZotDriver", "classZotDriver.html", null ]
+    ] ],
+    [ "Sabre", null, [
+      [ "RedDirectory", "classRedDirectory.html", null ],
+      [ "RedDirectory", "classRedDirectory.html", null ],
+      [ "RedDirectory", "classRedDirectory.html", null ],
+      [ "RedMatrix\\RedDAV\\RedBrowser", "classRedMatrix_1_1RedDAV_1_1RedBrowser.html", null ]
     ] ],
     [ "Smarty", null, [
       [ "FriendicaSmarty", "classFriendicaSmarty.html", null ]

@@ -27,6 +27,8 @@ var searchData=
   ['notice',['notice',['../boot_8php.html#a9255af5ae9c887520091ea04763c1a88',1,'boot.php']]],
   ['notification',['notification',['../enotify_8php.html#a3e9a9355b243777c488d2a9883908dfc',1,'enotify.php']]],
   ['notifications_5fcontent',['notifications_content',['../notifications_8php.html#aadd0b5525bd8c283a5d8a37982bbfe62',1,'notifications.php']]],
+  ['notifications_5foff',['notifications_off',['../identity_8php.html#a2e6a1cc35887937823ec7fbb90472afe',1,'identity.php']]],
+  ['notifications_5fon',['notifications_on',['../identity_8php.html#a5650319c799de09d1b6d1076b6f839a4',1,'identity.php']]],
   ['notifications_5fpost',['notifications_post',['../notifications_8php.html#a5baffec7b2e625c9f9cefbc097550d33',1,'notifications.php']]],
   ['notifier_5frun',['notifier_run',['../notifier_8php.html#a568c502f626cff95e344c0748938b85d',1,'notifier.php']]],
   ['notify_5fcontent',['notify_content',['../mod_2notify_8php.html#acdf3851688ebd6d6a575eb84ef9febe3',1,'notify.php']]],
