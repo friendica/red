@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper generic-content-wrapper-styled">
 <h3>{{$title}}</h3>
 
 {{foreach $contacts as $contact}}
@@ -5,5 +6,5 @@
 {{/foreach}}
 
 <div id="view-contact-end"></div>
-
 {{$paginate}}
+</div>
