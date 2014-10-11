@@ -1,3 +1,4 @@
+{{$listtitle}}
 {{if $pages}}
 
 	   <div id="pagelist-content-wrapper">

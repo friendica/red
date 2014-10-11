@@ -81,9 +81,6 @@ function webpages_content(&$a) {
 	require_once('include/conversation.php');
 	$o = profile_tabs($a,true);
 
-	$o .= '<div class="generic-content-wrapper-styled">';
-
-	$o .= '<h2>' . t('Webpages') . '</h2>';
 
 	$x = array(
 		'webpage' => ITEM_WEBPAGE,
@@ -129,6 +126,7 @@ function webpages_content(&$a) {
 		$url = z_root() . "/editwebpage/" . $which;
 // This isn't pretty, but it works.  Until I figure out what to do with the UI, it's Good Enough(TM).
 	return $o . replace_macros(get_markup_template("webpagelist.tpl"), array(
+    	'$listtitle = t('Webpages'),
 		'$baseurl' => $url,
 		'$edit' => t('Edit'),
 		'$pages' => $pages,
