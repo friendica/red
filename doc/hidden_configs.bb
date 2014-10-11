@@ -56,3 +56,52 @@ This document assumes you're an actual Power User.
     [em]system > do_not_track[/em]
         As the browser header.  This will break many identity based features.  
         You should really just set permissions that make sense.
+
+[b]Site config[/b]
+    [em]system > taganyone[/em]
+        Allow the tagging of anyone wehter you are connected or not.
+    [em]system > directorytags[/em]
+        Set the number of tags displayed on the directory page.
+    [em]system > startpage[/em]
+        Set the default page to be taken to after a login for all channels at
+        this website.  Can be overwritten by user settings.
+    [em]system > proejcthome[/em]
+        Set the project homepage as the homepage of your hub.
+    [em]system > workflowchannelnext[/em]
+        The page to direct users to immediately after creating a channel.
+    [em]system > max_bookmark_images[/em]
+        Set the maximum number of images to use when parsing a link.
+[color=red]Not sure this does anything.  It defaults to 2, I've never seen more than one.  Verify before linking from index[/color]
+    [em]system > max_daily_registrations[/em]
+        Set the maximum number of new registrations allowed on any day.
+        Useful to prevent oversubscription after a bout of publicity
+        for the project.
+    [em]system > tos_url[/em]
+        Set an alternative link for the ToS location.
+    [em]system > block_public_search[/em]
+        Similar to block_public, except only blocks public access to 
+        search features.  Useful for sites that want to be public, but
+        keep getting hammered by search engines.
+    [em]system > paranoia[/em]
+        As the pconfig, but on a site-wide basis.  Can be overwritten
+        by member settings.
+    [em]system > openssl_conf_file[/em]
+        Specify a file containing OpenSSL configuration.  Read the code first.
+        If you can't read the code, don't play with it.
+    [em]system > optimize_items[/em]
+        Runs optimise_table during some tasks to keep your database nice and 
+        defragmented.  This comes at a performance cost while the operations
+        are running, but also keeps things a bit faster while it's not.  
+        There also exist CLI utilities for performing this operation, which you
+        may prefer, especially if you're a large site.
+    [em]system > default_expire_days[/em]
+        When creating a new channel, set the default expiration of connections
+        posts to this number of days.
+    [em]system > dlogfile[/em]
+        Logfile to use for logging development errors.  Exactly the same as
+        logger otherwise.  This isn't magic, and requires your own logging
+        statements.  Developer tool.
+    [em]system > authlog[/em]
+        Logfile to use for logging auth errors.  Used to plug in to server
+        side software such as fail2ban.  Auth failures are still logged to
+        the main logs as well.
