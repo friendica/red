@@ -1,4 +1,4 @@
-{{if $is_default}}
+<div class="generic-content-wrapper-styled">{{if $is_default}}
 <p id="profile-edit-default-desc">{{$default}}</p>
 {{/if}}
 
@@ -362,5 +362,6 @@
 
 
 </form>
+</div>
 </div>
 

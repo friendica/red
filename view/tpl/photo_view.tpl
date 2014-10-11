@@ -1,5 +1,5 @@
 <div id="live-photos"></div>
-<div class="generic-content-wrapper">
+<div class="generic-content-wrapper-styled">
 <h3><a href="{{$album.0}}">{{$album.1}}</a></h3>
 
 <div id="photo-edit-link-wrap">

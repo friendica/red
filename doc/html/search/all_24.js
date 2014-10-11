@@ -9,7 +9,7 @@ var searchData=
   ['_24argv',['$argv',['../classApp.html#ab3da757abe5cb45bf88f07cc51a73b58',1,'App']]],
   ['_24arr',['$arr',['../extract_8php.html#a63bb4c41bc532baacf6a4976cfaa0feb',1,'extract.php']]],
   ['_24aside',['$aside',['../minimalisticdarkness_8php.html#a6e5d97615c6faef5dbffe04b8024ceaf',1,'minimalisticdarkness.php']]],
-  ['_24auth',['$auth',['../classRedDirectory.html#a9616af16cd19a18a6afebebcc2881c44',1,'RedDirectory\$auth()'],['../classRedFile.html#a4b5d0e33f919c6c175b30a55de6263f2',1,'RedFile\$auth()'],['../classRedBrowser.html#ab6d6d1e2a67e06b344a4cede1bd00b35',1,'RedBrowser\$auth()']]],
+  ['_24auth',['$auth',['../classRedMatrix_1_1RedDAV_1_1RedBrowser.html#ad19179bf4ac7f18fafa7e2e3df800142',1,'RedMatrix\RedDAV\RedBrowser\$auth()'],['../classRedDirectory.html#a9616af16cd19a18a6afebebcc2881c44',1,'RedDirectory\$auth()'],['../classRedFile.html#a4b5d0e33f919c6c175b30a55de6263f2',1,'RedFile\$auth()']]],
   ['_24baseurl',['$baseurl',['../classApp.html#ad5175536561021548ae8188e24c7b80c',1,'App']]],
   ['_24bodyclass',['$bodyclass',['../theme_2blogga_2php_2default_8php.html#a720581ae288aa09511670563e4205a4a',1,'$bodyclass():&#160;default.php'],['../theme_2blogga_2view_2theme_2blog_2default_8php.html#a720581ae288aa09511670563e4205a4a',1,'$bodyclass():&#160;default.php']]],
   ['_24browser',['$browser',['../classRedBasicAuth.html#af14337f1baad407f8a85d48205c0f30e',1,'RedBasicAuth']]],

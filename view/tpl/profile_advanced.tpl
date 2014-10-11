@@ -1,4 +1,4 @@
-<div id="profile-content-wrapper" class="generic-content-wrapper">
+<div id="profile-content-wrapper" class="generic-content-wrapper-styled">
 <h2>{{$title}}</h2>
 
 {{if $profile.canlike || $profile.like_count}}

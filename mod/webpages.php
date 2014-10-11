@@ -81,7 +81,7 @@ function webpages_content(&$a) {
 	require_once('include/conversation.php');
 	$o = profile_tabs($a,true);
 
-	$o .= '<div class="generic-content-wrapper">';
+	$o .= '<div class="generic-content-wrapper-styled">';
 
 	$o .= '<h2>' . t('Webpages') . '</h2>';
 
