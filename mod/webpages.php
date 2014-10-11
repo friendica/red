@@ -35,6 +35,8 @@ function webpages_content(&$a) {
 	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
 	$perms = get_all_perms($owner,$ob_hash);
+	if ($which == 'sys' && is_site_admin())
+		$perms['write_pages'] = 1;
 
 	if(! $perms['write_pages']) {
 		notice( t('Permission denied.') . EOL);
@@ -126,7 +128,7 @@ function webpages_content(&$a) {
 		$url = z_root() . "/editwebpage/" . $which;
 // This isn't pretty, but it works.  Until I figure out what to do with the UI, it's Good Enough(TM).
 	return $o . replace_macros(get_markup_template("webpagelist.tpl"), array(
-    	'$listtitle = t('Webpages'),
+    		'$listtitle' => t('Webpages'),
 		'$baseurl' => $url,
 		'$edit' => t('Edit'),
 		'$pages' => $pages,
