@@ -1716,7 +1716,7 @@ function process_location_delivery($sender,$arr,$deliveries) {
 		$sender['key'] = $r[0]['xchan_pubkey'];
 
 	$x = sync_locations($sender,$arr,true);
-	logger('process_location_delivery: results: ' . print_r($x,true), LOGGER_DATA);
+	logger('process_location_delivery: results: ' . print_r($x,true), LOGGER_DEBUG);
 }
 
 
@@ -1740,6 +1740,11 @@ function sync_locations($sender,$arr,$absolute = false) {
 			}
 		}
 
+		// Ensure that they have one primary hub
+
+		if(! $has_primary)
+			$arr['locations'][0]['primary'] = true;
+
 		foreach($arr['locations'] as $location) {
 			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$sender['key'])) {
 				logger('sync_locations: Unable to verify site signature for ' . $location['url']);
@@ -1747,10 +1752,6 @@ function sync_locations($sender,$arr,$absolute = false) {
 				continue;
 			}
 
-			// Ensure that they have one primary hub
-
-			if(! $has_primary)
-				$location['primary'] = true;
 
 			for($x = 0; $x < count($xisting); $x ++) {
 				if(($xisting[$x]['hubloc_url'] === $location['url']) 
@@ -1824,6 +1825,8 @@ function sync_locations($sender,$arr,$absolute = false) {
 						q("delete from hubloc where hubloc_id = %d limit 1",
 							intval($r[$h]['hubloc_id'])
 						);
+						$what .= 'duplicate_hubloc_removed ';
+						$changed = true;
 					}
 				}
 
@@ -1850,7 +1853,8 @@ function sync_locations($sender,$arr,$absolute = false) {
 				continue;
 			}
 
-			// new hub claiming to be primary. Make it so.
+			// Existing hubs are dealt with. Now let's process any new ones. 
+			// New hub claiming to be primary. Make it so by removing any existing primaries.
 
 			if(intval($location['primary'])) {
 				$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_hash = '%s' and (hubloc_flags & %d )",
@@ -1893,7 +1897,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 						dbesc(datetime_convert()),
 						intval($x['hubloc_id'])
 					);
-					$what .= 'removed_hub';
+					$what .= 'removed_hub ';
 					$changed = true;
 				}
 			}
