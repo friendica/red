@@ -5,6 +5,7 @@ var searchData=
   ['identity_5fselector',['identity_selector',['../identity_8php.html#a2ab5172eabd375869060c9ad68323f5c',1,'identity.php']]],
   ['ids_5fto_5fquerystr',['ids_to_querystr',['../text_8php.html#a436a8de00c942364c2d0fcfc7e1f4b5a',1,'text.php']]],
   ['imagestring',['imageString',['../classphoto__driver.html#abc9f73ad90923772d52b9fcc4eb117dd',1,'photo_driver\imageString()'],['../classphoto__gd.html#a0795fc029be382557ae3f6e285f40e00',1,'photo_gd\imageString()'],['../classphoto__imagick.html#a70adbef31128c0ac8cbc5dcf34cdb019',1,'photo_imagick\imageString()']]],
+  ['impel_5finit',['impel_init',['../impel_8php.html#ab7db6fca43b42ea4332cb3e841b3cf7b',1,'impel.php']]],
   ['import_5fauthor_5fdiaspora',['import_author_diaspora',['../items_8php.html#a2c3f97b2109c05df86d97449b3c78ebc',1,'items.php']]],
   ['import_5fauthor_5frss',['import_author_rss',['../items_8php.html#a6bee35961f2e32905f20367a9309d627',1,'items.php']]],
   ['import_5fauthor_5funknown',['import_author_unknown',['../items_8php.html#a37f79991f36811cf847446ff60e8e11f',1,'items.php']]],

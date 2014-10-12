@@ -162,7 +162,7 @@ function bb_parse_app($match) {
 function bb_parse_element($match) {
 	$j = json_decode(base64url_decode($match[1]),true);
 	if($j) {
-		$o = EOL . '<a href="' . z_root() . '" foo="baz" onclick="importElement(\'' . $match[1] . '\'); return false;" >' . t('Install design element: ') . $j['pagetitle'] . '</a>' . EOL; 
+		$o = EOL . '<a href="#" onclick="importElement(\'' . $match[1] . '\'); return false;" >' . t('Install design element: ') . $j['pagetitle'] . '</a>' . EOL; 
 	}
 	return $o;
 }
@@ -823,7 +823,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	// fix any escaped ampersands that may have been converted into links
 	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 
-	$Text = preg_replace("/\<(.*?)(src|href)=\"[^hfm](.*?)\>/ism",'<$1$2="">',$Text);
+	$Text = preg_replace("/\<(.*?)(src|href)=\"[^hfm#](.*?)\>/ism",'<$1$2="">',$Text);
 
 	call_hooks('bbcode',$Text);
 

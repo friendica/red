@@ -896,12 +896,14 @@ function updateConvItems(mode,data) {
 	function importElement(elem) {
 		$.post(  
              "impel",  
-            { "element" : elem }
+            { "element" : elem },
+			function(data) {
+				if(timer) clearTimeout(timer);
+				timer = setTimeout(NavUpdate,10);
+			}
 		);
-		if(timer) clearTimeout(timer);
-		timer = setTimeout(NavUpdate,10);
 
-		return true;  
+		return false;  
 	}
 
 	function preview_post() {

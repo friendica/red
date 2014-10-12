@@ -1,4 +1,4 @@
-<div class="generic-content-wrapper" id='adminpage'>
+<div class="generic-content-wrapper-styled" id='adminpage'>
 	<h1>{{$title}} - {{$page}}</h1>
 
 	<table id='server'>

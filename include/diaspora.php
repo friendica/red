@@ -821,7 +821,7 @@ function diaspora_post($importer,$xml,$msg) {
 
 		foreach($tags as $tag) {
 			if(strpos($tag,'#') === 0) {
-				if(strpos($tag,'[url='))
+				if((strpos($tag,'[url=')) || (strpos($tag,'[zrl')))
 					continue;
 
 				// don't link tags that are already embedded in links
@@ -1050,7 +1050,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 		foreach($tags as $tag) {
 			if(strpos($tag,'#') === 0) {
-				if(strpos($tag,'[url='))
+				if((strpos($tag,'[url=')) || (strpos($tag,'[zrl')))
 					continue;
 
 				// don't link tags that are already embedded in links
@@ -1087,7 +1087,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 		}
 	}
 
-	// This won't work
+	// This won't work on redmatrix
 	$plink = 'https://'.substr($diaspora_handle,strpos($diaspora_handle,'@')+1).'/posts/'.$guid;
 
 	$datarray['uid'] = $importer['channel_id'];
@@ -1337,7 +1337,7 @@ function diaspora_comment($importer,$xml,$msg) {
 
 		foreach($tags as $tag) {
 			if(strpos($tag,'#') === 0) {
-				if(strpos($tag,'[url='))
+				if((strpos($tag,'[url=')) || (strpos($tag,'[zrl')))
 					continue;
 
 				// don't link tags that are already embedded in links
@@ -1379,6 +1379,8 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray['mid'] = $guid;
 	$datarray['parent_mid'] = $parent_item['mid'];
 
+	// set the route to that of the parent so downstream hubs won't reject it.
+	$datarray['route'] = $parent_item['route'];
 
 	// No timestamps for comments? OK, we'll the use current time.
 	$datarray['changed'] = $datarray['created'] = $datarray['edited'] = datetime_convert();
@@ -1404,13 +1406,6 @@ function diaspora_comment($importer,$xml,$msg) {
 		$message_id = $result['item_id'];
 
 	if(($parent_item['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature)) {
-		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-			intval($message_id),
-			dbesc($signed_data),
-			dbesc(base64_encode($author_signature)),
-			dbesc($diaspora_handle)
-		);
-
 		// if the message isn't already being relayed, notify others
 		// the existence of parent_author_signature means the parent_author or owner
 		// is already relaying.
@@ -1968,6 +1963,9 @@ function diaspora_like($importer,$xml,$msg) {
 
 	$arr['app']  = 'Diaspora';
 
+	// set the route to that of the parent so downstream hubs won't reject it.
+	$arr['route'] = $parent_item['route'];
+
 	$arr['item_private'] = $parent_item['item_private'];
 	$arr['verb'] = $activity;
 	$arr['obj_type'] = $objtype;
@@ -2445,6 +2443,7 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 		$parent = $p[0];
 	else
 		return;
+
 
 	if(($item['verb'] === ACTIVITY_LIKE) && ($parent['mid'] === $parent['parent_mid'])) {
 		$tpl = get_markup_template('diaspora_like.tpl');

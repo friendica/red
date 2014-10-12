@@ -172,6 +172,10 @@ Functions</h2></td></tr>
 <tr class="separator:a4ff59df0f0a668a06a8411f87496aa21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a224710dfb7465b706c91134247c20afa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#a224710dfb7465b706c91134247c20afa">get_profile_fields_advanced</a> ($filter=0)</td></tr>
 <tr class="separator:a224710dfb7465b706c91134247c20afa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e6a1cc35887937823ec7fbb90472afe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#a2e6a1cc35887937823ec7fbb90472afe">notifications_off</a> ($channel_id)</td></tr>
+<tr class="separator:a2e6a1cc35887937823ec7fbb90472afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5650319c799de09d1b6d1076b6f839a4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#a5650319c799de09d1b6d1076b6f839a4">notifications_on</a> ($channel_id, $value)</td></tr>
+<tr class="separator:a5650319c799de09d1b6d1076b6f839a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="aa870d2c1f558cfd52bef05bc124e8fa4"></a>
@@ -612,6 +616,60 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a2e6a1cc35887937823ec7fbb90472afe"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">notifications_off </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$channel_id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>notifications_off($channel_id) Clear notifyflags for a channel - most likely during bulk import of content or other activity that is likely to generate huge amounts of undesired notifications. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$channel_id</td><td>The channel to disable notifications for </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int Current notification flag value. Send this to <a class="el" href="identity_8php.html#a5650319c799de09d1b6d1076b6f839a4">notifications_on()</a> to restore the channel settings when finished with the activity requiring <a class="el" href="identity_8php.html#a2e6a1cc35887937823ec7fbb90472afe">notifications_off()</a>; </dd></dl>
+
+<p>Referenced by <a class="el" href="import_8php.html#af17fef0410518f7eac205d0ea416eaa2">import_post()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5650319c799de09d1b6d1076b6f839a4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">notifications_on </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$channel_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="import_8php.html#af17fef0410518f7eac205d0ea416eaa2">import_post()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ad4a2c8caca8f6ae93633ebeca0ed6620"></a>
 <div class="memitem">
 <div class="memproto">
@@ -681,7 +739,7 @@ Functions</h2></td></tr>
 <p>The channel default theme is also selected for use, unless over-riden elsewhere. </p>
 <p>load/reload current theme info</p>
 
-<p>Referenced by <a class="el" href="achievements_8php.html#a35ae04ada0e227d19671f289a32fb30e">achievements_content()</a>, <a class="el" href="block_8php.html#a9b61c96044ed2a068f18c10370a78d5c">block_init()</a>, <a class="el" href="blocks_8php.html#a2531a8fd51db3cecb2eb20c002c66e12">blocks_content()</a>, <a class="el" href="channel_8php.html#ac7c8c7845741baadf87fae6bc279f3dc">channel_init()</a>, <a class="el" href="mod_2chat_8php.html#aa9ae4782e9baef0b7314ab9527c2707e">chat_init()</a>, <a class="el" href="cloud_8php.html#a1b79a6fe0454bc76673ad9aef55bf02d">cloud_init()</a>, <a class="el" href="common_8php.html#aca62f113655809f41f49042ce9b123c2">common_init()</a>, <a class="el" href="connect_8php.html#ad46a38f32fd7a3d324b1fa26373efa36">connect_init()</a>, <a class="el" href="hcard_8php.html#ac34f26b0e6a37eef44fa49bea135136d">hcard_init()</a>, <a class="el" href="layouts_8php.html#a6e0193759ad9eef76d3df2db24237b50">layouts_content()</a>, <a class="el" href="page_8php.html#a4d89800c0366a239191b1692c09635cf">page_init()</a>, <a class="el" href="mod_2photos_8php.html#ab950295cd77626f5fe65331a87693014">photos_init()</a>, <a class="el" href="profile_8php.html#ab5d0246be0552e2182a585c1206d22a5">profile_init()</a>, <a class="el" href="profile__photo_8php.html#a140631c56438fbfacb61a1eb43067d02">profile_photo_init()</a>, <a class="el" href="profiles_8php.html#a36f71405ad536228f8bb84a551b23f7e">profiles_init()</a>, <a class="el" href="profperm_8php.html#a17fb64ec05edee1dc94d95438807d6c6">profperm_init()</a>, <a class="el" href="viewconnections_8php.html#a00163d50b17568f7b0e48b1ca9ab7330">viewconnections_init()</a>, and <a class="el" href="webpages_8php.html#af3b7397d4abc153e3d2147740ee1a41d">webpages_content()</a>.</p>
+<p>Referenced by <a class="el" href="achievements_8php.html#a35ae04ada0e227d19671f289a32fb30e">achievements_content()</a>, <a class="el" href="block_8php.html#a9b61c96044ed2a068f18c10370a78d5c">block_init()</a>, <a class="el" href="blocks_8php.html#a2531a8fd51db3cecb2eb20c002c66e12">blocks_content()</a>, <a class="el" href="channel_8php.html#ac7c8c7845741baadf87fae6bc279f3dc">channel_init()</a>, <a class="el" href="mod_2chat_8php.html#aa9ae4782e9baef0b7314ab9527c2707e">chat_init()</a>, <a class="el" href="cloud_8php.html#ad2e96e917852f27dedfc263d37e13756">cloud_init()</a>, <a class="el" href="common_8php.html#aca62f113655809f41f49042ce9b123c2">common_init()</a>, <a class="el" href="connect_8php.html#ad46a38f32fd7a3d324b1fa26373efa36">connect_init()</a>, <a class="el" href="hcard_8php.html#ac34f26b0e6a37eef44fa49bea135136d">hcard_init()</a>, <a class="el" href="layouts_8php.html#a6e0193759ad9eef76d3df2db24237b50">layouts_content()</a>, <a class="el" href="page_8php.html#a4d89800c0366a239191b1692c09635cf">page_init()</a>, <a class="el" href="mod_2photos_8php.html#ab950295cd77626f5fe65331a87693014">photos_init()</a>, <a class="el" href="profile_8php.html#ab5d0246be0552e2182a585c1206d22a5">profile_init()</a>, <a class="el" href="profile__photo_8php.html#a140631c56438fbfacb61a1eb43067d02">profile_photo_init()</a>, <a class="el" href="profiles_8php.html#a36f71405ad536228f8bb84a551b23f7e">profiles_init()</a>, <a class="el" href="profperm_8php.html#a17fb64ec05edee1dc94d95438807d6c6">profperm_init()</a>, <a class="el" href="viewconnections_8php.html#a00163d50b17568f7b0e48b1ca9ab7330">viewconnections_init()</a>, and <a class="el" href="webpages_8php.html#af3b7397d4abc153e3d2147740ee1a41d">webpages_content()</a>.</p>
 
 </div>
 </div>

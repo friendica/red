@@ -1,4 +1,4 @@
-<div class="generic-content-wrapper">
+<div class="generic-content-wrapper-styled">
 <h1>{{$ptitle}}</h1>
 
 <form action="settings/display" id="settings-form" method="post" autocomplete="off" >

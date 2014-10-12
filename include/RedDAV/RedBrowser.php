@@ -41,7 +41,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 	 */
 	public function __construct(&$auth) {
 		$this->auth = $auth;
-		parent::__construct(false, false);
+		parent::__construct(true, false);
 	}
 
 	/**

@@ -169,24 +169,21 @@ Private Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:acb32b8df27538c57772824a745e751d7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRedDirectory.html#acb32b8df27538c57772824a745e751d7">$red_path</a></td></tr>
-<tr class="memdesc:acb32b8df27538c57772824a745e751d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The path inside /cloud.  <a href="#acb32b8df27538c57772824a745e751d7">More...</a><br/></td></tr>
 <tr class="separator:acb32b8df27538c57772824a745e751d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa10254abf177bb2a0e4a88495725e09b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRedDirectory.html#aa10254abf177bb2a0e4a88495725e09b">$folder_hash</a></td></tr>
 <tr class="separator:aa10254abf177bb2a0e4a88495725e09b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f113244cd85c17848df991001d024f4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRedDirectory.html#a0f113244cd85c17848df991001d024f4">$ext_path</a></td></tr>
-<tr class="memdesc:a0f113244cd85c17848df991001d024f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The full path as seen in the browser. /cloud + $red_path.  <a href="#a0f113244cd85c17848df991001d024f4">More...</a><br/></td></tr>
 <tr class="separator:a0f113244cd85c17848df991001d024f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad87c514a307ec97ba0f1372e9bcfa6a4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRedDirectory.html#ad87c514a307ec97ba0f1372e9bcfa6a4">$root_dir</a> = ''</td></tr>
 <tr class="separator:ad87c514a307ec97ba0f1372e9bcfa6a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9616af16cd19a18a6afebebcc2881c44"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRedDirectory.html#a9616af16cd19a18a6afebebcc2881c44">$auth</a></td></tr>
 <tr class="separator:a9616af16cd19a18a6afebebcc2881c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c148c07ad909985125aa4926d8d0021"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRedDirectory.html#a3c148c07ad909985125aa4926d8d0021">$os_path</a> = ''</td></tr>
-<tr class="memdesc:a3c148c07ad909985125aa4926d8d0021"><td class="mdescLeft">&#160;</td><td class="mdescRight">The real path on the filesystem. The actual path in store/ with the hashed names.  <a href="#a3c148c07ad909985125aa4926d8d0021">More...</a><br/></td></tr>
 <tr class="separator:a3c148c07ad909985125aa4926d8d0021"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classRedDirectory.html" title="RedDirectory class.">RedDirectory</a> class. </p>
-<p>A class that represents a directory. </p>
+<p>A class that represents a directory.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a1e35e3cd31d2a15250655e4cafdea180"></a>
 <div class="memitem">
@@ -216,7 +213,7 @@ Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">$ext_path</td><td>a full path </td></tr>
-    <tr><td class="paramtype"><a class="el" href="classRedBasicAuth.html">RedBasicAuth</a></td><td class="paramname">&amp;$auth_plugin</td><td></td></tr>
+    <tr><td class="paramtype"><a class="el" href="classRedBasicAuth.html" title="Authentication backend class for RedDAV.">RedBasicAuth</a></td><td class="paramname">&amp;$auth_plugin</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -385,7 +382,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>add description of what this function does.</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>add description of what this function does.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname">DAV\Exception\NotFound</td><td></td></tr>
@@ -494,7 +491,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Renames the directory. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>handle duplicate directory name</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>handle duplicate directory name</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname">DAV\Exception\Forbidden</td><td></td></tr>
@@ -550,9 +547,6 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The full path as seen in the browser. /cloud + $red_path. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>I think this is not used anywhere, we always strip '/cloud' and only use it in debug </dd></dl>
-
 <p>Referenced by <a class="el" href="classRedDirectory.html#a1e35e3cd31d2a15250655e4cafdea180">__construct()</a>, and <a class="el" href="classRedDirectory.html#a70173d4458572d95e586b2037d2fd2f4">getDir()</a>.</p>
 
 </div>
@@ -595,8 +589,6 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The real path on the filesystem. The actual path in store/ with the hashed names. </p>
-
 <p>Referenced by <a class="el" href="classRedDirectory.html#a2d12d99d38a6a75fc9a830b2f7fc0bf0">createFile()</a>, and <a class="el" href="classRedDirectory.html#a70173d4458572d95e586b2037d2fd2f4">getDir()</a>.</p>
 
 </div>
@@ -618,8 +610,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>The path inside /cloud. </p>
 
 </div>
 </div>

@@ -1,3 +1,5 @@
+<div class="generic-content-wrapper-styled">
+
 <table>
 	<tr>
 		<td><strong>{{$folder_header}}</strong>&nbsp;&nbsp;&nbsp;</td>
@@ -21,3 +23,5 @@
 		</td>
 	</tr>
 </table>
+
+</div>

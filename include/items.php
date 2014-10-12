@@ -2072,6 +2072,7 @@ function item_store($arr,$allow_exec = false) {
 				return $ret;
 			}
 
+
 			// is the new message multi-level threaded?
 			// even though we don't support it now, preserve the info
 			// and re-attach to the conversation parent.
@@ -2414,7 +2415,7 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['commented']     = $orig[0]['commented'];
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
-
+	$arr['route']         = ((array_key_exists('route',$arr)) ? trim($arr['route'])          : $orig[0]['route']);
 	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : $orig[0]['diaspora_meta']);
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : $orig[0]['location']);
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : $orig[0]['coord']);
@@ -2522,12 +2523,6 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id)
 
 	// since Diaspora doesn't handle edits we can only do this for the original text and not update it.
 
-	$enabled = intval(get_config('system','diaspora_enabled'));
-	if(! $enabled) {
-		logger('mod_item: diaspora support disabled, not storing comment signature', LOGGER_DEBUG);
-		return;
-	}
-
 	require_once('include/bb2diaspora.php');
 	$signed_body = bb2diaspora_itembody($datarray);
 
@@ -2552,12 +2547,6 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id)
 		intval($post_id) 
 	);
 
-	$r = q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-		intval($post_id),
-		dbesc($signed_text),
-		dbesc(base64_encode($authorsig)),
-		dbesc($diaspora_handle)
-	);
 	if(! $r)
 		logger('store_diaspora_comment_sig: DB write failed');
 
