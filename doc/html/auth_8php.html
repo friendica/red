@@ -110,24 +110,35 @@ $(document).ready(function(){initNavTree('auth_8php.html','');});
 <div class="title">auth.php File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Functions and inline functionality for authentication.  
+<a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a2add3a1129ffa4d5515442a9d52a9b1a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="auth_8php.html#a2add3a1129ffa4d5515442a9d52a9b1a">nuke_session</a> ()</td></tr>
+<tr class="memdesc:a2add3a1129ffa4d5515442a9d52a9b1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the current session.  <a href="#a2add3a1129ffa4d5515442a9d52a9b1a">More...</a><br/></td></tr>
 <tr class="separator:a2add3a1129ffa4d5515442a9d52a9b1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07bae0e623e2daa9ee2cd5a8aa294dee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="auth_8php.html#a07bae0e623e2daa9ee2cd5a8aa294dee">account_verify_password</a> ($email, $pass)</td></tr>
+<tr class="memdesc:a07bae0e623e2daa9ee2cd5a8aa294dee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verify login credentials.  <a href="#a07bae0e623e2daa9ee2cd5a8aa294dee">More...</a><br/></td></tr>
 <tr class="separator:a07bae0e623e2daa9ee2cd5a8aa294dee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7be44ee051c0aa29847807cf2c5dd38"><td class="memItemLeft" align="right" valign="top"><a class="el" href="theme_2mytheme_2php_2default_8php.html#a3987f5547ceb7e36a210a66a06241a5a">if</a>((<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST,'auth-params'))&amp;&amp;$_POST['auth-params']=== <br class="typebreak"/>
-'<a class="el" href="boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4">login</a>')&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="auth_8php.html#ab7be44ee051c0aa29847807cf2c5dd38">match_openid</a> ($authid)</td></tr>
-<tr class="separator:ab7be44ee051c0aa29847807cf2c5dd38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69fa663e6baf65f80d1b114ad72615f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="theme_2mytheme_2php_2default_8php.html#a3987f5547ceb7e36a210a66a06241a5a">if</a>((<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST, 'auth-params'))&amp;&amp;$_POST['auth-params']=== <br class="typebreak"/>
+'<a class="el" href="boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4">login</a>')&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="auth_8php.html#a69fa663e6baf65f80d1b114ad72615f2">match_openid</a> ($authid)</td></tr>
+<tr class="memdesc:a69fa663e6baf65f80d1b114ad72615f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the channel_id for a given openid_identity.  <a href="#a69fa663e6baf65f80d1b114ad72615f2">More...</a><br/></td></tr>
+<tr class="separator:a69fa663e6baf65f80d1b114ad72615f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a0950af7c2888ca1d4743fe5d0bff9ae5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="theme_2mytheme_2php_2default_8php.html#a3987f5547ceb7e36a210a66a06241a5a">if</a>((isset($_SESSION))&amp;&amp;(<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_SESSION,'authenticated'))&amp;&amp;((!(<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST,'auth-params')))||($_POST['auth-params']!== <br class="typebreak"/>
-'<a class="el" href="boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4">login</a>')))&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="auth_8php.html#a0950af7c2888ca1d4743fe5d0bff9ae5">else</a></td></tr>
-<tr class="separator:a0950af7c2888ca1d4743fe5d0bff9ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f60fb54f60cd36c2430d6615a7b4f3f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="theme_2mytheme_2php_2default_8php.html#a3987f5547ceb7e36a210a66a06241a5a">if</a>((isset($_SESSION))&amp;&amp;(<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_SESSION, <br class="typebreak"/>
+'authenticated'))&amp;&amp;((!(<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST, <br class="typebreak"/>
+'auth-params')))||($_POST['auth-params']!== <br class="typebreak"/>
+'<a class="el" href="boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4">login</a>')))&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="auth_8php.html#a6f60fb54f60cd36c2430d6615a7b4f3f">else</a></td></tr>
+<tr class="separator:a6f60fb54f60cd36c2430d6615a7b4f3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Functions and inline functionality for authentication. </p>
+<p>This file provides some functions for authentication handling and inline functionality. Look for auth parameters or re-validate an existing session also handles logout. Also provides a function for OpenID identiy matching. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a07bae0e623e2daa9ee2cd5a8aa294dee"></a>
 <div class="memitem">
 <div class="memproto">
@@ -151,20 +162,28 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Verify login credentials</p>
-<p>Returns account record on success, null on failure </p>
+
+<p>Verify login credentials. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$email</td><td>The email address to verify. </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$pass</td><td>The provided password to verify. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array|null Returns account record on success, null on failure. </dd></dl>
 <p>A plugin indicates successful login by setting 'authenticated' to non-zero value and returning a user record Plugins should never set 'authenticated' except to indicate success - as hooks may be chained and later plugins should not interfere with an earlier one that succeeded.</p>
 
 <p>Referenced by <a class="el" href="include_2api_8php.html#afe534f826e4282b72d66e8cadca7bb73">api_login()</a>, <a class="el" href="removeaccount_8php.html#a26a3325292e932c59793430ab737126a">removeaccount_post()</a>, <a class="el" href="removeme_8php.html#a7be08738beca44bb98a79e01cdb2ee88">removeme_post()</a>, and <a class="el" href="classRedBasicAuth.html#a8dfd9a0953f8884723b421b7c1acf79b">RedBasicAuth\validateUserPass()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab7be44ee051c0aa29847807cf2c5dd38"></a>
+<a class="anchor" id="a69fa663e6baf65f80d1b114ad72615f2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="theme_2mytheme_2php_2default_8php.html#a3987f5547ceb7e36a210a66a06241a5a">if</a> ((<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST,'auth-params'))&amp;&amp;$_POST['auth-params']=== '<a class="el" href="boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4">login</a>') match_openid </td>
+          <td class="memname"><a class="el" href="theme_2mytheme_2php_2default_8php.html#a3987f5547ceb7e36a210a66a06241a5a">if</a> ((<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST, 'auth-params'))&amp;&amp;$_POST['auth-params']=== '<a class="el" href="boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4">login</a>') match_openid </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>$authid</em></td><td>)</td>
@@ -172,6 +191,17 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the channel_id for a given openid_identity. </p>
+<p>Queries the values from pconfig configuration for the given openid_identity and returns the corresponding channel_id.</p>
+<p>How do we prevent that an OpenID identity is used more than once?</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$authid</td><td>The given openid_identity </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int|bool Return channel_id from pconfig or false. </dd></dl>
 
 <p>Referenced by <a class="el" href="openid_8php.html#a9a13827dbcf61ae4e45f0b6b33a88f43">openid_content()</a>.</p>
 
@@ -190,30 +220,33 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Resets the current session. </p>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
 <p>Referenced by <a class="el" href="include_2api_8php.html#a2e94eab9d6c164bfef7a1b2ab87b339b">api_account_logout()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="a0950af7c2888ca1d4743fe5d0bff9ae5"></a>
+<a class="anchor" id="a6f60fb54f60cd36c2430d6615a7b4f3f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="theme_2mytheme_2php_2default_8php.html#a3987f5547ceb7e36a210a66a06241a5a">if</a> ((isset($_SESSION))&amp;&amp;(<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_SESSION,'authenticated'))&amp;&amp;((!(<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST,'auth-params')))||($_POST['auth-params']!== '<a class="el" href="boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4">login</a>'))) else</td>
+          <td class="memname"><a class="el" href="theme_2mytheme_2php_2default_8php.html#a3987f5547ceb7e36a210a66a06241a5a">if</a> ((isset($_SESSION))&amp;&amp;(<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_SESSION, 'authenticated'))&amp;&amp;((!(<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST, 'auth-params')))||($_POST['auth-params']!== '<a class="el" href="boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4">login</a>'))) else</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line"></div>
 <div class="line">    <span class="keywordflow">if</span>(isset($_SESSION)) {</div>
-<div class="line">        <a class="code" href="auth_8php.html#a2add3a1129ffa4d5515442a9d52a9b1a">nuke_session</a>();</div>
+<div class="line">        <a class="code" href="auth_8php.html#a2add3a1129ffa4d5515442a9d52a9b1a" title="Resets the current session.">nuke_session</a>();</div>
 <div class="line">    }</div>
 <div class="line"></div>
 <div class="line">    </div>
 <div class="line"></div>
-<div class="line">    <span class="keywordflow">if</span>((<a class="code" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST,<span class="stringliteral">&#39;password&#39;</span>)) &amp;&amp; strlen($_POST[<span class="stringliteral">&#39;password&#39;</span>]))</div>
-<div class="line">        $encrypted = hash(<span class="stringliteral">&#39;whirlpool&#39;</span>,trim($_POST[<span class="stringliteral">&#39;password&#39;</span>]))</div>
+<div class="line">    <span class="keywordflow">if</span>((<a class="code" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST, <span class="stringliteral">&#39;password&#39;</span>)) &amp;&amp; strlen($_POST[<span class="stringliteral">&#39;password&#39;</span>]))</div>
+<div class="line">        $encrypted = hash(<span class="stringliteral">&#39;whirlpool&#39;</span>, trim($_POST[<span class="stringliteral">&#39;password&#39;</span>]))</div>
 </div><!-- fragment --><p>Inline - not a function look for auth parameters or re-validate an existing session also handles logout </p>
 
 </div>

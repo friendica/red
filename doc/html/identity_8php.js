@@ -22,6 +22,8 @@ var identity_8php =
     [ "is_member", "identity_8php.html#a9637c557e13d9671f3eeb124ab98212a", null ],
     [ "is_public_profile", "identity_8php.html#a4e996e44b50330098a04b467367a559f", null ],
     [ "is_sys_channel", "identity_8php.html#aa4bd4abfcba883f43919e89ec6419025", null ],
+    [ "notifications_off", "identity_8php.html#a2e6a1cc35887937823ec7fbb90472afe", null ],
+    [ "notifications_on", "identity_8php.html#a5650319c799de09d1b6d1076b6f839a4", null ],
     [ "profile_create_sidebar", "identity_8php.html#ad4a2c8caca8f6ae93633ebeca0ed6620", null ],
     [ "profile_load", "identity_8php.html#a4751b522ea913d0e7ed43e03d22e9e68", null ],
     [ "profile_sidebar", "identity_8php.html#a432259b2cf5b6f59be53e71db9f2c7dc", null ],

@@ -104,16 +104,18 @@ $(document).ready(function(){initNavTree('todo.html','');});
 <div class="textblock"><dl class="reflist">
 <dt><a class="anchor" id="_todo000001"></a>File <a class="el" href="include_2config_8php.html">config.php</a>  </dt>
 <dd>There are a few places in the code (such as the admin panel) where boolean configurations need to be fixed as of 10/08/2011. </dd>
-<dt><a class="anchor" id="_todo000002"></a>Member <a class="el" href="reddav_8php.html#ae92ea0df1993f6a7bcd1b6efa6c1fb66">RedChannelList</a>  (&amp;$auth)</dt>
+<dt><a class="anchor" id="_todo000004"></a>Member <a class="el" href="reddav_8php.html#ae92ea0df1993f6a7bcd1b6efa6c1fb66">RedChannelList</a>  (&amp;$auth)</dt>
 <dd>Is there any reason why this is not inside <a class="el" href="classRedDirectory.html" title="RedDirectory class.">RedDirectory</a> class? </dd>
-<dt><a class="anchor" id="_todo000003"></a>Member <a class="el" href="reddav_8php.html#a5df0d09893f2e65dc5cf6bbab6cfb266">RedCollectionData</a>  ($file, &amp;$auth)</dt>
+<dt><a class="anchor" id="_todo000005"></a>Member <a class="el" href="reddav_8php.html#a5df0d09893f2e65dc5cf6bbab6cfb266">RedCollectionData</a>  ($file, &amp;$auth)</dt>
 <dd>Is there any reason why this is not inside <a class="el" href="classRedDirectory.html" title="RedDirectory class.">RedDirectory</a> class? Seems only to be used there and we could simplify it a bit there. </dd>
-<dt><a class="anchor" id="_todo000004"></a>Member <a class="el" href="classRedDirectory.html#a0f113244cd85c17848df991001d024f4">RedDirectory::$ext_path</a>  </dt>
-<dd>I think this is not used anywhere, we always strip '/cloud' and only use it in debug  </dd>
-<dt><a class="anchor" id="_todo000006"></a>Member <a class="el" href="classRedDirectory.html#a70173d4458572d95e586b2037d2fd2f4">RedDirectory::getDir</a>  ()</dt>
+<dt><a class="anchor" id="_todo000003"></a>File <a class="el" href="reddav_8php.html">reddav.php</a>  </dt>
+<dd>split up the classes into own files.  </dd>
+<dt><a class="anchor" id="_todo000008"></a>Member <a class="el" href="classRedDirectory.html#a70173d4458572d95e586b2037d2fd2f4">RedDirectory::getDir</a>  ()</dt>
 <dd>add description of what this function does. </dd>
-<dt><a class="anchor" id="_todo000005"></a>Member <a class="el" href="classRedDirectory.html#adc48035679e52c55d9881f83de535553">RedDirectory::setName</a>  ($name)</dt>
-<dd>handle duplicate directory name</dd>
+<dt><a class="anchor" id="_todo000007"></a>Member <a class="el" href="classRedDirectory.html#adc48035679e52c55d9881f83de535553">RedDirectory::setName</a>  ($name)</dt>
+<dd>handle duplicate directory name </dd>
+<dt><a class="anchor" id="_todo000002"></a>Member <a class="el" href="classRedMatrix_1_1RedDAV_1_1RedBrowser.html#aa1607857cb59738c4dce2fe8e73d8f19">RedMatrix::set_writeable</a>  ()</dt>
+<dd>Maybe this can be solved with some $server-&gt;subscribeEvent()? </dd>
 </dl>
 </div></div><!-- contents -->
 </div><!-- doc-content -->

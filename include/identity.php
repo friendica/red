@@ -1525,4 +1525,36 @@ function get_profile_fields_advanced($filter = 0) {
 	return $x;
 }
 
+/**
+ * @function notifications_off($channel_id)
+ *    Clear notifyflags for a channel - most likely during bulk import of content or other activity that is likely
+ *    to generate huge amounts of undesired notifications.
+ * @param int $channel_id
+ *    The channel to disable notifications for
+ * @returns int
+ *    Current notification flag value. Send this to notifications_on() to restore the channel settings when finished
+ *    with the activity requiring notifications_off(); 
+ */
 
+
+
+function notifications_off($channel_id) {
+	$r = q("select channel_notifyflags from channel where channel_id = %d limit 1",
+		intval($channel_id)
+	);
+	$x = q("update channel set channel_notifyflags = 0 where channel_id = %d limit 1",
+		intval($channel_id)
+	);
+
+	return intval($r[0]['channel_notifyflags']);
+
+}
+
+
+function notifications_on($channel_id,$value) {
+	$x = q("update channel set channel_notifyflags = %d where channel_id = %d limit 1",
+		intval($value),
+		intval($channel_id)
+	);
+	return $x;
+}

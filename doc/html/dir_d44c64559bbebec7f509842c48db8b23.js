@@ -2,6 +2,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
 [
     [ "dba", "dir_21bc5169ff11430004758be31dcfc6c4.html", "dir_21bc5169ff11430004758be31dcfc6c4" ],
     [ "photo", "dir_aae29906d7bfc07d076125f669c8352e.html", "dir_aae29906d7bfc07d076125f669c8352e" ],
+    [ "RedDAV", "dir_e7f045be8bb383d8447c6a6b84145083.html", "dir_e7f045be8bb383d8447c6a6b84145083" ],
     [ "account.php", "account_8php.html", "account_8php" ],
     [ "acl_selectors.php", "acl__selectors_8php.html", "acl__selectors_8php" ],
     [ "activities.php", "activities_8php.html", "activities_8php" ],
@@ -90,6 +91,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     ] ],
     [ "socgraph.php", "socgraph_8php.html", "socgraph_8php" ],
     [ "spam.php", "spam_8php.html", "spam_8php" ],
+    [ "statistics_fns.php", "statistics__fns_8php.html", "statistics__fns_8php" ],
     [ "system_unavailable.php", "system__unavailable_8php.html", "system__unavailable_8php" ],
     [ "taxonomy.php", "taxonomy_8php.html", "taxonomy_8php" ],
     [ "template_processor.php", "template__processor_8php.html", "template__processor_8php" ],

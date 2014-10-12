@@ -32,5 +32,6 @@ var diaspora_8php =
     [ "diaspora_transmit", "diaspora_8php.html#aa704d6aa2ac77be345c0f501168e6e56", null ],
     [ "diaspora_unshare", "diaspora_8php.html#ab736d6f32b5de31c97cb579fc730e200", null ],
     [ "find_diaspora_person_by_handle", "diaspora_8php.html#aade0c165fcdded71352c7a67bf6ce37b", null ],
-    [ "get_diaspora_key", "diaspora_8php.html#a9bf7ef4094e0e14f6e2b7fe76ab7ad2e", null ]
+    [ "get_diaspora_key", "diaspora_8php.html#a9bf7ef4094e0e14f6e2b7fe76ab7ad2e", null ],
+    [ "get_diaspora_reshare_xml", "diaspora_8php.html#ac9e41e46626dc608204bf4b5e16e62d7", null ]
 ];

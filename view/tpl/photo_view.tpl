@@ -1,4 +1,5 @@
 <div id="live-photos"></div>
+<div class="generic-content-wrapper-styled">
 <h3><a href="{{$album.0}}">{{$album.1}}</a></h3>
 
 <div id="photo-edit-link-wrap">
@@ -96,6 +97,8 @@
 {{if $nextlink}}<div id="photo-next-link"><a href="{{$nextlink.0}}"><i class="icon-forward photo-icons"></i></a></div>{{/if}}
 
 <div class="clear"></div>
+
+</div>
 
 {{$paginate}}
 

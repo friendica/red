@@ -50,6 +50,8 @@
 		$search_background = "#000";
 	if (! $bgcolour)
 		$bgcolour = "#000";
+	if (! $genericcontent_bgcolour)
+		$genericcontent_bgcolour ='rgba(0,0,0,0.8)';
 	if (! $item_colour)
 		$item_colour = "rgba(0,0,0,0.8)";
 	if (! $comment_item_colour)

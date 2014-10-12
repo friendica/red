@@ -125,6 +125,8 @@ if(! $a->install) {
 		$item_colour = "rgba(238,238,238,0.8)";
 	if (! $comment_item_colour)
 		$comment_item_colour = "rgba(254,254,254,0.4)";
+	if (! $genericcontent_bgcolour)
+		$genericcontent_bgcolour = $comment_item_colour;
 	if (! $comment_border_colour)
 		$comment_border_colour = "rgba(238,238,238,0.8)";
 	if (! $toolicon_colour)
@@ -152,11 +154,11 @@ if(! $a->install) {
 	if (! $blockquote_bordercolour)
 		$blockquote_bordercolour = "#ccc";
 	if (! $code_borderc)
-		$code_borderc = "#444";
+		$code_borderc = "#ccc";
 	if (! $code_bgcolour)
-		$code_bgcolour = "#EEE";
+		$code_bgcolour = "#ccc";
 	if (! $code_txtcolour)
-		$code_txtcolour = "#444";
+		$code_txtcolour = "#000";
 	if (! $pre_borderc)
 		$pre_borderc = "#ccc";
 	if (! $pre_bgcolour)
@@ -331,6 +333,7 @@ $options = array (
 '$search_background' => $search_background,
 '$bgcolour' => $bgcolour,
 '$background_image' => $background_image,
+'$genericcontent_bgcolour' => $genericcontent_bgcolour,
 '$item_colour' => $item_colour,
 '$comment_item_colour' => $comment_item_colour,
 '$comment_border_colour' => $comment_border_colour,

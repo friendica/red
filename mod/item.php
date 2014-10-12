@@ -979,7 +979,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			}
 		}
 		// if the tag is already replaced...
-		elseif(strpos($tag,'[zrl=')) {
+		elseif((strpos($tag,'[zrl=')) || (strpos($tag,'[url='))) {
 			//...do nothing
 			return $replaced;
 		}

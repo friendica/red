@@ -1,3 +1,5 @@
+<div class="generic-content-wrapper-styled">
+
 <h3>{{$title}}</h3>
 
 <p>
@@ -147,4 +149,4 @@
     });
   });
 </script>
-
+</div>
