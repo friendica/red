@@ -117,7 +117,7 @@ function cloud_init(&$a) {
 	if ((! $auth->observer) && ($_SERVER['REQUEST_METHOD'] === 'GET')) {
 		try { 
 			$x = RedFileData('/' . $a->cmd, $auth);
-			if($x instanceof RedFile)
+			if($x instanceof RedDAV\RedFile)
 				$isapublic_file = true;
 		}
 		catch (Exception $e) {
