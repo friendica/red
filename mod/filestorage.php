@@ -1,18 +1,26 @@
 <?php
+/**
+ * @file mod/filestorage.php
+ *
+ */
 
 require_once('include/attach.php');
 
+/**
+ *
+ * @param object &$a
+ */
 function filestorage_post(&$a) {
 
-	$channel_id = ((x($_POST,'uid')) ? intval($_POST['uid']) : 0);
+	$channel_id = ((x($_POST, 'uid')) ? intval($_POST['uid']) : 0);
 
 	if((! $channel_id) || (! local_user()) || ($channel_id != local_user())) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
-	$recurse = ((x($_POST,'recurse')) ? intval($_POST['recurse']) : 0);
-	$resource = ((x($_POST,'filehash')) ? notags($_POST['filehash']) : '');
+	$recurse = ((x($_POST, 'recurse')) ? intval($_POST['recurse']) : 0);
+	$resource = ((x($_POST, 'filehash')) ? notags($_POST['filehash']) : '');
 
 	if(! $resource) {
 		notice(t('Item not found.') . EOL);
@@ -24,11 +32,11 @@ function filestorage_post(&$a) {
 	$str_group_deny    = perms2str($_REQUEST['group_deny']);
 	$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
  
-	attach_change_permissions($channel_id,$resource,$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny,$recurse = false);
+	attach_change_permissions($channel_id, $resource, $str_contact_allow, $str_group_allow, $str_contact_deny,$str_group_deny, $recurse = false);
 
 	//Build directory tree and redirect
 	$channel = $a->get_channel();
-	$cloudPath = get_parent_cloudpath($channel_id, $channel['channel_address'], $resource) ;
+	$cloudPath = get_parent_cloudpath($channel_id, $channel['channel_address'], $resource);
 	goaway($cloudPath);
 }
 
@@ -53,22 +61,21 @@ function filestorage_content(&$a) {
 	$observer = $a->get_observer();
 	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
-	$perms = get_all_perms($owner,$ob_hash);
+	$perms = get_all_perms($owner, $ob_hash);
 
 	if(! $perms['view_storage']) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
-	//	Since we have ACL'd files in the wild, but don't have ACL here yet, we 
-	//	need to return for anyone other than the owner, despite the perms check for now.
+	// Since we have ACL'd files in the wild, but don't have ACL here yet, we
+	// need to return for anyone other than the owner, despite the perms check for now.
 
 	$is_owner = (((local_user()) && ($owner  == local_user())) ? true : false);
 	if(! $is_owner) {
 		info( t('Permission Denied.') . EOL );
 		return;
 	}
-
 
 	if(argc() > 3 && argv(3) === 'delete') {
 		if(! $perms['write_storage']) {
@@ -77,7 +84,7 @@ function filestorage_content(&$a) {
 		}
 
 		$file = intval(argv(2));
-		$r = q("select hash from attach where id = %d and uid = %d limit 1",
+		$r = q("SELECT hash FROM attach WHERE id = %d AND uid = %d LIMIT 1",
 			dbesc($file),
 			intval($owner)
 		);
@@ -86,11 +93,15 @@ function filestorage_content(&$a) {
 			goaway(z_root() . '/cloud/' . $which);
 		}
 
-		attach_delete($owner,$r[0]['hash']);
-		
-		goaway(z_root() . '/cloud/' . $which);
-	}	
+		$f = $r[0];
+		$channel = $a->get_channel();
 
+		$parentpath = get_parent_cloudpath($channel['channel_id'], $channel['channel_address'], $f['hash']);
+
+		attach_delete($owner, $f['hash']);
+
+		goaway($parentpath);
+	}
 
 	if(argc() > 3 && argv(3) === 'edit') {
 		require_once('include/acl_selectors.php');
@@ -106,17 +117,15 @@ function filestorage_content(&$a) {
 		);
 
 		$f = $r[0];
-
 		$channel = $a->get_channel();
 
 		$cloudpath = get_cloudpath($f) . (($f['flags'] & ATTACH_FLAG_DIR) ? '?f=&davguest=1' : '');
 		$parentpath = get_parent_cloudpath($channel['channel_id'], $channel['channel_address'], $f['hash']);
 
-		$aclselect_e = populate_acl($f,false);
+		$aclselect_e = populate_acl($f, false);
 		$is_a_dir = (($f['flags'] & ATTACH_FLAG_DIR) ? true : false);
 
 		$lockstate = (($f['allow_cid'] || $f['allow_gid'] || $f['deny_cid'] || $f['deny_gid']) ? 'lock' : 'unlock'); 
-
 
 		$o = replace_macros(get_markup_template('attach_edit.tpl'), array(
 			'$header' => t('Edit file permissions'),
@@ -135,12 +144,10 @@ function filestorage_content(&$a) {
 			'$cpdesc' => t('Copy/paste this code to attach file to a post'),
 			'$cpldesc' => t('Copy/paste this URL to link file from a web page'),
 			'$submit' => t('Submit')
-
 		));
 
 		return $o;
-	}	
+	}
 
 	goaway(z_root() . '/cloud/' . $which);
-    
 }

@@ -49,7 +49,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		$this->data = $data;
 		$this->auth = $auth;
 
-		logger('RedFile::__construct(): ' . print_r($this->data, true), LOGGER_DATA);
+		//logger(print_r($this->data, true), LOGGER_DATA);
 	}
 
 	/**
@@ -58,7 +58,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	 * @return string
 	 */
 	public function getName() {
-		logger('RedFile::getName(): ' . basename($this->name), LOGGER_DEBUG);
+		//logger(basename($this->name), LOGGER_DATA);
 		return basename($this->name);
 	}
 
@@ -70,9 +70,10 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	 * @return void
 	 */
 	public function setName($newName) {
-		logger('RedFile::setName(): ' . basename($this->name) . ' -> ' . $newName, LOGGER_DEBUG);
+		logger('old name ' . basename($this->name) . ' -> ' . $newName, LOGGER_DATA);
 
 		if ((! $newName) || (! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id, $this->auth->observer, 'write_storage'))) {
+			logger('permission denied '. $newName);
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
@@ -91,7 +92,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	 * @return void
 	 */
 	public function put($data) {
-		logger('RedFile::put(): ' . basename($this->name), LOGGER_DEBUG);
+		logger('put file: ' . basename($this->name), LOGGER_DEBUG);
 		$size = 0;
 
 		// @todo only 3 values are needed
@@ -110,7 +111,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 				// @todo check return value and set $size directly
 				@file_put_contents($f, $data);
 				$size = @filesize($f);
-				logger('RedFile::put(): filename: ' . $f . ' size: ' . $size, LOGGER_DEBUG);
+				logger('filename: ' . $f . ' size: ' . $size, LOGGER_DEBUG);
 			} else {
 				$r = q("UPDATE attach SET data = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
 					dbesc(stream_get_contents($data)),
@@ -161,7 +162,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 				intval($c[0]['channel_account_id'])
 			);
 			if (($x) && ($x[0]['total'] + $size > $limit)) {
-				logger('RedFile::put(): service class limit exceeded for ' . $c[0]['channel_name'] . ' total usage is ' . $x[0]['total'] . ' limit is ' . $limit);
+				logger('service class limit exceeded for ' . $c[0]['channel_name'] . ' total usage is ' . $x[0]['total'] . ' limit is ' . $limit);
 				attach_delete($c[0]['channel_id'], $this->data['hash']);
 				return;
 			}
@@ -174,7 +175,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	 * @return string
 	 */
 	public function get() {
-		logger('RedFile::get(): ' . basename($this->name), LOGGER_DEBUG);
+		logger('get file ' . basename($this->name), LOGGER_DEBUG);
 
 		$r = q("SELECT data, flags, filename, filetype FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
 			dbesc($this->data['hash']),
@@ -206,7 +207,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	 *
 	 * Return null if the ETag can not effectively be determined.
 	 *
-	 * @return mixed
+	 * @return null|string
 	 */
 	public function getETag() {
 		$ret = null;
@@ -236,6 +237,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	 * @brief Returns the size of the node, in bytes.
 	 *
 	 * @return int
+	 *  filesize in bytes
 	 */
 	public function getSize() {
 		return $this->data['filesize'];
@@ -254,11 +256,13 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	/**
 	 * @brief Delete the file.
 	 *
-	 * @throw Sabre\DAV\Exception\Forbidden
-	 * @return void
+	 * This method checks the permissions and then calls attach_delete() function
+	 * to actually remove the file.
+	 *
+	 * @throw \Sabre\DAV\Exception\Forbidden
 	 */
 	public function delete() {
-		logger('RedFile::delete(): ' . basename($this->name), LOGGER_DEBUG);
+		logger('delete file ' . basename($this->name), LOGGER_DEBUG);
 
 		if ((! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id, $this->auth->observer, 'write_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
