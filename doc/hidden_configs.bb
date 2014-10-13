@@ -98,3 +98,6 @@ This document assumes you're an administrator.
         Logfile to use for logging auth errors.  Used to plug in to server
         side software such as fail2ban.  Auth failures are still logged to
         the main logs as well.
+    [b]system > hide_in_statistics[/b]
+        Tell the red statistics servers to completely hide this hub in hub lists.
+	
