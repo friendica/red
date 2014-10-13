@@ -2257,7 +2257,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 	$images = array();
 
 	$title = $item['title'];
-	$body = bb2diaspora_itembody($item);
+	$body = bb2diaspora_itembody($item,true);
 
 /*
 	// We're trying to match Diaspora's split message/photo protocol but
