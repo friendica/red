@@ -36,8 +36,8 @@ require_once('include/RedDAV/RedBasicAuth.php');
  * @todo Is there any reason why this is not inside RedDirectory class?
  * @fixme function name looks like a class name, should we rename it?
  *
- * @param $auth
- * @return array containing RedDirectory objects
+ * @param RedBasicAuth &$auth
+ * @return array RedDirectory[]
  */
 function RedChannelList(&$auth) {
 	$ret = array();
@@ -50,7 +50,7 @@ function RedChannelList(&$auth) {
 	if ($r) {
 		foreach ($r as $rr) {
 			if (perm_is_allowed($rr['channel_id'], $auth->observer, 'view_storage')) {
-				logger('RedChannelList: ' . '/cloud/' . $rr['channel_address'], LOGGER_DATA);
+				logger('found channel: /cloud/' . $rr['channel_address'], LOGGER_DEBUG);
 				// @todo can't we drop '/cloud'? It gets stripped off anyway in RedDirectory
 				$ret[] = new RedDAV\RedDirectory('/cloud/' . $rr['channel_address'], $auth);
 			}
@@ -70,8 +70,10 @@ function RedChannelList(&$auth) {
  * @fixme function name looks like a class name, should we rename it?
  *
  * @param string $file path to a directory
- * @param &$auth
- * @returns array DAV\INode[]
+ * @param RedBasicAuth &$auth
+ * @returns null|array \Sabre\DAV\INode[]
+ * @throw \Sabre\DAV\Exception\Forbidden
+ * @throw \Sabre\DAV\Exception\NotFound
  */
 function RedCollectionData($file, &$auth) {
 	$ret = array();
@@ -88,7 +90,7 @@ function RedCollectionData($file, &$auth) {
 
 	$file = trim($file, '/');
 	$path_arr = explode('/', $file);
-	
+
 	if (! $path_arr)
 		return null;
 
@@ -150,7 +152,7 @@ function RedCollectionData($file, &$auth) {
 
 	// This should no longer be needed since we just returned errors for paths not found
 	if ($path !== '/' . $file) {
-		logger("RedCollectionData: Path mismatch: $path !== /$file");
+		logger("Path mismatch: $path !== /$file");
 		return NULL;
 	}
 
@@ -160,8 +162,7 @@ function RedCollectionData($file, &$auth) {
 	);
 
 	foreach ($r as $rr) {
-		logger('RedCollectionData: filename: ' . $rr['filename'], LOGGER_DATA);
-
+		//logger('filename: ' . $rr['filename'], LOGGER_DEBUG);
 		if ($rr['flags'] & ATTACH_FLAG_DIR) {
 			// @todo can't we drop '/cloud'? it gets stripped off anyway in RedDirectory
 			$ret[] = new RedDAV\RedDirectory('/cloud' . $path . '/' . $rr['filename'], $auth);
@@ -180,11 +181,14 @@ function RedCollectionData($file, &$auth) {
  * @fixme function name looks like a class name, should we rename it?
  *
  * @param string $file
- * @param &$auth
+ *  path to file or directory
+ * @param RedBasicAuth &$auth
  * @param boolean $test (optional) enable test mode
+ * @return RedFile|RedDirectory|boolean|null
+ * @throw \Sabre\DAV\Exception\Forbidden
  */
 function RedFileData($file, &$auth, $test = false) {
-	logger('RedFileData:' . $file . (($test) ? ' (test mode) ' : ''), LOGGER_DEBUG);
+	logger($file . (($test) ? ' (test mode) ' : ''), LOGGER_DEBUG);
 
 	$x = strpos($file, '/cloud');
 	if ($x === 0) {
@@ -198,7 +202,7 @@ function RedFileData($file, &$auth, $test = false) {
 	$file = trim($file, '/');
 
 	$path_arr = explode('/', $file);
-	
+
 	if (! $path_arr)
 		return null;
 
@@ -237,7 +241,7 @@ function RedFileData($file, &$auth, $test = false) {
 		if ($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
 			$folder = $r[0]['hash'];
 			$path = $path . '/' . $r[0]['filename'];
-		}	
+		}
 		if (! $r) {
 			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach 
 				where folder = '%s' and filename = '%s' and uid = %d $perms group by filename limit 1",
@@ -267,11 +271,11 @@ function RedFileData($file, &$auth, $test = false) {
 	}
 
 	if ($errors) {
-		logger('RedFileData: not found');
+		logger('not found ' . $file);
 		if ($test)
 			return false;
 		if ($permission_error) {
-			logger('RedFileData: permission error');	
+			logger('permission error ' . $file);
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 		return;
