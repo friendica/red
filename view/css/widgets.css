@@ -81,10 +81,18 @@
 
 
 /* group */
+input.group-edit-checkbox {
+	margin: unset;
+	height: 1em;
+	width: 1em;
+}
+
+a.group-edit-link {
+	z-index: 1;
+}
 
 .group-edit-icon {
 	opacity: 0;
-	z-index: 1;
 }
 
 li:hover .group-edit-icon {

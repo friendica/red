@@ -3977,7 +3977,12 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL) {
 		// send the notification upstream/downstream as the case may be
 		// only send notifications to others if this is the owner's wall item. 
 
-		if(($item['item_flags'] & ITEM_WALL) && ($stage != DROPITEM_PHASE2))
+		// This isn't optimal. We somehow need to pass to this function whether or not 
+		// to call the notifier, or we need to call the notifier from the calling function. 
+		// We'll rely on the undocumented behaviour that DROPITEM_PHASE1 is (hopefully) only
+		// set if we know we're going to send delete notifications out to others. 
+
+		if((($item['item_flags'] & ITEM_WALL) && ($stage != DROPITEM_PHASE2)) || ($stage == DROPITEM_PHASE1))
 			proc_run('php','include/notifier.php','drop',$notify_id);
 
 		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
