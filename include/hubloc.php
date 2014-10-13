@@ -113,4 +113,46 @@ function remove_obsolete_hublocs() {
 }
 
 
+function hubloc_change_primary($hubloc) {
+
+	if(! is_array($hubloc))
+		return false;
+	if(! $hubloc['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)
+		return false;
+
+	// See if there's a local channel
+
+	$r = q("select channel_id, channel_primary from channel where channel_hash = '%s' limit 1",
+		dbesc($hubloc['hubloc_hash'])
+	);
+	if(($r) && (! $r[0]['channel_primary'])) {
+		q("update channel set channel_primary = 1 where channel_id = %d limit 1",
+			intval($r[0]['channel_id'])
+		);
+	}
+
+	// do we even have an xchan for this hubloc and if so is it already set as primary?
+
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($hubloc['hubloc_hash'])
+	);
+	if(! $r)
+		return false;
+	if($r[0]['xchan_addr'] === $hubloc['hubloc_addr'])
+		return false;
+
+	$url = $hubloc['hubloc_url'];
+	$lwebbie = substr($hubloc['hubloc_addr'],0,strpos($hubloc['hubloc_addr'],'@'));
+
+	$r = q("update xchan set xchan_addr, xchan_url = '%s', xchan_follow = '%s', xchan_connurl = '%s', where xchan_hash = '%s' limit 1",
+		dbesc($hubloc['hubloc_addr']),
+		dbesc($url . '/channel/' . $lwebbie),
+		dbesc($url . '/follow?f=&url=%s'),
+		dbesc($url . '/poco/' . $lwebbie),
+		dbesc($hubloc['hubloc_hash'])
+	);
+
+	return true;
+
+}
 	

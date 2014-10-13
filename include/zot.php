@@ -2,6 +2,7 @@
 
 require_once('include/crypto.php');
 require_once('include/items.php');
+require_once('include/hubloc.php');
 
 /**
  * Red implementation of zot protocol. 
@@ -1714,9 +1715,14 @@ function process_location_delivery($sender,$arr,$deliveries) {
 	);
 	if($r)
 		$sender['key'] = $r[0]['xchan_pubkey'];
-
-	$x = sync_locations($sender,$arr,true);
-	logger('process_location_delivery: results: ' . print_r($x,true), LOGGER_DEBUG);
+	if(array_key_exists('locations',$arr) && $arr['locations']) {
+		$x = sync_locations($sender,$arr,true);
+		logger('process_location_delivery: results: ' . print_r($x,true), LOGGER_DEBUG);
+		if($x['changed']) {
+			$guid = random_string() . '@' . get_app()->get_hostname();		
+			update_modtime($sender['hash'],$sender['guid'],$arr['locations'][0]['address'],UPDATE_FLAGS_UPDATED);
+		}
+	}
 }
 
 
@@ -1837,6 +1843,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
+					hubloc_change_primary($r[0]);
 					$what .= 'primary_hub ';
 					$changed = true;
 				}
@@ -1884,6 +1891,14 @@ function sync_locations($sender,$arr,$absolute = false) {
 			$what .= 'newhub ';
 			$changed = true;
 
+			if($location['primary']) {
+				$r = q("select * from hubloc where hubloc_addr = '%s' and hubloc_sitekey = '%s' limit 1",
+					dbesc($location['address']),
+					dbesc($location['sitekey'])
+				);
+				if($r)
+					hubloc_change_primary($r[0]);
+			}		
 		}
 
 		// get rid of any hubs we have for this channel which weren't reported.
