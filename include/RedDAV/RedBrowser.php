@@ -262,6 +262,14 @@ class RedBrowser extends DAV\Browser\Plugin {
 		construct_page(get_app());
 	}
 
+	/**
+	 * @brief Returns a human readable formatted string for filesizes.
+	 *
+	 * Don't we need such a functionality in other places, too?
+	 *
+	 * @param int $size filesize in bytes
+	 * @return string
+	 */
 	function userReadableSize($size) {
 		$ret = "";
 		if (is_numeric($size)) {
