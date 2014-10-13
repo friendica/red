@@ -144,7 +144,7 @@ function hubloc_change_primary($hubloc) {
 	$url = $hubloc['hubloc_url'];
 	$lwebbie = substr($hubloc['hubloc_addr'],0,strpos($hubloc['hubloc_addr'],'@'));
 
-	$r = q("update xchan set xchan_addr, xchan_url = '%s', xchan_follow = '%s', xchan_connurl = '%s', where xchan_hash = '%s' limit 1",
+	$r = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_follow = '%s', xchan_connurl = '%s' where xchan_hash = '%s' limit 1",
 		dbesc($hubloc['hubloc_addr']),
 		dbesc($url . '/channel/' . $lwebbie),
 		dbesc($url . '/follow?f=&url=%s'),
