@@ -1,10 +1,4 @@
 <?php
-/**
- * RedMatrix - "The Network"
- *
- * @link http://github.com/friendica/red
- * @license http://opensource.org/licenses/mit-license.php The MIT License (MIT)
- */
 
 namespace RedMatrix\RedDAV;
 
@@ -17,6 +11,9 @@ use Sabre\DAV;
  * for the webbrowser.
  *
  * @extends \Sabre\DAV\Browser\Plugin
+ *
+ * @link http://github.com/friendica/red
+ * @license http://opensource.org/licenses/mit-license.php The MIT License (MIT)
  */
 class RedBrowser extends DAV\Browser\Plugin {
 
@@ -33,6 +30,8 @@ class RedBrowser extends DAV\Browser\Plugin {
 	 * $enablePost will be activated through set_writeable() in a later stage.
 	 * At the moment the write_storage permission is only valid for the whole
 	 * folder. No file specific permissions yet.
+	 * @todo disable enablePost by default and only activate if permissions
+	 * grant edit rights.
 	 *
 	 * Disable assets with $enableAssets = false. Should get some thumbnail views
 	 * anyway.
@@ -52,7 +51,11 @@ class RedBrowser extends DAV\Browser\Plugin {
 	 * call the following function to decide whether or not to show web elements
 	 * which include writeable objects.
 	 *
-	 * @todo Maybe this can be solved with some $server->subscribeEvent()?
+	 * @fixme It only disable/enable the visible parts. Not the POST handler
+	 * which handels the actual requests when uploading files or creating folders.
+	 *
+	 * @todo Maybe this whole way of doing this can be solved with some
+	 * $server->subscribeEvent().
 	 */
 	public function set_writeable() {
 		if (! $this->auth->owner_id) {

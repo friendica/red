@@ -82,9 +82,12 @@
 
 /* group */
 
+a.group-edit-tool {
+	z-index: 1;
+}
+
 .group-edit-icon {
 	opacity: 0;
-	z-index: 1;
 }
 
 li:hover .group-edit-icon {

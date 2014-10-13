@@ -294,9 +294,9 @@ function bb2diaspora_itemwallwall(&$item) {
 }
 
 
-function bb2diaspora_itembody($item) {
+function bb2diaspora_itembody($item,$force_update = false) {
 
-	if($item['diaspora_meta']) {
+	if(($item['diaspora_meta']) && (! $force_update)) {
 		$diaspora_meta = json_decode($item['diaspora_meta'],true);
 		if($diaspora_meta) {
 			if(array_key_exists('iv',$diaspora_meta)) {
