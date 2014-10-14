@@ -1851,7 +1851,11 @@ function sync_locations($sender,$arr,$absolute = false) {
 				}
 				elseif($absolute) {
 					// Absolute sync - make sure the current primary is correctly reflected in the xchan
-					hubloc_change_primary($r[0]);
+					$pr = hubloc_change_primary($r[0]);
+					if($pr) {
+						$what .= 'xchan_primary';
+						$changed = true;
+					}
 				}
 				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted']))
 					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && ($location['deleted']))) {
