@@ -344,7 +344,7 @@ function import_post(&$a) {
 			unset($group['id']);
 			$group['uid'] = $channel['channel_id'];
 			dbesc_array($group);
-			$r = dbq("INSERT INTO group (`" 
+			$r = dbq("INSERT INTO groups (`" 
 				. implode("`, `", array_keys($group)) 
 				. "`) VALUES ('" 
 				. implode("', '", array_values($group)) 
