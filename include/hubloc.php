@@ -113,6 +113,8 @@ function remove_obsolete_hublocs() {
 }
 
 
+// This actually changes other structures to match the given (presumably current) hubloc primary selection
+
 function hubloc_change_primary($hubloc) {
 
 	if(! is_array($hubloc)) {

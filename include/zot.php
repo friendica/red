@@ -1849,6 +1849,10 @@ function sync_locations($sender,$arr,$absolute = false) {
 					$what .= 'primary_hub ';
 					$changed = true;
 				}
+				elseif($absolute) {
+					// Absolute sync - make sure the current primary is correctly reflected in the xchan
+					hubloc_change_primary($r[0]);
+				}
 				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted']))
 					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && ($location['deleted']))) {
 					$n = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
