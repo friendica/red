@@ -1843,6 +1843,8 @@ function sync_locations($sender,$arr,$absolute = false) {
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
+					// make sure hubloc_change_primary() has current data
+					$r[0]['hubloc_flags'] = $r[0]['hubloc_flags'] ^ HUBLOC_FLAGS_PRIMARY;
 					hubloc_change_primary($r[0]);
 					$what .= 'primary_hub ';
 					$changed = true;
