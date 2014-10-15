@@ -999,7 +999,7 @@ function photos_content(&$a) {
 			$comments = '';
 			if(! count($r)) {
 				if($can_post || $can_comment) {
-					$comments .= replace_macros($cmnt_tpl,array(
+					$commentbox = replace_macros($cmnt_tpl,array(
 						'$return_path' => '', 
 						'$mode' => 'photos',
 						'$jsreload' => $return_url,
