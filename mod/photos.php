@@ -1079,7 +1079,7 @@ function photos_content(&$a) {
 						'$title' => $title_e,
 						'$body' => $body_e,
 						'$ago' => relative_date($item['created']),
-						'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
+						'$indent' => (($item['parent'] != $item['id']) ? ' comment' : ''),
 						'$drop' => $drop,
 						'$comment' => $comment
 					));
