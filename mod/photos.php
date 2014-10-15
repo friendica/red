@@ -1087,7 +1087,7 @@ function photos_content(&$a) {
 				}
 			
 				if($can_post || $can_comment) {
-					$comments .= replace_macros($cmnt_tpl,array(
+					$commentbox = replace_macros($cmnt_tpl,array(
 						'$return_path' => '',
 						'$jsreload' => $return_url,
 						'$type' => 'wall-comment',
@@ -1129,6 +1129,7 @@ function photos_content(&$a) {
 			'$like' => $like_e,
 			'$dislike' => $dislike_e,
 			'$comments' => $comments,
+			'$commentbox' => $commentbox,
 			'$paginate' => $paginate,
 		));
 
