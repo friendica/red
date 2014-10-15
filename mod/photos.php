@@ -1070,7 +1070,7 @@ function photos_content(&$a) {
 					$body_e = prepare_text($item['body'],$item['mimetype']);
 
 					$comments .= replace_macros($template,array(
-						'$id' => $item['item_id'],
+						'$id' => $item['id'],
 						'$mode' => 'photos',
 						'$profile_url' => $profile_link,
 						'$name' => $name_e,
