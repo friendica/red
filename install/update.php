@@ -1458,7 +1458,7 @@ function update_r1128() {
 }
 
 function update_r1129() {
-	$r = q("update hubloc set hubloc_network = 'zot' where hubloc_network = '');
+	$r = q("update hubloc set hubloc_network = 'zot' where hubloc_network = ''");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
