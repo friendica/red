@@ -582,6 +582,7 @@ function events_content(&$a) {
 			'$t_orig' => $t_orig,
 			'$sh_text' => t('Share this event'),
 			'$sh_checked' => $sh_checked,
+			'$permissions' => t('Permissions'),
 			'$acl' => (($orig_event['event_xchan']) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $perm_defaults),false)),
 			'$submit' => t('Submit')
 

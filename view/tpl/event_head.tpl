@@ -115,10 +115,10 @@
 		$('#event-share-checkbox').change(function() {
 
 			if ($('#event-share-checkbox').is(':checked')) { 
-				$('#acl-wrapper').show();
+				$('#event-permissions-button').show();
 			}
 			else {
-				$('#acl-wrapper').hide();
+				$('#event-permissions-button').hide();
 			}
 		}).trigger('change');
 
