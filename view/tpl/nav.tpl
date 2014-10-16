@@ -48,14 +48,15 @@
 		<div class="collapse navbar-collapse" id="navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-left">
 			{{if !$userinfo}}
-				{{if $nav.lock}}
-					<li>
-						<a title="{{$nav.lock.3}}" href="{{$nav.lock.0}}"><i class="{{if $nav.locked}}icon-lock{{else}}icon-unlock{{/if}}"></i></a>
-					</li>
-				{{/if}}
+			{{if $nav.loginmenu}}
+				<li class="{{$nav.loginmenu.0.2}}"><a data-toggle="dropdown" data-target="#" href="{{$nav.loginmenu.0.0}}" title="{{$nav.loginmenu.0.3}}" >{{$nav.loginmenu.0.1}} <span class="caret" id="usermenu-caret"></span></a>
+				<ul class="dropdown-menu" role="menu">
+				{{foreach $nav.loginmenu as $loginmenu}}
+					<li role="presentation"><a class="{{$loginmenu.2}}" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem">{{$loginmenu.1}}</a></li>
+				{{/foreach}}
+				</ul></li>
 			{{/if}}
-			
-			{{if $nav.login}}<li class="{{$nav.login.2}}"><a href="{{$nav.login.0}}" title="{{$nav.login.3}}" >{{$nav.login.1}}</a><li>{{/if}}
+			{{/if}}
 
 			{{if $nav.alogout}}<li class="{{$nav}}-alogout.2"><a href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" >{{$nav.alogout.1}}</a></li>{{/if}}
 

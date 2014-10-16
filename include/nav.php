@@ -84,6 +84,7 @@ EOT;
 
 	$nav['usermenu']=array();
 	$userinfo = null;
+	$nav['loginmenu']=array();
 
 	if(local_user()) {
 
@@ -120,8 +121,9 @@ EOT;
 			$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'));
 	}
 	else {
-		if(! get_account_id()) 
-			$nav['login'] = Array('login',t('Login'), ($a->module == 'login'?'selected':''), t('Sign in'));
+		if(! get_account_id())  {
+			$nav['loginmenu'][] = Array('login',t('Login'),'',t('Sign in'));
+		}
 		else
 			$nav['alogout'] = Array('logout',t('Logout'), "", t('End this session'));
 
@@ -136,14 +138,11 @@ EOT;
 	}
 
 	if($observer) {
-		$nav['locked'] = true;
 		$nav['lock'] = array('logout','','lock', 
 			sprintf( t('%s - click to logout'), $observer['xchan_addr']));
 	}
 	else {
-		$nav['locked'] = false;
-		$nav['lock'] = array('rmagic','','unlock', 
-			t('Click to authenticate to your home hub'));
+		$nav['loginmenu'][] = Array('rmagic',t('Remote login'),'',t('Click to authenticate to your home hub'));
 	}
 
 	/**
