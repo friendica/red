@@ -66,7 +66,8 @@
 <input type="checkbox" name="share" value="1" id="event-share-checkbox" {{$sh_checked}} /> <div id="event-share-text">{{$sh_text}}</div>
 <div id="event-share-break"></div>
 
-{{$acl}}
+<button id="event-permissions-button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
+	{{$acl}}
 
 <div class="clear"></div>
 <input id="event-submit" type="submit" name="submit" value="{{$submit}}" />
