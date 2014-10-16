@@ -248,7 +248,8 @@ function populate_acl($defaults = null,$show_jotnets = true) {
 		'$aclModalTitle' => t('Permissions'),
 		'$aclModalDismiss' => t('Close')
 	));
-	
+
+	logger($o);	
 	
 	return $o;
 
