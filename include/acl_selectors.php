@@ -249,8 +249,6 @@ function populate_acl($defaults = null,$show_jotnets = true) {
 		'$aclModalDismiss' => t('Close')
 	));
 
-	logger($o);	
-	
 	return $o;
 
 }
