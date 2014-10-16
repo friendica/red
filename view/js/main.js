@@ -986,6 +986,7 @@ function updateConvItems(mode,data) {
 		$('body').css('cursor', 'wait');
 		$.get('contactgroup/' + gid + '/' + cid, function(data) {
 				$('body').css('cursor', 'auto');
+				$('#group-' + gid).toggleClass('icon-check icon-check-empty');
 		});
 	}
 

@@ -49,7 +49,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @param RedBasicAuth &$auth_plugin
 	 */
 	public function __construct($ext_path, &$auth_plugin) {
-		logger('RedDirectory::__construct() ' . $ext_path, LOGGER_DATA);
+		//logger('directory ' . $ext_path, LOGGER_DATA);
 		$this->ext_path = $ext_path;
 		// remove "/cloud" from the beginning of the path
 		$this->red_path = ((strpos($ext_path, '/cloud') === 0) ? substr($ext_path, 6) : $ext_path);
@@ -66,19 +66,19 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	}
 
 	private function log() {
-		logger('RedDirectory::log() ext_path ' . $this->ext_path, LOGGER_DATA);
-		logger('RedDirectory::log() os_path ' . $this->os_path, LOGGER_DATA);
-		logger('RedDirectory::log() red_path ' . $this->red_path, LOGGER_DATA);
+		logger('ext_path ' . $this->ext_path, LOGGER_DATA);
+		logger('os_path  ' . $this->os_path, LOGGER_DATA);
+		logger('red_path ' . $this->red_path, LOGGER_DATA);
 	}
 
 	/**
 	 * @brief Returns an array with all the child nodes.
 	 *
-	 * @throws DAV\Exception\Forbidden
-	 * @return array DAV\INode[]
+	 * @throw \Sabre\DAV\Exception\Forbidden
+	 * @return array \Sabre\DAV\INode[]
 	 */
 	public function getChildren() {
-		logger('RedDirectory::getChildren() called for ' . $this->ext_path, LOGGER_DATA);
+		//logger('children for ' . $this->ext_path, LOGGER_DATA);
 		$this->log();
 
 		if (get_config('system', 'block_public') && (! $this->auth->channel_id) && (! $this->auth->observer)) {
@@ -97,12 +97,12 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @brief Returns a child by name.
 	 *
 	 *
-	 * @throw DAV\Exception\Forbidden
-	 * @throw DAV\Exception\NotFound
+	 * @throw \Sabre\DAV\Exception\Forbidden
+	 * @throw \Sabre\DAV\Exception\NotFound
 	 * @param string $name
 	 */
 	public function getChild($name) {
-		logger('RedDirectory::getChild(): ' . $name, LOGGER_DATA);
+		logger($name, LOGGER_DATA);
 
 		if (get_config('system', 'block_public') && (! $this->auth->channel_id) && (! $this->auth->observer)) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
@@ -130,7 +130,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @return string
 	 */
 	public function getName() {
-		logger('RedDirectory::getName() returns: ' . basename($this->red_path), LOGGER_DATA);
+		//logger(basename($this->red_path), LOGGER_DATA);
 		return (basename($this->red_path));
 	}
 
@@ -139,20 +139,20 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 *
 	 * @todo handle duplicate directory name
 	 *
-	 * @throw DAV\Exception\Forbidden
+	 * @throw \Sabre\DAV\Exception\Forbidden
 	 * @param string $name The new name of the directory.
 	 * @return void
 	 */
 	public function setName($name) {
-		logger('RedDirectory::setName(): ' . basename($this->red_path) . ' -> ' . $name, LOGGER_DATA);
+		logger('old name ' . basename($this->red_path) . ' -> ' . $name, LOGGER_DATA);
 
 		if ((! $name) || (! $this->auth->owner_id)) {
-			logger('RedDirectory::setName(): permission denied');
+			logger('permission denied ' . $name);
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
 		if (! perm_is_allowed($this->auth->owner_id, $this->auth->observer, 'write_storage')) {
-			logger('RedDirectory::setName(): permission denied');
+			logger('permission denied '. $name);
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
@@ -177,21 +177,21 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * After successful creation of the file, you may choose to return the ETag
 	 * of the new file here.
 	 *
-	 * @throws DAV\Exception\Forbidden
+	 * @throw \Sabre\DAV\Exception\Forbidden
 	 * @param string $name Name of the file
 	 * @param resource|string $data Initial payload
 	 * @return null|string ETag
 	 */
 	public function createFile($name, $data = null) {
-		logger('RedDirectory::createFile(): ' . $name, LOGGER_DATA);
+		logger($name, LOGGER_DEBUG);
 
 		if (! $this->auth->owner_id) {
-			logger('RedDirectory::createFile(): permission denied');
+			logger('permission denied ' . $name);
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
 		if (! perm_is_allowed($this->auth->owner_id, $this->auth->observer, 'write_storage')) {
-			logger('RedDirectory::createFile(): permission denied');
+			logger('permission denied ' . $name);
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
@@ -203,7 +203,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		);
 
 		if (! $c) {
-			logger('RedDirectory::createFile(): no channel');
+			logger('no channel');
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
@@ -237,7 +237,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		$size = file_put_contents($f, $data);
 		// delete attach entry if file_put_contents() failed
 		if ($size === false) {
-			logger('RedDirectory::createFile(): file_put_contents() failed for ' . $name, LOGGER_DEBUG);
+			logger('file_put_contents() failed to ' . $f);
 			attach_delete($c[0]['channel_id'], $hash);
 			return;
 		}
@@ -273,7 +273,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 				intval($c[0]['channel_account_id'])
 			);
 			if (($x) && ($x[0]['total'] + $size > $limit)) {
-				logger('reddav: service class limit exceeded for ' . $c[0]['channel_name'] . ' total usage is ' . $x[0]['total'] . ' limit is ' . $limit);
+				logger('service class limit exceeded for ' . $c[0]['channel_name'] . ' total usage is ' . $x[0]['total'] . ' limit is ' . $limit);
 				attach_delete($c[0]['channel_id'], $hash);
 				return;
 			}
@@ -287,7 +287,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @return void
 	 */
 	public function createDirectory($name) {
-		logger('RedDirectory::createDirectory(): ' . $name, LOGGER_DEBUG);
+		logger($name, LOGGER_DEBUG);
 
 		if ((! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id, $this->auth->observer, 'write_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
@@ -301,7 +301,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		if ($r) {
 			$result = attach_mkdir($r[0], $this->auth->observer, array('filename' => $name, 'folder' => $this->folder_hash));
 			if (! $result['success']) {
-				logger('RedDirectory::createDirectory(): ' . print_r($result, true), LOGGER_DEBUG);
+				logger('error ' . print_r($result, true), LOGGER_DEBUG);
 			}
 		}
 	}
@@ -310,31 +310,33 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @brief Checks if a child exists.
 	 *
 	 * @param string $name
+	 *  The name to check if it exists.
 	 * @return boolean
 	 */
 	public function childExists($name) {
 		// On /cloud we show a list of available channels.
 		// @todo what happens if no channels are available?
 		if ($this->red_path === '/' && $name === 'cloud') {
-			logger('RedDirectory::childExists() /cloud: true', LOGGER_DATA);
+			//logger('We are at /cloud show a channel list', LOGGER_DEBUG);
 			return true;
 		}
 
 		$x = RedFileData($this->ext_path . '/' . $name, $this->auth, true);
-		logger('RedFileData returns: ' . print_r($x, true), LOGGER_DATA);
+		//logger('RedFileData returns: ' . print_r($x, true), LOGGER_DATA);
 		if ($x)
 			return true;
+
 		return false;
 	}
 
 	/**
 	 * @todo add description of what this function does.
 	 *
-	 * @throw DAV\Exception\NotFound
+	 * @throw \Sabre\DAV\Exception\NotFound
 	 * @return void
 	 */
 	function getDir() {
-		logger('RedDirectory::getDir(): ' . $this->ext_path, LOGGER_DEBUG);
+		//logger($this->ext_path, LOGGER_DEBUG);
 		$this->auth->log();
 
 		$file = $this->ext_path;
@@ -356,7 +358,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		if (! $path_arr)
 			return;
 
-		logger('RedDirectory::getDir(): path: ' . print_r($path_arr, true), LOGGER_DATA);
+		logger('paths: ' . print_r($path_arr, true), LOGGER_DATA);
 
 		$channel_name = $path_arr[0];
 
@@ -367,7 +369,6 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		if (! $r) {
 			throw new DAV\Exception\NotFound('The file with name: ' . $channel_name . ' could not be found.');
-			return;
 		}
 
 		$channel_id = $r[0]['channel_id'];
@@ -397,12 +398,11 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		}
 		$this->folder_hash = $folder;
 		$this->os_path = $os_path;
-		return;
 	}
 
 	/**
 	 * @brief Returns the last modification time for the directory, as a UNIX
-	 *        timestamp.
+	 * timestamp.
 	 *
 	 * It looks for the last edited file in the folder. If it is an empty folder
 	 * it returns the lastmodified time of the folder itself, to prevent zero
@@ -429,7 +429,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	/**
 	 * @brief Return quota usage.
 	 *
-	 * Do guests relly see the used/free values from filesystem of the complete store directory?
+	 * @fixme Should guests relly see the used/free values from filesystem of the
+	 * complete store directory?
 	 *
 	 * @return array with used and free values in bytes.
 	 */

@@ -291,8 +291,8 @@ function create_identity($arr) {
 	// Create a verified hub location pointing to this site.
 
 	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, 
-		hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey )
-		values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s' )",
+		hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_network )
+		values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 		dbesc($guid),
 		dbesc($sig),
 		dbesc($hash),
@@ -302,7 +302,8 @@ function create_identity($arr) {
 		dbesc(base64url_encode(rsa_sign(z_root(),$ret['channel']['channel_prvkey']))),
 		dbesc(get_app()->get_hostname()),
 		dbesc(z_root() . '/post'),
-		dbesc(get_config('system','pubkey'))
+		dbesc(get_config('system','pubkey')),
+		dbesc('zot')
 	);
 	if(! $r)
 		logger('create_identity: Unable to store hub location');

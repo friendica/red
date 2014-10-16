@@ -5,16 +5,12 @@
 			{{foreach $groups as $group}}
 			<li>
 				{{if $group.cid}}
-				<a class="pull-right group-edit-link">
-					<input type="checkbox" 
-						class="{{if $group.selected}}ticked{{else}}unticked {{/if}} group-edit-checkbox" 
-						onclick="contactgroupChangeMember('{{$group.id}}','{{$group.enc_cid}}');return true;"
-						{{if $group.ismember}}checked="checked"{{/if}}
-					/>
+				<a class="pull-right group-edit-tool fakelink" onclick="contactgroupChangeMember('{{$group.id}}','{{$group.enc_cid}}'); return true;"/>
+					<i id="group-{{$group.id}}" class="{{if $group.ismember}}icon-check{{else}}icon-check-empty{{/if}}"></i>
 				</a>
 				{{/if}}
 				{{if $group.edit}}
-				<a class="pull-right group-edit-link" href="{{$group.edit.href}}" title="{{$edittext}}"><i class="group-edit-icon icon-pencil"></i></a>
+				<a class="pull-right group-edit-tool" href="{{$group.edit.href}}" title="{{$edittext}}"><i class="group-edit-icon icon-pencil"></i></a>
 				{{/if}}
 				<a{{if $group.selected}} class="group-selected"{{/if}} href="{{$group.href}}">{{$group.text}}</a>
 			</li>
