@@ -999,7 +999,7 @@ function photos_content(&$a) {
 			$comments = '';
 			if(! count($r)) {
 				if($can_post || $can_comment) {
-					$comments .= replace_macros($cmnt_tpl,array(
+					$commentbox = replace_macros($cmnt_tpl,array(
 						'$return_path' => '', 
 						'$mode' => 'photos',
 						'$jsreload' => $return_url,
@@ -1070,7 +1070,7 @@ function photos_content(&$a) {
 					$body_e = prepare_text($item['body'],$item['mimetype']);
 
 					$comments .= replace_macros($template,array(
-						'$id' => $item['item_id'],
+						'$id' => $item['id'],
 						'$mode' => 'photos',
 						'$profile_url' => $profile_link,
 						'$name' => $name_e,
@@ -1079,7 +1079,7 @@ function photos_content(&$a) {
 						'$title' => $title_e,
 						'$body' => $body_e,
 						'$ago' => relative_date($item['created']),
-						'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
+						'$indent' => (($item['parent'] != $item['id']) ? ' comment' : ''),
 						'$drop' => $drop,
 						'$comment' => $comment
 					));
@@ -1087,7 +1087,7 @@ function photos_content(&$a) {
 				}
 			
 				if($can_post || $can_comment) {
-					$comments .= replace_macros($cmnt_tpl,array(
+					$commentbox = replace_macros($cmnt_tpl,array(
 						'$return_path' => '',
 						'$jsreload' => $return_url,
 						'$type' => 'wall-comment',
@@ -1129,6 +1129,7 @@ function photos_content(&$a) {
 			'$like' => $like_e,
 			'$dislike' => $dislike_e,
 			'$comments' => $comments,
+			'$commentbox' => $commentbox,
 			'$paginate' => $paginate,
 		));
 

@@ -46,7 +46,7 @@ class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	/**
 	 *
 	 * @see RedBrowser::set_writeable()
-	 * @var DAV\Browser\Plugin
+	 * @var \Sabre\DAV\Browser\Plugin
 	 */
 	public $browser;
 	/**
@@ -85,7 +85,7 @@ class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	 */
 	protected function validateUserPass($username, $password) {
 		if (trim($password) === '+++') {
-			logger('(DAV): RedBasicAuth::validateUserPass(): guest ' . $username);
+			logger('guest: ' . $username);
 			return true;
 		}
 
@@ -112,13 +112,14 @@ class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
 				foreach ($x as $record) {
 					if (($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)
 					&& (hash('whirlpool', $record['account_salt'] . $password) === $record['account_password'])) {
-						logger('(DAV) RedBasicAuth: password verified for ' . $username);
+						logger('password verified for ' . $username);
 						return $this->setAuthenticated($r[0]);
 					}
 				}
 			}
 		}
-		logger('(DAV) RedBasicAuth: password failed for ' . $username);
+		logger('password failed for ' . $username);
+		// @TODO add security logger
 		return false;
 	}
 
@@ -186,23 +187,23 @@ class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	 * @brief Set browser plugin for SabreDAV.
 	 *
 	 * @see RedBrowser::set_writeable()
-	 * @param DAV\Browser\Plugin $browser
+	 * @param \Sabre\DAV\Browser\Plugin $browser
 	 */
 	public function setBrowserPlugin($browser) {
 		$this->browser = $browser;
 	}
 
 	/**
-	 * Prints out all RedBasicAuth variables to logger().
+	 * @brief Prints out all RedBasicAuth variables to logger().
 	 *
 	 * @return void
 	 */
 	public function log() {
-		logger('dav: auth: channel_name ' . $this->channel_name, LOGGER_DATA);
-		logger('dav: auth: channel_id ' . $this->channel_id, LOGGER_DATA);
-		logger('dav: auth: channel_hash ' . $this->channel_hash, LOGGER_DATA);
-		logger('dav: auth: observer ' . $this->observer, LOGGER_DATA);
-		logger('dav: auth: owner_id ' . $this->owner_id, LOGGER_DATA);
-		logger('dav: auth: owner_nick ' . $this->owner_nick, LOGGER_DATA);
+		logger('channel_name ' . $this->channel_name, LOGGER_DATA);
+		logger('channel_id ' . $this->channel_id, LOGGER_DATA);
+		logger('channel_hash ' . $this->channel_hash, LOGGER_DATA);
+		logger('observer ' . $this->observer, LOGGER_DATA);
+		logger('owner_id ' . $this->owner_id, LOGGER_DATA);
+		logger('owner_nick ' . $this->owner_nick, LOGGER_DATA);
 	}
 }

@@ -92,6 +92,10 @@
 
 {{$comments}}
 
+<div class="wall-item-comment-wrapper{{if $comments}} wall-item-comment-wrapper-wc{{/if}}" >
+	{{$commentbox}}
+</div>
+
 </div>
 
 {{if $nextlink}}<div id="photo-next-link"><a href="{{$nextlink.0}}"><i class="icon-forward photo-icons"></i></a></div>{{/if}}
