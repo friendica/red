@@ -64,4 +64,4 @@ In the interests of consistency we adopt the following code styling. We may acce
 
 [li] Generally speaking, opening braces go on the same line as the thing which opens the brace. They are the last character on the line. Closing braces are on a line by themselves. [/li]
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

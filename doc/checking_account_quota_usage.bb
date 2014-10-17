@@ -14,4 +14,4 @@ Visit the following URL in your browser:
 Example:
 [observer.baseurl]/filestorage/[observer.webname]
 
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/main_footer.bb;

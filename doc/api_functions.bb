@@ -129,5 +129,5 @@ Red proposed API extensions to the Twitter API
     api/albums/destroy (R),J
     api/friends/permissions (R),J
 
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/main_footer.bb;
 

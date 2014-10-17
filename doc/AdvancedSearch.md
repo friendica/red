@@ -51,7 +51,4 @@ Example:
     name="charlie brown" and country=canada and not gender=female
 
 
-
-
-
- 
+#include doc/macros/main_footer.bb;

@@ -32,4 +32,4 @@ On the directory page, you may search for people with published profiles. Curren
 
 On your Connnections page and in the directory there is a link to &quot;Suggestions&quot; or &quot;Channel Suggestions&quot;, respectively. This will find channels who have matching and/or similar keywords. The more keywords you provide, the more relevant the search results that are returned. These are sorted by relevance.
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;
