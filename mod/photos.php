@@ -956,7 +956,7 @@ function photos_content(&$a) {
 
 			$edit = array(
 				'edit' => t('Edit photo'),
-				'id' => print_r($ph[0]), //['id'],
+				'id' => $link_item['id'], //$ph[0]['id'],
 				'rotatecw' => t('Rotate CW (right)'),
 				'rotateccw' => t('Rotate CCW (left)'),
 				'albums' => $albums['albums'],
