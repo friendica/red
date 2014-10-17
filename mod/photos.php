@@ -956,7 +956,7 @@ function photos_content(&$a) {
 
 			$edit = array(
 				'edit' => t('Edit photo'),
-				'id' => $ph[0]['id'],
+				'id' => print_r($ph[0]), //['id'],
 				'rotatecw' => t('Rotate CW (right)'),
 				'rotateccw' => t('Rotate CCW (left)'),
 				'albums' => $albums['albums'],
@@ -1114,7 +1114,7 @@ function photos_content(&$a) {
 
 		$photo_tpl = get_markup_template('photo_view.tpl');
 		$o .= replace_macros($photo_tpl, array(
-			'$id' => $ph[0]['id'],
+			'$id' => $link_item['id'], //$ph[0]['id'],
 			'$album' => $album_e,
 			'$tools' => $tools,
 			'$lock' => $lock,
