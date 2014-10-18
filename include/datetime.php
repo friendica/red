@@ -134,7 +134,7 @@ function dob($dob) {
 	$f = get_config('system','birthday_input_format');
 	if(! $f)
 		$f = 'ymd';
-	$o = datesel($f,'',1920,$y,true,$year,$month,$day);
+	$o = datesel($f,'dob',1920,$y,true,$year,$month,$day);
 	return $o;
 }
 
@@ -169,95 +169,107 @@ function datesel_format($f) {
 	return $o;
 }
 
+/**
+ * returns a date selector
+ * @param $format
+ *  format string, e.g. 'ymd' or 'mdy'. Not currently supported
+ * @param $id
+ *  id and name of datetimepicker (defaults to "datepicker")
+ * @param $ymin
+ *  first year shown in selector dropdown
+ * @param $ymax
+ *  last year shown in selector dropdown
+ * @param $allow_blank
+ *  allow an empty response on any field. Not currently supported
+ * @param $y
+ *  already selected year
+ * @param $m
+ *  already selected month
+ * @param $d
+ *  already selected day
+ */
+function datesel($format, $id, $ymin, $ymax, $allow_blank, $y, $m, $d) {
+	if($ymin > $ymax) list($ymin,$ymax) = array($ymax,$ymin);
 
-// returns a date selector.
-// $f           = format string, e.g. 'ymd' or 'mdy'
-// $pre         = prefix (if needed) for HTML name and class fields
-// $ymin        = first year shown in selector dropdown
-// $ymax        = last year shown in selector dropdown
-// $allow_blank = allow an empty response on any field
-// $y           = already selected year
-// $m           = already selected month
-// $d           = already selected day
-
-
-function datesel($f,$pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
+	if($id == '') $id = 'datepicker';
 
 	$o = '';
 
-	if(strlen($f)) {
-		for($z = 0; $z < strlen($f); $z ++) {
-			if($f[$z] === 'y') {
+	$dateformat = 'YYYY-MM-DD';
+	$mindate = $ymin ? "new Date($ymin,1,1)" : '';
+	$maxdate = $ymin ? "new Date($ymax,11,31)" : ''; // Yes, JS months really go from 0 to 11.
+	
+	$m = $m -1; // Because JavaScript month weirdness
 
-				$o .= "<select name=\"{$pre}year\" class=\"{$pre}year\" size=\"1\">";
-				if($allow_blank) {
-					$sel = (($y == '0000') ? " selected=\"selected\" " : "");
-					$o .= "<option value=\"0000\" $sel ></option>";
-				}
+	$defaultDate = ($y != 0 && $m != 0 && $d != 0) ? ", defaultDate: new Date($y,$m,$d)" : '';
 
-				if($ymax > $ymin) {
-					for($x = $ymax; $x >= $ymin; $x --) {
-						$sel = (($x == $y) ? " selected=\"selected\" " : "");
-						$o .= "<option value=\"$x\" $sel>$x</option>";
-					}
-				}
-				else {
-					for($x = $ymax; $x <= $ymin; $x ++) {
-						$sel = (($x == $y) ? " selected=\"selected\" " : "");
-						$o .= "<option value=\"$x\" $sel>$x</option>";
-					}
-				}
-			}
-			elseif($f[$z] == 'm') {
-  
-				$o .= "</select> <select name=\"{$pre}month\" class=\"{$pre}month\" size=\"1\">";
-				for($x = (($allow_blank) ? 0 : 1); $x <= 12; $x ++) {
-					$sel = (($x == $m) ? " selected=\"selected\" " : "");
-					$y = (($x) ? $x : '');
-					$o .= "<option value=\"$x\" $sel>$y</option>";
-				}
-			}
-			elseif($f[$z] == 'd') {
-
-				$o .= "</select> <select name=\"{$pre}day\" class=\"{$pre}day\" size=\"1\">";
-				for($x = (($allow_blank) ? 0 : 1); $x <= 31; $x ++) {
-					$sel = (($x == $d) ? " selected=\"selected\" " : "");
-					$y = (($x) ? $x : '');
-					$o .= "<option value=\"$x\" $sel>$y</option>";
-				}
-			}
-		}
-	}
-
-	$o .= "</select>";
+	$o .= "<div class='date' id='$id'><input type='text' placeholder='$dateformat' name='$id'/></div>";
+	$o .= "<script type='text/javascript'>\$(function () {\$('#$id').datetimepicker({pickTime: false, minDate: $mindate, maxDate: $maxdate, format: '$dateformat', useCurrent: false $defaultDate}); });</script>";
 	return $o;
 }
 
+/**
+ * returns a date selector
+ * @param $format
+ *  format string, e.g. 'ymd' or 'mdy'. Not currently supported
+ * @param $id
+ *  id and name of datetimepicker (defaults to "timepicker")
+ * @param $h
+ *  already selected hour
+ * @param $m
+ *  already selected minute
+ */
+function timesel($format,$id,$h,$m) {
+	if($id == '') $id = 'timepicker';
 
-function timesel($pre,$h,$m) {
+	$timeformat = 'HH:mm';
 
 	$o = '';
-	$o .= "<select name=\"{$pre}hour\" class=\"{$pre}hour\" size=\"1\">";
-	for($x = 0; $x < 24; $x ++) {
-		$sel = (($x == $h) ? " selected=\"selected\" " : "");
-		$o .= "<option value=\"$x\" $sel>$x</option>";
-	}
-	$o .= "</select> : <select name=\"{$pre}minute\" class=\"{$pre}minute\" size=\"1\">";
-	for($x = 0; $x < 60; $x ++) {
-		$sel = (($x == $m) ? " selected=\"selected\" " : "");
-		$o .= "<option value=\"$x\" $sel>$x</option>";
-	}
-
-	$o .= "</select>";
+	$o .= "<div class='date' id='$id'><input type='text' placeholder='$timeformat' name='$id'/></div>";
+	$o .= "<script type='text/javascript'>\$(function () {\$('#$id').datetimepicker({pickDate: false, format: '$timeformat', useCurrent: false, defaultDate: new Date(0,0,0,$h,$m)}); });</script>";
 	return $o;
 }
 
+/**
+ * returns a datetime selector
+ * @param $format
+ *  format string, e.g. 'ymd' or 'mdy'. Not currently supported
+ * @param $id
+ *  id and name of datetimepicker (defaults to "datetimepicker")
+ * @param $ymin
+ *  first year shown in selector dropdown
+ * @param $ymax
+ *  last year shown in selector dropdown
+ * @param $allow_blank
+ *  allow an empty response on any field. Not currently supported
+ * @param $y
+ *  already selected year
+ * @param $m
+ *  already selected month
+ * @param $d
+ *  already selected day
+ * @param $h
+ *  already selected hour
+ * @param $min
+ *  already selected minute
+ */
+function datetimesel($format, $id, $ymin, $ymax, $allow_blank, $y, $m, $d, $h, $min) {
+	if($ymin > $ymax) list($ymin,$ymax) = array($ymax,$ymin);
 
+	if($id == '') $id = 'datetimepicker';
 
+	$o = '';
 
+	$dateformat = 'YYYY-MM-DD HH:mm';
+	$mindate = $ymin ? "new Date($ymin,1,1)" : '';
+	$maxdate = $ymin ? "new Date($ymax,11,31)" : '';
+	
+	$defaultDate = ($y != 0 && $m != 0 && $d != 0) ? ", defaultDate: new Date($y, $m, $d, $h, $min)" : '';
 
-
-
+	$o .= "<div class='date' id='$id'><input type='text' placeholder='$dateformat' name='$id'/></div>";
+	$o .= "<script type='text/javascript'>\$(function () {\$('#$id').datetimepicker({sideBySide: true, minDate: $mindate, maxDate: $maxdate, format: '$dateformat', useCurrent: false $defaultDate}); });</script>";
+	return $o;
+}
 
 // implements "3 seconds ago" etc.
 // based on $posted_date, (UTC).
