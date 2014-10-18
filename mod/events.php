@@ -18,18 +18,6 @@ function events_post(&$a) {
 	$start_text = escape_tags($_REQUEST['start_text']);
 	$finish_text = escape_tags($_REQUEST['finish_text']);
 
-	$startyear = intval($_POST['startyear']);
-	$startmonth = intval($_POST['startmonth']);
-	$startday = intval($_POST['startday']);
-	$starthour = intval($_POST['starthour']);
-	$startminute = intval($_POST['startminute']);
-
-	$finishyear = intval($_POST['finishyear']);
-	$finishmonth = intval($_POST['finishmonth']);
-	$finishday = intval($_POST['finishday']);
-	$finishhour = intval($_POST['finishhour']);
-	$finishminute = intval($_POST['finishminute']);
-
 	$adjust   = intval($_POST['adjust']);
 	$nofinish = intval($_POST['nofinish']);
 
@@ -560,18 +548,15 @@ function events_content(&$a) {
 			'$placeholdercategory' => t('Categories (comma-separated list)'),
 			'$category' => $category,
 			'$s_text' => t('Event Starts:') . ' <span class="required" title="' . t('Required') . '">*</span>',
-			'$bootstrap' => 1,
 			'$stext' => $stext,
 			'$ftext' => $ftext,
 			'$ModalCANCEL' => t('Cancel'),
 			'$ModalOK' => t('OK'),
-			'$s_dsel' => datesel($f,'start',$syear+5,$syear,false,$syear,$smonth,$sday),
-			'$s_tsel' => timesel('start',$shour,$sminute),
+			'$s_dsel' => datetimesel($f,'start_text',$syear+5,$syear,false,$syear,$smonth,$sday,$shour,$sminute),
 			'$n_text' => t('Finish date/time is not known or not relevant'),
 			'$n_checked' => $n_checked,
 			'$f_text' => t('Event Finishes:'),
-			'$f_dsel' => datesel($f,'finish',$fyear+5,$fyear,false,$fyear,$fmonth,$fday),
-			'$f_tsel' => timesel('finish',$fhour,$fminute),
+			'$f_dsel' => datetimesel($f,'finish_text',$fyear+5,$fyear,false,$fyear,$fmonth,$fday,$fhour,$fminute),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$a_checked' => $a_checked,
 			'$d_text' => t('Description:'), 

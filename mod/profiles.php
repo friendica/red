@@ -233,40 +233,12 @@ function profiles_post(&$a) {
 			return;
 		}
 
-		if($_POST['dob']) {
-			$year = substr($_POST['dob'],0,4);
-			$month = substr($_POST['dob'],5,2);
-			$day = substr($_POST['dob'],8,2);
-		}
-	
-		$year = intval($_POST['year']);
-		if($year < 1900 || $year > 2100 || $year < 0)
-			$year = 0;
-		$month = intval($_POST['month']);
-			if(($month > 12) || ($month < 0))
-				$month = 0;
-		$mtab = array(0,31,29,31,30,31,30,31,31,30,31,30,31);
-		$day = intval($_POST['day']);
-			if(($day > $mtab[$month]) || ($day < 0))
-				$day = 0;
-
-//		if($year && (! ($month && $day))) {
-//			$month = 1; $day = 1;
-//		}
-
-
-		$dob = '0000-00-00';
-		$dob = sprintf('%04d-%02d-%02d',$year,$month,$day);
-
+		$dob = $_POST['dob'] ? escape_tags(trim($_POST['dob'])) : '0000-00-00'; // FIXME: Needs to be validated?
 			
 		$name = escape_tags(trim($_POST['name']));
 
 		if($orig[0]['name'] != $name)
 			$namechanged = true;
-
-
-
-
 
 		$pdesc        = escape_tags(trim($_POST['pdesc']));
 		$gender       = escape_tags(trim($_POST['gender']));
