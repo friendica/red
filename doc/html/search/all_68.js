@@ -31,6 +31,7 @@ var searchData=
   ['htmlactionspanel',['htmlActionsPanel',['../classRedMatrix_1_1RedDAV_1_1RedBrowser.html#a3bd98af2d1cdfd8f26deb914596176cf',1,'RedMatrix::RedDAV::RedBrowser']]],
   ['http_5fstatus_5fexit',['http_status_exit',['../include_2network_8php.html#a4cfb2c05a1c295317283d762440ce0b2',1,'network.php']]],
   ['hubloc_2ephp',['hubloc.php',['../hubloc_8php.html',1,'']]],
+  ['hubloc_5fchange_5fprimary',['hubloc_change_primary',['../hubloc_8php.html#ad86214b3a74084bd7b54e8d6c919ce4d',1,'hubloc.php']]],
   ['hubloc_5fflags_5fdeleted',['HUBLOC_FLAGS_DELETED',['../boot_8php.html#a7c286add8961fd2d79216314cd4aadd8',1,'boot.php']]],
   ['hubloc_5fflags_5forphancheck',['HUBLOC_FLAGS_ORPHANCHECK',['../boot_8php.html#aefe573c3c7b0d37fbff264bbae79d673',1,'boot.php']]],
   ['hubloc_5fflags_5fprimary',['HUBLOC_FLAGS_PRIMARY',['../boot_8php.html#a3ad9cc5d4354be741fa1de12b96e9955',1,'boot.php']]],
