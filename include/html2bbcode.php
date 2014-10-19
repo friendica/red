@@ -283,8 +283,9 @@ function html2bbcode($message)
 		array('[b]', '[/b]', '[i]', '[/i]'), $message);
 
 	// Handling Yahoo style of mails
-	$message = str_replace('[hr][b]From:[/b]', '[quote][b]From:[/b]', $message);
+	//	$message = str_replace('[hr][b]From:[/b]', '[quote][b]From:[/b]', $message);
 
+	$message = htmlspecialchars($message,ENT_COMPAT,'UTF-8',false);
 	return(trim($message));
 }
 
