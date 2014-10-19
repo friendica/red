@@ -626,7 +626,7 @@ logger('extra_fields: ' . print_r($extra_fields,true));
 			'$lbl_fullname' => t('Your Full Name:'),
 			'$lbl_title'    => t('Title/Description:'),
 			'$lbl_gender'   => t('Your Gender:'),
-			'$lbl_bd'       => sprintf( t("Birthday \x28%s\x29:"),datesel_format($f)),
+			'$lbl_bd'       => t("Birthday :"),
 			'$lbl_address'  => t('Street Address:'),
 			'$lbl_city'     => t('Locality/City:'),
 			'$lbl_zip'      => t('Postal/Zip Code:'),

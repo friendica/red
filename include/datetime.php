@@ -140,36 +140,6 @@ function dob($dob) {
 }
 
 
-function datesel_format($f) {
-
-	$o = '';
-
-	if(strlen($f)) {
-		for($x = 0; $x < strlen($f); $x ++) {
-			switch($f[$x]) {
-				case 'y':
-					if(strlen($o))
-						$o .= '-';
-					$o .= t('year');					
-					break;
-				case 'm':
-					if(strlen($o))
-						$o .= '-';
-					$o .= t('month');					
-					break;
-				case 'd':
-					if(strlen($o))
-						$o .= '-';
-					$o .= t('day');
-					break;
-				default:
-					break;
-			}
-		}
-	}
-	return $o;
-}
-
 /**
  * returns a date selector
  * @param $format

@@ -520,11 +520,6 @@ function events_content(&$a) {
 			}
 		}
 
-
-
-		$dateformat = datesel_format($f);
-		$timeformat = t('hour:minute');
-
 		require_once('include/acl_selectors.php');
 
 		$perm_defaults = array(
@@ -544,7 +539,6 @@ function events_content(&$a) {
 			'$mid' => $mid,
 	
 			'$title' => t('Event details'),
-			'$format_desc' => sprintf( t('Format is %s %s.'),$dateformat,$timeformat),
 			'$desc' => t('Starting date and Title are required.'),
 			'$catsenabled' => $catsenabled,
 			'$placeholdercategory' => t('Categories (comma-separated list)'),
