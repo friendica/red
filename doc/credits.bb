@@ -42,11 +42,10 @@ Erkan Yilmaz
 sasiflo
 Stefan Parviainen
 Haakon Meland Eriksen
-Oliver
+Oliver Hartmann (23n)
 Erik Lundin
 habeascodice
 sirius
-23n
 Charles
 Tony Baldwin
 Hauke Zuehl
