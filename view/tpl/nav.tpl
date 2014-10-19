@@ -47,6 +47,7 @@
 		</div>
 		<div class="collapse navbar-collapse" id="navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-left">
+			{{if $nav.register}}<li class="{{$nav.register.2}}"><a href="{{$nav.register.0}}" title="{{$nav.register.3}}" >{{$nav.register.1}}</a><li>{{/if}}
 			{{if !$userinfo}}
 			{{if $nav.loginmenu}}
 				<li class="{{$nav.loginmenu.0.2}}"><a data-toggle="dropdown" data-target="#" href="{{$nav.loginmenu.0.0}}" title="{{$nav.loginmenu.0.3}}" >{{$nav.loginmenu.0.1}} <span class="caret" id="usermenu-caret"></span></a>
@@ -92,7 +93,6 @@
 				</li>
 			{{/if}}
 
-			{{if $nav.register}}<li class="{{$nav.register.2}}"><a href="{{$nav.register.0}}" title="{{$nav.register.3}}" >{{$nav.register.1}}</a><li>{{/if}}
 
 			{{if $nav.messages}}
 				<li class="{{$sel.messages}} hidden-xs">

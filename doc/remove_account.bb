@@ -24,6 +24,4 @@ This is irreversible.
 
 All your channels will be deleted. If you have identity clones on other sites this only removes by default the channels instances which exists on this site.
 
-
-
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

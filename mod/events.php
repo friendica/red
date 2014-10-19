@@ -18,18 +18,6 @@ function events_post(&$a) {
 	$start_text = escape_tags($_REQUEST['start_text']);
 	$finish_text = escape_tags($_REQUEST['finish_text']);
 
-	$startyear = intval($_POST['startyear']);
-	$startmonth = intval($_POST['startmonth']);
-	$startday = intval($_POST['startday']);
-	$starthour = intval($_POST['starthour']);
-	$startminute = intval($_POST['startminute']);
-
-	$finishyear = intval($_POST['finishyear']);
-	$finishmonth = intval($_POST['finishmonth']);
-	$finishday = intval($_POST['finishday']);
-	$finishhour = intval($_POST['finishhour']);
-	$finishminute = intval($_POST['finishminute']);
-
 	$adjust   = intval($_POST['adjust']);
 	$nofinish = intval($_POST['nofinish']);
 
@@ -79,8 +67,10 @@ function events_post(&$a) {
 	// and we'll waste a bunch of time responding to it. Time that 
 	// could've been spent doing something else. 
 
-	if(strcmp($finish,$start) < 0)
-		$finish = $start;
+	if(strcmp($finish,$start) < 0) {
+		notice( t('Event can not end before it has started.') . EOL);
+		goaway($a->get_baseurl() . '/events/new');
+	}
 
 	$summary  = escape_tags(trim($_POST['summary']));
 	$desc     = escape_tags(trim($_POST['desc']));
@@ -530,11 +520,6 @@ function events_content(&$a) {
 			}
 		}
 
-
-
-		$dateformat = datesel_format($f);
-		$timeformat = t('hour:minute');
-
 		require_once('include/acl_selectors.php');
 
 		$perm_defaults = array(
@@ -554,24 +539,20 @@ function events_content(&$a) {
 			'$mid' => $mid,
 	
 			'$title' => t('Event details'),
-			'$format_desc' => sprintf( t('Format is %s %s.'),$dateformat,$timeformat),
 			'$desc' => t('Starting date and Title are required.'),
 			'$catsenabled' => $catsenabled,
 			'$placeholdercategory' => t('Categories (comma-separated list)'),
 			'$category' => $category,
 			'$s_text' => t('Event Starts:') . ' <span class="required" title="' . t('Required') . '">*</span>',
-			'$bootstrap' => 1,
 			'$stext' => $stext,
 			'$ftext' => $ftext,
 			'$ModalCANCEL' => t('Cancel'),
 			'$ModalOK' => t('OK'),
-			'$s_dsel' => datesel($f,'start',$syear+5,$syear,false,$syear,$smonth,$sday),
-			'$s_tsel' => timesel('start',$shour,$sminute),
+			'$s_dsel' => datetimesel($f,mktime(),mktime(0,0,0,0,0,$syear+5),mktime(),'start_text'),
 			'$n_text' => t('Finish date/time is not known or not relevant'),
 			'$n_checked' => $n_checked,
 			'$f_text' => t('Event Finishes:'),
-			'$f_dsel' => datesel($f,'finish',$fyear+5,$fyear,false,$fyear,$fmonth,$fday),
-			'$f_tsel' => timesel('finish',$fhour,$fminute),
+			'$f_dsel' => datetimesel($f,mktime(),mktime(0,0,0,0,0,$fyear+5),mktime(),'finish_text',true,true,'start_text'),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$a_checked' => $a_checked,
 			'$d_text' => t('Description:'), 

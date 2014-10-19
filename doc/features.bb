@@ -108,4 +108,4 @@ Similar to any other modern blogging system, social network, or a micro-blogging
 [b][color=white]Previewing[/color][/b] 
 Post can be previewed prior to sending.
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

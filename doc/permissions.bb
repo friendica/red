@@ -107,4 +107,4 @@ The connection edit screen offers a slider to select a degree of friendship with
 
 The slider on the matrix page has both a minimum and maximum value. Posts will only be shown from people who fall between this range. Affinity has no relation to permissions, and is only useful in conjunction with the affinity tool feature.
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

@@ -142,7 +142,7 @@ EOT;
 			sprintf( t('%s - click to logout'), $observer['xchan_addr']));
 	}
 	else {
-		$nav['loginmenu'][] = Array('rmagic',t('Remote login'),'',t('Click to authenticate to your home hub'));
+		$nav['loginmenu'][] = Array('rmagic',t('Remote authentication'),'',t('Click to authenticate to your home hub'));
 	}
 
 	/**

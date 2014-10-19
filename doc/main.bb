@@ -36,7 +36,7 @@ Zot is the great new communicaton protocol invented especially for the Red Matri
 [zrl=[baseurl]/help/diaspora_compat]Diaspora Communications Compatibility (Diaspora and Friendica)[/zrl]
 
 [size=large][b]Frequently Asked Questions For Members[/b][/size]
-[zrl=[baseurl]/help/faq_users]FAQ For Members[/zrl]
+[zrl=[baseurl]/help/faq_members]FAQ For Members[/zrl]
 
 [size=large][b]For Hub Administrators[/b][/size]
 [zrl=[baseurl]/help/install]Install[/zrl]

@@ -3,11 +3,21 @@
 <h3><a href="{{$album.0}}">{{$album.1}}</a></h3>
 
 <div id="photo-edit-link-wrap">
-{{if $tools}}
-<a id="photo-toprofile-link" href="{{$tools.profile.0}}">{{$tools.profile.1}}</a>
-{{/if}}
-{{if $lock}} | <i class="lockview icon-lock" title="{{$lock}}" onclick="lockview(event,'photo/{{$id}}');"></i> {{/if}}
+
+{{if $lock}}
+<div class="wall-item-lock dropdown">
+	<i class="icon-lock lockview dropdown-toggle" data-toggle="dropdown" title="{{$lock}}" onclick="lockview(event,{{$id}});" ></i><ul id="panel-{{$id}}" class="lockview-panel dropdown-menu"></ul>&nbsp;
 </div>
+{{/if}}
+
+
+{{if $tools}}
+<div>
+	<a id="photo-toprofile-link" href="{{$tools.profile.0}}">{{$tools.profile.1}}</a>
+</div>
+{{/if}}
+
+<div class="clear"></div>
 
 {{if $prevlink}}<div id="photo-prev-link"><a href="{{$prevlink.0}}"><i class="icon-backward photo-icons"></i></div>{{/if}}
 <div id="photo-view-wrapper"> 
