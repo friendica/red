@@ -67,8 +67,10 @@ function events_post(&$a) {
 	// and we'll waste a bunch of time responding to it. Time that 
 	// could've been spent doing something else. 
 
-	if(strcmp($finish,$start) < 0)
-		$finish = $start;
+	if(strcmp($finish,$start) < 0) {
+		notice( t('Event can not end before it has started.') . EOL);
+		goaway($a->get_baseurl() . '/events/new');
+	}
 
 	$summary  = escape_tags(trim($_POST['summary']));
 	$desc     = escape_tags(trim($_POST['desc']));
