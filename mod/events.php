@@ -67,8 +67,10 @@ function events_post(&$a) {
 	// and we'll waste a bunch of time responding to it. Time that 
 	// could've been spent doing something else. 
 
-	if(strcmp($finish,$start) < 0)
-		$finish = $start;
+	if(strcmp($finish,$start) < 0) {
+		notice( t('Event can not end before it has started.') . EOL);
+		goaway($a->get_baseurl() . '/events/new');
+	}
 
 	$summary  = escape_tags(trim($_POST['summary']));
 	$desc     = escape_tags(trim($_POST['desc']));
@@ -518,11 +520,6 @@ function events_content(&$a) {
 			}
 		}
 
-
-
-		$dateformat = datesel_format($f);
-		$timeformat = t('hour:minute');
-
 		require_once('include/acl_selectors.php');
 
 		$perm_defaults = array(
@@ -542,7 +539,6 @@ function events_content(&$a) {
 			'$mid' => $mid,
 	
 			'$title' => t('Event details'),
-			'$format_desc' => sprintf( t('Format is %s %s.'),$dateformat,$timeformat),
 			'$desc' => t('Starting date and Title are required.'),
 			'$catsenabled' => $catsenabled,
 			'$placeholdercategory' => t('Categories (comma-separated list)'),
@@ -552,11 +548,11 @@ function events_content(&$a) {
 			'$ftext' => $ftext,
 			'$ModalCANCEL' => t('Cancel'),
 			'$ModalOK' => t('OK'),
-			'$s_dsel' => datetimesel($f,'start_text',$syear+5,$syear,false,$syear,$smonth,$sday,$shour,$sminute),
+			'$s_dsel' => datetimesel($f,mktime(),mktime(0,0,0,0,0,$syear+5),mktime(),'start_text'),
 			'$n_text' => t('Finish date/time is not known or not relevant'),
 			'$n_checked' => $n_checked,
 			'$f_text' => t('Event Finishes:'),
-			'$f_dsel' => datetimesel($f,'finish_text',$fyear+5,$fyear,false,$fyear,$fmonth,$fday,$fhour,$fminute),
+			'$f_dsel' => datetimesel($f,mktime(),mktime(0,0,0,0,0,$fyear+5),mktime(),'finish_text',true,true,'start_text'),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$a_checked' => $a_checked,
 			'$d_text' => t('Description:'), 

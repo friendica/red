@@ -130,144 +130,95 @@ function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d 
 
 function dob($dob) {
 	list($year,$month,$day) = sscanf($dob,'%4d-%2d-%2d');
-	$y = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
 	$f = get_config('system','birthday_input_format');
 	if(! $f)
 		$f = 'ymd';
-	$o = datesel($f,'dob',1920,$y,true,$year,$month,$day);
+
+	$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),mktime(0,0,0,$month,$day,$year),'dob');
+
 	return $o;
 }
 
-
-function datesel_format($f) {
-
-	$o = '';
-
-	if(strlen($f)) {
-		for($x = 0; $x < strlen($f); $x ++) {
-			switch($f[$x]) {
-				case 'y':
-					if(strlen($o))
-						$o .= '-';
-					$o .= t('year');					
-					break;
-				case 'm':
-					if(strlen($o))
-						$o .= '-';
-					$o .= t('month');					
-					break;
-				case 'd':
-					if(strlen($o))
-						$o .= '-';
-					$o .= t('day');
-					break;
-				default:
-					break;
-			}
-		}
-	}
-	return $o;
-}
 
 /**
  * returns a date selector
  * @param $format
  *  format string, e.g. 'ymd' or 'mdy'. Not currently supported
+ * @param $min
+ *  unix timestamp of minimum date
+ * @param $max
+ *  unix timestap of maximum date
+ * @param $default
+ *  unix timestamp of default date
  * @param $id
- *  id and name of datetimepicker (defaults to "datepicker")
- * @param $ymin
- *  first year shown in selector dropdown
- * @param $ymax
- *  last year shown in selector dropdown
- * @param $allow_blank
- *  allow an empty response on any field. Not currently supported
- * @param $y
- *  already selected year
- * @param $m
- *  already selected month
- * @param $d
- *  already selected day
+ *  id and name of datetimepicker (defaults to "datetimepicker")
  */
-function datesel($format, $id, $ymin, $ymax, $allow_blank, $y, $m, $d) {
-	if($ymin > $ymax) list($ymin,$ymax) = array($ymax,$ymin);
-
-	if($id == '') $id = 'datepicker';
-
-	$o = '';
-
-	$dateformat = 'YYYY-MM-DD';
-	$mindate = $ymin ? "new Date($ymin,1,1)" : '';
-	$maxdate = $ymin ? "new Date($ymax,11,31)" : ''; // Yes, JS months really go from 0 to 11.
-	
-	$m = $m -1; // Because JavaScript month weirdness
-
-	$defaultDate = ($y != 0 && $m != 0 && $d != 0) ? ", defaultDate: new Date($y,$m,$d)" : '';
-
-	$o .= "<div class='date' id='$id'><input type='text' placeholder='$dateformat' name='$id'/></div>";
-	$o .= "<script type='text/javascript'>\$(function () {\$('#$id').datetimepicker({pickTime: false, minDate: $mindate, maxDate: $maxdate, format: '$dateformat', useCurrent: false $defaultDate}); });</script>";
-	return $o;
+function datesel($format, $min, $max, $default,$id = 'datepicker') {
+	return datetimesel($format,$min,$max,$default,$id,true,false);
 }
 
 /**
  * returns a date selector
  * @param $format
  *  format string, e.g. 'ymd' or 'mdy'. Not currently supported
- * @param $id
- *  id and name of datetimepicker (defaults to "timepicker")
  * @param $h
  *  already selected hour
  * @param $m
  *  already selected minute
+ * @param $id
+ *  id and name of datetimepicker (defaults to "timepicker")
  */
-function timesel($format,$id,$h,$m) {
-	if($id == '') $id = 'timepicker';
-
-	$timeformat = 'HH:mm';
-
-	$o = '';
-	$o .= "<div class='date' id='$id'><input type='text' placeholder='$timeformat' name='$id'/></div>";
-	$o .= "<script type='text/javascript'>\$(function () {\$('#$id').datetimepicker({pickDate: false, format: '$timeformat', useCurrent: false, defaultDate: new Date(0,0,0,$h,$m)}); });</script>";
-	return $o;
+function timesel($format,$h,$m,$id='timepicker') {
+	return datetimesel($format,mktime(),mktime(),mktime($h,$m),$id,false,true);
 }
 
 /**
  * returns a datetime selector
  * @param $format
  *  format string, e.g. 'ymd' or 'mdy'. Not currently supported
+ * @param $min
+ *  unix timestamp of minimum date
+ * @param $max
+ *  unix timestap of maximum date
+ * @param $default
+ *  unix timestamp of default date
  * @param $id
  *  id and name of datetimepicker (defaults to "datetimepicker")
- * @param $ymin
- *  first year shown in selector dropdown
- * @param $ymax
- *  last year shown in selector dropdown
- * @param $allow_blank
- *  allow an empty response on any field. Not currently supported
- * @param $y
- *  already selected year
- * @param $m
- *  already selected month
- * @param $d
- *  already selected day
- * @param $h
- *  already selected hour
- * @param $min
- *  already selected minute
+ * @param $pickdate
+ *  true to show date picker (default)
+ * @param $picktime
+ *  true to show time picker (default)
+ * @param $minfrom
+ *  set minimum date from picker with id $minfrom (none by default)
+ * @param $maxfrom
+ *  set maximum date from picker with id $maxfrom (none by default)
  */
-function datetimesel($format, $id, $ymin, $ymax, $allow_blank, $y, $m, $d, $h, $min) {
-	if($ymin > $ymax) list($ymin,$ymax) = array($ymax,$ymin);
-
-	if($id == '') $id = 'datetimepicker';
-
+function datetimesel($format, $min, $max, $default, $id = 'datetimepicker', $pickdate = true, $picktime = true, $minfrom = '', $maxfrom = '') {
 	$o = '';
 
-	$dateformat = 'YYYY-MM-DD HH:mm';
-	$mindate = $ymin ? "new Date($ymin,1,1)" : '';
-	$maxdate = $ymin ? "new Date($ymax,11,31)" : '';
+	$dateformat = '';
+	if($pickdate) $dateformat .= 'YYYY-MM-DD';
+	if($pickdate && $picktime) $dateformat .= ' ';
+	if($picktime) $dateformat .= 'HH:mm';
+
+	$mindate = $min ? "new Date($min*1000)" : '';
+	$maxdate = $max ? "new Date($max*1000)" : '';
 	
-	$defaultDate = ($y != 0 && $m != 0 && $d != 0) ? ", defaultDate: new Date($y, $m, $d, $h, $min)" : '';
+	$defaultDate = $default ? ", defaultDate: new Date($default*1000)" : '';
+
+	$pickers = '';
+	if(!$pickdate) $pickers .= 'pickDate: false,';
+	if(!$picktime) $pickers .= 'pickTime: false,';
+
+	$extra_js = '';
+	if($minfrom != '') 
+		$extra_js .= "\$('#$minfrom').on('dp.change',function (e) { \$('#$id').data('DateTimePicker').setMinDate(e.date); });";
+
+	if($maxfrom != '') 
+		$extra_js .= "\$('#$maxfrom').on('dp.change',function (e) { \$('#$id').data('DateTimePicker').setMaxDate(e.date); });";
 
 	$o .= "<div class='date' id='$id'><input type='text' placeholder='$dateformat' name='$id'/></div>";
-	$o .= "<script type='text/javascript'>\$(function () {\$('#$id').datetimepicker({sideBySide: true, minDate: $mindate, maxDate: $maxdate, format: '$dateformat', useCurrent: false $defaultDate}); });</script>";
+	$o .= "<script type='text/javascript'>\$(function () {\$('#$id').datetimepicker({sideBySide: true, $pickers minDate: $mindate, maxDate: $maxdate, format: '$dateformat', useCurrent: false $defaultDate}); $extra_js});</script>";
 	return $o;
 }
 
