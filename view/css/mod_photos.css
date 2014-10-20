@@ -3,19 +3,14 @@
 	margin-bottom: 25px;
 }
 
-#photo-view-wrapper {
-	float:left;
-	min-width: 500px;
-	overflow: hidden;
-}
-
-#photo-prev-link, #photo-next-link {
-	padding: 10px;
-	float: left;
+.photo-item-tools-left,
+.photo-item-tools-right {
+	padding: 7px 10px;
 }
 
 #photo-photo {
-	float: left;
+    display: table;
+    margin: 0 auto;
 }
 
 #photo-photo-end {
@@ -82,9 +77,6 @@
 #photo-edit-link-wrap {
 	margin-bottom: 15px;
 }
-#photo-like-div {
-	margin-bottom: 25px;
-}
 
 #photo-edit-caption-end, #photo-edit-tags-end, #photo-edit-albumname-end, #photo-edit-rotate-end {
 	clear: both;
@@ -94,18 +86,10 @@
 	margin-bottom: 15px;
 }
 
-#photo-edit-delete-button {
-	float: right;
-}
 
-#photo-edit-edit-wrapper {
-	margin-top: 10px;
-	margin-bottom: 30px;
-}
-
-#photo-photo-delete-button {
-	float: right;
-	margin-top: -64px;
+#photo-edit-edit {
+	padding: 7px 10px;
+	margin-bottom: 3px;
 }
 
 #photo-edit-end {
@@ -114,16 +98,6 @@
 #photo-caption {
 	margin-top: 15px;
 	margin-bottom: 15px;
-}
-
-#in-this-photo-text {
-	margin-left: 30px;
-}
-
-#in-this-photo {
-	margin-left: 60px;
-	margin-top: 10px;
-	margin-bottom: 20px;
 }
 
 #photo-album-edit-submit, #photo-album-edit-drop {
