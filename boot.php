@@ -1880,12 +1880,8 @@ function get_custom_nav(&$a,$navname) {
 
 }
 
-function construct_page(&$a) {
-
+function load_pdl(&$a) {
 	require_once('include/comanche.php');
-
-	// in case a page has overloaded a module, see if we already have a layout defined
-	// otherwise, if a pdl file exists for this module, use it
 
 	if(! count($a->layout)) {
 		$n = 'mod_' . $a->module . '.pdl' ;
@@ -1898,11 +1894,19 @@ function construct_page(&$a) {
 			comanche_parser($a,$s);
 	}
 
-	$comanche = ((count($a->layout)) ? true : false);
+}
+
+
+
+function construct_page(&$a) {
+
 
 	/**
 	 * Build the page - now that we have all the components
 	 */
+
+
+	$comanche = ((count($a->layout)) ? true : false);
 
 	require_once(theme_include('theme_init.php'));
 
