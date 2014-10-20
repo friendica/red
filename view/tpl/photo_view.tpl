@@ -67,7 +67,7 @@
 				{{$edit.aclselect}}
 				<div id="settings-default-perms-menu-end"></div>
 			</div>
-<			<br/>
+			<br/>
 			<div id="settings-default-perms-end"></div>
 				<input id="photo-edit-submit-button" type="submit" name="submit" value="{{$edit.submit}}">
 			<input id="photo-edit-delete-button" type="submit" name="delete" value="{{$edit.delete}}" onclick="return confirmDelete();">
@@ -82,17 +82,16 @@
 		<div id="photo-photo-end"></div>
 
 		<div class="photo-item-tools">
+			{{if $tags}}
 			<div class="photo-item-tools-left pull-left">
-				{{if $tags}}
 				<div id="in-this-photo">
 				<span id="in-this-photo-text">{{$tag_hdr}}</span>
 				{{foreach $tags as $t}}
 					{{$t.0}}{{if $edit}}<span id="tag-remove">&nbsp;<a href="{{$t.1}}"><i class="icon-remove"></i></a>&nbsp;</span>{{/if}}
 				{{/foreach}}
 				</div>
-				{{/if}}
-
 			</div>
+			{{/if}}
 
 			{{if $likebuttons}}
 			<div class="photo-item-tools-right btn-group pull-right">

@@ -3,7 +3,8 @@
 	margin-bottom: 25px;
 }
 
-.photo-item-tools {
+.photo-item-tools-left,
+.photo-item-tools-right {
 	padding: 7px 10px;
 }
 
