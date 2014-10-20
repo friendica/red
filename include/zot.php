@@ -1476,11 +1476,13 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			continue;
 		}
 
-		$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
+		$r = q("select id, edited, item_flags, mid, parent_mid from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['mid']),
 			intval($channel['channel_id'])
 		);
 		if($r) {
+			// We already have this post.
+			// Maybe it has been edited? 
 			$item_id = $r[0]['id'];
 			if($arr['edited'] > $r[0]['edited']) {
 				$arr['id'] = $r[0]['id'];
@@ -1492,6 +1494,10 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			}
 			else {
 				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				// We need this line to ensure wall-to-wall comments are relayed (by falling through to the relay bit), 
+				// and at the same time not relay any other relayable posts more than once, because to do so is very wasteful. 
+				if(! ($r[0]['item_flags'] & ITEM_ORIGIN))
+					continue;
 			}
 		}
 		else {
