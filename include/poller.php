@@ -25,6 +25,15 @@ function poller_run($argv, $argc){
 	if(! $interval) 
 		$interval = ((get_config('system','delivery_interval') === false) ? 3 : intval(get_config('system','delivery_interval')));
 
+	// Check for a logfile.  If it exists, but is over an hour old, it's stale.  Ignore it.
+	$lockfile = 'store/[data]/poller';
+		if ((file_exists($lockfile)) && (filemtime($lockfile) > (time() - 3600))) {
+			logger("poller: Already running");
+		return;
+                }
+	
+	// Create a lockfile.  Needs two vars, but $x doesn't need to contain anything.
+	file_put_contents($lockfile, $x);
 
 	logger('poller: start');
 	
@@ -254,7 +263,7 @@ function poller_run($argv, $argc){
 	);
 
 
-	$contacts = q("SELECT abook_id, abook_flags, abook_updated, abook_connected, abook_closeness, abook_xchan, abook_channel
+	$contacts = q("SELECT abook_id, abook_flags, abook_updated, abook_connected, abook_closeness, abook_channel
 		FROM abook LEFT JOIN account on abook_account = account_id where 1
 		$sql_extra 
 		AND (( abook_flags & %d ) OR  ( abook_flags = %d )) 
@@ -310,17 +319,12 @@ function poller_run($argv, $argc){
 				// He's dead, Jim
 
 				if(strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $c . " + 30 day")) > 0) {	
-					$n = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
-						dbesc($contact['abook_xchan'])
+					$r = q("update abook set abook_flags = (abook_flags | %d) where abook_id = %d limit 1",
+						intval(ABOOK_FLAG_ARCHIVED),
+						intval($contact['abook_id'])
 					);
-					if($n && $n[0]['xchan_network'] == 'zot') {
-						$r = q("update abook set abook_flags = (abook_flags | %d) where abook_id = %d limit 1",
-							intval(ABOOK_FLAG_ARCHIVED),
-							intval($contact['abook_id'])
-						);
-						$update = false;
-						continue;
-					}
+					$update = false;
+					continue;
 				}
 
 				if($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) {
@@ -375,7 +379,10 @@ function poller_run($argv, $argc){
 			}
 		}
 	}
-	
+
+	//All done - clear the lockfile	
+	@unlink($lockfile);
+
 	return;
 }
 
