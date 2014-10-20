@@ -1,39 +1,33 @@
 <div id="live-photos"></div>
-<div class="generic-content-wrapper-styled">
-<h3><a href="{{$album.0}}">{{$album.1}}</a></h3>
+<div class="generic-content-wrapper">
 
+	<div class="section-title-wrapper">
+
+		<div class="btn-group btn-group-xs pull-right">
+			{{if $prevlink}}
+			<a href="{{$prevlink.0}}" class="btn btn-default" title="{{$prevlink.1}}"><i class="icon-backward"></i></a>
+			{{/if}}
+			{{if $nextlink}}
+			<a href="{{$nextlink.0}}" class="btn btn-default" title="{{$nextlink.1}}"><i class="icon-forward"></i></a>
+			{{/if}}
+		</div>
+		<div class="btn-group btn-group-xs pull-right dropdown">
+			{{if $edit}}
+			<i class="icon-pencil btn btn-default" title="{{$edit.edit}}" onclick="openClose('photo-edit-edit');"></i>
+			{{/if}}
+			{{if $lock}}
+			<i class="icon-lock btn btn-default dropdown-toggle" data-toggle="dropdown" title="{{$lock}}" onclick="lockview(event,{{$id}});" ></i><ul id="panel-{{$id}}" class="lockview-panel dropdown-menu"></ul>
+			{{/if}}
+			&nbsp;
+		</div>
+
+		<h2>{{if $desc}}{{$desc}}{{elseif $filename}}{{$filename}}{{else}}{{$unknown}}{{/if}}</h2>
+		<div class="clear"></div>
+	</div>
 <div id="photo-edit-link-wrap">
-
-{{if $lock}}
-<div class="wall-item-lock dropdown">
-	<i class="icon-lock lockview dropdown-toggle" data-toggle="dropdown" title="{{$lock}}" onclick="lockview(event,{{$id}});" ></i><ul id="panel-{{$id}}" class="lockview-panel dropdown-menu"></ul>&nbsp;
-</div>
-{{/if}}
-
-
-{{if $tools}}
-<div>
-	<a id="photo-toprofile-link" href="{{$tools.profile.0}}">{{$tools.profile.1}}</a>
-</div>
-{{/if}}
 
 <div class="clear"></div>
 
-{{if $prevlink}}<div id="photo-prev-link"><a href="{{$prevlink.0}}"><i class="icon-backward photo-icons"></i></div>{{/if}}
-<div id="photo-view-wrapper"> 
-<div id="photo-photo"><a href="{{$photo.href}}" title="{{$photo.title}}" onclick="$.colorbox({href: '{{$photo.href}}'}); return false;"><img style="max-width: 100%;" src="{{$photo.src}}"></a></div>
-<div id="photo-photo-end"></div>
-<div id="photo-caption">{{$desc}}</div>
-{{if $tags}}
-<div id="in-this-photo-text">{{$tag_hdr}}</div>
-{{foreach $tags as $t}}
-<div id="in-this-photo">{{$t.0}}</div>
-{{if $edit}}<div id="tag-remove"><a href="{{$t.1}}">{{$t.2}}</a></div>{{/if}}
-{{/foreach}}
-{{/if}}
-
-{{if $edit}}
-<div id="photo-edit-edit-wrapper" class="btn btn-default fakelink" onclick="openClose('photo-edit-edit'); closeOpen('photo-photo-delete-button')">{{$edit.edit}}</div>
 <div id="photo-edit-edit" style="display: none;">
 <form action="photos/{{$edit.nickname}}/{{$edit.resource_id}}" method="post" id="photo_edit_form">
 
@@ -87,10 +81,25 @@
 </form>
 </div>
 
-<form action="photos/{{$edit.nickname}}/{{$edit.resource_id}}" method="post">
-	<input id="photo-photo-delete-button" type="submit" name="delete" value="{{$edit.delete}}" onclick="return confirmDelete();">
-</form>
+{{if $tools}}
+<div>
+	<a id="photo-toprofile-link" href="{{$tools.profile.0}}">{{$tools.profile.1}}</a>
+</div>
 {{/if}}
+
+<div id="photo-view-wrapper">
+<div id="photo-photo"><a href="{{$photo.href}}" title="{{$photo.title}}" onclick="$.colorbox({href: '{{$photo.href}}'}); return false;"><img style="width: 100%;" src="{{$photo.src}}"></a></div>
+<div id="photo-photo-end"></div>
+
+{{if $tags}}
+<div id="in-this-photo-text">{{$tag_hdr}}</div>
+{{foreach $tags as $t}}
+<div id="in-this-photo">{{$t.0}}</div>
+{{if $edit}}<div id="tag-remove"><a href="{{$t.1}}">{{$t.2}}</a></div>{{/if}}
+{{/foreach}}
+{{/if}}
+
+
 
 {{if $likebuttons}}
 <div id="photo-like-div">
@@ -107,8 +116,6 @@
 </div>
 
 </div>
-
-{{if $nextlink}}<div id="photo-next-link"><a href="{{$nextlink.0}}"><i class="icon-forward photo-icons"></i></a></div>{{/if}}
 
 <div class="clear"></div>
 

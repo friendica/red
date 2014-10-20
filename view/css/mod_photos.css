@@ -3,19 +3,9 @@
 	margin-bottom: 25px;
 }
 
-#photo-view-wrapper {
-	float:left;
-	min-width: 500px;
-	overflow: hidden;
-}
-
-#photo-prev-link, #photo-next-link {
-	padding: 10px;
-	float: left;
-}
-
 #photo-photo {
-	float: left;
+    display: table;
+    margin: 0 auto;
 }
 
 #photo-photo-end {

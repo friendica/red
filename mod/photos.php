@@ -855,15 +855,13 @@ function photos_content(&$a) {
 			$tools = array(
 				'profile'=>array($a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource_id'], t('Use as profile photo')),
 			);
-
-			// lock
-			$lock = ( ( ($ph[0]['uid'] == local_user()) && (strlen($ph[0]['allow_cid']) || strlen($ph[0]['allow_gid']) 
-					|| strlen($ph[0]['deny_cid']) || strlen($ph[0]['deny_gid'])) ) 
-					? t('Private Message')
-					: Null);
-	  		
-			
 		}
+
+		// lock
+		$lock = ( ( (strlen($ph[0]['allow_cid']) || strlen($ph[0]['allow_gid'])
+				|| strlen($ph[0]['deny_cid']) || strlen($ph[0]['deny_gid'])) )
+				? t('Private Photo')
+				: Null);
 
 		$a->page['htmlhead'] .= '<script>$(document).keydown(function(event) {' . "\n";
 		if($prevlink)
@@ -873,7 +871,7 @@ function photos_content(&$a) {
 		$a->page['htmlhead'] .= '});</script>';
 
 		if($prevlink)
-			$prevlink = array($prevlink, '<i class="icon-backward photo-icons""></i>') ;
+			$prevlink = array($prevlink, t('Previous'));
 
 		$photo = array(
 			'href' => $a->get_baseurl() . '/photo/' . $hires['resource_id'] . '-' . $hires['scale'] . '.' . $phototypes[$hires['type']],
@@ -882,7 +880,7 @@ function photos_content(&$a) {
 		);
 
 		if($nextlink)
-			$nextlink = array($nextlink, '<i class="icon-forward photo-icons"></i>');
+			$nextlink = array($nextlink, t('Next'));
 
 
 		// Do we have an item for this photo?
@@ -1122,6 +1120,8 @@ function photos_content(&$a) {
 			'$prevlink' => $prevlink,
 			'$nextlink' => $nextlink,
 			'$desc' => $ph[0]['description'],
+			'$filename' => $ph[0]['filename'],
+			'$unknown' => t('Unknown'),
 			'$tag_hdr' => t('In This Photo:'),
 			'$tags' => $tags,
 			'$edit' => $edit,	
