@@ -188,4 +188,4 @@ The 'comment' tag is used to delimit comments. These comments will not appear on
 	[/region]
 [/code]
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

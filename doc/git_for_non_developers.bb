@@ -68,4 +68,4 @@ git request-pull master https://example.com/project
 
 And simply send the output to the project maintainer.
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

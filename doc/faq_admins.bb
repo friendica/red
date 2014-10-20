@@ -45,4 +45,4 @@ valid SSL certificate rather than disabling port 443.
 
 [/ul]
 
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/main_footer.bb;

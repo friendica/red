@@ -29,4 +29,4 @@ To install Red for domain example.com, after the initial server setup run
 
 [code]bash setup-debian.sh red example.com[/code]
 
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/main_footer.bb;

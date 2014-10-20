@@ -73,4 +73,4 @@ theme are as follows:
 [li] sloppy_photos
 	Determins whether photos are &quot;sloppy&quot; or aligned.  Set or unset (1 or '')[/li]
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

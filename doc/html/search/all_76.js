@@ -4,7 +4,7 @@ var searchData=
   ['validate_5fchannelname',['validate_channelname',['../identity_8php.html#af2802bc13a00a17b867bba7978ba8f58',1,'identity.php']]],
   ['validate_5femail',['validate_email',['../include_2network_8php.html#a897e7112d86eb95526cbd0bff9375f02',1,'network.php']]],
   ['validate_5furl',['validate_url',['../include_2network_8php.html#a5caa264fab6d2b2344e6bd5b298b08f2',1,'network.php']]],
-  ['validateuserpass',['validateUserPass',['../classRedBasicAuth.html#a8dfd9a0953f8884723b421b7c1acf79b',1,'RedBasicAuth']]],
+  ['validateuserpass',['validateUserPass',['../classRedMatrix_1_1RedDAV_1_1RedBasicAuth.html#a6ece02655b780469e59e204c5979a624',1,'RedMatrix::RedDAV::RedBasicAuth']]],
   ['var_5freplace',['var_replace',['../classTemplate.html#abbc484016ddf5d818f55b823cae6feb0',1,'Template']]],
   ['vcard_5ffrom_5fxchan',['vcard_from_xchan',['../Contact_8php.html#a6348a532c9d26cd1c9afbc9aa6aa8960',1,'Contact.php']]],
   ['verify_5femail_5faddress',['verify_email_address',['../account_8php.html#acd6b8d2124ba5ea4f4794d2c58ae8bf5',1,'account.php']]],

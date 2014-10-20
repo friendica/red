@@ -19,6 +19,6 @@
 [*][url=https://github.com/zzottel/feed2red]feed2red.pl (posts Atom/RSS feeds to channel)[/url]
 
 [b]Utilities[/b]
-[*][url=http://beardyunixer.com:1234/?p=debian-install-script;a=tree]Debian Install Script[/url]
+[*][url=http://gitweb.whogotzot.com/debian-install-script]Debian Install Script[/url]
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

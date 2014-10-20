@@ -101,3 +101,5 @@ This document assumes you're an administrator.
     [b]system > hide_in_statistics[/b]
         Tell the red statistics servers to completely hide this hub in hub lists.
 	
+#include doc/macros/main_footer.bb;
+

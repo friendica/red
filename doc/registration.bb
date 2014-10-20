@@ -31,4 +31,5 @@ See Also
 [zrl=[baseurl]/help/permissions]Permissions[/zrl]
 [zrl=[baseurl]/help/remove_account]Remove Account[/zrl]
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;
+

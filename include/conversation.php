@@ -649,7 +649,10 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$likebuttons = false;
 				$shareable = false;
 
-				$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message is verified') : '');
+				$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message signature validated') : '');
+				$forged = ((($item['sig']) && (! ($item['item_flags'] & ITEM_VERIFIED))) ? t('Message signature incorrect') : '');
+
+
 				$unverified = '';
 
 
@@ -682,6 +685,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'mentions' => $mentions,
 					'verified' => $verified,
 					'unverified' => $unverified,
+					'forged' => $forged,
 					'txt_cats' => t('Categories:'),
 					'txt_folders' => t('Filed under:'),
 					'has_cats' => ((count($categories)) ? 'true' : ''),
