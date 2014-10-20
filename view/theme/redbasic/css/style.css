@@ -648,7 +648,7 @@ footer {
 	list-style: none;
 }
 
-.profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
+.profile-match-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
     border-radius: $radiuspx;
     -moz-border-radius: $radiuspx;
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
@@ -704,15 +704,10 @@ footer {
 	cursor: pointer;
 }
 
-#photo-caption {
-	font-size: 110%;
-	font-weight: bold;
+#photo-view-wrapper,
+#photo-edit-edit {
+	background-color: $item_colour;
 }
-
-#in-this-photo-text {
-	color: #0080FF;
-}
-
 
 #side-follow-wrapper {
 	margin-top: 20px;
@@ -2327,8 +2322,9 @@ aside .nav-pills > li > a {
 .section-title-wrapper {
 	padding: 7px 10px;
 	background-color: $item_colour;
-	border-radius: $radiuspx;
-	margin-bottom: 10px;
+	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radiuspx;
+	margin-bottom: 3px;
 }
 
 .section-title-wrapper h2 {
