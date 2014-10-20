@@ -6,6 +6,8 @@
 
 [boot.php] Every process uses this to bootstrap the application structure
 
+[custom] site-specific overrides of modules in mod/, excluded from git
+
 [doc] Help Files
 
 [images] core required images
