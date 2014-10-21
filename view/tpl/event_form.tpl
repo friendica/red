@@ -9,6 +9,7 @@
 <form action="{{$post}}" method="post" >
 
 <input type="hidden" name="event_id" value="{{$eid}}" />
+<input type="hidden" name="event_hash" value="{{$event_hash}}" />
 <input type="hidden" name="xchan" value="{{$xchan}}" />
 <input type="hidden" name="mid" value="{{$mid}}" />
 
