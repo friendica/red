@@ -98,6 +98,7 @@ function collect_recipients($item,&$private_envelope) {
 		}
 	}
 
+
 	// This is a somewhat expensive operation but important.
 	// Don't send this item to anybody who isn't allowed to see it
 

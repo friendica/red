@@ -257,10 +257,16 @@ function item_post(&$a) {
 		killme();
 	}
 
+	$walltowall = false;
+
 	if($observer) {
 		logger('mod_item: post accepted from ' . $observer['xchan_name'] . ' for ' . $owner_xchan['xchan_name'], LOGGER_DEBUG);
+		if($observer['xchan_name'] != $owner_xchan['xchan_name'])
+			$walltowall = true;		
 	}
 		
+
+
 	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
 	if($webpage)
 		$public_policy = '';
@@ -324,6 +330,15 @@ function item_post(&$a) {
 			&& (! array_key_exists('group_allow',$_REQUEST))
 			&& (! array_key_exists('contact_deny',$_REQUEST))
 			&& (! array_key_exists('group_deny',$_REQUEST))) {
+			$str_group_allow   = $channel['channel_allow_gid'];
+			$str_contact_allow = $channel['channel_allow_cid'];
+			$str_group_deny    = $channel['channel_deny_gid'];
+			$str_contact_deny  = $channel['channel_deny_cid'];
+		}
+		elseif($walltowall) {
+
+			// use the channel owner's default permissions
+
 			$str_group_allow   = $channel['channel_allow_gid'];
 			$str_contact_allow = $channel['channel_allow_cid'];
 			$str_group_deny    = $channel['channel_deny_gid'];
