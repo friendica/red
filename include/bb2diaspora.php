@@ -290,7 +290,7 @@ function bb2diaspora_itemwallwall(&$item) {
 	// We have to do something similar for wall-to-wall comments. ITEM_WALL|ITEM_ORIGIN indicates that it was posted on this site. 
 	// Regular matrix comments may have one of these bits set, but not both.
 
-	if(($item['mid'] != $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && ($item['item_flags'] & (ITEM_WALL|ITEM_ORIGIN)) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_m']) {
+	if(($item['mid'] != $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (($item['item_flags'] & (ITEM_WALL|ITEM_ORIGIN)) == (ITEM_WALL|ITEM_ORIGIN)) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_m']) {
 		logger('bb2diaspora_itemwallwall: wall to wall comment',LOGGER_DEBUG);
 		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
 		$item['body'] = "\n\n" 
