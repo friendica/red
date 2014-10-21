@@ -116,6 +116,8 @@ function diaspora_mention_callback($matches) {
 function diaspora2bb($s,$use_zrl = false) {
 
 
+	$s = str_replace("&#xD;\n&gt;","",$s);
+
 	$s = html_entity_decode($s,ENT_COMPAT,'UTF-8');
 
 	// Too many new lines. So deactivated the following line
