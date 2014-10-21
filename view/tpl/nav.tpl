@@ -50,12 +50,16 @@
 			{{if $nav.register}}<li class="{{$nav.register.2}}"><a href="{{$nav.register.0}}" title="{{$nav.register.3}}" >{{$nav.register.1}}</a><li>{{/if}}
 			{{if !$userinfo}}
 			{{if $nav.loginmenu}}
-				<li class="{{$nav.loginmenu.0.2}}"><a data-toggle="dropdown" data-target="#" href="{{$nav.loginmenu.0.0}}" title="{{$nav.loginmenu.0.3}}" >{{$nav.loginmenu.0.1}} <span class="caret" id="usermenu-caret"></span></a>
-				<ul class="dropdown-menu" role="menu">
+				<li class="{{$nav.loginmenu.0.2}} hidden-xs"><a data-toggle="dropdown" data-target="#" href="{{$nav.loginmenu.0.0}}" title="{{$nav.loginmenu.0.3}}" >{{$nav.loginmenu.0.1}} <span class="caret" id="usermenu-caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						{{foreach $nav.loginmenu as $loginmenu}}
+						<li role="presentation"><a class="{{$loginmenu.2}}" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem">{{$loginmenu.1}}</a></li>
+						{{/foreach}}
+					</ul>
+				</li>
 				{{foreach $nav.loginmenu as $loginmenu}}
-					<li role="presentation"><a class="{{$loginmenu.2}}" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem">{{$loginmenu.1}}</a></li>
+				<li role="presentation"><a class="{{$loginmenu.2}} visible-xs" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem">{{$loginmenu.1}}</a></li>
 				{{/foreach}}
-				</ul></li>
 			{{/if}}
 			{{/if}}
 
