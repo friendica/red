@@ -25,6 +25,15 @@ function poller_run($argv, $argc){
 	if(! $interval) 
 		$interval = ((get_config('system','delivery_interval') === false) ? 3 : intval(get_config('system','delivery_interval')));
 
+	// Check for a logfile.  If it exists, but is over an hour old, it's stale.  Ignore it.
+	$lockfile = 'store/[data]/poller';
+		if ((file_exists($lockfile)) && (filemtime($lockfile) > (time() - 3600))) {
+			logger("poller: Already running");
+		return;
+                }
+	
+	// Create a lockfile.  Needs two vars, but $x doesn't need to contain anything.
+	file_put_contents($lockfile, $x);
 
 	logger('poller: start');
 	
@@ -375,7 +384,10 @@ function poller_run($argv, $argc){
 			}
 		}
 	}
-	
+
+	//All done - clear the lockfile	
+	@unlink($lockfile);
+
 	return;
 }
 
