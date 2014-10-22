@@ -24,7 +24,7 @@ Zot is the great new communicaton protocol invented especially for the Red Matri
 [zrl=[baseurl]/help/cloud]Cloud Storage[/zrl]
 [zrl=[baseurl]/help/remove_account]Remove Channel or Account[/zrl]
 
-[size=large][b]Using the Red Matrix[/b][/size]
+[size=large][b]Members Help[/b][/size]
 [zrl=[baseurl]/help/tags_and_mentions]Tags and Mentions[/zrl]
 [zrl=[baseurl]/help/webpages]Web Pages[/zrl]
 [zrl=[baseurl]/help/bbcode]BBcode reference for posts and comments[/zrl]
@@ -32,20 +32,15 @@ Zot is the great new communicaton protocol invented especially for the Red Matri
 [zrl=[baseurl]/help/cloud_desktop_clients]Cloud Desktop Clients[/zrl]
 [zrl=[baseurl]/help/AdvancedSearch]Advanced Directory Search[/zrl]
 [zrl=[baseurl]/help/addons]Help With Addons[/zrl]
-[zrl=[baseurl]/help/nomadic-identity]Got Zot? Nomadic Identity, Channel Cloning And More[/zrl]
 [zrl=[baseurl]/help/diaspora_compat]Diaspora Communications Compatibility (Diaspora and Friendica)[/zrl]
-
-[size=large][b]Frequently Asked Questions For Members[/b][/size]
 [zrl=[baseurl]/help/faq_members]FAQ For Members[/zrl]
 
-[size=large][b]For Hub Administrators[/b][/size]
+[size=large][b]Administrators Help[/b][/size]
 [zrl=[baseurl]/help/install]Install[/zrl]
 [zrl=[baseurl]/help/debian_install]Easy Install on Debian via script[/zrl]
 [zrl=[baseurl]/help/red2pi]Installing Red on the Raspberry Pi[/zrl]
-[zrl=[baseurl]/help/problems-following-an-update]Problems Following A Software Update[/zrl]
 [zrl=[baseurl]/help/troubleshooting]Troubleshooting Tips[/zrl]
-
-[size=large][b]Frequently Asked Questions For Hub Admins[/b][/size]
+[zrl=[baseurl]/help/hidden_configs]Tweaking RedMatrix's Hidden Configurations[/zrl]
 [zrl=[baseurl]/help/faq_admins]FAQ For Admins[/zrl]
 
 [size=large][b]Technical Documentation[/b][/size]
@@ -69,7 +64,6 @@ Zot is the great new communicaton protocol invented especially for the Red Matri
 [zrl=[baseurl]/help/to_do_code]To-Do list for Developers[/zrl]
 [zrl=[baseurl]/help/git_for_non_developers]Git for Non-Developers[/zrl]
 
-
 [size=large][b]Frequently Asked Questions For Developers[/b][/size]
 [zrl=[baseurl]/help/faq_developers]FAQ For Developers[/zrl]
 
@@ -79,5 +73,6 @@ Zot is the great new communicaton protocol invented especially for the Red Matri
 [url=https://github.com/friendica/red-addons]Addon Website[/url]
 [url=https://zothub.com/channel/one]Development Channel[/url]
 
+[url=[baseurl]/help/credits]RedMatrix Credits[/url]
 [size=large][b]About This Red Matrix Site[/b][/size]
 [zrl=[baseurl]/siteinfo] [baseurl]/siteinfo[/zrl]

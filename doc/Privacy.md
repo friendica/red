@@ -25,10 +25,6 @@ An individual computer or server connected to the RedMatrix. These are provided 
 
 The system operator of an individual hub. 
 
-**spy network**
-
-Typically large centralised providers including but not limited to Facebook and Google.  RedMatrix PRIVATE communications are designed to even be resistant to monitoring by the American NSA, however the technical capabilities of the NSA are not completely known and no guarantee of privacy against this organisation can be made. RedMatrix PUBLIC communications are not protected in any way. 
-
 ##Policies
 
 **Public Information**
@@ -52,7 +48,7 @@ Comments to posts that were created by others and posts which are designated as 
 
 **Private Information**
 
-RedMatrix developers will ensure that any content you provide which is designated as PRIVATE will be protected against eavesdropping - to the best of their ability. Private content is generally hidden or obscured even from hub administrators. It is also stripped from email notifications. It is difficult but NOT impossible for this content to be seen by a hub administrator who is determined to monitor your communications. We consider this like the lock on the door of a house. It will generally keep the house safe, but a determined burgler will ignore the lock on the door and instead break a window. 
+RedMatrix developers will ensure that any content you provide which is designated as PRIVATE will be protected against eavesdropping - to the best of their ability. Private content is generally hidden or obscured even from hub administrators. It is also stripped from email notifications. It is difficult but NOT impossible for this content to be seen by a hub administrator.  This is a side effect of the physical laws of the universe.  Unfortunately, if a database needs to decrypt a post at display time, it must have the means to decrypt the post!  End to end encryption is also provided and this CANNOT be seen, even by a determined administrator. 
 
 ##Identity Privacy
 
@@ -74,3 +70,4 @@ The RedMatrix RECOMMENDS that hub administrators provide a grace period of 1-2 d
 
 If you typically and regularly post content of an adult or offensive nature, you are STRONGLY encouraged to mark your account "NSFW" (Not Safe For Work). This will prevent the display of your profile photo in the directory except to viewers that have chosen to disable "safe mode". If your profile photo is found by directory administrators to be adult or offensive, the directory administrator MAY flag your profile photo as NSFW. There is currently no official mechanism to contest or reverse this decision, which is why you SHOULD mark your own account NSFW if it is likely to be inappropriate for general audiences. 
 
+#include doc/macros/main_footer.bb;
