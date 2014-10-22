@@ -12,6 +12,8 @@ function events_post(&$a) {
 		return;
 
 	$event_id = ((x($_POST,'event_id')) ? intval($_POST['event_id']) : 0);
+	$event_hash = ((x($_POST,'event_hash')) ? $_POST['event_hash'] : '');
+
 	$xchan = ((x($_POST,'xchan')) ? dbesc($_POST['xchan']) : '');
 	$uid      = local_user();
 
@@ -67,19 +69,22 @@ function events_post(&$a) {
 	// and we'll waste a bunch of time responding to it. Time that 
 	// could've been spent doing something else. 
 
-	if(strcmp($finish,$start) < 0) {
-		notice( t('Event can not end before it has started.') . EOL);
-		goaway($a->get_baseurl() . '/events/new');
-	}
 
 	$summary  = escape_tags(trim($_POST['summary']));
 	$desc     = escape_tags(trim($_POST['desc']));
 	$location = escape_tags(trim($_POST['location']));
 	$type     = 'event';
 
+	$action = ($event_hash == '') ? 'new' : "event/" . $event_hash;
+	$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish";
+	if(strcmp($finish,$start) < 0 && !$nofinish) {
+		notice( t('Event can not end before it has started.') . EOL);
+		goaway($onerror_url);
+	}
+
 	if((! $summary) || (! $start)) {
 		notice( t('Event title and start time are required.') . EOL);
-		goaway($a->get_baseurl() . '/events/new');
+		goaway($onerror_url);
 	}
 
 	$share = ((intval($_POST['share'])) ? intval($_POST['share']) : 0);
@@ -450,6 +455,19 @@ function events_content(&$a) {
 
 	$channel = $a->get_channel();
 
+	// Passed parameters overrides anything found in the DB
+	if($mode === 'edit' || $mode === 'new') {
+		if(!x($orig_event)) $orig_event = array();
+		// In case of an error the browser is redirected back here, with these parameters filled in with the previous values
+		if(x($_REQUEST,'nofinish')) $orig_event['nofinish'] = $_REQUEST['nofinish'];
+		if(x($_REQUEST,'adjust')) $orig_event['adjust'] = $_REQUEST['adjust'];
+		if(x($_REQUEST,'summary')) $orig_event['summary'] = $_REQUEST['summary'];
+		if(x($_REQUEST,'description')) $orig_event['description'] = $_REQUEST['description'];
+		if(x($_REQUEST,'location')) $orig_event['location'] = $_REQUEST['location'];
+		if(x($_REQUEST,'start')) $orig_event['start'] = $_REQUEST['start'];
+		if(x($_REQUEST,'finish')) $orig_event['finish'] = $_REQUEST['finish'];
+	}
+
 	if($mode === 'edit' || $mode === 'new') {
 
 		$n_checked = ((x($orig_event) && $orig_event['nofinish']) ? ' checked="checked" ' : '');
@@ -537,6 +555,7 @@ function events_content(&$a) {
 			'$eid' => $eid, 
 			'$xchan' => $event_xchan,
 			'$mid' => $mid,
+			'$event_hash' => $event_id,
 	
 			'$title' => t('Event details'),
 			'$desc' => t('Starting date and Title are required.'),
@@ -548,11 +567,11 @@ function events_content(&$a) {
 			'$ftext' => $ftext,
 			'$ModalCANCEL' => t('Cancel'),
 			'$ModalOK' => t('OK'),
-			'$s_dsel' => datetimesel($f,mktime(),mktime(0,0,0,0,0,$syear+5),mktime(),'start_text'),
+			'$s_dsel' => datetimesel($f,mktime(),mktime(0,0,0,0,0,$syear+5),mktime($shour,$sminute,$ssecond,$smonth,$sday,$syear),'start_text'),
 			'$n_text' => t('Finish date/time is not known or not relevant'),
 			'$n_checked' => $n_checked,
 			'$f_text' => t('Event Finishes:'),
-			'$f_dsel' => datetimesel($f,mktime(),mktime(0,0,0,0,0,$fyear+5),mktime(),'finish_text',true,true,'start_text'),
+			'$f_dsel' => datetimesel($f,mktime(),mktime(0,0,0,0,0,$fyear+5),mktime($fhour,$fminute,$fsecond,$fmonth,$fday,$fyear),'finish_text',true,true,'start_text'),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$a_checked' => $a_checked,
 			'$d_text' => t('Description:'), 
