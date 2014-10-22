@@ -4131,7 +4131,7 @@ function list_post_dates($uid,$wall) {
 	if(intval(substr($dnow,8)) > 28)
 		$dnow = substr($dnow,0,8) . '28';
 	if(intval(substr($dthen,8)) > 28)
-		$dnow = substr($dthen,0,8) . '28';
+		$dthen = substr($dthen,0,8) . '28';
 
 	$ret = array();
 	// Starting with the current month, get the first and last days of every
@@ -4165,7 +4165,7 @@ function posted_dates($uid,$wall) {
 	if(intval(substr($dnow,8)) > 28)
 		$dnow = substr($dnow,0,8) . '28';
 	if(intval(substr($dthen,8)) > 28)
-		$dnow = substr($dthen,0,8) . '28';
+		$dthen = substr($dthen,0,8) . '28';
 
 	$ret = array();
 	// Starting with the current month, get the first and last days of every
