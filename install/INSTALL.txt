@@ -101,8 +101,9 @@ directory/path component in the URL) is REQUIRED.
         chmod -R 777 store
 
 		[This permission (777) is very dangerous and if you have sufficient
-		privilege and knowledge you should make this directory writeable only
-		by the webserver. In many shared hosting environments this may be
+		privilege and knowledge you should make these directories writeable
+		only by the webserver and, if different, the user that will run the
+		cron job (see below). In many shared hosting environments this may be
 		difficult without opening a trouble ticket with your provider. The
 		above permissions will allow the software to work, but are not
 		optimal.]
