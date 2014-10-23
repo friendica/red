@@ -400,8 +400,7 @@ function event_store_item($arr,$event) {
 	}
 	else {
 
-		$z = q("select * from channel where channel_hash = '%s' and channel_id = %d limit 1",
-			dbesc($event['event_xchan']),
+		$z = q("select * from channel where channel_id = %d limit 1",
 			intval($arr['uid'])
 		);
 
@@ -413,7 +412,7 @@ function event_store_item($arr,$event) {
 			$item_arr['id'] = $item['id'];
 		}
 		else {
-			$wall = (($z) ? true : false);
+			$wall = (($z[0]['channel_hash'] == $event['event_xchan']) ? true : false);
 
 			$item_flags = ITEM_THREAD_TOP;
 			if($wall) {
@@ -455,7 +454,14 @@ function event_store_item($arr,$event) {
 
 		$item_arr['body']          = $prefix . format_event_bbcode($arr);
 
-		$item_arr['plink'] = z_root() . '/channel/' . $z[0]['channel_address'] . '/?f=&mid=' . $item_arr['mid'];
+		// if it's local send the permalink to the channel page.
+		// otherwise we'll fallback to /display/$message_id
+
+		if($wall)
+			$item_arr['plink'] = z_root() . '/channel/' . $z[0]['channel_address'] . '/?f=&mid=' . $item_arr['mid'];
+		else
+			$item_arr['plink'] = z_root() . '/display/' . $item_arr['mid'];
+
 
 		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
 				dbesc($arr['event_xchan'])
