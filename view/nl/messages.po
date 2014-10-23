@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-10-17 14:18+0000\n"
-"PO-Revision-Date: 2014-10-23 13:58+0000\n"
+"PO-Revision-Date: 2014-10-23 15:13+0000\n"
 "Last-Translator: jeroenpraat <jeroenpraat@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -191,7 +191,7 @@ msgstr "Maak een account aan om toegang te krijgen tot diensten en toepassingen 
 
 #: ../../boot.php:1472 ../../include/nav.php:163 ../../mod/register.php:220
 msgid "Register"
-msgstr "Registreren "
+msgstr "Registreren"
 
 #: ../../boot.php:1495 ../../include/nav.php:95 ../../include/nav.php:128
 msgid "Logout"
@@ -1646,7 +1646,7 @@ msgstr "Jouw e-maildomein is op deze RedMatrix-hub niet toegestaan"
 
 #: ../../include/account.php:31
 msgid "Your email address is already registered at this site."
-msgstr "Jouw e-mailadres is al op deze RedMatrix-hub geregistreerd ."
+msgstr "Jouw e-mailadres is al op deze RedMatrix-hub geregistreerd."
 
 #: ../../include/account.php:64
 msgid "An invitation is required."
@@ -1672,7 +1672,7 @@ msgstr "Registratiebevestiging voor %s"
 #: ../../include/account.php:313
 #, php-format
 msgid "Registration request at %s"
-msgstr "Registratieverzoek op %s"
+msgstr "Registratiebevestiging voor %s"
 
 #: ../../include/account.php:315 ../../include/account.php:342
 #: ../../include/account.php:399
@@ -1686,7 +1686,7 @@ msgstr "jouw registratiewachtwoord"
 #: ../../include/account.php:340 ../../include/account.php:397
 #, php-format
 msgid "Registration details for %s"
-msgstr "Registratiedetails voor %s"
+msgstr "Registratiegegevens voor %s"
 
 #: ../../include/account.php:406
 msgid "Account approved."
@@ -4462,7 +4462,7 @@ msgstr "Plug-in-opties"
 
 #: ../../mod/admin.php:126
 msgid "User registrations waiting for confirmation"
-msgstr "Accountregistraties die op goedkeuring wachten"
+msgstr "Accounts die op goedkeuring wachten"
 
 #: ../../mod/admin.php:206
 msgid "Message queues"
@@ -4481,7 +4481,7 @@ msgstr "Samenvatting"
 
 #: ../../mod/admin.php:214
 msgid "Registered users"
-msgstr "Geregistreerde gebruikers"
+msgstr "Geregistreerde accounts"
 
 #: ../../mod/admin.php:216 ../../mod/admin.php:518
 msgid "Pending registrations"
@@ -4611,7 +4611,7 @@ msgstr "Maximale grootte in bytes voor afbeeldingen die worden geüpload. Standa
 
 #: ../../mod/admin.php:433
 msgid "Does this site allow new member registration?"
-msgstr "Staat deze hub registratie van nieuwe accounts toe?"
+msgstr "Staat deze hub nieuwe accounts toe?"
 
 #: ../../mod/admin.php:434
 msgid "Which best describes the types of account offered by this hub?"
@@ -4619,11 +4619,11 @@ msgstr "Wat voor soort accounts biedt deze RedMatrix-hub aan? Kies wat het meest
 
 #: ../../mod/admin.php:435
 msgid "Register text"
-msgstr "Registratietekst"
+msgstr "Tekst tijdens registratie"
 
 #: ../../mod/admin.php:435
 msgid "Will be displayed prominently on the registration page."
-msgstr "Wordt prominent op de registratiepagina getoond."
+msgstr "Tekst dat op de pagina voor het registreren van nieuwe accounts wordt getoond."
 
 #: ../../mod/admin.php:436
 msgid "Accounts abandoned after x days"
