@@ -50,7 +50,7 @@ function RedChannelList(&$auth) {
 	if ($r) {
 		foreach ($r as $rr) {
 			if (perm_is_allowed($rr['channel_id'], $auth->observer, 'view_storage')) {
-				logger('found channel: /cloud/' . $rr['channel_address'], LOGGER_DEBUG);
+				logger('found channel: /cloud/' . $rr['channel_address'], LOGGER_DATA);
 				// @todo can't we drop '/cloud'? It gets stripped off anyway in RedDirectory
 				$ret[] = new RedDAV\RedDirectory('/cloud/' . $rr['channel_address'], $auth);
 			}
@@ -188,7 +188,7 @@ function RedCollectionData($file, &$auth) {
  * @throw \Sabre\DAV\Exception\Forbidden
  */
 function RedFileData($file, &$auth, $test = false) {
-	logger($file . (($test) ? ' (test mode) ' : ''), LOGGER_DEBUG);
+	logger($file . (($test) ? ' (test mode) ' : ''), LOGGER_DATA);
 
 	$x = strpos($file, '/cloud');
 	if ($x === 0) {
