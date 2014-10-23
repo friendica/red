@@ -2517,7 +2517,7 @@ function item_store_update($arr,$allow_exec = false) {
 	return $ret;
 }
 
-function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id) {
+function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id, $walltowall = false) {
 
 	// We won't be able to sign Diaspora comments for authenticated visitors 
 	// - we don't have their private key
@@ -2527,7 +2527,16 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id)
 	require_once('include/bb2diaspora.php');
 	$signed_body = bb2diaspora_itembody($datarray);
 
-	logger('mod_item: storing diaspora comment signature',LOGGER_DEBUG);
+	if($walltowall) {
+		logger('wall to wall comment',LOGGER_DEBUG);
+		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
+		$signed_body = "\n\n" 
+			. '[img]' . $datarray['author']['xchan_photo_m'] . '[/img]' 
+			. '[url=' . $datarray['author']['xchan_url'] . ']' . $datarray['author']['xchan_name'] . '[/url]' . "\n\n" 
+			. $signed_body;
+	}
+
+	logger('storing diaspora comment signature',LOGGER_DEBUG);
 
 	$diaspora_handle = $channel['channel_address'] . '@' . get_app()->get_hostname();
 

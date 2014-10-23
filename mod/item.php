@@ -258,15 +258,26 @@ function item_post(&$a) {
 	}
 
 	$walltowall = false;
+	$walltowall_comment = false;
 
 	if($observer) {
 		logger('mod_item: post accepted from ' . $observer['xchan_name'] . ' for ' . $owner_xchan['xchan_name'], LOGGER_DEBUG);
-		if($observer['xchan_name'] != $owner_xchan['xchan_name'])
-			$walltowall = true;		
+
+		// wall-to-wall detection.
+		// For top-level posts, if the author and owner are different it's a wall-to-wall
+		// For comments, We need to additionally look at the parent and see if it's a wall post that originated locally.
+
+		if($observer['xchan_name'] != $owner_xchan['xchan_name'])  {
+			if($parent_item && ($parent_item['item_flags'] & (ITEM_WALL|ITEM_ORIGIN)) == (ITEM_WALL|ITEM_ORIGIN)) {
+				$walltowall_comment = true;
+				$walltowall = true;
+			}
+			if(! $parent) {
+				$walltowall = true;		
+			}
+		}
 	}
 		
-
-
 	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
 	if($webpage)
 		$public_policy = '';
@@ -874,10 +885,9 @@ function item_post(&$a) {
 
 	if($parent) {
 		// Store the comment signature information in case we need to relay to Diaspora
-//FIXME
 		$ditem = $datarray;
 		$ditem['author'] = $observer;
-		store_diaspora_comment_sig($ditem,$channel,$parent_item, $post_id);
+		store_diaspora_comment_sig($ditem,$channel,$parent_item, $post_id, (($walltowall_comment) ? 1 : 0));
 	}
 
 	update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);
