@@ -214,6 +214,7 @@ function can_comment_on_post($observer_xchan,$item) {
 			break;
 		case 'any connections':
 		case 'contacts':
+		case 'authenticated':
 		case '':
 			if(array_key_exists('owner',$item)) {
 				if(($item['owner']['abook_xchan']) && ($item['owner']['abook_their_perms'] & PERMS_W_COMMENT))
