@@ -340,8 +340,13 @@ function bb2diaspora_itembody($item,$force_update = false) {
 
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
 		$key = get_config('system','prvkey');
-		$newitem['title'] = (($item['title']) ? crypto_unencapsulate(json_decode($item['title'],true),$key) : '');
-		$newitem['body']  = (($item['body'])  ? crypto_unencapsulate(json_decode($item['body'],true),$key) : '');
+		$b = json_decode($item['title'],true);
+		// if called from diaspora_process_outbound, this decoding has already been done.
+		// Everything else that calls us will not yet be decoded.
+		if($b && is_array($b) && array_key_exists('iv',$b)) {
+			$newitem['title'] = (($item['title']) ? crypto_unencapsulate(json_decode($item['title'],true),$key) : '');
+			$newitem['body']  = (($item['body'])  ? crypto_unencapsulate(json_decode($item['body'],true),$key) : '');
+		}
 	}
 
 	bb2diaspora_itemwallwall($newitem);
