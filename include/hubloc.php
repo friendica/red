@@ -247,5 +247,15 @@ function xchan_fetch($arr) {
 		return false;
 
 	$r = q("select * from xchan where $key = '$v'");
-	return $r;
+	if(! $r)
+		return false;
+
+	$ret = array();
+	foreach($r as $k => $v) {
+		if($k === 'xchan_addr')
+			$ret['address'] = $v;
+		else
+			$ret[str_replace('xchan_','',$k)] = $v;
+	}
+	return $ret;
 }
