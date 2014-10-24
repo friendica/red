@@ -2532,8 +2532,8 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id,
 		logger('wall to wall comment',LOGGER_DEBUG);
 		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
 		$signed_body = "\n\n" 
-			. '[img]' . $datarray['author']['xchan_photo_m'] . '[/img]' 
-			. '[url=' . $datarray['author']['xchan_url'] . ']' . $datarray['author']['xchan_name'] . '[/url]' . "\n\n" 
+			. '![' . $datarray['author']['xchan_name'] . '](' . $datarray['author']['xchan_photo_m'] . ')'
+			. '[' . $datarray['author']['xchan_name'] . '](' . $datarray['author']['xchan_url'] . ')' . "\n\n" 
 			. $signed_body;
 	}
 
