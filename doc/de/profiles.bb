@@ -36,4 +36,4 @@ Im Verzeichnis (Kanal-Anzeiger) kannst Du nach Leuten suchen, die ihre Profile v
 
 Auf Deiner „Verbindungen“-Seite und im Verzeichnis (Kanal-Anzeiger) gibt es einen Link „Vorschläge“ bzw. „Kanal-Vorschläge“. Dort findest Du Kanäle, die gleiche oder ähnliche Schlüsselwörter im Profil haben wie Du. Je mehr Schlüsselwörter Du in Dein Standard-Profil einträgst, desto besser werden die Suchergebnisse. Sie sind nach relevanz sortiert.
 
-[zrl=[baseurl]/help]Zurück zur Hilfe-Startseite[/zrl]
+#include doc/macros/main_footer.bb;
