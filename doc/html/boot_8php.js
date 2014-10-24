@@ -30,6 +30,7 @@ var boot_8php =
     [ "is_windows", "boot_8php.html#ac5e74f899f6e98d8e91b14ba1c08bc08", null ],
     [ "killme", "boot_8php.html#aea7fc57a4d8e9dcb42f2601b0b9b761c", null ],
     [ "load_contact_links", "boot_8php.html#a719c7f3972d5f9268f37a41c76cd4ef6", null ],
+    [ "load_pdl", "boot_8php.html#a50a6707a28c7d05d3f49eaabc7994501", null ],
     [ "local_user", "boot_8php.html#ad4c9dc2c8a82e8f52b7404c1655eab44", null ],
     [ "login", "boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4", null ],
     [ "notice", "boot_8php.html#a9255af5ae9c887520091ea04763c1a88", null ],

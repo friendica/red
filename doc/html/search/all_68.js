@@ -18,6 +18,7 @@ var searchData=
   ['help',['help',['../namespacefriendica-to-smarty-tpl.html#af6b2c793958aae2aadc294577431f749',1,'friendica-to-smarty-tpl.help()'],['../namespaceupdatetpl.html#ac9d11279fed403a329a719298feafc4f',1,'updatetpl.help()']]],
   ['help_2ephp',['help.php',['../help_8php.html',1,'']]],
   ['help_5fcontent',['help_content',['../help_8php.html#af055e15f600ffa6fbca9386fdf715224',1,'help.php']]],
+  ['hivenet_5finit',['hivenet_init',['../hivenet_2php_2theme_8php.html#a3a8b539b112ae63936025236dbaf0a29',1,'theme.php']]],
   ['home_2ephp',['home.php',['../home_8php.html',1,'']]],
   ['home_5fcontent',['home_content',['../home_8php.html#aa1cf697851a646755baf537f75334c46',1,'home.php']]],
   ['home_5finit',['home_init',['../home_8php.html#ac4642c38b6f23a8d065dd4a75c620bde',1,'home.php']]],

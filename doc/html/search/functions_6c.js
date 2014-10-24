@@ -19,6 +19,7 @@ var searchData=
   ['load_5fdatabase_5frem',['load_database_rem',['../setup_8php.html#a2b375ddc555140236fc500135de99371',1,'setup.php']]],
   ['load_5fhooks',['load_hooks',['../plugin_8php.html#a326365e48ef94f0b9a0a771b8d75e813',1,'plugin.php']]],
   ['load_5fpconfig',['load_pconfig',['../include_2config_8php.html#a559791dda7fef8a4b2394c83e835787b',1,'config.php']]],
+  ['load_5fpdl',['load_pdl',['../boot_8php.html#a50a6707a28c7d05d3f49eaabc7994501',1,'boot.php']]],
   ['load_5fplugin',['load_plugin',['../plugin_8php.html#a9ca9632b7309a65b05c03a3e2f473a3d',1,'plugin.php']]],
   ['load_5ftranslation_5ftable',['load_translation_table',['../language_8php.html#a7e9904c730bb24ddcb0ff50fc96f6b05',1,'language.php']]],
   ['load_5fxconfig',['load_xconfig',['../include_2config_8php.html#aee4b619839cf4b64220f34edf5c67b52',1,'config.php']]],
