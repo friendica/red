@@ -11,7 +11,7 @@ function acl_init(&$a){
 	$count = (x($_REQUEST,'count')?$_REQUEST['count']:100);
 	$search = (x($_REQUEST,'search')?$_REQUEST['search']:"");
 	$type = (x($_REQUEST,'type')?$_REQUEST['type']:"");
-	
+	$noforums = (x($_REQUEST,'n') ? $_REQUEST['n'] : false);	
 
 	// For use with jquery.autocomplete for private mail completion
 
@@ -230,7 +230,7 @@ function acl_init(&$a){
 			if(strpos($g['hash'],'/'))
 				continue;
 
-			if(($g['abook_their_perms'] & PERMS_W_TAGWALL) && $type == 'c') {
+			if(($g['abook_their_perms'] & PERMS_W_TAGWALL) && $type == 'c' && (! $noforums)) {
 				$contacts[] = array(
 					"type"     => "c",
 					"photo"    => "images/twopeople.png",

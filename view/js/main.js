@@ -575,7 +575,7 @@ function updateConvItems(mode,data) {
 	}
 
 	/* autocomplete @nicknames */
-	$(".comment-edit-form  textarea").contact_autocomplete(baseurl+"/acl");
+	$(".comment-edit-form  textarea").contact_autocomplete(baseurl+"/acl?f=&n=1");
 	
 	var bimgs = $(".wall-item-body img").not(function() { return this.complete; });
 	var bimgcount = bimgs.length;
