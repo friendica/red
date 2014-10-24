@@ -24,7 +24,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/cloud]Cloud-Speicher[/zrl]
 [zrl=[baseurl]/help/remove_account]Einen Kanal oder das ganze Konto löschen[/zrl]
 
-[size=large][b]Nutzung der Red-Matrix[/b][/size]
+[size=large][b]Hilfe für RedMatrix-Mitglieder[/b][/size]
 [zrl=[baseurl]/help/tags_and_mentions]Tags und Erwähnungen[/zrl]
 [zrl=[baseurl]/help/webpages]Webseiten[/zrl]
 [zrl=[baseurl]/help/bbcode]BBcode-Referenz für Posts und Kommentare[/zrl]
@@ -32,25 +32,19 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/cloud_desktop_clients]Desktop-Anwendungen und die Cloud[/zrl]
 [zrl=[baseurl]/help/AdvancedSearch]Fortgeschrittene Suche im Kanalverzeichnis[/zrl]
 [zrl=[baseurl]/help/addons]Hilfe zu Addons[/zrl]
-[zrl=[baseurl]/help/nomadic-identity]Got Zot? Nomadische Identität, Kanal-Klone und mehr[/zrl]
 [zrl=[baseurl]/help/diaspora_compat]Kompatibilität zum Diaspora-Protokoll (zur Kommunikation mit Kontakten aus Diaspora und Friendica)[/zrl]
+[zrl=[baseurl]/help/faq_members]FAQ für Mitglieder[/zrl]
 
-
-[size=large][b]Häufig gestellte Fragen für Nutzer[/b][/size]
-[zrl=[baseurl]/help/faq_users]FAQ für Nutzer[/zrl]
-
-[size=large][b]Für Administratoren[/b][/size]
+[size=large][b]Hilfe für Administratoren[/b][/size]
 [zrl=[baseurl]/help/install]Installation[/zrl]
 [zrl=[baseurl]/help/debian_install]Einfache Installation unter Debian mit einem Skript[/zrl]
 [zrl=[baseurl]/help/red2pi]Red auf einem Raspberry Pi installieren[/zrl]
-[zrl=[baseurl]/help/problems-following-an-update]Probleme nach einem Software-Update[/zrl]
 [zrl=[baseurl]/help/troubleshooting]Troubleshooting-Tipps[/zrl]
-
-[size=large][b]Häufig gestellte Fragen für Hub-Admins[/b][/size]
+[zrl=[baseurl]/help/hidden_configs]Versteckte Konfigurations-Optionen[/zrl]
 [zrl=[baseurl]/help/faq_admins]FAQ für Admins[/zrl]
 
 [size=large][b]Technische Dokumentation[/b][/size]
-[zrl=[baseurl]/help/Zot---A-High-Level-Overview]Zot – ein erster Überblick[/zrl]
+[zrl=[baseurl]/help/Zot---A-High-Level-Overview]Zot – ein grober Überblick[/zrl]
 [zrl=[baseurl]/help/zot]Eine Einführung ins Zot-Protokoll[/zrl]
 [zrl=[baseurl]/help/zot_structures]Zot-Strukturen[/zrl]
 [zrl=[baseurl]/help/comanche]Seitenbeschreibung in Comanche[/zrl]
@@ -79,5 +73,6 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [url=https://github.com/friendica/red-addons]Addons-Website[/url]
 [url=https://zothub.com/channel/one]Entwickler-Kanal[/url]
 
+[url=[baseurl]/help/credits]RedMatrix Credits[/url]
 [size=large][b]Über diesen Red-Server[/b][/size]
 [zrl=[baseurl]/siteinfo]Informationen zu diesem Server und der Red-Version[/zrl]
