@@ -213,7 +213,6 @@ function like_content(&$a) {
 
 		logger('like: verb ' . $verb . ' item ' . $item_id, LOGGER_DEBUG);
 
-
 		$r = q("SELECT * FROM item WHERE id = %d and item_restrict = 0 LIMIT 1",
 			dbesc($item_id)
 		);
