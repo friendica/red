@@ -98,9 +98,9 @@
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="wall-item-like-{{$id}}">{{$like_count}} {{$like_button_label}}</button>
 							{{if $like_list_part}}
-							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$item.id}}">{{foreach $like_list_part as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$id}}">{{foreach $like_list_part as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
 							{{else}}
-							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$item.id}}">{{foreach $like_list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$id}}">{{foreach $like_list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
 							{{/if}}
 						</div>
 						{{/if}}
