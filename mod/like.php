@@ -218,8 +218,8 @@ function like_content(&$a) {
 		// get the item. Allow linked photos (which are normally hidden) to be liked
 
 		$r = q("SELECT * FROM item WHERE id = %d and (item_restrict = 0 or item_restrict = %d) LIMIT 1",
-			dbesc($item_id),
-			dbesc(ITEM_HIDDEN)
+			intval($item_id),
+			intval(ITEM_HIDDEN)
 		);
 
 		if(! $item_id || (! $r)) {
