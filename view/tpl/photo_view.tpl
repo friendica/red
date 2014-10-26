@@ -81,24 +81,89 @@
 		<div id="photo-photo"><a href="{{$photo.href}}" title="{{$photo.title}}" onclick="$.colorbox({href: '{{$photo.href}}'}); return false;"><img style="width: 100%;" src="{{$photo.src}}"></a></div>
 		<div id="photo-photo-end"></div>
 
+		{{if $tags}}
+		<div class="photo-item-tools-left" id="in-this-photo">
+			<span id="in-this-photo-text">{{$tag_hdr}}</span>
+			{{foreach $tags as $t}}
+				{{$t.0}}{{if $edit}}<span id="tag-remove">&nbsp;<a href="{{$t.1}}"><i class="icon-remove"></i></a>&nbsp;</span>{{/if}}
+			{{/foreach}}
+		</div>
+		{{/if}}
+
 		<div class="photo-item-tools">
-			{{if $tags}}
+			{{if $like_count ||  $dislike_count}}
 			<div class="photo-item-tools-left pull-left">
-				<div id="in-this-photo">
-				<span id="in-this-photo-text">{{$tag_hdr}}</span>
-				{{foreach $tags as $t}}
-					{{$t.0}}{{if $edit}}<span id="tag-remove">&nbsp;<a href="{{$t.1}}"><i class="icon-remove"></i></a>&nbsp;</span>{{/if}}
-				{{/foreach}}
+					<div class="{{if $like_count &&  $dislike_count}}btn-group{{/if}}">
+						{{if $like_count}}
+						<div class="btn-group">
+							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="wall-item-like-{{$id}}">{{$like_count}} {{$like_button_label}}</button>
+							{{if $like_list_part}}
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$id}}">{{foreach $like_list_part as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+							{{else}}
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$id}}">{{foreach $like_list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+							{{/if}}
+						</div>
+						{{/if}}
+						{{if $dislike_count}}
+						<div class="btn-group">
+							<button type="button" class="btn btn-default btn-sm wall-item-dislike dropdown-toggle" data-toggle="dropdown" id="wall-item-dislike-{{$id}}">{{$dislike_count}} {{$dislike_button_label}}</button>
+							{{if $dislike_list_part}}
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-dislike-{{$id}}">{{foreach $dislike_list_part as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
+							{{else}}
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-dislike-{{$id}}">{{foreach $dislike_list as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
+							{{/if}}
+						</div>
+						{{/if}}
+					</div>
+					{{if $like_list_part}}
+					<div class="modal" id="likeModal-{{$id}}">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title">{{$like_modal_title}}</h4>
+								</div>
+								<div class="modal-body">
+									<ul>{{foreach $like_list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+								</div>
+								<div class="modal-footer clear">
+									<button type="button" class="btn btn-default" data-dismiss="modal">{{$modal_dismiss}}</button>
+								</div>
+							</div><!-- /.modal-content -->
+						</div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
+					{{/if}}
+					{{if $dislike_list_part}}
+					<div class="modal" id="dislikeModal-{{$id}}">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title">{{$dislike_modal_title}}</h4>
+								</div>
+								<div class="modal-body">
+									<ul>{{foreach $dislike_list as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
+								</div>
+								<div class="modal-footer clear">
+									<button type="button" class="btn btn-default" data-dismiss="modal">{{$modal_dismiss}}</button>
+								</div>
+							</div><!-- /.modal-content -->
+						</div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
+					{{/if}}
 				</div>
 			</div>
 			{{/if}}
 
+
 			{{if $likebuttons}}
 			<div class="photo-item-tools-right btn-group pull-right">
-				<i class="icon-thumbs-up-alt item-tool btn btn-default btn-sm" title="{{$likethis}}" onclick="dolike({{$id}},'like'); return false"></i>
-				<i class="icon-thumbs-down-alt item-tool btn btn-default btn-sm" title="{{$nolike}}" onclick="dolike({{$id}},'dislike'); return false"></i>
-				{{$like}}
-				{{$dislike}}
+				<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$id}},'like'); return false">
+					<i class="icon-thumbs-up-alt" title="{{$likethis}}"></i>
+				</button>
+				<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$id}},'dislike'); return false">
+					<i class="icon-thumbs-down-alt" title="{{$nolike}}"></i>
+				</button>
 			</div>
 			<div id="like-rotator-{{$id}}" class="like-rotator pull-right"></div>
 			{{/if}}

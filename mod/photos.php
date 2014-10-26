@@ -1023,7 +1023,7 @@ function photos_content(&$a) {
 			$like = '';
 			$dislike = '';
 
-			// display comments
+
 			if($r) {
 
 				foreach($r as $item) {
@@ -1031,10 +1031,33 @@ function photos_content(&$a) {
 					like_puller($a,$item,$dlike,'dislike');
 				}
 
-				$like    = ((isset($alike[$link_item['id']])) ? format_like($alike[$link_item['id']],$alike[$link_item['id'] . '-l'],'like',$link_item['id']) : '');
-				$dislike = ((isset($dlike[$link_item['id']])) ? format_like($dlike[$link_item['id']],$dlike[$link_item['id'] . '-l'],'dislike',$link_item['id']) : '');
+				$like_count = ((x($alike,$link_item['mid'])) ? $alike[$link_item['mid']] : '');
+				$like_list = ((x($alike,$link_item['mid'])) ? $alike[$link_item['mid'] . '-l'] : '');
+				if (count($like_list) > MAX_LIKERS) {
+					$like_list_part = array_slice($like_list, 0, MAX_LIKERS);
+					array_push($like_list_part, '<a href="#" data-toggle="modal" data-target="#likeModal-' . $this->get_id() . '"><b>' . t('View all') . '</b></a>');
+				} else {
+					$like_list_part = '';
+				}
+				$like_button_label = tt('Like','Likes',$like_count,'noun');
+
+				//if (feature_enabled($conv->get_profile_owner(),'dislike')) {
+					$dislike_count = ((x($dlike,$link_item['mid'])) ? $dlike[$link_item['mid']] : '');
+					$dislike_list = ((x($dlike,$link_item['mid'])) ? $dlike[$link_item['mid'] . '-l'] : '');
+					$dislike_button_label = tt('Dislike','Dislikes',$dislike_count,'noun');
+					if (count($dislike_list) > MAX_LIKERS) {
+						$dislike_list_part = array_slice($dislike_list, 0, MAX_LIKERS);
+						array_push($dislike_list_part, '<a href="#" data-toggle="modal" data-target="#dislikeModal-' . $this->get_id() . '"><b>' . t('View all') . '</b></a>');
+					} else {
+						$dislike_list_part = '';
+					}
+				//}
 
 
+				$like    = ((isset($alike[$link_item['mid']])) ? format_like($alike[$link_item['mid']],$alike[$link_item['mid'] . '-l'],'like',$link_item['mid']) : '');
+				$dislike = ((isset($dlike[$link_item['mid']])) ? format_like($dlike[$link_item['mid']],$dlike[$link_item['mid'] . '-l'],'dislike',$link_item['mid']) : '');
+
+				// display comments
 
 				foreach($r as $item) {
 					$comment = '';
@@ -1128,6 +1151,17 @@ function photos_content(&$a) {
 			'$likebuttons' => $likebuttons,
 			'$like' => $like_e,
 			'$dislike' => $dislike_e,
+			'$like_count' => $like_count,
+			'$like_list' => $like_list,
+			'$like_list_part' => $like_list_part,
+			'$like_button_label' => $like_button_label,
+			'$like_modal_title' => t('Likes','noun'),
+			'$dislike_modal_title' => t('Dislikes','noun'),
+			'$dislike_count' => $dislike_count,  //((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_count : ''),
+			'$dislike_list' => $dislike_list, //((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_list : ''),
+			'$dislike_list_part' => $dislike_list_part, //((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_list_part : ''),
+			'$dislike_button_label' => $dislike_button_label, //((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_button_label : ''),
+			'$modal_dismiss' => t('Close'),
 			'$comments' => $comments,
 			'$commentbox' => $commentbox,
 			'$paginate' => $paginate,
