@@ -313,7 +313,7 @@ function settings_post(&$a) {
 					);
 				}
 				if($r) {
-					q("update channel set channel_default_group = '%s', channel_allow_gid = '%s' where channel_id = %d limit 1",
+					q("update channel set channel_default_group = '%s', channel_allow_gid = '%s', channel_allow_cid = '', channel_deny_gid = '', channel_deny_cid = '' where channel_id = %d limit 1",
 						dbesc($r[0]['hash']),
 						dbesc('<' . $r[0]['hash'] . '>'),
 						intval(local_user())
