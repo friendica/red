@@ -734,6 +734,10 @@ function get_role_perms($role) {
 
 
 function role_selector($current) {
+
+	if(! $current)
+		$current = 'custom';
+
 	$roles = array(
 		'social' => array( t('Social Networking'), 
 			array('social' => t('Mostly Public'), 'social_restricted' => t('Restricted'), 'social_private' => t('Private'))),

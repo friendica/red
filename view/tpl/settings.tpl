@@ -22,36 +22,43 @@
 
 <h3 class="settings-heading">{{$h_prv}}</h3>
 
+<div class="field custom">
+<label for="privacy-role-select">{{$role_lbl}}</label>
+{{$role_select}}
+</div>
+
+<div id="advanced-perm" style="display:{{if $permissions_set}}none{{else}}block{{/if}};">
 {{include file="field_checkbox.tpl" field=$hide_presence}}
 
-<button type="button" class="btn btn-xs btn-default" data-toggle="collapse" data-target="#settings-permissions-wrapper">{{$lbl_p2macro}}</button>
-
-
+<button type="button" class="btn btn-default" data-toggle="collapse" data-target="#settings-permissions-wrapper">{{$lbl_p2macro}}</button>
 
 <div class="collapse well" id="settings-permissions-wrapper">
-{{if !$expert}}
-	<div class="alert alert-info">{{$hint}}</div>
-{{/if}}
 
 {{foreach $permiss_arr as $permit}}
-	{{if $expert}}
-		{{include file="field_select.tpl" field=$permit}}
-	{{else}}
-		{{include file="field_select_disabled.tpl" field=$permit}}
-	{{/if}}
+	{{include file="field_select.tpl" field=$permit}}
 {{/foreach}}
-
-{{if $expert}}
 	<div class="settings-submit-wrapper" >
 	<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
 	</div>
-{{/if}}
+</div>
+
+<div id="settings-default-perms" class="settings-default-perms" >
+	<button class="btn btn-default" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
+	{{$aclselect}}
+	<div id="settings-default-perms-menu-end"></div>
+</div>
+<br/>
+<div id="settings-default-perms-end"></div>
+
+{{$group_select}}
+
+{{$profile_in_dir}}
 
 </div>
+
 <div class="settings-common-perms">
 
 
-{{$profile_in_dir}}
 
 {{$suggestme}}
 
@@ -62,15 +69,6 @@
 
 </div>
 
-<div id="settings-default-perms" class="settings-default-perms" >
-	<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
-	{{$aclselect}}
-	<div id="settings-default-perms-menu-end"></div>
-</div>
-<br/>
-<div id="settings-default-perms-end"></div>
-
-{{$group_select}}
 
 
 <div class="settings-submit-wrapper" >
