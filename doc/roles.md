@@ -47,13 +47,22 @@ Similiar to Social - Mostly Public, but tailored for RSS feed sources. Items may
 Not listed in directory. Online presence is meaningless, therefore hidden. Feed is published only to members of the 'Friends' collection. New connections are automatically added to this collections. Members must be manually approved by the channel owner. 
 
 
-##Soapbox
+##Special
+
+**Celebrity/Soapbox**
 
 Listed in directory. Communications are by default public. Online presence is hidden. No commenting or feedback of any form is allowed, though connections have the ability to "like" your profile. 
 
-##Custom/Advanced
 
-You decide the privacy behaviour.   
+**Group Repository**
+
+A public forum which allows members to post files/photos/webpages. 
+
+
+##Custom/Expert Mode
+
+Set all the privacy and permissions manually to suit your specific needs. 
+
 
  
 
