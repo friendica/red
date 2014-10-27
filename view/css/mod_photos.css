@@ -87,26 +87,16 @@
 }
 
 
-#photo-edit-edit {
+#photo-edit-edit,
+#photo-album-edit-wrapper {
+	display: none;
 	padding: 7px 10px;
 	margin-bottom: 3px;
-}
-
-#photo-edit-end {
-	margin-bottom: 35px;
-}
-#photo-caption {
-	margin-top: 15px;
-	margin-bottom: 15px;
 }
 
 #photo-album-edit-submit, #photo-album-edit-drop {
 	margin-top: 15px;
 	margin-bottom: 15px;
-}
-
-#photo-album-edit-drop {
-	margin-left: 200px;
 }
 
 #photos-usage-message {

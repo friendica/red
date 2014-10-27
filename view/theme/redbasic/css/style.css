@@ -704,6 +704,7 @@ footer {
 	cursor: pointer;
 }
 
+#photo-album-edit-wrapper,
 #photo-view-wrapper,
 #photo-edit-edit {
 	background-color: $item_colour;
