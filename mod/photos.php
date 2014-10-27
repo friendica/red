@@ -661,33 +661,25 @@ function photos_content(&$a) {
 			intval($a->pager['itemspage'])
 		);
 		
-		if($cmd === 'edit') {		
-			if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
-				if($can_post) {
-					if($a->get_template_engine() === 'internal') {
-						$album_e = template_escape($album);
-					}
-					else {
-						$album_e = $album;
-					}
-
-					$edit_tpl = get_markup_template('album_edit.tpl');
-					$o .= replace_macros($edit_tpl,array(
-						'$nametext' => t('New album name: '),
-						'$nickname' => $a->data['channel']['channel_address'],
-						'$album' => $album_e,
-						'$hexalbum' => bin2hex($album),
-						'$submit' => t('Submit'),
-						'$dropsubmit' => t('Delete Album')
-					));
+		//edit album name
+		$album_edit = null;
+		if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
+			if($can_post) {
+				if($a->get_template_engine() === 'internal') {
+					$album_e = template_escape($album);
 				}
-			}
-		}
-		else {
-			if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
-				if($can_post) {
-					$edit = array(t('Edit Album'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '/edit');
- 				}
+				else {
+					$album_e = $album;
+				}
+				$edit_tpl = get_markup_template('album_edit.tpl');
+				$album_edit = replace_macros($edit_tpl,array(
+					'$nametext' => t('New album name: '),
+					'$nickname' => $a->data['channel']['channel_address'],
+					'$album' => $album_e,
+					'$hexalbum' => bin2hex($album),
+					'$submit' => t('Submit'),
+					'$dropsubmit' => t('Delete Album')
+				));
 			}
 		}
 
@@ -727,6 +719,7 @@ function photos_content(&$a) {
 					'desc'=> $desc_e,
 					'ext' => $ext,
 					'hash'=> $rr['resource_id'],
+					'unknown' => t('Unknown')
 				);
 			}
 		}
@@ -749,10 +742,11 @@ function photos_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$photos' => $photos,
 				'$album' => $album,
+				'$album_edit' => array(t('Edit Album'), $album_edit),
 				'$can_post' => $can_post,
 				'$upload' => array(t('Upload'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album)),
 				'$order' => $order,
-				'$edit' => $edit
+
 			));
 
 		}

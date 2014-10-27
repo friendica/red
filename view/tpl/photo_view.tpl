@@ -31,7 +31,7 @@
 		<div class="clear"></div>
 
 	</div>
-	<div id="photo-edit-edit" style="display: none;">
+	<div id="photo-edit-edit">
 		<form action="photos/{{$edit.nickname}}/{{$edit.resource_id}}" method="post" id="photo_edit_form">
 			<input type="hidden" name="item_id" value="{{$edit.item_id}}">
 			<label id="photo-edit-albumname-label" for="photo-edit-albumname">{{$edit.newalbum}}</label>
@@ -155,7 +155,6 @@
 			</div>
 			{{/if}}
 
-
 			{{if $likebuttons}}
 			<div class="photo-item-tools-right btn-group pull-right">
 				<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$id}},'like'); return false">
@@ -167,23 +166,22 @@
 			</div>
 			<div id="like-rotator-{{$id}}" class="like-rotator pull-right"></div>
 			{{/if}}
-		<div class="clear"></div>
+
+			<div class="clear"></div>
 		</div>
 
+	</div>
+
+	{{$comments}}
+
+	{{if $commentbox}}
+	<div class="wall-item-comment-wrapper{{if $comments}} wall-item-comment-wrapper-wc{{/if}}" >
+		{{$commentbox}}
+	</div>
+	{{/if}}
 
 
-</div>
-
-{{$comments}}
-
-{{if $commentbox}}
-<div class="wall-item-comment-wrapper{{if $comments}} wall-item-comment-wrapper-wc{{/if}}" >
-	{{$commentbox}}
-</div>
-{{/if}}
-
-
-<div class="clear"></div>
+	<div class="clear"></div>
 
 </div>
 
