@@ -319,6 +319,7 @@ function photos_post(&$a) {
 			$old_inform = $r[0]['inform'];
 		}
 
+
 		// make sure the linked item has the same permissions as the photo regardless of any other changes
 		$x = q("update item set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
 			where id = %d limit 1",
@@ -380,6 +381,7 @@ function photos_post(&$a) {
 	
 					if($success['replaced']) {
 						$tagged[] = $tag;
+
 						$post_tags[] = array(
 							'uid'   => $a->profile['profile_uid'], 
 							'type'  => $success['termtype'],
@@ -397,8 +399,14 @@ function photos_post(&$a) {
 			);
 
 			if($r) {
+				$r = fetch_post_tags($r,true);
 				$datarray = $r[0];
-				$datarray['term']   = $post_tags;	
+				if($post_tags) {
+					if((! array_key_exists('term',$datarray)) || (! is_array($datarray['term'])))
+						$datarray['term'] = $post_tags;
+					else
+						$datarray['term'] = array_merge($datarray['term'],$post_tags);  
+				}
 				item_store_update($datarray,$execflag);
 			}
 
@@ -910,20 +918,18 @@ function photos_content(&$a) {
 				$r = conv_sort($r,'commented');
 			}
 
-
-
 			$tags = array();
 			if($link_item['term']) {
 				$cnt = 0;
-				foreach($link_item['term'] as $t)
+				foreach($link_item['term'] as $t) {
 					$tags[$cnt] = array(0 => format_term_for_display($t));
 					if($can_post && ($ph[0]['uid'] == $owner_uid)) {
 						$tags[$cnt][1] = 'tagrm?f=&item=' . $link_item['id'];
 						$tags[$cnt][2] = t('Remove');
 					}
 					$cnt ++;
+				}
 			}
-
 
 			if((local_user()) && (local_user() == $link_item['uid'])) {
 				q("UPDATE `item` SET item_flags = (item_flags ^ %d) WHERE parent = %d and uid = %d and (item_flags & %d)",

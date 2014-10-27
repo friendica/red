@@ -19,24 +19,27 @@ function tagrm_post(&$a) {
 		intval(local_user())
 	);
 
-	if(! count($r))
+	if(! $r)
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 
-	$arr = explode(',', $r[0]['tag']);
-	for($x = 0; $x < count($arr); $x ++) {
-		if($arr[$x] === $tag) {
-			unset($arr[$x]);
-			break;
+	$r = fetch_post_tags($r,true);
+
+	$item = $r[0];
+	$new_tags = array();
+
+	if($item['term']) {
+		for($x = 0; $x < count($item['term']); $x ++) {
+			if($item['term'][$x]['term'] !== hex2bin($tag))
+				$new_tags[] = $item['term'][$x];
 		}
 	}
 
-	$tag_str = implode(',',$arr);
+	if($new_tags)
+		$item['term'] = $new_tags;
+	else
+		unset($item['term']);
 
-	q("UPDATE `item` SET `tag` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-		dbesc($tag_str),
-		intval($item),
-		intval(local_user())
-	);
+	item_store_update($item);
 
 	info( t('Tag removed') . EOL );
 	goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
@@ -56,7 +59,7 @@ function tagrm_content(&$a) {
 		// NOTREACHED
 	}
 
-	$item = (($a->argc > 1) ? intval($a->argv[1]) : 0);
+	$item = intval($_GET['item']);
 	if(! $item) {
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 		// NOTREACHED
@@ -68,12 +71,14 @@ function tagrm_content(&$a) {
 		intval(local_user())
 	);
 
-	if(! count($r))
+
+	if(! $r)
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 
-	$arr = explode(',', $r[0]['tag']);
+	$r = fetch_post_tags($r,true);
 
-	if(! count($arr))
+
+	if(! count($r[0]['term']))
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 
 	$o .= '<h3>' . t('Remove Item Tag') . '</h3>';
@@ -85,8 +90,8 @@ function tagrm_content(&$a) {
 	$o .= '<ul>';
 
 
-	foreach($arr as $x) {
-		$o .= '<li><input type="checkbox" name="tag" value="' . bin2hex($x) . '" >' . bbcode($x) . '</input></li>';
+	foreach($r[0]['term'] as $x) {
+		$o .= '<li><input type="checkbox" name="tag" value="' . bin2hex($x['term']) . '" >' . bbcode($x['term']) . '</input></li>';
 	}
 
 	$o .= '</ul>';
