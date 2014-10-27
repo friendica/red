@@ -324,14 +324,19 @@ function settings_post(&$a) {
 					return;
 				}
 			}
-
-			if($role_permissions['perms_auto']) {
-				$r = q("update abook set abook_my_perms  = %d where abook_channel = %d and (abook_flags & %d) limit 1",
-					intval($role_permissions['perms_accept']),
-					intval(local_user()),
-					intval(ABOOK_FLAG_SELF)
+			// no default collection
+			else {
+				q("update channel set channel_default_group = '', channel_allow_gid = '', channel_allow_cid = '', channel_deny_gid = '', 
+					channel_deny_cid = '' where channel_id = %d limit 1",
+						intval(local_user())
 				);
 			}
+
+			$r = q("update abook set abook_my_perms  = %d where abook_channel = %d and (abook_flags & %d) limit 1",
+				intval(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0),
+				intval(local_user()),
+				intval(ABOOK_FLAG_SELF)
+			);
 
 			foreach($role_permissions as $p => $v) {
 				if(strpos($p,'channel_') !== false) {
