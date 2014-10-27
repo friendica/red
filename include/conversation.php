@@ -827,8 +827,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 		$threads = null;
 	}
 
-	if($page_mode === 'preview')
-		logger('preview: ' . print_r($threads,true));
+//	if($page_mode === 'preview')
+//		logger('preview: ' . print_r($threads,true));
 
 //  Do not un-comment if smarty3 is in use
 //	logger('page_template: ' . $page_template);
