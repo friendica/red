@@ -18,6 +18,7 @@ Zot is the great new communicaton protocol invented especially for the RedMatrix
 [zrl=[baseurl]/help/accounts_profiles_channels_basics]You at the RedMatrix: accounts, profiles and channels in short[/zrl]
 [zrl=[baseurl]/help/profiles]Profiles[/zrl]
 [zrl=[baseurl]/help/channels]Channels[/zrl]
+[zrl=[baseurl]/help/roles]Permission roles and Channel types[/zrl]
 [zrl=[baseurl]/help/first-post]Your first posting[/zrl]
 [zrl=[baseurl]/help/connecting_to_channels]Connecting To Other Channels[/zrl]
 [zrl=[baseurl]/help/permissions]Permissions And Encryption: You Are In Control[/zrl]
