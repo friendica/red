@@ -87,7 +87,7 @@ function acl_init(&$a){
 			$contact_count = (int)$r[0]['c'];
 
 	}
-	elseif ($type == 'a') {
+	elseif (($type == 'a')||($type == 'p')) {
 
 		// autocomplete for Contacts
 
@@ -168,7 +168,7 @@ function acl_init(&$a){
 			intval(XCHAN_FLAGS_DELETED)
 		);
 	}
-	elseif($type == 'a') {
+	elseif(($type == 'a') || ($type == 'p')) {
 		$r = q("SELECT abook_id as id, xchan_name as name, xchan_hash as hash, xchan_addr as nick, xchan_photo_s as micro, xchan_network as network, xchan_url as url, xchan_addr as attag , abook_their_perms FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d
 			and not (xchan_flags & %d)
@@ -204,7 +204,7 @@ function acl_init(&$a){
 		$r = array();
 
 
-	if($type == 'm' || $type == 'a') {
+	if($type == 'm' || $type == 'a' || $type == 'p') {
 		$x = array();
 		$x['query']       = $search;
 		$x['photos']      = array();
@@ -216,7 +216,7 @@ function acl_init(&$a){
 				$x['photos'][]      = $g['micro'];
 				$x['links'][]       = $g['url'];
 				$x['suggestions'][] = $g['name'];
-				$x['data'][]        = $g['id'];
+				$x['data'][]        = (($type === 'p') ? '@' . str_replace(' ','_',$g['name']) : $g['id']);
 			}
 		}
 		echo json_encode($x);

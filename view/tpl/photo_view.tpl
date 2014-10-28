@@ -33,9 +33,9 @@
 	</div>
 	<div id="photo-edit-edit">
 		<form action="photos/{{$edit.nickname}}/{{$edit.resource_id}}" method="post" id="photo_edit_form">
-			<input type="hidden" name="item_id" value="{{$edit.item_id}}">
+			<input type="hidden" name="item_id" value="{{$edit.item_id}}" />
 			<label id="photo-edit-albumname-label" for="photo-edit-albumname">{{$edit.newalbum}}</label>
-			<input id="photo-edit-albumname" type="text" name="albname" value="{{$edit.album}}" list="dl-albums">
+			<input id="photo-edit-albumname" type="text" name="albname" value="{{$edit.album}}" list="dl-albums" />
 			{{if $edit.albums}}
 			<datalist id="dl-albums">
 			{{foreach $edit.albums as $al}}
@@ -47,18 +47,18 @@
 			{{/if}}
 			<div id="photo-edit-albumname-end"></div>
 				<label id="photo-edit-caption-label" for="photo-edit-caption">{{$edit.capt_label}}</label>
-			<input id="photo-edit-caption" type="text" name="desc" value="{{$edit.caption}}">
+			<input id="photo-edit-caption" type="text" name="desc" value="{{$edit.caption}}" />
 				<div id="photo-edit-caption-end"></div>
 				<label id="photo-edit-tags-label" for="photo-edit-newtag" >{{$edit.tag_label}}</label>
-			<input name="newtag" id="photo-edit-newtag" title="{{$edit.help_tags}}" type="text">
+			<input name="newtag" id="photo-edit-newtag" title="{{$edit.help_tags}}" type="text" />
 				<div id="photo-edit-tags-end"></div>
 			<div id="photo-edit-rotate-wrapper">
 				<div id="photo-edit-rotate-label">
 					{{$edit.rotatecw}}<br>
 					{{$edit.rotateccw}}
 				</div>
-				<input type="radio" name="rotate" value="1"><br>
-				<input type="radio" name="rotate" value="2">
+				<input type="radio" name="rotate" value="1" /><br>
+				<input type="radio" name="rotate" value="2" />
 			</div>
 			<div id="photo-edit-rotate-end"></div>
 				<div id="settings-default-perms" class="settings-default-perms">
@@ -69,8 +69,8 @@
 			</div>
 			<br/>
 			<div id="settings-default-perms-end"></div>
-				<input id="photo-edit-submit-button" type="submit" name="submit" value="{{$edit.submit}}">
-			<input id="photo-edit-delete-button" type="submit" name="delete" value="{{$edit.delete}}" onclick="return confirmDelete();">
+				<input id="photo-edit-submit-button" type="submit" name="submit" value="{{$edit.submit}}" />
+			<input id="photo-edit-delete-button" type="submit" name="delete" value="{{$edit.delete}}" onclick="return confirmDelete();" />
 				<div id="photo-edit-end"></div>
 		</form>
 	</div>

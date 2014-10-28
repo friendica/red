@@ -1181,9 +1181,10 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			if(local_user() && local_user() == $profile_uid) {
 				require_once('include/group.php');
 				$grp = group_byname($profile_uid,$name);
+
 				if($grp) {
 					$g = q("select hash from groups where id = %d and visible = 1 limit 1",
-						intval($grp[0]['id'])
+						intval($grp)
 					);
 					if($g && $exclusive) {
 						$access_tag .= 'gid:' . $g[0]['hash'];

@@ -13,6 +13,8 @@ require_once('include/zot.php');
 
 function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) {
 
+
+
 	$result = array('success' => false,'message' => '');
 
 	$a = get_app();

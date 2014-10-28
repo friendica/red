@@ -176,6 +176,7 @@ function create_identity($arr) {
 	// save this for auto_friending
 	$total_identities = $ret['total_identities'];
 
+
 	$nick = mb_strtolower(trim($arr['nickname']));
 	if(! $nick) {
 		$ret['message'] = t('Nickname is required.');
@@ -404,6 +405,7 @@ function create_identity($arr) {
 
 		$accts = get_config('system','auto_follow');
 		if(($accts) && (! $total_identities)) {
+			require_once('include/follow.php');
 			if(! is_array($accts))
 				$accts = array($accts);
 			foreach($accts as $acct) {
