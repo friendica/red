@@ -918,7 +918,7 @@ function photos_content(&$a) {
 				foreach($link_item['term'] as $t) {
 					$tags[$cnt] = array(0 => format_term_for_display($t));
 					if($can_post && ($ph[0]['uid'] == $owner_uid)) {
-						$tags[$cnt][1] = 'tagrm?f=&item=' . $link_item['id'];
+						$tags[$cnt][1] = 'tagrm/drop/' . $link_item['id'] . '/' . bin2hex($t['term']);   //?f=&item=' . $link_item['id'];
 						$tags[$cnt][2] = t('Remove');
 					}
 					$cnt ++;
