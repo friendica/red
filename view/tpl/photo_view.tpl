@@ -85,7 +85,7 @@
 		<div class="photo-item-tools-left" id="in-this-photo">
 			<span id="in-this-photo-text">{{$tag_hdr}}</span>
 			{{foreach $tags as $t}}
-				{{$t.0}}{{if $edit}}<span id="tag-remove">&nbsp;<a href="{{$t.1}}"><i class="icon-remove"></i></a>&nbsp;</span>{{/if}}
+				{{$t.0}}{{if $edit}}<span id="tag-remove">&nbsp;<a href="{{$t.1}}" onclick="return confirmDelete();"><i class="icon-remove"></i></a>&nbsp;</span>{{/if}}
 			{{/foreach}}
 		</div>
 		{{/if}}
