@@ -967,7 +967,7 @@ function photos_content(&$a) {
 				'tag_label' => t('Add a Tag'),
 				'permissions' => t('Permissions'),
 				'aclselect' => $aclselect_e,
-				'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
+				'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com'),
 				'item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
 				'submit' => t('Submit'),
 				'delete' => t('Delete Photo')
