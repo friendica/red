@@ -1,7 +1,7 @@
 var bb2diaspora_8php =
 [
     [ "bb2diaspora", "bb2diaspora_8php.html#a4f10e0876b27373c762bc1abbe745f5c", null ],
-    [ "bb2diaspora_itembody", "bb2diaspora_8php.html#a2052c66bc1006a42b4c230320c269e47", null ],
+    [ "bb2diaspora_itembody", "bb2diaspora_8php.html#ab27761069ea1275f0fc4c543099c5519", null ],
     [ "bb2diaspora_itemwallwall", "bb2diaspora_8php.html#aab32042f8bd63552d3fadeeae9eab083", null ],
     [ "bb2dmention_callback", "bb2diaspora_8php.html#a5258d2f1addeb0a2a6b54c4f9e7d0f34", null ],
     [ "bb_tag_preg_replace", "bb2diaspora_8php.html#ad0abe1a7ee50aa0736a233df0a422eba", null ],

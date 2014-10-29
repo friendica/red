@@ -3,10 +3,18 @@ var ispublic = aStr['everybody'] ;
 
 $(document).ready(function() {
 
-			  $("a#settings-default-perms-menu").colorbox({ 
-				  'inline' : true, 
-				  'transition' : 'elastic' 
-			});
+	$("a#settings-default-perms-menu").colorbox({ 
+		'inline' : true, 
+		'transition' : 'elastic' 
+	});
+
+	$("#privacy-role-select").change(function() {
+		var role = $("#privacy-role-select").val();
+		if(role == 'custom')
+			$('#advanced-perm').show();
+		else
+			$('#advanced-perm').hide();
+	});
 
 	$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
 		var selstr;

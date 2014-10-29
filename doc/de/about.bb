@@ -20,4 +20,4 @@ Dabei bietet Red einige einzigartige Leckerbissen:
 
 [b]Privatsphäre:[/b] Red-Identitäten (Zot-IDs) können gelöscht, gesichert/heruntergeladen und geklont werden. Du hast volle Kontrolle über Deine Daten. Wenn Du Dich entscheidest, all Deine Daten und Deine Zot-ID zu löschen, musst Du nur auf einen Link klicken, und sie werden sofort von dem Server gelöscht. Keine Fragen, keine Umstände.
 
-[url=[baseurl]/help]Zurück zur Hilfe-Startseite[/url]
+#include doc/macros/main_footer.bb;

@@ -64,7 +64,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	if($update) {
 		// Ensure we've got a profile owner if updating.
-		$a->profile['profile_uid'] = $update;
+		$a->profile['profile_uid'] = $a->profile_uid = $update;
 	}
 	else {
 		if($a->profile['profile_uid'] == local_user()) {

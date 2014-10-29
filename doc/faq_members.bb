@@ -12,6 +12,4 @@ You have probably disabled third party cookies.  You need to enable them for rem
 There are also a lot of [b]private[/b] foreign language posts and auto-translation services would require us to transmit these private messages to the translation service; and we don't know what they will do with them on their servers. Actually we do know thanks to Edward Snowden. Our best bet is a project called [b][i]Apertium[/i][/b] which is an open source translator we can install locally. It is currently missing German translations - which are the most requested translation in the matrix. Once again, this will be implemented when we find somebody who really wants to make it happen. 
 [/ul]
 
-
-
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/main_footer.bb;

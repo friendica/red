@@ -319,6 +319,7 @@ function photos_post(&$a) {
 			$old_inform = $r[0]['inform'];
 		}
 
+
 		// make sure the linked item has the same permissions as the photo regardless of any other changes
 		$x = q("update item set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
 			where id = %d limit 1",
@@ -380,6 +381,7 @@ function photos_post(&$a) {
 	
 					if($success['replaced']) {
 						$tagged[] = $tag;
+
 						$post_tags[] = array(
 							'uid'   => $a->profile['profile_uid'], 
 							'type'  => $success['termtype'],
@@ -397,8 +399,14 @@ function photos_post(&$a) {
 			);
 
 			if($r) {
+				$r = fetch_post_tags($r,true);
 				$datarray = $r[0];
-				$datarray['term']   = $post_tags;	
+				if($post_tags) {
+					if((! array_key_exists('term',$datarray)) || (! is_array($datarray['term'])))
+						$datarray['term'] = $post_tags;
+					else
+						$datarray['term'] = array_merge($datarray['term'],$post_tags);  
+				}
 				item_store_update($datarray,$execflag);
 			}
 
@@ -653,33 +661,25 @@ function photos_content(&$a) {
 			intval($a->pager['itemspage'])
 		);
 		
-		if($cmd === 'edit') {		
-			if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
-				if($can_post) {
-					if($a->get_template_engine() === 'internal') {
-						$album_e = template_escape($album);
-					}
-					else {
-						$album_e = $album;
-					}
-
-					$edit_tpl = get_markup_template('album_edit.tpl');
-					$o .= replace_macros($edit_tpl,array(
-						'$nametext' => t('New album name: '),
-						'$nickname' => $a->data['channel']['channel_address'],
-						'$album' => $album_e,
-						'$hexalbum' => bin2hex($album),
-						'$submit' => t('Submit'),
-						'$dropsubmit' => t('Delete Album')
-					));
+		//edit album name
+		$album_edit = null;
+		if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
+			if($can_post) {
+				if($a->get_template_engine() === 'internal') {
+					$album_e = template_escape($album);
 				}
-			}
-		}
-		else {
-			if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
-				if($can_post) {
-					$edit = array(t('Edit Album'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '/edit');
- 				}
+				else {
+					$album_e = $album;
+				}
+				$edit_tpl = get_markup_template('album_edit.tpl');
+				$album_edit = replace_macros($edit_tpl,array(
+					'$nametext' => t('New album name: '),
+					'$nickname' => $a->data['channel']['channel_address'],
+					'$album' => $album_e,
+					'$hexalbum' => bin2hex($album),
+					'$submit' => t('Submit'),
+					'$dropsubmit' => t('Delete Album')
+				));
 			}
 		}
 
@@ -719,6 +719,7 @@ function photos_content(&$a) {
 					'desc'=> $desc_e,
 					'ext' => $ext,
 					'hash'=> $rr['resource_id'],
+					'unknown' => t('Unknown')
 				);
 			}
 		}
@@ -741,10 +742,11 @@ function photos_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$photos' => $photos,
 				'$album' => $album,
+				'$album_edit' => array(t('Edit Album'), $album_edit),
 				'$can_post' => $can_post,
 				'$upload' => array(t('Upload'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album)),
 				'$order' => $order,
-				'$edit' => $edit
+
 			));
 
 		}
@@ -855,15 +857,13 @@ function photos_content(&$a) {
 			$tools = array(
 				'profile'=>array($a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource_id'], t('Use as profile photo')),
 			);
-
-			// lock
-			$lock = ( ( ($ph[0]['uid'] == local_user()) && (strlen($ph[0]['allow_cid']) || strlen($ph[0]['allow_gid']) 
-					|| strlen($ph[0]['deny_cid']) || strlen($ph[0]['deny_gid'])) ) 
-					? t('Private Message')
-					: Null);
-	  		
-			
 		}
+
+		// lock
+		$lock = ( ( (strlen($ph[0]['allow_cid']) || strlen($ph[0]['allow_gid'])
+				|| strlen($ph[0]['deny_cid']) || strlen($ph[0]['deny_gid'])) )
+				? t('Private Photo')
+				: Null);
 
 		$a->page['htmlhead'] .= '<script>$(document).keydown(function(event) {' . "\n";
 		if($prevlink)
@@ -873,7 +873,7 @@ function photos_content(&$a) {
 		$a->page['htmlhead'] .= '});</script>';
 
 		if($prevlink)
-			$prevlink = array($prevlink, '<i class="icon-backward photo-icons""></i>') ;
+			$prevlink = array($prevlink, t('Previous'));
 
 		$photo = array(
 			'href' => $a->get_baseurl() . '/photo/' . $hires['resource_id'] . '-' . $hires['scale'] . '.' . $phototypes[$hires['type']],
@@ -882,7 +882,7 @@ function photos_content(&$a) {
 		);
 
 		if($nextlink)
-			$nextlink = array($nextlink, '<i class="icon-forward photo-icons"></i>');
+			$nextlink = array($nextlink, t('Next'));
 
 
 		// Do we have an item for this photo?
@@ -912,20 +912,18 @@ function photos_content(&$a) {
 				$r = conv_sort($r,'commented');
 			}
 
-
-
 			$tags = array();
 			if($link_item['term']) {
 				$cnt = 0;
-				foreach($link_item['term'] as $t)
+				foreach($link_item['term'] as $t) {
 					$tags[$cnt] = array(0 => format_term_for_display($t));
 					if($can_post && ($ph[0]['uid'] == $owner_uid)) {
-						$tags[$cnt][1] = 'tagrm?f=&item=' . $link_item['id'];
+						$tags[$cnt][1] = 'tagrm/drop/' . $link_item['id'] . '/' . bin2hex($t['term']);   //?f=&item=' . $link_item['id'];
 						$tags[$cnt][2] = t('Remove');
 					}
 					$cnt ++;
+				}
 			}
-
 
 			if((local_user()) && (local_user() == $link_item['uid'])) {
 				q("UPDATE `item` SET item_flags = (item_flags ^ %d) WHERE parent = %d and uid = %d and (item_flags & %d)",
@@ -956,7 +954,7 @@ function photos_content(&$a) {
 
 			$edit = array(
 				'edit' => t('Edit photo'),
-				'id' => $ph[0]['id'],
+				'id' => $link_item['id'], //$ph[0]['id'],
 				'rotatecw' => t('Rotate CW (right)'),
 				'rotateccw' => t('Rotate CCW (left)'),
 				'albums' => $albums['albums'],
@@ -969,7 +967,7 @@ function photos_content(&$a) {
 				'tag_label' => t('Add a Tag'),
 				'permissions' => t('Permissions'),
 				'aclselect' => $aclselect_e,
-				'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
+				'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com'),
 				'item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
 				'submit' => t('Submit'),
 				'delete' => t('Delete Photo')
@@ -1025,7 +1023,7 @@ function photos_content(&$a) {
 			$like = '';
 			$dislike = '';
 
-			// display comments
+
 			if($r) {
 
 				foreach($r as $item) {
@@ -1033,10 +1031,33 @@ function photos_content(&$a) {
 					like_puller($a,$item,$dlike,'dislike');
 				}
 
-				$like    = ((isset($alike[$link_item['id']])) ? format_like($alike[$link_item['id']],$alike[$link_item['id'] . '-l'],'like',$link_item['id']) : '');
-				$dislike = ((isset($dlike[$link_item['id']])) ? format_like($dlike[$link_item['id']],$dlike[$link_item['id'] . '-l'],'dislike',$link_item['id']) : '');
+				$like_count = ((x($alike,$link_item['mid'])) ? $alike[$link_item['mid']] : '');
+				$like_list = ((x($alike,$link_item['mid'])) ? $alike[$link_item['mid'] . '-l'] : '');
+				if (count($like_list) > MAX_LIKERS) {
+					$like_list_part = array_slice($like_list, 0, MAX_LIKERS);
+					array_push($like_list_part, '<a href="#" data-toggle="modal" data-target="#likeModal-' . $this->get_id() . '"><b>' . t('View all') . '</b></a>');
+				} else {
+					$like_list_part = '';
+				}
+				$like_button_label = tt('Like','Likes',$like_count,'noun');
+
+				//if (feature_enabled($conv->get_profile_owner(),'dislike')) {
+					$dislike_count = ((x($dlike,$link_item['mid'])) ? $dlike[$link_item['mid']] : '');
+					$dislike_list = ((x($dlike,$link_item['mid'])) ? $dlike[$link_item['mid'] . '-l'] : '');
+					$dislike_button_label = tt('Dislike','Dislikes',$dislike_count,'noun');
+					if (count($dislike_list) > MAX_LIKERS) {
+						$dislike_list_part = array_slice($dislike_list, 0, MAX_LIKERS);
+						array_push($dislike_list_part, '<a href="#" data-toggle="modal" data-target="#dislikeModal-' . $this->get_id() . '"><b>' . t('View all') . '</b></a>');
+					} else {
+						$dislike_list_part = '';
+					}
+				//}
 
 
+				$like    = ((isset($alike[$link_item['mid']])) ? format_like($alike[$link_item['mid']],$alike[$link_item['mid'] . '-l'],'like',$link_item['mid']) : '');
+				$dislike = ((isset($dlike[$link_item['mid']])) ? format_like($dlike[$link_item['mid']],$dlike[$link_item['mid'] . '-l'],'dislike',$link_item['mid']) : '');
+
+				// display comments
 
 				foreach($r as $item) {
 					$comment = '';
@@ -1114,7 +1135,7 @@ function photos_content(&$a) {
 
 		$photo_tpl = get_markup_template('photo_view.tpl');
 		$o .= replace_macros($photo_tpl, array(
-			'$id' => $ph[0]['id'],
+			'$id' => $link_item['id'], //$ph[0]['id'],
 			'$album' => $album_e,
 			'$tools' => $tools,
 			'$lock' => $lock,
@@ -1122,12 +1143,25 @@ function photos_content(&$a) {
 			'$prevlink' => $prevlink,
 			'$nextlink' => $nextlink,
 			'$desc' => $ph[0]['description'],
+			'$filename' => $ph[0]['filename'],
+			'$unknown' => t('Unknown'),
 			'$tag_hdr' => t('In This Photo:'),
 			'$tags' => $tags,
 			'$edit' => $edit,	
 			'$likebuttons' => $likebuttons,
 			'$like' => $like_e,
 			'$dislike' => $dislike_e,
+			'$like_count' => $like_count,
+			'$like_list' => $like_list,
+			'$like_list_part' => $like_list_part,
+			'$like_button_label' => $like_button_label,
+			'$like_modal_title' => t('Likes','noun'),
+			'$dislike_modal_title' => t('Dislikes','noun'),
+			'$dislike_count' => $dislike_count,  //((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_count : ''),
+			'$dislike_list' => $dislike_list, //((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_list : ''),
+			'$dislike_list_part' => $dislike_list_part, //((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_list_part : ''),
+			'$dislike_button_label' => $dislike_button_label, //((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_button_label : ''),
+			'$modal_dismiss' => t('Close'),
 			'$comments' => $comments,
 			'$commentbox' => $commentbox,
 			'$paginate' => $paginate,

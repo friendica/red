@@ -245,10 +245,12 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 			intval($channel_id)
 		);
 
+			
 		$r = q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_hash = '%s'",
 			intval(HUBLOC_FLAGS_DELETED),
 			dbesc($channel['channel_hash'])
 		);
+
 
 		$r = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
 			intval(XCHAN_FLAGS_DELETED),
@@ -256,7 +258,6 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 		);
 
 		proc_run('php','include/notifier.php','purge_all',$channel_id);
-
 
 	}
 
@@ -291,11 +292,23 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 		dbesc(z_root())
 	);
 
-	$r = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s' ",
-		intval(XCHAN_FLAGS_DELETED),
-		dbesc($channel['channel_hash'])
-	);
+	// Do we have any valid hublocs remaining?
 
+	$hublocs = 0;
+
+	$r = q("select hubloc_id from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d)",
+		dbesc($channel['channel_hash']),
+		intval(HUBLOC_FLAGS_DELETED)
+	);
+	if($r)
+		$hublocs = count($r);
+
+	if(! $hublocs) {
+		$r = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s' ",
+			intval(XCHAN_FLAGS_DELETED),
+			dbesc($channel['channel_hash'])
+		);
+	}
 
 	proc_run('php','include/directory.php',$channel_id);
 

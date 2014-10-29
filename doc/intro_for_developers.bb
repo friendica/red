@@ -111,4 +111,4 @@ At that point, if you need to add javascript or css files, add them to /js or /c
 
 Now you'll probably want to alter a template. These can be found in in /view/tpl OR view//tpl. All you should have to do is copy whatever you want to tweak from the first place to your theme's own tpl directory.
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

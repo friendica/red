@@ -98,6 +98,7 @@ function collect_recipients($item,&$private_envelope) {
 		}
 	}
 
+
 	// This is a somewhat expensive operation but important.
 	// Don't send this item to anybody who isn't allowed to see it
 
@@ -213,6 +214,7 @@ function can_comment_on_post($observer_xchan,$item) {
 			break;
 		case 'any connections':
 		case 'contacts':
+		case 'authenticated':
 		case '':
 			if(array_key_exists('owner',$item)) {
 				if(($item['owner']['abook_xchan']) && ($item['owner']['abook_their_perms'] & PERMS_W_COMMENT))
@@ -2516,7 +2518,7 @@ function item_store_update($arr,$allow_exec = false) {
 	return $ret;
 }
 
-function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id) {
+function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id, $walltowall = false) {
 
 	// We won't be able to sign Diaspora comments for authenticated visitors 
 	// - we don't have their private key
@@ -2524,9 +2526,18 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id)
 	// since Diaspora doesn't handle edits we can only do this for the original text and not update it.
 
 	require_once('include/bb2diaspora.php');
-	$signed_body = bb2diaspora_itembody($datarray);
+	$signed_body = bb2diaspora_itembody($datarray,$walltowall);
 
-	logger('mod_item: storing diaspora comment signature',LOGGER_DEBUG);
+	if($walltowall) {
+		logger('wall to wall comment',LOGGER_DEBUG);
+		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
+		$signed_body = "\n\n" 
+			. '![' . $datarray['author']['xchan_name'] . '](' . $datarray['author']['xchan_photo_m'] . ')'
+			. '[' . $datarray['author']['xchan_name'] . '](' . $datarray['author']['xchan_url'] . ')' . "\n\n" 
+			. $signed_body;
+	}
+
+	logger('storing diaspora comment signature',LOGGER_DEBUG);
 
 	$diaspora_handle = $channel['channel_address'] . '@' . get_app()->get_hostname();
 
@@ -4130,7 +4141,7 @@ function list_post_dates($uid,$wall) {
 	if(intval(substr($dnow,8)) > 28)
 		$dnow = substr($dnow,0,8) . '28';
 	if(intval(substr($dthen,8)) > 28)
-		$dnow = substr($dthen,0,8) . '28';
+		$dthen = substr($dthen,0,8) . '28';
 
 	$ret = array();
 	// Starting with the current month, get the first and last days of every
@@ -4164,7 +4175,7 @@ function posted_dates($uid,$wall) {
 	if(intval(substr($dnow,8)) > 28)
 		$dnow = substr($dnow,0,8) . '28';
 	if(intval(substr($dthen,8)) > 28)
-		$dnow = substr($dthen,0,8) . '28';
+		$dthen = substr($dthen,0,8) . '28';
 
 	$ret = array();
 	// Starting with the current month, get the first and last days of every

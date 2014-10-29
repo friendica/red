@@ -14,12 +14,10 @@ function page_init(&$a) {
 	if($a->profile['profile_uid'])
 		head_set_icon($a->profile['thumb']);
 
-}
 
+	// load the item here in the init function because we need to extract
+	// the page layout and initialise the correct theme.
 
-
-
-function page_content(&$a) {
 
 	$observer = $a->get_observer();
 	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
@@ -97,10 +95,26 @@ function page_content(&$a) {
 		}
 	}
 
+	$a->data['webpage'] = $r;
+
+
+
+}
+
+
+
+
+function page_content(&$a) {
+
+	$r = $a->data['webpage'];
+	if(! $r)
+		return;
 
 	// logger('layout: ' . print_r($a->layout,true));
 
 	// Use of widgets should be determined by Comanche, but we don't have it on system pages yet, so...
+
+	// I recommend we now get rid of this bit - it's quite a hack to work around... - mike
 
 	if ($perms['write_pages']) {
 		$chan = $a->channel['channel_id'];

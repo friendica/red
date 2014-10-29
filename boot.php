@@ -555,6 +555,7 @@ define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was success
 define ( 'ITEM_RETAINED',        0x4000);  // We looked at this item once to decide whether or not to expire it, and decided not to.
 define ( 'ITEM_RSS',             0x8000);  // Item comes from a feed. Use this to decide whether to link the title
 										   // Don't make us evaluate this same item again.
+
 /**
  *
  * Reverse the effect of magic_quotes_gpc if it is enabled.
@@ -1879,12 +1880,8 @@ function get_custom_nav(&$a,$navname) {
 
 }
 
-function construct_page(&$a) {
-
+function load_pdl(&$a) {
 	require_once('include/comanche.php');
-
-	// in case a page has overloaded a module, see if we already have a layout defined
-	// otherwise, if a pdl file exists for this module, use it
 
 	if(! count($a->layout)) {
 		$n = 'mod_' . $a->module . '.pdl' ;
@@ -1897,11 +1894,19 @@ function construct_page(&$a) {
 			comanche_parser($a,$s);
 	}
 
-	$comanche = ((count($a->layout)) ? true : false);
+}
+
+
+
+function construct_page(&$a) {
+
 
 	/**
 	 * Build the page - now that we have all the components
 	 */
+
+
+	$comanche = ((count($a->layout)) ? true : false);
 
 	require_once(theme_include('theme_init.php'));
 

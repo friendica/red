@@ -171,3 +171,91 @@ function hubloc_change_primary($hubloc) {
 
 }
 	
+
+function xchan_store($arr) {
+
+	if(! $arr['hash'])
+		$arr['hash'] = $arr['guid'];
+	if(! $arr['hash'])
+		return false;
+
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($arr['hash'])
+	);
+	if($r)
+		return true;
+
+	if(! $arr['network'])
+		$arr['network'] = 'unknown';
+	if(! $arr['name'])
+		$arr['name'] = 'unknown';
+	if(! $arr['url'])
+		$arr['url'] = z_root();
+	if(! $arr['photo'])
+		$arr['photo'] = get_default_profile_photo();
+
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_instance_url, xchan_flags, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s','%s','%s',%d,'%s') ",
+		dbesc($arr['hash']),
+		dbesc($arr['guid']),
+		dbesc($arr['guid_sig']),
+		dbesc($arr['pubkey']),
+		dbesc($arr['address']),
+		dbesc($arr['url']),
+		dbesc($arr['connurl']),
+		dbesc($arr['follow']),
+		dbesc($arr['connpage']),
+		dbesc($arr['name']),
+		dbesc($arr['network']),
+		dbesc($arr['instance_url']),
+		intval($arr['flags']),
+		dbesc(datetime_convert())
+	);
+	if(! $r)
+		return $r;
+
+	$photos = import_profile_photo($arr['photo'],$arr['hash']);
+	$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s' limit 1",
+		dbesc(datetime_convert()),
+		dbesc($photos[0]),
+		dbesc($photos[1]),
+		dbesc($photos[2]),
+		dbesc($photos[3]),
+		dbesc($arr['hash'])
+	);
+	return $r;
+
+}
+
+
+function xchan_fetch($arr) {
+
+	$key = '';
+	if($arr['hash']) {
+		$key = 'xchan_hash';
+		$v = $arr['hash'];
+	}
+	elseif($arr['guid']) {
+		$key = 'xchan_guid';
+		$v = $arr['guid'];
+	}
+	elseif($arr['address']) {
+		$key = 'xchan_addr';
+		$v = $arr['address'];
+	}
+
+	if(! $key)
+		return false;
+
+	$r = q("select * from xchan where $key = '$v'");
+	if(! $r)
+		return false;
+
+	$ret = array();
+	foreach($r as $k => $v) {
+		if($k === 'xchan_addr')
+			$ret['address'] = $v;
+		else
+			$ret[str_replace('xchan_','',$k)] = $v;
+	}
+	return $ret;
+}

@@ -261,6 +261,12 @@ function connedit_content(&$a) {
 		$x = get_role_perms($role);
 		if($x['perms_accept'])
 			$my_perms = $x['perms_accept'];
+		else {
+			// fixme - we need to be able to define these somewhere for the custom role
+			$my_perms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+                |PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+                |PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
+		}
 	}
 	if($my_perms) {
 		$o .= "<script>function connectDefaultShare() {
