@@ -596,7 +596,14 @@ function item_post(&$a) {
 				logger('handle_tag: ' . print_r($success,tue), LOGGER_DATA);
 				if(($access_tag) && (! $parent_item)) {
 					logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DATA);
-					if ($first_access_tag) {
+					if ($first_access_tag && (! get_pconfig($profile_uid,'system','no_private_mention_acl_override'))) {
+
+						// This is a tough call, hence configurable. The issue is that one can type in a @!privacy mention
+						// and also have a default ACL (perhaps from viewing a collection) and could be suprised that the 
+						// privacy mention wasn't the only recipient. So the default is to wipe out the existing ACL if a
+						// private mention is found. This can be over-ridden if you wish private mentions to be in 
+						// addition to the current ACL settings.
+
 						$str_contact_allow = '';
 						$str_group_allow = '';
 						$first_access_tag = false;
@@ -1162,6 +1169,8 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 
 		// $r is set if we found something
 
+		$channel = get_app()->get_channel();
+
 		if($r) {
 			$profile = $r[0]['xchan_url'];
 			$newname = $r[0]['xchan_name'];
@@ -1197,6 +1206,10 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 				}		
 			}
 		}
+
+		if(($exclusive) && (! $access_tag)) {
+			$access_tag .= 'cid:' . $channel['channel_hash'];
+		}			
 
 		// if there is an url for this channel
 
