@@ -1551,16 +1551,18 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		);
 	}
 
-	require_once('include/chat.php');
-	$has_chats = chatroom_list_count($uid);
-	if ($has_chats) {
-		$tabs[] = array(
-			'label' => t('Chatrooms'),
-			'url'	=> $a->get_baseurl() . '/chat/' . $nickname,
-			'sel' 	=> ((argv(0) == 'chat') ? 'active' : '' ),
-			'title' => t('Chatrooms'),
-			'id'    => 'chat-tab',
-		);
+	if($p['chat']) {
+		require_once('include/chat.php');
+		$has_chats = chatroom_list_count($uid);
+		if ($has_chats) {
+			$tabs[] = array(
+				'label' => t('Chatrooms'),
+				'url'	=> $a->get_baseurl() . '/chat/' . $nickname,
+				'sel' 	=> ((argv(0) == 'chat') ? 'active' : '' ),
+				'title' => t('Chatrooms'),
+				'id'    => 'chat-tab',
+			);
+		}
 	}
 
 	require_once('include/menu.php');
