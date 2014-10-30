@@ -127,6 +127,10 @@ a.wall-item-name-link {
    font-size: 1.112em;
 }
 
+.wall-item-content img {
+	max-width: 100%;
+}
+
 .wall-item-title h3 {
 	font-weight: bold;
 	margin: 0px;
