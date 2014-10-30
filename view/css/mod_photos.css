@@ -9,8 +9,8 @@
 }
 
 #photo-photo {
-    display: table;
-    margin: 0 auto;
+	display: table;
+	margin: 0 auto;
 }
 
 #photo-photo-end {
@@ -22,27 +22,12 @@
 	margin-bottom: 25px;
 }
 
-#photos-upload-newalbum-div {
-	float: left;
-	width: 175px;
-}
-
 #photos-upload-noshare {
 	margin-bottom: 10px;
 }
 
-#photos-upload-existing-album-text {
-	float: left;
-	width: 175px;
-}
-#photos-upload-newalbum {
-	float: left;
-}
-#photos-upload-album-select {
-	float: left;
-}
-
-#photos-upload-spacer {
+#photos-upload-spacer,
+#photos-upload-new-end {
 	margin-top: 25px;
 }
 #photos-upload-new-end, #photos-upload-exist-end {
