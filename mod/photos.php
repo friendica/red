@@ -476,11 +476,9 @@ function photos_content(&$a) {
 	if(argc() > 3) {
 		$datatype = argv(2);
 		$datum = argv(3);
-	}
-	elseif((argc() > 2) && (argv(2) === 'upload'))
-		$datatype = 'upload';
-	else
+	} else {
 		$datatype = 'summary';
+	}
 
 	if(argc() > 4)
 		$cmd = argv(4);
@@ -528,11 +526,7 @@ function photos_content(&$a) {
 	 * Display upload form
 	 */
 
-	if($datatype === 'upload') {
-		if(! ($can_post)) {
-			notice( t('Permission denied.'));
-			return;
-		}
+	if( $can_post) {
 
 		$uploader = '';
 
@@ -575,7 +569,7 @@ function photos_content(&$a) {
 		$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 
 		$tpl = get_markup_template('photos_upload.tpl');
-		$o .= replace_macros($tpl,array(
+		$upload_form = replace_macros($tpl,array(
 			'$pagename' => t('Upload Photos'),
 			'$sessid' => session_id(),
 			'$usage' => $usage_message,
@@ -594,7 +588,6 @@ function photos_content(&$a) {
 
 		));
 
-		return $o; 
 	}
 
 	/*
@@ -725,7 +718,8 @@ function photos_content(&$a) {
 				'$can_post' => $can_post,
 				'$upload' => array(t('Upload'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album)),
 				'$order' => $order,
-
+				'$upload_form' => $upload_form,
+				'$usage' => $usage_message
 			));
 
 		}
@@ -1234,6 +1228,8 @@ function photos_content(&$a) {
 			'$can_post' => $can_post,
 			'$upload' => array(t('Upload'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
 			'$photos' => $photos,
+			'$upload_form' => $upload_form,
+			'$usage' => $usage_message
 		));
 
 	}

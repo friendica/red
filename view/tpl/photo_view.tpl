@@ -31,7 +31,7 @@
 		<div class="clear"></div>
 
 	</div>
-	<div id="photo-edit-edit">
+	<div id="photo-edit-edit" class="section-content-tools-wrapper">
 		<form action="photos/{{$edit.nickname}}/{{$edit.resource_id}}" method="post" id="photo_edit_form">
 			<input type="hidden" name="item_id" value="{{$edit.item_id}}" />
 			<label id="photo-edit-albumname-label" for="photo-edit-albumname">{{$edit.newalbum}}</label>

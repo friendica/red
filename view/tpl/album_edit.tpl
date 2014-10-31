@@ -1,4 +1,4 @@
-<div id="photo-album-edit-wrapper">
+<div id="photo-album-edit-wrapper" class="section-content-tools-wrapper">
 <form name="photo-album-edit-form" id="photo-album-edit-form" action="photos/{{$nickname}}/album/{{$hexalbum}}" method="post" >
 
 

@@ -706,9 +706,7 @@ footer {
 	cursor: pointer;
 }
 
-#photo-album-edit-wrapper,
-#photo-view-wrapper,
-#photo-edit-edit {
+#photo-view-wrapper {
 	background-color: $item_colour;
 }
 
@@ -2335,12 +2333,10 @@ aside .nav-pills > li > a {
 	margin-bottom: 0px;
 }
 
-.section-title-submenu {
-	margin-top: 10px;
-}
-
-.section-title-submenu a {
-	margin-right: 10px;
+.section-content-tools-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	margin-bottom: 3px;
 }
 
 .section-content-wrapper {

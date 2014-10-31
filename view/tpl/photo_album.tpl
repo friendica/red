@@ -5,13 +5,14 @@
 		{{/if}}
 		<a class="btn btn-default" href="{{$order.1}}" title="{{$order.0}}"><i class="icon-sort"></i></a>
 		{{if $can_post}}
-		<a class="btn btn-xs btn-success" href="{{$upload.1}}"><i class="icon-upload"></i>&nbsp;{{$upload.0}}</a>
+		<button class="btn btn-xs btn-success" title="{{$usage}}" onclick="openClose('photo-upload-form');"><i class="icon-upload"></i>&nbsp;{{$upload.0}}</button>
 		{{/if}}
 	</div>
 	<h2>{{$album}}</h2>
 
 	<div class="clear"></div>
 </div>
+{{$upload_form}}
 {{$album_edit.1}}
 <div id="photo-album-contents" class="generic-content-wrapper">
 	{{foreach $photos as $photo}}

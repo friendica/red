@@ -1,18 +1,12 @@
-<div class="generic-content-wrapper">
-	<div class="section-title-wrapper">
-		<div id="photos-usage-message" class="pull-right">{{$usage}}</div>
-		<h2>{{$pagename}}</h2>
-		<div class="clear"></div>
-	</div>
-
-	<div class="section-content-wrapper">
+<div id="photo-upload-form" class="generic-content-wrapper">
+	<div class="section-content-tools-wrapper">
 		<form action="photos/{{$nickname}}" enctype="multipart/form-data" method="post" name="photos-upload-form" id="photos-upload-form">
 			<input type="hidden" id="photos-upload-source" name="source" value="photos" />
 
 
 			<div class="form-group">
 				<label for="photos-upload-album">{{$newalbum_label}}</label>
-				<input type="text" class="form-control" id="photos-upload-album" placeholder="{{$newalbum_placeholder}}" value="{{$selname}}" list="dl-photo-upload">
+				<input type="text" class="form-control" id="photos-upload-album" name="newalbum" placeholder="{{$newalbum_placeholder}}" value="{{$selname}}" list="dl-photo-upload">
 				<datalist id="dl-photo-upload">
 				{{foreach $albums as $al}}
 					{{if $al.text}}

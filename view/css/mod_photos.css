@@ -66,10 +66,9 @@
 
 
 #photo-edit-edit,
-#photo-album-edit-wrapper {
+#photo-album-edit-wrapper,
+#photo-upload-form {
 	display: none;
-	padding: 7px 10px;
-	margin-bottom: 3px;
 }
 
 #photo-album-edit-submit, #photo-album-edit-drop {
