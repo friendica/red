@@ -7,7 +7,7 @@ which can be [url=http://gitweb.whogotzot.com/debian-install-script]downloaded h
 
 Some programs such as Apache &amp; Samba are removed by this script.
 
-Note, this script will use Nginx as the webserver, and dropbear for ssh.  It will also install PHP and MySQL from the DotDeb repository.  The DotDeb is not an official Debian repository, though it is maintained by Debian developers.
+Note, this script will use Nginx as the webserver.  It will also install PHP and MySQL from the DotDeb repository.  The DotDeb is not an official Debian repository, though it is maintained by Debian developers.
 
 The file setup-debian.sh has to be on your server.
 
@@ -17,7 +17,7 @@ For the initial setup git may not be installed on your server, to install git:
 
 If wget is installed try
 
-[code]wget "http://gitweb.whogotzot.com/debian-install-script/snapshot/91e76332668509585d52d4fa3f5b81a728c67fa6.tar.gz" -O debian-setup.sh[/code]
+[code]wget http://git.beardyunixer.com/debian-install-script/blob/HEAD:/debian-setup.sh[/code]
 
 To install wget:
 [code]apt-get install wget[/code]

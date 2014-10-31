@@ -503,7 +503,6 @@ function photos_content(&$a) {
 	$can_post = perm_is_allowed($owner_uid,$observer['xchan_hash'],'post_photos');
 	$can_view = perm_is_allowed($owner_uid,$observer['xchan_hash'],'view_photos');
 
-
 	if(! $can_view) {
 		notice( t('Access to this item is restricted.') . EOL);
 		return;
@@ -535,29 +534,6 @@ function photos_content(&$a) {
 			return;
 		}
 
-
-
-		if(array_key_exists('albums', $a->data))
-			$albums = get_app()->data['albums'];
-		else
-			$albums = photos_albums_list($a->data['channel'],$a->data['observer']);
-
-
-		$selname = (($datum) ? hex2bin($datum) : '');
-		$albumselect = '<select id="photos-upload-album-select" name="album" size="4">';
-		
-		$albumselect .= '<option value="" ' . ((! $selname) ? ' selected="selected" ' : '') . '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
-		if(count($albums['albums'])) {
-			foreach($albums['albums'] as $album) {
-				if(! $album['text']) 
-					continue;
-				$selected = (($selname === $album['text']) ? ' selected="selected" ' : '');
-				$albumselect .= '<option value="' . $album['text'] . '"' . $selected . '>' . $album['text'] . '</option>';
-			}
-		}
-
-		$albumselect .= '</select>';
-
 		$uploader = '';
 
 		$ret = array('post_url' => $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'],
@@ -579,10 +555,10 @@ function photos_content(&$a) {
 
 		$limit = service_class_fetch($a->data['channel']['channel_id'],'photo_upload_limit');
 		if($limit !== false) {
-			$usage_message = sprintf( t("You have used %1$.2f Mbytes of %2$.2f Mbytes photo storage."), $r[0]['total'] / 1024000, $limit / 1024000 );
+			$usage_message = sprintf( t("%1$.2f MB of %2$.2f MB photo storage used."), $r[0]['total'] / 1024000, $limit / 1024000 );
 		}
 		else {
-			$usage_message = sprintf( t('You have used %1$.2f Mbytes of photo storage.'), $r[0]['total'] / 1024000 );
+			$usage_message = sprintf( t('%1$.2f MB photo storage used.'), $r[0]['total'] / 1024000 );
  		}
 
 		if($_is_owner) {
@@ -596,8 +572,11 @@ function photos_content(&$a) {
 			);
 		} 
 
-		$albumselect_e = $albumselect;
 		$aclselect_e = (($_is_owner) ? populate_acl($channel_acl,false) : '');
+
+		$selname = (($datum) ? hex2bin($datum) : '');
+
+		$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 
 		$tpl = get_markup_template('photos_upload.tpl');
 		$o .= replace_macros($tpl,array(
@@ -605,10 +584,10 @@ function photos_content(&$a) {
 			'$sessid' => session_id(),
 			'$usage' => $usage_message,
 			'$nickname' => $a->data['channel']['channel_address'],
-			'$newalbum' => t('New album name: '),
-			'$existalbumtext' => t('or existing album name: '),
+			'$newalbum' => t('Enter a new album name or select an existing one:'),
 			'$nosharetext' => t('Do not show a status post for this upload'),
-			'$albumselect' => $albumselect_e,
+			'$albums' => $albums['albums'],
+			'$selname' => $selname,
 			'$permissions' => t('Permissions'),
 			'$aclselect' => $aclselect_e,
 			'$uploader' => $ret['addon_text'],
@@ -671,11 +650,13 @@ function photos_content(&$a) {
 				else {
 					$album_e = $album;
 				}
+				$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 				$edit_tpl = get_markup_template('album_edit.tpl');
 				$album_edit = replace_macros($edit_tpl,array(
 					'$nametext' => t('New album name: '),
 					'$nickname' => $a->data['channel']['channel_address'],
 					'$album' => $album_e,
+					'$albums' => $albums['albums'],
 					'$hexalbum' => bin2hex($album),
 					'$submit' => t('Submit'),
 					'$dropsubmit' => t('Delete Album')
@@ -943,18 +924,14 @@ function photos_content(&$a) {
 
 		$edit = null;
 		if($can_post) {
-			if(array_key_exists('albums', $a->data))
-                        	$albums = get_app()->data['albums'];
-	                else
-        	                $albums = photos_albums_list($a->data['channel'],$a->data['observer']);
-
 			$album_e = $ph[0]['album'];
 			$caption_e = $ph[0]['description'];
 			$aclselect_e = populate_acl($ph[0]);
+			$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 
 			$edit = array(
 				'edit' => t('Edit photo'),
-				'id' => $link_item['id'], //$ph[0]['id'],
+				'id' => $link_item['id'],
 				'rotatecw' => t('Rotate CW (right)'),
 				'rotateccw' => t('Rotate CCW (left)'),
 				'albums' => $albums['albums'],

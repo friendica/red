@@ -2341,6 +2341,12 @@ aside .nav-pills > li > a {
 	margin-right: 10px;
 }
 
+.section-content-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
+}
 
 @media screen and (max-width: 767px) {
 	aside#region_1 {
