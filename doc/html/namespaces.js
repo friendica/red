@@ -4,6 +4,7 @@ var namespaces =
     [ "Friendica", "namespaceFriendica.html", null ],
     [ "friendica-to-smarty-tpl", "namespacefriendica-to-smarty-tpl.html", null ],
     [ "RedMatrix", "namespaceRedMatrix.html", "namespaceRedMatrix" ],
+    [ "Redmatrix", "namespaceRedmatrix.html", "namespaceRedmatrix" ],
     [ "updatetpl", "namespaceupdatetpl.html", null ],
     [ "util", "namespaceutil.html", null ]
 ];
