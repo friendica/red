@@ -540,11 +540,7 @@ function photos_content(&$a) {
 				'addon_text' => $uploader,
 				'default_upload' => true);
 
-
 		call_hooks('photo_upload_form',$ret);
-
-		$default_upload = '<input id="photos-upload-choose" type="file" name="userfile" /> 	<div class="photos-upload-submit-wrapper" >
-		<input type="submit" name="submit" value="' . t('Submit') . '" id="photos-upload-submit" /> </div>';
 
 		/* Show space usage */
 
@@ -584,15 +580,17 @@ function photos_content(&$a) {
 			'$sessid' => session_id(),
 			'$usage' => $usage_message,
 			'$nickname' => $a->data['channel']['channel_address'],
-			'$newalbum' => t('Enter a new album name or select an existing one:'),
+			'$newalbum_label' => t('Enter a new album name'),
+			'$newalbum_placeholder' => t('or select an existing one (doubleclick)'),
 			'$nosharetext' => t('Do not show a status post for this upload'),
 			'$albums' => $albums['albums'],
 			'$selname' => $selname,
 			'$permissions' => t('Permissions'),
 			'$aclselect' => $aclselect_e,
 			'$uploader' => $ret['addon_text'],
-			'$default' => (($ret['default_upload']) ? $default_upload : ''),
-			'$uploadurl' => $ret['post_url']
+			'$default' => (($ret['default_upload']) ? true : false),
+			'$uploadurl' => $ret['post_url'],
+			'$submit' => t('Submit')
 
 		));
 

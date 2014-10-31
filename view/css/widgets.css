@@ -26,9 +26,6 @@
 /* search */
 
 #search-text {
-	border: 1px solid #ccc;
-	padding: 5px;
-	line-height: 1.5;
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 }

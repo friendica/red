@@ -8,11 +8,11 @@
 	<div class="section-content-wrapper">
 		<form action="photos/{{$nickname}}" enctype="multipart/form-data" method="post" name="photos-upload-form" id="photos-upload-form">
 			<input type="hidden" id="photos-upload-source" name="source" value="photos" />
-			<div id="photos-album-name-label" >
-				<label id="photos-upload-newalbum-text" for="photos-upload-newalbum">{{$newalbum}}</label>
-			</div>
-			<div id="photos-album-name-input">
-				<input id="photos-upload-newalbum" type="text" value="{{$selname}}" name="newalbum" list="dl-photo-upload" />
+
+
+			<div class="form-group">
+				<label for="photos-upload-album">{{$newalbum_label}}</label>
+				<input type="text" class="form-control" id="photos-upload-album" placeholder="{{$newalbum_placeholder}}" value="{{$selname}}" list="dl-photo-upload">
 				<datalist id="dl-photo-upload">
 				{{foreach $albums as $al}}
 					{{if $al.text}}
@@ -22,27 +22,38 @@
 				</datalist>
 			</div>
 
+			{{$aclselect}}
+
+			{{if $default}}
+			<div class="form-group pull-left">
+				<input id="photos-upload-choose" type="file" name="userfile" />
+			</div>
+			<div class="btn-group pull-right">
+				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
+					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>
+				</button>
+				<button class="btn btn-primary btn-sm" type="submit" name="submit" id="photos-upload-submit">{{$submit}}</button>
+			</div>
+			{{/if}}
+
 			<div id="photos-upload-new-end"></div>
 
-			<div id="photos-upload-noshare-div" class="photos-upload-noshare-div" >
-				<input id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" />
-				<label id="photos-upload-noshare-text" for="photos-upload-noshare" >{{$nosharetext}}</label>
+			<div class="form-group" id="photos-upload-noshare">
+				<label id="photos-upload-noshare-text" for="photos-upload-noshare" >
+					<input id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" />&nbsp;{{$nosharetext}}
+				</label>
 			</div>
 
+			{{if $uploader}}
+			<div id="photos-upload-noshare-end"></div>
 			<div id="photos-upload-perms" class="photos-upload-perms" >
 				<span id="jot-perms-icon" class="icon-{{$lockstate}}" ></span>
 				<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
 			</div>
-
-			{{$aclselect}}
-
 			<div id="photos-upload-perms-end"></div>
-
-			<div id="photos-upload-spacer"></div>
-
 			{{$uploader}}
+			{{/if}}
 
-			{{$default}}
 
 			<div class="photos-upload-end" ></div>
 		</form>
