@@ -1444,8 +1444,11 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 			if(! $r) {
 				$result[] = array($d['hash'],'comment parent not found',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 
-				// we don't seem to have a copy of this conversation or at least the parent - request a copy of the entire conversation to date.
+				// We don't seem to have a copy of this conversation or at least the parent - so request a copy of the entire conversation to date.
 				// Don't do this if it's a relay post as we're the ones who are supposed to have the copy and we don't want the request to loop.
+				// Also don't do this if this comment came from a conversation request packet. It's possible that comments are allowed but posting
+				// isn't and that could cause a conversation fetch loop. We can detect these packets since they are delivered via a 'notify' packet type 
+				// that has a message_id element in the initial zot packet (just like the corresponding 'request' packet type which makes the request). 
 
 				if((! $relay) && (! $request))
 					proc_run('php', 'include/notifier.php', 'request', $channel['channel_id'], $sender['hash'], $arr['parent_mid']);
