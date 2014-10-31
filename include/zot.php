@@ -1081,6 +1081,7 @@ function zot_import($arr, $sender_url) {
 				continue;
 			}
 
+			$message_request = ((array_key_exists('message_id',$i['notify'])) ? true : false);
 
 			$i['notify']['sender']['hash'] = make_xchan_hash($i['notify']['sender']['guid'],$i['notify']['sender']['guid_sig']);
 			$deliveries = null;
@@ -1182,7 +1183,7 @@ function zot_import($arr, $sender_url) {
 					logger('Activity recipients: ' . print_r($deliveries,true), LOGGER_DATA);
 
 					$relay = ((array_key_exists('flags',$i['message']) && in_array('relay',$i['message']['flags'])) ? true : false);
-					$result = process_delivery($i['notify']['sender'],$arr,$deliveries,$relay);
+					$result = process_delivery($i['notify']['sender'],$arr,$deliveries,$relay,false,$message_request);
 
 				}
 				elseif($i['message']['type'] === 'mail') {
@@ -1379,7 +1380,7 @@ function allowed_public_recips($msg) {
 }
 
 
-function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
+function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$request = false) {
 
 	$result = array();
 
@@ -1446,7 +1447,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 				// we don't seem to have a copy of this conversation or at least the parent - request a copy of the entire conversation to date.
 				// Don't do this if it's a relay post as we're the ones who are supposed to have the copy and we don't want the request to loop.
 
-				if(! $relay)
+				if((! $relay) && (! $request))
 					proc_run('php', 'include/notifier.php', 'request', $channel['channel_id'], $sender['hash'], $arr['parent_mid']);
 
 				continue;
@@ -2852,7 +2853,7 @@ function zot_process_message_request($data) {
 		
 		foreach($hubs as $hub) {
 			$hash = random_string();
-			$n = zot_build_packet($c[0],'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null),$hash);
+			$n = zot_build_packet($c[0],'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null),$hash,array('message_id' => $data['message_id']));
 			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, 
 				outq_created, outq_updated, outq_notify, outq_msg ) 
 				values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
