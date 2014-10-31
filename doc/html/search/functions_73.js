@@ -90,7 +90,7 @@ var searchData=
   ['start_5fdelivery_5fchain',['start_delivery_chain',['../items_8php.html#adf2b8137dc4ad9ec958de2842f16f3c2',1,'items.php']]],
   ['startup',['startup',['../boot_8php.html#aca47505b8732177f52bb2d647eb2741c',1,'boot.php']]],
   ['status_5feditor',['status_editor',['../conversation_8php.html#a2a7d541854bba755eb8ada59af7dcb1a',1,'conversation.php']]],
-  ['store',['store',['../classphoto__driver.html#a642a8d0c4ad5f887c99c6af77cee287b',1,'photo_driver']]],
+  ['store',['store',['../classRedmatrix_1_1Import_1_1Import.html#a70f9dd767d877530a7da7c6bd821e080',1,'Redmatrix\Import\Import\store()'],['../classphoto__driver.html#a642a8d0c4ad5f887c99c6af77cee287b',1,'photo_driver\store()']]],
   ['store_5fdiaspora_5fcomment_5fsig',['store_diaspora_comment_sig',['../items_8php.html#a25221826fa4621f523c68483e3b6af26',1,'items.php']]],
   ['store_5fitem_5ftag',['store_item_tag',['../taxonomy_8php.html#a4ba1339b2a7054971178ce194e4440fd',1,'taxonomy.php']]],
   ['stream_5fperms_5fapi_5fuids',['stream_perms_api_uids',['../security_8php.html#a6126c77a1267e046ac59cf864613f011',1,'security.php']]],

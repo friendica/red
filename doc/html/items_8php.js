@@ -72,5 +72,5 @@ var items_8php =
     [ "translate_scope", "items_8php.html#aabfaa193b83154c2a81e91284e5d5e59", null ],
     [ "update_feed_item", "items_8php.html#a9b449eeae50003414b8b30ca927af434", null ],
     [ "update_remote_id", "items_8php.html#a2baa9e05f1e8aa3dd61c85803ae39bd6", null ],
-    [ "zot_feed", "items_8php.html#a004e89d86b0f29b2c4da20108ecc4091", null ]
+    [ "zot_feed", "items_8php.html#a1cf89557f32d5dfbe8bd90448dc1aa92", null ]
 ];
