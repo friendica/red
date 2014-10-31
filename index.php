@@ -197,7 +197,19 @@ if(strlen($a->module)) {
 	 */
 
 	if(! $a->module_loaded) {
-		if(file_exists("custom/{$a->module}.php")) {
+
+		/* 
+		 * Traditionally we looked in custom first, but we're leaning toward a convention where site
+		 * specific things are all in directories called 'site'. So custom will be going away.
+		 * There are a very small number of folks affected. You know who you are. Once you've got things sorted,
+		 * please remove the lines for "custom/" and push to the project repository.  
+		 */
+
+		if(file_exists("mod/site/{$a->module}.php")) {
+			include_once("mod/site/{$a->module}.php");
+			$a->module_loaded = true;
+		}
+		elseif(file_exists("custom/{$a->module}.php")) {
 			include_once("custom/{$a->module}.php");
 			$a->module_loaded = true;
 		}
