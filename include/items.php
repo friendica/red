@@ -4249,14 +4249,24 @@ function fetch_post_tags($items,$link = false) {
 
 
 
-function zot_feed($uid,$observer_xchan,$mindate) {
+function zot_feed($uid,$observer_xchan,$arr) {
 
 
 	$result = array();
-	$mindate = datetime_convert('UTC','UTC',$mindate);
+	$mindate = null;
+	$message_id = null;
+
+	if(array_key_exists('mindate',$arr)) {
+		$mindate = datetime_convert('UTC','UTC',$arr['mindate']);
+	}
+
+	if(array_key_exists('message_id',$arr)) {
+		$message_id = $arr['message_id'];
+	}
+
+
 	if(! $mindate)
 		$mindate = NULL_DATE;
-
 	$mindate = dbesc($mindate);
 
 	logger('zot_feed: ' . $uid);
@@ -4277,6 +4287,11 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 	}
 	else
 		$limit = " limit 0, 50 ";
+
+	if($message_id) {
+		$sql_extra .= " and mid = '" . dbesc($message_id) . "' ";
+		$limit = '';
+	}
 
 	$items = array();
 

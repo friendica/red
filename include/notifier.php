@@ -58,6 +58,7 @@ require_once('include/html2plain.php');
  *       expire                 channel_id
  *       relay					item_id (item was relayed to owner, we will deliver it as owner)
  *       location               channel_id
+ *       request                channel_id            xchan_hash             message_id
  *
  */
 
@@ -142,6 +143,7 @@ function notifier_run($argv, $argc){
 
 
 	$expire = false;
+	$request = false;
 	$mail = false;
 	$fsuggest = false;
 	$top_level = false;
@@ -173,6 +175,23 @@ function notifier_run($argv, $argc){
 		);
 		if($s)
 			$channel = $s[0];
+
+	}
+	elseif($cmd === 'request') {
+		$channel_id = $item_id;
+		$xchan = $argv[3];
+		$request_message_id = $argv[4];
+
+		$s = q("select * from channel where channel_id = %d limit 1",
+			intval($channel_id)
+		);
+		if($s)
+			$channel = $s[0];
+
+		$private = true;
+		$recipients[] = $xchan;
+		$packet_type = 'request';
+		$normal_mode = false;
 
 	}
 	elseif($cmd === 'expire') {
@@ -550,6 +569,7 @@ function notifier_run($argv, $argc){
 				'mail' => $mail,
 				'location' => $location,
 				'fsuggest' => $fsuggest,
+				'request' => $request,
 				'normal_mode' => $normal_mode,
 				'packet_type' => $packet_type,
 				'walltowall' => $walltowall
@@ -566,6 +586,21 @@ function notifier_run($argv, $argc){
 		$hash = random_string();
 		if($packet_type === 'refresh' || $packet_type === 'purge') {
 			$n = zot_build_packet($channel,$packet_type);
+			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
+				dbesc($hash),
+				intval($channel['channel_account_id']),
+				intval($channel['channel_id']),
+				dbesc('zot'),
+				dbesc($hub['hubloc_callback']),
+				intval(1),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc($n),
+				dbesc('')
+			);
+		}
+		elseif($packet_type === 'request') {
+			$n = zot_build_packet($channel,'request',$env_recips,$hub['hubloc_sitekey'],$hash,array('message_id' => $request_message_id));
 			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
 				dbesc($hash),
 				intval($channel['channel_account_id']),

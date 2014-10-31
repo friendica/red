@@ -104,7 +104,7 @@ function zot_get_hublocs($hash) {
  * @returns string json encoded zot packet
  */
 
-function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null, $secret = null) {
+function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null, $secret = null, $extra = null) {
 
 	$data = array(
 		'type' => $type,
@@ -128,6 +128,12 @@ function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_
 		$data['secret'] = $secret; 
 		$data['secret_sig'] = base64url_encode(rsa_sign($secret,$channel['channel_prvkey']));
 	}
+
+	if($extra) {
+		foreach($extra as $k => $v)
+			$data[$k] = $v;
+	}
+
 
 	logger('zot_build_packet: ' . print_r($data,true), LOGGER_DATA);
 
@@ -1436,6 +1442,13 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			);
 			if(! $r) {
 				$result[] = array($d['hash'],'comment parent not found',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+
+				// we don't seem to have a copy of this conversation or at least the parent - request a copy of the entire conversation to date.
+				// Don't do this if it's a relay post as we're the ones who are supposed to have the copy and we don't want the request to loop.
+
+				if(! $relay)
+					proc_run('php', 'include/notifier.php', 'request', $channel['channel_id'], $sender['hash'], $arr['parent_mid']);
+
 				continue;
 			}
 			if($relay) {
@@ -2793,3 +2806,71 @@ function import_author_zot($x) {
 	return false;
 }
 
+function zot_process_message_request($data) {
+	$ret = array('success' => false);
+	if(! $data['message_id']) {
+		$ret['message'] = 'no message_id';
+		logger('no message_id');
+		return $ret;
+	}
+
+	$sender = $data['sender'];
+	$sender_hash = make_xchan_hash($sender['guid'],$sender['guid_sig']);
+
+	$arr = $data['recipients'][0];
+	$recip_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
+	$c = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_hash = '%s' limit 1",
+		dbesc($recip_hash)
+	);
+	if(! $c) {
+		logger('recipient channel not found.');
+		$ret['message'] .= 'recipient not found.' . EOL;
+		return $ret;
+	}
+	$messages = zot_feed($c[0]['channel_id'],$sender_hash,array('message_id' => $data['message_id']));
+	if($messages) {
+		$env_recips = null;
+
+		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host 
+			from hubloc where hubloc_hash = '" . dbesc($sender_hash) . "' and not (hubloc_flags & %d)
+			and not (hubloc_status & %d) group by hubloc_sitekey",
+            intval(HUBLOC_FLAGS_DELETED),
+            intval(HUBLOC_OFFLINE)
+        );
+	    if(! $r) {
+	        logger('no hubs');
+    	    return $ret;
+    	}
+		$hubs = $r;
+		$hublist = array();
+		$keys = array();
+
+		$private = ((array_key_exists('flags',$messages[0]) && in_array('private',$messages[0]['flags'])) ? true : false);
+		if($private)
+			$env_recips = array('guid' => $sender['guid'],'guid_sig' => $sender['guid_sig'],'hash' => $sender_hash);
+		$data_packet = json_encode(array('message_list' => $messages));
+		
+		foreach($hubs as $hub) {
+			$hash = random_string();
+			$n = zot_build_packet($c[0],'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null),$hash);
+			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, 
+				outq_created, outq_updated, outq_notify, outq_msg ) 
+				values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
+				dbesc($hash),
+				intval($c[0]['channel_account_id']),
+				intval($c[0]['channel_id']),
+				dbesc('zot'),
+				dbesc($hub['hubloc_callback']),
+				intval(1),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc($n),
+				dbesc($data_packet)
+			);
+			proc_run('php','include/deliver.php',$hash);
+		}
+
+	}
+	$ret['success'] = true;
+	return $ret;
+}
