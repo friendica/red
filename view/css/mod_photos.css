@@ -22,24 +22,16 @@
 	margin-bottom: 25px;
 }
 
-#photos-upload-noshare {
-	margin-bottom: 10px;
+#photos-upload-album {
+	width: 100%;
 }
 
-#photos-upload-spacer,
-#photos-upload-new-end {
-	margin-top: 25px;
-}
 #photos-upload-new-end, #photos-upload-exist-end {
 	clear: both;
 }
 #photos-upload-exist-end {
 	margin-bottom: 15px;
 }
-#photos-upload-submit {
-	margin-top: 15px;
-}
-
 
 #photos-upload-select-files-text {
 	margin-top: 15px;
@@ -63,8 +55,9 @@
 	margin-bottom: 15px;
 }
 
-#photo-edit-caption-end, #photo-edit-tags-end, #photo-edit-albumname-end, #photo-edit-rotate-end {
+#photo-edit-caption-end, #photo-edit-tags-end, #photo-edit-albumname-end, #photo-edit-rotate-end, #photos-upload-perms-end, #photos-upload-noshare-end{
 	clear: both;
+	margin-bottom: 10px;
 }
 
 #photo-edit-rotate-end {
@@ -73,10 +66,9 @@
 
 
 #photo-edit-edit,
-#photo-album-edit-wrapper {
+#photo-album-edit-wrapper,
+#photo-upload-form {
 	display: none;
-	padding: 7px 10px;
-	margin-bottom: 3px;
 }
 
 #photo-album-edit-submit, #photo-album-edit-drop {

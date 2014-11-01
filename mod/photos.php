@@ -476,11 +476,9 @@ function photos_content(&$a) {
 	if(argc() > 3) {
 		$datatype = argv(2);
 		$datum = argv(3);
-	}
-	elseif((argc() > 2) && (argv(2) === 'upload'))
-		$datatype = 'upload';
-	else
+	} else {
 		$datatype = 'summary';
+	}
 
 	if(argc() > 4)
 		$cmd = argv(4);
@@ -528,11 +526,7 @@ function photos_content(&$a) {
 	 * Display upload form
 	 */
 
-	if($datatype === 'upload') {
-		if(! ($can_post)) {
-			notice( t('Permission denied.'));
-			return;
-		}
+	if( $can_post) {
 
 		$uploader = '';
 
@@ -540,11 +534,7 @@ function photos_content(&$a) {
 				'addon_text' => $uploader,
 				'default_upload' => true);
 
-
 		call_hooks('photo_upload_form',$ret);
-
-		$default_upload = '<input id="photos-upload-choose" type="file" name="userfile" /> 	<div class="photos-upload-submit-wrapper" >
-		<input type="submit" name="submit" value="' . t('Submit') . '" id="photos-upload-submit" /> </div>';
 
 		/* Show space usage */
 
@@ -579,24 +569,25 @@ function photos_content(&$a) {
 		$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 
 		$tpl = get_markup_template('photos_upload.tpl');
-		$o .= replace_macros($tpl,array(
+		$upload_form = replace_macros($tpl,array(
 			'$pagename' => t('Upload Photos'),
 			'$sessid' => session_id(),
 			'$usage' => $usage_message,
 			'$nickname' => $a->data['channel']['channel_address'],
-			'$newalbum' => t('Enter a new album name or select an existing one:'),
+			'$newalbum_label' => t('Enter a new album name'),
+			'$newalbum_placeholder' => t('or select an existing one (doubleclick)'),
 			'$nosharetext' => t('Do not show a status post for this upload'),
 			'$albums' => $albums['albums'],
 			'$selname' => $selname,
 			'$permissions' => t('Permissions'),
 			'$aclselect' => $aclselect_e,
 			'$uploader' => $ret['addon_text'],
-			'$default' => (($ret['default_upload']) ? $default_upload : ''),
-			'$uploadurl' => $ret['post_url']
+			'$default' => (($ret['default_upload']) ? true : false),
+			'$uploadurl' => $ret['post_url'],
+			'$submit' => t('Submit')
 
 		));
 
-		return $o; 
 	}
 
 	/*
@@ -727,7 +718,8 @@ function photos_content(&$a) {
 				'$can_post' => $can_post,
 				'$upload' => array(t('Upload'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album)),
 				'$order' => $order,
-
+				'$upload_form' => $upload_form,
+				'$usage' => $usage_message
 			));
 
 		}
@@ -1236,6 +1228,8 @@ function photos_content(&$a) {
 			'$can_post' => $can_post,
 			'$upload' => array(t('Upload'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
 			'$photos' => $photos,
+			'$upload_form' => $upload_form,
+			'$usage' => $usage_message
 		));
 
 	}

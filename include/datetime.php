@@ -134,7 +134,10 @@ function dob($dob) {
 	if(! $f)
 		$f = 'ymd';
 
-	$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),mktime(0,0,0,$month,$day,$year),'dob');
+	if ($dob && $dob != '0000-00-00')
+		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),mktime(0,0,0,$month,$day,$year),'dob');
+	else
+		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),false,'dob');
 
 	return $o;
 }

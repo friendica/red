@@ -13,7 +13,7 @@ html {
 }
 
 body {
-	font-family: arial,freesans,sans-serif;
+	font-family: sans-serif, arial, freesans;
 	font-size: $body_font_size;
 	background-color: $bgcolour;
 	background-image: url('$background_image');
@@ -37,7 +37,7 @@ h5, .h5, h6, .h6 {
 }
 
 .jslider {
-	font-family: arial,freesans,sans-serif;
+	font-family: sans-serif, arial, freesans;
 }
 
 abbr {
@@ -84,17 +84,19 @@ a.btn-success {
 input[type="text"],
 input[type="password"],
 input[type="submit"],
+input[type="file"],
 select,
 textarea {
-	font-family: arial,freesans,sans-serif;
+	font-family: sans-serif, arial, freesans;
 	font-size: $body_font_size;
 }
 
 input {
+	padding: 5px;
+	line-height: 1.5;
 	border: 1px solid $input_border;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
-	padding: 3px;
 }
 
 input[type="submit"] {
@@ -704,9 +706,7 @@ footer {
 	cursor: pointer;
 }
 
-#photo-album-edit-wrapper,
-#photo-view-wrapper,
-#photo-edit-edit {
+#photo-view-wrapper {
 	background-color: $item_colour;
 }
 
@@ -2333,12 +2333,10 @@ aside .nav-pills > li > a {
 	margin-bottom: 0px;
 }
 
-.section-title-submenu {
-	margin-top: 10px;
-}
-
-.section-title-submenu a {
-	margin-right: 10px;
+.section-content-tools-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	margin-bottom: 3px;
 }
 
 .section-content-wrapper {
