@@ -2813,6 +2813,7 @@ function import_author_zot($x) {
 function zot_process_message_request($data) {
 	$ret = array('success' => false);
 
+// note: disabled until the loops stop.
 	return $ret;
 
 	if(! $data['message_id']) {
