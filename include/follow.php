@@ -13,6 +13,8 @@ require_once('include/zot.php');
 
 function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) {
 
+
+
 	$result = array('success' => false,'message' => '');
 
 	$a = get_app();
@@ -64,7 +66,11 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	if($is_red && $j) {
 
-		$my_perms = PERMS_W_STREAM|PERMS_W_MAIL;
+
+		// fixme - we need to be able to define these somewhere for the custom role
+		$my_perms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+			|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+			|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
 
 		$role = get_pconfig($uid,'system','permissions_role');
 		if($role) {

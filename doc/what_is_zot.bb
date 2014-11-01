@@ -58,4 +58,4 @@ For more detailed, technical information about Zot, check out the following link
  - [url=https://github.com/friendica/red/blob/master/include/zot.php]Zot reference implementation in PHP[/url]
 
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

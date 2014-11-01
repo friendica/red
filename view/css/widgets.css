@@ -26,9 +26,6 @@
 /* search */
 
 #search-text {
-	border: 1px solid #ccc;
-	padding: 5px;
-	line-height: 1.5;
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 }
@@ -82,9 +79,12 @@
 
 /* group */
 
+a.group-edit-tool {
+	z-index: 1;
+}
+
 .group-edit-icon {
 	opacity: 0;
-	z-index: 1;
 }
 
 li:hover .group-edit-icon {

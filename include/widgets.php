@@ -430,6 +430,8 @@ function widget_settings_menu($arr) {
 
 	// Retrieve the 'self' address book entry for use in the auto-permissions link
 
+	$role = get_pconfig(local_user(),'system','permissions_role');
+
 	$abk = q("select abook_id from abook where abook_channel = %d and ( abook_flags & %d ) limit 1",
 		intval(local_user()),
 		intval(ABOOK_FLAG_SELF)
@@ -487,14 +489,15 @@ function widget_settings_menu($arr) {
 			'selected' => ''
 		),
 
-		array(
+	);
+
+	if($role === false || $role === 'custom') {
+		$tabs[] = array(
 			'label' => t('Automatic Permissions (Advanced)'),
 			'url' => $a->get_baseurl(true) . '/connedit/' . $abook_self_id,
 			'selected' => ''
-		),
-
-
-	);
+		);
+	}
 
 	if(feature_enabled(local_user(),'premium_channel')) {
 		$tabs[] = array(

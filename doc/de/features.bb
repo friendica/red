@@ -1,12 +1,10 @@
-[size=24][b]Features der Red-Matrix[/b][/size]
-
-[url=[baseurl]/help]Zurück zur Hilfe-Startseite[/url]
+[size=large][b]Features der Red-Matrix[/b][/size]
 
 Die Red-Matrix ist ein Allzweck-Kommunikationsnetzwerk mit einigen einzigartigen Features. Sie wurde für eine große Bandbreite von Nutzern entwickelt, von Nutzern sozialer Netzwerke über technisch nicht interessierte Blogger bis hin zu PHP-Experten und erfahrenen Systemadministratoren.
 
 Diese Seite listet einige der Kern-Features von Red auf, die in der offiziellen Distribution enthalten sind. Wie immer bei freier Open-Source-Software sind den Möglichkeiten keine Grenzen gesetzt. Beliebige Erweiterungen, Addons, Themes und Konfigurationen sind möglich.
 
-[b][size=18]Entwickelt für Privatsphäre und Freiheit[/size][/b]
+[h2]Entwickelt für Privatsphäre und Freiheit[/h2]
 
 Eines der Design-Ziele von Red ist einfache Kommunikations über das Web, ohne die Privatsphäre zu vernachlässigen, wenn die Nutzer das Wünschen. Um dieses Ziel zu erreichen, verfügt Red über einige Features, die beliebige Stufen des Privatsphäre-Schutzes ermöglichen:
 
@@ -83,7 +81,7 @@ Solche Backups sind ein Weg, um Klone zu erstellen, und können genutzt werden, 
 
 Konten und Kanäle können sofort gelöscht werden, indem Du einfach auf einen Link klickst. Das wars. Alle damit verbundenen Inhalte werden sofort aus der Matrix gelöscht (inklusiver aller Beiträge und sonstiger Inhalte, die von dem gelöschten Konto/Kanal erzeugt wurden).
 
-[b][size=18]Erstellen von Inhalten[/size][/b]
+[h2]Erstellen von Inhalten[/h2]
 
 [b]Beiträge schreiben[/b]
 
@@ -105,4 +103,4 @@ Genau wie jedes andere Blog-System, soziale Netzwerk oder Mikro-Blogging-Dienst 
 
 Vor dem Absenden kann eine Vorschau von Beiträgen betrachtet werden.
 
-[url=[baseurl]/help]Zurück zur Hilfe-Startseite[/url]
+#include doc/macros/main_footer.bb;

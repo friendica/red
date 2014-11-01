@@ -137,6 +137,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:af764d5f14df751f9ec86c34fab300c09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the directory listing for the given path.  <a href="#af764d5f14df751f9ec86c34fab300c09">More...</a><br/></td></tr>
 <tr class="separator:af764d5f14df751f9ec86c34fab300c09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a242ce69a2fe5a5fdf9c2b8d3954accfd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRedMatrix_1_1RedDAV_1_1RedBrowser.html#a242ce69a2fe5a5fdf9c2b8d3954accfd">userReadableSize</a> ($size)</td></tr>
+<tr class="memdesc:a242ce69a2fe5a5fdf9c2b8d3954accfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a human readable formatted string for filesizes.  <a href="#a242ce69a2fe5a5fdf9c2b8d3954accfd">More...</a><br/></td></tr>
 <tr class="separator:a242ce69a2fe5a5fdf9c2b8d3954accfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3bd98af2d1cdfd8f26deb914596176cf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRedMatrix_1_1RedDAV_1_1RedBrowser.html#a3bd98af2d1cdfd8f26deb914596176cf">htmlActionsPanel</a> (DAV\INode $node, &amp;$output)</td></tr>
 <tr class="memdesc:a3bd98af2d1cdfd8f26deb914596176cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a form to add new folders and upload files.  <a href="#a3bd98af2d1cdfd8f26deb914596176cf">More...</a><br/></td></tr>
@@ -161,6 +162,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides a DAV frontend for the webbrowser. </p>
 <p><a class="el" href="classRedMatrix_1_1RedDAV_1_1RedBrowser.html" title="Provides a DAV frontend for the webbrowser.">RedBrowser</a> is a SabreDAV server-plugin to provide a view to the DAV storage for the webbrowser.</p>
+<p><a class="el" href=""><a href="http://opensource.org/licenses/mit-license.php">http://opensource.org/licenses/mit-license.php</a> The MIT License (MIT) </a></p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a8161f2a0be205412e263c947b5ec46c5"></a>
 <div class="memitem">
@@ -177,11 +179,12 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Constructor for <a class="el" href="classRedMatrix_1_1RedDAV_1_1RedBrowser.html" title="Provides a DAV frontend for the webbrowser.">RedBrowser</a> class. </p>
-<p>$enablePost will be activated through <a class="el" href="classRedMatrix_1_1RedDAV_1_1RedBrowser.html#aa1607857cb59738c4dce2fe8e73d8f19">set_writeable()</a> in a later stage. At the moment the write_storage permission is only valid for the whole folder. No file specific permissions yet.</p>
+<p>$enablePost will be activated through <a class="el" href="classRedMatrix_1_1RedDAV_1_1RedBrowser.html#aa1607857cb59738c4dce2fe8e73d8f19">set_writeable()</a> in a later stage. At the moment the write_storage permission is only valid for the whole folder. No file specific permissions yet. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>disable enablePost by default and only activate if permissions grant edit rights.</dd></dl>
 <p>Disable assets with $enableAssets = false. Should get some thumbnail views anyway.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype"><a class="el" href="classRedBasicAuth.html" title="Authentication backend class for RedDAV.">RedBasicAuth</a></td><td class="paramname">&amp;$auth</td><td></td></tr>
+    <tr><td class="paramtype"><a class="el" href="classRedMatrix_1_1RedDAV_1_1RedBasicAuth.html" title="Authentication backend class for RedDAV.">RedBasicAuth</a></td><td class="paramname">&amp;$auth</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -385,7 +388,8 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>The DAV browser is instantiated after the auth module and directory classes but before we know the current directory and who the owner and observer are. So we add a pointer to the browser into the auth module and vice versa. Then when we've figured out what directory is actually being accessed, we call the following function to decide whether or not to show web elements which include writeable objects.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Maybe this can be solved with some $server-&gt;subscribeEvent()? </dd></dl>
+<p>It only disable/enable the visible parts. Not the POST handler which handels the actual requests when uploading files or creating folders.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Maybe this whole way of doing this can be solved with some $server-&gt;subscribeEvent(). </dd></dl>
 
 </div>
 </div>
@@ -402,6 +406,16 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns a human readable formatted string for filesizes. </p>
+<p>Don't we need such a functionality in other places, too?</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$size</td><td>filesize in bytes </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
 <p>Referenced by <a class="el" href="classRedMatrix_1_1RedDAV_1_1RedBrowser.html#af764d5f14df751f9ec86c34fab300c09">RedMatrix\RedDAV\RedBrowser\generateDirectoryIndex()</a>.</p>
 

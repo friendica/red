@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['datesel',['datesel',['../datetime_8php.html#ac265b86f384ee094ed5479aae02aa5c8',1,'datetime.php']]],
-  ['datesel_5fformat',['datesel_format',['../datetime_8php.html#a5f29553799005b1fd4e9ce9d98ce05aa',1,'datetime.php']]],
+  ['datesel',['datesel',['../datetime_8php.html#a77bb385ae8a9e7ca663309c102c0d766',1,'datetime.php']]],
   ['datetime_5fconvert',['datetime_convert',['../datetime_8php.html#ad6301e74b0f9267d52f8d432b5beb226',1,'datetime.php']]],
+  ['datetimesel',['datetimesel',['../datetime_8php.html#a72218e5ee21876484934bacbb6bd9ba3',1,'datetime.php']]],
   ['day_5ftranslate',['day_translate',['../text_8php.html#a63fb21c0bed2fc72eef2c1471ac42b63',1,'text.php']]],
   ['dba_5ffactory',['dba_factory',['../dba__driver_8php.html#ac10e60f6e5b95bcf67bd82cb88f37947',1,'dba_driver.php']]],
   ['dba_5ftimer',['dba_timer',['../boot_8php.html#a3e0930933fb2c0bf8211cc7ab4e1c3b4',1,'boot.php']]],
@@ -16,7 +16,7 @@ var searchData=
   ['del_5fpconfig',['del_pconfig',['../include_2config_8php.html#a7ad2081c5f812ac4387fd76f3762d941',1,'config.php']]],
   ['del_5fxconfig',['del_xconfig',['../include_2config_8php.html#a9c171def547deee16738dc58fdeb4b72',1,'config.php']]],
   ['delegate_5fcontent',['delegate_content',['../delegate_8php.html#a943eea8996ef348eb845c498f9f354dd',1,'delegate.php']]],
-  ['delete',['delete',['../classRedFile.html#aef71c9eaac7052be7dc8602eb12171e7',1,'RedFile']]],
+  ['delete',['delete',['../classRedMatrix_1_1RedDAV_1_1RedFile.html#ab7ab7ba81fab28eb02382cfdfd80ecfe',1,'RedMatrix::RedDAV::RedFile']]],
   ['delete_5fimported_5fitem',['delete_imported_item',['../zot_8php.html#adfeb9400ae6b726beec89f8f1e8fde72',1,'zot.php']]],
   ['delete_5fitem_5flowlevel',['delete_item_lowlevel',['../items_8php.html#aac8c9eb4338e2a996c43914392c6cfdb',1,'items.php']]],
   ['deletenode',['deletenode',['../html2bbcode_8php.html#a71a07f135d196ec5943b13f7b2e6a9b2',1,'html2bbcode.php']]],

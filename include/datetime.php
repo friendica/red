@@ -130,134 +130,100 @@ function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d 
 
 function dob($dob) {
 	list($year,$month,$day) = sscanf($dob,'%4d-%2d-%2d');
-	$y = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
 	$f = get_config('system','birthday_input_format');
 	if(! $f)
 		$f = 'ymd';
-	$o = datesel($f,'',1920,$y,true,$year,$month,$day);
+
+	if ($dob && $dob != '0000-00-00')
+		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),mktime(0,0,0,$month,$day,$year),'dob');
+	else
+		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),false,'dob');
+
 	return $o;
 }
 
 
-function datesel_format($f) {
+/**
+ * returns a date selector
+ * @param $format
+ *  format string, e.g. 'ymd' or 'mdy'. Not currently supported
+ * @param $min
+ *  unix timestamp of minimum date
+ * @param $max
+ *  unix timestap of maximum date
+ * @param $default
+ *  unix timestamp of default date
+ * @param $id
+ *  id and name of datetimepicker (defaults to "datetimepicker")
+ */
+function datesel($format, $min, $max, $default,$id = 'datepicker') {
+	return datetimesel($format,$min,$max,$default,$id,true,false);
+}
 
+/**
+ * returns a date selector
+ * @param $format
+ *  format string, e.g. 'ymd' or 'mdy'. Not currently supported
+ * @param $h
+ *  already selected hour
+ * @param $m
+ *  already selected minute
+ * @param $id
+ *  id and name of datetimepicker (defaults to "timepicker")
+ */
+function timesel($format,$h,$m,$id='timepicker') {
+	return datetimesel($format,mktime(),mktime(),mktime($h,$m),$id,false,true);
+}
+
+/**
+ * returns a datetime selector
+ * @param $format
+ *  format string, e.g. 'ymd' or 'mdy'. Not currently supported
+ * @param $min
+ *  unix timestamp of minimum date
+ * @param $max
+ *  unix timestap of maximum date
+ * @param $default
+ *  unix timestamp of default date
+ * @param $id
+ *  id and name of datetimepicker (defaults to "datetimepicker")
+ * @param $pickdate
+ *  true to show date picker (default)
+ * @param $picktime
+ *  true to show time picker (default)
+ * @param $minfrom
+ *  set minimum date from picker with id $minfrom (none by default)
+ * @param $maxfrom
+ *  set maximum date from picker with id $maxfrom (none by default)
+ */
+function datetimesel($format, $min, $max, $default, $id = 'datetimepicker', $pickdate = true, $picktime = true, $minfrom = '', $maxfrom = '') {
 	$o = '';
 
-	if(strlen($f)) {
-		for($x = 0; $x < strlen($f); $x ++) {
-			switch($f[$x]) {
-				case 'y':
-					if(strlen($o))
-						$o .= '-';
-					$o .= t('year');					
-					break;
-				case 'm':
-					if(strlen($o))
-						$o .= '-';
-					$o .= t('month');					
-					break;
-				case 'd':
-					if(strlen($o))
-						$o .= '-';
-					$o .= t('day');
-					break;
-				default:
-					break;
-			}
-		}
-	}
+	$dateformat = '';
+	if($pickdate) $dateformat .= 'YYYY-MM-DD';
+	if($pickdate && $picktime) $dateformat .= ' ';
+	if($picktime) $dateformat .= 'HH:mm';
+
+	$mindate = $min ? "new Date($min*1000)" : '';
+	$maxdate = $max ? "new Date($max*1000)" : '';
+	
+	$defaultDate = $default ? ", defaultDate: new Date($default*1000)" : '';
+
+	$pickers = '';
+	if(!$pickdate) $pickers .= 'pickDate: false,';
+	if(!$picktime) $pickers .= 'pickTime: false,';
+
+	$extra_js = '';
+	if($minfrom != '') 
+		$extra_js .= "\$('#$minfrom').on('dp.change',function (e) { \$('#$id').data('DateTimePicker').setMinDate(e.date); });";
+
+	if($maxfrom != '') 
+		$extra_js .= "\$('#$maxfrom').on('dp.change',function (e) { \$('#$id').data('DateTimePicker').setMaxDate(e.date); });";
+
+	$o .= "<div class='date' id='$id'><input type='text' placeholder='$dateformat' name='$id'/></div>";
+	$o .= "<script type='text/javascript'>\$(function () {\$('#$id').datetimepicker({sideBySide: true, $pickers minDate: $mindate, maxDate: $maxdate, format: '$dateformat', useCurrent: false $defaultDate}); $extra_js});</script>";
 	return $o;
 }
-
-
-// returns a date selector.
-// $f           = format string, e.g. 'ymd' or 'mdy'
-// $pre         = prefix (if needed) for HTML name and class fields
-// $ymin        = first year shown in selector dropdown
-// $ymax        = last year shown in selector dropdown
-// $allow_blank = allow an empty response on any field
-// $y           = already selected year
-// $m           = already selected month
-// $d           = already selected day
-
-
-function datesel($f,$pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
-
-	$o = '';
-
-	if(strlen($f)) {
-		for($z = 0; $z < strlen($f); $z ++) {
-			if($f[$z] === 'y') {
-
-				$o .= "<select name=\"{$pre}year\" class=\"{$pre}year\" size=\"1\">";
-				if($allow_blank) {
-					$sel = (($y == '0000') ? " selected=\"selected\" " : "");
-					$o .= "<option value=\"0000\" $sel ></option>";
-				}
-
-				if($ymax > $ymin) {
-					for($x = $ymax; $x >= $ymin; $x --) {
-						$sel = (($x == $y) ? " selected=\"selected\" " : "");
-						$o .= "<option value=\"$x\" $sel>$x</option>";
-					}
-				}
-				else {
-					for($x = $ymax; $x <= $ymin; $x ++) {
-						$sel = (($x == $y) ? " selected=\"selected\" " : "");
-						$o .= "<option value=\"$x\" $sel>$x</option>";
-					}
-				}
-			}
-			elseif($f[$z] == 'm') {
-  
-				$o .= "</select> <select name=\"{$pre}month\" class=\"{$pre}month\" size=\"1\">";
-				for($x = (($allow_blank) ? 0 : 1); $x <= 12; $x ++) {
-					$sel = (($x == $m) ? " selected=\"selected\" " : "");
-					$y = (($x) ? $x : '');
-					$o .= "<option value=\"$x\" $sel>$y</option>";
-				}
-			}
-			elseif($f[$z] == 'd') {
-
-				$o .= "</select> <select name=\"{$pre}day\" class=\"{$pre}day\" size=\"1\">";
-				for($x = (($allow_blank) ? 0 : 1); $x <= 31; $x ++) {
-					$sel = (($x == $d) ? " selected=\"selected\" " : "");
-					$y = (($x) ? $x : '');
-					$o .= "<option value=\"$x\" $sel>$y</option>";
-				}
-			}
-		}
-	}
-
-	$o .= "</select>";
-	return $o;
-}
-
-
-function timesel($pre,$h,$m) {
-
-	$o = '';
-	$o .= "<select name=\"{$pre}hour\" class=\"{$pre}hour\" size=\"1\">";
-	for($x = 0; $x < 24; $x ++) {
-		$sel = (($x == $h) ? " selected=\"selected\" " : "");
-		$o .= "<option value=\"$x\" $sel>$x</option>";
-	}
-	$o .= "</select> : <select name=\"{$pre}minute\" class=\"{$pre}minute\" size=\"1\">";
-	for($x = 0; $x < 60; $x ++) {
-		$sel = (($x == $m) ? " selected=\"selected\" " : "");
-		$o .= "<option value=\"$x\" $sel>$x</option>";
-	}
-
-	$o .= "</select>";
-	return $o;
-}
-
-
-
-
-
-
-
 
 // implements "3 seconds ago" etc.
 // based on $posted_date, (UTC).

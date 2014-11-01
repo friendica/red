@@ -4,6 +4,7 @@ var annotated =
     [ "Friendica", "namespaceFriendica.html", null ],
     [ "friendica-to-smarty-tpl", "namespacefriendica-to-smarty-tpl.html", null ],
     [ "RedMatrix", "namespaceRedMatrix.html", "namespaceRedMatrix" ],
+    [ "Redmatrix", "namespaceRedmatrix.html", "namespaceRedmatrix" ],
     [ "updatetpl", "namespaceupdatetpl.html", null ],
     [ "util", "namespaceutil.html", null ],
     [ "App", "classApp.html", "classApp" ],
@@ -24,9 +25,6 @@ var annotated =
     [ "photo_gd", "classphoto__gd.html", "classphoto__gd" ],
     [ "photo_imagick", "classphoto__imagick.html", "classphoto__imagick" ],
     [ "ProtoDriver", "classProtoDriver.html", "classProtoDriver" ],
-    [ "RedBasicAuth", "classRedBasicAuth.html", "classRedBasicAuth" ],
-    [ "RedDirectory", "classRedDirectory.html", "classRedDirectory" ],
-    [ "RedFile", "classRedFile.html", "classRedFile" ],
     [ "Template", "classTemplate.html", "classTemplate" ],
     [ "ZotDriver", "classZotDriver.html", "classZotDriver" ]
 ];

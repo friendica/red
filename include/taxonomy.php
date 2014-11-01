@@ -154,7 +154,7 @@ function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $restrict = 0, $
 }
 
 function tags_sort($a,$b) {
-   if($a[0] == $b[0])
+   if(strtolower($a[0]) == strtolower($b[0]))
 	 return 0;
    return((strtolower($a[0]) < strtolower($b[0])) ? -1 : 1);
 }

@@ -64,7 +64,7 @@ var items_8php =
     [ "retain_item", "items_8php.html#af6237605c60d69abdd959ddbbee3420c", null ],
     [ "send_status_notifications", "items_8php.html#aab9e0c58247427126de0699c729c3b6c", null ],
     [ "start_delivery_chain", "items_8php.html#adf2b8137dc4ad9ec958de2842f16f3c2", null ],
-    [ "store_diaspora_comment_sig", "items_8php.html#af0a887050dc8d0f51c89890cdaf3145f", null ],
+    [ "store_diaspora_comment_sig", "items_8php.html#a25221826fa4621f523c68483e3b6af26", null ],
     [ "tag_deliver", "items_8php.html#ab1bce4261bcf75ad62753b498a144d17", null ],
     [ "termtype", "items_8php.html#ad34827ed330898456783fb14c7b46154", null ],
     [ "tgroup_check", "items_8php.html#a88c6cf7649ac836fbbed82a7a0315110", null ],
@@ -72,5 +72,5 @@ var items_8php =
     [ "translate_scope", "items_8php.html#aabfaa193b83154c2a81e91284e5d5e59", null ],
     [ "update_feed_item", "items_8php.html#a9b449eeae50003414b8b30ca927af434", null ],
     [ "update_remote_id", "items_8php.html#a2baa9e05f1e8aa3dd61c85803ae39bd6", null ],
-    [ "zot_feed", "items_8php.html#a004e89d86b0f29b2c4da20108ecc4091", null ]
+    [ "zot_feed", "items_8php.html#a1cf89557f32d5dfbe8bd90448dc1aa92", null ]
 ];

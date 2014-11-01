@@ -13,7 +13,7 @@ html {
 }
 
 body {
-	font-family: arial,freesans,sans-serif;
+	font-family: sans-serif, arial, freesans;
 	font-size: $body_font_size;
 	background-color: $bgcolour;
 	background-image: url('$background_image');
@@ -37,7 +37,7 @@ h5, .h5, h6, .h6 {
 }
 
 .jslider {
-	font-family: arial,freesans,sans-serif;
+	font-family: sans-serif, arial, freesans;
 }
 
 abbr {
@@ -84,17 +84,19 @@ a.btn-success {
 input[type="text"],
 input[type="password"],
 input[type="submit"],
+input[type="file"],
 select,
 textarea {
-	font-family: arial,freesans,sans-serif;
+	font-family: sans-serif, arial, freesans;
 	font-size: $body_font_size;
 }
 
 input {
+	padding: 5px;
+	line-height: 1.5;
 	border: 1px solid $input_border;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
-	padding: 3px;
 }
 
 input[type="submit"] {
@@ -648,7 +650,7 @@ footer {
 	list-style: none;
 }
 
-.profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
+.profile-match-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
     border-radius: $radiuspx;
     -moz-border-radius: $radiuspx;
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
@@ -704,15 +706,9 @@ footer {
 	cursor: pointer;
 }
 
-#photo-caption {
-	font-size: 110%;
-	font-weight: bold;
+#photo-view-wrapper {
+	background-color: $item_colour;
 }
-
-#in-this-photo-text {
-	color: #0080FF;
-}
-
 
 #side-follow-wrapper {
 	margin-top: 20px;
@@ -2327,8 +2323,9 @@ aside .nav-pills > li > a {
 .section-title-wrapper {
 	padding: 7px 10px;
 	background-color: $item_colour;
-	border-radius: $radiuspx;
-	margin-bottom: 10px;
+	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radiuspx;
+	margin-bottom: 3px;
 }
 
 .section-title-wrapper h2 {
@@ -2336,14 +2333,18 @@ aside .nav-pills > li > a {
 	margin-bottom: 0px;
 }
 
-.section-title-submenu {
-	margin-top: 10px;
+.section-content-tools-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	margin-bottom: 3px;
 }
 
-.section-title-submenu a {
-	margin-right: 10px;
+.section-content-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
 }
-
 
 @media screen and (max-width: 767px) {
 	aside#region_1 {

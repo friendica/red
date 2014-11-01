@@ -1,6 +1,7 @@
 var dir_d44c64559bbebec7f509842c48db8b23 =
 [
     [ "dba", "dir_21bc5169ff11430004758be31dcfc6c4.html", "dir_21bc5169ff11430004758be31dcfc6c4" ],
+    [ "Import", "dir_7edbbd0f8c514efef79942dcdc21f738.html", "dir_7edbbd0f8c514efef79942dcdc21f738" ],
     [ "photo", "dir_aae29906d7bfc07d076125f669c8352e.html", "dir_aae29906d7bfc07d076125f669c8352e" ],
     [ "RedDAV", "dir_e7f045be8bb383d8447c6a6b84145083.html", "dir_e7f045be8bb383d8447c6a6b84145083" ],
     [ "account.php", "account_8php.html", "account_8php" ],
@@ -19,7 +20,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "cache.php", "cache_8php.html", [
       [ "Cache", "classCache.html", null ]
     ] ],
-    [ "chanman.php", "include_2chanman_8php.html", "include_2chanman_8php" ],
+    [ "chanman.php", "chanman_8php.html", "chanman_8php" ],
     [ "chat.php", "include_2chat_8php.html", "include_2chat_8php" ],
     [ "cli_startup.php", "cli__startup_8php.html", "cli__startup_8php" ],
     [ "cli_suggest.php", "cli__suggest_8php.html", "cli__suggest_8php" ],
@@ -37,6 +38,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "datetime.php", "datetime_8php.html", "datetime_8php" ],
     [ "deliver.php", "deliver_8php.html", "deliver_8php" ],
     [ "diaspora.php", "diaspora_8php.html", "diaspora_8php" ],
+    [ "dimport.php", "dimport_8php.html", "dimport_8php" ],
     [ "dir_fns.php", "dir__fns_8php.html", "dir__fns_8php" ],
     [ "directory.php", "include_2directory_8php.html", "include_2directory_8php" ],
     [ "enotify.php", "enotify_8php.html", "enotify_8php" ],

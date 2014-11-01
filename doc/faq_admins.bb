@@ -43,6 +43,11 @@ valid SSL certificate rather than disabling port 443.
 4) Rsync everything in custom/ (this will only exist if you have custom modules)
 5) Dump and restore DB.
 
+[*]
+[b]How do I set the default homepage for logged out viewers?[/b]
+
+Use the custom_home addon available in the main addons repository.
+
 [/ul]
 
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/main_footer.bb;

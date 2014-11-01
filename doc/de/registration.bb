@@ -27,10 +27,10 @@ Der Kanal-Name ist der Titel oder eine kurze Beschreibung des Kanals. Der „Spi
 Wenn Dein Kanal angelegt ist, geht es direkt weiter zu den Einstellungen. Dort kannst Du Zugriffsrechte setzen, Funktionen zu- oder abschalten und so weiter. Diese Punkte werden auf den entsprechenden Hilfeseiten erklärt.  
 
 Siehe auch
-[zrl=[baseurl]/help/accounts_profiles_channels_basics]Konten, Profile und Kanäle kurz erklärt[/zrl]
+[zrl=[baseurl]/help/accounts_profiles_channels_basics]Grundlagen zu Identitäten in der RedMatrix[/zrl]
 [zrl=[baseurl]/help/accounts]Konten[/zrl]
 [zrl=[baseurl]/help/profiles]Profile[/zrl]
 [zrl=[baseurl]/help/permissions]Zugriffsrechte[/zrl]
 [zrl=[baseurl]/help/remove_account]Konto löschen[/zrl]
 
-[url=[baseurl]/help]Zurück zur Hilfe-Startseite[/url]
+#include doc/macros/main_footer.bb;

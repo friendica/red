@@ -176,6 +176,7 @@ function create_identity($arr) {
 	// save this for auto_friending
 	$total_identities = $ret['total_identities'];
 
+
 	$nick = mb_strtolower(trim($arr['nickname']));
 	if(! $nick) {
 		$ret['message'] = t('Nickname is required.');
@@ -291,8 +292,8 @@ function create_identity($arr) {
 	// Create a verified hub location pointing to this site.
 
 	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, 
-		hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey )
-		values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s' )",
+		hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_network )
+		values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 		dbesc($guid),
 		dbesc($sig),
 		dbesc($hash),
@@ -302,7 +303,8 @@ function create_identity($arr) {
 		dbesc(base64url_encode(rsa_sign(z_root(),$ret['channel']['channel_prvkey']))),
 		dbesc(get_app()->get_hostname()),
 		dbesc(z_root() . '/post'),
-		dbesc(get_config('system','pubkey'))
+		dbesc(get_config('system','pubkey')),
+		dbesc('zot')
 	);
 	if(! $r)
 		logger('create_identity: Unable to store hub location');
@@ -388,7 +390,8 @@ function create_identity($arr) {
 				dbesc( t('Friends') )
 			);
 			if($r) {
-				q("update channel set channel_allow_gid = '%s' where channel_id = %d limit 1",
+				q("update channel set channel_default_group = '%s', channel_allow_gid = '%s' where channel_id = %d limit 1",
+					dbesc($r[0]['hash']),
 					dbesc('<' . $r[0]['hash'] . '>'),
 					intval($newuid)
 				);
@@ -402,6 +405,7 @@ function create_identity($arr) {
 
 		$accts = get_config('system','auto_follow');
 		if(($accts) && (! $total_identities)) {
+			require_once('include/follow.php');
 			if(! is_array($accts))
 				$accts = array($accts);
 			foreach($accts as $acct) {

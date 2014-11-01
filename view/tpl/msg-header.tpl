@@ -49,7 +49,7 @@ else
 <script>
 	$(document).ready(function() {
 		var uploader = new window.AjaxUpload(
-			'prvmail-upload',
+			'prvmail-upload-wrapper',
 			{ action: 'wall_upload/{{$nickname}}',
 				name: 'userfile',
 				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
@@ -61,7 +61,7 @@ else
 		);
 
 		var file_uploader = new window.AjaxUpload(
-			'prvmail-attach',
+			'prvmail-attach-wrapper',
 			{ action: 'wall_attach/{{$nickname}}',
 				name: 'userfile',
 				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },

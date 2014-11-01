@@ -11,9 +11,9 @@ Die wichtigsten Funktionen für einen Kanal, der einen selbst repräsentiert, si
 
 Kurz gesagt, ein Kanal der Dich repräsentiert ist sozusagen „Ich im Internet“.
 
-Du musst Deinen ersten Kanal erstellen, während Du Dich anmeldest. Du kannst auch weitere Kanäle erstellen und zwischen ihnen wechseln, indem Du auf „Kanal-Auswahl“ klickst.
+Du musst Deinen ersten Kanal erstellen, während Du Dich anmeldest. Du kannst auch weitere Kanäle erstellen und zwischen ihnen wechseln, indem Du auf „Kanal-Manager“ im Menü unter Deinem Profilbild klickst.
 
-Du wirst nach einem Kanalnamen und einem kurzen Spitznamen gefragt. Für einen Kanal, der Dich repräsentiert, ist es eine gute Idee, hier Deinen Realnamen anzugeben, damit Deine Freunde Dich finden und sich mit Dir verbinden können. Der Spitzname wird genutzt, um Deinen „Webbie“ zu erstellen. Das ist so etwas wie ein Username und sieht aus wie eine E-Mail-Adresse, zum Beispiel spitzname@red-hub.de. Überlege ein bisschen, was Du als Spitzname nutzen willst. Stell Dir vor, Du wirst nach Deinem Webbie gefragt und musst Deinem bekannten dann buchstabieren, dass Dein Webbie „llamas.sind-cool_274@example.com“ ist. „llamassindcool@exmaple.com“ wäre da viel einfacher gewesen.
+Du wirst nach einem Kanalnamen und einem kurzen Spitznamen gefragt. Für einen Kanal, der Dich repräsentiert, ist es eine gute Idee, hier Deinen Realnamen anzugeben, damit Deine Freunde Dich finden und sich mit Dir verbinden können. Der Spitzname wird genutzt, um Deinen „Webbie“ zu erstellen. Das ist so etwas wie ein Username und sieht aus wie eine E-Mail-Adresse, zum Beispiel spitzname@red-hub.de. Überlege ein bisschen, was Du als Spitzname nutzen willst. Stell Dir vor, Du wirst nach Deinem Webbie gefragt und musst Deinem Bekannten dann buchstabieren, dass Dein Webbie „llamas.sind-cool_274@example.com“ ist. „llamassindcool@exmaple.com“ wäre da viel einfacher gewesen.
 
 Nachdem Du Deinen Kanal erstellt hast, wirst Du zu den Einstellungen weitergeleitet. Hier kannst Du Deinen Kanal einrichten und die Standard-Berechtigungen setzen.
 
@@ -23,4 +23,4 @@ Die „Matrix“-Seite enthält alle neuen Beiträge aus der gesamten Red Matrix
 
 Wie zu Anfang erwähnt sind viele Arten von Kanälen möglich, diese unterscheiden sich hauptsächlich durch die Berechtigungen. Das Anlegen dieser Kanäle unterscheidet sich dagegen nicht. Beispiel: Um einen Kanal zum Austausch von Dokumenten zu erstellen, wirst du vermutlich die Berechtigung „Kann in meinen öffentlichen Dateiordner schreiben“ freizügiger einstellen. Für weitere Informationen sieh bitte in der Hilfe unter Zugriffsrechte nach.
 
-[url=[baseurl]/help]Zurück zur Hilfe-Startseite[/url]
+#include doc/macros/main_footer.bb;

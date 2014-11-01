@@ -38,15 +38,30 @@ function deliver_run($argv, $argc) {
 				continue;
 			}
 
-			if($r[0]['outq_posturl'] === z_root() . '/post') {
+			$notify = json_decode($r[0]['outq_notify'],true);
+
+			$sendtoweb = false;
+			if(array_key_exists('iv',$notify) && (! $r[0]['outq_msg']))
+				$sendtoweb = true;
+
+			if(($r[0]['outq_posturl'] === z_root() . '/post') && (! $sendtoweb)) {
 				logger('deliver: local delivery', LOGGER_DEBUG);
 				// local delivery
 				// we should probably batch these and save a few delivery processes
 				// If there is no outq_msg, this is a refresh_all message which does not require local handling
+				// also send 'request' packets to the webservice so it can decode the packet
 				if($r[0]['outq_msg']) {
-					$msg = array('body' => json_encode(array('pickup' => array(array('notify' => json_decode($r[0]['outq_notify'],true),'message' => json_decode($r[0]['outq_msg'],true))))));
-
-					zot_import($msg,z_root());
+					$m = json_decode($r[0]['outq_msg'],true);
+					if(array_key_exists('message_list',$m)) {
+						foreach($m['message_list'] as $mm) {
+							$msg = array('body' => json_encode(array('pickup' => array(array('notify' => $notify,'message' => $mm)))));
+							zot_import($msg,z_root());
+						}
+					}	
+					else {	
+						$msg = array('body' => json_encode(array('pickup' => array(array('notify' => $notify,'message' => $m)))));
+						zot_import($msg,z_root());
+					}
 					$r = q("delete from outq where outq_hash = '%s' limit 1",
 						dbesc($argv[$x])
 					);
