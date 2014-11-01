@@ -192,7 +192,6 @@ function notifier_run($argv, $argc){
 		$recipients[] = $xchan;
 		$packet_type = 'request';
 		$normal_mode = false;
-
 	}
 	elseif($cmd === 'expire') {
 

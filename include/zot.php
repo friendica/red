@@ -2812,6 +2812,9 @@ function import_author_zot($x) {
 
 function zot_process_message_request($data) {
 	$ret = array('success' => false);
+
+	return $ret;
+
 	if(! $data['message_id']) {
 		$ret['message'] = 'no message_id';
 		logger('no message_id');
