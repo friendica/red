@@ -439,12 +439,8 @@ function photos_content(&$a) {
 
 	// URLs:
 	// photos/name
-	// photos/name/upload
-	// photos/name/upload/xxxxx (xxxxx is album name)
-	// photos/name/album/xxxxx
-	// photos/name/album/xxxxx/edit
+	// photos/name/album/xxxxx (xxxxx is album name)
 	// photos/name/image/xxxxx
-	// photos/name/image/xxxxx/edit
 
 
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
@@ -518,10 +514,6 @@ function photos_content(&$a) {
 	$_is_owner = (local_user() && (local_user() == $owner_uid));
 	$o .= profile_tabs($a,$_is_owner, $a->data['channel']['channel_address']);	
 
-	//
-	// dispatch request
-	//
-
 	/**
 	 * Display upload form
 	 */
@@ -590,6 +582,10 @@ function photos_content(&$a) {
 
 	}
 
+	//
+	// dispatch request
+	//
+
 	/*
 	 * Display a single photo album
 	 */
@@ -644,7 +640,8 @@ function photos_content(&$a) {
 				$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 				$edit_tpl = get_markup_template('album_edit.tpl');
 				$album_edit = replace_macros($edit_tpl,array(
-					'$nametext' => t('New album name: '),
+					'$nametext' => t('Enter a new album name'),
+					'$name_placeholder' => t('or select an existing one (doubleclick)'),
 					'$nickname' => $a->data['channel']['channel_address'],
 					'$album' => $album_e,
 					'$albums' => $albums['albums'],
@@ -928,7 +925,8 @@ function photos_content(&$a) {
 				'rotateccw' => t('Rotate CCW (left)'),
 				'albums' => $albums['albums'],
 				'album' => $album_e,
-				'newalbum' => t('New album name'), 
+				'newalbum_label' => t('Enter a new album name'),
+				'newalbum_placeholder' => t('or select an existing one (doubleclick)'),
 				'nickname' => $a->data['channel']['channel_address'],
 				'resource_id' => $ph[0]['resource_id'],
 				'capt_label' => t('Caption'),

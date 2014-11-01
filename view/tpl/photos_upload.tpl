@@ -3,7 +3,6 @@
 		<form action="photos/{{$nickname}}" enctype="multipart/form-data" method="post" name="photos-upload-form" id="photos-upload-form">
 			<input type="hidden" id="photos-upload-source" name="source" value="photos" />
 
-
 			<div class="form-group">
 				<label for="photos-upload-album">{{$newalbum_label}}</label>
 				<input type="text" class="form-control" id="photos-upload-album" name="newalbum" placeholder="{{$newalbum_placeholder}}" value="{{$selname}}" list="dl-photo-upload">
@@ -22,17 +21,17 @@
 			<div class="form-group pull-left">
 				<input id="photos-upload-choose" type="file" name="userfile" />
 			</div>
-			<div class="btn-group pull-right">
+			<div class="form-group btn-group pull-right">
 				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
-					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>
+					<i id="jot-perms-icon" class="icon-{{$lockstate}}"></i>
 				</button>
 				<button class="btn btn-primary btn-sm" type="submit" name="submit" id="photos-upload-submit">{{$submit}}</button>
 			</div>
 			{{/if}}
 
-			<div id="photos-upload-new-end"></div>
+			<div id="photos-upload-new-end" class="clear"></div>
 
-			<div class="form-group" id="photos-upload-noshare">
+			<div id="photos-upload-noshare">
 				<label id="photos-upload-noshare-text" for="photos-upload-noshare" >
 					<input id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" />&nbsp;{{$nosharetext}}
 				</label>
@@ -44,12 +43,10 @@
 				<span id="jot-perms-icon" class="icon-{{$lockstate}}" ></span>
 				<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
 			</div>
-			<div id="photos-upload-perms-end"></div>
+			<div id="photos-upload-perms-end" class="clear"></div>
 			{{$uploader}}
 			{{/if}}
-
-
-			<div class="photos-upload-end" ></div>
 		</form>
 	</div>
+	<div class="photos-upload-end" class="clear"></div>
 </div>
