@@ -1082,6 +1082,8 @@ function zot_import($arr, $sender_url) {
 			}
 
 			$message_request = ((array_key_exists('message_id',$i['notify'])) ? true : false);
+			if($message_request)
+				logger('processing message request');
 
 			$i['notify']['sender']['hash'] = make_xchan_hash($i['notify']['sender']['guid'],$i['notify']['sender']['guid_sig']);
 			$deliveries = null;
@@ -1444,15 +1446,22 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 			if(! $r) {
 				$result[] = array($d['hash'],'comment parent not found',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 
-				// We don't seem to have a copy of this conversation or at least the parent - so request a copy of the entire conversation to date.
-				// Don't do this if it's a relay post as we're the ones who are supposed to have the copy and we don't want the request to loop.
-				// Also don't do this if this comment came from a conversation request packet. It's possible that comments are allowed but posting
-				// isn't and that could cause a conversation fetch loop. We can detect these packets since they are delivered via a 'notify' packet type 
-				// that has a message_id element in the initial zot packet (just like the corresponding 'request' packet type which makes the request).
-				// We'll also check the send_stream permission, because if it isn't allowed the top level post is unlikely to be imported and
+				// We don't seem to have a copy of this conversation or at least the parent 
+				// - so request a copy of the entire conversation to date.
+				// Don't do this if it's a relay post as we're the ones who are supposed to 
+				// have the copy and we don't want the request to loop.
+				// Also don't do this if this comment came from a conversation request packet.
+				// It's possible that comments are allowed but posting isn't and that could
+				// cause a conversation fetch loop. We can detect these packets since they are 
+				// delivered via a 'notify' packet type that has a message_id element in the 
+				// initial zot packet (just like the corresponding 'request' packet type which 
+				// makes the request).
+				// We'll also check the send_stream permission - because if it isn't allowed,
+				// the top level post is unlikely to be imported and
 				// this is just an exercise in futility.   
 
-				if((! $relay) && (! $request) && (! $public) && perm_is_allowed($channel['channel_id'],$sender['hash'],'send_stream')) {
+				if((! $relay) && (! $request) && (! $public) 
+					&& perm_is_allowed($channel['channel_id'],$sender['hash'],'send_stream')) {
 					proc_run('php', 'include/notifier.php', 'request', $channel['channel_id'], $sender['hash'], $arr['parent_mid']);
 				}
 				continue;
@@ -2812,11 +2821,24 @@ function import_author_zot($x) {
 	return false;
 }
 
+
+/**
+ * @function zot_process_message_request($data)
+ *    If a site receives a comment to a post but finds they have no parent to attach it with, they
+ * may send a 'request' packet containing the message_id of the missing parent. This is the handler
+ * for that packet. We will create a message_list array of the entire conversation starting with
+ * the missing parent and invoke delivery to the sender of the packet.
+ *
+ * include/deliver.php (for local delivery) and mod/post.php (for web delivery) detect the existence of 
+ * this 'message_list' at the destination and split it into individual messages which are 
+ * processed/delivered in order.  
+ *  
+ * Called from mod/post.php
+ */  
+
+
 function zot_process_message_request($data) {
 	$ret = array('success' => false);
-
-// note: disabled until the loops stop.
-	return $ret;
 
 	if(! $data['message_id']) {
 		$ret['message'] = 'no message_id';
@@ -2826,6 +2848,10 @@ function zot_process_message_request($data) {
 
 	$sender = $data['sender'];
 	$sender_hash = make_xchan_hash($sender['guid'],$sender['guid_sig']);
+
+	/*
+	 * Find the local channel in charge of this post (the first and only recipient of the request packet)
+	 */
 
 	$arr = $data['recipients'][0];
 	$recip_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
@@ -2837,13 +2863,20 @@ function zot_process_message_request($data) {
 		$ret['message'] .= 'recipient not found.' . EOL;
 		return $ret;
 	}
+
+	/*
+	 * fetch the requested conversation
+	 */
+
 	$messages = zot_feed($c[0]['channel_id'],$sender_hash,array('message_id' => $data['message_id']));
+
 	if($messages) {
 		$env_recips = null;
 
 		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host 
-			from hubloc where hubloc_hash = '" . dbesc($sender_hash) . "' and not (hubloc_flags & %d)
+			from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d)
 			and not (hubloc_status & %d) group by hubloc_sitekey",
+			dbesc($sender_hash),
             intval(HUBLOC_FLAGS_DELETED),
             intval(HUBLOC_OFFLINE)
         );
@@ -2858,10 +2891,16 @@ function zot_process_message_request($data) {
 		$private = ((array_key_exists('flags',$messages[0]) && in_array('private',$messages[0]['flags'])) ? true : false);
 		if($private)
 			$env_recips = array('guid' => $sender['guid'],'guid_sig' => $sender['guid_sig'],'hash' => $sender_hash);
+
 		$data_packet = json_encode(array('message_list' => $messages));
 		
 		foreach($hubs as $hub) {
 			$hash = random_string();
+
+			/*
+			 * create a notify packet and drop the actual message packet in the queue for pickup
+			 */
+
 			$n = zot_build_packet($c[0],'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null),$hash,array('message_id' => $data['message_id']));
 			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, 
 				outq_created, outq_updated, outq_notify, outq_msg ) 
@@ -2877,6 +2916,11 @@ function zot_process_message_request($data) {
 				dbesc($n),
 				dbesc($data_packet)
 			);
+
+			/*
+			 * invoke delivery to send out the notify packet
+			 */
+
 			proc_run('php','include/deliver.php',$hash);
 		}
 
