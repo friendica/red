@@ -19,10 +19,7 @@
 	display: none;
 }
 
-#photos-usage-message {
-	line-height: 22px;
-}
-
 #photos-upload-choose {
-	padding: 2px 12px;
+	border: unset;
+	padding: unset;
 }

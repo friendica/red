@@ -18,10 +18,10 @@
 			{{$aclselect}}
 
 			{{if $default}}
-			<div class="form-group pull-left">
+			<div class="pull-left">
 				<input id="photos-upload-choose" type="file" name="userfile" />
 			</div>
-			<div class="form-group btn-group pull-right">
+			<div class="btn-group pull-right">
 				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
 					<i id="jot-perms-icon" class="icon-{{$lockstate}}"></i>
 				</button>
@@ -31,9 +31,9 @@
 
 			<div id="photos-upload-new-end" class="clear"></div>
 
-			<div id="photos-upload-noshare">
-				<label id="photos-upload-noshare-text" for="photos-upload-noshare" >
-					<input id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" />&nbsp;{{$nosharetext}}
+			<div class="checkbox">
+				<label class="checkbox-inline" for="photos-upload-noshare" >
+					<input class="checkbox-inline" id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" />{{$nosharetext}}
 				</label>
 			</div>
 
