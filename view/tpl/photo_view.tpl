@@ -8,20 +8,20 @@
 			<a class="btn btn-default btn-xs" title="{{$tools.profile.1}}" href="{{$tools.profile.0}}"><i class="icon-user"></i></a>
 			{{/if}}
 
-			<div class="btn-group btn-group-xs dropdown">
+			<div class="btn-group btn-group dropdown">
 				{{if $edit}}
-				<i class="icon-pencil btn btn-default" title="{{$edit.edit}}" onclick="openClose('photo-edit');"></i>
+				<i class="icon-pencil btn btn-default btn-xs" title="{{$edit.edit}}" onclick="openClose('photo-edit');"></i>
 				{{/if}}
 				{{if $lock}}
-				<i id="lockview" class="icon-lock btn btn-default dropdown-toggle" data-toggle="dropdown" title="{{$lock}}" onclick="lockview(event,{{$id}});" ></i><ul id="panel-{{$id}}" class="lockview-panel dropdown-menu"></ul>
+				<i id="lockview" class="icon-lock btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" title="{{$lock}}" onclick="lockview(event,{{$id}});" ></i><ul id="panel-{{$id}}" class="lockview-panel dropdown-menu"></ul>
 				{{/if}}
 			</div>
-			<div class="btn-group btn-group-xs">
+			<div class="btn-group btn-group">
 				{{if $prevlink}}
-				<a href="{{$prevlink.0}}" class="btn btn-default" title="{{$prevlink.1}}"><i class="icon-backward"></i></a>
+				<a href="{{$prevlink.0}}" class="btn btn-default btn-xs" title="{{$prevlink.1}}"><i class="icon-backward"></i></a>
 				{{/if}}
 				{{if $nextlink}}
-				<a href="{{$nextlink.0}}" class="btn btn-default" title="{{$nextlink.1}}"><i class="icon-forward"></i></a>
+				<a href="{{$nextlink.0}}" class="btn btn-default btn-xs" title="{{$nextlink.1}}"><i class="icon-forward"></i></a>
 				{{/if}}
 			</div>
 		</div>

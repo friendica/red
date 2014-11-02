@@ -45,6 +45,10 @@ abbr {
 }
 
 /* icons */
+.tool-icons {
+	color: $toolicon_colour;
+}
+
 .icon {
   background-color: transparent ;
   background-repeat: no-repeat;
@@ -105,10 +109,6 @@ input[type="submit"] {
 	color: $input_linksubmit;
 	text-decoration: none;
 	padding: 6px 12px;
-}
-
-input[type="submit"]:hover {
-	text-decoration: underline;
 }
 
 button, input, optgroup, select, textarea {
@@ -869,6 +869,7 @@ footer {
 }
 
 #nav-search-text {
+	font-size: 12px;
 	height: 20px;
 	margin: 15px;
 	padding: 0px 5px 0px 5px;
@@ -2198,6 +2199,7 @@ aside .nav-pills > li > a {
 
 
 .navbar-inverse .navbar-nav > li > a {
+	font-size: 12px;
 	color: $nav_icon_colour;
 	text-shadow: 0px 0px 0px;
 }
