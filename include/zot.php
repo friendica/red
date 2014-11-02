@@ -1448,11 +1448,13 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 				// Don't do this if it's a relay post as we're the ones who are supposed to have the copy and we don't want the request to loop.
 				// Also don't do this if this comment came from a conversation request packet. It's possible that comments are allowed but posting
 				// isn't and that could cause a conversation fetch loop. We can detect these packets since they are delivered via a 'notify' packet type 
-				// that has a message_id element in the initial zot packet (just like the corresponding 'request' packet type which makes the request). 
+				// that has a message_id element in the initial zot packet (just like the corresponding 'request' packet type which makes the request).
+				// We'll also check the send_stream permission, because if it isn't allowed the top level post is unlikely to be imported and
+				// this is just an exercise in futility.   
 
-				if((! $relay) && (! $request))
+				if((! $relay) && (! $request) && (! $public) && perm_is_allowed($channel['channel_id'],$sender['hash'],'send_stream')) {
 					proc_run('php', 'include/notifier.php', 'request', $channel['channel_id'], $sender['hash'], $arr['parent_mid']);
-
+				}
 				continue;
 			}
 			if($relay) {

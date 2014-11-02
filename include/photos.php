@@ -178,7 +178,7 @@ function photo_upload($channel, $observer, $args) {
 	if($args['title'])
 		$p['title'] = $args['title'];
 	if($args['description'])
-		$p['desciprion'] = $args['description'];
+		$p['description'] = $args['description'];
 
 
 	$r1 = $ph->save($p);
