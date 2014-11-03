@@ -5,7 +5,7 @@ require_once('include/items.php');
 require_once('include/hubloc.php');
 
 /**
- * Red implementation of zot protocol. 
+ * Red implementation of zot protocol.
  *
  * https://github.com/friendica/red/wiki/zot
  * https://github.com/friendica/red/wiki/Zot---A-High-Level-Overview
@@ -20,8 +20,8 @@ require_once('include/hubloc.php');
  *    Generates a unique string for use as a zot guid using our DNS-based url, the channel nickname and some entropy.
  *    The entropy ensures uniqueness against re-installs where the same URL and nickname are chosen.
  *    NOTE: zot doesn't require this to be unique. Internally we use a whirlpool hash of this guid and the signature
- *    of this guid signed with the channel private key. This can be verified and should make the probability of 
- *    collision of the verified result negligible within the constraints of our immediate universe.  
+ *    of this guid signed with the channel private key. This can be verified and should make the probability of
+ *    collision of the verified result negligible within the constraints of our immediate universe.
  *
  * @param string channel_nickname = unique nickname of controlling entity
  *
@@ -51,7 +51,7 @@ function make_xchan_hash($guid,$guid_sig) {
 
 /**
  * @function zot_get_hublocs($hash)
- *     Given a zot hash, return all distinct hubs. 
+ *     Given a zot hash, return all distinct hubs.
  *     This function is used in building the zot discovery packet
  *     and therefore should only be used by channels which are defined
  *     on this hub
@@ -71,7 +71,7 @@ function make_xchan_hash($guid,$guid_sig) {
  *    hubloc_connect     char(255)
  *    hubloc_sitekey     text
  *    hubloc_updated     datetime
- *    hubloc_connected   datetime 	
+ *    hubloc_connected   datetime
  *
  */
 
@@ -85,21 +85,21 @@ function zot_get_hublocs($hash) {
 	);
 	return $ret;
 }
-	 
+
 /**
  *
  * @function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null, $secret = null)
  *    builds a zot notification packet that you can either
- *    store in the queue with a message array or call zot_zot to immediately 
+ *    store in the queue with a message array or call zot_zot to immediately
  *    zot it to the other side
  *
  * @param array $channel     => sender channel structure
  * @param string $type       => packet type: one of 'ping', 'pickup', 'purge', 'refresh', 'force_refresh', 'notify', 'auth_check'
  * @param array $recipients  => envelope information, array ( 'guid' => string, 'guid_sig' => string ); empty for public posts
  * @param string $remote_key => optional public site key of target hub used to encrypt entire packet
- *    NOTE: remote_key and encrypted packets are required for 'auth_check' packets, optional for all others 
+ *    NOTE: remote_key and encrypted packets are required for 'auth_check' packets, optional for all others
  * @param string $secret     => random string, required for packets which require verification/callback
- *    e.g. 'pickup', 'purge', 'notify', 'auth_check'. Packet types 'ping', 'force_refresh', and 'refresh' do not require verification 
+ *    e.g. 'pickup', 'purge', 'notify', 'auth_check'. Packet types 'ping', 'force_refresh', and 'refresh' do not require verification
  *
  * @returns string json encoded zot packet
  */
@@ -1071,7 +1071,7 @@ function zot_import($arr, $sender_url) {
 
 			if(array_key_exists('iv',$i['notify'])) {
 				$i['notify'] = json_decode(crypto_unencapsulate($i['notify'],get_config('system','prvkey')),true);
-	  		}
+			}
 
 			logger('zot_import: notify: ' . print_r($i['notify'],true), LOGGER_DATA);
 
@@ -1107,7 +1107,7 @@ function zot_import($arr, $sender_url) {
 				// It's a specifically targetted post. If we were sent a public_scope hint (likely), 
 				// get rid of it so that it doesn't get stored and cause trouble. 
 
-				if(array_key_exists('message',$i) && array_key_exists('public_scope',$i['message']))
+				if(($i) && is_array($i) && array_key_exists('message',$i) && is_array($i['message']) && array_key_exists('public_scope',$i['message']))
 					unset($i['message']['public_scope']);
 
 				$deliveries = $r;
@@ -2460,8 +2460,8 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 		$channel = $r[0];
 
-	    $max_friends = service_class_fetch($channel['channel_id'],'total_channels');
-    	$max_feeds = account_service_class_fetch($channel['channel_account_id'],'total_feeds');
+		$max_friends = service_class_fetch($channel['channel_id'],'total_channels');
+		$max_feeds = account_service_class_fetch($channel['channel_account_id'],'total_feeds');
 
 
 		if($channel['channel_hash'] != $sender['hash']) {
@@ -2547,7 +2547,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 							continue;
 						}
 						$j = json_decode($f['body'],true);
-				        if(! ($j['success'] && $j['guid'])) {
+						if(! ($j['success'] && $j['guid'])) {
 							logger('process_channel_sync_delivery: probe failed.');
 							continue;
 						}
@@ -2646,8 +2646,8 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 						intval($channel['channel_id']),
 						intval($cl['visible']),
 						intval($cl['deleted']),
-           				dbesc($cl['name'])
-       				);
+						dbesc($cl['name'])
+					);
 				}
 
 				// now look for any collections locally which weren't in the list we just received.
@@ -2877,13 +2877,13 @@ function zot_process_message_request($data) {
 			from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d)
 			and not (hubloc_status & %d) group by hubloc_sitekey",
 			dbesc($sender_hash),
-            intval(HUBLOC_FLAGS_DELETED),
-            intval(HUBLOC_OFFLINE)
-        );
-	    if(! $r) {
-	        logger('no hubs');
-    	    return $ret;
-    	}
+			intval(HUBLOC_FLAGS_DELETED),
+			intval(HUBLOC_OFFLINE)
+		);
+		if(! $r) {
+			logger('no hubs');
+			return $ret;
+		}
 		$hubs = $r;
 		$hublist = array();
 		$keys = array();
