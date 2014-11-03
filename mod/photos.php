@@ -428,8 +428,11 @@ function photos_post(&$a) {
 	if(! $r['success']) {
 		notice($r['message'] . EOL);
 	}		
-
-	goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+	
+	if($_REQUEST['newalbum'])
+		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($_REQUEST['newalbum']));
+	else
+		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex(datetime_convert('UTC',date_default_timezone_get(),'now', 'Y')));		
 
 }
 
@@ -610,6 +613,8 @@ function photos_content(&$a) {
 		if(count($r)) {
 			$a->set_pager_total(count($r));
 			$a->set_pager_itemspage(60);
+		} else {
+			goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address']);
 		}
 
 		if($_GET['order'] === 'posted')
