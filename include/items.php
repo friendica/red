@@ -4128,10 +4128,13 @@ function first_post_date($uid,$wall = false) {
  * current flat list of all representative dates.
  */
 
-function list_post_dates($uid,$wall) {
+function list_post_dates($uid,$wall,$mindate) {
 	$dnow = datetime_convert('',date_default_timezone_get(),'now','Y-m-d');
 
-	$dthen = first_post_date($uid,$wall);
+	if($mindate)
+		$dthen = datetime_convert('',date_default_timezone_get(),$mindate);
+	else
+		$dthen = first_post_date($uid,$wall);
 	if(! $dthen)
 		return array();
 
