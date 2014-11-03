@@ -196,7 +196,7 @@ function photos_post(&$a) {
 			}
 		}
 
-		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . $_SESSION['album_return']);
 	}
 
 	if(($a->argc > 2) && ((x($_POST,'desc') !== false) || (x($_POST,'newtag') !== false)) || (x($_POST,'albname') !== false)) {
@@ -428,8 +428,11 @@ function photos_post(&$a) {
 	if(! $r['success']) {
 		notice($r['message'] . EOL);
 	}		
-
-	goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+	
+	if($_REQUEST['newalbum'])
+		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($_REQUEST['newalbum']));
+	else
+		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex(datetime_convert('UTC',date_default_timezone_get(),'now', 'Y')));		
 
 }
 
@@ -610,6 +613,8 @@ function photos_content(&$a) {
 		if(count($r)) {
 			$a->set_pager_total(count($r));
 			$a->set_pager_itemspage(60);
+		} else {
+			goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address']);
 		}
 
 		if($_GET['order'] === 'posted')
@@ -917,6 +922,8 @@ function photos_content(&$a) {
 			$caption_e = $ph[0]['description'];
 			$aclselect_e = populate_acl($ph[0]);
 			$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
+
+			$_SESSION['album_return'] = bin2hex($ph[0]['album']);
 
 			$edit = array(
 				'edit' => t('Edit photo'),

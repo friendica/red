@@ -31,20 +31,20 @@
 
 			<div id="photos-upload-new-end" class="clear"></div>
 
-			<div class="checkbox">
+			<div class="checkbox pull-left">
 				<label class="checkbox-inline" for="photos-upload-noshare" >
 					<input class="checkbox-inline" id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" />{{$nosharetext}}
 				</label>
 			</div>
 
 			{{if $uploader}}
-			<div id="photos-upload-noshare-end"></div>
-			<div id="photos-upload-perms" class="photos-upload-perms" >
-				<span id="jot-perms-icon" class="icon-{{$lockstate}}" ></span>
-				<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
+			<div id="photos-upload-perms" class="pull-right">
+				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
+					<i id="jot-perms-icon" class="icon-{{$lockstate}}"></i>
+				</button>
+			<div class="pull-right">
+				{{$uploader}}
 			</div>
-			<div id="photos-upload-perms-end" class="clear"></div>
-			{{$uploader}}
 			{{/if}}
 		</form>
 	</div>

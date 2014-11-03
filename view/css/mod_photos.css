@@ -8,6 +8,11 @@
 	padding: 7px 10px;
 }
 
+.photo-like-rotator {
+	margin-top: 23px;
+	margin-right: 5px;
+}
+
 #photo-photo {
 	display: table;
 	margin: 0 auto;
