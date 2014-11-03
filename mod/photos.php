@@ -196,7 +196,7 @@ function photos_post(&$a) {
 			}
 		}
 
-		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . $_SESSION['album_return']);
 	}
 
 	if(($a->argc > 2) && ((x($_POST,'desc') !== false) || (x($_POST,'newtag') !== false)) || (x($_POST,'albname') !== false)) {
@@ -917,6 +917,8 @@ function photos_content(&$a) {
 			$caption_e = $ph[0]['description'];
 			$aclselect_e = populate_acl($ph[0]);
 			$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
+
+			$_SESSION['album_return'] = bin2hex($ph[0]['album']);
 
 			$edit = array(
 				'edit' => t('Edit photo'),
