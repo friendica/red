@@ -377,6 +377,22 @@ define ( 'NOTIFY_POKE',     0x0200 );
 
 define ( 'NOTIFY_SYSTEM',   0x8000 );
 
+/**
+ * visual notification options
+ */
+
+define ( 'VNOTIFY_NETWORK',    0x0001 );
+define ( 'VNOTIFY_CHANNEL',    0x0002 );
+define ( 'VNOTIFY_MAIL',       0x0004 );
+define ( 'VNOTIFY_EVENT',      0x0008 );
+define ( 'VNOTIFY_EVENTTODAY', 0x0010 );
+define ( 'VNOTIFY_BIRTHDAY',   0x0020 );
+define ( 'VNOTIFY_SYSTEM',     0x0040 );
+define ( 'VNOTIFY_INFO',       0x0080 );
+define ( 'VNOTIFY_ALERT',      0x0100 );
+define ( 'VNOTIFY_INTRO',      0x0200 );
+define ( 'VNOTIFY_REGISTER',   0x0400 );
+
 
 // We need a flag to designate that a site is a
 // global directory mirror, but probably doesn't

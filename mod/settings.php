@@ -358,6 +358,8 @@ function settings_post(&$a) {
 	$openid           = ((x($_POST,'openid_url')) ? notags(trim($_POST['openid_url']))   : '');
 	$maxreq           = ((x($_POST,'maxreq'))     ? intval($_POST['maxreq'])             : 0);
 	$expire           = ((x($_POST,'expire'))     ? intval($_POST['expire'])             : 0);
+	$evdays           = ((x($_POST,'evdays'))     ? intval($_POST['evdays'])             : 3);
+
 	$channel_menu     = ((x($_POST['channel_menu'])) ? htmlspecialchars_decode(trim($_POST['channel_menu']),ENT_QUOTES) : '');
 
 	$expire_items     = ((x($_POST,'expire_items')) ? intval($_POST['expire_items'])	 : 0);
@@ -404,6 +406,32 @@ function settings_post(&$a) {
 	if(x($_POST,'notify8'))
 		$notify += intval($_POST['notify8']);
 
+
+	$vnotify = 0;
+
+	if(x($_POST,'vnotify1'))
+		$vnotify += intval($_POST['vnotify1']);
+	if(x($_POST,'vnotify2'))
+		$vnotify += intval($_POST['vnotify2']);
+	if(x($_POST,'vnotify3'))
+		$vnotify += intval($_POST['vnotify3']);
+	if(x($_POST,'vnotify4'))
+		$vnotify += intval($_POST['vnotify4']);
+	if(x($_POST,'vnotify5'))
+		$vnotify += intval($_POST['vnotify5']);
+	if(x($_POST,'vnotify6'))
+		$vnotify += intval($_POST['vnotify6']);
+	if(x($_POST,'vnotify7'))
+		$vnotify += intval($_POST['vnotify7']);
+	if(x($_POST,'vnotify8'))
+		$vnotify += intval($_POST['vnotify8']);
+	if(x($_POST,'vnotify9'))
+		$vnotify += intval($_POST['vnotify9']);
+	if(x($_POST,'vnotify10'))
+		$vnotify += intval($_POST['vnotify10']);
+	if(x($_POST,'vnotify11'))
+		$vnotify += intval($_POST['vnotify11']);
+
 	$channel = $a->get_channel();
 
 	$err = '';
@@ -432,6 +460,8 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 	set_pconfig(local_user(),'system','blocktags',$blocktags);
 	set_pconfig(local_user(),'system','channel_menu',$channel_menu);
+	set_pconfig(local_user(),'system','vnotify',$vnotify);
+	set_pconfig(local_user(),'system','evdays',$evdays);
 
 	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d $set_perms where channel_id = %d limit 1",
 		dbesc($username),
@@ -929,9 +959,15 @@ function settings_content(&$a) {
 			}
 		}
 
+		$evdays = get_pconfig(local_user(),'system','evdays');
+		if(! $evdays)
+			$evdays = 3;
 
 		$permissions_role = get_pconfig(local_user(),'system','permissions_role');
 		$permissions_set = (($permissions_role && $permissions_role != 'custom') ? true : false);
+		$vnotify = get_pconfig(local_user(),'system','vnotify');
+		if($vnotify === false)
+			$vnotify = (-1);
 
 		$o .= replace_macros($stpl,array(
 			'$ptitle' 	=> t('Channel Settings'),
@@ -1001,7 +1037,23 @@ function settings_content(&$a) {
 			'$notify7'  => array('notify7', t('You are tagged in a post'), ($notify & NOTIFY_TAGSELF), NOTIFY_TAGSELF, ''),		
 			'$notify8'  => array('notify8', t('You are poked/prodded/etc. in a post'), ($notify & NOTIFY_POKE), NOTIFY_POKE, ''),		
 		
-		
+
+			'$lbl_vnot' 	=> t('Show visual notifications including:'),
+
+			'$vnotify1'	=> array('vnotify1', t('Unseen matrix activity'), ($vnotify & VNOTIFY_NETWORK), VNOTIFY_NETWORK, ''),
+			'$vnotify2'	=> array('vnotify2', t('Unseen channel activity'), ($vnotify & VNOTIFY_CHANNEL), VNOTIFY_CHANNEL, ''),
+			'$vnotify3'	=> array('vnotify3', t('Unseen private messages'), ($vnotify & VNOTIFY_MAIL), VNOTIFY_MAIL, t('Recommended')),
+			'$vnotify4'	=> array('vnotify4', t('Upcoming events'), ($vnotify & VNOTIFY_EVENT), VNOTIFY_EVENT, ''),
+			'$vnotify5'	=> array('vnotify5', t('Events today'), ($vnotify & VNOTIFY_EVENTTODAY), VNOTIFY_EVENTTODAY, ''),
+			'$vnotify6'  => array('vnotify6', t('Upcoming birthdays'), ($vnotify & VNOTIFY_BIRTHDAY), VNOTIFY_BIRTHDAY, t('Not available in all themes')),
+			'$vnotify7'  => array('vnotify7', t('Personal conversation updates'), ($vnotify & VNOTIFY_SYSTEM), VNOTIFY_SYSTEM, ''),		
+			'$vnotify8'  => array('vnotify8', t('System info messages'), ($vnotify & VNOTIFY_INFO), VNOTIFY_INFO, t('Recommended')),		
+			'$vnotify9'  => array('vnotify9', t('System critical alerts'), ($vnotify & VNOTIFY_ALERT), VNOTIFY_ALERT, t('Recommended')),		
+			'$vnotify10'  => array('vnotify10', t('New connections'), ($vnotify & VNOTIFY_INTRO), VNOTIFY_INTRO, t('Recommended')),		
+			'$vnotify11'  => array('vnotify11', t('System Registrations'), ($vnotify & VNOTIFY_REGISTER), VNOTIFY_REGISTER, ''),		
+
+			'$evdays' => array('evdays', t('Notify me of events this many days in advance'), $evdays, t('Must be greater than 0')),			
+
 			'$h_advn' => t('Advanced Account/Page Type Settings'),
 			'$h_descadvn' => t('Change the behaviour of this account for special situations'),
 			'$pagetype' => $pagetype,
