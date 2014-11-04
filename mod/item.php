@@ -112,6 +112,7 @@ function item_post(&$a) {
 	$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : 0);
 	$parent_mid = ((x($_REQUEST,'parent_mid')) ? trim($_REQUEST['parent_mid']) : '');
 
+	$route = '';
 	$parent_item = null;
 	$parent_contact = null;
 	$thr_parent = '';
@@ -163,6 +164,7 @@ function item_post(&$a) {
 
 		$thr_parent = $parent_mid;
 
+		$route = $parent_item['route'];
 
 	}
 
@@ -753,6 +755,7 @@ function item_post(&$a) {
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 	$datarray['term']           = $post_tags;
 	$datarray['plink']          = $plink;
+	$datarray['route']          = $route;
 
 	// preview mode - prepare the body for display and send it via json
 
