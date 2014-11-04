@@ -42,8 +42,9 @@
 				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
 					<i id="jot-perms-icon" class="icon-{{$lockstate}}"></i>
 				</button>
-			<div class="pull-right">
-				{{$uploader}}
+				<div class="pull-right">
+					{{$uploader}}
+				</div>
 			</div>
 			{{/if}}
 		</form>
