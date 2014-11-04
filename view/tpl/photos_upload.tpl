@@ -49,5 +49,5 @@
 			{{/if}}
 		</form>
 	</div>
-	<div class="photos-upload-end" class="clear"></div>
+	<div id="photos-upload-end" class="clear"></div>
 </div>
