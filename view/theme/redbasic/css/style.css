@@ -2390,6 +2390,13 @@ aside .nav-pills > li > a {
 
 }
 
+/* release the navbar in landscape view on small devices */
+@media screen and (max-height: 320px) {
+	.navbar-fixed-top {
+		position: absolute;
+	}
+}
+
 .shareable_element_text {
 	height: 300px;
 	width: 300px;
