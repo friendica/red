@@ -42,7 +42,7 @@
 					<i class="icon-camera jot-icons"></i>
 				</button>
 				<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
-					<i id="wall-file-upload" class="icon-paper-clip jot-icons"></i>
+					<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
 				</button>
 				<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
 					<i id="profile-link" class="icon-link jot-icons"></i>
