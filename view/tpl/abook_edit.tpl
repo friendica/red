@@ -10,7 +10,10 @@
 {{/if}}
 
 {{if $self}}
+<div class="abook-autotext">
 <div id="autoperm-desc" class="descriptive-paragraph">{{$autolbl}}</div>
+{{include file="field_checkbox.tpl" field=$autoperms}}
+</div>
 {{/if}}
 
 

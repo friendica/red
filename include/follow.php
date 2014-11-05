@@ -64,13 +64,9 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		$j = json_decode($ret['body'],true);
 	}
 
+	$my_perms = get_channel_default_perms($uid);
+
 	if($is_red && $j) {
-
-
-		// fixme - we need to be able to define these somewhere for the custom role
-		$my_perms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
-			|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
-			|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
 
 		$role = get_pconfig($uid,'system','permissions_role');
 		if($role) {
@@ -141,7 +137,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			}
 		}
 
-		$my_perms = 0;
 		$their_perms = 0;
 		$xchan_hash = '';
 
@@ -168,7 +163,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		if($r) {
 			$xchan_hash = $r[0]['xchan_hash'];
 			$their_perms = 0;
-			$my_perms = PERMS_W_STREAM|PERMS_W_MAIL;
 			$role = get_pconfig($uid,'system','permissions_role');
 			if($role) {
 				$x = get_role_perms($role);

@@ -439,15 +439,15 @@ function zot_refresh($them,$channel = null, $force = false) {
 				}
 			}
 			else {
-				$default_perms = 0;
-				// look for default permissions to apply in return - e.g. auto-friend
-				$z = q("select * from abook where abook_channel = %d and (abook_flags & %d) limit 1",
-					intval($channel['channel_id']),
-					intval(ABOOK_FLAG_SELF)
-				);
-
-				if($z)
-					$default_perms = intval($z[0]['abook_my_perms']);		
+				$role = get_pconfig($channel['channel_id'],'system','permissions_role');
+				if($role) {
+					$x = get_role_perms($role);
+					if($x['perms_auto'])
+						$default_perms = $x['perms_accept'];
+				}
+				if(! $default_perms)
+					$default_perms = intval(get_pconfig($channel['channel_id'],'system','autoperms'));
+				
 
 				// Keep original perms to check if we need to notify them
 				$previous_perms = get_all_perms($channel['channel_id'],$x['hash']);

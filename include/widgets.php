@@ -506,7 +506,7 @@ function widget_settings_menu($arr) {
 
 	if($role === false || $role === 'custom') {
 		$tabs[] = array(
-			'label' => t('Automatic Permissions (Advanced)'),
+			'label' => t('Connection Default Permissions'),
 			'url' => $a->get_baseurl(true) . '/connedit/' . $abook_self_id,
 			'selected' => ''
 		);
