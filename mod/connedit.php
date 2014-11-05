@@ -68,7 +68,7 @@ function connedit_post(&$a) {
 
 	call_hooks('contact_edit_post', $_POST);
 
-	if($orig_record['abook_flags'] & ABOOK_FLAG_SELF) {
+	if($orig_record[0]['abook_flags'] & ABOOK_FLAG_SELF) {
 		$autoperms = intval($_POST['autoperms']);
 	}
 	else {
@@ -216,9 +216,10 @@ function connedit_post(&$a) {
 		$arr = array('channel_id' => local_user(), 'abook' => $a->poi);
 		call_hooks('accept_follow', $arr);
 	}
-
+dbg(1);
 	if(! is_null($autoperms)) 
 		set_pconfig(local_user(),'system','autoperms',(($autoperms) ? $abook_my_perms : 0));
+dbg(0);
 
 	connedit_clone($a);
 
