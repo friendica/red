@@ -277,7 +277,7 @@ function bb2diaspora_itemwallwall(&$item) {
 	}
 
 	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author']))) {
-		logger('bb2diaspora_itemwallwall: author: ' . print_r($item['author'],true), LOGGER_DEBUG);
+		logger('bb2diaspora_itemwallwall: author: ' . print_r($item['author'],true), LOGGER_DATA);
 	}
 
 	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_m']) {
@@ -388,7 +388,7 @@ function bb2diaspora_itembody($item,$force_update = false) {
 		}
 	}
 
-	logger('bb2diaspora_itembody : ' . $body);
+//	logger('bb2diaspora_itembody : ' . $body, LOGGER_DATA);
 
 	return html_entity_decode($body);
 
@@ -462,7 +462,7 @@ function format_event_diaspora($ev) {
 
 	$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8 AM
 
-	$o = 'Friendica event notification:' . "\n";
+	$o = t('Redmatrix event notification:') . "\n";
 
 	$o .= '**' . (($ev['summary']) ? bb2diaspora($ev['summary']) : bb2diaspora($ev['desc'])) .  '**' . "\n";
 

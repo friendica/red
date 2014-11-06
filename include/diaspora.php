@@ -58,7 +58,7 @@ function diaspora_dispatch($importer,$msg,$attempt=1) {
 
 	$xmlbase = $parsed_xml->post;
 
-	logger('diaspora_dispatch: ' . print_r($xmlbase,true), LOGGER_DATA);
+//	logger('diaspora_dispatch: ' . print_r($xmlbase,true), LOGGER_DATA);
 
 
 	if($xmlbase->request) {
