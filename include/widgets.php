@@ -400,6 +400,17 @@ function widget_tagcloud_wall($arr) {
 		return tagblock('search',$a->profile['profile_uid'],$limit,$a->profile['channel_hash'],ITEM_WALL);
 	return '';
 }
+function widget_catcloud_wall($arr) {
+	$a = get_app();
+	if((! $a->profile['profile_uid']) || (! $a->profile['channel_hash']))
+		return '';
+	if(! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_stream'))
+		return '';
+
+	$limit = ((array_key_exists('limit',$arr)) ? intval($arr['limit']) : 50);
+	return catblock($a->profile['profile_uid'],$limit,$a->profile['channel_hash'],ITEM_WALL);
+	return '';
+}
 
 
 function widget_affinity($arr) {
