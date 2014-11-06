@@ -555,7 +555,9 @@ function photos_content(&$a) {
 				'deny_cid' => $channel['channel_deny_cid'], 
 				'deny_gid' => $channel['channel_deny_gid']
 			);
-		} 
+
+			$lockstate = (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock');
+		}
 
 		$aclselect_e = (($_is_owner) ? populate_acl($channel_acl,false) : '');
 
@@ -576,6 +578,7 @@ function photos_content(&$a) {
 			'$selname' => $selname,
 			'$permissions' => t('Permissions'),
 			'$aclselect' => $aclselect_e,
+			'$lockstate' => $lockstate,
 			'$uploader' => $ret['addon_text'],
 			'$default' => (($ret['default_upload']) ? true : false),
 			'$uploadurl' => $ret['post_url'],
