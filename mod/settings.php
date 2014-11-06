@@ -337,6 +337,7 @@ function settings_post(&$a) {
 				intval(local_user()),
 				intval(ABOOK_FLAG_SELF)
 			);
+			set_pconfig(local_user(),'system','autoperms',(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0));
 
 			foreach($role_permissions as $p => $v) {
 				if(strpos($p,'channel_') !== false) {
