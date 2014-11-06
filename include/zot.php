@@ -441,9 +441,9 @@ function zot_refresh($them,$channel = null, $force = false) {
 			else {
 				$role = get_pconfig($channel['channel_id'],'system','permissions_role');
 				if($role) {
-					$x = get_role_perms($role);
-					if($x['perms_auto'])
-						$default_perms = $x['perms_accept'];
+					$xx = get_role_perms($role);
+					if($xx['perms_auto'])
+						$default_perms = $xx['perms_accept'];
 				}
 				if(! $default_perms)
 					$default_perms = intval(get_pconfig($channel['channel_id'],'system','autoperms'));
