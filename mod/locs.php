@@ -1,34 +1,6 @@
 <?php /** @file */
 
 
-/**
-	Placeholder file at present. This is going to involve a bit of work.
-
-	This file will deal with the deletion of channels and management of hublocs.
-
-	We need to provide the following functionality:
-
-	- Delete my account and all channels from the entire network
-
-	- Delete my account and all channels from this server
-
-	- Delete a channel from the entire network
-
-	- Delete a channel from this server
-
-	- List all hub locations for this channel
-
-	- Remove this/some hub location from this channel
-
-	- promote this/some hub location to primary
-
-	- Remove hub location 'xyz' from this channel, (this should possibly only be allowed if that hub has been down for a period of time)
-
-	- Some of these actions should probably require email verification
-
-*/
-
-
 function locs_post(&$a) {
 
 	if(! local_user())
@@ -87,4 +59,46 @@ function locs_post(&$a) {
 			return;
 		}			
 	}
+}
+
+
+
+function locs_content(&$a) {
+
+
+
+	if(! local_user()) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
+
+	$channel = $a->get_channel();
+
+	$r = q("select * from hubloc where hubloc_hash = '%s'",
+		dbesc($channel['channel_hash'])
+	);
+
+	if(! $r) {
+		notice( t('No locations found.') . EOL);
+		return;
+	}
+
+
+	for($x = 0; $x < count($r); $x ++) {
+		$r[$x]['primary'] = (($r[$x]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false);
+		$r[$x]['deleted'] = (($r[$x]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) ? true : false);
+	}
+
+
+
+	$o = replace_macros(get_markup_template('locmanage.tpl'), array(
+		'$header' => t('Manage Channel Locations'),
+		'$loc' => t('Location (address)'),
+		'$mkprm' => t('Primary Location'),
+		'$drop' => t('Drop location'),
+		'$submit' => t('Submit'),
+		'$hubs' => $r
+	));
+
+	return $o;
 }
