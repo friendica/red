@@ -206,6 +206,7 @@ function photos_post(&$a) {
 		$rawtags     = ((x($_POST,'newtag'))  ? notags(trim($_POST['newtag']))  : '');
 		$item_id     = ((x($_POST,'item_id')) ? intval($_POST['item_id'])       : 0);
 		$albname     = ((x($_POST,'albname')) ? notags(trim($_POST['albname'])) : '');
+		$adult       = ((x($_POST,'adult'))   ? intval($_POST['adult'])         : 0);
 		$str_group_allow   = perms2str($_POST['group_allow']);
 		$str_contact_allow = perms2str($_POST['contact_allow']);
 		$str_group_deny    = perms2str($_POST['group_deny']);
@@ -273,13 +274,13 @@ function photos_post(&$a) {
 			}
 		}
 
-		$p = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d and ( photo_flags = %d or photo_flags = %d ) ORDER BY `scale` DESC",
+		$p = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d and ((photo_flags = %d) or (photo_flags & %d )) ORDER BY `scale` DESC",
 			dbesc($resource_id),
 			intval($page_owner_uid),
 			intval(PHOTO_NORMAL),
 			intval(PHOTO_PROFILE)
 		);
-		if(count($p)) {
+		if($p) {
 			$ext = $phototypes[$p[0]['type']];
 
 			$r = q("UPDATE `photo` SET `description` = '%s', `album` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource_id` = '%s' AND `uid` = %d",
@@ -296,6 +297,14 @@ function photos_post(&$a) {
 
 		$item_private = (($str_contact_allow || $str_group_allow || $str_contact_deny || $str_group_deny) ? true : false);
 
+		$old_adult = (($p[0]['photo_flags'] & PHOTO_ADULT) ? 1 : 0);
+		if($old_adult != $adult) {
+			$r = q("update photo set photo_flags = ( photo_flags ^ %d) where resource_id = '%s' and uid = %d",
+				intval(PHOTO_ADULT),
+				dbesc($resource_id),
+				intval($page_owner_uid)
+			);
+		}
 
 		/* Don't make the item visible if the only change was the album name */
 
@@ -450,8 +459,9 @@ function photos_content(&$a) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}
-	
-	
+
+	$unsafe = ((array_key_exists('unsafe',$_REQUEST) && $_REQUEST['unsafe']) ? 1 : 0);
+		
 	require_once('include/bbcode.php');
 	require_once('include/security.php');
 	require_once('include/conversation.php');
@@ -598,6 +608,8 @@ function photos_content(&$a) {
 
 	if($datatype === 'album') {
 
+
+
 		if((strlen($datum) & 1) || (! ctype_xdigit($datum))) {
 			notice( t('Album name could not be decoded') . EOL);
 			logger('mod_photos: illegal album encoding: ' . $datum);
@@ -607,11 +619,11 @@ function photos_content(&$a) {
 		$album = hex2bin($datum);
 
 		$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			AND `scale` <= 4 and (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY `resource_id`",
+			AND `scale` <= 4 and ((photo_flags = %d) or (photo_flags & %d )) $sql_extra GROUP BY `resource_id`",
 			intval($owner_uid),
 			dbesc($album),
 			intval(PHOTO_NORMAL),
-			intval(PHOTO_PROFILE)
+			intval(($unsafe) ? (PHOTO_PROFILE|PHOTO_ADULT) : PHOTO_PROFILE)
 		);
 		if(count($r)) {
 			$a->set_pager_total(count($r));
@@ -626,11 +638,11 @@ function photos_content(&$a) {
 			$order = 'DESC';
 
 		$r = q("SELECT `resource_id`, `id`, `filename`, type, max(`scale`) AS `scale`, `description` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			AND `scale` <= 4 and (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY `resource_id` ORDER BY `created` $order LIMIT %d , %d",
+			AND `scale` <= 4 and ((photo_flags = %d) or (photo_flags & %d )) $sql_extra GROUP BY `resource_id` ORDER BY `created` $order LIMIT %d , %d",
 			intval($owner_uid),
 			dbesc($album),
 			intvaL(PHOTO_NORMAL),
-			intval(PHOTO_PROFILE),
+			intval(($unsafe) ? (PHOTO_PROFILE|PHOTO_ADULT) : PHOTO_PROFILE),
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
@@ -750,25 +762,18 @@ function photos_content(&$a) {
 		// fetch image, item containing image, then comments
 
 		$ph = q("SELECT aid,uid,xchan,resource_id,created,edited,title,`description`,album,filename,`type`,height,width,`size`,scale,profile,photo_flags,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
-			and (photo_flags = %d or photo_flags = %d ) $sql_extra ORDER BY `scale` ASC ",
+			$sql_extra ORDER BY `scale` ASC ",
 			intval($owner_uid),
-			dbesc($datum),
-			intval(PHOTO_NORMAL),
-			intval(PHOTO_PROFILE)
-
+			dbesc($datum)
 		);
 
 		if(! $ph) {
 
 			/* Check again - this time without specifying permissions */
 
-			$ph = q("SELECT id FROM photo WHERE uid = %d AND resource_id = '%s' 
-				and ( photo_flags = %d or photo_flags = %d )
-				LIMIT 1",
+			$ph = q("SELECT id FROM photo WHERE uid = %d AND resource_id = '%s' LIMIT 1",
 				intval($owner_uid),
-				dbesc($datum),
-				intval(PHOTO_NORMAL),
-				intval(PHOTO_PROFILE)
+				dbesc($datum)
 			);
 			if($ph) 
 				notice( t('Permission denied. Access to this item may be restricted.') . EOL);
@@ -789,11 +794,9 @@ function photos_content(&$a) {
 
 
 		$prvnxt = q("SELECT `resource_id` FROM `photo` WHERE `album` = '%s' AND `uid` = %d AND `scale` = 0 
-			and ( photo_flags = %d or photo_flags = %d ) $sql_extra ORDER BY `created` $order ",
+			$sql_extra ORDER BY `created` $order ",
 			dbesc($ph[0]['album']),
-			intval($owner_uid),
-			intval(PHOTO_NORMAL),
-			intval(PHOTO_PROFILE)
+			intval($owner_uid)
 		); 
 
 		if(count($prvnxt)) {
@@ -946,6 +949,7 @@ function photos_content(&$a) {
 				'aclselect' => $aclselect_e,
 				'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com'),
 				'item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
+				'adult' => array('adult',t('Flag as adult in album view'), (($ph[0]['photo_flags'] & PHOTO_ADULT) ? 1 : 0),''),
 				'submit' => t('Submit'),
 				'delete' => t('Delete Photo')
 			);
@@ -1153,12 +1157,12 @@ function photos_content(&$a) {
 	//$o = '';
 
 	$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
-		and ( photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY `resource_id`",
+		and ((photo_flags = %d) or (photo_flags & %d)) $sql_extra GROUP BY `resource_id`",
 		intval($a->data['channel']['channel_id']),
 		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos')),
 		intval(PHOTO_NORMAL),
-		intval(PHOTO_PROFILE)		
+		intval(($unsafe) ? (PHOTO_PROFILE|PHOTO_ADULT) : PHOTO_PROFILE)
 	);
 	if(count($r)) {
 		$a->set_pager_total(count($r));
@@ -1167,13 +1171,13 @@ function photos_content(&$a) {
 
 	$r = q("SELECT `resource_id`, `id`, `filename`, type, `album`, max(`scale`) AS `scale` FROM `photo`
 		WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s'
-		and ( photo_flags = %d or photo_flags = %d )  
+		and ( (photo_flags = %d) or (photo_flags & %d ))  
 		$sql_extra GROUP BY `resource_id` ORDER BY `created` DESC LIMIT %d , %d",
 		intval($a->data['channel']['channel_id']),
 		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos')),
 		intval(PHOTO_NORMAL),
-		intval(PHOTO_PROFILE),
+		intval(($unsafe) ? (PHOTO_PROFILE|PHOTO_ADULT) : PHOTO_PROFILE),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);

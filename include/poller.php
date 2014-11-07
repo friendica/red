@@ -123,8 +123,8 @@ function poller_run($argv, $argc){
 
 	if(($d2 != $d1) && ($h1 == $h2)) {
 
-	require_once('include/dir_fns.php');
-	check_upstream_directory();
+		require_once('include/dir_fns.php');
+		check_upstream_directory();
 
 		call_hooks('cron_daily',datetime_convert());
 
@@ -263,7 +263,7 @@ function poller_run($argv, $argc){
 	);
 
 
-	$contacts = q("SELECT abook_id, abook_flags, abook_updated, abook_connected, abook_closeness, abook_xchan, abook_channel
+	$contacts = q("SELECT abook_id, abook_flags, abook_network, abook_updated, abook_connected, abook_closeness, abook_xchan, abook_channel
 		FROM abook LEFT JOIN account on abook_account = account_id where 1
 		$sql_extra 
 		AND (( abook_flags & %d ) OR  ( abook_flags = %d )) 
@@ -305,6 +305,7 @@ function poller_run($argv, $argc){
 					$update = true;
 			}
 			else {
+
 				// if we've never connected with them, start the mark for death countdown from now
 
 				if($c == NULL_DATE) {
@@ -351,11 +352,16 @@ function poller_run($argv, $argc){
 					$update = true;
 				}
 
-
 			}
 
 			if((! $update) && (! $force))
 					continue;
+
+			// we handled feed contacts earlier - now filter out anything else that 
+			// doesn't require polling to keep the process count down.
+
+			if($contact['abook_network'] !== 'zot')
+				continue;
 
 			proc_run('php','include/onepoll.php',$contact['abook_id']);
 			if($interval)
