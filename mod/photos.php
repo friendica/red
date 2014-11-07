@@ -274,11 +274,9 @@ function photos_post(&$a) {
 			}
 		}
 
-		$p = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d and ((photo_flags = %d) or (photo_flags & %d )) ORDER BY `scale` DESC",
+		$p = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d ORDER BY `scale` DESC",
 			dbesc($resource_id),
-			intval($page_owner_uid),
-			intval(PHOTO_NORMAL),
-			intval(PHOTO_PROFILE)
+			intval($page_owner_uid)
 		);
 		if($p) {
 			$ext = $phototypes[$p[0]['type']];
@@ -322,10 +320,11 @@ function photos_post(&$a) {
 				intval($item_id),
 				intval($page_owner_uid)
 			);
-		}
-		if($r) {
-			$old_tag    = $r[0]['tag'];
-			$old_inform = $r[0]['inform'];
+
+			if($r) {
+				$old_tag    = $r[0]['tag'];
+				$old_inform = $r[0]['inform'];
+			}
 		}
 
 
