@@ -69,7 +69,7 @@
 			</div>
 			<div class="form-group btn-group pull-right">
 				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
-					<i id="jot-perms-icon" class="{{$edit.lockstate}}"></i>
+					<i id="jot-perms-icon" class="icon-{{$edit.lockstate}}"></i>
 				</button>
 				<button class="btn btn-primary btn-sm" type="submit" name="submit" id="photos-edit-submit">{{$edit.submit}}</button>
 			</div>

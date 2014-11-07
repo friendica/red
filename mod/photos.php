@@ -840,11 +840,11 @@ function photos_content(&$a) {
 			);
 		}
 
-		// lock
-		$lock = ( ( (strlen($ph[0]['allow_cid']) || strlen($ph[0]['allow_gid'])
+		// lockstate
+		$lockstate = ( ( (strlen($ph[0]['allow_cid']) || strlen($ph[0]['allow_gid'])
 				|| strlen($ph[0]['deny_cid']) || strlen($ph[0]['deny_gid'])) )
-				? t('Private Photo')
-				: Null);
+				? array('lock', t('Private Photo'))
+				: array('unlock', Null));
 
 		$a->page['htmlhead'] .= '<script>$(document).keydown(function(event) {' . "\n";
 		if($prevlink)
@@ -947,6 +947,7 @@ function photos_content(&$a) {
 				'tag_label' => t('Add a Tag'),
 				'permissions' => t('Permissions'),
 				'aclselect' => $aclselect_e,
+				'lockstate' => $lockstate[0],
 				'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com'),
 				'item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
 				'adult' => array('adult',t('Flag as adult in album view'), (($ph[0]['photo_flags'] & PHOTO_ADULT) ? 1 : 0),''),
@@ -1119,7 +1120,7 @@ function photos_content(&$a) {
 			'$id' => $link_item['id'], //$ph[0]['id'],
 			'$album' => $album_e,
 			'$tools' => $tools,
-			'$lock' => $lock,
+			'$lock' => $lockstate[1],
 			'$photo' => $photo,
 			'$prevlink' => $prevlink,
 			'$nextlink' => $nextlink,
