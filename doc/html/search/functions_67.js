@@ -20,6 +20,7 @@ var searchData=
   ['get_5fcapath',['get_capath',['../include_2network_8php.html#a78e89557b2fbd344ad790846d761b0c7',1,'network.php']]],
   ['get_5fchannel',['get_channel',['../classApp.html#a084e03c77686d8c13390fef3f7428a2b',1,'App']]],
   ['get_5fchannel_5fby_5fnick',['get_channel_by_nick',['../identity_8php.html#ac73b3e13778c564c877554517a7f51ba',1,'identity.php']]],
+  ['get_5fchannel_5fdefault_5fperms',['get_channel_default_perms',['../identity_8php.html#a293f416ce9050220b183e08ff5890216',1,'identity.php']]],
   ['get_5fchild',['get_child',['../classItem.html#a632185dd25c5caf277067c76230a4320',1,'Item']]],
   ['get_5fchildren',['get_children',['../classRedmatrix_1_1Import_1_1Import.html#a832a4cc0d33d0eea29cb450004054580',1,'Redmatrix\Import\Import\get_children()'],['../classItem.html#aa0ee775ec94abccec6c798428835d001',1,'Item\get_children()']]],
   ['get_5fcipher',['get_cipher',['../classConversation.html#a4aab60bb39fa6761b6cacdc8d9da2901',1,'Conversation']]],
