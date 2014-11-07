@@ -263,7 +263,7 @@ function poller_run($argv, $argc){
 	);
 
 
-	$contacts = q("SELECT abook_id, abook_flags, abook_network, abook_updated, abook_connected, abook_closeness, abook_xchan, abook_channel
+	$contacts = q("SELECT abook_id, abook_flags, abook_updated, abook_connected, abook_closeness, abook_xchan, abook_channel
 		FROM abook LEFT JOIN account on abook_account = account_id where 1
 		$sql_extra 
 		AND (( abook_flags & %d ) OR  ( abook_flags = %d )) 
@@ -356,12 +356,6 @@ function poller_run($argv, $argc){
 
 			if((! $update) && (! $force))
 					continue;
-
-			// we handled feed contacts earlier - now filter out anything else that 
-			// doesn't require polling to keep the process count down.
-
-			if($contact['abook_network'] !== 'zot')
-				continue;
 
 			proc_run('php','include/onepoll.php',$contact['abook_id']);
 			if($interval)
