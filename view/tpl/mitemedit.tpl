@@ -26,7 +26,7 @@
 
 
 <div class="mitemedit-submit-wrapper" >
-<input type="submit" name="submit" class="mitemedit-submit" value="{{$submit}}" />
+<input id="dbtn-submit" type="submit" name="submit" class="mitemedit-submit" value="{{$submit}}" disabled="disabled" />
 </div>
 
 </form>
