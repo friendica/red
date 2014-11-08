@@ -8,15 +8,17 @@
 .directory-photo {
 	margin-left: 25px;
 }
+.directory-photo-img {
+	margin-left: auto;
+	margin-right: auto;
+	display:block;
+}
 .directory-details {
 	text-align: center;
 	margin-left: 5px;
 	margin-right: 5px;
 }
 .directory-item {
-	float: left;
-	width: 225px;
-	height: 260px;
 	overflow: hidden;
 	margin: 2px;
 }
@@ -41,4 +43,27 @@ div.dirtagblock.widget {
 .dirpopup {
 	float: left;
 	width: 225px;
+}
+
+.contact-photo {
+	float: left;
+	margin-right: 16px;
+}
+
+.contact-name {
+	font-size: larger;
+}
+
+.contact-info {
+	display: block;
+	overflow: hidden;
+}
+
+.directory-item {
+	margin: 16px;
+}
+.directory-connect {
+	display:block;
+	margin-left:auto;
+	margin-right: auto;
 }
