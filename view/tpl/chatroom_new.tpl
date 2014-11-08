@@ -2,12 +2,12 @@
 
 <form action="chat" method="post" >
 {{include file="field_input.tpl" field=$name}}
-<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
+<button id="dbtn-acl" class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;" disabled="disabled">{{$permissions}}</button>
 {{$acl}}
 <div class="clear"></div>
 <br />
 <br />
-<input type="submit" name="submit" value="{{$submit}}" />
+<input id="dbtn-submit" type="submit" name="submit" value="{{$submit}}" disabled="disabled"/>
 </form>
 
 
