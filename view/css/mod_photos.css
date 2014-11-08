@@ -3,112 +3,28 @@
 	margin-bottom: 25px;
 }
 
-.photo-item-tools {
+.photo-item-tools-left,
+.photo-item-tools-right {
 	padding: 7px 10px;
+}
+
+.photo-like-rotator {
+	margin-top: 23px;
+	margin-right: 5px;
 }
 
 #photo-photo {
-    display: table;
-    margin: 0 auto;
+	display: table;
+	margin: 0 auto;
 }
 
-#photo-photo-end {
-	clear: both;
+#photo-edit,
+#photo-album-edit-wrapper,
+#photo-upload-form {
+	display: none;
 }
 
-#photo-album-end {
-	clear: both;
-	margin-bottom: 25px;
+#photos-upload-choose {
+	border: unset;
+	padding: unset;
 }
-
-#photos-upload-newalbum-div {
-	float: left;
-	width: 175px;
-}
-
-#photos-upload-noshare {
-	margin-bottom: 10px;
-}
-
-#photos-upload-existing-album-text {
-	float: left;
-	width: 175px;
-}
-#photos-upload-newalbum {
-	float: left;
-}
-#photos-upload-album-select {
-	float: left;
-}
-
-#photos-upload-spacer {
-	margin-top: 25px;
-}
-#photos-upload-new-end, #photos-upload-exist-end {
-	clear: both;
-}
-#photos-upload-exist-end {
-	margin-bottom: 15px;
-}
-#photos-upload-submit {
-	margin-top: 15px;
-}
-
-
-#photos-upload-select-files-text {
-	margin-top: 15px;
-	margin-bottom: 15px;
-}
-
-#photo-edit-caption-label, #photo-edit-tags-label, #photo-edit-albumname-label, #photo-edit-rotate-label {
-	float: left;
-	width: 150px;
-}
-
-#photo-edit-perms-end {
-	margin-bottom: 15px;
-}
-
-#photo-edit-caption, #photo-edit-newtag, #photo-edit-albumname, #photo-edit-rotate {
-	float: left;
-	margin-bottom: 25px;
-}
-#photo-edit-link-wrap {
-	margin-bottom: 15px;
-}
-
-#photo-edit-caption-end, #photo-edit-tags-end, #photo-edit-albumname-end, #photo-edit-rotate-end {
-	clear: both;
-}
-
-#photo-edit-rotate-end {
-	margin-bottom: 15px;
-}
-
-
-#photo-edit-edit {
-	padding: 7px 10px;
-	margin-bottom: 3px;
-}
-
-#photo-edit-end {
-	margin-bottom: 35px;
-}
-#photo-caption {
-	margin-top: 15px;
-	margin-bottom: 15px;
-}
-
-#photo-album-edit-submit, #photo-album-edit-drop {
-	margin-top: 15px;
-	margin-bottom: 15px;
-}
-
-#photo-album-edit-drop {
-	margin-left: 200px;
-}
-
-#photos-usage-message {
-	line-height: 22px;
-}
-

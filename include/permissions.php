@@ -460,6 +460,7 @@ function get_role_perms($role) {
 			$ret['channel_w_chat']      = PERMS_CONTACTS;
 			$ret['channel_a_delegate']  = 0;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_w_storage']   = 0;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
@@ -492,6 +493,7 @@ function get_role_perms($role) {
 			$ret['channel_w_chat']      = PERMS_CONTACTS;
 			$ret['channel_a_delegate']  = 0;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_w_storage']   = 0;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
@@ -524,6 +526,7 @@ function get_role_perms($role) {
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
 			$ret['channel_a_delegate']  = 0;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_w_storage']   = 0;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
@@ -555,6 +558,7 @@ function get_role_perms($role) {
 			$ret['channel_w_chat']      = PERMS_CONTACTS;
 			$ret['channel_a_delegate']  = 0;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_w_storage']   = 0;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
@@ -586,6 +590,7 @@ function get_role_perms($role) {
 			$ret['channel_w_chat']      = PERMS_CONTACTS;
 			$ret['channel_a_delegate']  = 0;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_w_storage']   = 0;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
@@ -618,6 +623,7 @@ function get_role_perms($role) {
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
 			$ret['channel_a_delegate']  = 0;
 			$ret['channel_r_storage']   = PERMS_CONTACTS;
+			$ret['channel_w_storage']   = 0;
 			$ret['channel_r_pages']     = PERMS_CONTACTS;
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
@@ -649,6 +655,7 @@ function get_role_perms($role) {
 			$ret['channel_w_chat']      = PERMS_CONTACTS;
 			$ret['channel_a_delegate']  = 0;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_w_storage']   = 0;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_NETWORK;
@@ -681,6 +688,7 @@ function get_role_perms($role) {
 			$ret['channel_w_chat']      = PERMS_CONTACTS;
 			$ret['channel_a_delegate']  = 0;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_w_storage']   = 0;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
@@ -710,12 +718,47 @@ function get_role_perms($role) {
 			$ret['channel_w_chat']      = 0;
 			$ret['channel_a_delegate']  = 0;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_w_storage']   = 0;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_NETWORK;
 			
 			break;
+
+		case 'repository':
+			$ret['perms_auto'] = true;
+			$ret['default_collection'] = false;
+			$ret['directory_publish'] = true;
+			$ret['online'] = false;
+			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_W_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE|PERMS_W_TAGWALL;
+			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_R_STORAGE|PERMS_W_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE|PERMS_W_TAGWALL;
+			$ret['channel_r_stream']    = PERMS_PUBLIC;
+			$ret['channel_r_profile']   = PERMS_PUBLIC;
+			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_abook']     = PERMS_PUBLIC;
+			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_wall']      = PERMS_CONTACTS;
+			$ret['channel_w_tagwall']   = PERMS_CONTACTS;
+			$ret['channel_w_comment']   = PERMS_CONTACTS;
+			$ret['channel_w_mail']      = PERMS_CONTACTS;
+			$ret['channel_w_photos']    = PERMS_CONTACTS;
+			$ret['channel_w_chat']      = PERMS_CONTACTS;
+			$ret['channel_a_delegate']  = 0;
+			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_w_storage']   = PERMS_CONTACTS;
+			$ret['channel_r_pages']     = PERMS_PUBLIC;
+			$ret['channel_w_pages']     = PERMS_CONTACTS;
+			$ret['channel_a_republish'] = PERMS_SPECIFIC;
+			$ret['channel_w_like']      = PERMS_NETWORK;
+			
+			break;
+
+
 
 		default:
 			break;
@@ -734,6 +777,10 @@ function get_role_perms($role) {
 
 
 function role_selector($current) {
+
+	if(! $current)
+		$current = 'custom';
+
 	$roles = array(
 		'social' => array( t('Social Networking'), 
 			array('social' => t('Mostly Public'), 'social_restricted' => t('Restricted'), 'social_private' => t('Private'))),
@@ -741,8 +788,8 @@ function role_selector($current) {
 			array('forum' => t('Mostly Public'), 'forum_restricted' => t('Restricted'), 'forum_private' => t('Private'))),
 		'feed' => array( t('Feed Republish'), 
 			array('feed' => t('Mostly Public'), 'feed_restricted' => t('Restricted'))),
-		'soapbox' => array( t('Celebrity/Soapbox'),
-			array('soapbox' => t('Mostly Public'))),
+		'special' => array( t('Special Purpose'),
+			array('soapbox' => t('Celebrity/Soapbox'), 'repository' => t('Group Repository'))),
 		'other' => array( t('Other'),
 			array('custom' => t('Custom/Expert Mode'))));
 	$o = '<select name="permissions_role" id="privacy-role-select">';

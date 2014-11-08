@@ -178,7 +178,7 @@ function photo_upload($channel, $observer, $args) {
 	if($args['title'])
 		$p['title'] = $args['title'];
 	if($args['description'])
-		$p['desciprion'] = $args['description'];
+		$p['description'] = $args['description'];
 
 
 	$r1 = $ph->save($p);
@@ -431,7 +431,7 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 	// Create item container
 
 	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
-	$item_restrict = (($visible) ? ITEM_HIDDEN : ITEM_VISIBLE);			
+	$item_restrict = (($visible) ? ITEM_VISIBLE : ITEM_HIDDEN);			
 
 	$title = '';
 	$mid = item_message_id();

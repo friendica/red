@@ -12,6 +12,9 @@ function feed_init(&$a) {
 	$params['type']      = ((stristr(argv(0),'json'))   ? 'json'                       : 'xml');
 	$params['pages']     = ((x($_REQUEST,'pages'))      ? intval($_REQUEST['pages'])   : 0);
 	$params['top']       = ((x($_REQUEST,'top'))        ? intval($_REQUEST['top'])     : 0);
+	$params['start']     = ((x($params,'start'))        ? intval($params['start'])     : 0);
+	$params['records']   = ((x($params,'records'))      ? intval($params['records'])   : 40);
+	$params['direction'] = ((x($params,'direction'))    ? dbesc($params['direction'])  : 'desc');
 
 	$channel = '';
 	if(argc() > 1) {

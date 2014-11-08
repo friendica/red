@@ -507,6 +507,7 @@ function post_post(&$a) {
 		json_return_and_die($ret);
 	}
 
+
 	if($msgtype === 'pickup') {
 
 		/**
@@ -597,11 +598,24 @@ function post_post(&$a) {
 			$ret['success'] = true;
 			$ret['pickup'] = array();
 			foreach($r as $rr) {
-				$ret['pickup'][] = array('notify' => json_decode($rr['outq_notify'],true),'message' => json_decode($rr['outq_msg'],true));
+				if($rr['outq_msg']) {
+					$x = json_decode($rr['outq_msg'],true);
 
-				$x = q("delete from outq where outq_hash = '%s' limit 1",
-					dbesc($rr['outq_hash'])
-				);
+					if(! $x)
+						continue;
+
+					if(array_key_exists('message_list',$x)) {
+						foreach($x['message_list'] as $xx) {
+							$ret['pickup'][] = array('notify' => json_decode($rr['outq_notify'],true),'message' => $xx);
+						}
+					}
+					else
+						$ret['pickup'][] = array('notify' => json_decode($rr['outq_notify'],true),'message' => $x);
+
+					$x = q("delete from outq where outq_hash = '%s' limit 1",
+						dbesc($rr['outq_hash'])
+					);
+				}
 			}
 		}
 
@@ -794,6 +808,12 @@ function post_post(&$a) {
 
 		}
 		json_return_and_die($ret);
+	}
+
+	if($msgtype === 'request') {
+		// request a particular post/conversation by message_id
+		$x = zot_process_message_request($data);
+		json_return_and_die($x);		
 	}
 
 

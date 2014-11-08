@@ -4,6 +4,7 @@ var widgets_8php =
     [ "widget_appselect", "widgets_8php.html#aced5cb177f630b30799c5eab873ee75c", null ],
     [ "widget_archive", "widgets_8php.html#a7b1e357b5a2027718470b77ec921fc65", null ],
     [ "widget_bookmarkedchats", "widgets_8php.html#a0e2f5179ed1a73b282dfda7270fcabb3", null ],
+    [ "widget_catcloud_wall", "widgets_8php.html#af919de8e7e2ba8192a65fadc72a2c8b5", null ],
     [ "widget_categories", "widgets_8php.html#af37fdad3b2e861d860a4a8c4d8a76c0b", null ],
     [ "widget_chatroom_list", "widgets_8php.html#a47c72aac42058ea086c9ef8651c259da", null ],
     [ "widget_clock", "widgets_8php.html#a9d60539db68042e63c0015abd69a6f7a", null ],

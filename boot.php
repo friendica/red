@@ -48,7 +48,7 @@ define ( 'RED_PLATFORM',            'redmatrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1130  );
+define ( 'DB_UPDATE_VERSION',       1131  );
 
 define ( 'EOL',                    '<br />' . "\r\n"      );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z'       );
@@ -74,7 +74,7 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://redmatrix.nl', 
 	'https://whogotzot.com', 
 	'https://red.zottel.red',
-	'https://red.pixelbits.de'
+    'https://red.pixelbits.de'
 );
 
 
@@ -230,6 +230,7 @@ define ( 'PHOTO_NORMAL',           0x0000 );
 define ( 'PHOTO_PROFILE',          0x0001 );
 define ( 'PHOTO_XCHAN',            0x0002 );
 define ( 'PHOTO_THING',            0x0004 );
+define ( 'PHOTO_ADULT',            0x0008 );
 
 /**
  * Menu types
@@ -376,6 +377,22 @@ define ( 'NOTIFY_TAGSHARE', 0x0100 );
 define ( 'NOTIFY_POKE',     0x0200 );
 
 define ( 'NOTIFY_SYSTEM',   0x8000 );
+
+/**
+ * visual notification options
+ */
+
+define ( 'VNOTIFY_NETWORK',    0x0001 );
+define ( 'VNOTIFY_CHANNEL',    0x0002 );
+define ( 'VNOTIFY_MAIL',       0x0004 );
+define ( 'VNOTIFY_EVENT',      0x0008 );
+define ( 'VNOTIFY_EVENTTODAY', 0x0010 );
+define ( 'VNOTIFY_BIRTHDAY',   0x0020 );
+define ( 'VNOTIFY_SYSTEM',     0x0040 );
+define ( 'VNOTIFY_INFO',       0x0080 );
+define ( 'VNOTIFY_ALERT',      0x0100 );
+define ( 'VNOTIFY_INTRO',      0x0200 );
+define ( 'VNOTIFY_REGISTER',   0x0400 );
 
 
 // We need a flag to designate that a site is a
@@ -1787,9 +1804,8 @@ function load_contact_links($uid) {
 
 //	logger('load_contact_links');
 
-	$r = q("SELECT abook_id, abook_flags, abook_my_perms, abook_their_perms, xchan_hash, xchan_photo_m, xchan_name, xchan_url from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d) ",
-		intval($uid),
-		intval(ABOOK_FLAG_SELF)
+	$r = q("SELECT abook_id, abook_flags, abook_my_perms, abook_their_perms, xchan_hash, xchan_photo_m, xchan_name, xchan_url from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d ",
+		intval($uid)
 	);
 	if($r) {
 		foreach($r as $rr){
@@ -1880,12 +1896,8 @@ function get_custom_nav(&$a,$navname) {
 
 }
 
-function construct_page(&$a) {
-
+function load_pdl(&$a) {
 	require_once('include/comanche.php');
-
-	// in case a page has overloaded a module, see if we already have a layout defined
-	// otherwise, if a pdl file exists for this module, use it
 
 	if(! count($a->layout)) {
 		$n = 'mod_' . $a->module . '.pdl' ;
@@ -1898,11 +1910,19 @@ function construct_page(&$a) {
 			comanche_parser($a,$s);
 	}
 
-	$comanche = ((count($a->layout)) ? true : false);
+}
+
+
+
+function construct_page(&$a) {
+
 
 	/**
 	 * Build the page - now that we have all the components
 	 */
+
+
+	$comanche = ((count($a->layout)) ? true : false);
 
 	require_once(theme_include('theme_init.php'));
 

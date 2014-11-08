@@ -25,6 +25,15 @@ function poller_run($argv, $argc){
 	if(! $interval) 
 		$interval = ((get_config('system','delivery_interval') === false) ? 3 : intval(get_config('system','delivery_interval')));
 
+	// Check for a lockfile.  If it exists, but is over an hour old, it's stale.  Ignore it.
+	$lockfile = 'store/[data]/poller';
+		if ((file_exists($lockfile)) && (filemtime($lockfile) > (time() - 3600))) {
+			logger("poller: Already running");
+		return;
+                }
+	
+	// Create a lockfile.  Needs two vars, but $x doesn't need to contain anything.
+	file_put_contents($lockfile, $x);
 
 	logger('poller: start');
 	
@@ -114,8 +123,8 @@ function poller_run($argv, $argc){
 
 	if(($d2 != $d1) && ($h1 == $h2)) {
 
-	require_once('include/dir_fns.php');
-	check_upstream_directory();
+		require_once('include/dir_fns.php');
+		check_upstream_directory();
 
 		call_hooks('cron_daily',datetime_convert());
 
@@ -296,6 +305,7 @@ function poller_run($argv, $argc){
 					$update = true;
 			}
 			else {
+
 				// if we've never connected with them, start the mark for death countdown from now
 
 				if($c == NULL_DATE) {
@@ -342,7 +352,6 @@ function poller_run($argv, $argc){
 					$update = true;
 				}
 
-
 			}
 
 			if((! $update) && (! $force))
@@ -375,7 +384,10 @@ function poller_run($argv, $argc){
 			}
 		}
 	}
-	
+
+	//All done - clear the lockfile	
+	@unlink($lockfile);
+
 	return;
 }
 

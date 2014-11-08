@@ -15,12 +15,6 @@ function onepoll_run($argv, $argc){
 
 	logger('onepoll: start');
 	
-	$manual_id  = 0;
-	$generation = 0;
-
-	$force      = false;
-	$restart    = false;
-
 	if(($argc > 1) && (intval($argv[1])))
 		$contact_id = intval($argv[1]);
 
@@ -28,7 +22,7 @@ function onepoll_run($argv, $argc){
 		logger('onepoll: no contact');
 		return;
 	}
-	
+
 	$d = datetime_convert();
 
 	$contacts = q("SELECT abook.*, xchan.*, account.*
@@ -90,7 +84,8 @@ function onepoll_run($argv, $argc){
 	$x = zot_refresh($contact,$importer);
 
 	$responded = false;
-	$updated = datetime_convert();
+	$updated   = datetime_convert();
+	$connected = datetime_convert();
 	if(! $x) {
 		// mark for death by not updating abook_connected, this is caught in include/poller.php
 		q("update abook set abook_updated = '%s' where abook_id = %d limit 1",
@@ -101,7 +96,7 @@ function onepoll_run($argv, $argc){
 	else {
 		q("update abook set abook_updated = '%s', abook_connected = '%s' where abook_id = %d limit 1",
 			dbesc($updated),
-			dbesc($updated),
+			dbesc($connected),
 			intval($contact['abook_id'])
 		);
 		$responded = true;
@@ -120,7 +115,9 @@ function onepoll_run($argv, $argc){
 		if($fetch_feed) {
 
 			$feedurl = str_replace('/poco/','/zotfeed/',$contact['xchan_connurl']);		
-			$x = z_fetch_url($feedurl . '?f=&mindate=' . urlencode($last_update));
+			$feedurl .= '?f=&mindate=' . urlencode($last_update);
+
+			$x = z_fetch_url($feedurl);
 
 			logger('feed_update: ' . print_r($x,true), LOGGER_DATA);
 
@@ -143,8 +140,8 @@ function onepoll_run($argv, $argc){
 		}
 	}
 			
-	// fetch some items
-	// set last updated timestamp
+
+	// update the poco details for this connection
 
 	if($contact['xchan_connurl']) {	
 		$r = q("SELECT xlink_id from xlink 

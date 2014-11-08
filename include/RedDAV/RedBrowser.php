@@ -259,6 +259,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 		$html .= $output;
 	
 		get_app()->page['content'] = $html;
+		load_pdl(get_app());
 		construct_page(get_app());
 	}
 

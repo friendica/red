@@ -13,7 +13,7 @@ html {
 }
 
 body {
-	font-family: arial,freesans,sans-serif;
+	font-family: sans-serif, arial, freesans;
 	font-size: $body_font_size;
 	background-color: $bgcolour;
 	background-image: url('$background_image');
@@ -37,7 +37,7 @@ h5, .h5, h6, .h6 {
 }
 
 .jslider {
-	font-family: arial,freesans,sans-serif;
+	font-family: sans-serif, arial, freesans;
 }
 
 abbr {
@@ -45,6 +45,10 @@ abbr {
 }
 
 /* icons */
+.tool-icons {
+	color: $toolicon_colour;
+}
+
 .icon {
   background-color: transparent ;
   background-repeat: no-repeat;
@@ -84,17 +88,19 @@ a.btn-success {
 input[type="text"],
 input[type="password"],
 input[type="submit"],
+input[type="file"],
 select,
 textarea {
-	font-family: arial,freesans,sans-serif;
+	font-family: sans-serif, arial, freesans;
 	font-size: $body_font_size;
 }
 
 input {
+	padding: 5px;
+	line-height: 1.5;
 	border: 1px solid $input_border;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
-	padding: 3px;
 }
 
 input[type="submit"] {
@@ -103,10 +109,6 @@ input[type="submit"] {
 	color: $input_linksubmit;
 	text-decoration: none;
 	padding: 6px 12px;
-}
-
-input[type="submit"]:hover {
-	text-decoration: underline;
 }
 
 button, input, optgroup, select, textarea {
@@ -704,8 +706,7 @@ footer {
 	cursor: pointer;
 }
 
-#photo-view-wrapper,
-#photo-edit-edit {
+#photo-view-wrapper {
 	background-color: $item_colour;
 }
 
@@ -868,6 +869,7 @@ footer {
 }
 
 #nav-search-text {
+	font-size: 12px;
 	height: 20px;
 	margin: 15px;
 	padding: 0px 5px 0px 5px;
@@ -2201,6 +2203,7 @@ aside .nav-pills > li > a {
 
 
 .navbar-inverse .navbar-nav > li > a {
+	font-size: 12px;
 	color: $nav_icon_colour;
 	text-shadow: 0px 0px 0px;
 }
@@ -2336,14 +2339,18 @@ aside .nav-pills > li > a {
 	margin-bottom: 0px;
 }
 
-.section-title-submenu {
-	margin-top: 10px;
+.section-content-tools-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	margin-bottom: 3px;
 }
 
-.section-title-submenu a {
-	margin-right: 10px;
+.section-content-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
 }
-
 
 @media screen and (max-width: 767px) {
 	aside#region_1 {
@@ -2385,6 +2392,13 @@ aside .nav-pills > li > a {
 		width: calc(100% - 10px);
 	}
 
+}
+
+/* release the navbar in landscape view on small devices */
+@media screen and (max-height: 320px) {
+	.navbar-fixed-top {
+		position: absolute;
+	}
 }
 
 .shareable_element_text {

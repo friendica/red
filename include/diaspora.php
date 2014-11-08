@@ -58,7 +58,7 @@ function diaspora_dispatch($importer,$msg,$attempt=1) {
 
 	$xmlbase = $parsed_xml->post;
 
-	logger('diaspora_dispatch: ' . print_r($xmlbase,true), LOGGER_DATA);
+//	logger('diaspora_dispatch: ' . print_r($xmlbase,true), LOGGER_DATA);
 
 
 	if($xmlbase->request) {
@@ -673,16 +673,15 @@ function diaspora_request($importer,$xml) {
 		return;
 	}
 
-	$default_perms = 0;
-	// look for default permissions to apply in return - e.g. auto-friend
-	$z = q("select * from abook where abook_channel = %d and (abook_flags & %d) limit 1",
-		intval($importer['channel_id']),
-		intval(ABOOK_FLAG_SELF)
-	);
-
-	if($z)
-		$default_perms = intval($z[0]['abook_my_perms']);
-
+	$role = get_pconfig($channel['channel_id'],'system','permissions_role');
+	if($role) {
+		$x = get_role_perms($role);
+		if($x['perms_auto'])
+		$default_perms = $x['perms_accept'];
+	}
+	if(! $default_perms)
+		$default_perms = intval(get_pconfig($channel['channel_id'],'system','autoperms'));
+				
 	$their_perms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT|PERMS_R_STORAGE|PERMS_R_PAGES;
 
 	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_my_perms, abook_their_perms, abook_closeness, abook_rating, abook_created, abook_updated, abook_connected, abook_dob, abook_flags) values ( %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', %d )",

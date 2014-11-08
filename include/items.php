@@ -98,6 +98,7 @@ function collect_recipients($item,&$private_envelope) {
 		}
 	}
 
+
 	// This is a somewhat expensive operation but important.
 	// Don't send this item to anybody who isn't allowed to see it
 
@@ -213,6 +214,7 @@ function can_comment_on_post($observer_xchan,$item) {
 			break;
 		case 'any connections':
 		case 'contacts':
+		case 'authenticated':
 		case '':
 			if(array_key_exists('owner',$item)) {
 				if(($item['owner']['abook_xchan']) && ($item['owner']['abook_their_perms'] & PERMS_W_COMMENT))
@@ -2516,7 +2518,7 @@ function item_store_update($arr,$allow_exec = false) {
 	return $ret;
 }
 
-function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id) {
+function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id, $walltowall = false) {
 
 	// We won't be able to sign Diaspora comments for authenticated visitors 
 	// - we don't have their private key
@@ -2524,9 +2526,18 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id)
 	// since Diaspora doesn't handle edits we can only do this for the original text and not update it.
 
 	require_once('include/bb2diaspora.php');
-	$signed_body = bb2diaspora_itembody($datarray);
+	$signed_body = bb2diaspora_itembody($datarray,$walltowall);
 
-	logger('mod_item: storing diaspora comment signature',LOGGER_DEBUG);
+	if($walltowall) {
+		logger('wall to wall comment',LOGGER_DEBUG);
+		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
+		$signed_body = "\n\n" 
+			. '![' . $datarray['author']['xchan_name'] . '](' . $datarray['author']['xchan_photo_m'] . ')'
+			. '[' . $datarray['author']['xchan_name'] . '](' . $datarray['author']['xchan_url'] . ')' . "\n\n" 
+			. $signed_body;
+	}
+
+	logger('storing diaspora comment signature',LOGGER_DEBUG);
 
 	$diaspora_handle = $channel['channel_address'] . '@' . get_app()->get_hostname();
 
@@ -2963,7 +2974,15 @@ function tgroup_check($uid,$item) {
 	// At this point we've determined that the person receiving this post was mentioned in it.
 	// Now let's check if this mention was inside a reshare so we don't spam a forum
 
-	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
+
+	$body = $item['body'];
+
+	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED) && $body) {
+		$key = get_config('system','prvkey');
+		$body = crypto_unencapsulate(json_decode($body,true),$key);
+	}
+
+	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$body);
 
 	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
 
@@ -4117,10 +4136,13 @@ function first_post_date($uid,$wall = false) {
  * current flat list of all representative dates.
  */
 
-function list_post_dates($uid,$wall) {
+function list_post_dates($uid,$wall,$mindate) {
 	$dnow = datetime_convert('',date_default_timezone_get(),'now','Y-m-d');
 
-	$dthen = first_post_date($uid,$wall);
+	if($mindate)
+		$dthen = datetime_convert('',date_default_timezone_get(),$mindate);
+	else
+		$dthen = first_post_date($uid,$wall);
 	if(! $dthen)
 		return array();
 
@@ -4130,7 +4152,7 @@ function list_post_dates($uid,$wall) {
 	if(intval(substr($dnow,8)) > 28)
 		$dnow = substr($dnow,0,8) . '28';
 	if(intval(substr($dthen,8)) > 28)
-		$dnow = substr($dthen,0,8) . '28';
+		$dthen = substr($dthen,0,8) . '28';
 
 	$ret = array();
 	// Starting with the current month, get the first and last days of every
@@ -4164,7 +4186,7 @@ function posted_dates($uid,$wall) {
 	if(intval(substr($dnow,8)) > 28)
 		$dnow = substr($dnow,0,8) . '28';
 	if(intval(substr($dthen,8)) > 28)
-		$dnow = substr($dthen,0,8) . '28';
+		$dthen = substr($dthen,0,8) . '28';
 
 	$ret = array();
 	// Starting with the current month, get the first and last days of every
@@ -4238,14 +4260,24 @@ function fetch_post_tags($items,$link = false) {
 
 
 
-function zot_feed($uid,$observer_xchan,$mindate) {
+function zot_feed($uid,$observer_xchan,$arr) {
 
 
 	$result = array();
-	$mindate = datetime_convert('UTC','UTC',$mindate);
+	$mindate = null;
+	$message_id = null;
+
+	if(array_key_exists('mindate',$arr)) {
+		$mindate = datetime_convert('UTC','UTC',$arr['mindate']);
+	}
+
+	if(array_key_exists('message_id',$arr)) {
+		$message_id = $arr['message_id'];
+	}
+
+
 	if(! $mindate)
 		$mindate = NULL_DATE;
-
 	$mindate = dbesc($mindate);
 
 	logger('zot_feed: ' . $uid);
@@ -4266,6 +4298,11 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 	}
 	else
 		$limit = " limit 0, 50 ";
+
+	if($message_id) {
+		$sql_extra .= " and mid = '" . dbesc($message_id) . "' ";
+		$limit = '';
+	}
 
 	$items = array();
 

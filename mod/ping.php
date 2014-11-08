@@ -41,6 +41,19 @@ function ping_init(&$a) {
 
 	header("content-type: application/json");
 
+	$vnotify = false;
+
+	if(local_user())  {
+		$vnotify = get_pconfig(local_user(),'system','vnotify');
+		$evdays = intval(get_pconfig(local_user(),'system','evdays'));
+	}
+
+	// if unset show all visual notification types
+	if($vnotify === false)
+		$vnotify = (-1);
+	if($evdays < 1)
+		$evdays = 3;
+
 	/**
 	 * If you have several windows open to this site and switch to a different channel
 	 * in one of them, the others may get into a confused state showing you a page or options 
@@ -71,6 +84,11 @@ function ping_init(&$a) {
 		}
 		unset($_SESSION['sysmsg_info']);
 	}
+	if(! ($vnotify & VNOTIFY_INFO))
+		$result['info'] = array();
+	if(! ($vnotify & VNOTIFY_ALERT))
+		$result['notice'] = array();
+
 
 	if($a->install) {
 		echo json_encode($result);
@@ -303,7 +321,7 @@ function ping_init(&$a) {
 			WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
 			ORDER BY `start` DESC ",
 			intval(local_user()),
-			dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + 7 days')),
+			dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + ' . intval($evdays) . ' days')),
 			dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
 		);
 
@@ -341,101 +359,125 @@ function ping_init(&$a) {
 	 * Normal ping - just the counts, no detail
 	 */
 
-	$t = q("select count(*) as total from notify where uid = %d and seen = 0",
-		intval(local_user())
-	);
-	if($t)
-		$result['notify'] = intval($t[0]['total']);
+	if($vnotify & VNOTIFY_SYSTEM) {
+		$t = q("select count(*) as total from notify where uid = %d and seen = 0",
+			intval(local_user())
+		);
+		if($t)
+			$result['notify'] = intval($t[0]['total']);
+	}
 
 	$t1 = dba_timer();
 
-	$r = q("SELECT id, item_restrict, item_flags FROM item
-		WHERE (item_restrict = %d) and ( item_flags & %d ) and uid = %d",
-		intval(ITEM_VISIBLE),
-		intval(ITEM_UNSEEN),
-		intval(local_user())
-	);
+	if($vnotify & (VNOTIFY_NETWORK|VNOTIFY_CHANNEL)) {
+		$r = q("SELECT id, item_restrict, item_flags FROM item
+			WHERE (item_restrict = %d) and ( item_flags & %d ) and uid = %d",
+			intval(ITEM_VISIBLE),
+			intval(ITEM_UNSEEN),
+			intval(local_user())
+		);
 
-	if(count($r)) {	
-		$arr = array('items' => $r);
-		call_hooks('network_ping', $arr);
+		if($r) {	
+			$arr = array('items' => $r);
+			call_hooks('network_ping', $arr);
 	
-		foreach ($r as $it) {
-			if($it['item_flags'] & ITEM_WALL)
-				$result['home'] ++;
-			else
-				$result['network'] ++;
+			foreach ($r as $it) {
+				if($it['item_flags'] & ITEM_WALL)
+					$result['home'] ++;
+				else
+					$result['network'] ++;
+			}
 		}
 	}
+	if(! ($vnotify & VNOTIFY_NETWORK))
+		$result['network'] = 0;
+	if(! ($vnotify & VNOTIFY_CHANNEL))
+		$result['home'] = 0;
+
 
 	$t2 = dba_timer();
 
-	$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) and not ((abook_flags & %d) or (xchan_flags & %d))",
-		intval(local_user()),
-		intval(ABOOK_FLAG_PENDING),
-		intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
-		intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
-	);
+	if($vnotify & VNOTIFY_INTRO) {
+		$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) and not ((abook_flags & %d) or (xchan_flags & %d))",
+			intval(local_user()),
+			intval(ABOOK_FLAG_PENDING),
+			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
+			intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
+		);
 
-	$t3 = dba_timer();
+		$t3 = dba_timer();
 
-	if($intr)
-		$result['intros'] = intval($intr[0]['total']);
+		if($intr)
+			$result['intros'] = intval($intr[0]['total']);
+	}
 
 	$t4 = dba_timer();
 	$channel = get_app()->get_channel();
 
-	$mails = q("SELECT count(id) as total from mail
-		WHERE channel_id = %d AND not (mail_flags & %d) and from_xchan != '%s' ",
-		intval(local_user()),
-		intval(MAIL_SEEN),		
-		dbesc($channel['channel_hash'])
-	);
-	if($mails)
-		$result['mail'] = intval($mails[0]['total']);
-		
-	if ($a->config['system']['register_policy'] == REGISTER_APPROVE && is_site_admin()) {
-		$regs = q("SELECT count(account_id) as total from account where (account_flags & %d)",
-			intval(ACCOUNT_PENDING)
+	if($vnotify & VNOTIFY_MAIL) {
+		$mails = q("SELECT count(id) as total from mail
+			WHERE channel_id = %d AND not (mail_flags & %d) and from_xchan != '%s' ",
+			intval(local_user()),
+			intval(MAIL_SEEN),		
+			dbesc($channel['channel_hash'])
 		);
-		if($regs)
-			$result['register'] = intval($regs[0]['total']);
+		if($mails)
+			$result['mail'] = intval($mails[0]['total']);
+	}
+	
+	if($vnotify & VNOTIFY_REGISTER) {
+		if ($a->config['system']['register_policy'] == REGISTER_APPROVE && is_site_admin()) {
+			$regs = q("SELECT count(account_id) as total from account where (account_flags & %d)",
+				intval(ACCOUNT_PENDING)
+			);
+			if($regs)
+				$result['register'] = intval($regs[0]['total']);
+		}
 	} 
 
 	$t5 = dba_timer();
 
-	$events = q("SELECT type, start, adjust FROM `event`
-		WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
-		ORDER BY `start` ASC ",
-			intval(local_user()),
-			dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + 7 days')),
-			dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
-	);
+	if($vnotify & (VNOTIFY_EVENT|VNOTIFY_EVENTTODAY|VNOTIFY_BIRTHDAY)) {
+		$events = q("SELECT type, start, adjust FROM `event`
+			WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
+			ORDER BY `start` ASC ",
+				intval(local_user()),
+				dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + ' . intval($evdays) . ' days')),
+				dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
+		);
 
-	if($events) {
-		$result['all_events'] = count($events);
+		if($events) {
+			$result['all_events'] = count($events);
 
-		if($result['all_events']) {
-			$str_now = datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y-m-d');
-			foreach($events as $x) {
-				$bd = false;
-				if($x['type'] === 'birthday') {
-					$result['birthdays'] ++;
-					$bd = true;
-				}
-				else {
-					$result['events'] ++;
-				}
-				if(datetime_convert('UTC', ((intval($x['adjust'])) ? date_default_timezone_get() : 'UTC'), $x['start'], 'Y-m-d') === $str_now) {
-					$result['all_events_today'] ++;
-					if($bd)
-						$result['birthdays_today'] ++;
-					else
-						$result['events_today'] ++;
+			if($result['all_events']) {
+				$str_now = datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y-m-d');
+				foreach($events as $x) {
+					$bd = false;
+					if($x['type'] === 'birthday') {
+						$result['birthdays'] ++;
+						$bd = true;
+					}
+					else {
+						$result['events'] ++;
+					}
+					if(datetime_convert('UTC', ((intval($x['adjust'])) ? date_default_timezone_get() : 'UTC'), $x['start'], 'Y-m-d') === $str_now) {
+						$result['all_events_today'] ++;
+						if($bd)
+							$result['birthdays_today'] ++;
+						else
+							$result['events_today'] ++;
+					}
 				}
 			}
 		}
 	}
+	if(! ($vnotify & VNOTIFY_EVENT))
+		$result['all_events'] = $result['events'] = 0;
+	if(! ($vnotify & VNOTIFY_EVENTTODAY))
+		$result['all_events_today'] = $result['events_today'] = 0;
+	if(! ($vnotify & VNOTIFY_BIRTHDAY))
+		$result['birthdays'] = 0;
+
 
 	$x = json_encode($result);
 	

@@ -12,6 +12,10 @@ ul#settings-privacy-macros {
 	margin-top: 15px;
 }
 
+#settings-default-perms {
+	margin-top: 15px;
+}
+
 #settings-perm-advanced {
 	margin-top: 15px;
 }
@@ -41,7 +45,7 @@ ul#settings-privacy-macros {
 	margin-left: 20px;
 	width: 330px;
 }
-#settings-notify-desc, #settings-activity-desc {
+#settings-notify-desc, #settings-activity-desc, #settings-vnotify-desc {
 	font-weight: bold;
 	margin-bottom: 15px;
 }

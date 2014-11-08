@@ -77,7 +77,7 @@ function item_post(&$a) {
 	$preview     = ((x($_REQUEST,'preview'))     ? intval($_REQUEST['preview'])        : 0);
 	$categories  = ((x($_REQUEST,'category'))    ? escape_tags($_REQUEST['category'])  : '');
 	$webpage     = ((x($_REQUEST,'webpage'))     ? intval($_REQUEST['webpage'])        : 0);
-	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']) : '');
+    $pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags(urlencode($_REQUEST['pagetitle'])) : '');
 	$layout_mid  = ((x($_REQUEST,'layout_mid'))  ? escape_tags($_REQUEST['layout_mid']): '');
 	$plink       = ((x($_REQUEST,'permalink'))   ? escape_tags($_REQUEST['permalink']) : '');
 
@@ -112,6 +112,7 @@ function item_post(&$a) {
 	$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : 0);
 	$parent_mid = ((x($_REQUEST,'parent_mid')) ? trim($_REQUEST['parent_mid']) : '');
 
+	$route = '';
 	$parent_item = null;
 	$parent_contact = null;
 	$thr_parent = '';
@@ -163,6 +164,7 @@ function item_post(&$a) {
 
 		$thr_parent = $parent_mid;
 
+		$route = $parent_item['route'];
 
 	}
 
@@ -257,8 +259,25 @@ function item_post(&$a) {
 		killme();
 	}
 
+	$walltowall = false;
+	$walltowall_comment = false;
+
 	if($observer) {
 		logger('mod_item: post accepted from ' . $observer['xchan_name'] . ' for ' . $owner_xchan['xchan_name'], LOGGER_DEBUG);
+
+		// wall-to-wall detection.
+		// For top-level posts, if the author and owner are different it's a wall-to-wall
+		// For comments, We need to additionally look at the parent and see if it's a wall post that originated locally.
+
+		if($observer['xchan_name'] != $owner_xchan['xchan_name'])  {
+			if($parent_item && ($parent_item['item_flags'] & (ITEM_WALL|ITEM_ORIGIN)) == (ITEM_WALL|ITEM_ORIGIN)) {
+				$walltowall_comment = true;
+				$walltowall = true;
+			}
+			if(! $parent) {
+				$walltowall = true;		
+			}
+		}
 	}
 		
 	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
@@ -324,6 +343,15 @@ function item_post(&$a) {
 			&& (! array_key_exists('group_allow',$_REQUEST))
 			&& (! array_key_exists('contact_deny',$_REQUEST))
 			&& (! array_key_exists('group_deny',$_REQUEST))) {
+			$str_group_allow   = $channel['channel_allow_gid'];
+			$str_contact_allow = $channel['channel_allow_cid'];
+			$str_group_deny    = $channel['channel_deny_gid'];
+			$str_contact_deny  = $channel['channel_deny_cid'];
+		}
+		elseif($walltowall) {
+
+			// use the channel owner's default permissions
+
 			$str_group_allow   = $channel['channel_allow_gid'];
 			$str_contact_allow = $channel['channel_allow_cid'];
 			$str_group_deny    = $channel['channel_deny_gid'];
@@ -570,7 +598,14 @@ function item_post(&$a) {
 				logger('handle_tag: ' . print_r($success,tue), LOGGER_DATA);
 				if(($access_tag) && (! $parent_item)) {
 					logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DATA);
-					if ($first_access_tag) {
+					if ($first_access_tag && (! get_pconfig($profile_uid,'system','no_private_mention_acl_override'))) {
+
+						// This is a tough call, hence configurable. The issue is that one can type in a @!privacy mention
+						// and also have a default ACL (perhaps from viewing a collection) and could be suprised that the 
+						// privacy mention wasn't the only recipient. So the default is to wipe out the existing ACL if a
+						// private mention is found. This can be over-ridden if you wish private mentions to be in 
+						// addition to the current ACL settings.
+
 						$str_contact_allow = '';
 						$str_group_allow = '';
 						$first_access_tag = false;
@@ -720,6 +755,7 @@ function item_post(&$a) {
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 	$datarray['term']           = $post_tags;
 	$datarray['plink']          = $plink;
+	$datarray['route']          = $route;
 
 	// preview mode - prepare the body for display and send it via json
 
@@ -859,10 +895,9 @@ function item_post(&$a) {
 
 	if($parent) {
 		// Store the comment signature information in case we need to relay to Diaspora
-//FIXME
 		$ditem = $datarray;
 		$ditem['author'] = $observer;
-		store_diaspora_comment_sig($ditem,$channel,$parent_item, $post_id);
+		store_diaspora_comment_sig($ditem,$channel,$parent_item, $post_id, (($walltowall_comment) ? 1 : 0));
 	}
 
 	update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);
@@ -1137,6 +1172,8 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 
 		// $r is set if we found something
 
+		$channel = get_app()->get_channel();
+
 		if($r) {
 			$profile = $r[0]['xchan_url'];
 			$newname = $r[0]['xchan_name'];
@@ -1156,9 +1193,10 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			if(local_user() && local_user() == $profile_uid) {
 				require_once('include/group.php');
 				$grp = group_byname($profile_uid,$name);
+
 				if($grp) {
 					$g = q("select hash from groups where id = %d and visible = 1 limit 1",
-						intval($grp[0]['id'])
+						intval($grp)
 					);
 					if($g && $exclusive) {
 						$access_tag .= 'gid:' . $g[0]['hash'];
@@ -1171,6 +1209,10 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 				}		
 			}
 		}
+
+		if(($exclusive) && (! $access_tag)) {
+			$access_tag .= 'cid:' . $channel['channel_hash'];
+		}			
 
 		// if there is an url for this channel
 

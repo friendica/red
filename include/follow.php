@@ -13,6 +13,8 @@ require_once('include/zot.php');
 
 function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) {
 
+
+
 	$result = array('success' => false,'message' => '');
 
 	$a = get_app();
@@ -62,9 +64,9 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		$j = json_decode($ret['body'],true);
 	}
 
-	if($is_red && $j) {
+	$my_perms = get_channel_default_perms($uid);
 
-		$my_perms = PERMS_W_STREAM|PERMS_W_MAIL;
+	if($is_red && $j) {
 
 		$role = get_pconfig($uid,'system','permissions_role');
 		if($role) {
@@ -135,7 +137,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			}
 		}
 
-		$my_perms = 0;
 		$their_perms = 0;
 		$xchan_hash = '';
 
@@ -162,7 +163,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		if($r) {
 			$xchan_hash = $r[0]['xchan_hash'];
 			$their_perms = 0;
-			$my_perms = PERMS_W_STREAM|PERMS_W_MAIL;
 			$role = get_pconfig($uid,'system','permissions_role');
 			if($role) {
 				$x = get_role_perms($role);
@@ -203,8 +203,9 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			return $result;
 		}
 
-		$r = q("select count(*) as total from abook where abook_account = %d and ( abook_flags & ABOOK_FLAG_FEED )",
-			intval($aid)
+		$r = q("select count(*) as total from abook where abook_account = %d and ( abook_flags & %d )",
+			intval($aid),
+			intval(ABOOK_FLAG_FEED)
 		);
 		if($r)
 			$total_feeds = $r[0]['total'];

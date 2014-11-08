@@ -197,8 +197,9 @@ if(strlen($a->module)) {
 	 */
 
 	if(! $a->module_loaded) {
-		if(file_exists("custom/{$a->module}.php")) {
-			include_once("custom/{$a->module}.php");
+
+		if(file_exists("mod/site/{$a->module}.php")) {
+			include_once("mod/site/{$a->module}.php");
 			$a->module_loaded = true;
 		}
 		elseif(file_exists("mod/{$a->module}.php")) {
@@ -242,14 +243,6 @@ if(strlen($a->module)) {
 	}
 }
 
-/**
- * load current theme info
- */
-$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
-if (file_exists($theme_info_file)){
-	require_once($theme_info_file);
-}
-
 
 /* initialise content region */
 
@@ -281,10 +274,42 @@ if($a->module_loaded) {
 	$a->page['page_title'] = $a->module;
 	$placeholder = '';
 
+	/**
+	 * No theme has been specified when calling the module_init functions
+	 * For this reason, please restrict the use of templates to those which
+	 * do not provide any presentation details - as themes will not be able
+	 * to over-ride them.
+	 */  
+
 	if(function_exists($a->module . '_init')) {
 		call_hooks($a->module . '_mod_init', $placeholder);
 		$func = $a->module . '_init';
 		$func($a);
+	}
+
+	/**
+	 * Do all theme initialiasion here before calling any additional module functions.
+	 * The module_init function may have changed the theme.
+	 * Additionally any page with a Comanche template may alter the theme.
+	 * So we'll check for those now.
+	 */
+
+
+	/**
+	 * In case a page has overloaded a module, see if we already have a layout defined
+	 * otherwise, if a PDL file exists for this module, use it
+	 * The member may have also created a customised PDL that's stored in the config
+	 */
+
+	load_pdl($a);
+
+	/**
+ 	 * load current theme info
+ 	 */
+
+	$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
+	if (file_exists($theme_info_file)){
+		require_once($theme_info_file);
 	}
 
 	if(function_exists(str_replace('-','_',current_theme()) . '_init')) {

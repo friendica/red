@@ -20,13 +20,13 @@ Returns the global app structure ($a).
 
 (App:: is usually assigned to the global $a), so $a-&gt;get_observer() or get_app()-&gt;get_observer() - returns an xchan structure representing the current viewer if authenticated (locally or remotely).
 
-[b]get_config($family,$key), get_pconfig($uid,$family,$key)[/b]
+[b]get_config($family,$key), get_pconfig($uid,$family,$key), get_xconfig($xchan_hash,$family,$key)[/b]
 
 Returns the config setting for $family and $key or false if unset.
 
 [b]    set_config($family,$key,$value), set_pconfig($uid,$family,$key,$value)[/b]
 
-Sets the value of config setting for $family and $key to $value. Returns $value. The config versions operate on system-wide settings. The pconfig versions get/set the values for a specific integer uid (channel_id).
+Sets the value of config setting for $family and $key to $value. Returns $value. The config versions operate on system-wide settings. The pconfig versions get/set the values for a specific integer uid (channel_id).  The xconfig version get/sets the value for a specific xchan hash - generally used for remote users.
 
 [b]dbesc()[/b]
 

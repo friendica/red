@@ -621,7 +621,19 @@ require_once('include/items.php');
 	api_register_func('api/red/group','api_group', true);
 
 
+	function api_red_xchan(&$a,$type) {
+		if(api_user() === false)
+			return false;
+		require_once('include/hubloc.php');
+		if($_SERVER['request_method'] === 'POST') {
+			$r = xchan_store($_REQUEST);
+		}
+		$r = xchan_fetch($_REQUEST);
+		json_return_and_die($r);
+	};
 
+	api_register_func('api/red/xchan','api_red_xchan',true);
+	
 
     function api_statuses_mediap(&$a, $type) {
 		if (api_user() === false) {

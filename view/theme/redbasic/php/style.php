@@ -226,7 +226,7 @@ if(! $a->install) {
 	if (! $input_linksubmit)
 		$input_linksubmit = "#0080FF";
 	if (! $input_border)
-		$input_border = "#666";
+		$input_border = "#ccc";
 	if (! $input_colourhover)
 		$input_colourhover = "#333";
 	if (! $input_decohover)

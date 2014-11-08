@@ -16,6 +16,7 @@ var searchData=
   ['head_5fset_5ficon',['head_set_icon',['../classApp.html#a8863703a0305eaa45eb970dbd2046291',1,'App\head_set_icon()'],['../boot_8php.html#a0e4701c9742c3ef88f02ac450a042a84',1,'head_set_icon():&#160;boot.php']]],
   ['help',['help',['../namespacefriendica-to-smarty-tpl.html#af6b2c793958aae2aadc294577431f749',1,'friendica-to-smarty-tpl.help()'],['../namespaceupdatetpl.html#ac9d11279fed403a329a719298feafc4f',1,'updatetpl.help()']]],
   ['help_5fcontent',['help_content',['../help_8php.html#af055e15f600ffa6fbca9386fdf715224',1,'help.php']]],
+  ['hivenet_5finit',['hivenet_init',['../hivenet_2php_2theme_8php.html#a3a8b539b112ae63936025236dbaf0a29',1,'theme.php']]],
   ['home_5fcontent',['home_content',['../home_8php.html#aa1cf697851a646755baf537f75334c46',1,'home.php']]],
   ['home_5finit',['home_init',['../home_8php.html#ac4642c38b6f23a8d065dd4a75c620bde',1,'home.php']]],
   ['hostxrd_5finit',['hostxrd_init',['../hostxrd_8php.html#aa37ffc8e7900bc76c4828bd25916db92',1,'hostxrd.php']]],

@@ -68,6 +68,14 @@ function connedit_post(&$a) {
 
 	call_hooks('contact_edit_post', $_POST);
 
+	if($orig_record[0]['abook_flags'] & ABOOK_FLAG_SELF) {
+		$autoperms = intval($_POST['autoperms']);
+	}
+	else {
+		$autoperms = null;
+	}
+
+
 	$profile_id = $_POST['profile_assign'];
 	if($profile_id) {
 		$r = q("SELECT profile_guid FROM profile WHERE profile_guid = '%s' AND `uid` = %d LIMIT 1",
@@ -121,7 +129,7 @@ function connedit_post(&$a) {
 	if($orig_record[0]['abook_profile'] != $profile_id) { 
 		//Update profile photo permissions
 
-		logger('As a new profile was assigned updating profile photos');
+		logger('A new profile was assigned - updating profile photos');
 		require_once('mod/profile_photo.php');
 		profile_photo_set_profile_perms($profile_id);
 
@@ -208,6 +216,10 @@ function connedit_post(&$a) {
 		$arr = array('channel_id' => local_user(), 'abook' => $a->poi);
 		call_hooks('accept_follow', $arr);
 	}
+dbg(1);
+	if(! is_null($autoperms)) 
+		set_pconfig(local_user(),'system','autoperms',(($autoperms) ? $abook_my_perms : 0));
+dbg(0);
 
 	connedit_clone($a);
 
@@ -261,6 +273,8 @@ function connedit_content(&$a) {
 		$x = get_role_perms($role);
 		if($x['perms_accept'])
 			$my_perms = $x['perms_accept'];
+		else
+			$my_perms = get_channel_default_perms(local_user());
 	}
 	if($my_perms) {
 		$o .= "<script>function connectDefaultShare() {
@@ -516,16 +530,17 @@ function connedit_content(&$a) {
 			if((! $self) && ($existing[$k]))
 				$thisperm = "1";
 
-			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),$thisperm, $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4]);
+			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),$thisperm, $v[1], (($channel[$v[0]] == PERMS_SPECIFIC || $self) ? '' : '1'), $v[4]);
 		}
 
 		$o .= replace_macros($tpl,array(
 
-			'$header'         => (($self) ? t('Automatic Permissions Settings') : sprintf( t('Connections: settings for %s'),$contact['xchan_name'])),
+			'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connections: settings for %s'),$contact['xchan_name'])),
+			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_user(),'system','autoperms')) ? 1 : 0), ''),
 			'$addr'           => $contact['xchan_addr'],
 			'$notself'        => (($self) ? '' : '1'),
 			'$self'           => (($self) ? '1' : ''),
-			'$autolbl'        => t('When receiving a channel introduction, any permissions provided here will be applied to the new connection automatically and the introduction approved. Leave this page if you do not wish to use this feature.'),
+			'$autolbl'        => t('Apply the permissions indicated on this page to all new connections.'),
 			'$viewprof'       => t('View Profile'),
 			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
 			'$slide'          => $slide,

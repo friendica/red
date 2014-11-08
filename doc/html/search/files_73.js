@@ -21,9 +21,12 @@ var searchData=
   ['sslify_2ephp',['sslify.php',['../sslify_8php.html',1,'']]],
   ['starred_2ephp',['starred.php',['../starred_8php.html',1,'']]],
   ['statistics_5ffns_2ephp',['statistics_fns.php',['../statistics__fns_8php.html',1,'']]],
+  ['style_2ephp',['style.php',['../stumble_2php_2style_8php.html',1,'']]],
   ['style_2ephp',['style.php',['../mytheme_2php_2style_8php.html',1,'']]],
-  ['style_2ephp',['style.php',['../redbasic_2php_2style_8php.html',1,'']]],
+  ['style_2ephp',['style.php',['../hivenet_2php_2style_8php.html',1,'']]],
   ['style_2ephp',['style.php',['../apw_2php_2style_8php.html',1,'']]],
+  ['style_2ephp',['style.php',['../redbasic_2php_2style_8php.html',1,'']]],
+  ['style_2ephp',['style.php',['../suckerberg_2php_2style_8php.html',1,'']]],
   ['subthread_2ephp',['subthread.php',['../subthread_8php.html',1,'']]],
   ['suggest_2ephp',['suggest.php',['../suggest_8php.html',1,'']]],
   ['system_5funavailable_2ephp',['system_unavailable.php',['../system__unavailable_8php.html',1,'']]]

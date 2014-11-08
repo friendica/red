@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['datesel',['datesel',['../datetime_8php.html#ac265b86f384ee094ed5479aae02aa5c8',1,'datetime.php']]],
-  ['datesel_5fformat',['datesel_format',['../datetime_8php.html#a5f29553799005b1fd4e9ce9d98ce05aa',1,'datetime.php']]],
+  ['datesel',['datesel',['../datetime_8php.html#a77bb385ae8a9e7ca663309c102c0d766',1,'datetime.php']]],
   ['datetime_5fconvert',['datetime_convert',['../datetime_8php.html#ad6301e74b0f9267d52f8d432b5beb226',1,'datetime.php']]],
+  ['datetimesel',['datetimesel',['../datetime_8php.html#a72218e5ee21876484934bacbb6bd9ba3',1,'datetime.php']]],
   ['day_5ftranslate',['day_translate',['../text_8php.html#a63fb21c0bed2fc72eef2c1471ac42b63',1,'text.php']]],
   ['dba_5ffactory',['dba_factory',['../dba__driver_8php.html#ac10e60f6e5b95bcf67bd82cb88f37947',1,'dba_driver.php']]],
   ['dba_5ftimer',['dba_timer',['../boot_8php.html#a3e0930933fb2c0bf8211cc7ab4e1c3b4',1,'boot.php']]],
