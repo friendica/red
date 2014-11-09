@@ -122,6 +122,10 @@ function directory_content(&$a) {
 						$pdesc = (($rr['description']) ? $rr['description'] . '<br />' : '');
 						$connect_link = ((local_user()) ? z_root() . '/follow?f=&url=' . urlencode($rr['address']) : ''); 		
 
+						// Checking status is disabled ATM until someone checks the performance impact more carefully
+						//$online = remote_online_status($rr['address']);
+						$online = '';
+
 						if(in_array($rr['hash'],$contacts))
 							$connect_link = '';
 
@@ -142,8 +146,6 @@ function directory_content(&$a) {
 							if(($years = age($rr['birthday'],'UTC','')) != 0)
 								$details .= '<br />' . t('Age: ') . $years ; 
 						}
-						if(strlen($rr['gender']))
-							$details .= '<br />' . t('Gender: ') . $rr['gender'];
 
 						$page_type = '';
 
@@ -155,13 +157,48 @@ function directory_content(&$a) {
 							|| (x($profile,'country') == 1))
 						$location = t('Location:');
 
-						$gender = ((x($profile,'gender') == 1) ? t('Gender:') : False);
+						$gender = ((x($profile,'gender') == 1) ? t('Gender: ') . $profile['gender']: False);
 	
-						$marital = ((x($profile,'marital') == 1) ?  t('Status:') : False);
+						$marital = ((x($profile,'marital') == 1) ?  t('Status: ') . $profile['marital']: False);
 		
-						$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage:') : False);
+						$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage: ') : False);
+						$homepageurl = ((x($profile,'homepage') == 1) ?  $profile['homepage'] : ''); 
 
-						$about = ((x($profile,'about') == 1) ?  t('About:') : False);
+						$hometown = ((x($profile,'hometown') == 1) ?  t('Hometown: ') . $profile['hometown']  : False);
+
+						$about = ((x($profile,'about') == 1) ?  t('About: ') . $profile['about'] : False);
+
+						$keywords = ((x($profile,'keywords')) ? $profile['keywords'] : '');
+
+logger('keywords: '.$keywords);
+						if($keywords) {
+							$keywords = str_replace(',',' ', $keywords);
+							$keywords = str_replace('  ',' ', $keywords);
+							$karr = explode(' ', $keywords);
+							$out = '';
+							if($karr) {
+								if(local_user()) {
+									$r = q("select keywords from profile where uid = %d and is_default = 1 limit 1",
+										intval(local_user())
+									);
+									if($r) {
+										$keywords = str_replace(',',' ', $r[0]['keywords']);
+										$keywords = str_replace('  ',' ', $keywords);
+										$marr = explode(' ', $keywords);
+									}
+								}
+								foreach($karr as $k) {
+									if(strlen($out))
+										$out .= ', ';
+									if($marr && in_arrayi($k,$marr))
+										$out .= '<strong>' . $k . '</strong>';
+									else
+										$out .= $k;
+								}
+							}
+			
+						}
+logger('out: '.$out);
 			
 
 						$entry = array(
@@ -179,9 +216,14 @@ function directory_content(&$a) {
 							'pdesc'	=> $pdesc,
 							'marital'  => $marital,
 							'homepage' => $homepage,
+							'homepageurl' => $homepageurl,
+							'hometown' => $hometown,
 							'about' => $about,
 							'conn_label' => t('Connect'),
 							'connect' => $connect_link,
+							'online' => $online,
+							'kw' => (($out) ? t('Keywords: ') : ''),
+							'keywords' => $out,
 						);
 
 						$arr = array('contact' => $rr, 'entry' => $entry);
