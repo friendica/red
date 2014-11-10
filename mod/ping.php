@@ -222,7 +222,7 @@ function ping_init(&$a) {
 					'url' => $zz['url'],
 					'photo' => $zz['photo'],
 					'when' => relative_date($zz['date']), 
-					'class' => (($zz['seen']) ? 'notify-seen' : 'notify-unseen'), 
+					'hclass' => (($zz['seen']) ? 'notify-seen' : 'notify-unseen'), 
 					'message' => strip_tags(bbcode($zz['msg']))
 				);
 			}
@@ -251,7 +251,7 @@ function ping_init(&$a) {
 					'url' => $zz['xchan_url'],
 					'photo' => $zz['xchan_photo_s'],
 					'when' => relative_date($zz['created']), 
-					'class' => (($zz['mail_flags'] & MAIL_SEEN) ? 'notify-seen' : 'notify-unseen'), 
+					'hclass' => (($zz['mail_flags'] & MAIL_SEEN) ? 'notify-seen' : 'notify-unseen'), 
 					'message' => t('sent you a private message'),
 				);
 			}
@@ -302,7 +302,7 @@ function ping_init(&$a) {
 					'url' => $rr['xchan_url'],
 					'photo' => $rr['xchan_photo_s'],
 					'when' => relative_date($rr['abook_created']), 
-					'class' => ('notify-unseen'), 
+					'hclass' => ('notify-unseen'), 
 					'message' => t('added your channel')
 				);
 			}
@@ -343,7 +343,7 @@ function ping_init(&$a) {
 					'url'         => $rr['xchan_url'],
 					'photo'       => $rr['xchan_photo_s'],
 					'when'        => $when,
-					'class'       => ('notify-unseen'), 
+					'hclass'       => ('notify-unseen'), 
 					'message'     => t('posted an event')
 				);
 			}

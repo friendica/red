@@ -749,7 +749,7 @@ function updateConvItems(mode,data) {
 				$("#nav-" + notifyType + "-menu").html(notifications_all + notifications_mark);
 
 				$(data.notify).each(function() {
-					html = notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.class);
+					html = notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.hclass);
 					$("#nav-" + notifyType + "-menu").append(html);
 				});
 				$(".dropdown-menu img[data-src]").each(function(i, el){
