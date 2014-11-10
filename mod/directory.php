@@ -170,12 +170,14 @@ function directory_content(&$a) {
 
 						$keywords = ((x($profile,'keywords')) ? $profile['keywords'] : '');
 
+						$out = '';
+
 logger('keywords: '.$keywords);
 						if($keywords) {
 							$keywords = str_replace(',',' ', $keywords);
 							$keywords = str_replace('  ',' ', $keywords);
 							$karr = explode(' ', $keywords);
-							$out = '';
+//							$out = '';
 							if($karr) {
 								if(local_user()) {
 									$r = q("select keywords from profile where uid = %d and is_default = 1 limit 1",
