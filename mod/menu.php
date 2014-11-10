@@ -52,24 +52,26 @@ function menu_content(&$a) {
 	if(argc() == 1) {
 		// list menus
 		$x = menu_list(local_user());
+		if($x) {
+			for($y = 0; $y < count($x); $y ++) {
+				$x[$y]['bookmark'] = (($x[$y]['menu_flags'] & MENU_BOOKMARK) ? true : false);
+			}
+		}
 
-			$o = replace_macros(get_markup_template('menulist.tpl'),array(
-				'$title' => t('Manage Menus'),
-				'$menus' => $x,
-				'$edit' => t('Edit'),
-				'$drop' => t('Drop'),
-				'$new' => t('New'),
-				'$hintnew' => t('Create a new menu'),
-				'$hintdrop' => t('Delete this menu'),
-				'$hintcontent' => t('Edit menu contents'),
-				'$hintedit' => t('Edit this menu')
-				));
+		$o = replace_macros(get_markup_template('menulist.tpl'),array(
+			'$title' => t('Manage Menus'),
+			'$menus' => $x,
+			'$edit' => t('Edit'),
+			'$drop' => t('Drop'),
+			'$new' => t('New'),
+			'$bmark' => t('Bookmarks allowed'),
+			'$hintnew' => t('Create a new menu'),
+			'$hintdrop' => t('Delete this menu'),
+			'$hintcontent' => t('Edit menu contents'),
+			'$hintedit' => t('Edit this menu')
+		));
 
 		return $o;
-
-
-
-
 
 	}
 
