@@ -172,12 +172,11 @@ function directory_content(&$a) {
 
 						$out = '';
 
-logger('keywords: '.$keywords);
 						if($keywords) {
 							$keywords = str_replace(',',' ', $keywords);
 							$keywords = str_replace('  ',' ', $keywords);
 							$karr = explode(' ', $keywords);
-//							$out = '';
+
 							if($karr) {
 								if(local_user()) {
 									$r = q("select keywords from profile where uid = %d and is_default = 1 limit 1",
@@ -200,8 +199,6 @@ logger('keywords: '.$keywords);
 							}
 			
 						}
-logger('out: '.$out);
-			
 
 						$entry = array(
 							'id' => ++$t,
