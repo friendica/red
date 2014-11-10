@@ -108,6 +108,21 @@ function zfinger_init(&$a) {
 	if($deleted || $censored)
 		$searchable = false;
 	 
+	$public_forum = false;
+
+	$role = get_pconfig($e['channel_id'],'system','permissions_role');
+	if($role === 'forum') {
+		$public_forum = true;
+	}
+	else {
+		// check if it has characteristics of a public forum based on custom permissions.
+		$t = q("select abook_my_perms from abook where abook_channel = %d and (abook_flags & %d) limit 1",
+			intval($e['channel_id']),
+			intval(ABOOK_FLAG_SELF)
+		);
+		if($t && ($t[0]['abook_my_perms'] & PERMS_W_TAGWALL))
+			$public_forum = true;
+	}
 
 
 	//  This is for birthdays and keywords, but must check access permissions
@@ -174,6 +189,7 @@ function zfinger_init(&$a) {
 	$ret['target_sig']     = $zsig;
 	$ret['searchable']     = $searchable;
 	$ret['adult_content']  = $adult_channel;
+	$ret['public_forum']   = $public_forum;
 	if($deleted)
 		$ret['deleted']        = $deleted;	
 

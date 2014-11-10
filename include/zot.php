@@ -699,9 +699,13 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 
 		$dirmode = get_config('system','directory_mode'); 
 
-		if((($arr['site']['directory_mode'] === 'standalone') || ($dirmode & DIRECTORY_MODE_STANDALONE))
-&& ($arr['site']['url'] != z_root()))
+		if((($arr['site']['directory_mode'] === 'standalone') || ($dirmode & DIRECTORY_MODE_STANDALONE)) && ($arr['site']['url'] != z_root()))
 			$arr['searchable'] = false;
+
+		$public_forum = (($r[0]['xchan_flags'] & XCHAN_FLAGS_PUBFORUM) ? true : false);
+		$pubforum_changed = ((intval($public_forum) != intval($arr['public_forum'])) ? true : false);
+		if($pubforum_changed)
+			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_PUBFORUM;
 
 		$hidden = (1 - intval($arr['searchable']));
 
