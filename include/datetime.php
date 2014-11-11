@@ -134,10 +134,17 @@ function dob($dob) {
 	if(! $f)
 		$f = 'ymd';
 
-	if ($dob && $dob != '0000-00-00')
-		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),mktime(0,0,0,$month,$day,$year),'dob');
+	if($dob === '0000-00-00')
+		$value = '';
 	else
-		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),false,'dob');
+		$value = (($year) ? datetime_convert('UTC','UTC',$dob,'Y-m-d') : datetime_convert('UTC','UTC',$dob,'m-d'));
+
+	$o = '<input type="text" name="dob" value="' . $value . '" placeholder="' . t('YYYY-MM-DD or MM-DD') . '" />';
+
+//	if ($dob && $dob != '0000-00-00')
+//		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),mktime(0,0,0,$month,$day,$year),'dob');
+//	else
+//		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),false,'dob');
 
 	return $o;
 }
