@@ -2169,10 +2169,6 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 	background-color: $navaside_bghover;
 }
 
-aside .nav-pills > li > a {
-	padding: 6px 10px;
-}
-
 .dropdown-menu img {
 	border-radius: $radiuspx;
 }

@@ -7,6 +7,11 @@
 	margin-top: 0px;
 }
 
+
+.widget .nav-pills > li > a {
+	padding: 6px 10px;
+}
+
 /* suggest */
 
 .suggest-widget-more {
