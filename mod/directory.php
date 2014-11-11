@@ -2,7 +2,7 @@
 
 require_once('include/dir_fns.php');
 require_once('include/widgets.php');
-
+require_once('include/bbcode.php');
 
 function directory_init(&$a) {
 	$a->set_pager_itemspage(60);
@@ -166,7 +166,7 @@ function directory_content(&$a) {
 
 						$hometown = ((x($profile,'hometown') == 1) ?  t('Hometown: ') . $profile['hometown']  : False);
 
-						$about = ((x($profile,'about') == 1) ?  t('About: ') . $profile['about'] : False);
+						$about = ((x($profile,'about') == 1) ?  t('About: ') . bbcode($profile['about']) : False);
 
 						$keywords = ((x($profile,'keywords')) ? $profile['keywords'] : '');
 
