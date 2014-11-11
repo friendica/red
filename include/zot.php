@@ -702,10 +702,6 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 		if((($arr['site']['directory_mode'] === 'standalone') || ($dirmode & DIRECTORY_MODE_STANDALONE)) && ($arr['site']['url'] != z_root()))
 			$arr['searchable'] = false;
 
-		$public_forum = (($r[0]['xchan_flags'] & XCHAN_FLAGS_PUBFORUM) ? true : false);
-		$pubforum_changed = ((intval($public_forum) != intval($arr['public_forum'])) ? true : false);
-		if($pubforum_changed)
-			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_PUBFORUM;
 
 		$hidden = (1 - intval($arr['searchable']));
 
@@ -724,6 +720,11 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 		$deleted_changed =  ((intval($deleted) != intval($arr['deleted'])) ? true : false);
 		if($deleted_changed)
 			$new_flags = $new_flags ^ XCHAN_FLAGS_DELETED;
+
+		$public_forum = (($r[0]['xchan_flags'] & XCHAN_FLAGS_PUBFORUM) ? true : false);
+		$pubforum_changed = ((intval($public_forum) != intval($arr['public_forum'])) ? true : false);
+		if($pubforum_changed)
+			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_PUBFORUM;
 
 		if(($r[0]['xchan_name_date'] != $arr['name_updated']) 
 			|| ($r[0]['xchan_connurl'] != $arr['connections_url']) 

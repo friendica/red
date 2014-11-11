@@ -12,6 +12,12 @@
 <div class='contact-info'>
 <div class="contact-name" id="directory-name-{{$entry.id}}"  ><a href='{{$entry.profile_link}}' >{{$entry.name}}</a>{{if $entry.online}} <i class="icon-asterisk online-now" title="{{$entry.online}}"></i>{{/if}}</div>
 
+{{if $entry.public_forum}}
+<div class="contact-forum">
+{{$entry.forum_label}} @{{$entry.nickname}}+
+</div>
+{{/if}}
+
 <div class="contact-details">{{$entry.details}}</div>
 {{if $entry.hometown}}
 <div class="directory-hometown">{{$entry.hometown}} </div>

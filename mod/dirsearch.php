@@ -226,6 +226,8 @@ function dirsearch_content(&$a) {
 			$entry['name']        = $rr['xchan_name'];
 			$entry['hash']        = $rr['xchan_hash'];
 
+			$entry['public_forum'] = (($rr['xchan_flags'] & XCHAN_FLAGS_PUBFORUM) ? true : false);
+
 			$entry['url']         = $rr['xchan_url'];
 			$entry['photo_l']     = $rr['xchan_photo_l'];
 			$entry['photo']       = $rr['xchan_photo_m'];

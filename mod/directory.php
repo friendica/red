@@ -203,6 +203,7 @@ function directory_content(&$a) {
 						$entry = array(
 							'id' => ++$t,
 							'profile_link' => $profile_link,
+							'public_forum' => $rr['public_forum'],
 							'photo' => $rr['photo'],
 							'hash' => $rr['hash'],
 							'alttext' => $rr['name'] . ' ' . $rr['address'],
@@ -210,6 +211,7 @@ function directory_content(&$a) {
 							'details' => $pdesc . $details,
 							'profile' => $profile,
 							'address' =>  $rr['address'],
+							'nickname' => substr($rr['address'],0,strpos($rr['address'],'@')),
 							'location' => $location,
 							'gender'   => $gender,
 							'pdesc'	=> $pdesc,
@@ -219,6 +221,7 @@ function directory_content(&$a) {
 							'hometown' => $hometown,
 							'about' => $about,
 							'conn_label' => t('Connect'),
+							'forum_label' => t('Public Forum:'), 
 							'connect' => $connect_link,
 							'online' => $online,
 							'kw' => (($out) ? t('Keywords: ') : ''),
