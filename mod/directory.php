@@ -217,7 +217,7 @@ function directory_content(&$a) {
 							'pdesc'	=> $pdesc,
 							'marital'  => $marital,
 							'homepage' => $homepage,
-							'homepageurl' => $homepageurl,
+							'homepageurl' => linkify($homepageurl),
 							'hometown' => $hometown,
 							'about' => $about,
 							'conn_label' => t('Connect'),

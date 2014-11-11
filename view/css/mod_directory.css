@@ -21,6 +21,8 @@
 .directory-item {
 	overflow: hidden;
 	margin: 2px;
+	border-bottom: 2px solid #f1f1f1;
+	padding-bottom: 3px;
 }
 
 #directory-search-wrapper {
@@ -63,6 +65,7 @@ div.dirtagblock.widget {
 	margin: 16px;
 }
 .directory-connect {
+	margin-top: 3px;
 	display:block;
 	margin-left:auto;
 	margin-right: auto;

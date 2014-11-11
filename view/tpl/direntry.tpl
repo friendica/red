@@ -26,7 +26,7 @@
 <div class="directory-about">{{$entry.about}} </div>
 {{/if}}
 {{if $entry.homepage}}
-<div class="directory-homepage">{{$entry.homepage}}<a href='{{$entry.homepageurl}}'>{{$entry.homepageurl}}</a> </div>
+<div class="directory-homepage">{{$entry.homepage}}{{$entry.homepageurl}} </div>
 {{/if}}
 {{if $entry.kw}}
 <div class="directory-keywords">{{$entry.kw}} {{$entry.keywords}}</div>
