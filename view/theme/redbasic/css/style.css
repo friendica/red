@@ -2019,10 +2019,6 @@ img.mail-list-sender-photo {
 	-moz-border-radius: $radiuspx;
 }
 
-#saved-search-ul {
-	list-style-type: none;
-}
-
 .fileas-ul {
 	list-style-type: none;
 }
@@ -2032,15 +2028,6 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 	-moz-border-radius: $radiuspx;
 }
-/*
-.categories-ul {
-	list-style-type: none;
-}
-
-#sidebar-group-list ul, #posted-date-selector {
-	list-style-type: none;
-}
-*/
 
 .profile-thing-list img, .thing-show img, .thing-edit-links a {
 	margin-top: 8px;
