@@ -238,7 +238,6 @@ function admin_page_site_post(&$a){
 	$language			=	((x($_POST,'language'))			? notags(trim($_POST['language']))			: '');
 	$theme				=	((x($_POST,'theme'))			? notags(trim($_POST['theme']))				: '');
 	$theme_mobile			=	((x($_POST,'theme_mobile'))		? notags(trim($_POST['theme_mobile']))			: '');
-	$theme_accessibility		=	((x($_POST,'theme_accessibility'))	? notags(trim($_POST['theme_accessibility']))		: '');
 //	$site_channel			=	((x($_POST,'site_channel'))	? notags(trim($_POST['site_channel']))				: '');
 	$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))				:  0);
 	
@@ -298,12 +297,6 @@ function admin_page_site_post(&$a){
 	} else {
 		set_config('system','mobile_theme', $theme_mobile);
         }
-        if ( $theme_accessibility === '---' ) {
-		del_config('system','accessibility_theme');
-	} else {
-		set_config('system','accessibility_theme', $theme_accessibility);
-        }
-      
 //	set_config('system','site_channel', $site_channel);
 	set_config('system','maximagesize', $maximagesize);
 	
@@ -357,27 +350,32 @@ function admin_page_site(&$a) {
 	}
 
 	/* Installed themes */
-	$theme_choices = array();
-	$theme_choices_mobile = array();
-	$theme_choices_mobile["---"] = t("No special theme for mobile devices");
-	$theme_choices_accessibility = array();
-	$theme_choices_accessibility["---"] =t("No special theme for accessibility");
-	$files = glob('view/theme/*');
-	if($files) {
-		foreach($files as $file) {
-			$f = basename($file);
-			$theme_name = ((file_exists($file . '/experimental')) ?  sprintf("%s - Experimental", $f) : $f);
-		if (file_exists($file . '/mobile')) {
-			$theme_choices_mobile[$f] = $theme_name;
+    $theme_choices_mobile["---"] = t("Default");
+    $theme_choices = array();
+    $files = glob('view/theme/*');
+    if($files) {
+        foreach($files as $file) {
+		    $vars = '';
+            $f = basename($file);
+            if (file_exists($file . '/library'))
+			    continue;
+            if (file_exists($file . '/mobile'))
+			    $vars = t('mobile');
+			if (file_exists($file . '/experimental'))
+				$vars .= t('experimental');
+			if (file_exists($file . '/unsupported'))
+				$vars .= t('unsupported');
+			if ($vars) {
+				$theme_choices[$f] = $f . ' (' . $vars . ')';
+				$theme_choices_mobile[$f] = $f . ' (' . $vars . ')';
             }
-		if (file_exists($file . '/accessibility')) {
-                $theme_choices_accessibility[$f] = $theme_name;
-            }
-			$theme_choices[$f] = $theme_name;
-		}
-	}
-	
-	
+			else {
+                $theme_choices[$f] = $f;
+                $theme_choices_mobile[$f] = $f;
+                }
+        }
+    }
+
 	/* Banner */
 	$banner = get_config('system','banner');
 	if($banner == false) 
@@ -425,7 +423,6 @@ function admin_page_site(&$a) {
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 		'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),
-		'$theme_accessibility' 	=> array('theme_accessibility', t("Accessibility system theme"), get_config('system','accessibility_theme'), t("Accessibility theme"), $theme_choices_accessibility),
 //		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
 		'$diaspora_enabled'  => array('diaspora_enabled',t('Enable Diaspora Protocol'), get_config('system','diaspora_enabled'), t('Communicate with Diaspora and Friendica - experimental')),
 		'$feed_contacts'    => array('feed_contacts', t('Allow Feeds as Connections'),get_config('system','feed_contacts'),t('(Heavy system resource usage)')), 
