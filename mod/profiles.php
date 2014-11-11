@@ -514,6 +514,8 @@ function profiles_post(&$a) {
 		}
 
 		if($is_default) {
+			// reload the info for the sidebar widget - why does this not work?
+			profile_load($a,$channel['channel_address']);
 			proc_run('php','include/directory.php',local_user());
 		}
 	}
