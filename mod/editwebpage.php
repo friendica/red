@@ -214,9 +214,7 @@ function editwebpage_content(&$a) {
 
 	));
 
-	$ob = (($observer) ? $observer['xchan_hash'] : '');
-
-	if(($itm[0]['author_xchan'] === $ob) || ($itm[0]['owner_xchan'] === $ob))
+	if(($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash))
 		$o .= '<br /><br /><a class="page-delete-link" href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Webpage') . '</a><br />';
 
 
