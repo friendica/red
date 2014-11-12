@@ -2023,10 +2023,12 @@ function json_decode_plus($s) {
 function design_tools() {
 
 	$channel  = get_app()->get_channel();
+	$sys = false;
 
 	if(get_app()->is_sys && is_site_admin()) {
 		require_once('include/identity.php');
 		$channel = get_sys_channel();
+		$sys = true;
 	}
 
 	$who = $channel['channel_address'];
@@ -2034,6 +2036,7 @@ function design_tools() {
 	return replace_macros(get_markup_template('design_tools.tpl'), array(
 		'$title' => t('Design'),
 		'$who' => $who,
+		'$sys' => $sys,
 		'$blocks' => t('Blocks'),
 		'$menus' => t('Menus'),
 		'$layout' => t('Layouts'),

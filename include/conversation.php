@@ -1493,8 +1493,12 @@ function network_tabs() {
 
 
 function profile_tabs($a, $is_owner=False, $nickname=Null){
-	//echo "<pre>"; var_dump($a->user); killme();
-		
+
+	// Don't provide any profile tabs if we're running as the sys channel
+	
+	if($a->is_sys)
+		return;
+	
 	$channel = $a->get_channel();
 
 	if (is_null($nickname))

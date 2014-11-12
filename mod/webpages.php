@@ -1,9 +1,12 @@
 <?php
 
+require_once('include/identity.php');
+require_once('include/conversation.php');
+require_once('include/acl_selectors.php');
+
 function webpages_init(&$a) {
 
 	if(argc() > 1 && argv(1) === 'sys' && is_site_admin()) {
-		require_once('include/identity.php');
 		$sys = get_sys_channel();
 		if($sys && intval($sys['channel_id'])) {
 			$a->is_sys = true;
@@ -15,7 +18,7 @@ function webpages_init(&$a) {
 	else
 		return;
 
-	profile_load($a,$which,$profile);
+	profile_load($a,$which);
 
 }
 
@@ -28,16 +31,16 @@ function webpages_content(&$a) {
 		return;
 	}
 
+	$which = argv(1);
+
 	$uid = 0;
 	$owner = 0;
 	$channel = null;
 	$observer = $a->get_observer();
 
-	$profile = 0;
 	$channel = $a->get_channel();
 
 	if($a->is_sys && is_site_admin()) {
-		require_once('include/identity.php');
 		$sys = get_sys_channel();
 		if($sys && intval($sys['channel_id'])) {
 			$uid = $owner = intval($sys['channel_id']);
@@ -83,8 +86,6 @@ function webpages_content(&$a) {
 	// Nickname is set to the observers xchan, and profile_uid to the owner's.  
 	// This lets you post pages at other people's channels.
 
-	require_once ('include/conversation.php');
-	require_once('include/acl_selectors.php');
 
 
 	if((! $channel) && ($uid) && ($uid == $a->profile_uid)) {
@@ -101,21 +102,20 @@ function webpages_content(&$a) {
 	else
 		$channel_acl = array();
 
-	require_once('include/conversation.php');
+
 	$o = profile_tabs($a,true);
 
-
 	$x = array(
-		'webpage' => ITEM_WEBPAGE,
-		'is_owner' => true,
-		'nickname' => $a->profile['channel_address'],
-		'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-		'bang' => (($group || $cid) ? '!' : ''),
-		'acl' => (($uid && $uid == $owner) ? populate_acl($channel_acl,false) : ''),
-		'visitor' => true,
+		'webpage'     => ITEM_WEBPAGE,
+		'is_owner'    => true,
+		'nickname'    => $a->profile['channel_address'],
+		'lockstate'   => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
+		'bang'        => '',
+		'acl'         => (($uid && $uid == $owner) ? populate_acl($channel_acl,false) : ''),
+		'visitor'     => true,
 		'profile_uid' => intval($owner),
-		'mimetype' => $mimetype,
-		'layout' => $layout,
+		'mimetype'    => $mimetype,
+		'layout'      => $layout,
 	);
 	
 	if($_REQUEST['title'])
@@ -127,10 +127,12 @@ function webpages_content(&$a) {
 
 	$o .= status_editor($a,$x);
 
-	// Get a list of webpages.  We can't display all them because endless scroll makes that unusable, so just list titles and an edit link.
+	// Get a list of webpages.  We can't display all them because endless scroll makes that unusable, 
+	// so just list titles and an edit link.
 	//TODO - this should be replaced with pagelist_widget
 
-	$r = q("select * from item_id left join item on item_id.iid = item.id where item_id.uid = %d and service = 'WEBPAGE' order by item.created desc",
+	$r = q("select * from item_id left join item on item_id.iid = item.id 
+		where item_id.uid = %d and service = 'WEBPAGE' order by item.created desc",
 		intval($owner)
 	);
 
@@ -140,30 +142,36 @@ function webpages_content(&$a) {
 		$pages = array();
 		foreach($r as $rr) {
 			unobscure($rr);
-			$pages[$rr['iid']][] = array('url' => $rr['iid'],'pagetitle' => $rr['sid'],'title' => $rr['title'],'created' => datetime_convert('UTC',date_default_timezone_get(),$rr['created']),'edited' => datetime_convert('UTC',date_default_timezone_get(),$rr['edited']));
+			$pages[$rr['iid']][] = array(
+				'url'       => $rr['iid'],
+				'pagetitle' => $rr['sid'],
+				'title'     => $rr['title'],
+				'created'   => datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
+				'edited'    => datetime_convert('UTC',date_default_timezone_get(),$rr['edited'])
+			);
 		}
 	}
 
 
-//Build the base URL for edit links
-		$url = z_root() . "/editwebpage/" . $which;
-// This isn't pretty, but it works.  Until I figure out what to do with the UI, it's Good Enough(TM).
-	return $o . replace_macros(get_markup_template("webpagelist.tpl"), array(
-    		'$listtitle' => t('Webpages'),
-		'$baseurl' => $url,
-		'$edit' => t('Edit'),
-		'$pages' => $pages,
-		'$channel' => $which,
-		'$view' => t('View'),
-		'$preview' => t('Preview'),
-		'$actions_txt' => t('Actions'),
+	//Build the base URL for edit links
+	$url = z_root() . '/editwebpage/' . $which;
+	
+	$o .= replace_macros(get_markup_template('webpagelist.tpl'), array(
+    	'$listtitle'    => t('Webpages'),
+		'$baseurl'      => $url,
+		'$edit'         => t('Edit'),
+		'$pages'        => $pages,
+		'$channel'      => $which,
+		'$view'         => t('View'),
+		'$preview'      => t('Preview'),
+		'$actions_txt'  => t('Actions'),
 		'$pagelink_txt' => t('Page Link'),
-		'$title_txt' => t('Title'),
-		'$created_txt' => t('Created'),
-		'$edited_txt' => t('Edited')
+		'$title_txt'    => t('Title'),
+		'$created_txt'  => t('Created'),
+		'$edited_txt'   => t('Edited')
 
-));
+	));
 
-	$o .= '</div>'; 
+	return $o;
 
 }
