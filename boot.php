@@ -677,8 +677,8 @@ class App {
 	public  $css_sources = array();
 	public  $js_sources = array();
 	public  $theme_info = array();
-
-	public $nav_sel;
+	public  $is_sys = false;
+	public  $nav_sel;
 
 	public $category;
 

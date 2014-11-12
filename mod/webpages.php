@@ -1,15 +1,32 @@
 <?php
 
-function webpages_content(&$a) {
+function webpages_init(&$a) {
+
+	if(argc() > 1 && argv(1) === 'sys' && is_site_admin()) {
+		require_once('include/identity.php');
+		$sys = get_sys_channel();
+		if($sys && intval($sys['channel_id'])) {
+			$a->is_sys = true;
+		}
+	}
 
 	if(argc() > 1)
 		$which = argv(1);
-	else {
+	else
+		return;
+
+	profile_load($a,$which,$profile);
+
+}
+
+
+function webpages_content(&$a) {
+
+	if(! $a->profile) {
 		notice( t('Requested profile is not available.') . EOL );
 		$a->error = 404;
 		return;
 	}
-
 
 	$uid = 0;
 	$owner = 0;
@@ -19,7 +36,7 @@ function webpages_content(&$a) {
 	$profile = 0;
 	$channel = $a->get_channel();
 
-	if($which === 'sys' && is_site_admin()) {
+	if($a->is_sys && is_site_admin()) {
 		require_once('include/identity.php');
 		$sys = get_sys_channel();
 		if($sys && intval($sys['channel_id'])) {
@@ -28,8 +45,6 @@ function webpages_content(&$a) {
 			$observer = $sys;
 		}
 	}
-
-	profile_load($a,$which,$profile);
 
 	if(! $owner) {
 		// Figure out who the page owner is.

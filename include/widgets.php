@@ -585,7 +585,7 @@ function widget_design_tools($arr) {
 	// otherwise local_user() is sufficient for permissions.
 
 	if($a->profile['profile_uid']) 
-		if($a->profile['profile_uid'] != local_user())
+		if(($a->profile['profile_uid'] != local_user()) && (! $a->is_sys))
 				return '';
  
 	if(! local_user())

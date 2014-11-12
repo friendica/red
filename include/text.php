@@ -2024,7 +2024,7 @@ function design_tools() {
 
 	$channel  = get_app()->get_channel();
 
-	if(array_key_exists('sys',$_REQUEST) && $_REQUEST['sys'] == 1 && is_site_admin()) {
+	if(get_app()->is_sys && is_site_admin()) {
 		require_once('include/identity.php');
 		$channel = get_sys_channel();
 	}
