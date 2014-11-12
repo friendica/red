@@ -2021,7 +2021,14 @@ function json_decode_plus($s) {
 
 
 function design_tools() {
+
 	$channel  = get_app()->get_channel();
+
+	if(array_key_exists('sys',$_REQUEST) && $_REQUEST['sys'] == 1 && is_site_admin()) {
+		require_once('include/identity.php');
+		$channel = get_sys_channel();
+	}
+
 	$who = $channel['channel_address'];
 
 	return replace_macros(get_markup_template('design_tools.tpl'), array(
