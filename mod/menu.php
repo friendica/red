@@ -1,13 +1,23 @@
 <?php
 
 require_once('include/menu.php');
+require_once('include/identity.php');
 
 function menu_post(&$a) {
 
-	if(! local_user())
+	$uid = local_user();
+
+	if(array_key_exists('sys',$_REQUEST) && $_REQUEST['sys'] && is_site_admin()) {
+		$sys = get_sys_channel();
+		$uid = intval($sys['channel_id']);
+		$a->is_sys = true;
+	}
+
+	if(! $uid)
 		return;
 
-	$_REQUEST['menu_channel_id'] = local_user();
+	$_REQUEST['menu_channel_id'] = $uid;
+	
 	if($_REQUEST['menu_bookmark'])
 		$_REQUEST['menu_flags'] |= MENU_BOOKMARK;
 	if($_REQUEST['menu_system'])
@@ -19,7 +29,7 @@ function menu_post(&$a) {
 		$r = menu_edit($_REQUEST);
 		if($r) {
 			info( t('Menu updated.') . EOL);
-			goaway(z_root() . '/mitem/' . $menu_id); 
+			goaway(z_root() . '/mitem/' . $menu_id . (($a->is_sys) ? '?f=&sys=1' : '')); 
 		}
 		else
 			notice( t('Unable to update menu.'). EOL);
@@ -28,7 +38,7 @@ function menu_post(&$a) {
 		$r = menu_create($_REQUEST);
 			if($r) {
 			info( t('Menu created.') . EOL);
-			goaway(z_root() . '/mitem/' . $r); 
+			goaway(z_root() . '/mitem/' . $r . (($a->is_sys) ? '?f=&sys=1' : '')); 
 		}
 		else
 			notice( t('Unable to create menu.'). EOL);
@@ -40,18 +50,22 @@ function menu_post(&$a) {
 
 function menu_content(&$a) {
 
-	if(! local_user()) {
+	$uid = local_user();
+
+	if($a->is_sys && is_site_admin()) {
+		$sys = get_sys_channel();
+		$uid = intval($sys['channel_id']);
+	}
+
+	if(! $uid) {
 		notice( t('Permission denied.') . EOL);
 		return '';
 	}
 
 
-//	$a->set_widget('design',design_tools());
-
-
 	if(argc() == 1) {
 		// list menus
-		$x = menu_list(local_user());
+		$x = menu_list($uid);
 		if($x) {
 			for($y = 0; $y < count($x); $y ++) {
 				$x[$y]['bookmark'] = (($x[$y]['menu_flags'] & MENU_BOOKMARK) ? true : false);
@@ -89,19 +103,19 @@ function menu_content(&$a) {
 		}
 
  		elseif(intval(argv(1))) {
-			$m = menu_fetch_id(intval(argv(1)),local_user());
+			$m = menu_fetch_id(intval(argv(1)),$uid);
 			if(! $m) {
 				notice( t('Menu not found.') . EOL);
 				return '';
 			}
 			if(argc() == 3 && argv(2) == 'drop') {
-				$r = menu_delete_id(intval(argv(1)),local_user());
+				$r = menu_delete_id(intval(argv(1)),$uid);
 				if($r)
 					info( t('Menu deleted.') . EOL);
 				else
 					notice( t('Menu could not be deleted.'). EOL);
 
-				goaway(z_root() . '/menu');
+				goaway(z_root() . '/menu' . (($a->is_sys) ? '?f=&sys=1' : ''));
 			}
 			else {
 				$o = replace_macros(get_markup_template('menuedit.tpl'), array(
