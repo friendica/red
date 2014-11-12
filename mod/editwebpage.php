@@ -1,26 +1,74 @@
 <?php
 
-// Required for setting permissions. (FIXME)
+require_once('include/identity.php');
+require_once('include/acl_selectors.php');
 
-require_once('acl_selectors.php');
+function editwebpage_init(&$a) {
+
+	if(argc() > 1 && argv(1) === 'sys' && is_site_admin()) {
+		$sys = get_sys_channel();
+		if($sys && intval($sys['channel_id'])) {
+			$a->is_sys = true;
+		}
+	}
+
+	if(argc() > 1)
+		$which = argv(1);
+	else
+		return;
+
+	profile_load($a,$which);
+
+}
+
 
 function editwebpage_content(&$a) {
 
-	// We first need to figure out who owns the webpage, grab it from an argument
+	if(! $a->profile) {
+		notice( t('Requested profile is not available.') . EOL );
+		$a->error = 404;
+		return;
+	}
 
 	$which = argv(1);
 
-	// $a->get_channel() and stuff don't work here, so we've got to find the owner for ourselves.
-	
-	$r = q("select channel_id from channel where channel_address = '%s'",
-		dbesc($which)
-	);
-	if($r) {
-		$owner = intval($r[0]['channel_id']);
-		//logger('owner: ' . print_r($owner,true));
+	$uid = local_user();
+	$owner = 0;
+	$channel = null;
+	$observer = $a->get_observer();
+
+	$channel = $a->get_channel();
+
+	if($a->is_sys && is_site_admin()) {
+		$sys = get_sys_channel();
+		if($sys && intval($sys['channel_id'])) {
+			$uid = $owner = intval($sys['channel_id']);
+			$channel = $sys;
+			$observer = $sys;
+		}
 	}
 
-	$is_owner = ((local_user() && local_user() == $owner) ? true : false);
+	if(! $owner) {
+		// Figure out who the page owner is.
+		$r = q("select channel_id from channel where channel_address = '%s'",
+			dbesc($which)
+		);
+		if($r) {
+			$owner = intval($r[0]['channel_id']);
+		}
+	}
+
+	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
+
+	$perms = get_all_perms($owner,$ob_hash);
+
+	if(! $perms['write_pages']) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
+
+
+	$is_owner = (($uid && $uid == $owner) ? true : false);
 			
 	$o = '';
 
@@ -33,9 +81,6 @@ function editwebpage_content(&$a) {
 		return;
 	}
 
-	// Now we've got a post and an owner, let's find out if we're allowed to edit it
-
-	$observer = $a->get_observer();
 	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
 	$perms = get_all_perms($owner,$ob_hash);
@@ -45,14 +90,13 @@ function editwebpage_content(&$a) {
 		return;
 	}
 
+	// We've already figured out which item we want and whose copy we need, 
+	// so we don't need anything fancy here
 
-
-	// We've already figured out which item we want and whose copy we need, so we don't need anything fancy here
 	$itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s LIMIT 1",
 		intval($post_id),
 		intval($owner)
-   );
-
+	);
 
 	if($itm[0]['item_flags'] & ITEM_OBSCURED) {
 		$key = get_config('system','prvkey');
@@ -63,23 +107,17 @@ function editwebpage_content(&$a) {
 	}
 
 	$item_id = q("select * from item_id where service = 'WEBPAGE' and iid = %d limit 1",
-		$itm[0]['id']
+		intval($itm[0]['id'])
 	);
 	if($item_id)
 		$page_title = $item_id[0]['sid'];
 
-
-
-
 	$plaintext = true;
-
-//	if(feature_enabled($itm[0]['uid'],'richtext'))
-//		$plaintext = false;
 
 	$mimetype = $itm[0]['mimetype'];
 
 	if($mimetype === 'application/x-php') {
-		if((! local_user()) || (local_user() != $itm[0]['uid'])) {
+		if((! $uid) || ($uid != $itm[0]['uid'])) {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
@@ -101,7 +139,6 @@ function editwebpage_content(&$a) {
 	else
 		$layoutselect = layout_select($itm[0]['uid'],$itm[0]['layout_mid']);
 		
-
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 		'$title' => t('Edit Webpage')
 	));
@@ -112,7 +149,7 @@ function editwebpage_content(&$a) {
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag' => $geotag,
-		'$nickname' => $a->user['nickname'],
+		'$nickname' => $channel['channel_address'],
 		'$confirmdelete' => t('Delete webpage?')
 	));
 
@@ -124,12 +161,9 @@ function editwebpage_content(&$a) {
 
 	call_hooks('jot_tool', $jotplugins);
 	call_hooks('jot_networks', $jotnets);
-
-	$channel = $a->get_channel();
-
-	//$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 	
-//FIXME A return path with $_SESSION doesn't always work for observer - it may WSoD instead of loading a sensible page.  So, send folk to the webpage list.
+	// FIXME A return path with $_SESSION doesn't always work for observer - it may WSoD 
+	// instead of loading a sensible page.  So, send folk to the webpage list.
 
 	$rp = 'webpages/' . $which;
 
@@ -171,16 +205,16 @@ function editwebpage_content(&$a) {
 		'lockstate' => (((strlen($itm[0]['allow_cid'])) || (strlen($itm[0]['allow_gid'])) || (strlen($itm[0]['deny_cid'])) || (strlen($itm[0]['deny_gid']))) ? 'lock' : 'unlock'),
 		'$bang' => '',
 		'$profile_uid' => (intval($owner)),
-		'$preview' => ((feature_enabled(local_user(),'preview')) ? t('Preview') : ''),
+		'$preview' => ((feature_enabled($uid,'preview')) ? t('Preview') : ''),
 		'$jotplugins' => $jotplugins,
-		'$sourceapp' => t($a->sourcename),
+		'$sourceapp' => $a->sourcename,
 		'$defexpire' => '',
 		'$feature_expire' => false,
 		'$expires' => t('Set expiration date'),
 
 	));
 
-	$ob = get_observer_hash();
+	$ob = (($observer) ? $observer['xchan_hash'] : '');
 
 	if(($itm[0]['author_xchan'] === $ob) || ($itm[0]['owner_xchan'] === $ob))
 		$o .= '<br /><br /><a class="page-delete-link" href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Webpage') . '</a><br />';

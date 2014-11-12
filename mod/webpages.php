@@ -33,7 +33,7 @@ function webpages_content(&$a) {
 
 	$which = argv(1);
 
-	$uid = 0;
+	$uid = local_user();
 	$owner = 0;
 	$channel = null;
 	$observer = $a->get_observer();
