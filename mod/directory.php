@@ -42,7 +42,8 @@ function directory_content(&$a) {
 	else
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
-	$advanced = ((x($_REQUEST,'query')) ? notags(trim($_REQUEST['query'])) : '');
+	if(strpos($search,'=') && local_user() && get_pconfig(local_user(),'feature','expert'))
+		$advanced = $search;
 
 	$keywords = (($_GET['keywords']) ? $_GET['keywords'] : '');
 

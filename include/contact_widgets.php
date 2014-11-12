@@ -29,8 +29,7 @@ function findpeople_widget() {
 		'$random' => t('Random Profile'),
 		'$inv' => t('Invite Friends'),
 		'$advanced_search' => $advanced_search,
-		'$advanced_hint' => t('Exammple: name=fred and country=iceland'),
-		'$find_advanced' => t('Advanced Find'),
+		'$advanced_hint' => "\r\n" . t('Advanced example: name=fred and country=iceland'),
 		'$loggedin' => local_user()
 	));
 
