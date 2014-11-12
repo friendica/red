@@ -33,14 +33,15 @@ function item_post(&$a) {
 
 	$uid = local_user();
 	$channel = null;
+	$observer = null;
 
-	if(array_key_exists('sys',$_REQUEST) && $_REQUEST['sys'] == 1 && is_site_admin()) {
-		require_once('include/identity.php');
-		$sys = get_sys_channel();
-		if($sys && intval($sys['channel_id'])) {
-			$uid = intval($sys['channel_id']);
-			$channel = $sys;
-		}
+	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
+	require_once('include/identity.php');
+	$sys = get_sys_channel();
+	if($sys && $profile_uid && ($sys['channel_id'] == $profile_uid) && is_site_admin()) {
+		$uid = intval($sys['channel_id']);
+		$channel = $sys;
+		$observer = $sys;
 	}
 
 	if(x($_REQUEST,'dropitems')) {
@@ -78,7 +79,6 @@ function item_post(&$a) {
 
 	$message_id  = ((x($_REQUEST,'message_id') && $api_source)  ? strip_tags($_REQUEST['message_id'])       : '');
 	$created     = ((x($_REQUEST,'created'))     ? datetime_convert('UTC','UTC',$_REQUEST['created']) : datetime_convert());
-	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
 	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])        : 0);
 	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])     : '');
 	$return_path = ((x($_REQUEST,'return'))      ? $_REQUEST['return']                 : '');
@@ -176,9 +176,8 @@ function item_post(&$a) {
 
 	}
 
-
-	$observer = $a->get_observer();
-
+	if(! $observer)
+		$observer = $a->get_observer();
 
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);

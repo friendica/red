@@ -10,28 +10,37 @@ function webpages_content(&$a) {
 		return;
 	}
 
+
+	$uid = 0;
+	$owner = 0;
+	$channel = null;
+	$observer = $a->get_observer();
+
 	$profile = 0;
 	$channel = $a->get_channel();
 
-	if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
-		$which = $channel['channel_address'];
-		$profile = argv(1);
+	if($which === 'sys' && is_site_admin()) {
+		require_once('include/identity.php');
+		$sys = get_sys_channel();
+		if($sys && intval($sys['channel_id'])) {
+			$uid = $owner = intval($sys['channel_id']);
+			$channel = $sys;
+			$observer = $sys;
+		}
 	}
 
 	profile_load($a,$which,$profile);
 
-
-	// Figure out who the page owner is.
-	$r = q("select channel_id from channel where channel_address = '%s'",
-		dbesc($which)
-	);
-	if($r) {
-		$owner = intval($r[0]['channel_id']);
+	if(! $owner) {
+		// Figure out who the page owner is.
+		$r = q("select channel_id from channel where channel_address = '%s'",
+			dbesc($which)
+		);
+		if($r) {
+			$owner = intval($r[0]['channel_id']);
+		}
 	}
 
-	// Get the observer, check their permissions
-
-	$observer = $a->get_observer();
 	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
 	$perms = get_all_perms($owner,$ob_hash);
@@ -40,11 +49,6 @@ function webpages_content(&$a) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
-
-//		if(local_user() && local_user() == $owner) {
-//			$a->set_widget('design',design_tools());
-//		}
-
 
 	if(feature_enabled($owner,'expert')) {
 		$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
@@ -60,14 +64,18 @@ function webpages_content(&$a) {
 		$layout = 'choose';
 
 
-// Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
-// Nickname is set to the observers xchan, and profile_uid to the owners.  This lets you post pages at other people's channels.
+	// Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
+	// Nickname is set to the observers xchan, and profile_uid to the owner's.  
+	// This lets you post pages at other people's channels.
+
 	require_once ('include/conversation.php');
 	require_once('include/acl_selectors.php');
 
 
-	if(local_user() && local_user() == $a->profile_uid) {
+	if((! $channel) && ($uid) && ($uid == $a->profile_uid)) {
 		$channel = $a->get_channel();
+	}
+	if($channel) {
 		$channel_acl = array(
 			'allow_cid' => $channel['channel_allow_cid'],
 			'allow_gid' => $channel['channel_allow_gid'],
@@ -88,7 +96,7 @@ function webpages_content(&$a) {
 		'nickname' => $a->profile['channel_address'],
 		'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 		'bang' => (($group || $cid) ? '!' : ''),
-		'acl' => ((local_user() && local_user() == $owner) ? populate_acl($channel_acl,false) : ''),
+		'acl' => (($uid && $uid == $owner) ? populate_acl($channel_acl,false) : ''),
 		'visitor' => true,
 		'profile_uid' => intval($owner),
 		'mimetype' => $mimetype,
