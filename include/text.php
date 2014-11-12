@@ -2046,12 +2046,20 @@ function normalise_openid($s) {
 
 // used in ajax endless scroll request to find out all the args that the master page was viewing.
 // This was using $_REQUEST, but $_REQUEST also contains all your cookies. So we're restricting it 
-// to $_GET. If this is used in a post handler, that decision may need to be considered. 
+// to $_GET and $_POST. 
 
 function extra_query_args() {
 	$s = '';
 	if(count($_GET)) {
 		foreach($_GET as $k => $v) {
+			// these are request vars we don't want to duplicate
+			if(! in_array($k, array('q','f','zid','page','PHPSESSID'))) {
+				$s .= '&' . $k . '=' . $v;
+			}
+		}
+	}
+	if(count($_POST)) {
+		foreach($_POST as $k => $v) {
 			// these are request vars we don't want to duplicate
 			if(! in_array($k, array('q','f','zid','page','PHPSESSID'))) {
 				$s .= '&' . $k . '=' . $v;
