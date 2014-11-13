@@ -38,7 +38,7 @@ function connect_post(&$a) {
 		$text = escape_tags($_POST['text']);
 		
 		if($has_premium != $premium) {
-			$r = q("update channel set channel_pageflags = ( channel_pageflags ^ %d ) where channel_id = %d limit 1",
+			$r = q("update channel set channel_pageflags = ( channel_pageflags & ~%d ) where channel_id = %d",
 				intval(PAGE_PREMIUM),
 				intval(local_user()) 
 			);

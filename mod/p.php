@@ -11,7 +11,7 @@ function p_init(&$a) {
 
 	$mid = str_replace('.xml','',argv(1));
 
-	$r = q("select * from item where mid = '%s' and (item_flags & %d) and item_private = 0 limit 1",
+	$r = q("select * from item where mid = '%s' and (item_flags & %d)>0 and item_private = 0 limit 1",
 		dbesc($mid),
 		intval(ITEM_WALL)
 	);

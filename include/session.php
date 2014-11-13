@@ -60,11 +60,11 @@ function ref_session_write ($id,$data) {
   if($session_exists)
     $r = q("UPDATE `session` 
             SET `data` = '%s', `expire` = '%s' 
-            WHERE `sid` = '%s' LIMIT 1", 
+            WHERE `sid` = '%s'", 
             dbesc($data), dbesc($expire), dbesc($id));
   else
-    $r = q("INSERT INTO `session`
-            SET `sid` = '%s', `expire` = '%s', `data` = '%s'",
+    $r = q("INSERT INTO `session` (sid, expire, data) values ('%s', '%s', '%s')",
+            //SET `sid` = '%s', `expire` = '%s', `data` = '%s'",
             dbesc($id), dbesc($default_expire), dbesc($data));
 
   return true;
@@ -84,8 +84,9 @@ function ref_session_destroy ($id) {
 
 function ref_session_gc($expire) {
   q("DELETE FROM session WHERE expire < %d", dbesc(time()));
-  q("OPTIMIZE TABLE session");
-  return true;
+    if (! get_config('system','innodb'))
+	db_optimizetable('session');
+    return true;
 }
 
 $gc_probability = 50;

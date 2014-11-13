@@ -134,7 +134,17 @@ function dob($dob) {
 	if(! $f)
 		$f = 'ymd';
 
-	$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),mktime(0,0,0,$month,$day,$year),'dob');
+	if($dob === '0000-00-00')
+		$value = '';
+	else
+		$value = (($year) ? datetime_convert('UTC','UTC',$dob,'Y-m-d') : datetime_convert('UTC','UTC',$dob,'m-d'));
+
+	$o = '<input type="text" name="dob" value="' . $value . '" placeholder="' . t('YYYY-MM-DD or MM-DD') . '" />';
+
+//	if ($dob && $dob != '0000-00-00')
+//		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),mktime(0,0,0,$month,$day,$year),'dob');
+//	else
+//		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),false,'dob');
 
 	return $o;
 }
@@ -450,7 +460,10 @@ function update_birthdays() {
 	require_once('include/permissions.php');
 
     $r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash 
-		WHERE abook_dob > utc_timestamp() + interval 7 day and abook_dob < utc_timestamp() + interval 14 day");
+		WHERE abook_dob > %s + interval %s and abook_dob < %s + interval %s",
+		db_utcnow(), db_quoteinterval('7 day'),
+		db_utcnow(), db_quoteinterval('14 day')
+		);
 	if($r) {
 		foreach($r as $rr) {
 			
@@ -472,7 +485,7 @@ function update_birthdays() {
 			$z = event_store_event($ev);
 			if($z) {
 				$item_id = event_store_item($ev,$z);
-				q("update abook set abook_dob = '%s' where abook_id = %d limit 1",
+				q("update abook set abook_dob = '%s' where abook_id = %d",
 					dbesc(intval($rr['abook_dob']) + 1 . substr($rr['abook_dob'],4)),
 					intval($rr['abook_id'])
 				);

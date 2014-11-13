@@ -1,4 +1,6 @@
 <div id="directory_safemode" class="widget">
 <h3>{{$safemode}}</h3>
-<a href="toggle_safesearch">{{$toggle}}</a>
+<ul class="nav nav-pills nav-stacked">
+	<li><a href="toggle_safesearch">{{$toggle}}</a></li>
+</ul>
 </div>

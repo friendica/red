@@ -150,12 +150,12 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	
 	$sql_options  = (($star) 
-		? " and (item_flags & " . intval(ITEM_STARRED) . ")" 
+		? " and (item_flags & " . intval(ITEM_STARRED) . ")>0" 
 		: '');
 
 	$sql_nets = '';
 
-	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
+	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ")>0 $sql_options ) ";
 
 	if($group) {
 		$contact_str = '';
@@ -184,7 +184,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	elseif($cid) {
 
-        $r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") limit 1",
+        $r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ")>0 limit 1",
 			intval($cid),
 			intval(local_user())
         );
@@ -264,7 +264,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 	if($conv) {
-		$sql_extra .= sprintf(" AND parent IN (SELECT distinct(parent) from item where ( author_xchan like '%s' or ( item_flags & %d ))) ",
+		$sql_extra .= sprintf(" AND parent IN (SELECT distinct(parent) from item where ( author_xchan like '%s' or ( item_flags & %d )>0)) ",
 			dbesc(protect_sprintf($channel['channel_hash'])),
 			intval(ITEM_MENTIONSME)
 		);
@@ -279,7 +279,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	else {
 		$itemspage = get_pconfig(local_user(),'system','itemspage');
 		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
-		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
+		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']), intval($a->pager['start']));
 	}
 
 
@@ -314,7 +314,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		$uids = " and item.uid = " . local_user() . " ";
 	}
 
-	$simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) " : '');
+	$simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " )>0 " : '');
 
 	// This fixes a very subtle bug so I'd better explain it. You wake up in the morning or return after a day
 	// or three and look at your matrix page - after opening up your browser. The first page loads just as it 
@@ -336,7 +336,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	if($nouveau && $load) {
 		// "New Item View" - show all items unthreaded in reverse created date order
 
-		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
+		$items = q("SELECT `item`.*, `item`.`id` AS `item_id`, received FROM `item` 
 			WHERE true $uids AND item_restrict = 0 
 			$simple_update
 			$sql_extra $sql_nets
@@ -364,13 +364,13 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			// Fetch a page full of parent items for this page
 
-			$r = q("SELECT distinct item.id AS item_id FROM item 
+			$r = q("SELECT distinct item.id AS item_id, $ordering FROM item 
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE true $uids AND item.item_restrict = 0
 				AND item.parent = item.id
 				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra3 $sql_extra $sql_nets
-				ORDER BY item.$ordering DESC $pager_sql ",
+				ORDER BY $ordering DESC $pager_sql ",
 				intval(ABOOK_FLAG_BLOCKED)
 			);
 
@@ -417,8 +417,8 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 	if(($update_unseen) && (! $firehose))
-		$r = q("UPDATE `item` SET item_flags = ( item_flags ^ %d)
-			WHERE (item_flags & %d) AND `uid` = %d $update_unseen ",
+		$r = q("UPDATE `item` SET item_flags = ( item_flags & ~%d)
+			WHERE (item_flags & %d)>0 AND `uid` = %d $update_unseen ",
 			intval(ITEM_UNSEEN),
 			intval(ITEM_UNSEEN),
 			intval(local_user())

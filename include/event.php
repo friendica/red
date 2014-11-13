@@ -183,7 +183,7 @@ function event_store_event($arr) {
 			`allow_gid` = '%s',
 			`deny_cid` = '%s',
 			`deny_gid` = '%s'
-			WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			WHERE `id` = %d AND `uid` = %d",
 
 			dbesc($arr['edited']),
 			dbesc($arr['start']),
@@ -284,7 +284,7 @@ function event_addtocal($item_id, $uid) {
 
 		$event = event_store_event($ev);
 		if($event) {
-			$r = q("update item set resource_id = '%s', resource_type = 'event' where id = %d and uid = %d limit 1",
+			$r = q("update item set resource_id = '%s', resource_type = 'event' where id = %d and uid = %d",
 				dbesc($event['event_hash']),
 				intval($item['id']),
 				intval($channel['channel_id'])
@@ -359,7 +359,7 @@ function event_store_item($arr,$event) {
 
 		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
 
-		q("UPDATE item SET title = '%s', body = '%s', object = '%s', allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', edited = '%s', item_flags = %d, item_private = %d  WHERE id = %d AND uid = %d LIMIT 1",
+		q("UPDATE item SET title = '%s', body = '%s', object = '%s', allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', edited = '%s', item_flags = %d, item_private = %d  WHERE id = %d AND uid = %d",
 			dbesc($arr['summary']),
 			dbesc($prefix . format_event_bbcode($arr)),
 			dbesc($object),

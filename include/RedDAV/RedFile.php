@@ -79,7 +79,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 		$newName = str_replace('/', '%2F', $newName);
 
-		$r = q("UPDATE attach SET filename = '%s' WHERE hash = '%s' AND id = %d LIMIT 1",
+		$r = q("UPDATE attach SET filename = '%s' WHERE hash = '%s' AND id = %d",
 			dbesc($this->data['filename']),
 			intval($this->data['id'])
 		);
@@ -96,7 +96,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		$size = 0;
 
 		// @todo only 3 values are needed
-		$c = q("SELECT * FROM channel WHERE channel_id = %d AND NOT (channel_pageflags & %d) LIMIT 1",
+		$c = q("SELECT * FROM channel WHERE channel_id = %d AND NOT (channel_pageflags & %d)>0 LIMIT 1",
 			intval($this->auth->owner_id),
 			intval(PAGE_REMOVED)
 		);
@@ -113,7 +113,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 				$size = @filesize($f);
 				logger('filename: ' . $f . ' size: ' . $size, LOGGER_DEBUG);
 			} else {
-				$r = q("UPDATE attach SET data = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+				$r = q("UPDATE attach SET data = '%s' WHERE hash = '%s' AND uid = %d",
 					dbesc(stream_get_contents($data)),
 					dbesc($this->data['hash']),
 					intval($this->data['uid'])
@@ -131,7 +131,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		// returns now()
 		$edited = datetime_convert();
 
-		$d = q("UPDATE attach SET filesize = '%s', edited = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+		$d = q("UPDATE attach SET filesize = '%s', edited = '%s' WHERE hash = '%s' AND uid = %d",
 			dbesc($size),
 			dbesc($edited),
 			dbesc($this->data['hash']),
@@ -139,7 +139,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		);
 
 		// update the folder's lastmodified timestamp
-		$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+		$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d",
 			dbesc($edited),
 			dbesc($r[0]['folder']),
 			intval($c[0]['channel_id'])

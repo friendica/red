@@ -209,12 +209,34 @@ function tagblock($link,$uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$
   if($r) {
 	$o = '<div class="tagblock widget"><h3>' . t('Tags') . '</h3><div class="tags" align="center">';
 	foreach($r as $rr) { 
-	  $o .= '<a href="'.$link .'/' . '?f=&tag=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
+	  $o .= '<span class="tag'.$rr[2].'">#</span><a href="'.$link .'/' . '?f=&tag=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
 	}
 	$o .= '</div></div>';
   }
 	return $o;
 }
+
+function catblock($uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$type = TERM_CATEGORY) {
+  $o = '';
+  $tab = 0;
+
+  $r = tagadelic($uid,$count,$authors,$flags,$restrict,$type);
+
+  if($r) {
+	$c = q("select channel_address from channel where channel_id = %d limit 1",
+		intval($uid)
+	);
+
+	$o = '<div class="tagblock widget"><h3>' . t('Categories') . '</h3><div class="tags" align="center">';
+	foreach($r as $rr) { 
+	  $o .= '<a href="channel/' . $c[0]['channel_address']. '?f=&cat=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
+	}
+	$o .= '</div></div>';
+  }
+	return $o;
+}
+
+
 
 function dir_tagblock($link,$r) {
 	$o = '';

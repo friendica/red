@@ -21,7 +21,7 @@ function lostpass_post(&$a) {
 
 	$hash = random_string();
 
-	$r = q("UPDATE account SET account_reset = '%s' WHERE account_id = %d LIMIT 1",
+	$r = q("UPDATE account SET account_reset = '%s' WHERE account_id = %d",
 		dbesc($hash),
 		intval($aid)
 	);
@@ -73,7 +73,7 @@ function lostpass_content(&$a) {
 		$salt = random_string(32);
 		$password_encoded = hash('whirlpool', $salt . $new_password);
 
-		$r = q("UPDATE account SET account_salt = '%s', account_password = '%s', account_reset = '' where account_id = %d limit 1",
+		$r = q("UPDATE account SET account_salt = '%s', account_password = '%s', account_reset = '' where account_id = %d",
 			dbesc($salt),
 			dbesc($password_encoded),
 			intval($aid)

@@ -77,7 +77,7 @@ function chatroom_destroy($channel,$arr) {
 		return $ret;
 	}
 
-	q("delete from chatroom where cr_id = %d limit 1",
+	q("delete from chatroom where cr_id = %d",
 		intval($r[0]['cr_id'])
 	);
 	if($r[0]['cr_id']) {
@@ -129,8 +129,11 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 	}
 
 	if(intval($x[0]['cr_expire'])) {
-		$sql = "delete from chat where created < UTC_TIMESTAMP() - INTERVAL " . intval($x[0]['cr_expire']) . " MINUTE and chat_room = " . intval($x[0]['cr_id']);
-		$r = q($sql);
+		$r = q("delete from chat where created < %s - INTERVAL %s and chat_room = %d", 
+			db_utcnow(), 
+			db_quoteinterval( intval($x[0]['cr_expire']) . ' MINUTE' ),
+			intval($x[0]['cr_id'])
+		);
 	}
 
 	$r = q("select * from chatpresence where cp_xchan = '%s' and cp_room = %d limit 1",
@@ -138,7 +141,7 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 		intval($room_id)
 	);
 	if($r) {
-		q("update chatpresence set cp_last = '%s' where cp_id = %d and cp_client = '%s' limit 1",
+		q("update chatpresence set cp_last = '%s' where cp_id = %d and cp_client = '%s'",
 			dbesc(datetime_convert()),
 			intval($r[0]['cp_id']),
 			dbesc($client)
@@ -169,7 +172,7 @@ function chatroom_leave($observer_xchan,$room_id,$client) {
 		dbesc($client)
 	);
 	if($r) {
-		q("delete from chatpresence where cp_id = %d limit 1",
+		q("delete from chatpresence where cp_id = %d",
 			intval($r[0]['cp_id'])
 		);
 	}

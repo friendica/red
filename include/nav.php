@@ -38,7 +38,7 @@ EOT;
 			intval($channel['channel_id'])
 		);
 
-		$chans = q("select channel_name, channel_id from channel where channel_account_id = %d and not ( channel_pageflags & %d ) order by channel_name ",
+		$chans = q("select channel_name, channel_id from channel where channel_account_id = %d and not ( channel_pageflags & %d )>0 order by channel_name ",
 			intval(get_account_id()),
 			intval(PAGE_REMOVED)
 		);
@@ -173,7 +173,7 @@ EOT;
 	$nav['search'] = array('search', t('Search'), "", t('Search site content'));
 
 
-	$nav['directory'] = array('directory', t('Directory'), "", t('Channel Locator')); 
+	$nav['directory'] = array('directory', t('Directory'), "", t('Channel Directory')); 
 
 
 	/**

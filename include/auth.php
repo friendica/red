@@ -123,7 +123,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 		// if our authenticated guest is allowed to take control of the admin channel, make it so.
 		$admins = get_config('system', 'remote_admin');
 		if($admins && is_array($admins) && in_array($_SESSION['visitor_id'], $admins)) {
-			$x = q("select * from account where account_email = '%s' and account_email != '' and ( account_flags & %d ) limit 1",
+			$x = q("select * from account where account_email = '%s' and account_email != '' and ( account_flags & %d )>0 limit 1",
 				dbesc(get_config('system', 'admin_email')),
 				intval(ACCOUNT_ROLE_ADMIN)
 			);

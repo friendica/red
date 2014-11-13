@@ -75,13 +75,13 @@ function profperm_content(&$a) {
 
 		if($change) {
 			if(in_array($change,$ingroup)) {
-				q("UPDATE abook SET abook_profile = '' WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
+				q("UPDATE abook SET abook_profile = '' WHERE abook_id = %d AND abook_channel = %d",
 					intval($change),
 					intval(local_user())
 				);
 			}
 			else {
-				q("UPDATE abook SET abook_profile = '%s' WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
+				q("UPDATE abook SET abook_profile = '%s' WHERE abook_id = %d AND abook_channel = %d",
 					dbesc($profile['profile_guid']),
 					intval($change),
 					intval(local_user())

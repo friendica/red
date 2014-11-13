@@ -42,7 +42,7 @@ require_once('include/RedDAV/RedBasicAuth.php');
 function RedChannelList(&$auth) {
 	$ret = array();
 
-	$r = q("SELECT channel_id, channel_address FROM channel WHERE NOT (channel_pageflags & %d) AND NOT (channel_pageflags & %d)",
+	$r = q("SELECT channel_id, channel_address FROM channel WHERE NOT (channel_pageflags & %d)>0 AND NOT (channel_pageflags & %d)>0",
 		intval(PAGE_REMOVED),
 		intval(PAGE_HIDDEN)
 	);
@@ -115,7 +115,7 @@ function RedCollectionData($file, &$auth) {
 	$permission_error = false;
 
 	for ($x = 1; $x < count($path_arr); $x++) {
-		$r = q("SELECT id, hash, filename, flags FROM attach WHERE folder = '%s' AND filename = '%s' AND uid = %d AND (flags & %d) $perms LIMIT 1",
+		$r = q("SELECT id, hash, filename, flags FROM attach WHERE folder = '%s' AND filename = '%s' AND uid = %d AND (flags & %d)>0 $perms LIMIT 1",
 			dbesc($folder),
 			dbesc($path_arr[$x]),
 			intval($channel_id),
@@ -124,7 +124,7 @@ function RedCollectionData($file, &$auth) {
 		if (! $r) {
 			// path wasn't found. Try without permissions to see if it was the result of permissions.
 			$errors = true;
-			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d) limit 1",
+			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d)>0 limit 1",
 				dbesc($folder),
 				basename($path_arr[$x]),
 				intval($channel_id),
@@ -155,8 +155,14 @@ function RedCollectionData($file, &$auth) {
 		logger("Path mismatch: $path !== /$file");
 		return NULL;
 	}
-
-	$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach where folder = '%s' and uid = %d $perms group by filename",
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$prefix = 'DISTINCT ON (filename)';
+		$suffix = 'ORDER BY filename';
+	} else {
+		$prefix = '';
+		$suffix = 'GROUP BY filename';
+	}
+	$r = q("select $prefix id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach where folder = '%s' and uid = %d $perms $suffix",
 		dbesc($folder),
 		intval($channel_id)
 	);
@@ -231,7 +237,7 @@ function RedFileData($file, &$auth, $test = false) {
 	$errors = false;
 
 	for ($x = 1; $x < count($path_arr); $x++) {		
-		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d) $perms",
+		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d)>0 $perms",
 			dbesc($folder),
 			dbesc($path_arr[$x]),
 			intval($channel_id),
@@ -244,7 +250,7 @@ function RedFileData($file, &$auth, $test = false) {
 		}
 		if (! $r) {
 			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach 
-				where folder = '%s' and filename = '%s' and uid = %d $perms group by filename limit 1",
+				where folder = '%s' and filename = '%s' and uid = %d $perms order by filename limit 1",
 				dbesc($folder),
 				dbesc(basename($file)),
 				intval($channel_id)
@@ -253,7 +259,7 @@ function RedFileData($file, &$auth, $test = false) {
 		if (! $r) {
 			$errors = true;
 			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach 
-				where folder = '%s' and filename = '%s' and uid = %d group by filename limit 1",
+				where folder = '%s' and filename = '%s' and uid = %d order by filename limit 1",
 				dbesc($folder),
 				dbesc(basename($file)),
 				intval($channel_id)

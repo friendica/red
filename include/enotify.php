@@ -18,7 +18,7 @@ function notification($params) {
 	}
 	if($params['to_xchan']) {
 		$y = q("select channel.*, account.* from channel left join account on channel_account_id = account_id
-			where channel_hash = '%s' and not (channel_pageflags & %d) limit 1",
+			where channel_hash = '%s' and not (channel_pageflags & %d)>0 limit 1",
 			dbesc($params['to_xchan']),
 			intval(PAGE_REMOVED)
 		);
@@ -394,7 +394,7 @@ function notification($params) {
 	if(($a->language === 'en' || (! $a->language)) && strpos($msg,', '))
 		$msg = substr($msg,strpos($msg,', ')+1);	
 
-	$r = q("update notify set msg = '%s' where id = %d and uid = %d limit 1",
+	$r = q("update notify set msg = '%s' where id = %d and uid = %d",
 		dbesc($msg),
 		intval($notify_id),
 		intval($datarray['uid'])

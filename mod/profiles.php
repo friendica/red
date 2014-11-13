@@ -30,7 +30,7 @@ function profiles_init(&$a) {
 			dbesc($profile_guid),
 			intval(local_user())
 		);
-		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d",
 			intval(argv(2)),
 			intval(local_user())
 		);
@@ -234,6 +234,22 @@ function profiles_post(&$a) {
 		}
 
 		$dob = $_POST['dob'] ? escape_tags(trim($_POST['dob'])) : '0000-00-00'; // FIXME: Needs to be validated?
+
+		$y = substr($dob,0,4);
+		if((! ctype_digit($y)) || ($y < 1900))
+			$ignore_year = true;
+		else
+			$ignore_year = false;
+
+		if($dob != '0000-00-00') {
+			if(strpos($dob,'0000-') === 0) {
+				$ignore_year = true;
+				$dob = substr($dob,5);
+			}
+			$dob = datetime_convert('UTC','UTC',(($ignore_year) ? '1900-' . $dob : $dob),(($ignore_year) ? 'm-d' : 'Y-m-d'));
+			if($ignore_year)
+				$dob = '0000-' . $dob;
+		}
 			
 		$name = escape_tags(trim($_POST['name']));
 
@@ -338,7 +354,7 @@ function profiles_post(&$a) {
 						dbesc($zz['field_name'])
 					);
 					if($w) {
-						q("update profext set v = '%s' where id = %d limit 1",
+						q("update profext set v = '%s' where id = %d",
 							dbesc(escape_tags(trim($_POST[$zz['field_name']]))),
 							intval($w[0]['id'])
 						);
@@ -453,7 +469,7 @@ function profiles_post(&$a) {
 			`work` = '%s',
 			`education` = '%s',
 			`hide_friends` = %d
-			WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			WHERE `id` = %d AND `uid` = %d",
 			dbesc($profile_name),
 			dbesc($name),
 			dbesc($pdesc),
@@ -506,7 +522,7 @@ function profiles_post(&$a) {
 		$channel = $a->get_channel();
 
 		if($namechanged && $is_default) {
-			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date = '%s' WHERE xchan_hash = '%s' limit 1",
+			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date = '%s' WHERE xchan_hash = '%s'",
 				dbesc($name),
 				dbesc(datetime_convert()),
 				dbesc($channel['xchan_hash'])
@@ -514,6 +530,8 @@ function profiles_post(&$a) {
 		}
 
 		if($is_default) {
+			// reload the info for the sidebar widget - why does this not work?
+			profile_load($a,$channel['channel_address']);
 			proc_run('php','include/directory.php',local_user());
 		}
 	}

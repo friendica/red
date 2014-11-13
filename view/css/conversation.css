@@ -128,7 +128,7 @@ a.wall-item-name-link {
 }
 
 .wall-item-content img {
-    max-width: 95%;
+	max-width: 100%;
 }
 
 .wall-item-title h3 {

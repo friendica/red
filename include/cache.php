@@ -21,7 +21,7 @@
 				dbesc($key)
 			);
 			if($r) {
-				q("UPDATE cache SET v = '%s', updated = '%s' WHERE k = '%s' limit 1",
+				q("UPDATE cache SET v = '%s', updated = '%s' WHERE k = '%s'",
 					dbesc($value),
 					dbesc(datetime_convert()),
 					dbesc($key));

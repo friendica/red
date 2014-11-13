@@ -85,7 +85,7 @@ function thing_init(&$a) {
 		else
 			$local_photo = $orig_record['imgurl'];
 
-		$r = q("update term  set term = '%s', url = '%s', imgurl = '%s' where term_hash = '%s' and uid = %d limit 1",
+		$r = q("update term  set term = '%s', url = '%s', imgurl = '%s' where term_hash = '%s' and uid = %d",
 			dbesc($name),
 			dbesc(($url) ? $url : z_root() . '/thing/' . $term_hash),
 			dbesc($local_photo),
@@ -301,12 +301,12 @@ function thing_content(&$a) {
 		}
 
 
-		$x = q("delete from obj where obj_obj = '%s' and obj_type = %d and obj_channel = %d limit 1",
+		$x = q("delete from obj where obj_obj = '%s' and obj_type = %d and obj_channel = %d",
 			dbesc($thing_hash),
 			intval(TERM_OBJ_THING),
 			intval(local_user())
 		);
-		$x = q("delete from term where term_hash = '%s' and uid = %d limit 1",
+		$x = q("delete from term where term_hash = '%s' and uid = %d",
 			dbesc($thing_hash),
 			intval(local_user())
 		);

@@ -1859,7 +1859,7 @@ msgstr "Merci d'entrer l'URL d'une video&nbsp;:"
 
 #: ../../include/conversation.php:1077
 msgid "Please enter an audio link/URL:"
-msgstr "Merci d'entrer l'URL d'un contenu audio&nsbp;:"
+msgstr "Merci d'entrer l'URL d'un contenu audio&nbsp;:"
 
 #: ../../include/conversation.php:1078
 msgid "Tag term:"
@@ -2672,7 +2672,7 @@ msgstr "Ville natale&nbsp;:"
 
 #: ../../include/identity.php:1042
 msgid "Tags:"
-msgstr "Étiquettes:"
+msgstr "Étiquettes&nbsp;:"
 
 #: ../../include/identity.php:1044 ../../mod/profiles.php:616
 msgid "Political Views:"
@@ -2720,7 +2720,7 @@ msgstr "Télévision&nbsp;:"
 
 #: ../../include/identity.php:1067
 msgid "Film/dance/culture/entertainment:"
-msgstr "Cinéma/danse/culture/divertissement&nsbp;:"
+msgstr "Cinéma/danse/culture/divertissement&nbsp;:"
 
 #: ../../include/identity.php:1069
 msgid "Love/Romance:"

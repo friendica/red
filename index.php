@@ -40,8 +40,8 @@ date_default_timezone_set($a->timezone);
 require_once("include/dba/dba_driver.php");
 
 if(! $a->install) {
-	$db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $a->install);
-    	    unset($db_host, $db_port, $db_user, $db_pass, $db_data);
+	$db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, $a->install);
+    	    unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
 
 	/**
 	 * Load configs from db. Overwrite configs from .htconfig.php
@@ -197,8 +197,9 @@ if(strlen($a->module)) {
 	 */
 
 	if(! $a->module_loaded) {
-		if(file_exists("custom/{$a->module}.php")) {
-			include_once("custom/{$a->module}.php");
+
+		if(file_exists("mod/site/{$a->module}.php")) {
+			include_once("mod/site/{$a->module}.php");
 			$a->module_loaded = true;
 		}
 		elseif(file_exists("mod/{$a->module}.php")) {

@@ -50,16 +50,18 @@ function setup_post(&$a) {
 			$dbuser = trim($_POST['dbuser']);
 			$dbpass = trim($_POST['dbpass']);
 			$dbdata = trim($_POST['dbdata']);
+			$dbtype = intval(trim($_POST['dbtype']));
 			$phpath = trim($_POST['phpath']);
 			$adminmail = trim($_POST['adminmail']);
 			$siteurl = trim($_POST['siteurl']);
 
 			require_once('include/dba/dba_driver.php');
 			unset($db);
-			$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
+			$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
 			if(! $db->connected) {
 				echo "Database Connect failed: " . $db->error;
 				killme();
+				$a->data['db_conn_failed']=true;
 			}
 			/*if(get_db_errno()) {
 				unset($db);
@@ -80,9 +82,9 @@ function setup_post(&$a) {
 					return;
 				}
 			}*/
-			if(get_db_errno()) {
-				$a->data['db_conn_failed']=true;
-			}
+			//if(get_db_errno()) {
+				
+			//}
 
 			return; 
 			break;
@@ -93,6 +95,7 @@ function setup_post(&$a) {
 			$dbuser = notags(trim($_POST['dbuser']));
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
+			$dbtype = intval(notags(trim($_POST['dbtype'])));
 			$phpath = notags(trim($_POST['phpath']));
 			$timezone = notags(trim($_POST['timezone']));
 			$adminmail = notags(trim($_POST['adminmail']));
@@ -109,7 +112,7 @@ function setup_post(&$a) {
 			}
 
 			// connect to db
-			$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
+			$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
 
 			if(! $db->connected) {
 				echo 'CRITICAL: DB not connected.';
@@ -123,6 +126,7 @@ function setup_post(&$a) {
 				'$dbuser' => $dbuser,
 				'$dbpass' => $dbpass,
 				'$dbdata' => $dbdata,
+				'$dbtype' => $dbtype,
 				'$timezone' => $timezone,
 				'$siteurl' => $siteurl,
 				'$site_id' => random_string(),
@@ -187,7 +191,7 @@ function setup_content(&$a) {
 	}
 
 	if(x($a->data,'db_failed')) {
-		$txt = t('You may need to import the file "install/database.sql" manually using phpmyadmin or mysql.') . EOL;
+		$txt = t('You may need to import the file "install/schema_xxx.sql" manually using a database client.') . EOL;
 		$txt .= t('Please see the file "install/INSTALL.txt".') . EOL ."<hr>" ;
 		$txt .= "<pre>".$a->data['db_failed'] . "</pre>". EOL ;
 		$db_return_text .= $txt;
@@ -273,6 +277,7 @@ function setup_content(&$a) {
 			$dbport = intval(notags(trim($_POST['dbport'])));
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
+			$dbtype = intval(notags(trim($_POST['dbtype'])));
 			$phpath = notags(trim($_POST['phpath']));
 			$adminmail = notags(trim($_POST['adminmail']));
 			$siteurl = notags(trim($_POST['siteurl']));
@@ -293,6 +298,7 @@ function setup_content(&$a) {
 				'$dbuser' => array('dbuser', t('Database Login Name'), $dbuser, ''),
 				'$dbpass' => array('dbpass', t('Database Login Password'), $dbpass, ''),
 				'$dbdata' => array('dbdata', t('Database Name'), $dbdata, ''),
+				'$dbtype' => array('dbtype', t('Database Type'), $dbtype, '', array( 0=>'MySQL', 1=>'PostgreSQL' )),
 
 				'$adminmail' => array('adminmail', t('Site administrator email address'), $adminmail, t('Your account email address must match this in order to use the web admin panel.')),
 				'$siteurl' => array('siteurl', t('Website URL'), z_root(), t('Please use SSL (https) URL if available.')),
@@ -316,6 +322,7 @@ function setup_content(&$a) {
 			$dbuser = notags(trim($_POST['dbuser']));
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
+			$dbtype = intval(notags(trim($_POST['dbtype'])));
 			$phpath = notags(trim($_POST['phpath']));
 			
 			$adminmail = notags(trim($_POST['adminmail']));
@@ -335,6 +342,7 @@ function setup_content(&$a) {
 				'$dbpass' => $dbpass,
 				'$dbdata' => $dbdata,
 				'$phpath' => $phpath,
+				'$dbtype' => $dbtype,
 				
 				'$adminmail' => array('adminmail', t('Site administrator email address'), $adminmail, t('Your account email address must match this in order to use the web admin panel.')),
 
@@ -440,7 +448,7 @@ function check_funcs(&$checks) {
 	check_add($ck_funcs, t('libCurl PHP module'), true, true, "");
 	check_add($ck_funcs, t('GD graphics PHP module'), true, true, "");
 	check_add($ck_funcs, t('OpenSSL PHP module'), true, true, "");
-	check_add($ck_funcs, t('mysqli PHP module'), true, true, "");
+	check_add($ck_funcs, t('mysqli or postgres PHP module'), true, true, "");
 	check_add($ck_funcs, t('mb_string PHP module'), true, true, "");
 	check_add($ck_funcs, t('mcrypt PHP module'), true, true, "");
 		
@@ -471,9 +479,9 @@ function check_funcs(&$checks) {
 		$ck_funcs[2]['status']= false;
 		$ck_funcs[2]['help']= t('Error: openssl PHP module required but not installed.');
 	}
-	if(! function_exists('mysqli_connect')){
+	if(! function_exists('mysqli_connect') && !function_exists('pg_connect')){ 
 		$ck_funcs[3]['status']= false;
-		$ck_funcs[3]['help']= t('Error: mysqli PHP module required but not installed.');
+		$ck_funcs[3]['help']= t('Error: mysqli or postgres PHP module required but neither are installed.');
 	}
 	if(! function_exists('mb_strlen')){
 		$ck_funcs[4]['status']= false;
@@ -579,7 +587,7 @@ function check_htaccess(&$checks) {
 
         if ((! $test['success']) || ($test['body'] != "ok")) {
             $status = false;
-            $help = t('Url rewrite in .htaccess is not working. Check your server configuration.');
+            $help = t('Url rewrite in .htaccess is not working. Check your server configuration.'.'Test: '.var_export($test,true));
         }
         check_add($checks, t('Url rewrite is working'), $status, true, $help); 
     } else {
@@ -607,8 +615,8 @@ function load_database_rem($v, $i){
 
 
 function load_database($db) {
-
-	$str = file_get_contents('install/database.sql');
+	file_put_contents('debug-foo.log', 'Loading schema: '.$db->get_install_script());
+	$str = file_get_contents($db->get_install_script());
 	$arr = explode(';',$str);
 	$errors = false;
 	foreach($arr as $a) {

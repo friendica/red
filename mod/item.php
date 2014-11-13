@@ -32,8 +32,17 @@ function item_post(&$a) {
 	require_once('include/security.php');
 
 	$uid = local_user();
-
 	$channel = null;
+	$observer = null;
+
+	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
+	require_once('include/identity.php');
+	$sys = get_sys_channel();
+	if($sys && $profile_uid && ($sys['channel_id'] == $profile_uid) && is_site_admin()) {
+		$uid = intval($sys['channel_id']);
+		$channel = $sys;
+		$observer = $sys;
+	}
 
 	if(x($_REQUEST,'dropitems')) {
 		require_once('include/items.php');
@@ -70,7 +79,6 @@ function item_post(&$a) {
 
 	$message_id  = ((x($_REQUEST,'message_id') && $api_source)  ? strip_tags($_REQUEST['message_id'])       : '');
 	$created     = ((x($_REQUEST,'created'))     ? datetime_convert('UTC','UTC',$_REQUEST['created']) : datetime_convert());
-	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
 	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])        : 0);
 	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])     : '');
 	$return_path = ((x($_REQUEST,'return'))      ? $_REQUEST['return']                 : '');
@@ -87,8 +95,8 @@ function item_post(&$a) {
 	/*
 	 * Check service class limits
 	 */
-	if (local_user() && !(x($_REQUEST,'parent')) && !(x($_REQUEST,'post_id'))) {
-		$ret = item_check_service_class(local_user(),x($_REQUEST,'webpage'));
+	if ($uid && !(x($_REQUEST,'parent')) && !(x($_REQUEST,'post_id'))) {
+		$ret = item_check_service_class($uid,x($_REQUEST,'webpage'));
 		if (!$ret['success']) { 
 			notice( t($ret['message']) . EOL) ;
 			if(x($_REQUEST,'return')) 
@@ -112,6 +120,7 @@ function item_post(&$a) {
 	$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : 0);
 	$parent_mid = ((x($_REQUEST,'parent_mid')) ? trim($_REQUEST['parent_mid']) : '');
 
+	$route = '';
 	$parent_item = null;
 	$parent_contact = null;
 	$thr_parent = '';
@@ -128,11 +137,11 @@ function item_post(&$a) {
 				intval($parent)
 			);
 		}
-		elseif($parent_mid && local_user()) {
+		elseif($parent_mid && $uid) {
 			// This is coming from an API source, and we are logged in
 			$r = q("SELECT * FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($parent_mid),
-				intval(local_user())
+				intval($uid)
 			);
 		}
 		// if this isn't the real parent of the conversation, find it
@@ -163,12 +172,12 @@ function item_post(&$a) {
 
 		$thr_parent = $parent_mid;
 
+		$route = $parent_item['route'];
 
 	}
 
-
-	$observer = $a->get_observer();
-
+	if(! $observer)
+		$observer = $a->get_observer();
 
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);
@@ -221,7 +230,7 @@ function item_post(&$a) {
 
 
 	if(! $channel) {
-		if(local_user() && local_user() == $profile_uid) {
+		if($uid && $uid == $profile_uid) {
 			$channel = $a->get_channel();
 		}
 		else {
@@ -444,7 +453,7 @@ function item_post(&$a) {
 			intval($profile_uid)
 		);
 		if($z && ($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE)) {
-			if(local_user() && (get_account_id() == $z[0]['account_id'])) {
+			if($uid && (get_account_id() == $z[0]['account_id'])) {
 				$execflag = true;
 			}
 			else {
@@ -459,7 +468,7 @@ function item_post(&$a) {
 
 	if($mimetype === 'text/bbcode') {
 
-		if(local_user() && local_user() == $profile_uid && feature_enabled(local_user(),'markdown')) {
+		if($uid && $uid == $profile_uid && feature_enabled($uid,'markdown')) {
 			require_once('include/bb2diaspora.php');			
 			$body = diaspora2bb(escape_tags($body),true);
 		}
@@ -592,7 +601,7 @@ function item_post(&$a) {
 				if($fullnametagged)
 					continue;
 
-				$success = handle_tag($a, $body, $access_tag, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
+				$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : $profile_uid , $tag); 
 				logger('handle_tag: ' . print_r($success,tue), LOGGER_DATA);
 				if(($access_tag) && (! $parent_item)) {
 					logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DATA);
@@ -753,6 +762,7 @@ function item_post(&$a) {
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 	$datarray['term']           = $post_tags;
 	$datarray['plink']          = $plink;
+	$datarray['route']          = $route;
 
 	// preview mode - prepare the body for display and send it via json
 
@@ -794,7 +804,7 @@ function item_post(&$a) {
 
 		$datarray['body'] = z_input_filter($datarray['uid'],$datarray['body'],$datarray['mimetype']);
 
-		if(local_user()) {
+		if($uid) {
 			if($channel['channel_hash'] === $datarray['author_xchan']) {
 				$datarray['sig'] = base64url_encode(rsa_sign($datarray['body'],$channel['channel_prvkey']));
 				$datarray['item_flags'] = $datarray['item_flags'] | ITEM_VERIFIED;
@@ -877,7 +887,7 @@ function item_post(&$a) {
 		// They will show up as people comment on them.
 
 		if($parent_item['item_restrict'] & ITEM_HIDDEN) {
-			$r = q("UPDATE `item` SET `item_restrict` = %d WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `item` SET `item_restrict` = %d WHERE `id` = %d",
 				intval($parent_item['item_restrict'] - ITEM_HIDDEN),
 				intval($parent_item['id'])
 			);
@@ -1291,7 +1301,7 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 						$private = (($str_contact_allow || $str_group_allow || $str_contact_deny || $str_group_deny) ? true : false);
 
 						$r = q("UPDATE item SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
-							WHERE id = %d AND uid = %d limit 1",
+							WHERE id = %d AND uid = %d",
 							dbesc($str_contact_allow),
 							dbesc($str_group_allow),
 							dbesc($str_contact_deny),
@@ -1341,7 +1351,7 @@ function item_check_service_class($channel_id,$iswebpage) {
 	if ($iswebpage) {
 		$r = q("select count(i.id)  as total from item i 
 			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
-			and i.parent=i.id and (i.item_restrict & %d) and not (i.item_restrict & %d) and i.uid= %d ",
+			and i.parent=i.id and (i.item_restrict & %d)>0 and not (i.item_restrict & %d)>0 and i.uid= %d ",
 			intval(ITEM_WEBPAGE),
 			intval(ITEM_DELETED),
 		intval($channel_id)
