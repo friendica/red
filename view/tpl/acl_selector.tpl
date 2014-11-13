@@ -31,14 +31,14 @@
 </div><!-- /.modal -->
 
 <script>
-$(document).ready(function() {
-	setTimeout( function () {
+//$(document).ready(function() {
+//	setTimeout( function () {
 		if(typeof acl=="undefined"){
 			acl = new ACL(
 				baseurl+"/acl",
 				[ {{$allowcid}},{{$allowgid}},{{$denycid}},{{$denygid}} ]
 			);
 		}
-	}, 5000 );
-});
+//	}, 5000 );
+//});
 </script>
