@@ -950,7 +950,7 @@ class App {
 			foreach($this->widgets as $w) {
 				if ($w['location'] == $location)
 					$ret[] = $w;
-            }
+			}
 			$arr = array('location' => $location, 'widgets' => $ret);
 			call_hooks('get_widgets', $arr);
 			return $arr['widgets'];
