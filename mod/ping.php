@@ -89,7 +89,7 @@ function ping_init(&$a) {
 		$basic_presence = false;
 		if($r) {
 			$basic_presence = true;	
-			q("update chatpresence set cp_last = '%s' where cp_id = %d limit 1",
+			q("update chatpresence set cp_last = '%s' where cp_id = %d",
 				dbesc(datetime_convert()),
 				intval($r[0]['cp_id'])
 			);
@@ -110,7 +110,9 @@ function ping_init(&$a) {
 	 * and shouldn't count as online anymore. We allow an expection for bots.
 	 */
 
-	q("delete from chatpresence where cp_last < UTC_TIMESTAMP() - INTERVAL 3 MINUTE and cp_client != 'auto' "); 
+	q("delete from chatpresence where cp_last < %s - INTERVAL %s and cp_client != 'auto' ",
+		db_utcnow(), db_quoteinterval('3 MINUTE')
+	); 
 
 	if((! local_user()) || ($result['invalid'])) {
 		echo json_encode($result);
@@ -130,14 +132,14 @@ function ping_init(&$a) {
 	if(x($_REQUEST, 'markRead') && local_user()) {
 		switch($_REQUEST['markRead']) {
 			case 'network':
-				$r = q("update item set item_flags = ( item_flags ^ %d ) where (item_flags & %d) and uid = %d", 
+				$r = q("update item set item_flags = ( item_flags & ~%d ) where (item_flags & %d)>0 and uid = %d", 
 					intval(ITEM_UNSEEN),
 					intval(ITEM_UNSEEN),
 					intval(local_user())
 				);
 				break;
 			case 'home':
-				$r = q("update item set item_flags = ( item_flags ^ %d ) where (item_flags & %d) and (item_flags & %d) and uid = %d", 
+				$r = q("update item set item_flags = ( item_flags & ~%d ) where (item_flags & %d)>0 and (item_flags & %d) and uid = %d", 
 					intval(ITEM_UNSEEN),
 					intval(ITEM_UNSEEN),
 					intval(ITEM_WALL),
@@ -145,7 +147,7 @@ function ping_init(&$a) {
 				);
 				break;
 			case 'messages':
-				$r = q("update mail set mail_flags = ( mail_flags ^ %d ) where channel_id = %d and not (mail_flags & %d)",
+				$r = q("update mail set mail_flags = ( mail_flags | %d ) where channel_id = %d and not (mail_flags & %d)>0",
 					intval(MAIL_SEEN),
 					intval(local_user()),
 					intval(MAIL_SEEN)
@@ -179,17 +181,17 @@ function ping_init(&$a) {
 		);
 		if($t && intval($t[0]['total']) > 49) {
 			$z = q("select * from notify where uid = %d
-				and seen = 0 order by date desc limit 0, 50",
+				and seen = 0 order by date desc limit 50",
 				intval(local_user())
 			);
 		}
 		else {
 			$z1 = q("select * from notify where uid = %d
-				and seen = 0 order by date desc limit 0, 50",
+				and seen = 0 order by date desc limit 50",
 				intval(local_user())
 			);
 			$z2 = q("select * from notify where uid = %d
-				and seen = 1 order by date desc limit 0, %d",
+				and seen = 1 order by date desc limit %d",
 				intval(local_user()),
 				intval(50 - intval($t[0]['total']))
 			);
@@ -217,8 +219,8 @@ function ping_init(&$a) {
 	if(argc() > 1 && argv(1) === 'messages') {
 		$channel = $a->get_channel();
 		$t = q("select mail.*, xchan.* from mail left join xchan on xchan_hash = from_xchan 
-			where channel_id = %d and not ( mail_flags & %d ) and not (mail_flags & %d ) 
-			and from_xchan != '%s' order by created desc limit 0,50",
+			where channel_id = %d and not ( mail_flags & %d )>0 and not (mail_flags & %d )>0 
+			and from_xchan != '%s' order by created desc limit 50",
 			intval(local_user()),
 			intval(MAIL_SEEN),
 			intval(MAIL_DELETED),
@@ -247,7 +249,7 @@ function ping_init(&$a) {
 		$result = array();
 
 		$r = q("SELECT * FROM item
-			WHERE item_restrict = %d and ( item_flags & %d ) and uid = %d",
+			WHERE item_restrict = %d and ( item_flags & %d )>0 and uid = %d",
 			intval(ITEM_VISIBLE),
 			intval(ITEM_UNSEEN),
 			intval(local_user())
@@ -269,7 +271,7 @@ function ping_init(&$a) {
 	if(argc() > 1 && (argv(1) === 'intros')) {
 		$result = array();
 
-		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) and not ((abook_flags & %d) or (xchan_flags & %d))",
+		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d)>0 and not ((abook_flags & %d)>0 or (xchan_flags & %d)>0)",
 			intval(local_user()),
 			intval(ABOOK_FLAG_PENDING),
 			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
@@ -350,7 +352,7 @@ function ping_init(&$a) {
 	$t1 = dba_timer();
 
 	$r = q("SELECT id, item_restrict, item_flags FROM item
-		WHERE (item_restrict = %d) and ( item_flags & %d ) and uid = %d",
+		WHERE (item_restrict = %d) and ( item_flags & %d )>0 and uid = %d",
 		intval(ITEM_VISIBLE),
 		intval(ITEM_UNSEEN),
 		intval(local_user())
@@ -370,7 +372,7 @@ function ping_init(&$a) {
 
 	$t2 = dba_timer();
 
-	$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) and not ((abook_flags & %d) or (xchan_flags & %d))",
+	$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d)>0 and not ((abook_flags & %d)>0 or (xchan_flags & %d)>0)",
 		intval(local_user()),
 		intval(ABOOK_FLAG_PENDING),
 		intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
@@ -386,7 +388,7 @@ function ping_init(&$a) {
 	$channel = get_app()->get_channel();
 
 	$mails = q("SELECT count(id) as total from mail
-		WHERE channel_id = %d AND not (mail_flags & %d) and from_xchan != '%s' ",
+		WHERE channel_id = %d AND not (mail_flags & %d)>0 and from_xchan != '%s' ",
 		intval(local_user()),
 		intval(MAIL_SEEN),		
 		dbesc($channel['channel_hash'])
@@ -395,7 +397,7 @@ function ping_init(&$a) {
 		$result['mail'] = intval($mails[0]['total']);
 		
 	if ($a->config['system']['register_policy'] == REGISTER_APPROVE && is_site_admin()) {
-		$regs = q("SELECT count(account_id) as total from account where (account_flags & %d)",
+		$regs = q("SELECT count(account_id) as total from account where (account_flags & %d)>0",
 			intval(ACCOUNT_PENDING)
 		);
 		if($regs)

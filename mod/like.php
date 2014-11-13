@@ -276,7 +276,7 @@ function like_content(&$a) {
 
 			// Already liked/disliked it, delete it
 
-			$r = q("UPDATE item SET item_restrict = ( item_restrict ^ %d ), changed = '%s' WHERE id = %d LIMIT 1",
+			$r = q("UPDATE item SET item_restrict = ( item_restrict & ~%d ), changed = '%s' WHERE id = %d",
 				intval(ITEM_DELETED),
 				dbesc(datetime_convert()),
 				intval($like_item['id'])
@@ -332,7 +332,7 @@ function like_content(&$a) {
 		// if this was a linked photo and was hidden, unhide it.
 
 		if($item['item_restrict'] & ITEM_HIDDEN) {
-			$r = q("update item set item_restrict = (item_restrict ^ %d) where id = %d limit 1",
+			$r = q("update item set item_restrict = (item_restrict ^ %d) where id = %d",
 				intval(ITEM_HIDDEN),
 				intval($item['id'])
 			);

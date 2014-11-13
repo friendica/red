@@ -341,7 +341,7 @@ abstract class photo_driver {
 				`allow_gid` = '%s',
 				`deny_cid` = '%s',
 				`deny_gid` = '%s'
-				where id = %d limit 1",
+				where id = %d",
 
 				intval($p['aid']),
 				intval($p['uid']),
@@ -354,7 +354,7 @@ abstract class photo_driver {
 				dbesc($p['album']),
 				intval($this->getHeight()),
 				intval($this->getWidth()),
-				dbesc($this->imageString()),
+				dbescbin($this->imageString()),
 				intval(strlen($this->imageString())),
 				intval($p['scale']),
 				intval($p['profile']),
@@ -383,7 +383,7 @@ abstract class photo_driver {
 				dbesc($p['album']),
 				intval($this->getHeight()),
 				intval($this->getWidth()),
-				dbesc($this->imageString()),
+				dbescbin($this->imageString()),
 				intval(strlen($this->imageString())),
 				intval($p['scale']),
 				intval($p['profile']),
@@ -428,7 +428,7 @@ abstract class photo_driver {
 				`allow_gid` = '%s',
 				`deny_cid` = '%s',
 				`deny_gid` = '%s'
-				where id = %d limit 1",
+				where id = %d",
 
 				intval($aid),
 				intval($uid),
@@ -441,7 +441,7 @@ abstract class photo_driver {
 				dbesc($album),
 				intval($this->getHeight()),
 				intval($this->getWidth()),
-				dbesc($this->imageString()),
+				dbescbin($this->imageString()),
 				intval(strlen($this->imageString())),
 				intval($scale),
 				intval($profile),
@@ -467,7 +467,7 @@ abstract class photo_driver {
 				dbesc($album),
 				intval($this->getHeight()),
 				intval($this->getWidth()),
-				dbesc($this->imageString()),
+				dbescbin($this->imageString()),
 				intval(strlen($this->imageString())),
 				intval($scale),
 				intval($profile),
@@ -562,7 +562,7 @@ function import_profile_photo($photo,$xchan,$thing = false) {
 	if($thing)
 		$hash = photo_new_resource();
 	else {
-		$r = q("select resource_id from photo where xchan = '%s' and (photo_flags & %d ) and scale = 4 limit 1",
+		$r = q("select resource_id from photo where xchan = '%s' and (photo_flags & %d )>0 and scale = 4 limit 1",
 			dbesc($xchan),
 			intval(PHOTO_XCHAN)
 		);

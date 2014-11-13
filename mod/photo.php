@@ -66,7 +66,7 @@ function photo_init(&$a) {
 			intval($uid)
 		);
 		if(count($r)) {
-			$data = $r[0]['data'];
+			$data = dbunescbin($r[0]['data']);
 			$mimetype = $r[0]['type'];
 		}
 		if(! isset($data)) {
@@ -140,7 +140,7 @@ function photo_init(&$a) {
 			);
 
 			if($r && $allowed) {
-				$data = $r[0]['data'];
+				$data = dbunescbin($r[0]['data']);
 				$mimetype = $r[0]['type'];
 			}
 			else {

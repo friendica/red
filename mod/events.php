@@ -199,14 +199,14 @@ function events_content(&$a) {
 	nav_set_selected('all_events');
 
 	if((argc() > 2) && (argv(1) === 'ignore') && intval(argv(2))) {
-		$r = q("update event set ignore = 1 where id = %d and uid = %d limit 1",
+		$r = q("update event set ignore = 1 where id = %d and uid = %d",
 			intval(argv(2)),
 			intval(local_user())
 		);
 	}
 
 	if((argc() > 2) && (argv(1) === 'unignore') && intval(argv(2))) {
-		$r = q("update event set ignore = 0 where id = %d and uid = %d limit 1",
+		$r = q("update event set ignore = 0 where id = %d and uid = %d",
 			intval(argv(2)),
 			intval(local_user())
 		);
@@ -330,8 +330,8 @@ function events_content(&$a) {
 			$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
                               from event left join item on event_hash = resource_id 
 				where resource_type = 'event' and event.uid = %d and event.ignore = %d 
-				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' ) 
-				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' )) ",
+				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' ) 
+				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' )) ",
 				intval(local_user()),
 				intval($ignored),
 				dbesc($start),

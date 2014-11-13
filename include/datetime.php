@@ -453,7 +453,10 @@ function update_birthdays() {
 	require_once('include/permissions.php');
 
     $r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash 
-		WHERE abook_dob > utc_timestamp() + interval 7 day and abook_dob < utc_timestamp() + interval 14 day");
+		WHERE abook_dob > %s + interval %s and abook_dob < %s + interval %s",
+		db_utcnow(), db_quoteinterval('7 day'),
+		db_utcnow(), db_quoteinterval('14 day')
+		);
 	if($r) {
 		foreach($r as $rr) {
 			
@@ -475,7 +478,7 @@ function update_birthdays() {
 			$z = event_store_event($ev);
 			if($z) {
 				$item_id = event_store_item($ev,$z);
-				q("update abook set abook_dob = '%s' where abook_id = %d limit 1",
+				q("update abook set abook_dob = '%s' where abook_id = %d",
 					dbesc(intval($rr['abook_dob']) + 1 . substr($rr['abook_dob'],4)),
 					intval($rr['abook_id'])
 				);

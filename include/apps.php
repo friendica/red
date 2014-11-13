@@ -267,7 +267,7 @@ function app_install($uid,$app) {
 
 function app_destroy($uid,$app) {
 	if($uid && $app['guid']) {
-		$r = q("delete from app where app_id = '%s' and app_channel = %d limit 1",
+		$r = q("delete from app where app_id = '%s' and app_channel = %d",
 			dbesc($app['guid']),
 			intval($uid)
 		);
@@ -388,7 +388,7 @@ function app_update($arr) {
 	$darray['app_page']     = ((x($arr,'page')) ? escape_tags($arr['page']) : '');
 	$darray['app_requires'] = ((x($arr,'requires')) ? escape_tags($arr['requires']) : '');
 
-	$r = q("update app set app_sig = '%s', app_author = '%s', app_name = '%s', app_desc = '%s', app_url = '%s', app_photo = '%s', app_version = '%s', app_addr = '%s', app_price = '%s', app_page = '%s', app_requires = '%s' where app_id = '%s' and app_channel = %d limit 1",
+	$r = q("update app set app_sig = '%s', app_author = '%s', app_name = '%s', app_desc = '%s', app_url = '%s', app_photo = '%s', app_version = '%s', app_addr = '%s', app_price = '%s', app_page = '%s', app_requires = '%s' where app_id = '%s' and app_channel = %d",
 		dbesc($darray['app_sig']),
 		dbesc($darray['app_author']),
 		dbesc($darray['app_name']),

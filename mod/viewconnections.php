@@ -37,7 +37,7 @@ function viewconnections_content(&$a) {
 		$xchan_flags = $xchan_flags | XCHAN_FLAGS_HIDDEN;
 	}
 
-	$r = q("SELECT count(*) as total FROM abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d ) and not ( xchan_flags & %d ) ",
+	$r = q("SELECT count(*) as total FROM abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d )>0 and not ( xchan_flags & %d )>0 ",
 		intval($a->profile['uid']),
 		intval($abook_flags),
 		intval($xchan_flags)
@@ -46,12 +46,12 @@ function viewconnections_content(&$a) {
 		$a->set_pager_total($r[0]['total']);
 	}
 
-	$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not ( abook_flags & %d ) and not ( xchan_flags & %d ) order by xchan_name LIMIT %d , %d ",
+	$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not ( abook_flags & %d )>0 and not ( xchan_flags & %d )>0 order by xchan_name LIMIT %d OFFSET %d ",
 		intval($a->profile['uid']),
 		intval($abook_flags),
 		intval($xchan_flags),
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
+		intval($a->pager['itemspage']),
+		intval($a->pager['start'])
 	);
 
 	if(! $r) {

@@ -657,7 +657,7 @@ function diaspora_request($importer,$xml) {
 
 		$newperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT|PERMS_R_STORAGE|PERMS_R_PAGES;
 
-		$r = q("update abook set abook_their_perms = %d where abook_id = %d and abook_channel = %d limit 1",
+		$r = q("update abook set abook_their_perms = %d where abook_id = %d and abook_channel = %d",
 			intval($newperms),
 			intval($contact['abook_id']),
 			intval($importer['channel_id'])
@@ -675,7 +675,7 @@ function diaspora_request($importer,$xml) {
 
 	$default_perms = 0;
 	// look for default permissions to apply in return - e.g. auto-friend
-	$z = q("select * from abook where abook_channel = %d and (abook_flags & %d) limit 1",
+	$z = q("select * from abook where abook_channel = %d and (abook_flags & %d)>0 limit 1",
 		intval($importer['channel_id']),
 		intval(ABOOK_FLAG_SELF)
 	);

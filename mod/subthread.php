@@ -228,7 +228,7 @@ EOT;
 	$post_id = $post['item_id'];
 
 	if(! $item['visible']) {
-		$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d AND `uid` = %d",
 			intval($item['id']),
 			intval($owner_uid)
 		);

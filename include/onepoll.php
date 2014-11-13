@@ -28,8 +28,8 @@ function onepoll_run($argv, $argc){
 	$contacts = q("SELECT abook.*, xchan.*, account.*
 		FROM abook LEFT JOIN account on abook_account = account_id left join xchan on xchan_hash = abook_xchan 
 		where abook_id = %d
-		AND (( abook_flags & %d ) OR ( abook_flags = %d ))
-		AND NOT ( abook_flags & %d )
+		AND (( abook_flags & %d )>0 OR ( abook_flags = %d ))
+		AND NOT ( abook_flags & %d )>0
 		AND (( account_flags = %d ) OR ( account_flags = %d )) limit 1",
 		intval($contact_id),
 		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_UNCONNECTED|ABOOK_FLAG_FEED),
@@ -69,7 +69,7 @@ function onepoll_run($argv, $argc){
 	if($contact['xchan_network'] === 'rss') {
 		logger('onepoll: processing feed ' . $contact['xchan_name'], LOGGER_DEBUG);
 		handle_feed($importer['channel_id'],$contact_id,$contact['xchan_hash']);
-		q("update abook set abook_connected = '%s' where abook_id = %d limit 1",
+		q("update abook set abook_connected = '%s' where abook_id = %d",
 			dbesc(datetime_convert()),
 			intval($contact['abook_id'])
 		);
@@ -88,13 +88,13 @@ function onepoll_run($argv, $argc){
 	$connected = datetime_convert();
 	if(! $x) {
 		// mark for death by not updating abook_connected, this is caught in include/poller.php
-		q("update abook set abook_updated = '%s' where abook_id = %d limit 1",
+		q("update abook set abook_updated = '%s' where abook_id = %d",
 			dbesc($updated),
 			intval($contact['abook_id'])
 		);
 	}
 	else {
-		q("update abook set abook_updated = '%s', abook_connected = '%s' where abook_id = %d limit 1",
+		q("update abook set abook_updated = '%s', abook_connected = '%s' where abook_id = %d",
 			dbesc($updated),
 			dbesc($connected),
 			intval($contact['abook_id'])
@@ -145,8 +145,9 @@ function onepoll_run($argv, $argc){
 
 	if($contact['xchan_connurl']) {	
 		$r = q("SELECT xlink_id from xlink 
-			where xlink_xchan = '%s' and xlink_updated > UTC_TIMESTAMP() - INTERVAL 1 DAY limit 1",
-			intval($contact['xchan_hash'])
+			where xlink_xchan = '%s' and xlink_updated > %s - INTERVAL %s limit 1",
+			intval($contact['xchan_hash']),
+			db_utcnow(), db_quoteinterval('1 DAY')
 		);
 		if(! $r) {
 			poco_load($contact['xchan_hash'],$contact['xchan_connurl']);

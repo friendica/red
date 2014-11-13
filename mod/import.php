@@ -215,7 +215,7 @@ function import_post(&$a) {
 	// reset the original primary hubloc if it is being seized
 
 	if($seize)
-		$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where (hubloc_flags & %d) and hubloc_hash = '%s' and hubloc_url != '%s' ",
+		$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where (hubloc_flags & %d)>0 and hubloc_hash = '%s' and hubloc_url != '%s' ",
 			intval(HUBLOC_FLAGS_PRIMARY),
 			intval(HUBLOC_FLAGS_PRIMARY),
 			dbesc($channel['channel_hash']),
@@ -228,7 +228,7 @@ function import_post(&$a) {
 
 		// replace our existing xchan if we're seizing control
 
-		$r = q("delete from xchan where xchan_hash = '%s' limit 1",
+		$r = q("delete from xchan where xchan_hash = '%s'",
 			dbesc($channel['channel_hash'])
 		);
 
@@ -278,7 +278,7 @@ function import_post(&$a) {
 				$photodate = $xchan['xchan_photo_date'];
 
 			$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s', xchan_photo_date = '%s'
-				where xchan_hash = '%s' limit 1",
+				where xchan_hash = '%s'",
 				dbesc($photos[0]),
 				dbesc($photos[1]),
 				dbesc($photos[2]),

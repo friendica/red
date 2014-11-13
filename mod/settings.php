@@ -168,7 +168,7 @@ function settings_post(&$a) {
 			}
 		}
 
-		$r = q("UPDATE channel SET channel_theme = '%s' WHERE channel_id = %d LIMIT 1",
+		$r = q("UPDATE channel SET channel_theme = '%s' WHERE channel_id = %d",
 				dbesc($theme),
 				intval(local_user())
 		);
@@ -205,7 +205,7 @@ function settings_post(&$a) {
 				$salt = random_string(32);
 				$password_encoded = hash('whirlpool', $salt . $newpass);
 				$r = q("update account set account_salt = '%s', account_password = '%s', account_password_changed = '%s' 
-					where account_id = %d limit 1",
+					where account_id = %d",
 					dbesc($salt),
 					dbesc($password_encoded),
 					dbesc(datetime_convert()),
@@ -235,7 +235,7 @@ function settings_post(&$a) {
 				$email = $a->user['email'];
 			}
 			if(! $errs) {
-				$r = q("update account set account_email = '%s' where account_id = %d limit 1",
+				$r = q("update account set account_email = '%s' where account_id = %d",
 					dbesc($email),
 					intval($account['account_id'])
 				);
@@ -267,7 +267,7 @@ function settings_post(&$a) {
 			$hide_presence    = (((x($_POST,'hide_presence')) && (intval($_POST['hide_presence']) == 1)) ? 1: 0);
 			$publish          = (((x($_POST,'profile_in_directory')) && (intval($_POST['profile_in_directory']) == 1)) ? 1: 0);
 			$def_group        = ((x($_POST,'group-selection')) ? notags(trim($_POST['group-selection'])) : '');
-			$r = q("update channel set channel_default_group = '%s' where channel_id = %d limit 1",
+			$r = q("update channel set channel_default_group = '%s' where channel_id = %d",
 				dbesc($def_group),
 				intval(local_user())
 			);	
@@ -283,7 +283,7 @@ function settings_post(&$a) {
 			$str_group_deny    = perms2str($_POST['group_deny']);
 			$str_contact_deny  = perms2str($_POST['contact_deny']);
 			$r = q("update channel set channel_allow_cid = '%s', channel_allow_gid = '%s', channel_deny_cid = '%s', channel_deny_gid = '%s'
-				where channel_id = %d limit 1",
+				where channel_id = %d",
 				dbesc($str_contact_allow),
 				dbesc($str_group_allow),
 				dbesc($str_contact_deny),
@@ -313,7 +313,7 @@ function settings_post(&$a) {
 					);
 				}
 				if($r) {
-					q("update channel set channel_default_group = '%s', channel_allow_gid = '%s', channel_allow_cid = '', channel_deny_gid = '', channel_deny_cid = '' where channel_id = %d limit 1",
+					q("update channel set channel_default_group = '%s', channel_allow_gid = '%s', channel_allow_cid = '', channel_deny_gid = '', channel_deny_cid = '' where channel_id = %d",
 						dbesc($r[0]['hash']),
 						dbesc('<' . $r[0]['hash'] . '>'),
 						intval(local_user())
@@ -327,12 +327,12 @@ function settings_post(&$a) {
 			// no default collection
 			else {
 				q("update channel set channel_default_group = '', channel_allow_gid = '', channel_allow_cid = '', channel_deny_gid = '', 
-					channel_deny_cid = '' where channel_id = %d limit 1",
+					channel_deny_cid = '' where channel_id = %d",
 						intval(local_user())
 				);
 			}
 
-			$r = q("update abook set abook_my_perms  = %d where abook_channel = %d and (abook_flags & %d) limit 1",
+			$r = q("update abook set abook_my_perms  = %d where abook_channel = %d and (abook_flags & %d)>0",
 				intval(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0),
 				intval(local_user()),
 				intval(ABOOK_FLAG_SELF)
@@ -433,7 +433,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','blocktags',$blocktags);
 	set_pconfig(local_user(),'system','channel_menu',$channel_menu);
 
-	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d $set_perms where channel_id = %d limit 1",
+	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d $set_perms where channel_id = %d",
 		dbesc($username),
 		intval($pageflags),
 		dbesc($timezone),
@@ -448,14 +448,14 @@ function settings_post(&$a) {
 		info( t('Settings updated.') . EOL);
 
 	if(! is_null($publish)) {
-		$r = q("UPDATE profile SET publish = %d WHERE is_default = 1 AND uid = %d LIMIT 1",
+		$r = q("UPDATE profile SET publish = %d WHERE is_default = 1 AND uid = %d",
 			intval($publish),
 			intval(local_user())
 		);
 	}
 
 	if($name_change) {
-		$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s' where xchan_hash = '%s' limit 1",
+		$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s' where xchan_hash = '%s'",
 			dbesc($username),
 			dbesc(datetime_convert()),
 			dbesc($channel['channel_hash'])

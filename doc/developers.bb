@@ -64,4 +64,7 @@ In the interests of consistency we adopt the following code styling. We may acce
 
 [li] Generally speaking, opening braces go on the same line as the thing which opens the brace. They are the last character on the line. Closing braces are on a line by themselves. [/li]
 
+[b]See Also[/b]
+[zrl=[baseurl]/help/sql_conventions]SQL Conventions[/zrl]
+
 #include doc/macros/main_footer.bb;

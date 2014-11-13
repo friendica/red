@@ -1,25 +1,35 @@
 <?php /** @file */
 
-function dba_factory($server, $port,$user,$pass,$db,$install = false) {
+function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
 	$dba = null;
 
-	if(class_exists('mysqli')) {
-        if (is_null($port)) $port = ini_get("mysqli.default_port");
-		require_once('include/dba/dba_mysqli.php');
-		$dba = new dba_mysqli($server, $port,$user,$pass,$db,$install);
+	if($dbtype == 1) {
+		require_once('include/dba/dba_postgres.php');
+		if(is_null($port)) $port = 5432;
+		$dba = new dba_postgres($server, $port, $user, $pass, $db, $install);
+	} else {
+		if(class_exists('mysqli')) {
+			if (is_null($port)) $port = ini_get("mysqli.default_port");
+			require_once('include/dba/dba_mysqli.php');
+			$dba = new dba_mysqli($server, $port,$user,$pass,$db,$install);
+		} else {
+			if (is_null($port)) $port = "3306";
+			require_once('include/dba/dba_mysql.php');
+			$dba = new dba_mysql($server, $port,$user,$pass,$db,$install);
+		}
 	}
-	else {
-        if (is_null($port)) $port = "3306";
-		require_once('include/dba/dba_mysql.php');
-		$dba = new dba_mysql($server, $port,$user,$pass,$db,$install);
-	}
-
+	define('NULL_DATE', $dba->get_null_date());
+	define('ACTIVE_DBTYPE', $dbtype);
 	return $dba;
 }
 
 
 abstract class dba_driver {
-
+	// legacy behavior
+	const INSTALL_SCRIPT='install/schema_mysql.sql';
+	const NULL_DATE = '0000-00-00 00:00:00';
+	const UTC_NOW = 'UTC_TIMESTAMP()';
+	
 	protected $debug = 0;
 	protected $db;
 	public  $connected = false;
@@ -37,6 +47,17 @@ abstract class dba_driver {
 		$this->connect($server, $port, $user,$pass,$db);
 	}
 
+	function get_null_date() {
+		return static::NULL_DATE;
+	}
+	
+	function get_install_script() {
+		return static::INSTALL_SCRIPT;
+	}
+	
+	function utcnow() {
+		return static::UTC_NOW;
+	}
 
 	function install($server,$user,$pass,$db) {
 		if (!(strlen($server) && strlen($user))){
@@ -67,6 +88,26 @@ abstract class dba_driver {
 		}
 	}
 
+	function quote_interval($txt) {
+		return $txt;
+	}
+	
+	function optimize_table($table) {
+		q('OPTIMIZE TABLE '.$table);
+	}
+	
+	function concat($fld, $sep) {
+		return 'GROUP_CONCAT(DISTINCT '.$fld.' SEPARATOR \''.$sep.'\')';
+	}
+	
+	function escapebin($str) {
+		return $this->escape($str);
+	}
+	
+	function unescapebin($str) {
+		return $str;
+	}
+	
 }
 
 
@@ -95,8 +136,49 @@ function dbesc($str) {
 	else
 		return(str_replace("'","\\'",$str));
 }
+function dbescbin($str) {
+	global $db;
+	return $db->escapebin($str);
+}
 
+function dbunescbin($str) {
+	global $db;
+	return $db->unescapebin($str);
+}
 
+function dbescdate($date) {
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES && $date == '0000-00-00 00:00:00') {
+		$date = NULL_DATE;
+	} else if(ACTIVE_DBTYPE != DBTYPE_POSTGRES && $date == '0001-01-01 00:00:00') {
+		$date = NULL_DATE;
+	}
+	return $date;
+}
+
+function db_quoteinterval($txt) {
+	global $db;
+	return $db->quote_interval($txt);
+}
+
+function dbesc_identifier($str) {
+	global $db;
+	return $db->escape_identifier($txt);
+}
+
+function db_utcnow() {
+	global $db;
+	return $db->utcnow();
+}
+
+function db_optimizetable($table) {
+	global $db;
+	$db->optimize_table($table);
+}
+
+function db_concat($fld, $sep) {
+	global $db;
+	return $db->concat($fld, $sep);
+}
 
 // Function: q($sql,$args);
 // Description: execute SQL query with printf style args.
@@ -158,8 +240,11 @@ function dbq($sql) {
 
 
 function dbesc_array_cb(&$item, $key) {
-	if(is_string($item))
+	if(is_string($item)) {
+		if($item == '0000-00-00 00:00:00' && ACTIVE_DBTYPE == DBTYPE_POSTGRES)
+			$item = '0001-01-01 00:00:00';
 		$item = dbesc($item);
+	}
 }
 
 
@@ -169,3 +254,27 @@ function dbesc_array(&$arr) {
 		array_walk($arr,'dbesc_array_cb');
 	}
 }
+
+function db_getfunc($f) {
+	$lookup = array(
+		'rand'=>array(
+			DBTYPE_MYSQL=>'RAND()', 
+			DBTYPE_POSTGRES=>'RANDOM()'
+		),
+		'utc_timestamp'=>array(
+			DBTYPE_MYSQL=>'UTC_TIMESTAMP()',
+			DBTYPE_POSTGRES=>"now() at time zone 'UTC'"
+		),
+		'regexp'=>array(
+			DBTYPE_MYSQL=>'REGEXP',
+			DBTYPE_POSTGRES=>'~'
+		)
+	);
+	$f = strtolower($f);
+	if(isset($lookup[$f]) && isset($lookup[$f][ACTIVE_DBTYPE]))
+		return $lookup[$f][ACTIVE_DBTYPE];
+		
+	logger('Unable to abstract DB function "'. $f . '"', LOG_DEBUG);
+	return $f;
+}
+

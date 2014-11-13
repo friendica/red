@@ -226,7 +226,7 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 			if(count($r)) {
-				$ph = photo_factory($r[0]['data'], $r[0]['type']);
+				$ph = photo_factory(dbunescbin($r[0]['data']), $r[0]['type']);
 				if($ph->is_valid()) {
 					$rotate_deg = ( (intval($_POST['rotate']) == 1) ? 270 : 90 );
 					$ph->rotate($rotate_deg);
@@ -234,8 +234,8 @@ function photos_post(&$a) {
 					$width  = $ph->getWidth();
 					$height = $ph->getHeight();
 
-					$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 0 limit 1",
-						dbesc($ph->imageString()),
+					$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 0",
+						dbescbin($ph->imageString()),
 						intval($height),
 						intval($width),
 						dbesc($resource_id),
@@ -247,8 +247,8 @@ function photos_post(&$a) {
 						$width  = $ph->getWidth();
 						$height = $ph->getHeight();
 		
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 1 limit 1",
-							dbesc($ph->imageString()),
+						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 1",
+							dbescbin($ph->imageString()),
 							intval($height),
 							intval($width),
 							dbesc($resource_id),
@@ -261,8 +261,8 @@ function photos_post(&$a) {
 						$width  = $ph->getWidth();
 						$height = $ph->getHeight();
 
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 2 limit 1",
-							dbesc($ph->imageString()),
+						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 2",
+							dbescbin($ph->imageString()),
 							intval($height),
 							intval($width),
 							dbesc($resource_id),
@@ -322,7 +322,7 @@ function photos_post(&$a) {
 
 		// make sure the linked item has the same permissions as the photo regardless of any other changes
 		$x = q("update item set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
-			where id = %d limit 1",
+			where id = %d",
 				dbesc($str_contact_allow),
 				dbesc($str_group_allow),
 				dbesc($str_contact_deny),
@@ -621,14 +621,20 @@ function photos_content(&$a) {
 		else
 			$order = 'DESC';
 
-		$r = q("SELECT `resource_id`, `id`, `filename`, type, max(`scale`) AS `scale`, `description` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			AND `scale` <= 4 and (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY `resource_id` ORDER BY `created` $order LIMIT %d , %d",
+			
+		/*"SELECT $prefix `resource_id`, `id`, `filename`, type, max(`scale`) AS `scale`, `description` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
+			AND `scale` <= 4 and (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY resource_id ORDER BY `created` $order LIMIT %d OFFSET %d"*/
+			
+		$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.scale, p.description, p.created FROM photo p INNER JOIN
+				(SELECT resource_id, max(scale) scale FROM photo WHERE uid = %d AND album = '%s' AND scale <= 4 AND (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY resource_id) ph 
+				ON (p.resource_id = ph.resource_id AND p.scale = ph.scale)
+			ORDER BY created $order LIMIT %d OFFSET %d",
 			intval($owner_uid),
 			dbesc($album),
 			intvaL(PHOTO_NORMAL),
 			intval(PHOTO_PROFILE),
-			intval($a->pager['start']),
-			intval($a->pager['itemspage'])
+			intval($a->pager['itemspage']),
+			intval($a->pager['start'])
 		);
 		
 		//edit album name
@@ -899,7 +905,7 @@ function photos_content(&$a) {
 			}
 
 			if((local_user()) && (local_user() == $link_item['uid'])) {
-				q("UPDATE `item` SET item_flags = (item_flags ^ %d) WHERE parent = %d and uid = %d and (item_flags & %d)",
+				q("UPDATE `item` SET item_flags = (item_flags & ~%d) WHERE parent = %d and uid = %d and (item_flags & %d)>0",
 					intval(ITEM_UNSEEN),
 					intval($link_item['parent']),
 					intval(local_user()),
@@ -1156,18 +1162,19 @@ function photos_content(&$a) {
 		$a->set_pager_total(count($r));
 		$a->set_pager_itemspage(60);
 	}
-
-	$r = q("SELECT `resource_id`, `id`, `filename`, type, `album`, max(`scale`) AS `scale` FROM `photo`
-		WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s'
-		and ( photo_flags = %d or photo_flags = %d )  
-		$sql_extra GROUP BY `resource_id` ORDER BY `created` DESC LIMIT %d , %d",
+	
+	$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.album, p.scale, p.created FROM photo p INNER JOIN 
+		(SELECT resource_id, max(scale) scale FROM photo 
+			WHERE uid=%d AND album != '%s' AND album != '%s' 
+			AND (photo_flags = %d or photo_flags = %d ) group by resource_id) ph 
+		ON (p.resource_id = ph.resource_id and p.scale = ph.scale) ORDER by p.created DESC LIMIT %d OFFSET %d",
 		intval($a->data['channel']['channel_id']),
 		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos')),
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE),
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
+		intval($a->pager['itemspage']),
+		intval($a->pager['start'])
 	);
 
 

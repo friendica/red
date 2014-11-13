@@ -30,7 +30,7 @@ function collect_recipients($item,&$private_envelope) {
 		// as that would allow the denied person to see the post by logging out. 
 
 		if((! $item['allow_cid']) && (! $item['allow_gid'])) {
-			$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) ",
+			$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d)>0 ",
 				intval($item['uid']),
 				intval(ABOOK_FLAG_SELF|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
 			);
@@ -68,7 +68,7 @@ function collect_recipients($item,&$private_envelope) {
 		$private_envelope = false;
 
 		if(array_key_exists('public_policy',$item) && $item['public_policy'] !== 'self') {
-			$r = q("select abook_xchan, xchan_network from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d) ",
+			$r = q("select abook_xchan, xchan_network from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d)>0 ",
 				intval($item['uid']),
 				intval(ABOOK_FLAG_SELF|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
 			);
@@ -258,7 +258,7 @@ function add_source_route($iid,$hash) {
 	);
 	if($r) {
 		$new_route = (($r[0]['route']) ? $r[0]['route'] . ',' : '') . $hash; 
-		q("update item set route = '%s' where id = %d limit 1",
+		q("update item set route = '%s' where id = %d",
 			(dbesc($new_route)),
 			intval($iid)
 		);
@@ -969,7 +969,7 @@ function import_author_rss($x) {
 		$photos = import_profile_photo($x['photo']['src'],$x['url']);
 
 		if($photos) {
-			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_url = '%s' and xchan_network = 'rss' limit 1",
+			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_url = '%s' and xchan_network = 'rss'",
 				dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
 				dbesc($photos[0]),
 				dbesc($photos[1]),
@@ -1014,7 +1014,7 @@ function import_author_unknown($x) {
 		$photos = import_profile_photo($x['photo']['src'],$x['url']);
 
 		if($photos) {
-			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_url = '%s' and xchan_network = 'unknown' limit 1",
+			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_url = '%s' and xchan_network = 'unknown'",
 				dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
 				dbesc($photos[0]),
 				dbesc($photos[1]),
@@ -2213,7 +2213,7 @@ function item_store($arr,$allow_exec = false) {
 
 	$r = q("UPDATE item SET parent = %d, allow_cid = '%s', allow_gid = '%s',
 		deny_cid = '%s', deny_gid = '%s', public_policy = '%s', item_private = %d, comments_closed = '%s' 
-		WHERE id = %d LIMIT 1",
+		WHERE id = %d",
 		intval($parent_id),
 		dbesc($allow_cid),
 		dbesc($allow_gid),
@@ -2258,13 +2258,13 @@ function item_store($arr,$allow_exec = false) {
 
 	// update the commented timestamp on the parent
 
-	$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d and not ( item_restrict & %d ) ",
+	$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d and not ( item_restrict & %d )>0 ",
 		dbesc($arr['parent_mid']),
 		intval($arr['uid']),
 		intval(ITEM_DELAYED_PUBLISH)
 	);
 
-	q("UPDATE item set commented = '%s', changed = '%s' WHERE id = %d LIMIT 1",
+	q("UPDATE item set commented = '%s', changed = '%s' WHERE id = %d",
 		dbesc(($z) ? $z[0]['commented'] : (datetime_convert())),
 		dbesc(datetime_convert()),
 		intval($parent_id)
@@ -2476,7 +2476,7 @@ function item_store_update($arr,$allow_exec = false) {
 			$str .= " `" . $k . "` = '" . $v . "' ";
 		} 
 
-	$r = dbq("update `item` set " . $str . " where id = " . $orig_post_id . " limit 1");
+	$r = dbq("update `item` set " . $str . " where id = " . $orig_post_id );
 
 	if($r)
 		logger('item_store_update: updated item ' . $orig_post_id, LOGGER_DEBUG);
@@ -2553,7 +2553,7 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id,
 	$key = get_config('system','pubkey');
 	$y = crypto_encapsulate(json_encode($x),$key);
 
-	$r = q("update item set diaspora_meta = '%s' where id = %d limit 1",
+	$r = q("update item set diaspora_meta = '%s' where id = %d",
 		dbesc(json_encode($y)),
 		intval($post_id) 
 	);
@@ -2749,7 +2749,7 @@ function tag_deliver($uid,$item_id) {
 							$taglink = get_rel_link($j_obj['link'],'alternate');
 
 						store_item_tag($u[0]['channel_id'],$p[0]['id'],TERM_OBJ_POST,TERM_HASHTAG,$j_obj['title'],$j_obj['id']);
-						$x = q("update item set edited = '%s', received = '%s', changed = '%s' where mid = '%s' and uid = %d limit 1",
+						$x = q("update item set edited = '%s', received = '%s', changed = '%s' where mid = '%s' and uid = %d",
 							dbesc(datetime_convert()),
 							dbesc(datetime_convert()),
 							dbesc(datetime_convert()),
@@ -2815,7 +2815,7 @@ function tag_deliver($uid,$item_id) {
 	if($mention) {
 		logger('tag_deliver: mention found for ' . $u[0]['channel_name']);
 		
-		$r = q("update item set item_flags = ( item_flags | %d ) where id = %d limit 1",
+		$r = q("update item set item_flags = ( item_flags | %d ) where id = %d",
 			intval(ITEM_MENTIONSME),
 			intval($item_id)
 		);			
@@ -2930,7 +2930,7 @@ function tgroup_check($uid,$item) {
 	// or is a followup and we have already accepted the top level post as an uplink
 
 	if($item['mid'] != $item['parent_mid']) {
-		$r = q("select id from item where mid = '%s' and uid = %d and ( item_flags & %d ) limit 1",
+		$r = q("select id from item where mid = '%s' and uid = %d and ( item_flags & %d )>0 limit 1",
 			dbesc($item['parent_mid']),
 			intval($uid),
 			intval(ITEM_UPLINK)
@@ -3020,14 +3020,14 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 	// when we created the delivery fork
 
 	if($parent) {
-		$r = q("update item set source_xchan = '%s' where id = %d limit 1",
+		$r = q("update item set source_xchan = '%s' where id = %d",
 			dbesc($parent['source_xchan']),
 			intval($item_id)
 		);
 	}
 	else {
 		$flag_bits = $flag_bits | ITEM_UPLINK;
-		$r = q("update item set source_xchan = owner_xchan where id = %d limit 1",
+		$r = q("update item set source_xchan = owner_xchan where id = %d",
 			intval($item_id)
 		);
 	} 
@@ -3057,7 +3057,7 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 	}
 
 	$r = q("update item set item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
-		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s'  where id = %d limit 1",
+		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s'  where id = %d",
 		intval($flag_bits),
 		dbesc($channel['channel_hash']),
 		dbesc($channel['channel_allow_cid']),
@@ -3097,7 +3097,7 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 function check_item_source($uid,$item) {
 
 
-	$r = q("select * from source where src_channel_id = %d and ( src_xchan = '%s' || src_xchan = '*' ) limit 1",
+	$r = q("select * from source where src_channel_id = %d and ( src_xchan = '%s' or src_xchan = '*' ) limit 1",
 		intval($uid),
 		dbesc(($item['source_xchan']) ?  $item['source_xchan'] : $item['owner_xchan'])
 	);
@@ -3837,17 +3837,17 @@ function item_expire($uid,$days) {
 
 	$expire_network_only = 1;
 
-	$sql_extra = ((intval($expire_network_only)) ? " AND not (item_flags & " . intval(ITEM_WALL) . ") " : "");
+	$sql_extra = ((intval($expire_network_only)) ? " AND not (item_flags & " . intval(ITEM_WALL) . ")>0 " : "");
 
 	$r = q("SELECT * FROM `item` 
 		WHERE `uid` = %d 
-		AND `created` < UTC_TIMESTAMP() - INTERVAL %d DAY 
+		AND `created` < %s - INTERVAL %s 
 		AND `id` = `parent` 
 		$sql_extra
-		AND NOT ( item_flags & %d )
+		AND NOT ( item_flags & %d )>0
 		AND (item_restrict = 0 ) ",
 		intval($uid),
-		intval($days),
+		db_utcnow(), db_quoteinterval(intval($days).' DAY'),
 		intval(ITEM_RETAINED)
 	);
 
@@ -3885,7 +3885,7 @@ function item_expire($uid,$days) {
 }
 
 function retain_item($id) {
-	$r = q("update item set item_flags = (item_flags | %d ) where id = %d limit 1",
+	$r = q("update item set item_flags = (item_flags | %d ) where id = %d",
 		intval(ITEM_RETAINED),
 		intval($id)
 	);
@@ -3961,7 +3961,7 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL) {
 		// set the deleted flag immediately on this item just in case the 
 		// hook calls a remote process which loops. We'll delete it properly in a second.
 
-		$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ) WHERE id = %d LIMIT 1",
+		$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ) WHERE id = %d",
 			intval(ITEM_DELETED),
 			intval($item['id'])
 		);
@@ -4018,7 +4018,7 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 	switch($stage) {
 		case DROPITEM_PHASE2:
 			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
-				changed = '%s', edited = '%s'  WHERE id = %d LIMIT 1",
+				changed = '%s', edited = '%s'  WHERE id = %d",
 				intval(ITEM_PENDING_REMOVE),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
@@ -4028,7 +4028,7 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 
 		case DROPITEM_PHASE1:
 			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ),
-				changed = '%s', edited = '%s'  WHERE id = %d LIMIT 1",
+				changed = '%s', edited = '%s'  WHERE id = %d",
 				intval(ITEM_DELETED),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
@@ -4039,7 +4039,7 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 		case DROPITEM_NORMAL:
 		default:
 			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
-				changed = '%s', edited = '%s'  WHERE id = %d LIMIT 1",
+				changed = '%s', edited = '%s'  WHERE id = %d",
 				intval(ITEM_DELETED),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
@@ -4051,7 +4051,7 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 
 	// immediately remove any undesired profile likes. 
 
-	q("delete from likes where iid = %d and channel_id = %d limit 1",
+	q("delete from likes where iid = %d and channel_id = %d",
 		intval($item['id']),
 		intval($item['uid'])
 	);
@@ -4062,7 +4062,7 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 
 	if(strlen($item['resource_id'])) {
 		if($item['resource_type'] === 'event') {
-			q("delete from event where event_hash = '%s' and uid = %d limit 1",
+			q("delete from event where event_hash = '%s' and uid = %d",
 				dbesc($item['resource_id']),
 				intval($item['uid'])
 			);				
@@ -4082,12 +4082,12 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 	if($stage == DROPITEM_PHASE1)
 		return true;
 
-	$r = q("delete from term where otype = %d and oid = %d limit 1",
+	$r = q("delete from term where otype = %d and oid = %d",
 		intval(TERM_OBJ_POST),
 		intval($item['id'])
 	);
 
-	q("delete from item_id where iid = %d and uid = %d limit 1",
+	q("delete from item_id where iid = %d and uid = %d",
 		intval($item['id']),
 		intval($item['uid'])
 	);
@@ -4106,7 +4106,7 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 
 function first_post_date($uid,$wall = false) {
 
-	$wall_sql = (($wall) ? sprintf(" and item_flags & %d ", ITEM_WALL) : "" );
+	$wall_sql = (($wall) ? sprintf(" and (item_flags & %d)>0 ", ITEM_WALL) : "" );
 
 	$r = q("select id, created from item
 		where item_restrict = %d and uid = %d and id = parent $wall_sql
@@ -4297,19 +4297,19 @@ function zot_feed($uid,$observer_xchan,$arr) {
 
 	if(is_sys_channel($uid)) {
 		require_once('include/security.php');
-		$r = q("SELECT distinct parent from item
+		$r = q("SELECT distinct parent, created from item
 			WHERE uid != %d
 			and uid in (" . stream_perms_api_uids(PERMS_PUBLIC) . ") AND item_restrict = 0 
-			AND (item_flags &  %d) 
+			AND (item_flags &  %d)>0 
 			and item_private = 0 $sql_extra ORDER BY created ASC $limit",
 			intval($uid),
 			intval(ITEM_WALL)
 		);
 	}
 	else {
-		$r = q("SELECT distinct parent from item
+		$r = q("SELECT distinct parent, created from item
 			WHERE uid = %d AND item_restrict = 0
-			AND (item_flags &  %d) 
+			AND (item_flags &  %d)>0 
 			$sql_extra ORDER BY created ASC $limit",
 			intval($uid),
 			intval(ITEM_WALL)
@@ -4372,12 +4372,12 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	}
 
 	if($arr['star'])
-		$sql_options .= " and (item_flags & " . intval(ITEM_STARRED) . ") ";
+		$sql_options .= " and (item_flags & " . intval(ITEM_STARRED) . ")>0 ";
 
 	if($arr['wall'])
-		$sql_options .= " and (item_flags & " . intval(ITEM_WALL) . ") ";
+		$sql_options .= " and (item_flags & " . intval(ITEM_WALL) . ")>0 ";
 									
-	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
+	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ")>0 $sql_options ) ";
 	
 	if($arr['since_id'])
    		$sql_extra .= " and item.id > " . $since_id . " ";
@@ -4415,7 +4415,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
     }
     elseif($arr['cid'] && $uid) {
 
-        $r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") limit 1",
+        $r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ")>0 limit 1",
 			intval($arr['cid']),
 			intval(local_user())
         );
@@ -4455,7 +4455,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
     }
 
     if($arr['conv'] && $channel) {
-        $sql_extra .= sprintf(" AND parent IN (SELECT distinct parent from item where ( author_xchan like '%s' or ( item_flags & %d ))) ",
+        $sql_extra .= sprintf(" AND parent IN (SELECT distinct parent from item where ( author_xchan like '%s' or ( item_flags & %d )>0)) ",
             dbesc(protect_sprintf($uidhash)),
             intval(ITEM_MENTIONSME)
         );
@@ -4471,11 +4471,11 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
     else {
         $itemspage = (($channel) ? get_pconfig($uid,'system','itemspage') : 20);
         $a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
-        $pager_sql = sprintf(" LIMIT %d, %d ",intval(get_app()->pager['start']), intval(get_app()->pager['itemspage']));
+        $pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(get_app()->pager['itemspage']), intval(get_app()->pager['start']));
     }
 
 	if(isset($arr['start']) && isset($arr['records']))
-        $pager_sql = sprintf(" LIMIT %d, %d ",intval($arr['start']), intval($arr['records']));
+        $pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($arr['records']), intval($arr['start']));
 
 	if(array_key_exists('cmin',$arr) || array_key_exists('cmax',$arr)) {
 		if(($arr['cmin'] != 0) || ($arr['cmax'] != 99)) {
@@ -4497,7 +4497,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
     	}
 	}
 
-    $simple_update = (($client_mode & CLIENT_MODE_UPDATE) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) " : '');
+    $simple_update = (($client_mode & CLIENT_MODE_UPDATE) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " )>0 " : '');
     if($client_mode & CLIENT_MODE_LOAD)
         $simple_update = '';
 
@@ -4541,7 +4541,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
             // Fetch a page full of parent items for this page
 
-            $r = q("SELECT distinct item.id AS item_id FROM item
+            $r = q("SELECT distinct item.id AS item_id, item.$ordering FROM item
                 left join abook on item.author_xchan = abook.abook_xchan
                 WHERE $item_uids $item_restrict
                 AND item.parent = item.id
@@ -4639,7 +4639,7 @@ function update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remo
 			dbesc($page_type)
 		);
 		if($r) {
-			q("update item_id set sid = '%s' where id = %d limit 1",
+			q("update item_id set sid = '%s' where id = %d",
 				dbesc(($pagetitle) ? $pagetitle : substr($mid,0,16)),
 				intval($r[0]['id'])
 			);
@@ -4670,7 +4670,7 @@ function item_add_cid($xchan_hash,$mid,$uid) {
 		dbesc('<' . $xchan_hash . '>')
 	);
 	if(! $r) {
-		$r = q("update item set allow_cid = concat(allow_cid,'%s') where mid = '%s' and uid = %d limit 1",
+		$r = q("update item set allow_cid = concat(allow_cid,'%s') where mid = '%s' and uid = %d",
 			dbesc('<' . $xchan_hash . '>'),
 			dbesc($mid),
 			intval($uid)
@@ -4685,7 +4685,7 @@ function item_remove_cid($xchan_hash,$mid,$uid) {
 		dbesc('<' . $xchan_hash . '>')
 	);
 	if($r) {
-		$x = q("update item set allow_cid = '%s' where mid = '%s' and uid = %d limit 1",
+		$x = q("update item set allow_cid = '%s' where mid = '%s' and uid = %d",
 			dbesc(str_replace('<' . $xchan_hash . '>','',$r[0]['allow_cid'])),
 			dbesc($mid),
 			intval($uid)

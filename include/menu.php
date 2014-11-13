@@ -176,7 +176,7 @@ function menu_edit($arr) {
 	}
 
 	return q("update menu set menu_name = '%s', menu_desc = '%s', menu_flags = %d
-		where menu_id = %d and menu_channel_id = %d limit 1", 
+		where menu_id = %d and menu_channel_id = %d", 
  		dbesc($menu_name),
 		dbesc($menu_desc),
 		intval($menu_flags),
@@ -303,7 +303,7 @@ function menu_edit_item($menu_id, $uid, $arr) {
 	}
 
 
-	$r = q("update menu_item set mitem_link = '%s', mitem_desc = '%s', mitem_flags = %d, allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', mitem_order = %d  where mitem_channel_id = %d and mitem_menu_id = %d and mitem_id = %d limit 1",
+	$r = q("update menu_item set mitem_link = '%s', mitem_desc = '%s', mitem_flags = %d, allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', mitem_order = %d  where mitem_channel_id = %d and mitem_menu_id = %d and mitem_id = %d",
 		dbesc($mitem_link),
 		dbesc($mitem_desc),
 		intval($mitem_flags),
@@ -323,7 +323,7 @@ function menu_edit_item($menu_id, $uid, $arr) {
 
 
 function menu_del_item($menu_id,$uid,$item_id) {
-	$r = q("delete from menu_item where mitem_menu_id = %d and mitem_channel_id = %d and mitem_id = %d limit 1",
+	$r = q("delete from menu_item where mitem_menu_id = %d and mitem_channel_id = %d and mitem_id = %d",
 		intval($menu_id),
 		intval($uid),
 		intval($item_id)

@@ -151,16 +151,16 @@ function dirsearch_content(&$a) {
 	}
 
 
-	$safesql = (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " ) " : '');
+	$safesql = (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " )>0 " : '');
 	if($safe < 0)
-		$safesql = " and ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " ) ";
+		$safesql = " and ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " )>0 ";
 
 	if($limit) 
 		$qlimit = " LIMIT $limit ";
 	else {
 		$qlimit = " LIMIT " . intval($startrec) . " , " . intval($perpage);
 		if($return_total) {
-			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and xchan_network = 'zot' and not ( xchan_flags & %d) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql ",
+			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and xchan_network = 'zot' and not ( xchan_flags & %d)>0 and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 $safesql ",
 				intval(XCHAN_FLAGS_HIDDEN),
 				intval(XCHAN_FLAGS_ORPHAN),
 				intval(XCHAN_FLAGS_DELETED)
@@ -205,7 +205,7 @@ function dirsearch_content(&$a) {
 		json_return_and_die($spkt);
 	}
 	else {
-		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and xchan_network = 'zot' and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql $order $qlimit ",
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and xchan_network = 'zot' and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 $safesql $order $qlimit ",
 			intval(XCHAN_FLAGS_HIDDEN),
 			intval(XCHAN_FLAGS_ORPHAN),
 			intval(XCHAN_FLAGS_DELETED)

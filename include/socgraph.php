@@ -77,7 +77,7 @@ function poco_load($xchan = '',$url = null) {
 					dbesc($xchan)
 				);
 				if($r) {
-					q("update xchat set xchat_edited = '%s' where xchat_id = %d limit 1",
+					q("update xchat set xchat_edited = '%s' where xchat_id = %d",
 						dbesc(datetime_convert()),
 						intval($r[0]['xchat_id'])
 					);
@@ -93,7 +93,8 @@ function poco_load($xchan = '',$url = null) {
 				}
 			}
 		}
-		q("delete from xchat where xchat_edited < UTC_TIMESTAMP() - INTERVAL 7 DAY and xchat_xchan = '%s' ",
+		q("delete from xchat where xchat_edited < %s - INTERVAL %s and xchat_xchan = '%s' ",
+			db_utcnow(), db_quoteinterval('7 DAY'),
 			dbesc($xchan)
 		);
 	}
@@ -195,7 +196,7 @@ function poco_load($xchan = '',$url = null) {
 			);
 		}
 		else {
-			q("update xlink set xlink_updated = '%s', xlink_rating = %d where xlink_id = %d limit 1",
+			q("update xlink set xlink_updated = '%s', xlink_rating = %d where xlink_id = %d",
 				dbesc(datetime_convert()),
 				intval($rating),
 				intval($r[0]['xlink_id'])
@@ -204,8 +205,9 @@ function poco_load($xchan = '',$url = null) {
 	}
 	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 
-	q("delete from xlink where xlink_xchan = '%s' and xlink_updated < UTC_TIMESTAMP() - INTERVAL 2 DAY",
-		dbesc($xchan)
+	q("delete from xlink where xlink_xchan = '%s' and xlink_updated < %s - INTERVAL %s",
+		dbesc($xchan),
+		db_utcnow(), db_quoteinterval('2 DAY')
 	);
 }
 
@@ -227,18 +229,19 @@ function count_common_friends($uid,$xchan) {
 
 function common_friends($uid,$xchan,$start = 0,$limit=100000000,$shuffle = false) {
 
+	$rand = db_getfunc('rand');
 	if($shuffle)
-		$sql_extra = " order by rand() ";
+		$sql_extra = " order by $rand ";
 	else
 		$sql_extra = " order by xchan_name asc "; 
 
 	$r = q("SELECT * from xchan left join xlink on xlink_link = xchan_hash where xlink_xchan = '%s' and xlink_link in
-		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 ) $sql_extra limit %d, %d",
+		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 ) $sql_extra limit %d offset %d",
 		dbesc($xchan),
 		dbesc($xchan),
 		intval($uid),
-		intval($start),
-		intval($limit)
+		intval($limit),
+		intval($start)
 	);
 
 	return $r;
@@ -273,11 +276,11 @@ function common_friends_zcid($uid,$zcid,$start = 0, $limit = 9999,$shuffle = fal
 		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
 		where `glink`.`zcid` = %d
 		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and blocked = 0 and hidden = 0 ) 
-		$sql_extra limit %d, %d",
+		$sql_extra limit %d offset %d",
 		intval($zcid),
 		intval($uid),
-		intval($start),
-		intval($limit)
+		intval($limit),
+		intval($start)
 	);
 
 	return $r;
@@ -306,11 +309,11 @@ function all_friends($uid,$cid,$start = 0, $limit = 80) {
 	$r = q("SELECT `gcontact`.* 
 		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
 		where `glink`.`cid` = %d and `glink`.`uid` = %d 
-		order by `gcontact`.`name` asc LIMIT %d, %d ",
+		order by `gcontact`.`name` asc LIMIT %d OFFSET %d ",
 		intval($cid),
 		intval($uid),
-		intval($start),
-		intval($limit)
+		intval($limit),
+		intval($start)
 	);
 
 	return $r;
@@ -329,16 +332,16 @@ function suggestion_query($uid, $myxchan, $start = 0, $limit = 80) {
 		and not xlink_link in ( select abook_xchan from abook where abook_channel = %d )
 		and not xlink_link in ( select xchan from xign where uid = %d )
 		and xlink_xchan != ''
-		and not ( xchan_flags & %d )
-		and not ( xchan_flags & %d )
-		group by xchan_hash order by total desc limit %d, %d ",
+		and not ( xchan_flags & %d )>0
+		and not ( xchan_flags & %d )>0
+		group by xchan_hash order by total desc limit %d offset %d ",
 		intval($uid),
 		intval($uid),
 		intval($uid),
 		intval(XCHAN_FLAGS_HIDDEN),
 		intval(XCHAN_FLAGS_DELETED),
-		intval($start),
-		intval($limit)
+		intval($limit),
+		intval($start)
 	);
 
 	if($r && count($r) >= ($limit -1))
@@ -349,15 +352,15 @@ function suggestion_query($uid, $myxchan, $start = 0, $limit = 80) {
 		where xlink_xchan = ''
 		and not xlink_link in ( select abook_xchan from abook where abook_channel = %d )
 		and not xlink_link in ( select xchan from xign where uid = %d )
-		and not ( xchan_flags & %d )
-		and not ( xchan_flags & %d )
-		group by xchan_hash order by total desc limit %d, %d ",
+		and not ( xchan_flags & %d )>0
+		and not ( xchan_flags & %d )>0
+		group by xchan_hash order by total desc limit %d offset %d ",
 		intval($uid),
 		intval($uid),
 		intval(XCHAN_FLAGS_HIDDEN),
 		intval(XCHAN_FLAGS_DELETED),
-		intval($start),
-		intval($limit)
+		intval($limit),
+		intval($start)
 	);
 
 	if(is_array($r) && is_array($r2))
@@ -394,7 +397,9 @@ function update_suggestions() {
 		// the targets may have changed their preferences and don't want to be suggested - and they 
 		// may have simply gone away. 
 
-		$r = q("delete from xlink where xlink_xchan = '' and xlink_updated < UTC_TIMESTAMP() - INTERVAL 7 DAY");
+		$r = q("delete from xlink where xlink_xchan = '' and xlink_updated < %s - INTERVAL %s",
+			db_utcnow(), db_quoteinterval('7 DAY')
+		);
 
 
 		$j = json_decode($ret['body'],true);

@@ -594,7 +594,7 @@ function admin_page_users_post(&$a){
 
 	if (x($_POST,'page_users_block')){
 		foreach($users as $uid){
-			q("UPDATE account SET account_flags = (account_flags & %d) where account_id = %d limit 1",
+			q("UPDATE account SET account_flags = (account_flags & %d) where account_id = %d",
 				intval(ACCOUNT_BLOCKED),
 				intval( $uid )
 			);
@@ -650,7 +650,7 @@ function admin_page_users(&$a){
 			}; break;
 			case "block":{
                 check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
-				q("UPDATE account SET account_flags = ( account_flags ^ %d ) where account_id = %d",
+				q("UPDATE account SET account_flags = ( account_flags & ~%d ) where account_id = %d",
 					intval(ACCOUNT_BLOCKED),
 					intval( $uid )
 				);
@@ -664,13 +664,13 @@ function admin_page_users(&$a){
 	}
 	
 	/* get pending */
-	$pending = q("SELECT account.*, register.hash from account left join register on account_id = register.uid where (account_flags & %d ) ",
+	$pending = q("SELECT account.*, register.hash from account left join register on account_id = register.uid where (account_flags & %d )>0 ",
 		intval(ACCOUNT_PENDING)
 	);	
 	
 	/* get users */
 
-	$total = q("SELECT count(*) as total FROM account where 1");
+	$total = q("SELECT count(*) as total FROM account");
 	if(count($total)) {
 		$a->set_pager_total($total[0]['total']);
 		$a->set_pager_itemspage(100);
@@ -690,14 +690,15 @@ function admin_page_users(&$a){
     if($_REQUEST['order'] === 'created')
 		$order = " order by account_created desc ";
 		
-	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d ) > 0 as `blocked`, " .
-			"(SELECT GROUP_CONCAT( ch.channel_address SEPARATOR ' ') FROM channel as ch " .
-			"WHERE ch.channel_account_id = ac.account_id and not (ch.channel_pageflags & %d )) as `channels` " .
-		"FROM account as ac where true $serviceclass $order limit %d , %d ",
+	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d )>0 as `blocked`, " .
+			"(SELECT %s FROM channel as ch " .
+			"WHERE ch.channel_account_id = ac.account_id and not (ch.channel_pageflags & %d )>0) as `channels` " .
+		"FROM account as ac where true $serviceclass $order limit %d offset %d ",
 		intval(ACCOUNT_BLOCKED),
+		db_concat('ch.channel_address', ' '),
 		intval(PAGE_REMOVED),		
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
+		intval($a->pager['itemspage']),
+		intval($a->pager['start'])
 	);
 					
 //	function _setup_users($e){
@@ -764,7 +765,7 @@ function admin_page_channels_post(&$a){
 
 	if (x($_POST,'page_channels_block')){
 		foreach($channels as $uid){
-			q("UPDATE channel SET channel_pageflags = ( channel_pageflags ^ %d ) where channel_id = %d",
+			q("UPDATE channel SET channel_pageflags = ( channel_pageflags & ~%d ) where channel_id = %d",
 				intval(PAGE_CENSORED),
 				intval( $uid )
 				);
@@ -812,7 +813,7 @@ function admin_page_channels(&$a){
 
 			case "block":{
 				check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels', 't');
-				q("UPDATE channel SET channel_pageflags = ( channel_pageflags ^ %d ) where channel_id = %d",
+				q("UPDATE channel SET channel_pageflags = ( channel_pageflags & ~%d ) where channel_id = %d",
 					intval(PAGE_CENSORED),
 					intval( $uid )
 				);
@@ -828,7 +829,7 @@ function admin_page_channels(&$a){
 	
 	/* get channels */
 
-	$total = q("SELECT count(*) as total FROM channel where not (channel_pageflags & %d)",
+	$total = q("SELECT count(*) as total FROM channel where not (channel_pageflags & %d)>0",
 		intval(PAGE_REMOVED)
 	);
 	if($total) {
@@ -838,10 +839,10 @@ function admin_page_channels(&$a){
 	
 	$order = " order by channel_name asc ";
 
-	$channels = q("SELECT * from channel where not ( channel_pageflags & %d ) $order limit %d , %d ",
+	$channels = q("SELECT * from channel where not ( channel_pageflags & %d )>0 $order limit %d offset %d ",
 		intval(PAGE_REMOVED),
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
+		intval($a->pager['itemspage']),
+		intval($a->pager['start'])
 	);
 					
 	if($channels) {
@@ -1295,7 +1296,7 @@ readable.");
 function admin_page_profs_post(&$a) {
 
 	if($_REQUEST['id']) {
-		$r = q("update profdef set field_name = '%s', field_type = '%s', field_desc = '%s' field_help = '%s', field_inputs = '%s' where id = %d limit 1",
+		$r = q("update profdef set field_name = '%s', field_type = '%s', field_desc = '%s' field_help = '%s', field_inputs = '%s' where id = %d",
 			dbesc($_REQUEST['field_name']),
 			dbesc($_REQUEST['field_type']),
 			dbesc($_REQUEST['field_desc']),
@@ -1323,7 +1324,7 @@ function admin_page_profs_post(&$a) {
 function admin_page_profs(&$a) {
 
 	if((argc() > 3) && argv(2) == 'drop' && intval(argv(3))) {
-		$r = q("delete from profdef where id = %d limit 1",
+		$r = q("delete from profdef where id = %d",
 			intval(argv(3))
 		);
 		// remove from allowed fields
