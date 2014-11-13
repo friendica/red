@@ -60,13 +60,10 @@ function editlayout_content(&$a) {
 
 	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
-	$perms = get_all_perms($owner,$ob_hash);
-
-	if(! $perms['write_pages']) {
+	if(! perm_is_allowed($owner,$ob_hash,'write_pages')) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
-
 
 	$is_owner = (($uid && $uid == $owner) ? true : false);
 
