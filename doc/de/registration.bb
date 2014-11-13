@@ -12,7 +12,7 @@ Gib ein Passwort Deiner Wahl ein und wiederhole es in der zweiten Box, um sicher
 
 [b]Nutzungsbedingungen[/b]
 
-Klicke auf den Link, um die Nutzungsbedingungen dieses Servers zu lesen. Wenn Du sie gelesen hast, setze den Haken im Registrierungsformular, um sie zu akzeptieren.
+Klicke auf den Link, um die [zrl=[baseurl]/help/TermsOfService]Nutzungsbedingungen[/zrl] dieses Servers zu lesen. Wenn Du sie gelesen hast, setze den Haken im Registrierungsformular, um sie zu akzeptieren.
 
 [b]Registrieren[/b]
 

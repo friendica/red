@@ -128,8 +128,8 @@ function poller_run($argv, $argc){
 
 	if(($d2 != $d1) && ($h1 == $h2)) {
 
-	require_once('include/dir_fns.php');
-	check_upstream_directory();
+		require_once('include/dir_fns.php');
+		check_upstream_directory();
 
 		call_hooks('cron_daily',datetime_convert());
 
@@ -315,6 +315,7 @@ function poller_run($argv, $argc){
 					$update = true;
 			}
 			else {
+
 				// if we've never connected with them, start the mark for death countdown from now
 
 				if($c == NULL_DATE) {
@@ -360,7 +361,6 @@ function poller_run($argv, $argc){
 				if(strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $t . " + 2 day")) > 0) {	
 					$update = true;
 				}
-
 
 			}
 

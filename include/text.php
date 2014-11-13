@@ -2025,12 +2025,22 @@ function json_decode_plus($s) {
 
 
 function design_tools() {
+
 	$channel  = get_app()->get_channel();
+	$sys = false;
+
+	if(get_app()->is_sys && is_site_admin()) {
+		require_once('include/identity.php');
+		$channel = get_sys_channel();
+		$sys = true;
+	}
+
 	$who = $channel['channel_address'];
 
 	return replace_macros(get_markup_template('design_tools.tpl'), array(
 		'$title' => t('Design'),
 		'$who' => $who,
+		'$sys' => $sys,
 		'$blocks' => t('Blocks'),
 		'$menus' => t('Menus'),
 		'$layout' => t('Layouts'),
@@ -2050,7 +2060,7 @@ function normalise_openid($s) {
 
 // used in ajax endless scroll request to find out all the args that the master page was viewing.
 // This was using $_REQUEST, but $_REQUEST also contains all your cookies. So we're restricting it 
-// to $_GET. If this is used in a post handler, that decision may need to be considered. 
+// to $_GET and $_POST. 
 
 function extra_query_args() {
 	$s = '';
@@ -2058,7 +2068,15 @@ function extra_query_args() {
 		foreach($_GET as $k => $v) {
 			// these are request vars we don't want to duplicate
 			if(! in_array($k, array('q','f','zid','page','PHPSESSID'))) {
-				$s .= '&' . $k . '=' . $v;
+				$s .= '&' . $k . '=' . urlencode($v);
+			}
+		}
+	}
+	if(count($_POST)) {
+		foreach($_POST as $k => $v) {
+			// these are request vars we don't want to duplicate
+			if(! in_array($k, array('q','f','zid','page','PHPSESSID'))) {
+				$s .= '&' . $k . '=' . urlencode($v);
 			}
 		}
 	}

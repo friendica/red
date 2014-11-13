@@ -11,7 +11,7 @@ var zot_8php =
     [ "import_xchan", "zot_8php.html#a528e97ca5d69c3b7f35c5d954afde315", null ],
     [ "make_xchan_hash", "zot_8php.html#a0fc2211c5309d9f925ecc4115e3fdb75", null ],
     [ "process_channel_sync_delivery", "zot_8php.html#ac301c67864917c35922257950ae0f95c", null ],
-    [ "process_delivery", "zot_8php.html#a4d9e6ca295e443b740d9960c304b3474", null ],
+    [ "process_delivery", "zot_8php.html#a0e3006e7a456b2175a9badc96bc5176d", null ],
     [ "process_location_delivery", "zot_8php.html#a8eeefdb0dad4c436bea9d1c06c0a7988", null ],
     [ "process_mail_delivery", "zot_8php.html#aa6ae96db8cbbdbb10e6876d206bbf7cc", null ],
     [ "process_profile_delivery", "zot_8php.html#a9a57b40669351c9791126b925cb7ef3b", null ],

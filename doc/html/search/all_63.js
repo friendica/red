@@ -5,6 +5,7 @@ var searchData=
   ['cal',['cal',['../datetime_8php.html#aea356409ba69f9de412298c998595dd2',1,'datetime.php']]],
   ['call_5fhooks',['call_hooks',['../plugin_8php.html#a7f05de16c0a32602853b09b99dd85e7c',1,'plugin.php']]],
   ['can_5fcomment_5fon_5fpost',['can_comment_on_post',['../items_8php.html#a1e75047cf175aaee8dd16aa761913ff9',1,'items.php']]],
+  ['catblock',['catblock',['../taxonomy_8php.html#aa8f8a1ff85daef046298e93c83e7a1b4',1,'taxonomy.php']]],
   ['categories_5fwidget',['categories_widget',['../contact__widgets_8php.html#a165eb021e61c4dcab2a552f28628d353',1,'contact_widgets.php']]],
   ['change_5fchannel',['change_channel',['../security_8php.html#a8d23d2597aae380a3341872fe9513380',1,'security.php']]],
   ['change_5fpermissions',['change_permissions',['../classProtoDriver.html#a34b97ca5ef2165f2e16eb2fe59ff6c67',1,'ProtoDriver\change_permissions()'],['../classZotDriver.html#a6776935156accb0f170e2e24577133db',1,'ZotDriver\change_permissions()']]],

@@ -330,19 +330,32 @@ function widget_archive($arr) {
 
 	$wall = ((array_key_exists('wall', $arr)) ? intval($arr['wall']) : 0);
 	$style = ((array_key_exists('style', $arr)) ? $arr['style'] : 'select');
+	$showend = ((get_pconfig($uid,'system','archive_show_end_date')) ? true : false);
+	$mindate = get_pconfig($uid,'system','archive_mindate');
+	$visible_years = get_pconfig($uid,'system','archive_visible_years');
+	if(! $visible_years)
+		$visible_years = 5;
+
+
 	$url = z_root() . '/' . $a->cmd;
 
 
-	$ret = list_post_dates($uid,$wall);
+	$ret = list_post_dates($uid,$wall,$mindate);
 
 	if(! count($ret))
 		return '';
 
+	$cutoff_year = intval(datetime_convert('',date_default_timezone_get(),'now','Y')) - $visible_years;
+	$cutoff = ((array_key_exists($cutoff_year,$ret))? true : false);
+
 	$o = replace_macros(get_markup_template('posted_date_widget.tpl'),array(
 		'$title' => t('Archives'),
-		'$size' => ((count($ret) > 6) ? 6 : count($ret)),
+		'$size' => $visible_years,
+		'$cutoff_year' => $cutoff_year,
+		'$cutoff' => $cutoff,
 		'$url' => $url,
 		'$style' => $style,
+		'$showend' => $showend,
 		'$dates' => $ret
 	));
 	return $o;
@@ -385,6 +398,17 @@ function widget_tagcloud_wall($arr) {
 	$limit = ((array_key_exists('limit',$arr)) ? intval($arr['limit']) : 50);
 	if(feature_enabled($a->profile['profile_uid'],'tagadelic'))
 		return tagblock('search',$a->profile['profile_uid'],$limit,$a->profile['channel_hash'],ITEM_WALL);
+	return '';
+}
+function widget_catcloud_wall($arr) {
+	$a = get_app();
+	if((! $a->profile['profile_uid']) || (! $a->profile['channel_hash']))
+		return '';
+	if(! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_stream'))
+		return '';
+
+	$limit = ((array_key_exists('limit',$arr)) ? intval($arr['limit']) : 50);
+	return catblock($a->profile['profile_uid'],$limit,$a->profile['channel_hash'],ITEM_WALL);
 	return '';
 }
 
@@ -493,7 +517,7 @@ function widget_settings_menu($arr) {
 
 	if($role === false || $role === 'custom') {
 		$tabs[] = array(
-			'label' => t('Automatic Permissions (Advanced)'),
+			'label' => t('Connection Default Permissions'),
 			'url' => $a->get_baseurl(true) . '/connedit/' . $abook_self_id,
 			'selected' => ''
 		);
@@ -561,7 +585,7 @@ function widget_design_tools($arr) {
 	// otherwise local_user() is sufficient for permissions.
 
 	if($a->profile['profile_uid']) 
-		if($a->profile['profile_uid'] != local_user())
+		if(($a->profile['profile_uid'] != local_user()) && (! $a->is_sys))
 				return '';
  
 	if(! local_user())

@@ -45,6 +45,7 @@ Zot is the great new communicaton protocol invented especially for the RedMatrix
 [zrl=[baseurl]/help/faq_admins]FAQ For Admins[/zrl]
 
 [size=large][b]Technical Documentation[/b][/size]
+[zrl=[baseurl]/help/history]RedMatrix history[/zrl]
 [zrl=[baseurl]/help/Zot---A-High-Level-Overview]A high level overview of Zot[/zrl]
 [zrl=[baseurl]/help/zot]An introduction to Zot[/zrl]
 [zrl=[baseurl]/help/zot_structures]Zot Stuctures[/zrl]

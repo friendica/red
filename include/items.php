@@ -2974,7 +2974,15 @@ function tgroup_check($uid,$item) {
 	// At this point we've determined that the person receiving this post was mentioned in it.
 	// Now let's check if this mention was inside a reshare so we don't spam a forum
 
-	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
+
+	$body = $item['body'];
+
+	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED) && $body) {
+		$key = get_config('system','prvkey');
+		$body = crypto_unencapsulate(json_decode($body,true),$key);
+	}
+
+	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$body);
 
 	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
 
@@ -4128,10 +4136,13 @@ function first_post_date($uid,$wall = false) {
  * current flat list of all representative dates.
  */
 
-function list_post_dates($uid,$wall) {
+function list_post_dates($uid,$wall,$mindate) {
 	$dnow = datetime_convert('',date_default_timezone_get(),'now','Y-m-d');
 
-	$dthen = first_post_date($uid,$wall);
+	if($mindate)
+		$dthen = datetime_convert('',date_default_timezone_get(),$mindate);
+	else
+		$dthen = first_post_date($uid,$wall);
 	if(! $dthen)
 		return array();
 

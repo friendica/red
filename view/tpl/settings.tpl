@@ -100,6 +100,27 @@
 {{include file="field_intcheckbox.tpl" field=$notify8}}
 </div>
 
+<div id="settings-vnotify-desc">{{$lbl_vnot}}</div>
+
+<div class="group">
+{{include file="field_intcheckbox.tpl" field=$vnotify1}}
+{{include file="field_intcheckbox.tpl" field=$vnotify2}}
+{{include file="field_intcheckbox.tpl" field=$vnotify3}}
+{{include file="field_intcheckbox.tpl" field=$vnotify4}}
+{{include file="field_intcheckbox.tpl" field=$vnotify5}}
+{{include file="field_intcheckbox.tpl" field=$vnotify6}}
+{{include file="field_intcheckbox.tpl" field=$vnotify10}}
+{{include file="field_intcheckbox.tpl" field=$vnotify7}}
+{{include file="field_intcheckbox.tpl" field=$vnotify8}}
+{{include file="field_intcheckbox.tpl" field=$vnotify9}}
+
+{{*include file="field_intcheckbox.tpl" field=$vnotify11*}}
+</div>
+
+{{include file="field_input.tpl" field=$evdays}}
+
+
+
 </div>
 
 <div class="settings-submit-wrapper" >
@@ -109,6 +130,8 @@
 
 {{if $menus}}
 <h3 class="settings-heading">{{$lbl_misc}}</h3>
+
+
 
 <div id="settings-menu-desc">{{$menu_desc}}</div>
 <div class="settings-channel-menu-div">

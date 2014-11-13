@@ -549,7 +549,7 @@ function get_role_perms($role) {
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
 			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
-			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_stream']    = 0;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
 			$ret['channel_w_tagwall']   = PERMS_CONTACTS;
 			$ret['channel_w_comment']   = PERMS_CONTACTS;
@@ -581,7 +581,7 @@ function get_role_perms($role) {
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
 			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
-			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_stream']    = 0;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_CONTACTS;
@@ -614,7 +614,7 @@ function get_role_perms($role) {
 			$ret['channel_r_profile']   = PERMS_CONTACTS;
 			$ret['channel_r_photos']    = PERMS_CONTACTS; 			
 			$ret['channel_r_abook']     = PERMS_CONTACTS;
-			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_stream']    = 0;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
 			$ret['channel_w_tagwall']   = 0;
 			$ret['channel_w_comment']   = PERMS_CONTACTS;

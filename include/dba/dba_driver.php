@@ -1,5 +1,26 @@
-<?php /** @file */
+<?php
+/**
+ * @file dba_driver.php
+ * @brief some database related functions and abstract driver class.
+ *
+ * This file contains the abstract database driver class dba_driver and some
+ * functions for working with databases.
+ */
 
+/**
+ * @brief Returns the database driver object.
+ *
+ * If available it will use PHP's mysqli otherwise mysql driver.
+ *
+ * @param string $server DB server name
+ * @param string $port DB port
+ * @param string $user DB username
+ * @param string $pass DB password
+ * @param string $db database name
+ * @param string $dbtype 0 for mysql, 1 for postgres
+ * @param bool $install Defaults to false
+ * @return null|dba_driver A database driver object (dba_mysql|dba_mysqli) or null if no driver found.
+ */
 function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
 	$dba = null;
 
@@ -23,7 +44,12 @@ function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
 	return $dba;
 }
 
-
+/**
+ * @brief abstract database driver class.
+ *
+ * This class gets extended by the real database driver classes, e.g. dba_mysql,
+ * dba_mysqli.
+ */
 abstract class dba_driver {
 	// legacy behavior
 	const INSTALL_SCRIPT='install/schema_mysql.sql';
@@ -35,16 +61,51 @@ abstract class dba_driver {
 	public  $connected = false;
 	public  $error = false;
 
-	abstract function connect($server, $port, $user,$pass,$db);
+	/**
+	 * @brief Connect to the database.
+	 *
+	 * This abstract function needs to be implemented in the real driver.
+	 *
+	 * @param string $server DB server name
+	 * @param string $port DB port
+	 * @param string $user DB username
+	 * @param string $pass DB password
+	 * @param string $db database name
+	 * @return bool
+	 */
+	abstract function connect($server, $port, $user, $pass, $db);
+
+	/**
+	 * @brief Perform a DB query with the SQL statement $sql.
+	 *
+	 * This abstract function needs to be implemented in the real driver.
+	 *
+	 * @param string $sql The SQL query to execute
+	 */
 	abstract function q($sql);
+
+	/**
+	 * @brief Escape a string before being passed to a DB query.
+	 *
+	 * This abstract function needs to be implemented in the real driver.
+	 *
+	 * @param string $str The string to escape.
+	 */
 	abstract function escape($str);
+
+	/**
+	 * @brief Close the database connection.
+	 *
+	 * This abstract function needs to be implemented in the real driver.
+	 */
 	abstract function close();
 
+
 	function __construct($server, $port, $user,$pass,$db,$install = false) {
-		if(($install) && (! $this->install($server, $port, $user,$pass,$db))) {
+		if(($install) && (! $this->install($server, $port, $user, $pass, $db))) {
 			return;
 		}
-		$this->connect($server, $port, $user,$pass,$db);
+		$this->connect($server, $port, $user, $pass, $db);
 	}
 
 	function get_null_date() {
@@ -77,7 +138,11 @@ abstract class dba_driver {
 		return true;
 	}
 
-
+	/**
+	 * @brief Sets the database driver's debugging state.
+	 *
+	 * @param int $dbg 0 to disable debugging
+	 */
 	function dbg($dbg) {
 		$this->debug = $dbg;
 	}
@@ -107,10 +172,11 @@ abstract class dba_driver {
 	function unescapebin($str) {
 		return $str;
 	}
-	
-}
+} // end abstract dba_driver class
 
 
+
+// Procedural functions
 
 function printable($s) {
 	$s = preg_replace("~([\x01-\x08\x0E-\x0F\x10-\x1F\x7F-\xFF])~",".", $s);
@@ -120,21 +186,35 @@ function printable($s) {
 	return $s;
 }
 
-// Procedural functions
-
+/**
+ * @brief set database driver debugging state.
+ *
+ * @param int $state 0 to disable debugging
+ */
 function dbg($state) {
 	global $db;
+
 	if($db)
-	$db->dbg($state);
+		$db->dbg($state);
 }
 
-
+/**
+ * @brief Escape strings being passed to DB queries.
+ *
+ * Always escape strings being used in DB queries. This function returns the
+ * escaped string. Integer DB parameters should all be proven integers by
+ * wrapping with intval().
+ *
+ * @param string $str A string to pass to a DB query
+ * @return Return an escaped string of the value to pass to a DB query.
+ */
 function dbesc($str) {
 	global $db;
+
 	if($db && $db->connected)
 		return($db->escape($str));
 	else
-		return(str_replace("'","\\'",$str));
+		return(str_replace("'", "\\'", $str));
 }
 function dbescbin($str) {
 	global $db;
@@ -186,58 +266,72 @@ function db_concat($fld, $sep) {
 //                   'user', 1);
 
 
+/**
+ * @brief Execute a SQL query with printf style args.
+ *
+ * printf style arguments %s and %d are replaced with variable arguments, which
+ * should each be appropriately dbesc() or intval().
+ * SELECT queries return an array of results or false if SQL or DB error. Other
+ * queries return true if the command was successful or false if it wasn't.
+ *
+ * Example:
+ *  $r = q("SELECT * FROM `%s` WHERE `uid` = %d",
+ *         'user', 1);
+ *
+ * @param string $sql The SQL query to execute
+ * @return bool|array
+ */
 function q($sql) {
-
 	global $db;
+
 	$args = func_get_args();
 	unset($args[0]);
 
 	if($db && $db->connected) {
-		$stmt = vsprintf($sql,$args);
+		$stmt = vsprintf($sql, $args);
 		if($stmt === false) {
-			if(version_compare(PHP_VERSION,'5.4.0') >= 0)
-				logger('dba: vsprintf error: ' . print_r(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT,1),true));
+			if(version_compare(PHP_VERSION, '5.4.0') >= 0)
+				logger('dba: vsprintf error: ' .
+					print_r(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1), true));
 			else
-				logger('dba: vsprintf error: ' . print_r(debug_backtrace(),true));
+				logger('dba: vsprintf error: ' . print_r(debug_backtrace(), true));
 		}
 		return $db->q($stmt);
 	}
 
-	/**
-	 *
+	/*
 	 * This will happen occasionally trying to store the 
 	 * session data after abnormal program termination 
-	 *
 	 */
 	logger('dba: no database: ' . print_r($args,true));
-	return false; 
 
+	return false;
 }
 
 /**
+ * @brief Raw DB query, no arguments.
  *
- * Raw db query, no arguments
+ * This function executes a raw DB query without any arguments.
  *
+ * @param string $sql The SQL query to execute
  */
-
-
 function dbq($sql) {
-
 	global $db;
+
 	if($db && $db->connected)
 		$ret = $db->q($sql);
 	else
 		$ret = false;
+
 	return $ret;
 }
 
 
-// Caller is responsible for ensuring that any integer arguments to 
+
+// Caller is responsible for ensuring that any integer arguments to
 // dbesc_array are actually integers and not malformed strings containing
 // SQL injection vectors. All integer array elements should be specifically 
 // cast to int to avoid trouble. 
-
-
 
 function dbesc_array_cb(&$item, $key) {
 	if(is_string($item)) {
@@ -246,7 +340,6 @@ function dbesc_array_cb(&$item, $key) {
 		$item = dbesc($item);
 	}
 }
-
 
 
 function dbesc_array(&$arr) {

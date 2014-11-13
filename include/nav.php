@@ -173,7 +173,7 @@ EOT;
 	$nav['search'] = array('search', t('Search'), "", t('Search site content'));
 
 
-	$nav['directory'] = array('directory', t('Directory'), "", t('Channel Locator')); 
+	$nav['directory'] = array('directory', t('Directory'), "", t('Channel Directory')); 
 
 
 	/**

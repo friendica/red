@@ -9,9 +9,6 @@
 </div>
 {{/if}}
 
-{{if $self}}
-<div id="autoperm-desc" class="descriptive-paragraph">{{$autolbl}}</div>
-{{/if}}
 
 
 <div id="contact-edit-wrapper">
@@ -31,6 +28,15 @@
 
 
 <form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
+
+{{if $self}}
+<div class="abook-autotext">
+<div id="autoperm-desc" class="descriptive-paragraph">{{$autolbl}}</div>
+{{include file="field_checkbox.tpl" field=$autoperms}}
+</div>
+{{/if}}
+
+
 <input type="hidden" name="contact_id" value="{{$contact_id}}">
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
 

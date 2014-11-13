@@ -348,10 +348,13 @@ function create_identity($arr) {
 		dbesc($a->get_baseurl() . "/photo/profile/m/{$newuid}")
 	);
 
-	$myperms = 0;
 	if($role_permissions) {
 		$myperms = ((array_key_exists('perms_auto',$role_permissions) && $role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0);
 	}
+	else
+		$myperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+			|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+			|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
 
 	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_closeness, abook_created, abook_updated, abook_flags, abook_my_perms )
 		values ( %d, %d, '%s', %d, '%s', '%s', %d, %d ) ",
@@ -373,6 +376,8 @@ function create_identity($arr) {
 			set_pconfig($newuid,'system','permissions_role',$arr['permissions_role']);
 			if(array_key_exists('online',$role_permissions))
 				set_pconfig($newuid,'system','hide_presence',1-intval($role_permissions['online']));
+			if(array_key_exists('perms_auto',$role_permissions))
+				set_pconfig($newuid,'system','autoperms',(($role_permissions['perms_auto']) ? $role_permissions['perms_accept'] : 0));
 		}
 
 		// Create a group with yourself as a member. This allows somebody to use it 
@@ -884,6 +889,8 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 		|| (x($profile,'postal_code') == 1)
 		|| (x($profile,'country_name') == 1))
 		$location = t('Location:');
+
+	$profile['homepage'] = linkify($profile['homepage']);
 
 	$gender   = ((x($profile,'gender')   == 1) ? t('Gender:')   : False);
 	$marital  = ((x($profile,'marital')  == 1) ? t('Status:')   : False);
@@ -1561,4 +1568,16 @@ function notifications_on($channel_id,$value) {
 		intval($channel_id)
 	);
 	return $x;
+}
+
+
+function get_channel_default_perms($uid) {
+
+	$r = q("select abook_my_perms from abook where abook_channel = %d and abook_flags & %d limit 1",
+		intval($uid),
+		intval(ABOOK_FLAG_SELF)
+	);
+	if($r)
+		return $r[0]['abook_my_perms'];
+	return 0;
 }

@@ -51,7 +51,7 @@ var items_8php =
     [ "item_store_update", "items_8php.html#acf0bf7c9d21ac84f32effb754f7ad484", null ],
     [ "items_fetch", "items_8php.html#a756738301f2ed96be50232500677d58a", null ],
     [ "limit_body_size", "items_8php.html#af94c281016c6c912d06e064113336c5c", null ],
-    [ "list_post_dates", "items_8php.html#aa2d3caa2f27720762b5c729e07df40fb", null ],
+    [ "list_post_dates", "items_8php.html#ab33fa9756aaa5f39a6104d57a62baf00", null ],
     [ "mail_store", "items_8php.html#a77da7ce9a117601d49ac4a67c71b514f", null ],
     [ "map_scope", "items_8php.html#a8675e62674de6fb7c42e4a408c7116cc", null ],
     [ "post_activity_item", "items_8php.html#a410f9c743877c125ca06312373346903", null ],

@@ -84,8 +84,9 @@ function ref_session_destroy ($id) {
 
 function ref_session_gc($expire) {
   q("DELETE FROM session WHERE expire < %d", dbesc(time()));
-  db_optimizetable('session');
-  return true;
+    if (! get_config('system','innodb'))
+	db_optimizetable('session');
+    return true;
 }
 
 $gc_probability = 50;
