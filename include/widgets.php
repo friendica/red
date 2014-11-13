@@ -155,7 +155,7 @@ function widget_follow($args) {
 		return '';
 	$a = get_app();
 	$uid =$a->channel['channel_id'];
-	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d) ",
+	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d)>0 ",
 		intval($uid),
 		intval(ABOOK_FLAG_SELF)
 	);
@@ -220,7 +220,7 @@ function widget_savedsearch($arr) {
 	}
 
 	if(x($_GET,'searchremove') && $search) {
-		q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
+		q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s'",
 			intval(local_user()),
 			intval(TERM_SAVEDSEARCH),
 			dbesc($search)
@@ -456,7 +456,7 @@ function widget_settings_menu($arr) {
 
 	$role = get_pconfig(local_user(),'system','permissions_role');
 
-	$abk = q("select abook_id from abook where abook_channel = %d and ( abook_flags & %d ) limit 1",
+	$abk = q("select abook_id from abook where abook_channel = %d and ( abook_flags & %d )>0 limit 1",
 		intval(local_user()),
 		intval(ABOOK_FLAG_SELF)
 	);

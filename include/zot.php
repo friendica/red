@@ -79,7 +79,7 @@ function zot_get_hublocs($hash) {
 
 	/** Only search for active hublocs - e.g. those that haven't been marked deleted */
 
-	$ret = q("select * from hubloc where hubloc_hash = '%s' and not ( hubloc_flags & %d ) group by hubloc_url ",
+	$ret = q("select * from hubloc where hubloc_hash = '%s' and not ( hubloc_flags & %d )>0 order by hubloc_url ",
 		dbesc($hash),
 		intval(HUBLOC_FLAGS_DELETED)
 	);
@@ -194,14 +194,15 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 		logger('zot_finger: no address :' . $webbie);
 		return array('success' => false);
 	}		
-
+	logger('using xchan_addr: ' . $xchan_addr, LOGGER_DATA);
+	
 	// potential issue here; the xchan_addr points to the primary hub.
 	// The webbie we were called with may not, so it might not be found
 	// unless we query for hubloc_addr instead of xchan_addr
 
 	$r = q("select xchan.*, hubloc.* from xchan 
 			left join hubloc on xchan_hash = hubloc_hash
-			where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
+			where xchan_addr = '%s' and (hubloc_flags & %d)>0 limit 1",
 		dbesc($xchan_addr),
 		intval(HUBLOC_FLAGS_PRIMARY)
 	);
@@ -211,6 +212,7 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 
 		if($r[0]['hubloc_network'] && $r[0]['hubloc_network'] !== 'zot') {
 			logger('zot_finger: alternate network: ' . $webbie);
+			logger('url: '.$url.', net: '.var_export($r[0]['hubloc_network'],true), LOGGER_DATA);
 			return array('success' => false);
 		}		
 	}
@@ -299,7 +301,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 	if($them['hubloc_url'])
 		$url = $them['hubloc_url'];
 	else {
-		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d ) limit 1",
+		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d )>0 limit 1",
 			dbesc($them['xchan_hash']),
 			intval(HUBLOC_FLAGS_PRIMARY)
 		);
@@ -381,7 +383,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 				}
 			}
 
-			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) limit 1",
+			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d)>0 limit 1",
 				dbesc($x['hash']),
 				intval($channel['channel_id']),
 				intval(ABOOK_FLAG_SELF)
@@ -407,7 +409,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 		
 				$y = q("update abook set abook_their_perms = %d, abook_dob = '%s'
 					where abook_xchan = '%s' and abook_channel = %d 
-					and not (abook_flags & %d) limit 1",
+					and not (abook_flags & %d)>0 ",
 					intval($their_perms),
 					dbesc($next_birthday),
 					dbesc($x['hash']),
@@ -469,7 +471,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 					$new_perms = get_all_perms($channel['channel_id'],$x['hash']);
 					if($new_perms != $previous_perms) {
 						// Send back a permissions update if permissions have changed
-						$z = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) limit 1",
+						$z = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d)>0 limit 1",
 							dbesc($x['hash']),
 							intval($channel['channel_id']),
 							intval(ABOOK_FLAG_SELF)
@@ -735,7 +737,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			|| ($r[0]['xchan_url'] != $arr['url'])) {
 			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_follow = '%s', 
 				xchan_connpage = '%s', xchan_flags = %d,
-				xchan_addr = '%s', xchan_url = '%s' where xchan_hash = '%s' limit 1",
+				xchan_addr = '%s', xchan_url = '%s' where xchan_hash = '%s'",
 				dbesc(($arr['name']) ? $arr['name'] : '-'),
 				dbesc($arr['name_updated']),
 				dbesc($arr['connections_url']),
@@ -788,8 +790,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			dbesc($arr['connect_url']),
 			dbesc(($arr['name']) ? $arr['name'] : '-'),
 			dbesc('zot'),
-			dbesc($arr['photo_updated']),
-			dbesc($arr['name_updated']),
+			dbescdate($arr['photo_updated']),
+			dbescdate($arr['name_updated']),
 			intval($new_flags)
 		);
 
@@ -830,7 +832,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 				// importing the photo failed somehow. Leave the photo_date alone so we can try again at a later date.
 				// This often happens when somebody joins the matrix with a bad cert. 
 				$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
-					where xchan_hash = '%s' limit 1",
+					where xchan_hash = '%s'",
 					dbesc($photos[0]),
 					dbesc($photos[1]),
 					dbesc($photos[2]),
@@ -840,8 +842,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			}
 			else {
 				$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
-					where xchan_hash = '%s' limit 1",
-					dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
+					where xchan_hash = '%s'",
+					dbescdate(datetime_convert('UTC','UTC',$arr['photo_updated'])),
 					dbesc($photos[0]),
 					dbesc($photos[1]),
 					dbesc($photos[2]),
@@ -901,10 +903,10 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 		else {
 			logger('import_xchan: profile not available - hiding');
 			// they may have made it private
-			$r = q("delete from xprof where xprof_hash = '%s' limit 1",
+			$r = q("delete from xprof where xprof_hash = '%s'",
 				dbesc($xchan_hash)
 			);
-			$r = q("delete from xtag where xtag_hash = '%s' limit 1",
+			$r = q("delete from xtag where xtag_hash = '%s'",
 				dbesc($xchan_hash)
 			);
 		}
@@ -926,7 +928,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 	}
 	elseif(! $ud_flags) {
 		// nothing changed but we still need to update the updates record
-		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
+		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d)>0 ",
 			intval(UPDATE_FLAGS_UPDATED),
 			dbesc($address),
 			intval(UPDATE_FLAGS_UPDATED)
@@ -976,14 +978,14 @@ function zot_process_response($hub,$arr,$outq) {
 	// async messages remain in the queue until processed.
 
 	if(intval($outq['outq_async'])) {
-		$r = q("update outq set outq_delivered = 1, outq_updated = '%s' where outq_hash = '%s' and outq_channel = %d limit 1",
+		$r = q("update outq set outq_delivered = 1, outq_updated = '%s' where outq_hash = '%s' and outq_channel = %d",
 			dbesc(datetime_convert()),
 			dbesc($outq['outq_hash']),
 			intval($outq['outq_channel'])
 		);
 	}
 	else {
-		$r = q("delete from outq where outq_hash = '%s' and outq_channel = %d limit 1",
+		$r = q("delete from outq where outq_hash = '%s' and outq_channel = %d",
 			dbesc($outq['outq_hash']),
 			intval($outq['outq_channel'])
 		);
@@ -1101,7 +1103,7 @@ function zot_import($arr, $sender_url) {
 				}
 				stringify_array_elms($recip_arr);
 				$recips = implode(',',$recip_arr);
-				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and not ( channel_pageflags & %d ) ",
+				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and not ( channel_pageflags & %d )>0 ",
 					intval(PAGE_REMOVED)
 				);
 				if(! $r) {
@@ -1283,9 +1285,9 @@ function public_recips($msg) {
 
 	
 	if($msg['notify']['sender']['url'] === z_root())
-		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )  or ( " . $col . " & " . PERMS_SITE . " ) or ( " . $col . " & " . PERMS_PUBLIC . ")) ";				
+		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )>0  or ( " . $col . " & " . PERMS_SITE . " )>0 or ( " . $col . " & " . PERMS_PUBLIC . ")>0) ";				
 	else
-		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )  or ( "  . $col . " & " . PERMS_PUBLIC . ")) ";
+		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )>0  or ( "  . $col . " & " . PERMS_PUBLIC . ")>0) ";
 
 
 	$r = q("select channel_hash as hash from channel $sql or channel_hash = '%s' ",
@@ -1295,7 +1297,7 @@ function public_recips($msg) {
 	if(! $r)
 		$r = array();
 
-	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & " . PAGE_REMOVED . " ) and (( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " )) OR ( " . $col . " & " . PERMS_PENDING . " ) OR (( " . $col . " & " . PERMS_CONTACTS . " ) and not ( abook_flags & " . ABOOK_FLAG_PENDING . " )) ",
+	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & " . PAGE_REMOVED . " )>0 and (( " . $col . " & " . PERMS_SPECIFIC . " )>0  and ( abook_my_perms & " . $field . " )>0) OR ( " . $col . " & " . PERMS_PENDING . " )>0 OR (( " . $col . " & " . PERMS_CONTACTS . " )>0 and not ( abook_flags & " . ABOOK_FLAG_PENDING . " )>0) ",
 		dbesc($msg['notify']['sender']['hash'])
 	); 
 
@@ -1371,7 +1373,7 @@ function allowed_public_recips($msg) {
 			$condensed_recips[] = $rr['hash'];
 
 		$results = array();
-		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & %d ) ",
+		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & %d )>0 ",
 			dbesc($hash),
 			intval(PAGE_REMOVED)
 		);
@@ -1615,7 +1617,7 @@ function remove_community_tag($sender,$arr,$uid) {
 		return;
 	}
 	
-	$x = q("delete from term where uid = %d and oid = %d and otype = %d and type = %d and term = '%s' and url = '%s' limit 1",
+	$x = q("delete from term where uid = %d and oid = %d and otype = %d and type = %d and term = '%s' and url = '%s'",
 		intval($uid),
 		intval($r[0]['id']),
 		intval(TERM_OBJ_POST),
@@ -1709,7 +1711,7 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 		);
 		if($r) {
 			if($arr['mail_flags'] & MAIL_RECALLED) {
-				$x = q("delete from mail where id = %d and channel_id = %d limit 1",
+				$x = q("delete from mail where id = %d and channel_id = %d",
 					intval($r[0]['id']),
 					intval($channel['channel_id'])
 				);
@@ -1835,7 +1837,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 				// This only happens when called from import_xchan
 
 				if(array_key_exists('site',$arr) && $location['url'] == $arr['site']['url']) {
-					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d limit 1",
+					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
@@ -1847,17 +1849,17 @@ function sync_locations($sender,$arr,$absolute = false) {
 				// the directory server if the site is alive.
 
 				if($r[0]['hubloc_status'] & HUBLOC_OFFLINE) {
-					q("update hubloc set hubloc_status = (hubloc_status ^ %d) where hubloc_id = %d limit 1",
+					q("update hubloc set hubloc_status = (hubloc_status & ~%d) where hubloc_id = %d",
 						intval(HUBLOC_OFFLINE),
 						intval($r[0]['hubloc_id'])
 					);
 					if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
-						q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
+						q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where hubloc_id = %d",
 							intval(HUBLOC_FLAGS_ORPHANCHECK),
 							intval($r[0]['hubloc_id'])
 						);
 					}
-					q("update xchan set xchan_flags = (xchan_flags ^ %d) where (xchan_flags & %d) and xchan_hash = '%s' limit 1",
+					q("update xchan set xchan_flags = (xchan_flags & ~%d) where (xchan_flags & %d)>0 and xchan_hash = '%s'",
 						intval(XCHAN_FLAGS_ORPHAN),
 						intval(XCHAN_FLAGS_ORPHAN),
 						dbesc($sender['hash'])
@@ -1867,7 +1869,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 				// Remove pure duplicates
 				if(count($r) > 1) {
 					for($h = 1; $h < count($r); $h ++) {
-						q("delete from hubloc where hubloc_id = %d limit 1",
+						q("delete from hubloc where hubloc_id = %d",
 							intval($r[$h]['hubloc_id'])
 						);
 						$what .= 'duplicate_hubloc_removed ';
@@ -1877,7 +1879,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 
 				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
 					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
-					$m = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
+					$m = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
 						intval(HUBLOC_FLAGS_PRIMARY),
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
@@ -1898,7 +1900,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 				}
 				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted']))
 					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && ($location['deleted']))) {
-					$n = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
+					$n = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
 						intval(HUBLOC_FLAGS_DELETED),
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
@@ -1913,7 +1915,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 			// New hub claiming to be primary. Make it so by removing any existing primaries.
 
 			if(intval($location['primary'])) {
-				$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_hash = '%s' and (hubloc_flags & %d )",
+				$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_hash = '%s' and (hubloc_flags & %d )>0",
 					intval(HUBLOC_FLAGS_PRIMARY),
 					dbesc(datetime_convert()),
 					dbesc($sender['hash']),
@@ -1956,7 +1958,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 			foreach($xisting as $x) {
 				if(! array_key_exists('updated',$x)) {
 					logger('sync_locations: deleting unreferenced hub location ' . $x['hubloc_url']);
-					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
+					$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
 						intval(HUBLOC_FLAGS_DELETED),
 						dbesc(datetime_convert()),
 						intval($x['hubloc_id'])
@@ -2050,7 +2052,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 
 
 	if(in_arrayi('nsfw',$clean) || in_arrayi('adult',$clean)) {
-		q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s' limit 1",
+		q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
 			intval(XCHAN_FLAGS_SELFCENSORED),
 			dbesc($hash)
 		);
@@ -2085,7 +2087,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 				xprof_homepage = '%s',
 				xprof_hometown = '%s',
 				xprof_keywords = '%s'
-				where xprof_hash = '%s' limit 1",
+				where xprof_hash = '%s'",
 				dbesc($arr['xprof_desc']),
 				dbesc($arr['xprof_dob']),
 				intval($arr['xprof_age']),
@@ -2155,7 +2157,7 @@ function import_directory_keywords($hash,$keywords) {
 
 	foreach($existing as $x) {
 		if(! in_array($x,$clean))
-			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s' limit 1",
+			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s'",
 				dbesc($hash),
 				dbesc($x)
 			);
@@ -2187,7 +2189,7 @@ function update_modtime($hash,$guid,$addr,$flags = 0) {
 		);
 	}
 	else {
-		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
+		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d)>0 ",
 			intval(UPDATE_FLAGS_UPDATED),
 			dbesc($addr),
 			intval(UPDATE_FLAGS_UPDATED)
@@ -2278,7 +2280,7 @@ function import_site($arr,$pubkey) {
 //			logger('import_site: stored: ' . print_r($siterecord,true));
 
 			$r = q("update site set site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s'
-				where site_url = '%s' limit 1",
+				where site_url = '%s'",
 				dbesc($site_location),
 				intval($site_directory),
 				intval($access_policy),
@@ -2494,7 +2496,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 			if(count($clean)) {
 				foreach($clean as $k => $v) {
 					$r = dbq("UPDATE channel set " . dbesc($k) . " = '" . dbesc($v) 
-						. "' where channel_id = " . intval($channel['channel_id']) . " limit 1");
+						. "' where channel_id = " . intval($channel['channel_id']) );
 				}
 			}
 		}
@@ -2525,7 +2527,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);
 					require_once('include/Contact.php');
 					
-					$r = q("select abook_id, abook_flags from abook where abook_xchan = '%s' and abook_channel = %d and not ( abook_flags & %d ) limit 1",
+					$r = q("select abook_id, abook_flags from abook where abook_xchan = '%s' and abook_channel = %d and not ( abook_flags & %d )>0 limit 1",
 						dbesc($abook['abook_xchan']),
 						intval($channel['channel_id']),
 						intval(ABOOK_FLAG_SELF)
@@ -2603,8 +2605,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
 						$r = dbq("UPDATE abook set " . dbesc($k) . " = '" . dbesc($v) 
-						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']) 
-						. " limit 1");
+						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']));
 					}
 				}
 			}
@@ -2629,7 +2630,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 						if(($y['name'] != $cl['name']) 
 							|| ($y['visible'] != $cl['visible']) 
 							|| ($y['deleted'] != $cl['deleted'])) {
-							q("update groups set name = '%s', visible = %d, deleted = %d where hash = '%s' and uid = %d limit 1",
+							q("update groups set name = '%s', visible = %d, deleted = %d where hash = '%s' and uid = %d",
 								dbesc($cl['name']),
 								intval($cl['visible']),
 								intval($cl['deleted']),
@@ -2672,7 +2673,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 							q("delete from group_member where gid = %d",
 								intval($y['id'])
 							);  
-							q("update groups set deleted = 1 where id = %d and uid = %d limit 1",
+							q("update groups set deleted = 1 where id = %d and uid = %d",
 								intval($y['id']),
 								intval($channel['channel_id'])
 							);
@@ -2735,7 +2736,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 							foreach($m as $mm) {
 								// if the local existing member isn't in the list we just received - remove them
 								if(! in_array($mm['xchan'],$members[$y['hash']])) {
-									q("delete from group_member where xchan = '%s' and gid = %d and uid = %d limit 1",
+									q("delete from group_member where xchan = '%s' and gid = %d and uid = %d",
 										dbesc($mm['xchan']),
 										intval($y['id']),
 										intval($channel['channel_id'])
@@ -2781,8 +2782,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
 						$r = dbq("UPDATE profile set " . dbesc($k) . " = '" . dbesc($v) 
-						. "' where profile_guid = '" . dbesc($profile['profile_guid']) . "' and uid = " . intval($channel['channel_id']) 
-						. " limit 1");
+						. "' where profile_guid = '" . dbesc($profile['profile_guid']) . "' and uid = " . intval($channel['channel_id']));
 					}
 				}
 			}
@@ -2807,7 +2807,7 @@ function get_rpost_path($observer) {
 
 function import_author_zot($x) {
 	$hash = make_xchan_hash($x['guid'],$x['guid_sig']);
-	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d) limit 1",
+	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d)>0 limit 1",
 		dbesc($x['guid']),
 		dbesc($x['guid_sig']),
 		intval(HUBLOC_FLAGS_PRIMARY)
@@ -2879,8 +2879,8 @@ function zot_process_message_request($data) {
 		$env_recips = null;
 
 		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host 
-			from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d)
-			and not (hubloc_status & %d) group by hubloc_sitekey",
+			from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d)>0
+			and not (hubloc_status & %d)>0 group by hubloc_sitekey",
 			dbesc($sender_hash),
 			intval(HUBLOC_FLAGS_DELETED),
 			intval(HUBLOC_OFFLINE)

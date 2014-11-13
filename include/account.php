@@ -202,7 +202,7 @@ function create_account($arr) {
 	// Set the parent record to the current record_id if no parent was provided
 
 	if(! $parent) {
-		$r = q("update account set account_parent = %d where account_id = %d limit 1",
+		$r = q("update account set account_parent = %d where account_id = %d",
 			intval($result['account']['account_id']),
 			intval($result['account']['account_id'])
 		);
@@ -367,16 +367,16 @@ function user_allow($hash) {
 	if(! $account)
 		return $ret;
 
-	$r = q("DELETE FROM register WHERE hash = '%s' LIMIT 1",
+	$r = q("DELETE FROM register WHERE hash = '%s'",
 		dbesc($register[0]['hash'])
 	);
 
-	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+	$r = q("update account set account_flags = (account_flags & ~%d) where (account_flags & %d)>0 and account_id = %d",
 		intval(ACCOUNT_BLOCKED),
 		intval(ACCOUNT_BLOCKED),
 		intval($register[0]['uid'])
 	);
-	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+	$r = q("update account set account_flags = (account_flags & ~%d) where (account_flags & %d)>0 and account_id = %d",
 		intval(ACCOUNT_PENDING),
 		intval(ACCOUNT_PENDING),
 		intval($register[0]['uid'])
@@ -430,11 +430,11 @@ function user_deny($hash) {
 	if(! $account)
 		return false;
 
-	$r = q("DELETE FROM account WHERE account_id = %d LIMIT 1",
+	$r = q("DELETE FROM account WHERE account_id = %d",
 		intval($register[0]['uid'])
 	);
 
-	$r = q("DELETE FROM `register` WHERE id = %d LIMIT 1",
+	$r = q("DELETE FROM `register` WHERE id = %d",
 		dbesc($register[0]['id'])
 	);
 	notice( sprintf(t('Registration revoked for %s'), $account[0]['account_email']) . EOL);
@@ -463,21 +463,21 @@ function user_approve($hash) {
 	if(! $account)
 		return $ret;
 
-	$r = q("DELETE FROM register WHERE hash = '%s' and password = 'verify' LIMIT 1",
+	$r = q("DELETE FROM register WHERE hash = '%s' and password = 'verify'",
 		dbesc($register[0]['hash'])
 	);
 
-	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+	$r = q("update account set account_flags = (account_flags & ~%d) where (account_flags & %d)>0 and account_id = %d",
 		intval(ACCOUNT_BLOCKED),
 		intval(ACCOUNT_BLOCKED),
 		intval($register[0]['uid'])
 	);
-	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+	$r = q("update account set account_flags = (account_flags & ~%d) where (account_flags & %d)>0 and account_id = %d",
 		intval(ACCOUNT_PENDING),
 		intval(ACCOUNT_PENDING),
 		intval($register[0]['uid'])
 	);
-	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+	$r = q("update account set account_flags = (account_flags & ~%d) where (account_flags & %d)>0 and account_id = %d",
 		intval(ACCOUNT_UNVERIFIED),
 		intval(ACCOUNT_UNVERIFIED),
 		intval($register[0]['uid'])
@@ -510,11 +510,12 @@ function user_approve($hash) {
 
 function downgrade_accounts() {
 
-	$r = q("select * from account where not ( account_flags & %d ) 
+	$r = q("select * from account where not ( account_flags & %d )>0 
 		and account_expires != '%s' 
-		and account_expires < UTC_TIMESTAMP() ",
+		and account_expires < %s ",
 		intval(ACCOUNT_EXPIRED),
-		dbesc(NULL_DATE)
+		dbesc(NULL_DATE),
+		db_getfunc('UTC_TIMESTAMP')
 	);
 
 	if(! $r)
@@ -527,7 +528,7 @@ function downgrade_accounts() {
 
 		if(($basic) && ($rr['account_service_class']) && ($rr['account_service_class'] != $basic)) {
 			$x = q("UPDATE account set account_service_class = '%s', account_expires = '%s'
-				where account_id = %d limit 1",
+				where account_id = %d",
 				dbesc($basic),
 				dbesc(NULL_DATE),
 				intval($rr['account_id'])
@@ -537,7 +538,7 @@ function downgrade_accounts() {
 			logger('downgrade_accounts: Account id ' . $rr['account_id'] . ' downgraded.');
 		}
 		else {
-			$x = q("UPDATE account SET account_flags = (account_flags | %d) where account_id = %d limit 1",
+			$x = q("UPDATE account SET account_flags = (account_flags | %d) where account_id = %d",
 				intval(ACCOUNT_EXPIRED),
 				intval($rr['account_id'])
 			);

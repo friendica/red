@@ -44,9 +44,10 @@ function photo_upload($channel, $observer, $args) {
 	 *
 	 */
 
-	$r = q("SELECT * FROM photo WHERE album = '%s' AND uid = %d AND created > UTC_TIMESTAMP() - INTERVAL 3 HOUR ",
+	$r = q("SELECT * FROM photo WHERE album = '%s' AND uid = %d AND created > %s - INTERVAL %s ",
 		dbesc($album),
-		intval($channel_id)
+		intval($channel_id),
+		db_utcnow(), db_quoteinterval('3 HOUR')
 	);
 	if((! $r) || ($album == t('Profile Photos')))
 		$visible = 1;
@@ -291,7 +292,7 @@ function photos_albums_list($channel,$observer) {
 
 	$sql_extra = permissions_sql($channel_id);
 
-	$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and ( photo_flags = %d or photo_flags = %d ) $sql_extra group by album order by created desc",
+	$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and ( photo_flags = %d or photo_flags = %d ) $sql_extra group by album order by max(created) desc",
 		intval($channel_id),
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)

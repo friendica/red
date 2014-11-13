@@ -54,7 +54,7 @@ define ( 'DB_UPDATE_VERSION',       1131  );
 
 define ( 'EOL',                    '<br>' . "\r\n"        );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z'       );
-define ( 'NULL_DATE',              '0000-00-00 00:00:00'  );
+//define ( 'NULL_DATE',              '0000-00-00 00:00:00'  );
 define ( 'TEMPLATE_BUILD_PATH',    'store/[data]/smarty3' );
 
 define ( 'DIRECTORY_MODE_NORMAL',      0x0000);  // This is technically DIRECTORY_MODE_TERTIARY, but it's the default, hence 0x0000
@@ -567,7 +567,9 @@ define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was success
 define ( 'ITEM_RETAINED',        0x4000);  // We looked at this item once to decide whether or not to expire it, and decided not to.
 define ( 'ITEM_RSS',             0x8000);  // Item comes from a feed. Use this to decide whether to link the title
 										   // Don't make us evaluate this same item again.
-
+define ( 'DBTYPE_MYSQL', 0 );
+define ( 'DBTYPE_POSTGRES', 1 );
+										   
 /**
  *
  * Reverse the effect of magic_quotes_gpc if it is enabled.
@@ -1416,7 +1418,7 @@ function fix_system_urls($oldurl,$newurl) {
 
 			$replace_xchan_url = ((strpos($rr['xchan_url'],$oldurl) !== false) ? true : false);
 
-			$x = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_connurl = '%s', xchan_follow = '%s', xchan_connpage = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_date = '%s' where xchan_hash = '%s' limit 1",
+			$x = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_connurl = '%s', xchan_follow = '%s', xchan_connpage = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_date = '%s' where xchan_hash = '%s'",
 				dbesc($channel_address . '@' . $rhs),
 				dbesc(($replace_xchan_url) ? str_replace($oldurl,$newurl,$rr['xchan_url']) : $rr['xchan_url']),
 				dbesc(str_replace($oldurl,$newurl,$rr['xchan_connurl'])),
@@ -1429,7 +1431,7 @@ function fix_system_urls($oldurl,$newurl) {
 				dbesc($rr['xchan_hash'])
 			);
 
-			$y = q("update hubloc set hubloc_addr = '%s', hubloc_url = '%s', hubloc_url_sig = '%s', hubloc_host = '%s', hubloc_callback = '%s' where hubloc_hash = '%s' and hubloc_url = '%s' limit 1",
+			$y = q("update hubloc set hubloc_addr = '%s', hubloc_url = '%s', hubloc_url_sig = '%s', hubloc_host = '%s', hubloc_callback = '%s' where hubloc_hash = '%s' and hubloc_url = '%s'",
 				dbesc($channel_address . '@' . $rhs),
 				dbesc($newurl),
 				dbesc(base64url_encode(rsa_sign($newurl,$c[0]['channel_prvkey']))),

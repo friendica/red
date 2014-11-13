@@ -154,7 +154,7 @@ function set_config($family, $key, $value) {
 		return $ret;
 	}
 
-	$ret = q("UPDATE config SET v = '%s' WHERE cat = '%s' AND k = '%s' LIMIT 1",
+	$ret = q("UPDATE config SET v = '%s' WHERE cat = '%s' AND k = '%s'",
 		dbesc($dbvalue),
 		dbesc($family),
 		dbesc($key)
@@ -185,7 +185,7 @@ function del_config($family, $key) {
 
 	if(array_key_exists($family, $a->config) && array_key_exists($key, $a->config[$family]))
 		unset($a->config[$family][$key]);
-		$ret = q("DELETE FROM config WHERE cat = '%s' AND k = '%s' LIMIT 1",
+		$ret = q("DELETE FROM config WHERE cat = '%s' AND k = '%s'",
 		dbesc($family),
 		dbesc($key)
 	);
@@ -318,7 +318,7 @@ function set_pconfig($uid, $family, $key, $value) {
 		return $ret;
 	}
 
-	$ret = q("UPDATE pconfig SET v = '%s' WHERE uid = %d and cat = '%s' AND k = '%s' LIMIT 1",
+	$ret = q("UPDATE pconfig SET v = '%s' WHERE uid = %d and cat = '%s' AND k = '%s'",
 		dbesc($dbvalue),
 		intval($uid),
 		dbesc($family),
@@ -362,7 +362,7 @@ function del_pconfig($uid, $family, $key) {
 
 	if(x($a->config[$uid][$family], $key))
 		unset($a->config[$uid][$family][$key]);
-		$ret = q("DELETE FROM pconfig WHERE uid = %d AND cat = '%s' AND k = '%s' LIMIT 1",
+		$ret = q("DELETE FROM pconfig WHERE uid = %d AND cat = '%s' AND k = '%s'",
 		intval($uid),
 		dbesc($family),
 		dbesc($key)
@@ -483,7 +483,7 @@ function set_xconfig($xchan, $family, $key, $value) {
 		return $ret;
 	}
 
-	$ret = q("UPDATE xconfig SET v = '%s' WHERE xchan = '%s' and cat = '%s' AND k = '%s' LIMIT 1",
+	$ret = q("UPDATE xconfig SET v = '%s' WHERE xchan = '%s' and cat = '%s' AND k = '%s'",
 		dbesc($dbvalue),
 		dbesc($xchan),
 		dbesc($family),
@@ -517,7 +517,7 @@ function del_xconfig($xchan, $family, $key) {
 
 	if(x($a->config[$xchan][$family], $key))
 		unset($a->config[$xchan][$family][$key]);
-		$ret = q("DELETE FROM `xconfig` WHERE `xchan` = '%s' AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
+		$ret = q("DELETE FROM `xconfig` WHERE `xchan` = '%s' AND `cat` = '%s' AND `k` = '%s'",
 		dbesc($xchan),
 		dbesc($family),
 		dbesc($key)

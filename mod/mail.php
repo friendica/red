@@ -141,7 +141,7 @@ function mail_content(&$a) {
 		if(! intval(argv(2)))
 			return;
 		$cmd = argv(1);
-		$r = q("update mail set mail_flags = mail_flags | %d where id = %d and channel_id = %d limit 1",
+		$r = q("update mail set mail_flags = mail_flags | %d where id = %d and channel_id = %d",
 			intval(MAIL_RECALLED),
 			intval(argv(2)),
 			intval(local_user())

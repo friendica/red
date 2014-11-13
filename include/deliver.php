@@ -24,13 +24,13 @@ function deliver_run($argv, $argc) {
 				$result = z_post_url($r[0]['outq_posturl'],$r[0]['outq_msg']); 
 				if($result['success'] && $result['return_code'] < 300) {
 					logger('deliver: queue post success to ' . $r[0]['outq_posturl'], LOGGER_DEBUG);
-					$y = q("delete from outq where outq_hash = '%s' limit 1",
+					$y = q("delete from outq where outq_hash = '%s'",
 						dbesc($argv[$x])
 					);
 				}
 				else {
 					logger('deliver: queue post returned ' . $result['return_code'] . ' from ' . $r[0]['outq_posturl'],LOGGER_DEBUG);
-					$y = q("update outq set outq_updated = '%s' where outq_hash = '%s' limit 1",
+					$y = q("update outq set outq_updated = '%s' where outq_hash = '%s'",
 						dbesc(datetime_convert()),
 						dbesc($argv[$x])
 					);
@@ -65,7 +65,7 @@ function deliver_run($argv, $argc) {
 						$msg = array('body' => json_encode(array('pickup' => array(array('notify' => $notify,'message' => $m)))));
 						zot_import($msg,z_root());
 					}
-					$r = q("delete from outq where outq_hash = '%s' limit 1",
+					$r = q("delete from outq where outq_hash = '%s'",
 						dbesc($argv[$x])
 					);
 				}
@@ -77,7 +77,7 @@ function deliver_run($argv, $argc) {
 					zot_process_response($r[0]['outq_posturl'],$result, $r[0]);				
 				}
 				else {
-					$y = q("update outq set outq_updated = '%s' where outq_hash = '%s' limit 1",
+					$y = q("update outq set outq_updated = '%s' where outq_hash = '%s'",
 						dbesc(datetime_convert()),
 						dbesc($argv[$x])
 					);

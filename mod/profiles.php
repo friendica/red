@@ -30,7 +30,7 @@ function profiles_init(&$a) {
 			dbesc($profile_guid),
 			intval(local_user())
 		);
-		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d",
 			intval(argv(2)),
 			intval(local_user())
 		);
@@ -354,7 +354,7 @@ function profiles_post(&$a) {
 						dbesc($zz['field_name'])
 					);
 					if($w) {
-						q("update profext set v = '%s' where id = %d limit 1",
+						q("update profext set v = '%s' where id = %d",
 							dbesc(escape_tags(trim($_POST[$zz['field_name']]))),
 							intval($w[0]['id'])
 						);
@@ -469,7 +469,7 @@ function profiles_post(&$a) {
 			`work` = '%s',
 			`education` = '%s',
 			`hide_friends` = %d
-			WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			WHERE `id` = %d AND `uid` = %d",
 			dbesc($profile_name),
 			dbesc($name),
 			dbesc($pdesc),
@@ -522,7 +522,7 @@ function profiles_post(&$a) {
 		$channel = $a->get_channel();
 
 		if($namechanged && $is_default) {
-			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date = '%s' WHERE xchan_hash = '%s' limit 1",
+			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date = '%s' WHERE xchan_hash = '%s'",
 				dbesc($name),
 				dbesc(datetime_convert()),
 				dbesc($channel['xchan_hash'])

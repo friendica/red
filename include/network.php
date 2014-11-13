@@ -991,7 +991,7 @@ function discover_by_url($url,$arr = null) {
 	);
 
 	$photos = import_profile_photo($photo,$guid);
-	$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s' limit 1",
+	$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s'",
 		dbesc(datetime_convert()),
 		dbesc($photos[0]),
 		dbesc($photos[1]),
@@ -1104,7 +1104,7 @@ function discover_by_webbie($webbie) {
 				dbesc($vcard['fn']),
 				dbesc($network),
 				dbesc(z_root()),
-				dbesc(datetime_convert())
+				dbescdate(datetime_convert())
 			);
 
 			$r = q("select * from hubloc where hubloc_hash = '%s' limit 1",
@@ -1119,13 +1119,13 @@ function discover_by_webbie($webbie) {
 					dbesc(trim($diaspora_base,'/')),
 					dbesc($hostname),
 					dbesc($notify),
-					dbesc(datetime_convert()),
+					dbescdate(datetime_convert()),
 					intval(HUBLOC_FLAGS_PRIMARY)
 				);
 			}
 			$photos = import_profile_photo($vcard['photo'],$addr);
-			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s' limit 1",
-				dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
+			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s'",
+				dbescdate(datetime_convert('UTC','UTC',$arr['photo_updated'])),
 				dbesc($photos[0]),
 				dbesc($photos[1]),
 				dbesc($photos[2]),

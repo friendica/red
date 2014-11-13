@@ -74,12 +74,12 @@ function zfinger_init(&$a) {
 			 */
 
 			$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
-				where ( channel_pageflags & %d ) order by channel_id limit 1",
+				where ( channel_pageflags & %d )>0 order by channel_id limit 1",
 				intval(PAGE_SYSTEM)
 			);
 			if(! $r) {
 				$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
-					where not ( channel_pageflags & %d ) order by channel_id limit 1",
+					where not ( channel_pageflags & %d )>0 order by channel_id limit 1",
 					intval(PAGE_REMOVED)
 				);
 			}
