@@ -76,7 +76,7 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://redmatrix.nl', 
 	'https://whogotzot.com', 
 	'https://red.zottel.red',
-    'https://red.pixelbits.de'
+	'https://red.pixelbits.de'
 );
 
 
@@ -637,7 +637,7 @@ class App {
 
 	private $perms      = null;            // observer permissions
 	private $widgets    = array();         // widgets for this page
-	private $widgetlist = null;            // widget ordering and inclusion directives
+	//private $widgetlist = null;            // widget ordering and inclusion directives
 
 	public  $groups;
 	public  $language;
@@ -714,13 +714,6 @@ class App {
 	private $hostname;
 	private $baseurl;
 	private $path;
-	private $db;
-
-	private $curl_code;
-	private $curl_headers;
-
-	private $cached_profile_image;
-	private $cached_profile_picdate;
 
 
 	function __construct() {
@@ -849,12 +842,14 @@ class App {
 			&& array_key_exists('baseurl',$this->config['system'])
 			&& strlen($this->config['system']['baseurl'])) {
 			$url = $this->config['system']['baseurl'];
+
 			return $url;
 		}
 
 		$scheme = $this->scheme;
 
 		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
+
 		return $this->baseurl;
 	}
 
@@ -881,7 +876,6 @@ class App {
 			if(x($parsed,'path'))
 				$this->path = trim($parsed['path'],'\\/');
 		}
-
 	}
 
 	function get_hostname() {
@@ -955,9 +949,10 @@ class App {
 	function get_widgets($location = '') {
 		if($location && count($this->widgets)) {
 			$ret = array();
-			foreach($widgets as $w)
-				if($w['location'] == $location)
+			foreach($this->widgets as $w) {
+				if ($w['location'] == $location)
 					$ret[] = $w;
+			}
 			$arr = array('location' => $location, 'widgets' => $ret);
 			call_hooks('get_widgets', $arr);
 			return $arr['widgets'];
@@ -1009,7 +1004,6 @@ class App {
 
 		// always put main.js at the end
 		$this->page['htmlhead'] .= head_get_main_js();
-
 	}
 
 	/**
@@ -1019,11 +1013,11 @@ class App {
 	* @param string $name
 	*/
 	function register_template_engine($class, $name = '') {
-		if ($name===""){
+		if ($name === ""){
 			$v = get_class_vars( $class );
-			if(x($v,"name")) $name = $v['name'];
+			if(x($v, "name")) $name = $v['name'];
 		}
-		if ($name===""){
+		if ($name === ""){
 			echo "template engine <tt>$class</tt> cannot be registered without a name.\n";
 			killme();
 		}
@@ -1034,11 +1028,11 @@ class App {
 	* return template engine instance. If $name is not defined,
 	* return engine defined by theme, or default
 	*
-	* @param strin $name Template engine name
+	* @param string $name Template engine name
 	* @return object Template Engine instance
 	*/
 	function template_engine($name = ''){
-		if ($name!=="") {
+		if ($name !== "") {
 			$template_engine = $name;
 		} else {
 			$template_engine = 'smarty3';
@@ -1888,6 +1882,17 @@ function curPageURL() {
 	return $pageURL;
 }
 
+/**
+ * @brief Returns a custom navigation by name???
+ *
+ * If no $navname provided load default page['nav']
+ *
+ * @todo not fully implemented yet
+ *
+ * @param App $a global application object
+ * @param string $navname
+ * @return mixed
+ */
 function get_custom_nav(&$a, $navname) {
 	if(! $navname)
 		return $a->page['nav'];
@@ -1942,7 +1947,7 @@ function construct_page(&$a) {
 
 	if($comanche) {
 		if($a->layout['nav']) {
-			$a->page['nav'] = get_custom_nav($a->layout['nav']);
+			$a->page['nav'] = get_custom_nav($a, $a->layout['nav']);
 		}
 	}
 
