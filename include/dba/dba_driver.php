@@ -361,6 +361,10 @@ function db_getfunc($f) {
 		'regexp'=>array(
 			DBTYPE_MYSQL=>'REGEXP',
 			DBTYPE_POSTGRES=>'~'
+		),
+		'^'=>array(
+			DBTYPE_MYSQL=>'^',
+			DBTYPE_POSTGRES=>'#'
 		)
 	);
 	$f = strtolower($f);
