@@ -40,7 +40,7 @@ class dba_mysqli extends dba_driver {
 
 		if(($result === true) || ($result === false)) {
 			if($this->debug) {
-				logger('dba_mysqli: DEBUG: returns ' . (($result) ? 'true' : 'false'));
+				logger('dba_mysqli: DEBUG: ' . printable($sql) . ' returns ' . (($result) ? 'true' : 'false'));
 			}
 			return $result;
 		}
