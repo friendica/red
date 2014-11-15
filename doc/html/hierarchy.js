@@ -11,7 +11,8 @@ var hierarchy =
     [ "Cache", "classCache.html", null ],
     [ "dba_driver", "classdba__driver.html", [
       [ "dba_mysql", "classdba__mysql.html", null ],
-      [ "dba_mysqli", "classdba__mysqli.html", null ]
+      [ "dba_mysqli", "classdba__mysqli.html", null ],
+      [ "dba_postgres", "classdba__postgres.html", null ]
     ] ],
     [ "enotify", "classenotify.html", null ],
     [ "ICollection", null, [

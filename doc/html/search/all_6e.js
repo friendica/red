@@ -89,5 +89,5 @@ var searchData=
   ['notify_5fwall',['NOTIFY_WALL',['../boot_8php.html#a505410c7edc5f5bb5fa227b98359793e',1,'boot.php']]],
   ['notred_2ephp',['notred.php',['../notred_8php.html',1,'']]],
   ['nuke_5fsession',['nuke_session',['../auth_8php.html#a2add3a1129ffa4d5515442a9d52a9b1a',1,'auth.php']]],
-  ['null_5fdate',['NULL_DATE',['../boot_8php.html#a6cd1b4081630b2bf7be38836cd9f410c',1,'boot.php']]]
+  ['null_5fdate',['NULL_DATE',['../classdba__driver.html#afce39394c010ea589d99a21579b2c31e',1,'dba_driver\NULL_DATE()'],['../classdba__postgres.html#aeb404a85974d6c5df30c21650888000b',1,'dba_postgres\NULL_DATE()']]]
 ];

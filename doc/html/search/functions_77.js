@@ -5,6 +5,7 @@ var searchData=
   ['webfinger_5fcontent',['webfinger_content',['../webfinger_8php.html#a17dd28db6d390194bf9ecb809739d1d3',1,'webfinger.php']]],
   ['webfinger_5frfc7033',['webfinger_rfc7033',['../include_2network_8php.html#a3e6c751a51de33ad3563f0938296e78a',1,'network.php']]],
   ['webpages_5fcontent',['webpages_content',['../webpages_8php.html#af3b7397d4abc153e3d2147740ee1a41d',1,'webpages.php']]],
+  ['webpages_5finit',['webpages_init',['../webpages_8php.html#af9ad0b65eba79acead3fa32b43d888b7',1,'webpages.php']]],
   ['wfinger_5finit',['wfinger_init',['../wfinger_8php.html#ae21e50c8d0a5f3c9be9f43a4e519acd3',1,'wfinger.php']]],
   ['what_5fnext',['what_next',['../setup_8php.html#aea1ebdda58ec938f4e7b31aa5c5f6b58',1,'setup.php']]],
   ['widget_5faffinity',['widget_affinity',['../widgets_8php.html#add9b24d3304e529a7975e96122315554',1,'widgets.php']]],

@@ -9,6 +9,7 @@ var searchData=
   ['layout_5fselect',['layout_select',['../text_8php.html#a3999a0b3e22e440f280ee791ce34d384',1,'text.php']]],
   ['layouts_2ephp',['layouts.php',['../layouts_8php.html',1,'']]],
   ['layouts_5fcontent',['layouts_content',['../layouts_8php.html#a6e0193759ad9eef76d3df2db24237b50',1,'layouts.php']]],
+  ['layouts_5finit',['layouts_init',['../layouts_8php.html#a39c8e9f72641c684c8b689bd91a642fa',1,'layouts.php']]],
   ['ldelim',['ldelim',['../namespacefriendica-to-smarty-tpl.html#a0b4cf73d1a8d201a28d269eeb62a5d5c',1,'friendica-to-smarty-tpl']]],
   ['legal_5fwebbie',['legal_webbie',['../text_8php.html#a2690ad67bb6fb97ef69de3e8d23f2728',1,'text.php']]],
   ['like_2ephp',['like.php',['../like_8php.html',1,'']]],

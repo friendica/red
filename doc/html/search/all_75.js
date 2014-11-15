@@ -5,6 +5,7 @@ var searchData=
   ['unamp',['unamp',['../text_8php.html#a29d6b804e368d3ef359ee295e96ed4c7',1,'text.php']]],
   ['undo_5fpost_5ftagging',['undo_post_tagging',['../text_8php.html#a740ad03e00459039a2c0992246c4e727',1,'text.php']]],
   ['unescape_5funderscores_5fin_5flinks',['unescape_underscores_in_links',['../bb2diaspora_8php.html#a599428bceb6f6d82a6a78cb66811f747',1,'bb2diaspora.php']]],
+  ['unescapebin',['unescapebin',['../classdba__driver.html#ab43184239e1d6eb00a98319f4a3df155',1,'dba_driver\unescapebin()'],['../classdba__postgres.html#a677f850211975c9ab89602c67e2dcad9',1,'dba_postgres\unescapebin()']]],
   ['uninstall_5fplugin',['uninstall_plugin',['../plugin_8php.html#a093a9cb98f51e3643634bd8bc6ed6e76',1,'plugin.php']]],
   ['unload_5fplugin',['unload_plugin',['../plugin_8php.html#a90538627db68605aeb6db17a8ead6523',1,'plugin.php']]],
   ['unobscure',['unobscure',['../text_8php.html#a8264348059abd1d4d5bb521323d3b19a',1,'text.php']]],
@@ -45,5 +46,7 @@ var searchData=
   ['user_5fdeny',['user_deny',['../account_8php.html#ac1653efba62493b9d87513e1b6c04c83',1,'account.php']]],
   ['user_5fremove',['user_remove',['../Contact_8php.html#a2fc191067dd571a79603c66b04b1ca15',1,'Contact.php']]],
   ['userreadablesize',['userReadableSize',['../classRedMatrix_1_1RedDAV_1_1RedBrowser.html#a242ce69a2fe5a5fdf9c2b8d3954accfd',1,'RedMatrix::RedDAV::RedBrowser']]],
+  ['utc_5fnow',['UTC_NOW',['../classdba__driver.html#aa3325d982d4ee5d1114fd7e02a4356e8',1,'dba_driver\UTC_NOW()'],['../classdba__postgres.html#ace80a204e34b20b9907650399cce02a3',1,'dba_postgres\UTC_NOW()']]],
+  ['utcnow',['utcnow',['../classdba__driver.html#ad700712879719bee23752b8f424d97d0',1,'dba_driver']]],
   ['util',['util',['../namespaceutil.html',1,'']]]
 ];
