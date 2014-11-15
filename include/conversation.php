@@ -853,8 +853,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 		profiler($t3,$t4,'conversation template');
 	}
 
-	if($page_mode === 'preview')
-		logger('preview: ' . $o);
+//	if($page_mode === 'preview')
+//		logger('preview: ' . $o, LOGGER_DATA);
 
 	return $o;
 
