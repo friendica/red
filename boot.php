@@ -567,7 +567,8 @@ define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was success
 define ( 'ITEM_RETAINED',        0x4000);  // We looked at this item once to decide whether or not to expire it, and decided not to.
 define ( 'ITEM_RSS',             0x8000);  // Item comes from a feed. Use this to decide whether to link the title
 										   // Don't make us evaluate this same item again.
-define ( 'DBTYPE_MYSQL', 0 );
+
+define ( 'DBTYPE_MYSQL',    0 );
 define ( 'DBTYPE_POSTGRES', 1 );
 										   
 /**

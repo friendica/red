@@ -14,6 +14,8 @@ function externals_run($argv, $argc){
 	$total = 0;
 	$attempts = 0;
 
+	logger('externals: startup', LOGGER_DEBUG);
+
 	// pull in some public posts
 
 
