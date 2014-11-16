@@ -268,8 +268,8 @@ function events_content(&$a) {
 	if($mode == 'view') {
 		
 		
-	    $thisyear = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
-    	$thismonth = datetime_convert('UTC',date_default_timezone_get(),'now','m');
+		$thisyear = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
+		$thismonth = datetime_convert('UTC',date_default_timezone_get(),'now','m');
 		if(! $y)
 			$y = intval($thisyear);
 		if(! $m)
@@ -549,7 +549,6 @@ function events_content(&$a) {
 
 		$tpl = get_markup_template('event_form.tpl');
 
-
 		$o .= replace_macros($tpl,array(
 			'$post' => $a->get_baseurl() . '/events',
 			'$eid' => $eid, 
@@ -567,11 +566,11 @@ function events_content(&$a) {
 			'$ftext' => $ftext,
 			'$ModalCANCEL' => t('Cancel'),
 			'$ModalOK' => t('OK'),
-			'$s_dsel' => datetimesel($f,mktime(),mktime(0,0,0,0,0,$syear+5),mktime($shour,$sminute,$ssecond,$smonth,$sday,$syear),'start_text'),
+			'$s_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$syear+5),DateTime::createFromFormat('Y-m-d H:i',"$syear-$smonth-$sday $shour:$sminute"),'start_text'),
 			'$n_text' => t('Finish date/time is not known or not relevant'),
 			'$n_checked' => $n_checked,
 			'$f_text' => t('Event Finishes:'),
-			'$f_dsel' => datetimesel($f,mktime(),mktime(0,0,0,0,0,$fyear+5),mktime($fhour,$fminute,$fsecond,$fmonth,$fday,$fyear),'finish_text',true,true,'start_text'),
+			'$f_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$fyear+5),DateTime::createFromFormat('Y-m-d H:i',"$fyear-$fmonth-$fday $fhour:$fminute"),'finish_text',true,true,'start_text'),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$a_checked' => $a_checked,
 			'$d_text' => t('Description:'), 
