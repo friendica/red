@@ -293,8 +293,14 @@ function channel_content(&$a, $update = 0, $load = false) {
 	}
 
 
+	if(get_pconfig($a->profile['profile_uid'],'system','channel_list_mode'))
+		$page_mode = 'list';
+	else
+		$page_mode = 'client';
+
+
 	if($_COOKIE['jsAvailable'] == 1) {
-		$o .= conversation($a,$items,'channel',$update,'client');
+		$o .= conversation($a,$items,'channel',$update,$page_mode);
 	} else {
 		$o .= conversation($a,$items,'channel',$update,'traditional');
 	}

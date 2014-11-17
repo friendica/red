@@ -426,7 +426,12 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	$mode = (($nouveau) ? 'network-new' : 'network');
 
-	$o .= conversation($a,$items,$mode,$update,'client');
+	if(get_pconfig(local_user(),'system','network_list_mode'))
+		$page_mode = 'list';
+	else
+		$page_mode = 'client';
+
+	$o .= conversation($a,$items,$mode,$update,$page_mode);
 
 	if(($items) && (! $update)) 
         $o .= alt_pager($a,count($items));

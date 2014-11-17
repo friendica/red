@@ -243,6 +243,7 @@ class Item extends BaseObject {
 			'id' => $this->get_id(),
 			'linktitle' => sprintf( t('View %s\'s profile - %s'), $profile_name, $item['author']['xchan_addr']),
 			'olinktitle' => sprintf( t('View %s\'s profile - %s'), $this->get_owner_name(), $item['owner']['xchan_addr']),
+			'llink' => $item['llink'],
 			'to' => t('to'),
 			'via' => t('via'),
 			'wall' => t('Wall-to-Wall'),
@@ -503,12 +504,12 @@ class Item extends BaseObject {
 	/**
 	 * Get template
 	 */
-	private function get_template() {
+	public function get_template() {
 		return $this->template;
 	}
 
 
-	private function set_template($t) {
+	public function set_template($t) {
 		$this->template = $t;
 	}
 
