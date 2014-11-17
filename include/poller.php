@@ -27,10 +27,11 @@ function poller_run($argv, $argc){
 
 	// Check for a lockfile.  If it exists, but is over an hour old, it's stale.  Ignore it.
 	$lockfile = 'store/[data]/poller';
-		if ((file_exists($lockfile)) && (filemtime($lockfile) > (time() - 3600))) {
-			logger("poller: Already running");
+	if((file_exists($lockfile)) && (filemtime($lockfile) > (time() - 3600)) 
+		&& (! get_config('system','override_poll_lockfile'))) {
+		logger("poller: Already running");
 		return;
-                }
+	}
 	
 	// Create a lockfile.  Needs two vars, but $x doesn't need to contain anything.
 	file_put_contents($lockfile, $x);
@@ -52,7 +53,7 @@ function poller_run($argv, $argc){
 	// expire any expired items
 
 	$r = q("select id from item where expires != '%s' and expires < %s 
-		and not ( item_restrict & %d )>0 ",
+		and ( item_restrict & %d ) = 0 ",
 		dbesc(NULL_DATE),
 		db_utcnow(),
 		intval(ITEM_DELETED)
@@ -69,7 +70,8 @@ function poller_run($argv, $argc){
 	// or dead entries.
 
 	$r = q("select channel_id from channel where channel_dirdate < %s - INTERVAL %s",
-		db_utcnow(), db_quoteinterval('30 DAY')
+		db_utcnow(), 
+		db_quoteinterval('30 DAY')
 	);
 	if($r) {
 		foreach($r as $rr) {
@@ -82,7 +84,7 @@ function poller_run($argv, $argc){
 	// publish any applicable items that were set to be published in the future
 	// (time travel posts)
 
-	$r = q("select id from item where ( item_restrict & %d )>0 and created <= %s ",
+	$r = q("select id from item where ( item_restrict & %d ) > 0 and created <= %s ",
 		intval(ITEM_DELAYED_PUBLISH),
 		db_utcnow()
 	);
@@ -207,7 +209,8 @@ function poller_run($argv, $argc){
 
 	$r = q("select xchan_photo_l, xchan_hash from xchan where xchan_photo_l != '' and xchan_photo_m = '' 
 		and xchan_photo_date < %s - INTERVAL %s",
-		db_utcnow(), db_quoteinterval('1 DAY')
+		db_utcnow(), 
+		db_quoteinterval('1 DAY')
 	);
 	if($r) {
 		require_once('include/photo/photo_driver.php');
@@ -253,13 +256,13 @@ function poller_run($argv, $argc){
 	}
 
 
-	$sql_extra = (($manual_id) ? " AND abook_id = $manual_id " : "");
+	$sql_extra = (($manual_id) ? " AND abook_id = " . intval($manual_id) . " " : "");
 
 	reload_plugins();
 
 	$d = datetime_convert();
 
-	//TODO check to see if there are any cronhooks before wasting a process
+	// TODO check to see if there are any cronhooks before wasting a process
 
 	if(! $restart)
 		proc_run('php','include/cronhooks.php');
@@ -271,12 +274,12 @@ function poller_run($argv, $argc){
 		: '' 
 	);
 
-	$randfunc = (ACTIVE_DBTYPE == DBTYPE_POSTGRES) ? 'RANDOM()' : 'RAND()';
+	$randfunc = db_getfunc('RAND');
 	
-	$contacts = q("SELECT abook_id, abook_flags, abook_updated, abook_connected, abook_closeness, abook_xchan, abook_channel
-		FROM abook LEFT JOIN account on abook_account = account_id
+	$contacts = q("SELECT abook_id, abook_flags, abook_updated, abook_connected, abook_closeness, abook_xchan, abook_channel, xchan_network
+		FROM abook LEFT JOIN xchan on abook_xchan = xchan_hash LEFT JOIN account on abook_account = account_id
 		$sql_extra 
-		AND (( abook_flags & %d )>0 OR  ( abook_flags = %d )) 
+		AND (( abook_flags & %d ) > 0 OR  ( abook_flags = %d )) 
 		AND (( account_flags = %d ) OR ( account_flags = %d )) $abandon_sql ORDER BY $randfunc",
 		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_UNCONNECTED|ABOOK_FLAG_FEED),
 		intval(0),
@@ -288,6 +291,9 @@ function poller_run($argv, $argc){
 	if($contacts) {
 
 		foreach($contacts as $contact) {
+
+			if($contact['abook_flags'] & ABOOK_FLAG_SELF)
+				continue;
 
 			$update  = false;
 
@@ -310,6 +316,9 @@ function poller_run($argv, $argc){
 			}
 
 
+			if($contact['xchan_network'] !== 'zot')
+				continue;
+
 			if($c == $t) {
 				if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
 					$update = true;
@@ -330,17 +339,12 @@ function poller_run($argv, $argc){
 				// He's dead, Jim
 
 				if(strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $c . " + 30 day")) > 0) {	
-					$n = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
-						dbesc($contact['abook_xchan'])
+					$r = q("update abook set abook_flags = (abook_flags | %d) where abook_id = %d",
+						intval(ABOOK_FLAG_ARCHIVED),
+						intval($contact['abook_id'])
 					);
-					if($n && $n[0]['xchan_network'] == 'zot') {
-						$r = q("update abook set abook_flags = (abook_flags | %d) where abook_id = %d",
-							intval(ABOOK_FLAG_ARCHIVED),
-							intval($contact['abook_id'])
-						);
-						$update = false;
-						continue;
-					}
+					$update = false;
+					continue;
 				}
 
 				if($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) {
@@ -364,6 +368,9 @@ function poller_run($argv, $argc){
 
 			}
 
+			if($contact['abook_flags'] & (ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED|ABOOK_FLAG_IGNORED))
+				continue;
+
 			if((! $update) && (! $force))
 					continue;
 
@@ -375,7 +382,7 @@ function poller_run($argv, $argc){
 	}
 
 	if($dirmode == DIRECTORY_MODE_SECONDARY || $dirmode == DIRECTORY_MODE_PRIMARY) {
-		$r = q("select distinct ud_addr, updates.* from updates where not ( ud_flags & %d )>0 and ud_addr != '' and ( ud_last = '%s' OR ud_last > %s - INTERVAL %s ) group by ud_addr ",
+		$r = q("select distinct ud_addr, updates.* from updates where ( ud_flags & %d ) = 0 and ud_addr != '' and ( ud_last = '%s' OR ud_last > %s - INTERVAL %s ) group by ud_addr ",
 			intval(UPDATE_FLAGS_UPDATED),
 			dbesc(NULL_DATE),
 			db_utcnow(), db_quoteinterval('7 DAY')

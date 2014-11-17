@@ -9,9 +9,10 @@ function home_init(&$a) {
 	$ret = array();
 	call_hooks('home_init',$ret);
 
-	$channel = $a->get_channel();
+	$splash = ((argc() > 1 && argv(1) === 'splash') ? true : false);
 
-	if(local_user() && $channel && $channel['xchan_url']) {
+	$channel = $a->get_channel();
+	if(local_user() && $channel && $channel['xchan_url'] && ! $splash) {
 		$dest = $channel['channel_startpage'];
 		if(! $dest)
 			$dest = get_pconfig(local_user(),'system','startpage');
@@ -23,7 +24,7 @@ function home_init(&$a) {
 		goaway($dest);
 	}
 
-	if(get_account_id()) {
+	if(get_account_id() && ! $splash) {
 		goaway(z_root() . '/new_channel');
 	}
 
@@ -39,6 +40,7 @@ function home_content(&$a) {
 	if(x($_SESSION,'mobile_theme'))
 		unset($_SESSION['mobile_theme']);
 
+	$splash = ((argc() > 1 && argv(1) === 'splash') ? true : false);
 
 	if(get_config('system','projecthome')) {
 		$o .= file_get_contents('assets/home.html');
@@ -48,20 +50,20 @@ function home_content(&$a) {
 	}
 
 
-// Deprecated
-    $channel_address = get_config("system", "site_channel" );
-    
-// See if the sys channel set a homepage
-    if (! $channel_address) {
-            $u = get_sys_channel();
-                if ($u) {
-                $u = array($u);
-                // change to channel_id when below deprecated and skip the $u=...
-                $channel_address = $u[0]['channel_address'];
-                }
-    }
+	// Deprecated
+	$channel_address = get_config("system", "site_channel" );
+	
+	// See if the sys channel set a homepage
+	if (! $channel_address) {
+		$u = get_sys_channel();
+		if ($u) {
+			$u = array($u);
+			// change to channel_id when below deprecated and skip the $u=...
+			$channel_address = $u[0]['channel_address'];
+		}
+	}
 
-    if ($channel_address){
+	if($channel_address) {
 
 		$page_id = 'home';
 
@@ -78,16 +80,16 @@ function home_content(&$a) {
 		);
 
 		if($r) {
-		xchan_query($r);
-		$r = fetch_post_tags($r,true);
-		$a->profile = array('profile_uid' => $u[0]['channel_id']);
-		$o .= prepare_page($r[0]);
-		return $o;
+			xchan_query($r);
+			$r = fetch_post_tags($r,true);
+			$a->profile = array('profile_uid' => $u[0]['channel_id']);
+			$a->profile_uid = $u[0]['channel_id'];
+			$o .= prepare_page($r[0]);
+			return $o;
 		}
-
 	}
 
-// Nope, we didn't find an item.  Let's see if there's any html
+	// Nope, we didn't find an item.  Let's see if there's any html
 
 	if(file_exists('home.html')) {
 		$o .= file_get_contents('home.html');

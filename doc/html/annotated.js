@@ -14,6 +14,7 @@ var annotated =
     [ "dba_driver", "classdba__driver.html", "classdba__driver" ],
     [ "dba_mysql", "classdba__mysql.html", "classdba__mysql" ],
     [ "dba_mysqli", "classdba__mysqli.html", "classdba__mysqli" ],
+    [ "dba_postgres", "classdba__postgres.html", "classdba__postgres" ],
     [ "enotify", "classenotify.html", null ],
     [ "FKOAuth1", "classFKOAuth1.html", "classFKOAuth1" ],
     [ "FKOAuthDataStore", "classFKOAuthDataStore.html", "classFKOAuthDataStore" ],

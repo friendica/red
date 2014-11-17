@@ -43,10 +43,6 @@ function wall_upload_post(&$a) {
 		killme();
 	}
 
-	$m = $ret['body'];
-
-
-
 	if($using_api)
 		return("\n\n" . $ret['body'] . "\n\n");
 	else

@@ -28,6 +28,7 @@ class Item extends BaseObject {
 	private $threaded = false;
 	private $visiting = false;
 	private $channel = null;
+	private $display_mode = 'normal';
 
 
 	public function __construct($data) {
@@ -64,8 +65,6 @@ class Item extends BaseObject {
 
 	public function get_template_data($alike, $dlike, $thread_level=1) {
 	
-		$t1 = dba_timer();
-
 		$result = array();
 
 		$a        = $this->get_app();
@@ -228,15 +227,13 @@ class Item extends BaseObject {
 		if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
 			$indent .= ' shiny';
 
-		$t2 = dba_timer();
 
 		localize_item($item);
-
-		$t3 = dba_timer();
-
 		$body = prepare_body($item,true);
+		
 
-		$t4 = dba_timer();
+		$comment_count_txt = sprintf( tt('%d comment','%d comments',$total_children),$total_children );
+		$children = $this->get_children();
 
 		$tmp_item = array(
 			'template' => $this->get_template(),
@@ -248,6 +245,7 @@ class Item extends BaseObject {
 			'id' => $this->get_id(),
 			'linktitle' => sprintf( t('View %s\'s profile - %s'), $profile_name, $item['author']['xchan_addr']),
 			'olinktitle' => sprintf( t('View %s\'s profile - %s'), $this->get_owner_name(), $item['owner']['xchan_addr']),
+			'llink' => $item['llink'],
 			'to' => t('to'),
 			'via' => t('via'),
 			'wall' => t('Wall-to-Wall'),
@@ -292,6 +290,8 @@ class Item extends BaseObject {
 			'drop'      => $drop,
 			'multidrop' => ((feature_enabled($conv->get_profile_owner(),'multi_delete')) ? $multidrop : ''),
 // end toolbar buttons
+			'comment_count' => $total_children,
+			'comment_count_txt' => $comment_count_txt,
 			'like_count' => $like_count,
 			'like_list' => $like_list,
 			'like_list_part' => $like_list_part,
@@ -311,24 +311,22 @@ class Item extends BaseObject {
 			'thread_level' => $thread_level
 		);
 
-		$t5 = dba_timer();
-
 		$arr = array('item' => $item, 'output' => $tmp_item);
 		call_hooks('display_item', $arr);
 
 		$result = $arr['output'];
 
 		$result['children'] = array();
-		$children = $this->get_children();
 		$nb_children = count($children);
-		if($nb_children > 0) {
+
+		if(($this->get_display_mode() === 'normal') && ($nb_children > 0)) {
 			foreach($children as $child) {
 				$result['children'][] = $child->get_template_data($alike, $dlike, $thread_level + 1);
 			}
 			// Collapse
 			if(($nb_children > 2) || ($thread_level > 1)) {
 				$result['children'][0]['comment_firstcollapsed'] = true;
-				$result['children'][0]['num_comments'] = sprintf( tt('%d comment','%d comments',$total_children),$total_children );
+				$result['children'][0]['num_comments'] = $comment_count_txt;
 				$result['children'][0]['hide_text'] = t('[+] show all');
 				if($thread_level > 1) {
 					$result['children'][$nb_children - 1]['comment_lastcollapsed'] = true;
@@ -350,20 +348,20 @@ class Item extends BaseObject {
 			$result['flatten'] = true;
 			$result['threaded'] = false;
 		}
-		$t6 = dba_timer();
-
-//		profiler($t1,$t2,'t2');
-//		profiler($t2,$t3,'t3');
-//		profiler($t3,$t4,'t4');
-//		profiler($t4,$t5,'t5');
-//		profiler($t5,$t6,'t6');
-//		profiler($t1,$t6,'item total');
 
 		return $result;
 	}
 	
 	public function get_id() {
 		return $this->get_data_value('id');
+	}
+
+	public function get_display_mode() {
+		return $this->display_mode;
+	}
+
+	public function set_display_mode($mode) {
+		$this->display_mode = $mode;
 	}
 
 	public function is_threaded() {
@@ -517,12 +515,12 @@ class Item extends BaseObject {
 	/**
 	 * Get template
 	 */
-	private function get_template() {
+	public function get_template() {
 		return $this->template;
 	}
 
 
-	private function set_template($t) {
+	public function set_template($t) {
 		$this->template = $t;
 	}
 

@@ -9,6 +9,7 @@ var searchData=
   ['dba_5fdriver_2ephp',['dba_driver.php',['../dba__driver_8php.html',1,'']]],
   ['dba_5fmysql_2ephp',['dba_mysql.php',['../dba__mysql_8php.html',1,'']]],
   ['dba_5fmysqli_2ephp',['dba_mysqli.php',['../dba__mysqli_8php.html',1,'']]],
+  ['dba_5fpostgres_2ephp',['dba_postgres.php',['../dba__postgres_8php.html',1,'']]],
   ['default_2ephp',['default.php',['../theme_2blogga_2view_2theme_2blog_2default_8php.html',1,'']]],
   ['default_2ephp',['default.php',['../php_2default_8php.html',1,'']]],
   ['default_2ephp',['default.php',['../theme_2blogga_2php_2default_8php.html',1,'']]],
@@ -18,9 +19,8 @@ var searchData=
   ['diaspora_2ephp',['diaspora.php',['../diaspora_8php.html',1,'']]],
   ['dimport_2ephp',['dimport.php',['../dimport_8php.html',1,'']]],
   ['dir_5ffns_2ephp',['dir_fns.php',['../dir__fns_8php.html',1,'']]],
-  ['directory_2ephp',['directory.php',['../mod_2directory_8php.html',1,'']]],
   ['directory_2ephp',['directory.php',['../include_2directory_8php.html',1,'']]],
-  ['dirprofile_2ephp',['dirprofile.php',['../dirprofile_8php.html',1,'']]],
+  ['directory_2ephp',['directory.php',['../mod_2directory_8php.html',1,'']]],
   ['dirsearch_2ephp',['dirsearch.php',['../dirsearch_8php.html',1,'']]],
   ['display_2ephp',['display.php',['../display_8php.html',1,'']]],
   ['docblox_5ferrorchecker_2ephp',['docblox_errorchecker.php',['../docblox__errorchecker_8php.html',1,'']]]

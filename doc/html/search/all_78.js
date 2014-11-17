@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['x',['x',['../boot_8php.html#a01353c9abebc3544ea080ac161729632',1,'boot.php']]],
+  ['x',['x',['../boot_8php.html#ae97836b0547953be182a2334c9c91d3c',1,'boot.php']]],
   ['xchan_2ephp',['xchan.php',['../xchan_8php.html',1,'']]],
   ['xchan_5fcontent',['xchan_content',['../xchan_8php.html#a9853348bf1a35c644460221ba75edc2d',1,'xchan.php']]],
   ['xchan_5ffetch',['xchan_fetch',['../hubloc_8php.html#af1b476c936f96a93282b1d058e3d05ea',1,'hubloc.php']]],
@@ -9,6 +9,7 @@ var searchData=
   ['xchan_5fflags_5fhidden',['XCHAN_FLAGS_HIDDEN',['../boot_8php.html#a1af3ed96de14aa0d7891b39cc75b60f2',1,'boot.php']]],
   ['xchan_5fflags_5fnormal',['XCHAN_FLAGS_NORMAL',['../boot_8php.html#a8fdcc4ffb365a3267bd02ce8a8d466d6',1,'boot.php']]],
   ['xchan_5fflags_5forphan',['XCHAN_FLAGS_ORPHAN',['../boot_8php.html#a1c923b99bf77e4203ae94e5684b6ad0f',1,'boot.php']]],
+  ['xchan_5fflags_5fpubforum',['XCHAN_FLAGS_PUBFORUM',['../boot_8php.html#a0209e605028a5bb492683951ab30d49d',1,'boot.php']]],
   ['xchan_5fflags_5fselfcensored',['XCHAN_FLAGS_SELFCENSORED',['../boot_8php.html#a5a681a672e007cdc22b43345d71f07c6',1,'boot.php']]],
   ['xchan_5fflags_5fsystem',['XCHAN_FLAGS_SYSTEM',['../boot_8php.html#afef254290febac854c85fc698d9483a6',1,'boot.php']]],
   ['xchan_5fmail_5fquery',['xchan_mail_query',['../text_8php.html#a543447c5ed766535221e2d9636b379ee',1,'text.php']]],

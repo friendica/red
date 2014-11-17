@@ -24,7 +24,10 @@
 function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
 	$dba = null;
 
-	if($dbtype == 1) {
+
+	$dbtype = intval($dbtype);
+
+	if($dbtype == DBTYPE_POSTGRES) {
 		require_once('include/dba/dba_postgres.php');
 		if(is_null($port)) $port = 5432;
 		$dba = new dba_postgres($server, $port, $user, $pass, $db, $install);
@@ -39,6 +42,7 @@ function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
 			$dba = new dba_mysql($server, $port,$user,$pass,$db,$install);
 		}
 	}
+
 	define('NULL_DATE', $dba->get_null_date());
 	define('ACTIVE_DBTYPE', $dbtype);
 	return $dba;
@@ -361,13 +365,17 @@ function db_getfunc($f) {
 		'regexp'=>array(
 			DBTYPE_MYSQL=>'REGEXP',
 			DBTYPE_POSTGRES=>'~'
+		),
+		'^'=>array(
+			DBTYPE_MYSQL=>'^',
+			DBTYPE_POSTGRES=>'#'
 		)
 	);
 	$f = strtolower($f);
 	if(isset($lookup[$f]) && isset($lookup[$f][ACTIVE_DBTYPE]))
 		return $lookup[$f][ACTIVE_DBTYPE];
 		
-	logger('Unable to abstract DB function "'. $f . '"', LOG_DEBUG);
+	logger('Unable to abstract DB function "'. $f . '" for dbtype ' . ACTIVE_DBTYPE, LOGGER_DEBUG);
 	return $f;
 }
 
