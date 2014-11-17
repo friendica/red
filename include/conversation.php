@@ -419,8 +419,6 @@ function visible_activity($item) {
 
 function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $prepared_item = '') {
 
-	$tstart = dba_timer();
-	$t0 = $t1 = $t2 = $t3 = $t4 = $t5 = $t6 = null;
 	$content_html = '';
 	$o = '';
 
@@ -451,8 +449,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 	$previewing = (($preview) ? ' preview ' : '');
 
 	if($mode === 'network') {
-
-		$t1 = dba_timer();
 
 		$profile_owner = local_user();
 		$page_writeable = true;
@@ -790,7 +786,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$item['pagedrop'] = $page_dropping;
 
 				if($item['id'] == $item['parent']) {
-//					$tx1 = dba_timer();
+
 					$item_object = new Item($item);
 					$conv->add_thread($item_object);
 					if($page_mode === 'list') {
@@ -799,18 +795,12 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					}
 				}
 			}
-			$t2 = dba_timer();
+
 			$threads = $conv->get_template_data($alike, $dlike);
 			if(!$threads) {
 				logger('[ERROR] conversation : Failed to get template data.', LOGGER_DEBUG);
 				$threads = array();
 			}
-			$t3 = dba_timer();
-			if($mode === 'network') {
-				profiler($t1,$t2,'Conversation prepare');
-				profiler($t2,$t3,'Conversation get_template');
-			}
-
 		}
 	}
 
@@ -845,14 +835,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 		'$wait' => t('Loading...'),
         '$dropping' => ($page_dropping?t('Delete Selected Items'):False),
     ));
-
-	if($mode === 'network') {
-		$t4 = dba_timer();
-		profiler($t3,$t4,'conversation template');
-	}
-
-//	if($page_mode === 'preview')
-//		logger('preview: ' . $o, LOGGER_DATA);
 
 	return $o;
 
