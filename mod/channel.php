@@ -137,6 +137,11 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	$sql_extra = item_permissions_sql($a->profile['profile_uid'],$remote_contact,$groups);
 
+	if(get_pconfig($a->profile['profile_uid'],'system','channel_list_mode'))
+		$page_mode = 'list';
+	else
+		$page_mode = 'client';
+
 
 	if(($update) && (! $load)) {
 		if ($mid) {
@@ -279,24 +284,37 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	}
 
+	$update_unseen = '';
 
+	if($page_mode === 'list') {
 
-	if($is_owner) {
+		/**
+		 * in "list mode", only mark the parent item and any like activities as "seen". 
+		 * We won't distinguish between comment likes and post likes. The important thing
+		 * is that the number of unseen comments will be accurate. The SQL to separate the
+		 * comment likes could also get somewhat hairy. 
+		 */
 
+		if($parents_str) {
+			$update_unseen = " AND ( id IN ( " . dbesc($parents_str) . " )";
+			$update_unseen .= " OR ( parent IN ( " . dbesc($parents_str) . " ) AND verb in ( '" . dbesc(ACTIVITY_LIKE) . "','" . dbesc(ACTIVITY_DISLIKE) . "' ))) ";
+		}
+	}
+	else {
+		if($parents_str) {
+			$update_unseen = " AND parent IN ( " . dbesc($parents_str) . " )";
+		}
+	}
+
+	if($is_owner && $update_unseen) {
 		$r = q("UPDATE item SET item_flags = (item_flags & ~%d)
-			WHERE (item_flags & %d)>0 AND (item_flags & %d)>0 AND uid = %d ",
+			WHERE (item_flags & %d) > 0 AND (item_flags & %d) > 0 AND uid = %d $update_unseen",
 			intval(ITEM_UNSEEN),
 			intval(ITEM_UNSEEN),
 			intval(ITEM_WALL),
 			intval(local_user())
 		);
 	}
-
-
-	if(get_pconfig($a->profile['profile_uid'],'system','channel_list_mode'))
-		$page_mode = 'list';
-	else
-		$page_mode = 'client';
 
 
 	if($_COOKIE['jsAvailable'] == 1) {
