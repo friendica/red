@@ -4,6 +4,7 @@ var searchData=
   ['lang_5fselector',['lang_selector',['../text_8php.html#a71f6952243d3fe1c5a8154f78027e29c',1,'text.php']]],
   ['layout_5fselect',['layout_select',['../text_8php.html#a3999a0b3e22e440f280ee791ce34d384',1,'text.php']]],
   ['layouts_5fcontent',['layouts_content',['../layouts_8php.html#a6e0193759ad9eef76d3df2db24237b50',1,'layouts.php']]],
+  ['layouts_5finit',['layouts_init',['../layouts_8php.html#a39c8e9f72641c684c8b689bd91a642fa',1,'layouts.php']]],
   ['legal_5fwebbie',['legal_webbie',['../text_8php.html#a2690ad67bb6fb97ef69de3e8d23f2728',1,'text.php']]],
   ['like_5fcontent',['like_content',['../like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538',1,'like.php']]],
   ['like_5fpuller',['like_puller',['../conversation_8php.html#afe5b2f38d8b803edb0d7ec5fa2868db0',1,'conversation.php']]],

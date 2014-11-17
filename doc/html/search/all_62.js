@@ -32,6 +32,7 @@ var searchData=
   ['block_5finit',['block_init',['../block_8php.html#a9b61c96044ed2a068f18c10370a78d5c',1,'block.php']]],
   ['blocks_2ephp',['blocks.php',['../blocks_8php.html',1,'']]],
   ['blocks_5fcontent',['blocks_content',['../blocks_8php.html#a2531a8fd51db3cecb2eb20c002c66e12',1,'blocks.php']]],
+  ['blocks_5finit',['blocks_init',['../blocks_8php.html#aebe88302181883d2b17d6e98a1aaebe9',1,'blocks.php']]],
   ['blog_5finit',['blog_init',['../blogga_2php_2theme_8php.html#aa55c1cb1f05087b5002ecb633b550b1b',1,'blog_init(&amp;$a):&#160;theme.php'],['../blogga_2view_2theme_2blog_2theme_8php.html#aa55c1cb1f05087b5002ecb633b550b1b',1,'blog_init(&amp;$a):&#160;theme.php']]],
   ['blog_5finstall',['blog_install',['../blogga_2view_2theme_2blog_2theme_8php.html#aae58cc837fe56473d9f3370abfe533ae',1,'theme.php']]],
   ['blog_5funinstall',['blog_uninstall',['../blogga_2view_2theme_2blog_2theme_8php.html#a3e77dbe111f330c64a1ff6c741cd515c',1,'theme.php']]],

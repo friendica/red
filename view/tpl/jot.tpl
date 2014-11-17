@@ -108,12 +108,7 @@
       </div>
      <!--  <div class="modal-body"> -->
             <div class="modal-body form-group" style="width:90%">
-                <div class="input-group input-group-sm date" id="datetimepicker1">
-                    <span class="input-group-addon"><!-- <span class="glyphicon glyphicon-calendar"></span> -->
-                    <span class="icon-calendar"></span>
-                    </span>
-                    <input id="expiration-date" type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm" size="20"/>
-                </div>
+		<div class='date'><input type='text' placeholder='yyyy-mm-dd HH:MM' name='start_text' id='expiration-date' class="form-control" /></div><script type='text/javascript'>$(function () {var picker = $('#expiration-date').datetimepicker({format:'Y-m-d H:i', minDate: 0 }); })</script>
             </div>
       <!-- </div> -->
       <div class="modal-footer">

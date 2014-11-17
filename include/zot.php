@@ -202,7 +202,7 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 
 	$r = q("select xchan.*, hubloc.* from xchan 
 			left join hubloc on xchan_hash = hubloc_hash
-			where xchan_addr = '%s' and (hubloc_flags & %d)>0 limit 1",
+			where xchan_addr = '%s' and (hubloc_flags & %d) > 0 limit 1",
 		dbesc($xchan_addr),
 		intval(HUBLOC_FLAGS_PRIMARY)
 	);
@@ -301,7 +301,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 	if($them['hubloc_url'])
 		$url = $them['hubloc_url'];
 	else {
-		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d )>0 limit 1",
+		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d ) > 0 limit 1",
 			dbesc($them['xchan_hash']),
 			intval(HUBLOC_FLAGS_PRIMARY)
 		);
@@ -383,7 +383,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 				}
 			}
 
-			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d)>0 limit 1",
+			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 limit 1",
 				dbesc($x['hash']),
 				intval($channel['channel_id']),
 				intval(ABOOK_FLAG_SELF)
@@ -409,7 +409,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 		
 				$y = q("update abook set abook_their_perms = %d, abook_dob = '%s'
 					where abook_xchan = '%s' and abook_channel = %d 
-					and not (abook_flags & %d)>0 ",
+					and not (abook_flags & %d) > 0 ",
 					intval($their_perms),
 					dbesc($next_birthday),
 					dbesc($x['hash']),
@@ -421,7 +421,8 @@ function zot_refresh($them,$channel = null, $force = false) {
 
 					// if they are in your address book but you aren't in theirs, and/or this does not
 					// match your current connected state setting, toggle it. 
-
+					// FIXME: uncoverted to postgres
+					// FIXME: when this was enabled, all contacts became unconnected. Currently disabled intentionally
 //					$y1 = q("update abook set abook_flags = (abook_flags ^ %d)
 //						where abook_xchan = '%s' and abook_channel = %d 
 //						and not (abook_flags & %d) limit 1",
@@ -471,7 +472,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 					$new_perms = get_all_perms($channel['channel_id'],$x['hash']);
 					if($new_perms != $previous_perms) {
 						// Send back a permissions update if permissions have changed
-						$z = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d)>0 limit 1",
+						$z = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 limit 1",
 							dbesc($x['hash']),
 							intval($channel['channel_id']),
 							intval(ABOOK_FLAG_SELF)

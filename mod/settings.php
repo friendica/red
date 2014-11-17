@@ -140,6 +140,10 @@ function settings_post(&$a) {
 		$user_scalable = ((x($_POST,'user_scalable')) ? intval($_POST['user_scalable'])  : 0);
 		$nosmile = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0); 
 		$title_tosource = ((x($_POST,'title_tosource')) ? intval($_POST['title_tosource'])  : 0);		 
+		$channel_list_mode = ((x($_POST,'channel_list_mode')) ? intval($_POST['channel_list_mode']) : 0);
+		$network_list_mode = ((x($_POST,'network_list_mode')) ? intval($_POST['network_list_mode']) : 0);
+
+
 		$browser_update   = ((x($_POST,'browser_update')) ? intval($_POST['browser_update']) : 0);
 		$browser_update   = $browser_update * 1000;
 		if($browser_update < 10000)
@@ -159,6 +163,8 @@ function settings_post(&$a) {
 		set_pconfig(local_user(),'system','itemspage', $itemspage);
 		set_pconfig(local_user(),'system','no_smilies',$nosmile);
 		set_pconfig(local_user(),'system','title_tosource',$title_tosource);
+		set_pconfig(local_user(),'system','channel_list_mode', $channel_list_mode);
+		set_pconfig(local_user(),'system','network_list_mode', $network_list_mode);
 
 		if ($theme == $a->channel['channel_theme']){
 			// call theme_post only if theme has not been changed
@@ -722,6 +728,7 @@ function settings_content(&$a) {
 	/*
 	 * DISPLAY SETTINGS
 	 */
+
 	if((argc() > 1) && (argv(1) === 'display')) {
 		$default_theme = get_config('system','theme');
 		if(! $default_theme)
@@ -801,6 +808,9 @@ function settings_content(&$a) {
 			'$layout_editor' => t('System Page Layout Editor - (advanced)'),
 			'$theme_config' => $theme_config,
 			'$expert' => feature_enabled(local_user(),'expert'),
+			'$channel_list_mode' => array('channel_list_mode', t('Use blog/list mode on channel page'), get_pconfig(local_user(),'system','channel_list_mode'), t('(comments displayed separately)')),
+			'$network_list_mode' => array('network_list_mode', t('Use blog/list mode on matrix page'), get_pconfig(local_user(),'system','network_list_mode'), t('(comments displayed separately)')),
+
 		));
 		
 		return $o;

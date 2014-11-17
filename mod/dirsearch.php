@@ -282,35 +282,38 @@ function dir_parse_query($s) {
 
 	if($all) {
 		foreach($all as $q) {
-			if($q === 'and') {
-				$curr['logic'] = 'and';
-				continue;
-			}
-			if($q === 'or') {
-				$curr['logic'] = 'or';
-				continue;
-			}
-			if($q === 'not') {
-				$curr['logic'] .= ' not';
-				continue;
-			}
-			if(strpos($q,'=')) {
-				if(! isset($curr['logic']))
+			if($quoted_string === false) {
+				if($q === 'and') {
+					$curr['logic'] = 'and';
+					continue;
+				}
+				if($q === 'or') {
 					$curr['logic'] = 'or';
-				$curr['field'] = trim(substr($q,0,strpos($q,'=')));
-				$curr['value'] = trim(substr($q,strpos($q,'=')+1));
-				if(strpos($curr['value'],'"') !== false) {
-					$quoted_string = true;
-					$curr['value'] = substr($curr['value'],strpos($curr['value'],'"')+1);
+					continue;
 				}
-				else {
-					$ret[] = $curr;
-					$curr = array();
-					$continue;
+				if($q === 'not') {
+					$curr['logic'] .= ' not';
+					continue;
+				}
+				if(strpos($q,'=')) {
+					if(! isset($curr['logic']))
+						$curr['logic'] = 'or';
+					$curr['field'] = trim(substr($q,0,strpos($q,'=')));
+					$curr['value'] = trim(substr($q,strpos($q,'=')+1));
+					if($curr['value'][0] == '"' && $curr['value'][strlen($curr['value'])-1] != '"') {
+						$quoted_string = true;
+						$curr['value'] = substr($curr['value'],1);
+						continue;
+					}
+					else {
+						$ret[] = $curr;
+						$curr = array();
+						continue;
+					}
 				}
 			}
-			elseif($quoted_string) {
-				if(strpos($q,'"') !== false) {
+			else {
+				if($q[strlen($q)-1] == '"') {
 					$curr['value'] .= ' ' . str_replace('"','',trim($q));
 					$ret[] = $curr;
 					$curr = array();

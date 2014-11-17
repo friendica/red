@@ -25,14 +25,16 @@ function ACL(backend_url, preset){
 	/*events*/
 
 	$(document).ready(function() {
-		that.showall.click(that.on_showall);
-		$(document).on('click','.acl-button-show',that.on_button_show);
-		$(document).on('click','.acl-button-hide',that.on_button_hide);
-		$("#acl-search").keypress(that.on_search);
+//		setTimeout( function() {
+			that.showall.click(that.on_showall);
+			$(document).on('click','.acl-button-show',that.on_button_show);
+			$(document).on('click','.acl-button-hide',that.on_button_hide);
+			$("#acl-search").keypress(that.on_search);
 
-		/* startup! */
-		that.get(0,100);
-		that.on_submit();
+			/* startup! */
+			that.get(0,100);
+			that.on_submit();
+//		}, 5000 );
 	});
 
 }

@@ -23,7 +23,6 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "contactgroup.php", "contactgroup_8php.html", "contactgroup_8php" ],
     [ "delegate.php", "delegate_8php.html", "delegate_8php" ],
     [ "directory.php", "mod_2directory_8php.html", "mod_2directory_8php" ],
-    [ "dirprofile.php", "dirprofile_8php.html", "dirprofile_8php" ],
     [ "dirsearch.php", "dirsearch_8php.html", "dirsearch_8php" ],
     [ "display.php", "display_8php.html", "display_8php" ],
     [ "editblock.php", "editblock_8php.html", "editblock_8php" ],
