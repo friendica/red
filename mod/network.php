@@ -24,7 +24,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	if(! local_user()) {
 		$_SESSION['return_url'] = $a->query_string;
-    	return login(false);
+		return login(false);
 	}
 
 
@@ -52,28 +52,30 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 
-
 	$datequery = $datequery2 = '';
 
 	$group = 0;
 
-	$nouveau = false;
+	$nouveau    = false;
 
-	$datequery = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
+	$datequery  = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
 	$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
-	$nouveau = ((x($_GET,'new')) ? intval($_GET['new']) : 0);
-	$gid = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
+	$nouveau    = ((x($_GET,'new')) ? intval($_GET['new']) : 0);
+	$gid        = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
 
 
 	if($datequery)
 		$_GET['order'] = 'post';
 
+
+	// filter by collection (e.g. group)
+
 	if($gid) {
-        $r = q("SELECT * FROM `groups` WHERE id = %d AND uid = %d LIMIT 1",
-            intval($gid),
-            intval(local_user())
-        );
-        if(! $r) {
+		$r = q("SELECT * FROM groups WHERE id = %d AND uid = %d LIMIT 1",
+			intval($gid),
+			intval(local_user())
+		);
+		if(! $r) {
 			if($update)
 				killme();
 			notice( t('No such group') . EOL );
@@ -81,27 +83,26 @@ function network_content(&$a, $update = 0, $load = false) {
 			// NOTREACHED
 		}
 
-		$group = $gid;
+		$group      = $gid;
 		$group_hash = $r[0]['hash'];
-		$def_acl = array('allow_gid' => '<' . $r[0]['hash'] . '>');
+		$def_acl    = array('allow_gid' => '<' . $r[0]['hash'] . '>');
 	}
 
 	$o = '';
 
-	
 
 	// if no tabs are selected, defaults to comments
 
-	$cid = ((x($_GET,'cid')) ? intval($_GET['cid']) : 0);
-	$star = ((x($_GET,'star')) ? intval($_GET['star']) : 0);
-	$order = ((x($_GET,'order')) ? notags($_GET['order']) : 'comment');
-	$liked = ((x($_GET,'liked')) ? intval($_GET['liked']) : 0);
-	$conv = ((x($_GET,'conv')) ? intval($_GET['conv']) : 0);
-	$spam = ((x($_GET,'spam')) ? intval($_GET['spam']) : 0);
-	$cmin = ((x($_GET,'cmin')) ? intval($_GET['cmin']) : 0);
-	$cmax = ((x($_GET,'cmax')) ? intval($_GET['cmax']) : 99);
-	$firehose = ((x($_GET,'fh')) ? intval($_GET['fh']) : 0);
-	$file = ((x($_GET,'file')) ? $_GET['file'] : '');
+	$cid      = ((x($_GET,'cid'))   ? intval($_GET['cid'])   : 0);
+	$star     = ((x($_GET,'star'))  ? intval($_GET['star'])  : 0);
+	$order    = ((x($_GET,'order')) ? notags($_GET['order']) : 'comment');
+	$liked    = ((x($_GET,'liked')) ? intval($_GET['liked']) : 0);
+	$conv     = ((x($_GET,'conv'))  ? intval($_GET['conv'])  : 0);
+	$spam     = ((x($_GET,'spam'))  ? intval($_GET['spam'])  : 0);
+	$cmin     = ((x($_GET,'cmin'))  ? intval($_GET['cmin'])  : 0);
+	$cmax     = ((x($_GET,'cmax'))  ? intval($_GET['cmax'])  : 99);
+	$firehose = ((x($_GET,'fh'))    ? intval($_GET['fh'])    : 0);
+	$file     = ((x($_GET,'file'))  ? $_GET['file']          : '');
 
 
 	if(x($_GET,'search') || x($_GET,'file'))
@@ -122,21 +123,21 @@ function network_content(&$a, $update = 0, $load = false) {
 		$channel_acl = array(
 			'allow_cid' => $channel['channel_allow_cid'], 
 			'allow_gid' => $channel['channel_allow_gid'], 
-			'deny_cid' => $channel['channel_deny_cid'], 
-			'deny_gid' => $channel['channel_deny_gid']
+			'deny_cid'  => $channel['channel_deny_cid'], 
+			'deny_gid'  => $channel['channel_deny_gid']
 		); 
 
 
 		$x = array(
-			'is_owner' => true,
-			'allow_location' => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
+			'is_owner'         => true,
+			'allow_location'   => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
 			'default_location' => $channel['channel_location'],
-			'nickname' => $channel['channel_address'],
-			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-			'acl' => populate_acl((($group || $cid) ? $def_acl : $channel_acl)),
-			'bang' => (($group || $cid) ? '!' : ''),
-			'visitor' => true,
-			'profile_uid' => local_user()
+			'nickname'         => $channel['channel_address'],
+			'lockstate'        => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
+			'acl'              => populate_acl((($group || $cid) ? $def_acl : $channel_acl)),
+			'bang'             => (($group || $cid) ? '!' : ''),
+			'visitor'          => true,
+			'profile_uid'      => local_user()
 		);
 
 		$o .= status_editor($a,$x);
@@ -146,11 +147,11 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	// We don't have to deal with ACL's on this page. You're looking at everything
 	// that belongs to you, hence you can see all of it. We will filter by group if
-	// desired. 
+	// desired.
 
-	
-	$sql_options  = (($star) 
-		? " and (item_flags & " . intval(ITEM_STARRED) . ")>0" 
+
+	$sql_options  = (($star)
+		? " and (item_flags & " . intval(ITEM_STARRED) . ") > 0"
 		: '');
 
 	$sql_nets = '';
@@ -159,20 +160,20 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	if($group) {
 		$contact_str = '';
-        $contacts = group_get_members($group);
-        if($contacts) {
+		$contacts = group_get_members($group);
+		if($contacts) {
 			foreach($contacts as $c) {
 				if($contact_str)
 					$contact_str .= ',';
-            	$contact_str .= "'" . $c['xchan'] . "'";
+				$contact_str .= "'" . $c['xchan'] . "'";
 			}
-        }
-        else {
-			$contact_str = ' 0 ';	
+		}
+		else {
+			$contact_str = ' 0 ';
 			info( t('Collection is empty'));
-        }
+		}
 
-        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str )) or allow_gid like '" . protect_sprintf('%<' . dbesc($group_hash) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
+		$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str )) or allow_gid like '" . protect_sprintf('%<' . dbesc($group_hash) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
 
 		$x = group_rec_byhash(local_user(), $group_hash);
 
@@ -180,60 +181,60 @@ function network_content(&$a, $update = 0, $load = false) {
 			$o = '<h2>' . t('Collection: ') . $x['name'] . '</h2>' . $o;
 
 
-    }
+	}
 
 	elseif($cid) {
 
-        $r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ")>0 limit 1",
+		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") > 0 limit 1",
 			intval($cid),
 			intval(local_user())
-        );
-        if($r) {
-            $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_user()) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
+		);
+		if($r) {
+			$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_user()) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
 			$o = '<h2>' . t('Connection: ') . $r[0]['xchan_name'] . '</h2>' . $o;
-        }
-        else {
+		}
+		else {
 			notice( t('Invalid connection.') . EOL);
 			goaway($a->get_baseurl(true) . '/network');
-        }
+		}
 	}
 
 
 	if(! $update) {
 		// The special div is needed for liveUpdate to kick in for this page.
-		// We only launch liveUpdate if you aren't filtering in some incompatible 
+		// We only launch liveUpdate if you aren't filtering in some incompatible
 		// way and also you aren't writing a comment (discovered in javascript).
 
 		if($gid || $cid || $cmin || ($cmax != 99) || $star || $liked || $conv || $spam || $nouveau || $list)
-			$firehose = 0; 
+			$firehose = 0;
 
 		$o .= '<div id="live-network"></div>' . "\r\n";
-		$o .= "<script> var profile_uid = " . $_SESSION['uid'] . "; var profile_page = " . $a->pager['page'] . ";</script>";
+		$o .= "<script> var profile_uid = " . local_user() . "; var profile_page = " . $a->pager['page'] . ";</script>";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
-			'$pgtype' => 'network',
-			'$uid' => ((local_user()) ? local_user() : '0'),
-			'$gid' => (($gid) ? $gid : '0'),
-			'$cid' => (($cid) ? $cid : '0'),
-			'$cmin' => (($cmin) ? $cmin : '0'),
-			'$cmax' => (($cmax) ? $cmax : '0'),
-			'$star' => (($star) ? $star : '0'),
-			'$liked' => (($liked) ? $liked : '0'),
-			'$conv' => (($conv) ? $conv : '0'),
-			'$spam' => (($spam) ? $spam : '0'),
-			'$fh' => (($firehose) ? $firehose : '0'),
+			'$pgtype'  => 'network',
+			'$uid'     => ((local_user()) ? local_user() : '0'),
+			'$gid'     => (($gid) ? $gid : '0'),
+			'$cid'     => (($cid) ? $cid : '0'),
+			'$cmin'    => (($cmin) ? $cmin : '0'),
+			'$cmax'    => (($cmax) ? $cmax : '0'),
+			'$star'    => (($star) ? $star : '0'),
+			'$liked'   => (($liked) ? $liked : '0'),
+			'$conv'    => (($conv) ? $conv : '0'),
+			'$spam'    => (($spam) ? $spam : '0'),
+			'$fh'      => (($firehose) ? $firehose : '0'),
 			'$nouveau' => (($nouveau) ? $nouveau : '0'),
-			'$wall' => '0',
-			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
-			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
-			'$search' => (($search) ? $search : ''),
-			'$order' => $order,
-			'$file' => $file,
-			'$cats' => '',
-			'$dend' => $datequery,
-			'$mid' => '',
-			'$dbegin' => $datequery2
+			'$wall'    => '0',
+			'$list'    => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
+			'$page'    => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
+			'$search'  => (($search) ? $search : ''),
+			'$order'   => $order,
+			'$file'    => $file,
+			'$cats'    => '',
+			'$dend'    => $datequery,
+			'$mid'     => '',
+			'$dbegin'  => $datequery2
 		));
 	}
 
@@ -246,17 +247,19 @@ function network_content(&$a, $update = 0, $load = false) {
 		$sql_extra3 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$datequery2))));
 	}
 
-	$sql_extra2 = (($nouveau) ? '' : " AND `item`.`parent` = `item`.`id` ");
+	$sql_extra2 = (($nouveau) ? '' : " AND item.parent = item.id ");
 	$sql_extra3 = (($nouveau) ? '' : $sql_extra3);
 
 	if(x($_GET,'search')) {
 		$search = escape_tags($_GET['search']);
-		if(strpos($search,'#') === 0)
+		if(strpos($search,'#') === 0) {
 			$sql_extra .= term_query('item',substr($search,1),TERM_HASHTAG);
-		else
-			$sql_extra .= sprintf(" AND `item`.`body` like '%s' ",
+		}
+		else {
+			$sql_extra .= sprintf(" AND item.body like '%s' ",
 				dbesc(protect_sprintf('%' . $search . '%'))
 			);
+		}
 	}
 
 	if(strlen($file)) {
@@ -264,7 +267,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 	if($conv) {
-		$sql_extra .= sprintf(" AND parent IN (SELECT distinct(parent) from item where ( author_xchan like '%s' or ( item_flags & %d )>0)) ",
+		$sql_extra .= sprintf(" AND parent IN (SELECT distinct(parent) from item where ( author_xchan like '%s' or ( item_flags & %d ) > 0)) ",
 			dbesc(protect_sprintf($channel['channel_hash'])),
 			intval(ITEM_MENTIONSME)
 		);
@@ -287,7 +290,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		// Not everybody who shows up in the network stream will be in your address book.
 		// By default those that aren't are assumed to have closeness = 99; but this isn't
-		// recorded anywhere. So if cmax is 99, we'll open the search up to anybody in 
+		// recorded anywhere. So if cmax is 99, we'll open the search up to anybody in
 		// the stream with a NULL address book entry.
 
 		$sql_nets .= " AND ";
@@ -314,33 +317,33 @@ function network_content(&$a, $update = 0, $load = false) {
 		$uids = " and item.uid = " . local_user() . " ";
 	}
 
-	$simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " )>0 " : '');
+	$simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) > 0 " : '');
 
 	// This fixes a very subtle bug so I'd better explain it. You wake up in the morning or return after a day
-	// or three and look at your matrix page - after opening up your browser. The first page loads just as it 
-	// should. All of a sudden a few seconds later, page 2 will get inserted at the beginning of the page 
+	// or three and look at your matrix page - after opening up your browser. The first page loads just as it
+	// should. All of a sudden a few seconds later, page 2 will get inserted at the beginning of the page
 	// (before the page 1 content). The update code is actually doing just what it's supposed
 	// to, it's fetching posts that have the ITEM_UNSEEN bit set. But the reason that page 2 content is being
-	// returned in an UPDATE is because you hadn't gotten that far yet - you're still on page 1 and everything 
+	// returned in an UPDATE is because you hadn't gotten that far yet - you're still on page 1 and everything
 	// that we loaded for page 1 is now marked as seen. But the stuff on page 2 hasn't been. So... it's being
-	// treated as "new fresh" content because it is unseen. We need to distinguish it somehow from content 
+	// treated as "new fresh" content because it is unseen. We need to distinguish it somehow from content
 	// which "arrived as you were reading page 1". We're going to do this
 	// by storing in your session the current UTC time whenever you LOAD a network page, and only UPDATE items
 	// which are both ITEM_UNSEEN and have "changed" since that time. Cross fingers...
 
-	if($update && $_SESSION['loadtime']) 
-		$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' "; 
+	if($update && $_SESSION['loadtime'])
+		$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ";
 	if($load)
 		$simple_update = '';
 
 	if($nouveau && $load) {
 		// "New Item View" - show all items unthreaded in reverse created date order
 
-		$items = q("SELECT `item`.*, `item`.`id` AS `item_id`, received FROM `item` 
-			WHERE true $uids AND item_restrict = 0 
+		$items = q("SELECT item.*, item.id AS item_id, received FROM item
+			WHERE true $uids AND item_restrict = 0
 			$simple_update
 			$sql_extra $sql_nets
-			ORDER BY `item`.`received` DESC $pager_sql "
+			ORDER BY item.received DESC $pager_sql "
 		);
 
 		require_once('include/items.php');
@@ -354,9 +357,9 @@ function network_content(&$a, $update = 0, $load = false) {
 		// Normal conversation view
 
 		if($order === 'post')
-				$ordering = "`created`";
+				$ordering = "created";
 		else
-				$ordering = "`commented`";
+				$ordering = "commented";
 
 		if($load) {
 
@@ -364,7 +367,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			// Fetch a page full of parent items for this page
 
-			$r = q("SELECT distinct item.id AS item_id, $ordering FROM item 
+			$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE true $uids AND item.item_restrict = 0
 				AND item.parent = item.id
@@ -376,7 +379,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		}
 		else {
-			if(! $firehose) { 
+			if(! $firehose) {
 				// update
 				$r = q("SELECT item.parent AS item_id FROM item
 					left join abook on item.author_xchan = abook.abook_xchan
@@ -396,9 +399,9 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			$parents_str = ids_to_querystr($r,'item_id');
 
-			$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
-				WHERE true $uids AND `item`.`item_restrict` = 0
-				AND `item`.`parent` IN ( %s )
+			$items = q("SELECT item.*, item.id AS item_id FROM item
+				WHERE true $uids AND item.item_restrict = 0
+				AND item.parent IN ( %s )
 				$sql_extra ",
 				dbesc($parents_str)
 			);
@@ -406,7 +409,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			xchan_query($items,true,(($firehose) ? local_user() : 0));
 			$items = fetch_post_tags($items,true);
 			$items = conv_sort($items,$ordering);
-		} 
+		}
 		else {
 			$items = array();
 		}
@@ -417,8 +420,8 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 	if(($update_unseen) && (! $firehose))
-		$r = q("UPDATE `item` SET item_flags = ( item_flags & ~%d)
-			WHERE (item_flags & %d)>0 AND `uid` = %d $update_unseen ",
+		$r = q("UPDATE item SET item_flags = ( item_flags & ~%d)
+			WHERE (item_flags & %d) > 0 AND uid = %d $update_unseen ",
 			intval(ITEM_UNSEEN),
 			intval(ITEM_UNSEEN),
 			intval(local_user())
@@ -433,8 +436,8 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	$o .= conversation($a,$items,$mode,$update,$page_mode);
 
-	if(($items) && (! $update)) 
-        $o .= alt_pager($a,count($items));
+	if(($items) && (! $update))
+		$o .= alt_pager($a,count($items));
 
 	return $o;
 }
