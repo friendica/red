@@ -7,6 +7,16 @@
 	margin-top: 0px;
 }
 
+
+.widget .nav-pills > li > a {
+	padding: 6px 10px;
+}
+
+.widget-input {
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
 /* suggest */
 
 .suggest-widget-more {
@@ -21,16 +31,6 @@
 
 #side-follow-submit {
 	margin-top: 15px;
-}
-
-/* search */
-
-#search-text {
-	border: 1px solid #ccc;
-	padding: 5px;
-	line-height: 1.5;
-	border-top-right-radius: 0px;
-	border-bottom-right-radius: 0px;
 }
 
 /* notes */ 
@@ -49,21 +49,6 @@
 }
 
 
-/* peoplefind */
-
-#peoplefind-sidebar .btn {
-	margin: 10px 0 10px 0;
-}
-
-#side-peoplefind-url {
-	margin-top: 5px;
-}
-
-#side-peoplefind-url {
-	font-size: 1em;
-}
-
-
 /* fileas */
 
 
@@ -74,6 +59,10 @@
 }
 
 #posted-date-selector li:not(:first-child) {
+	margin-top: 2px;
+}
+
+#posted-date-selector-drop li:not(:first-child) {
 	margin-top: 2px;
 }
 

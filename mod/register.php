@@ -37,7 +37,9 @@ function register_post(&$a) {
 
 	$max_dailies = intval(get_config('system','max_daily_registrations'));
 	if($max_dailies) {
-		$r = q("select count(account_id) as total from account where account_created > UTC_TIMESTAMP() - INTERVAL 1 day");
+		$r = q("select count(account_id) as total from account where account_created > %s - INTERVAL %s",
+			db_utcnow(), db_quoteinterval('1 day')
+		);
 		if($r && $r[0]['total'] >= $max_dailies) {
 			notice( t('Maximum daily site registrations exceeded. Please try again tomorrow.') . EOL);
 			return;
@@ -100,7 +102,7 @@ function register_post(&$a) {
 	$invite_code   = ((x($_POST,'invite_code'))  ? notags(trim($_POST['invite_code']))  : '');
 
 	if($using_invites && $invite_code) {
-		q("delete * from register where hash = '%s' limit 1", dbesc($invite_code));
+		q("delete * from register where hash = '%s'", dbesc($invite_code));
 		set_pconfig($result['account']['account_id'],'system','invites_remaining',$num_invites);
 	}
 
@@ -164,7 +166,9 @@ function register_content(&$a) {
 
 	$max_dailies = intval(get_config('system','max_daily_registrations'));
 	if($max_dailies) {
-		$r = q("select count(account_id) as total from account where account_created > UTC_TIMESTAMP() - INTERVAL 1 day");
+		$r = q("select count(account_id) as total from account where account_created > %s - INTERVAL %s",
+			db_utcnow(), db_quoteinterval('1 day')
+		);
 		if($r && $r[0]['total'] >= $max_dailies) {
 			logger('max daily registrations exceeded.');
 			notice( t('This site has exceeded the number of allowed daily account registrations. Please try again tomorrow.') . EOL);

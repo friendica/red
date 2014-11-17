@@ -1,7 +1,7 @@
 var hierarchy =
 [
     [ "AbstractBasic", null, [
-      [ "RedBasicAuth", "classRedBasicAuth.html", null ]
+      [ "RedMatrix\\RedDAV\\RedBasicAuth", "classRedMatrix_1_1RedDAV_1_1RedBasicAuth.html", null ]
     ] ],
     [ "App", "classApp.html", null ],
     [ "BaseObject", "classBaseObject.html", [
@@ -15,21 +15,22 @@ var hierarchy =
     ] ],
     [ "enotify", "classenotify.html", null ],
     [ "ICollection", null, [
-      [ "RedDirectory", "classRedDirectory.html", null ]
+      [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ]
     ] ],
     [ "IFile", null, [
-      [ "RedFile", "classRedFile.html", null ]
+      [ "RedMatrix\\RedDAV\\RedFile", "classRedMatrix_1_1RedDAV_1_1RedFile.html", null ]
     ] ],
+    [ "Redmatrix\\Import\\Import", "classRedmatrix_1_1Import_1_1Import.html", null ],
     [ "IQuota", null, [
-      [ "RedDirectory", "classRedDirectory.html", null ]
+      [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ]
     ] ],
     [ "ITemplateEngine", "interfaceITemplateEngine.html", [
       [ "FriendicaSmartyEngine", "classFriendicaSmartyEngine.html", null ],
       [ "Template", "classTemplate.html", null ]
     ] ],
     [ "Node", null, [
-      [ "RedDirectory", "classRedDirectory.html", null ],
-      [ "RedFile", "classRedFile.html", null ]
+      [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ],
+      [ "RedMatrix\\RedDAV\\RedFile", "classRedMatrix_1_1RedDAV_1_1RedFile.html", null ]
     ] ],
     [ "OAuthDataStore", null, [
       [ "FKOAuthDataStore", "classFKOAuthDataStore.html", null ]
@@ -48,10 +49,13 @@ var hierarchy =
       [ "ZotDriver", "classZotDriver.html", null ]
     ] ],
     [ "Sabre", null, [
-      [ "RedDirectory", "classRedDirectory.html", null ],
-      [ "RedDirectory", "classRedDirectory.html", null ],
-      [ "RedDirectory", "classRedDirectory.html", null ],
-      [ "RedMatrix\\RedDAV\\RedBrowser", "classRedMatrix_1_1RedDAV_1_1RedBrowser.html", null ]
+      [ "RedMatrix\\RedDAV\\RedBasicAuth", "classRedMatrix_1_1RedDAV_1_1RedBasicAuth.html", null ],
+      [ "RedMatrix\\RedDAV\\RedBrowser", "classRedMatrix_1_1RedDAV_1_1RedBrowser.html", null ],
+      [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ],
+      [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ],
+      [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ],
+      [ "RedMatrix\\RedDAV\\RedFile", "classRedMatrix_1_1RedDAV_1_1RedFile.html", null ],
+      [ "RedMatrix\\RedDAV\\RedFile", "classRedMatrix_1_1RedDAV_1_1RedFile.html", null ]
     ] ],
     [ "Smarty", null, [
       [ "FriendicaSmarty", "classFriendicaSmarty.html", null ]

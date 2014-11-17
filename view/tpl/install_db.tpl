@@ -22,7 +22,7 @@
 {{include file="field_input.tpl" field=$dbuser}}
 {{include file="field_password.tpl" field=$dbpass}}
 {{include file="field_input.tpl" field=$dbdata}}
-
+{{include file="field_select.tpl" field=$dbtype}}
 
 <input id="install-submit" type="submit" name="submit" value="{{$submit}}" /> 
 

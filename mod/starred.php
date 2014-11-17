@@ -21,7 +21,7 @@ function starred_init(&$a) {
 
 	$item_flags = ( $r[0]['item_flags'] ^ ITEM_STARRED );
 
-	$r = q("UPDATE item SET item_flags = %d WHERE uid = %d and id = %d LIMIT 1",
+	$r = q("UPDATE item SET item_flags = %d WHERE uid = %d and id = %d",
 		intval($item_flags),
 		intval(local_user()),
 		intval($message_id)

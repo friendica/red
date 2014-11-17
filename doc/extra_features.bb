@@ -94,4 +94,4 @@ Ability to mark special posts with a star indicator
 
 Provide a personal tag cloud on your channel page
 
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/main_footer.bb;

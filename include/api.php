@@ -197,7 +197,10 @@ require_once('include/items.php');
 					case "json":
 						header ("Content-Type: application/json");
 						foreach($r as $rr)
-						    return json_encode($rr);
+							$json = json_encode($rr);
+						if ($_GET['callback'])
+							$json = $_GET['callback']."(".$json.")";
+						return $json; 
 						break;
 					case "rss":
 						header ("Content-Type: application/rss+xml");
@@ -306,7 +309,7 @@ require_once('include/items.php');
 				return False;
 			} else {
 				$user = local_user();
-				$extra_query = " AND abook_channel = %d AND (abook_flags & " . ABOOK_FLAG_SELF . " ) ";
+				$extra_query = " AND abook_channel = %d AND (abook_flags & " . ABOOK_FLAG_SELF . " )>0 ";
 			}
 			
 		}
@@ -333,7 +336,7 @@ require_once('include/items.php');
 			// count public wall messages
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
 					WHERE `uid` = %d
-					AND ( item_flags & %d ) and item_restrict = 0 
+					AND ( item_flags & %d )>0 and item_restrict = 0 
 					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
 					intval($usr[0]['channel_id']),
 					intval(ITEM_WALL)
@@ -360,7 +363,7 @@ require_once('include/items.php');
 			$countfollowers = $r[0]['count'];
 		}
 
-		$r = q("SELECT count(`id`) as `count` FROM item where ( item_flags & %d ) and uid = %d and item_restrict = 0",
+		$r = q("SELECT count(`id`) as `count` FROM item where ( item_flags & %d )>0 and uid = %d and item_restrict = 0",
 			intval($uinfo[0]['channel_id']),
 			intval(ITEM_STARRED)
 		);
@@ -618,7 +621,19 @@ require_once('include/items.php');
 	api_register_func('api/red/group','api_group', true);
 
 
+	function api_red_xchan(&$a,$type) {
+		if(api_user() === false)
+			return false;
+		require_once('include/hubloc.php');
+		if($_SERVER['request_method'] === 'POST') {
+			$r = xchan_store($_REQUEST);
+		}
+		$r = xchan_fetch($_REQUEST);
+		json_return_and_die($r);
+	};
 
+	api_register_func('api/red/xchan','api_red_xchan',true);
+	
 
     function api_statuses_mediap(&$a, $type) {
 		if (api_user() === false) {
@@ -989,8 +1004,8 @@ require_once('include/items.php');
 		// at the network timeline just mark everything seen. 
 	
 		if (api_user() == $user_info['uid']) {
-			$r = q("UPDATE `item` SET item_flags = ( item_flags ^ %d )
-				WHERE item_flags & %d and uid = %d",
+			$r = q("UPDATE `item` SET item_flags = ( item_flags & ~%d )
+				WHERE (item_flags & %d)>0 and uid = %d",
 				intval(ITEM_UNSEEN),
 				intval(ITEM_UNSEEN),
 				intval($user_info['uid'])
@@ -1047,10 +1062,10 @@ require_once('include/items.php');
 			and uid in ( " . stream_perms_api_uids() . " )
 			$sql_extra
 			AND id > %d group by mid
-            order by received desc LIMIT %d, %d ",
+            order by received desc LIMIT %d OFFSET %d ",
 			intval($since_id),
-			intval($start),
-			intval($count)
+			intval($count),
+			intval($start)
 		);
 
 		xchan_query($r,true);
@@ -1691,9 +1706,9 @@ require_once('include/items.php');
 		// For Red, the closest thing we can do to figure out if you're friends is if both of you are sending each other your streams.
 		// This won't work if either of you send your stream to everybody on the network
 		if($qtype == 'friends')
-			$sql_extra = sprintf(" AND ( abook_their_perms & %d ) and ( abook_my_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+			$sql_extra = sprintf(" AND ( abook_their_perms & %d )>0 and ( abook_my_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
 		if($qtype == 'followers')
-			$sql_extra = sprintf(" AND ( abook_my_perms & %d ) and not ( abook_their_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+			$sql_extra = sprintf(" AND ( abook_my_perms & %d )>0 and not ( abook_their_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
  
 		$r = q("SELECT abook_id FROM abook where abook_flags = 0 and abook_channel = %d $sql_extra",
 			intval(api_user())
@@ -1807,9 +1822,9 @@ require_once('include/items.php');
 		// This won't work if either of you send your stream to everybody on the network
 
 		if($qtype == 'friends')
-			$sql_extra = sprintf(" AND ( abook_their_perms & %d ) and ( abook_my_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+			$sql_extra = sprintf(" AND ( abook_their_perms & %d )>0 and ( abook_my_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
 		if($qtype == 'followers')
-			$sql_extra = sprintf(" AND ( abook_my_perms & %d ) and not ( abook_their_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+			$sql_extra = sprintf(" AND ( abook_my_perms & %d )>0 and not ( abook_their_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
  
 		$r = q("SELECT abook_id FROM abook where abook_flags = 0 and abook_channel = %d $sql_extra",
 			intval(api_user())
@@ -1925,9 +1940,9 @@ require_once('include/items.php');
 			$sql_extra = "`from-url`!='".dbesc( $profile_url )."'";
 		}
 		
-		$r = q("SELECT * FROM `mail` WHERE uid=%d AND $sql_extra ORDER BY created DESC LIMIT %d,%d",
+		$r = q("SELECT * FROM `mail` WHERE uid=%d AND $sql_extra ORDER BY created DESC LIMIT %d OFFSET %d",
 				intval(api_user()),
-				intval($start),	intval($count)
+				intval($count), intval($start)
 		);
 		
 		$ret = Array();

@@ -191,7 +191,8 @@ class Item extends BaseObject {
 		}
 
 
-		$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message is verified') : '');
+		$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message signature validated') : '');
+		$forged = ((($item['sig']) && (! ($item['item_flags'] & ITEM_VERIFIED))) ? t('Message signature incorrect') : '');
 		$unverified = '' ; // (($this->is_wall_to_wall() && (! ($item['item_flags'] & ITEM_VERIFIED))) ? t('Message cannot be verified') : '');
 
 
@@ -269,6 +270,7 @@ class Item extends BaseObject {
 			'lock' => $lock,
 			'verified' => $verified,
 			'unverified' => $unverified,
+			'forged' => $forged,
 			'location' => $location,
 			'indent' => $indent,
 			'owner_url' => $this->get_owner_url(),

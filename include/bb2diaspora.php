@@ -116,6 +116,8 @@ function diaspora_mention_callback($matches) {
 function diaspora2bb($s,$use_zrl = false) {
 
 
+	$s = str_replace("&#xD;\n&gt;","",$s);
+
 	$s = html_entity_decode($s,ENT_COMPAT,'UTF-8');
 
 	// Too many new lines. So deactivated the following line
@@ -275,7 +277,7 @@ function bb2diaspora_itemwallwall(&$item) {
 	}
 
 	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author']))) {
-		logger('bb2diaspora_itemwallwall: author: ' . print_r($item['author'],true), LOGGER_DEBUG);
+		logger('bb2diaspora_itemwallwall: author: ' . print_r($item['author'],true), LOGGER_DATA);
 	}
 
 	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_m']) {
@@ -286,6 +288,23 @@ function bb2diaspora_itemwallwall(&$item) {
 			. '[url=' . $item['author']['xchan_url'] . ']' . $item['author']['xchan_name'] . '[/url]' . "\n\n" 
 			. $item['body'];
 	}
+
+	// We have to do something similar for wall-to-wall comments. ITEM_WALL|ITEM_ORIGIN indicates that it was posted on this site. 
+	// Regular matrix comments may have one of these bits set, but not both.
+
+	// Update: this is getting triggered way too often and unnecessarily. Commenting out until we find a better solution.
+	// It's not an easy problem. For now we'll live with the mis-attributions, as wall to wall comments are much less frequent
+	// than wall-to-wall posts. 
+
+//	if(($item['mid'] != $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (($item['item_flags'] & (ITEM_WALL|ITEM_ORIGIN)) == (ITEM_WALL|ITEM_ORIGIN)) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_m']) {
+//		logger('bb2diaspora_itemwallwall: wall to wall comment',LOGGER_DEBUG);
+		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
+//		$item['body'] = "\n\n" 
+//			. '[img]' . $item['author']['xchan_photo_m'] . '[/img]' 
+//			. '[url=' . $item['author']['xchan_url'] . ']' . $item['author']['xchan_name'] . '[/url]' . "\n\n" 
+//			. $item['body'];
+//	}
+
 	// $item['author'] might cause a surprise further down the line if it wasn't expected to be here.
  
 	if(! $author_exists)
@@ -321,8 +340,13 @@ function bb2diaspora_itembody($item,$force_update = false) {
 
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
 		$key = get_config('system','prvkey');
-		$newitem['title'] = (($item['title']) ? crypto_unencapsulate(json_decode($item['title'],true),$key) : '');
-		$newitem['body']  = (($item['body'])  ? crypto_unencapsulate(json_decode($item['body'],true),$key) : '');
+		$b = json_decode($item['body'],true);
+		// if called from diaspora_process_outbound, this decoding has already been done.
+		// Everything else that calls us will not yet be decoded.
+		if($b && is_array($b) && array_key_exists('iv',$b)) {
+			$newitem['title'] = (($item['title']) ? crypto_unencapsulate(json_decode($item['title'],true),$key) : '');
+			$newitem['body']  = (($item['body'])  ? crypto_unencapsulate(json_decode($item['body'],true),$key) : '');
+		}
 	}
 
 	bb2diaspora_itemwallwall($newitem);
@@ -364,7 +388,7 @@ function bb2diaspora_itembody($item,$force_update = false) {
 		}
 	}
 
-	logger('bb2diaspora_itembody : ' . $body);
+//	logger('bb2diaspora_itembody : ' . $body, LOGGER_DATA);
 
 	return html_entity_decode($body);
 
@@ -438,7 +462,7 @@ function format_event_diaspora($ev) {
 
 	$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8 AM
 
-	$o = 'Friendica event notification:' . "\n";
+	$o = t('Redmatrix event notification:') . "\n";
 
 	$o .= '**' . (($ev['summary']) ? bb2diaspora($ev['summary']) : bb2diaspora($ev['desc'])) .  '**' . "\n";
 

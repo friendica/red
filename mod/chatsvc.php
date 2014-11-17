@@ -73,7 +73,7 @@ function chatsvc_content(&$a) {
 			intval($a->data['chat']['uid'])
 		);			
 
-		$r = q("update chatpresence set cp_status = '%s', cp_last = '%s' where cp_room = %d and cp_xchan = '%s' and cp_client = '%s' limit 1",
+		$r = q("update chatpresence set cp_status = '%s', cp_last = '%s' where cp_room = %d and cp_xchan = '%s' and cp_client = '%s'",
 			dbesc($status),
 			dbesc(datetime_convert()),
 			intval($room_id),
@@ -141,7 +141,7 @@ function chatsvc_content(&$a) {
 		}
 	}
 
-	$r = q("update chatpresence set cp_last = '%s' where cp_room = %d and cp_xchan = '%s' and cp_client = '%s' limit 1",
+	$r = q("update chatpresence set cp_last = '%s' where cp_room = %d and cp_xchan = '%s' and cp_client = '%s'",
 		dbesc(datetime_convert()),
 		intval($a->data['chat']['room_id']),
 		dbesc(get_observer_hash()),

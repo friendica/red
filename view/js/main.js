@@ -575,7 +575,7 @@ function updateConvItems(mode,data) {
 	}
 
 	/* autocomplete @nicknames */
-	$(".comment-edit-form  textarea").contact_autocomplete(baseurl+"/acl");
+	$(".comment-edit-form  textarea").contact_autocomplete(baseurl+"/acl?f=&n=1");
 	
 	var bimgs = $(".wall-item-body img").not(function() { return this.complete; });
 	var bimgcount = bimgs.length;
@@ -749,7 +749,7 @@ function updateConvItems(mode,data) {
 				$("#nav-" + notifyType + "-menu").html(notifications_all + notifications_mark);
 
 				$(data.notify).each(function() {
-					html = notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.class);
+					html = notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.hclass);
 					$("#nav-" + notifyType + "-menu").append(html);
 				});
 				$(".dropdown-menu img[data-src]").each(function(i, el){

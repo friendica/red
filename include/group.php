@@ -18,10 +18,11 @@ function group_add($uid,$name,$public = 0) {
 				intval($r)
 			);
 			if(count($z) && $z[0]['deleted']) {
-				$r = q("UPDATE `groups` SET `deleted` = 0 WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
+				/*$r = q("UPDATE `groups` SET `deleted` = 0 WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
 					intval($uid),
 					dbesc($name)
-				);
+				);*/
+				q('UPDATE groups SET deleted = 0 WHERE id = %d', intval($z[0]['id']));
 				notice( t('A deleted group with this name was revived. Existing item permissions <strong>may</strong> apply to this group and any future members. If this is not what you intended, please create another group with a different name.') . EOL); 
 			}
 			return true;
@@ -107,7 +108,7 @@ function group_rmv($uid,$name) {
 		);
 
 		// remove group
-		$r = q("UPDATE `groups` SET `deleted` = 1 WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
+		$r = q("UPDATE `groups` SET `deleted` = 1 WHERE `uid` = %d AND `name` = '%s'",
 			intval($uid),
 			dbesc($name)
 		);
@@ -152,7 +153,7 @@ function group_rmv_member($uid,$name,$member) {
 		return false;
 	if(! ( $uid && $gid && $member))
 		return false;
-	$r = q("DELETE FROM `group_member` WHERE `uid` = %d AND `gid` = %d AND xchan = '%s' LIMIT 1 ",
+	$r = q("DELETE FROM `group_member` WHERE `uid` = %d AND `gid` = %d AND xchan = '%s' ",
 		intval($uid),
 		intval($gid),
 		dbesc($member)
@@ -199,7 +200,7 @@ function group_get_members($gid) {
 	if(intval($gid)) {
 		$r = q("SELECT * FROM `group_member` 
 			LEFT JOIN abook ON abook_xchan = `group_member`.`xchan` left join xchan on xchan_hash = abook_xchan
-			WHERE `gid` = %d AND abook_channel = %d and `group_member`.`uid` = %d and not ( xchan_flags & %d ) and not ( abook_flags & %d ) and not ( abook_flags & %d ) ORDER BY xchan_name ASC ",
+			WHERE `gid` = %d AND abook_channel = %d and `group_member`.`uid` = %d and not ( xchan_flags & %d )>0 and not ( abook_flags & %d )>0 and not ( abook_flags & %d )>0 ORDER BY xchan_name ASC ",
 			intval($gid),
 			intval(local_user()),
 			intval(local_user()),

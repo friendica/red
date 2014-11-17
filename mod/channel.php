@@ -64,7 +64,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	if($update) {
 		// Ensure we've got a profile owner if updating.
-		$a->profile['profile_uid'] = $update;
+		$a->profile['profile_uid'] = $a->profile_uid = $update;
 	}
 	else {
 		if($a->profile['profile_uid'] == local_user()) {
@@ -141,17 +141,17 @@ function channel_content(&$a, $update = 0, $load = false) {
 	if(($update) && (! $load)) {
 		if ($mid) {
 			$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d AND item_restrict = 0
-				AND (item_flags &  %d) AND (item_flags & %d) $sql_extra limit 1",
+				AND (item_flags &  %d)>0 AND (item_flags & %d)>0 $sql_extra limit 1",
 				dbesc($mid),
 				intval($a->profile['profile_uid']),
 				intval(ITEM_WALL),
 				intval(ITEM_UNSEEN)
 			);
 		} else {
-			$r = q("SELECT distinct parent AS `item_id` from item
+			$r = q("SELECT distinct parent AS `item_id`, created from item
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE uid = %d AND item_restrict = 0
-				AND (item_flags &  %d) AND ( item_flags & %d ) 
+				AND (item_flags &  %d)>0 AND ( item_flags & %d )>0
 				AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra
 				ORDER BY created DESC",
@@ -179,12 +179,12 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 		$itemspage = get_pconfig(local_user(),'system','itemspage');
 		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
-		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
+		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']), intval($a->pager['start']));
 
 		if($load || ($_COOKIE['jsAvailable'] != 1)) {
 			if ($mid) {
 				$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d AND item_restrict = 0
-					AND (item_flags &  %d) $sql_extra limit 1",
+					AND (item_flags &  %d)>0 $sql_extra limit 1",
 					dbesc($mid),
 					intval($a->profile['profile_uid']),
 					intval(ITEM_WALL)
@@ -194,10 +194,10 @@ function channel_content(&$a, $update = 0, $load = false) {
 				}
 
 			} else {
-				$r = q("SELECT distinct id AS item_id FROM item 
+				$r = q("SELECT distinct id AS item_id, created FROM item 
 					left join abook on item.author_xchan = abook.abook_xchan
 					WHERE uid = %d AND item_restrict = 0
-					AND (item_flags &  %d) and (item_flags & %d)
+					AND (item_flags &  %d)>0 and (item_flags & %d)>0
 					AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 					$sql_extra $sql_extra2
 					ORDER BY created DESC $pager_sql ",
@@ -283,8 +283,8 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	if($is_owner) {
 
-		$r = q("UPDATE item SET item_flags = (item_flags ^ %d)
-			WHERE (item_flags & %d) AND (item_flags & %d) AND uid = %d ",
+		$r = q("UPDATE item SET item_flags = (item_flags & ~%d)
+			WHERE (item_flags & %d)>0 AND (item_flags & %d)>0 AND uid = %d ",
 			intval(ITEM_UNSEEN),
 			intval(ITEM_UNSEEN),
 			intval(ITEM_WALL),

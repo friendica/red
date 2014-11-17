@@ -13,6 +13,19 @@ $(document).ready(function() {
 		'transition' : 'elastic' 
 	});
 
+	var a;
+	a = $("#photo-edit-newtag").autocomplete({ 
+		serviceUrl: baseurl + '/acl',
+		minChars: 2,
+		width: 250,
+		id: 'newtag-ac',
+		onSelect: function(value,data) {
+			$("#photo-edit-newtag").val(data);
+		},
+	});
+	a.setOptions({ params: { type: 'p' }});
+
+
 	$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
 		var selstr;
 		$('#contact_allow option:selected, #contact_deny option:selected, #group_allow option:selected, #group_deny option:selected').each( function() {

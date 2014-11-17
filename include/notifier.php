@@ -58,6 +58,7 @@ require_once('include/html2plain.php');
  *       expire                 channel_id
  *       relay					item_id (item was relayed to owner, we will deliver it as owner)
  *       location               channel_id
+ *       request                channel_id            xchan_hash             message_id
  *
  */
 
@@ -98,7 +99,7 @@ function notifier_run($argv, $argc){
 		// Get the recipient	
 		$r = q("select abook.*, hubloc.* from abook 
 			left join hubloc on hubloc_hash = abook_xchan
-			where abook_id = %d and not ( abook_flags & %d ) limit 1",
+			where abook_id = %d and not ( abook_flags & %d )>0 limit 1",
 			intval($item_id),
 			intval(ABOOK_FLAG_SELF)
 		);
@@ -142,6 +143,7 @@ function notifier_run($argv, $argc){
 
 
 	$expire = false;
+	$request = false;
 	$mail = false;
 	$fsuggest = false;
 	$top_level = false;
@@ -175,6 +177,22 @@ function notifier_run($argv, $argc){
 			$channel = $s[0];
 
 	}
+	elseif($cmd === 'request') {
+		$channel_id = $item_id;
+		$xchan = $argv[3];
+		$request_message_id = $argv[4];
+
+		$s = q("select * from channel where channel_id = %d limit 1",
+			intval($channel_id)
+		);
+		if($s)
+			$channel = $s[0];
+
+		$private = true;
+		$recipients[] = $xchan;
+		$packet_type = 'request';
+		$normal_mode = false;
+	}
 	elseif($cmd === 'expire') {
 
 		// FIXME
@@ -187,11 +205,12 @@ function notifier_run($argv, $argc){
 
 		$normal_mode = false;
 		$expire = true;
-		$items = q("SELECT * FROM item WHERE uid = %d AND ( item_flags & %d )
-			AND ( item_restrict & %d ) AND `changed` > UTC_TIMESTAMP() - INTERVAL 10 MINUTE",
+		$items = q("SELECT * FROM item WHERE uid = %d AND ( item_flags & %d )>0
+			AND ( item_restrict & %d )>0 AND `changed` > %s - INTERVAL %s",
 			intval($item_id),
 			intval(ITEM_WALL),
-			intval(ITEM_DELETED)
+			intval(ITEM_DELETED),
+			db_utcnow(), db_quoteinterval('10 MINUTE')
 		);
 		$uid = $item_id;
 		$item_id = 0;
@@ -477,13 +496,19 @@ function notifier_run($argv, $argc){
 			where hubloc_hash in (" . implode(',',$recipients) . ") group by hubloc_sitekey order by hubloc_connected desc limit 1");
 	} 
 	else {
-
+		if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+			$r = q("select distinct on (hubloc_sitekey) hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+				where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)>0  and not (hubloc_status & %d)>0",
+				intval(HUBLOC_FLAGS_DELETED),
+				intval(HUBLOC_OFFLINE)
+			);
+		} else {
 		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)  and not (hubloc_status & %d) group by hubloc_sitekey",
+			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)>0  and not (hubloc_status & %d)>0 group by hubloc_sitekey",
 			intval(HUBLOC_FLAGS_DELETED),
 			intval(HUBLOC_OFFLINE)
 		);
-
+		}
 	}
 
 	if(! $r) {
@@ -550,6 +575,7 @@ function notifier_run($argv, $argc){
 				'mail' => $mail,
 				'location' => $location,
 				'fsuggest' => $fsuggest,
+				'request' => $request,
 				'normal_mode' => $normal_mode,
 				'packet_type' => $packet_type,
 				'walltowall' => $walltowall
@@ -566,6 +592,21 @@ function notifier_run($argv, $argc){
 		$hash = random_string();
 		if($packet_type === 'refresh' || $packet_type === 'purge') {
 			$n = zot_build_packet($channel,$packet_type);
+			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
+				dbesc($hash),
+				intval($channel['channel_account_id']),
+				intval($channel['channel_id']),
+				dbesc('zot'),
+				dbesc($hub['hubloc_callback']),
+				intval(1),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc($n),
+				dbesc('')
+			);
+		}
+		elseif($packet_type === 'request') {
+			$n = zot_build_packet($channel,'request',$env_recips,$hub['hubloc_sitekey'],$hash,array('message_id' => $request_message_id));
 			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
 				dbesc($hash),
 				intval($channel['channel_account_id']),

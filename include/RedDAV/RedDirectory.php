@@ -159,7 +159,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		list($parent_path, ) = DAV\URLUtil::splitPath($this->red_path);
 		$new_path = $parent_path . '/' . $name;
 
-		$r = q("UPDATE attach SET filename = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+		$r = q("UPDATE attach SET filename = '%s' WHERE hash = '%s' AND uid = %d",
 			dbesc($name),
 			dbesc($this->folder_hash),
 			intval($this->auth->owner_id)
@@ -197,7 +197,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		$mimetype = z_mime_content_type($name);
 
-		$c = q("SELECT * FROM channel WHERE channel_id = %d AND NOT (channel_pageflags & %d) LIMIT 1",
+		$c = q("SELECT * FROM channel WHERE channel_id = %d AND NOT (channel_pageflags & %d)>0 LIMIT 1",
 			intval($this->auth->owner_id),
 			intval(PAGE_REMOVED)
 		);
@@ -246,7 +246,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		$edited = datetime_convert();
 
 		// updates entry with filesize and timestamp
-		$d = q("UPDATE attach SET filesize = '%s', edited = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+		$d = q("UPDATE attach SET filesize = '%s', edited = '%s' WHERE hash = '%s' AND uid = %d",
 			dbesc($size),
 			dbesc($edited),
 			dbesc($hash),
@@ -254,7 +254,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		);
 
 		// update the folder's lastmodified timestamp
-		$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+		$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d",
 			dbesc($edited),
 			dbesc($this->folder_hash),
 			intval($c[0]['channel_id'])
@@ -293,7 +293,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
-		$r = q("SELECT * FROM channel WHERE channel_id = %d AND NOT (channel_pageflags & %d) LIMIT 1",
+		$r = q("SELECT * FROM channel WHERE channel_id = %d AND NOT (channel_pageflags & %d)>0 LIMIT 1",
 			intval($this->auth->owner_id),
 			intval(PAGE_REMOVED)
 		);
@@ -362,7 +362,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		$channel_name = $path_arr[0];
 
-		$r = q("SELECT channel_id FROM channel WHERE channel_address = '%s' AND NOT ( channel_pageflags & %d ) LIMIT 1",
+		$r = q("SELECT channel_id FROM channel WHERE channel_address = '%s' AND NOT ( channel_pageflags & %d )>0 LIMIT 1",
 			dbesc($channel_name),
 			intval(PAGE_REMOVED)
 		);
@@ -380,7 +380,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		$os_path = '';
 
 		for ($x = 1; $x < count($path_arr); $x++) {
-			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d)",
+			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d)>0",
 				dbesc($folder),
 				dbesc($path_arr[$x]),
 				intval($channel_id),
@@ -440,7 +440,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		$free = disk_free_space('store');
 
 		if ($this->auth->owner_id) {
-			$c = q("select * from channel where channel_id = %d and not (channel_pageflags & %d) limit 1",
+			$c = q("select * from channel where channel_id = %d and not (channel_pageflags & %d)>0 limit 1",
 				intval($this->auth->owner_id),
 				intval(PAGE_REMOVED)
 			);

@@ -1,9 +1,5 @@
 [b]How to install the Red Matrix on a Raspberry Pi[/b]
 
-[zrl=[baseurl]/help/main] Back to the main page[/zrl]
-Last update 2014-02-22
-[hr]
-
 You just bought a Raspberry Pi and want to run the RED Matrix with your own domain name?
 
 Then this page is for you! You will:
@@ -342,4 +338,4 @@ Save and exit.
 Follow the instructions here:
 [url=https://github.com/friendica/friendica/wiki/Running-Friendica-with-SSL]https://github.com/friendica/friendica/wiki/Running-Friendica-with-SSL[/url]
 
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/main_footer.bb;

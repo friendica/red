@@ -31,3 +31,5 @@ See Also
 [zrl=[baseurl]/help/permissions]Permissions[/zrl]
 [zrl=[baseurl]/help/profiles]Profiles[/zrl]
 [zrl=[baseurl]/help/remove_account]Remove Account[/zrl]
+
+#include doc/macros/main_footer.bb;

@@ -32,6 +32,7 @@ var include_2api_8php =
     [ "api_oauth_access_token", "include_2api_8php.html#aff322705cc6084b329003fc8eab0aad0", null ],
     [ "api_oauth_request_token", "include_2api_8php.html#aa1bddb580510e70cc1a7b7381667f1a3", null ],
     [ "api_photos", "include_2api_8php.html#aa6fc3bc8c0fad1d081db0dcc456dd77f", null ],
+    [ "api_red_xchan", "include_2api_8php.html#a4fe872332ff0bd8d5eae2f0c6819cb60", null ],
     [ "api_register_func", "include_2api_8php.html#ac2c2b18c426d697d11a830bca146be8a", null ],
     [ "api_rss_extra", "include_2api_8php.html#a6a04b48168ba1d9dd2de3081a630611f", null ],
     [ "api_status_show", "include_2api_8php.html#a645397787618b5c548a31e8686e8cca4", null ],

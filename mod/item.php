@@ -32,8 +32,17 @@ function item_post(&$a) {
 	require_once('include/security.php');
 
 	$uid = local_user();
-
 	$channel = null;
+	$observer = null;
+
+	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
+	require_once('include/identity.php');
+	$sys = get_sys_channel();
+	if($sys && $profile_uid && ($sys['channel_id'] == $profile_uid) && is_site_admin()) {
+		$uid = intval($sys['channel_id']);
+		$channel = $sys;
+		$observer = $sys;
+	}
 
 	if(x($_REQUEST,'dropitems')) {
 		require_once('include/items.php');
@@ -70,14 +79,13 @@ function item_post(&$a) {
 
 	$message_id  = ((x($_REQUEST,'message_id') && $api_source)  ? strip_tags($_REQUEST['message_id'])       : '');
 	$created     = ((x($_REQUEST,'created'))     ? datetime_convert('UTC','UTC',$_REQUEST['created']) : datetime_convert());
-	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
 	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])        : 0);
 	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])     : '');
 	$return_path = ((x($_REQUEST,'return'))      ? $_REQUEST['return']                 : '');
 	$preview     = ((x($_REQUEST,'preview'))     ? intval($_REQUEST['preview'])        : 0);
 	$categories  = ((x($_REQUEST,'category'))    ? escape_tags($_REQUEST['category'])  : '');
 	$webpage     = ((x($_REQUEST,'webpage'))     ? intval($_REQUEST['webpage'])        : 0);
-	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']) : '');
+    $pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags(urlencode($_REQUEST['pagetitle'])) : '');
 	$layout_mid  = ((x($_REQUEST,'layout_mid'))  ? escape_tags($_REQUEST['layout_mid']): '');
 	$plink       = ((x($_REQUEST,'permalink'))   ? escape_tags($_REQUEST['permalink']) : '');
 
@@ -87,8 +95,8 @@ function item_post(&$a) {
 	/*
 	 * Check service class limits
 	 */
-	if (local_user() && !(x($_REQUEST,'parent')) && !(x($_REQUEST,'post_id'))) {
-		$ret = item_check_service_class(local_user(),x($_REQUEST,'webpage'));
+	if ($uid && !(x($_REQUEST,'parent')) && !(x($_REQUEST,'post_id'))) {
+		$ret = item_check_service_class($uid,x($_REQUEST,'webpage'));
 		if (!$ret['success']) { 
 			notice( t($ret['message']) . EOL) ;
 			if(x($_REQUEST,'return')) 
@@ -112,6 +120,7 @@ function item_post(&$a) {
 	$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : 0);
 	$parent_mid = ((x($_REQUEST,'parent_mid')) ? trim($_REQUEST['parent_mid']) : '');
 
+	$route = '';
 	$parent_item = null;
 	$parent_contact = null;
 	$thr_parent = '';
@@ -128,11 +137,11 @@ function item_post(&$a) {
 				intval($parent)
 			);
 		}
-		elseif($parent_mid && local_user()) {
+		elseif($parent_mid && $uid) {
 			// This is coming from an API source, and we are logged in
 			$r = q("SELECT * FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($parent_mid),
-				intval(local_user())
+				intval($uid)
 			);
 		}
 		// if this isn't the real parent of the conversation, find it
@@ -163,12 +172,12 @@ function item_post(&$a) {
 
 		$thr_parent = $parent_mid;
 
+		$route = $parent_item['route'];
 
 	}
 
-
-	$observer = $a->get_observer();
-
+	if(! $observer)
+		$observer = $a->get_observer();
 
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);
@@ -221,7 +230,7 @@ function item_post(&$a) {
 
 
 	if(! $channel) {
-		if(local_user() && local_user() == $profile_uid) {
+		if($uid && $uid == $profile_uid) {
 			$channel = $a->get_channel();
 		}
 		else {
@@ -257,8 +266,25 @@ function item_post(&$a) {
 		killme();
 	}
 
+	$walltowall = false;
+	$walltowall_comment = false;
+
 	if($observer) {
 		logger('mod_item: post accepted from ' . $observer['xchan_name'] . ' for ' . $owner_xchan['xchan_name'], LOGGER_DEBUG);
+
+		// wall-to-wall detection.
+		// For top-level posts, if the author and owner are different it's a wall-to-wall
+		// For comments, We need to additionally look at the parent and see if it's a wall post that originated locally.
+
+		if($observer['xchan_name'] != $owner_xchan['xchan_name'])  {
+			if($parent_item && ($parent_item['item_flags'] & (ITEM_WALL|ITEM_ORIGIN)) == (ITEM_WALL|ITEM_ORIGIN)) {
+				$walltowall_comment = true;
+				$walltowall = true;
+			}
+			if(! $parent) {
+				$walltowall = true;		
+			}
+		}
 	}
 		
 	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
@@ -324,6 +350,15 @@ function item_post(&$a) {
 			&& (! array_key_exists('group_allow',$_REQUEST))
 			&& (! array_key_exists('contact_deny',$_REQUEST))
 			&& (! array_key_exists('group_deny',$_REQUEST))) {
+			$str_group_allow   = $channel['channel_allow_gid'];
+			$str_contact_allow = $channel['channel_allow_cid'];
+			$str_group_deny    = $channel['channel_deny_gid'];
+			$str_contact_deny  = $channel['channel_deny_cid'];
+		}
+		elseif($walltowall) {
+
+			// use the channel owner's default permissions
+
 			$str_group_allow   = $channel['channel_allow_gid'];
 			$str_contact_allow = $channel['channel_allow_cid'];
 			$str_group_deny    = $channel['channel_deny_gid'];
@@ -418,7 +453,7 @@ function item_post(&$a) {
 			intval($profile_uid)
 		);
 		if($z && ($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE)) {
-			if(local_user() && (get_account_id() == $z[0]['account_id'])) {
+			if($uid && (get_account_id() == $z[0]['account_id'])) {
 				$execflag = true;
 			}
 			else {
@@ -433,7 +468,7 @@ function item_post(&$a) {
 
 	if($mimetype === 'text/bbcode') {
 
-		if(local_user() && local_user() == $profile_uid && feature_enabled(local_user(),'markdown')) {
+		if($uid && $uid == $profile_uid && feature_enabled($uid,'markdown')) {
 			require_once('include/bb2diaspora.php');			
 			$body = diaspora2bb(escape_tags($body),true);
 		}
@@ -566,11 +601,18 @@ function item_post(&$a) {
 				if($fullnametagged)
 					continue;
 
-				$success = handle_tag($a, $body, $access_tag, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
+				$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : $profile_uid , $tag); 
 				logger('handle_tag: ' . print_r($success,tue), LOGGER_DATA);
 				if(($access_tag) && (! $parent_item)) {
 					logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DATA);
-					if ($first_access_tag) {
+					if ($first_access_tag && (! get_pconfig($profile_uid,'system','no_private_mention_acl_override'))) {
+
+						// This is a tough call, hence configurable. The issue is that one can type in a @!privacy mention
+						// and also have a default ACL (perhaps from viewing a collection) and could be suprised that the 
+						// privacy mention wasn't the only recipient. So the default is to wipe out the existing ACL if a
+						// private mention is found. This can be over-ridden if you wish private mentions to be in 
+						// addition to the current ACL settings.
+
 						$str_contact_allow = '';
 						$str_group_allow = '';
 						$first_access_tag = false;
@@ -720,6 +762,7 @@ function item_post(&$a) {
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 	$datarray['term']           = $post_tags;
 	$datarray['plink']          = $plink;
+	$datarray['route']          = $route;
 
 	// preview mode - prepare the body for display and send it via json
 
@@ -761,7 +804,7 @@ function item_post(&$a) {
 
 		$datarray['body'] = z_input_filter($datarray['uid'],$datarray['body'],$datarray['mimetype']);
 
-		if(local_user()) {
+		if($uid) {
 			if($channel['channel_hash'] === $datarray['author_xchan']) {
 				$datarray['sig'] = base64url_encode(rsa_sign($datarray['body'],$channel['channel_prvkey']));
 				$datarray['item_flags'] = $datarray['item_flags'] | ITEM_VERIFIED;
@@ -844,7 +887,7 @@ function item_post(&$a) {
 		// They will show up as people comment on them.
 
 		if($parent_item['item_restrict'] & ITEM_HIDDEN) {
-			$r = q("UPDATE `item` SET `item_restrict` = %d WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `item` SET `item_restrict` = %d WHERE `id` = %d",
 				intval($parent_item['item_restrict'] - ITEM_HIDDEN),
 				intval($parent_item['id'])
 			);
@@ -859,10 +902,9 @@ function item_post(&$a) {
 
 	if($parent) {
 		// Store the comment signature information in case we need to relay to Diaspora
-//FIXME
 		$ditem = $datarray;
 		$ditem['author'] = $observer;
-		store_diaspora_comment_sig($ditem,$channel,$parent_item, $post_id);
+		store_diaspora_comment_sig($ditem,$channel,$parent_item, $post_id, (($walltowall_comment) ? 1 : 0));
 	}
 
 	update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);
@@ -1137,6 +1179,8 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 
 		// $r is set if we found something
 
+		$channel = get_app()->get_channel();
+
 		if($r) {
 			$profile = $r[0]['xchan_url'];
 			$newname = $r[0]['xchan_name'];
@@ -1156,9 +1200,10 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			if(local_user() && local_user() == $profile_uid) {
 				require_once('include/group.php');
 				$grp = group_byname($profile_uid,$name);
+
 				if($grp) {
 					$g = q("select hash from groups where id = %d and visible = 1 limit 1",
-						intval($grp[0]['id'])
+						intval($grp)
 					);
 					if($g && $exclusive) {
 						$access_tag .= 'gid:' . $g[0]['hash'];
@@ -1171,6 +1216,10 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 				}		
 			}
 		}
+
+		if(($exclusive) && (! $access_tag)) {
+			$access_tag .= 'cid:' . $channel['channel_hash'];
+		}			
 
 		// if there is an url for this channel
 
@@ -1252,7 +1301,7 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 						$private = (($str_contact_allow || $str_group_allow || $str_contact_deny || $str_group_deny) ? true : false);
 
 						$r = q("UPDATE item SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
-							WHERE id = %d AND uid = %d limit 1",
+							WHERE id = %d AND uid = %d",
 							dbesc($str_contact_allow),
 							dbesc($str_group_allow),
 							dbesc($str_contact_deny),
@@ -1302,7 +1351,7 @@ function item_check_service_class($channel_id,$iswebpage) {
 	if ($iswebpage) {
 		$r = q("select count(i.id)  as total from item i 
 			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
-			and i.parent=i.id and (i.item_restrict & %d) and not (i.item_restrict & %d) and i.uid= %d ",
+			and i.parent=i.id and (i.item_restrict & %d)>0 and not (i.item_restrict & %d)>0 and i.uid= %d ",
 			intval(ITEM_WEBPAGE),
 			intval(ITEM_DELETED),
 		intval($channel_id)

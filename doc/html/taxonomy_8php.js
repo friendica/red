@@ -1,5 +1,6 @@
 var taxonomy_8php =
 [
+    [ "catblock", "taxonomy_8php.html#aa8f8a1ff85daef046298e93c83e7a1b4", null ],
     [ "dir_tagadelic", "taxonomy_8php.html#a088371f4bc19155b2291508f5cd63332", null ],
     [ "dir_tagblock", "taxonomy_8php.html#a599ee71dd3194c8127b00dabec77abc1", null ],
     [ "file_tag_decode", "taxonomy_8php.html#a08df5164926d2b31b8e9fcfe919de2b6", null ],

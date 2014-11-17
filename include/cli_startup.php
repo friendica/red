@@ -19,8 +19,8 @@ function cli_startup() {
 		date_default_timezone_set($a->timezone);
 
     	require_once('include/dba/dba_driver.php');
-	    $db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data);
-    	unset($db_host, $db_port, $db_user, $db_pass, $db_data);
+	    $db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
+    	unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
   	};
 
 	require_once('include/session.php');

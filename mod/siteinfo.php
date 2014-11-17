@@ -8,7 +8,7 @@ function siteinfo_init(&$a) {
 		
 		$sql_extra = '';
 
-		$r = q("select * from channel left join account on account_id = channel_account_id where ( account_roles & 4096 ) and account_default_channel = channel_id");
+		$r = q("select * from channel left join account on account_id = channel_account_id where ( account_roles & 4096 )>0 and account_default_channel = channel_id");
 
 
 		if($r) {

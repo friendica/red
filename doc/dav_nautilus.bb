@@ -6,4 +6,4 @@
 4. You will be prompted for your username (same as above) and password
 5. Your personal DAV directory will be shown in the window
 
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/cloud_footer.bb;

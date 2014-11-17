@@ -209,13 +209,17 @@ function like_content(&$a) {
 	}
 	else {
 
+		// this is used to like an item or comment
+
 		$item_id = ((argc() == 2) ? notags(trim(argv(1))) : 0);
 
 		logger('like: verb ' . $verb . ' item ' . $item_id, LOGGER_DEBUG);
 
+		// get the item. Allow linked photos (which are normally hidden) to be liked
 
-		$r = q("SELECT * FROM item WHERE id = %d and item_restrict = 0 LIMIT 1",
-			dbesc($item_id)
+		$r = q("SELECT * FROM item WHERE id = %d and (item_restrict = 0 or item_restrict = %d) LIMIT 1",
+			intval($item_id),
+			intval(ITEM_HIDDEN)
 		);
 
 		if(! $item_id || (! $r)) {
@@ -272,7 +276,7 @@ function like_content(&$a) {
 
 			// Already liked/disliked it, delete it
 
-			$r = q("UPDATE item SET item_restrict = ( item_restrict ^ %d ), changed = '%s' WHERE id = %d LIMIT 1",
+			$r = q("UPDATE item SET item_restrict = ( item_restrict & ~%d ), changed = '%s' WHERE id = %d",
 				intval(ITEM_DELETED),
 				dbesc(datetime_convert()),
 				intval($like_item['id'])
@@ -324,6 +328,15 @@ function like_content(&$a) {
 		$item_flags = ITEM_ORIGIN | ITEM_NOTSHOWN;
 		if($item['item_flags'] & ITEM_WALL)
 			$item_flags |= ITEM_WALL;
+
+		// if this was a linked photo and was hidden, unhide it.
+
+		if($item['item_restrict'] & ITEM_HIDDEN) {
+			$r = q("update item set item_restrict = (item_restrict ^ %d) where id = %d",
+				intval(ITEM_HIDDEN),
+				intval($item['id'])
+			);
+		}	
 
 	}
 

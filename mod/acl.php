@@ -11,7 +11,7 @@ function acl_init(&$a){
 	$count = (x($_REQUEST,'count')?$_REQUEST['count']:100);
 	$search = (x($_REQUEST,'search')?$_REQUEST['search']:"");
 	$type = (x($_REQUEST,'type')?$_REQUEST['type']:"");
-	
+	$noforums = (x($_REQUEST,'n') ? $_REQUEST['n'] : false);	
 
 	// For use with jquery.autocomplete for private mail completion
 
@@ -49,7 +49,7 @@ function acl_init(&$a){
 	
 	if ($type=='' || $type=='c'){
 		$r = q("SELECT COUNT(abook_id) AS c FROM abook left join xchan on abook_xchan = xchan_hash 
-				WHERE abook_channel = %d AND not ( abook_flags & %d ) and not (xchan_flags & %d ) $sql_extra2" ,
+				WHERE abook_channel = %d AND not ( abook_flags & %d )>0 and not (xchan_flags & %d )>0 $sql_extra2" ,
 			intval(local_user()),
 			intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED),
 			intval(XCHAN_FLAGS_DELETED)
@@ -59,7 +59,7 @@ function acl_init(&$a){
 		if(intval(get_config('system','taganyone')) || intval(get_pconfig(local_user(),'system','taganyone'))) {
 			if(((! $r) || (! $r[0]['total'])) && $type == 'c') {
 				$r = q("SELECT COUNT(xchan_hash) AS c FROM xchan 
-					WHERE not (xchan_flags & %d ) $sql_extra2" ,
+					WHERE not (xchan_flags & %d )>0 $sql_extra2" ,
 					intval(XCHAN_FLAGS_DELETED)
 				);
 				$contact_count = (int)$r[0]['c'];
@@ -75,8 +75,8 @@ function acl_init(&$a){
 
 		$r = q("SELECT count(xchan_hash) as c
 			FROM abook left join xchan on abook_xchan = xchan_hash
-			WHERE abook_channel = %d and ( (abook_their_perms = null) or (abook_their_perms & %d ))
-			and not ( xchan_flags & %d )
+			WHERE abook_channel = %d and ( (abook_their_perms = null) or (abook_their_perms & %d )>0)
+			and not ( xchan_flags & %d )>0
 			$sql_extra2 ",
 			intval(local_user()),
 			intval(PERMS_W_MAIL),
@@ -87,12 +87,12 @@ function acl_init(&$a){
 			$contact_count = (int)$r[0]['c'];
 
 	}
-	elseif ($type == 'a') {
+	elseif (($type == 'a')||($type == 'p')) {
 
 		// autocomplete for Contacts
 
 		$r = q("SELECT COUNT(abook_id) AS c FROM abook left join xchan on abook_xchan = xchan_hash 
-				WHERE abook_channel = %d and not ( xchan_flags & %d ) $sql_extra2" ,
+				WHERE abook_channel = %d and not ( xchan_flags & %d )>0 $sql_extra2" ,
 			intval(local_user()),
 			intval(XCHAN_FLAGS_DELETED)
 		);
@@ -110,17 +110,18 @@ function acl_init(&$a){
 	if ($type=='' || $type=='g'){
 		
 		$r = q("SELECT `groups`.`id`, `groups`.`hash`, `groups`.`name`, 
-				GROUP_CONCAT(DISTINCT `group_member`.`xchan` SEPARATOR ',') as uids
+				%s as uids
 				FROM `groups`,`group_member` 
 				WHERE `groups`.`deleted` = 0 AND `groups`.`uid` = %d 
 					AND `group_member`.`gid`=`groups`.`id`
 					$sql_extra
 				GROUP BY `groups`.`id`
 				ORDER BY `groups`.`name` 
-				LIMIT %d,%d",
+				LIMIT %d OFFSET %d",
+			db_concat('group_member.xchan', ','),
 			intval(local_user()),
-			intval($start),
-			intval($count)
+			intval($count),
+			intval($start)
 		);
 
 		foreach($r as $g){
@@ -140,7 +141,7 @@ function acl_init(&$a){
 	if ($type=='' || $type=='c') {
 		$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, abook_flags 
 				FROM abook left join xchan on abook_xchan = xchan_hash 
-				WHERE abook_channel = %d AND not ( abook_flags & %d ) and not (xchan_flags & %d ) $sql_extra2 order by xchan_name asc" ,
+				WHERE abook_channel = %d AND not ( abook_flags & %d )>0 and not (xchan_flags & %d )>0 $sql_extra2 order by xchan_name asc" ,
 			intval(local_user()),
 			intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED),
 			intval(XCHAN_FLAGS_DELETED)
@@ -149,7 +150,7 @@ function acl_init(&$a){
 			if((! $r) && $type == 'c') {
 				$r = q("SELECT substr(xchan_hash,1,18) as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, 0 as abook_their_perms, 0 as abook_flags 
 					FROM xchan 
-					WHERE not (xchan_flags & %d ) $sql_extra2 order by xchan_name asc" ,
+					WHERE not (xchan_flags & %d )>0 $sql_extra2 order by xchan_name asc" ,
 					intval(XCHAN_FLAGS_DELETED)
 				);
 			}
@@ -159,8 +160,8 @@ function acl_init(&$a){
 
 		$r = q("SELECT xchan_hash as id, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_url as url 
 			FROM abook left join xchan on abook_xchan = xchan_hash
-			WHERE abook_channel = %d and ( (abook_their_perms = null) or (abook_their_perms & %d ))
-			and not (xchan_flags & %d)
+			WHERE abook_channel = %d and ( (abook_their_perms = null) or (abook_their_perms & %d )>0)
+			and not (xchan_flags & %d)>0
 			$sql_extra3
 			ORDER BY `xchan_name` ASC ",
 			intval(local_user()),
@@ -168,10 +169,10 @@ function acl_init(&$a){
 			intval(XCHAN_FLAGS_DELETED)
 		);
 	}
-	elseif($type == 'a') {
+	elseif(($type == 'a') || ($type == 'p')) {
 		$r = q("SELECT abook_id as id, xchan_name as name, xchan_hash as hash, xchan_addr as nick, xchan_photo_s as micro, xchan_network as network, xchan_url as url, xchan_addr as attag , abook_their_perms FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d
-			and not (xchan_flags & %d)
+			and not (xchan_flags & %d)>0
 			$sql_extra3
 			ORDER BY xchan_name ASC ",
 			intval(local_user()),
@@ -204,7 +205,7 @@ function acl_init(&$a){
 		$r = array();
 
 
-	if($type == 'm' || $type == 'a') {
+	if($type == 'm' || $type == 'a' || $type == 'p') {
 		$x = array();
 		$x['query']       = $search;
 		$x['photos']      = array();
@@ -216,7 +217,7 @@ function acl_init(&$a){
 				$x['photos'][]      = $g['micro'];
 				$x['links'][]       = $g['url'];
 				$x['suggestions'][] = $g['name'];
-				$x['data'][]        = $g['id'];
+				$x['data'][]        = (($type === 'p') ? '@' . str_replace(' ','_',$g['name']) : $g['id']);
 			}
 		}
 		echo json_encode($x);
@@ -230,7 +231,7 @@ function acl_init(&$a){
 			if(strpos($g['hash'],'/'))
 				continue;
 
-			if(($g['abook_their_perms'] & PERMS_W_TAGWALL) && $type == 'c') {
+			if(($g['abook_their_perms'] & PERMS_W_TAGWALL) && $type == 'c' && (! $noforums)) {
 				$contacts[] = array(
 					"type"     => "c",
 					"photo"    => "images/twopeople.png",

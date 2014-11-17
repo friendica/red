@@ -30,7 +30,7 @@ function profiles_init(&$a) {
 			dbesc($profile_guid),
 			intval(local_user())
 		);
-		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d",
 			intval(argv(2)),
 			intval(local_user())
 		);
@@ -233,40 +233,28 @@ function profiles_post(&$a) {
 			return;
 		}
 
-		if($_POST['dob']) {
-			$year = substr($_POST['dob'],0,4);
-			$month = substr($_POST['dob'],5,2);
-			$day = substr($_POST['dob'],8,2);
+		$dob = $_POST['dob'] ? escape_tags(trim($_POST['dob'])) : '0000-00-00'; // FIXME: Needs to be validated?
+
+		$y = substr($dob,0,4);
+		if((! ctype_digit($y)) || ($y < 1900))
+			$ignore_year = true;
+		else
+			$ignore_year = false;
+
+		if($dob != '0000-00-00') {
+			if(strpos($dob,'0000-') === 0) {
+				$ignore_year = true;
+				$dob = substr($dob,5);
+			}
+			$dob = datetime_convert('UTC','UTC',(($ignore_year) ? '1900-' . $dob : $dob),(($ignore_year) ? 'm-d' : 'Y-m-d'));
+			if($ignore_year)
+				$dob = '0000-' . $dob;
 		}
-	
-		$year = intval($_POST['year']);
-		if($year < 1900 || $year > 2100 || $year < 0)
-			$year = 0;
-		$month = intval($_POST['month']);
-			if(($month > 12) || ($month < 0))
-				$month = 0;
-		$mtab = array(0,31,29,31,30,31,30,31,31,30,31,30,31);
-		$day = intval($_POST['day']);
-			if(($day > $mtab[$month]) || ($day < 0))
-				$day = 0;
-
-//		if($year && (! ($month && $day))) {
-//			$month = 1; $day = 1;
-//		}
-
-
-		$dob = '0000-00-00';
-		$dob = sprintf('%04d-%02d-%02d',$year,$month,$day);
-
 			
 		$name = escape_tags(trim($_POST['name']));
 
 		if($orig[0]['name'] != $name)
 			$namechanged = true;
-
-
-
-
 
 		$pdesc        = escape_tags(trim($_POST['pdesc']));
 		$gender       = escape_tags(trim($_POST['gender']));
@@ -366,7 +354,7 @@ function profiles_post(&$a) {
 						dbesc($zz['field_name'])
 					);
 					if($w) {
-						q("update profext set v = '%s' where id = %d limit 1",
+						q("update profext set v = '%s' where id = %d",
 							dbesc(escape_tags(trim($_POST[$zz['field_name']]))),
 							intval($w[0]['id'])
 						);
@@ -481,7 +469,7 @@ function profiles_post(&$a) {
 			`work` = '%s',
 			`education` = '%s',
 			`hide_friends` = %d
-			WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			WHERE `id` = %d AND `uid` = %d",
 			dbesc($profile_name),
 			dbesc($name),
 			dbesc($pdesc),
@@ -534,7 +522,7 @@ function profiles_post(&$a) {
 		$channel = $a->get_channel();
 
 		if($namechanged && $is_default) {
-			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date = '%s' WHERE xchan_hash = '%s' limit 1",
+			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date = '%s' WHERE xchan_hash = '%s'",
 				dbesc($name),
 				dbesc(datetime_convert()),
 				dbesc($channel['xchan_hash'])
@@ -542,6 +530,8 @@ function profiles_post(&$a) {
 		}
 
 		if($is_default) {
+			// reload the info for the sidebar widget - why does this not work?
+			profile_load($a,$channel['channel_address']);
 			proc_run('php','include/directory.php',local_user());
 		}
 	}
@@ -654,7 +644,7 @@ logger('extra_fields: ' . print_r($extra_fields,true));
 			'$lbl_fullname' => t('Your Full Name:'),
 			'$lbl_title'    => t('Title/Description:'),
 			'$lbl_gender'   => t('Your Gender:'),
-			'$lbl_bd'       => sprintf( t("Birthday \x28%s\x29:"),datesel_format($f)),
+			'$lbl_bd'       => t("Birthday :"),
 			'$lbl_address'  => t('Street Address:'),
 			'$lbl_city'     => t('Locality/City:'),
 			'$lbl_zip'      => t('Postal/Zip Code:'),

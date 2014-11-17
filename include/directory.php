@@ -42,7 +42,7 @@ function directory_run($argv, $argc){
 
 		local_dir_update($argv[1],$force);
 
-		q("update channel set channel_dirdate = '%s' where channel_id = %d limit 1",
+		q("update channel set channel_dirdate = '%s' where channel_id = %d",
 			dbesc(datetime_convert()),
 			intval($channel['channel_id'])
 		);
@@ -85,7 +85,7 @@ function directory_run($argv, $argc){
 		);
 	}
 	else {
-		q("update channel set channel_dirdate = '%s' where channel_id = %d limit 1",
+		q("update channel set channel_dirdate = '%s' where channel_id = %d",
 			dbesc(datetime_convert()),
 			intval($channel['channel_id'])
 		);

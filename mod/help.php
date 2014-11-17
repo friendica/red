@@ -34,8 +34,6 @@ function help_content(&$a) {
 
 	$doctype = 'markdown';
 
-	require_once('library/markdown.php');
-
 	$text = '';
 
 	if(argc() > 1) {
@@ -73,16 +71,21 @@ function help_content(&$a) {
 		));
 	}
 
-	$text = preg_replace_callback("/#include (.*?)\;/ism", 'preg_callback_help_include', $text);
-
 	if($doctype === 'html')
 		$content = $text;
-	if($doctype === 'markdown')	
+	if($doctype === 'markdown')	{
+		require_once('library/markdown.php');
+		# escape #include tags
+		$text = preg_replace('/#include/ism', '%%include', $text);
 		$content = Markdown($text);
+		$content = preg_replace('/%%include/ism', '#include', $content);
+	}
 	if($doctype === 'bbcode') {
 		require_once('include/bbcode.php');
 		$content = bbcode($text);
 	} 
+
+	$content = preg_replace_callback("/#include (.*?)\;/ism", 'preg_callback_help_include', $content);
 
 	return replace_macros(get_markup_template("help.tpl"), array(
 		'$content' => $content
@@ -93,8 +96,17 @@ function help_content(&$a) {
 
 function preg_callback_help_include($matches) {
 
-	if($matches[1])
-		return str_replace($matches[0],load_doc_file($matches[1]),$matches[0]);
+	if($matches[1]) {
+		$include = str_replace($matches[0],load_doc_file($matches[1]),$matches[0]);
+		if(preg_match('/\.bb$/', $matches[1])) {
+			require_once('include/bbcode.php');
+			$include = bbcode($include);
+		} elseif(preg_match('/\.md$/', $matches[1])) {
+			require_once('library/markdown.php');
+			$include = Markdown($include);
+		}
+		return $include;
+	}
 
 }
 

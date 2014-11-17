@@ -12,7 +12,7 @@ Enter a password of your choice, and repeat it in the second box to ensure it wa
 
 [b]Terms Of Service[/b]
 
-Click the link to read the site's terms of service. Once you've read them, tick the box in the register form to confirm.
+Click the link to read the site's [zrl=[baseurl]/help/TermsOfService]Terms of Service[/zrl]. Once you've read them, tick the box in the register form to confirm.
 
 [b]Register[/b]
 
@@ -31,4 +31,5 @@ See Also
 [zrl=[baseurl]/help/permissions]Permissions[/zrl]
 [zrl=[baseurl]/help/remove_account]Remove Account[/zrl]
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;
+

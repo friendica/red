@@ -38,7 +38,7 @@ EOT;
 			intval($channel['channel_id'])
 		);
 
-		$chans = q("select channel_name, channel_id from channel where channel_account_id = %d and not ( channel_pageflags & %d ) order by channel_name ",
+		$chans = q("select channel_name, channel_id from channel where channel_account_id = %d and not ( channel_pageflags & %d )>0 order by channel_name ",
 			intval(get_account_id()),
 			intval(PAGE_REMOVED)
 		);
@@ -84,6 +84,7 @@ EOT;
 
 	$nav['usermenu']=array();
 	$userinfo = null;
+	$nav['loginmenu']=array();
 
 	if(local_user()) {
 
@@ -120,8 +121,9 @@ EOT;
 			$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'));
 	}
 	else {
-		if(! get_account_id()) 
-			$nav['login'] = Array('login',t('Login'), ($a->module == 'login'?'selected':''), t('Sign in'));
+		if(! get_account_id())  {
+			$nav['loginmenu'][] = Array('login',t('Login'),'',t('Sign in'));
+		}
 		else
 			$nav['alogout'] = Array('logout',t('Logout'), "", t('End this session'));
 
@@ -136,14 +138,11 @@ EOT;
 	}
 
 	if($observer) {
-		$nav['locked'] = true;
 		$nav['lock'] = array('logout','','lock', 
 			sprintf( t('%s - click to logout'), $observer['xchan_addr']));
 	}
 	else {
-		$nav['locked'] = false;
-		$nav['lock'] = array('rmagic','','unlock', 
-			t('Click to authenticate to your home hub'));
+		$nav['loginmenu'][] = Array('rmagic',t('Remote authentication'),'',t('Click to authenticate to your home hub'));
 	}
 
 	/**
@@ -174,7 +173,7 @@ EOT;
 	$nav['search'] = array('search', t('Search'), "", t('Search site content'));
 
 
-	$nav['directory'] = array('directory', t('Directory'), "", t('Channel Locator')); 
+	$nav['directory'] = array('directory', t('Directory'), "", t('Channel Directory')); 
 
 
 	/**

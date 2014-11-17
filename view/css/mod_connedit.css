@@ -14,7 +14,7 @@
 	margin-bottom: 5px !important;
 }
 
-.abook-pending-contact, .abook-permschange {
+.abook-pending-contact, .abook-permschange, .abook-autotext {
 	background: orange;
 	font-weight: bold;
 	margin: 10px;

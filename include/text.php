@@ -619,8 +619,8 @@ function get_tags($s) {
 			}
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);
-			// ignore strictly numeric tags like #1
-			if((strpos($mtch,'#') === 0) && ( ctype_digit(substr($mtch,1)) || substr($mtch,1,1) === '^'))
+			// ignore strictly numeric tags like #1 or #^ bookmarks or ## double hash
+			if((strpos($mtch,'#') === 0) && ( ctype_digit(substr($mtch,1)) || substr($mtch,1,1) === '^') || substr($mtch,1,1) === '#')
 				continue;
 			// try not to catch url fragments
 			if(strpos($s,$mtch) && preg_match('/[a-zA-z0-9\/]/',substr($s,strpos($s,$mtch)-1,1)))
@@ -724,7 +724,7 @@ function contact_block() {
 
 	if((! is_array($a->profile)) || ($a->profile['hide_friends']))
 		return $o;
-	$r = q("SELECT COUNT(abook_id) AS total FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d and not ( abook_flags & %d ) and not (xchan_flags & %d)",
+	$r = q("SELECT COUNT(abook_id) AS total FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d and not ( abook_flags & %d )>0 and not (xchan_flags & %d)>0",
 			intval($a->profile['uid']),
 			intval($abook_flags),
 			intval($xchan_flags)
@@ -737,8 +737,12 @@ function contact_block() {
 		$micropro = Null;
 		
 	} else {
-
-		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND not ( abook_flags & %d) and not (xchan_flags & %d ) ORDER BY RAND() LIMIT %d",
+		if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+			$randfunc = 'RANDOM()';
+		} else {
+			$randfunc = 'RAND()';
+		}
+		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND not ( abook_flags & %d)>0 and not (xchan_flags & %d )>0 ORDER BY $randfunc LIMIT %d",
 				intval($a->profile['uid']),
 				intval($abook_flags|ABOOK_FLAG_ARCHIVED),
 				intval($xchan_flags),
@@ -1534,7 +1538,7 @@ function unamp($s) {
 }
 
 function layout_select($channel_id, $current = '') {
-	$r = q("select mid,sid from item left join item_id on iid = item.id where service = 'PDL' and item.uid = item_id.uid and item_id.uid = %d and (item_restrict & %d)",
+	$r = q("select mid,sid from item left join item_id on iid = item.id where service = 'PDL' and item.uid = item_id.uid and item_id.uid = %d and (item_restrict & %d)>0",
 		intval($channel_id),
 		intval(ITEM_PDL)
 	);
@@ -1874,13 +1878,13 @@ function xchan_query(&$items,$abook = true,$effective_uid = 0) {
 	if(count($arr)) {
 		if($abook) {
 			$chans = q("select * from xchan left join hubloc on hubloc_hash = xchan_hash left join abook on abook_xchan = xchan_hash and abook_channel = %d
-				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )",
+				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )>0",
 				intval($item['uid'])
 			);
 		}
 		else {
 			$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
-				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )");
+				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )>0");
 		}
 		$xchans = q("select * from xchan where xchan_hash in (" . implode(',',$arr) . ") and xchan_network in ('rss','unknown')");
 		if(! $chans)
@@ -1909,7 +1913,7 @@ function xchan_mail_query(&$item) {
 
 	if(count($arr)) {
 		$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
-			where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )");
+			where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )>0");
 	}
 	if($chans) {
 		$item['from'] = find_xchan_in_array($item['from_xchan'],$chans);
@@ -2021,12 +2025,22 @@ function json_decode_plus($s) {
 
 
 function design_tools() {
+
 	$channel  = get_app()->get_channel();
+	$sys = false;
+
+	if(get_app()->is_sys && is_site_admin()) {
+		require_once('include/identity.php');
+		$channel = get_sys_channel();
+		$sys = true;
+	}
+
 	$who = $channel['channel_address'];
 
 	return replace_macros(get_markup_template('design_tools.tpl'), array(
 		'$title' => t('Design'),
 		'$who' => $who,
+		'$sys' => $sys,
 		'$blocks' => t('Blocks'),
 		'$menus' => t('Menus'),
 		'$layout' => t('Layouts'),
@@ -2046,7 +2060,7 @@ function normalise_openid($s) {
 
 // used in ajax endless scroll request to find out all the args that the master page was viewing.
 // This was using $_REQUEST, but $_REQUEST also contains all your cookies. So we're restricting it 
-// to $_GET. If this is used in a post handler, that decision may need to be considered. 
+// to $_GET and $_POST. 
 
 function extra_query_args() {
 	$s = '';
@@ -2054,7 +2068,15 @@ function extra_query_args() {
 		foreach($_GET as $k => $v) {
 			// these are request vars we don't want to duplicate
 			if(! in_array($k, array('q','f','zid','page','PHPSESSID'))) {
-				$s .= '&' . $k . '=' . $v;
+				$s .= '&' . $k . '=' . urlencode($v);
+			}
+		}
+	}
+	if(count($_POST)) {
+		foreach($_POST as $k => $v) {
+			// these are request vars we don't want to duplicate
+			if(! in_array($k, array('q','f','zid','page','PHPSESSID'))) {
+				$s .= '&' . $k . '=' . urlencode($v);
 			}
 		}
 	}

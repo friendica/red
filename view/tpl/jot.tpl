@@ -42,7 +42,7 @@
 					<i class="icon-camera jot-icons"></i>
 				</button>
 				<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
-					<i id="wall-file-upload" class="icon-paper-clip jot-icons"></i>
+					<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
 				</button>
 				<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
 					<i id="profile-link" class="icon-link jot-icons"></i>
@@ -76,7 +76,7 @@
 			</div>
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				{{if $showacl}}
-				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
+				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" disabled="disabled" onclick="return false;">
 					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons">{{$bang}}</i>
 				</button>
 				{{/if}}
@@ -85,7 +85,7 @@
 					<i class="icon-eye-open jot-icons" ></i>
 				</button>
 				{{/if}}
-				<button class="btn btn-primary btn-sm" type="submit" name="button-submit">{{$share}}</button>
+				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="button-submit"{{if $showacl}} disabled="disabled"{{/if}}>{{$share}}</button>
 			</div>
 			<div id="profile-jot-perms-end"></div>
 			<div id="profile-jot-plugin-wrapper">
