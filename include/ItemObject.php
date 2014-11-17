@@ -28,6 +28,7 @@ class Item extends BaseObject {
 	private $threaded = false;
 	private $visiting = false;
 	private $channel = null;
+	private $display_mode = 'normal';
 
 
 	public function __construct($data) {
@@ -226,9 +227,10 @@ class Item extends BaseObject {
 		if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
 			$indent .= ' shiny';
 
-		localize_item($item);
 
+		localize_item($item);
 		$body = prepare_body($item,true);
+		
 
 		$comment_count_txt = sprintf( tt('%d comment','%d comments',$total_children),$total_children );
 		$children = $this->get_children();
@@ -316,7 +318,8 @@ class Item extends BaseObject {
 
 		$result['children'] = array();
 		$nb_children = count($children);
-		if($nb_children > 0) {
+
+		if(($this->get_display_mode() === 'normal') && ($nb_children > 0)) {
 			foreach($children as $child) {
 				$result['children'][] = $child->get_template_data($alike, $dlike, $thread_level + 1);
 			}
@@ -351,6 +354,14 @@ class Item extends BaseObject {
 	
 	public function get_id() {
 		return $this->get_data_value('id');
+	}
+
+	public function get_display_mode() {
+		return $this->display_mode;
+	}
+
+	public function set_display_mode($mode) {
+		$this->display_mode = $mode;
 	}
 
 	public function is_threaded() {
