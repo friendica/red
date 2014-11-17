@@ -458,25 +458,17 @@ function updateConvItems(mode,data) {
 				if(isVisible)
 					showHideComments(itmId);
 				$(".autotime").timeago();
-				// divgrow doesn't prevent itself from attaching a second (or 500th)
-				// "show more" div to a content region - it also has a few other
-				// issues related to how we're trying to use it. 
-				// disable for now.
-				//				$("div.wall-item-body").divgrow({ initialHeight: 400 });
 			}
 			else {
 				$('img',this).each(function() {
 					$(this).attr('src',$(this).attr('dst'));
 				});
-				// more FIXME related to expanded comments
 				if($('#collapsed-comments-'+itmId).is(':visible'))
 					isVisible = true;
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
 				$(".autotime").timeago();
-				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
-
 			}
 			prev = ident;
 		});
@@ -508,8 +500,6 @@ function updateConvItems(mode,data) {
 				if(isVisible)
 					showHideComments(itmId);
 				$(".autotime").timeago();
-				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
-
 			}
 			else {
 				$('img',this).each(function() {
@@ -521,7 +511,6 @@ function updateConvItems(mode,data) {
 				if(isVisible)
 					showHideComments(itmId);
 				$(".autotime").timeago();
-				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 			}
 		});
 
@@ -557,7 +546,6 @@ function updateConvItems(mode,data) {
 					showHideComments(itmId);
 				$(".autotime").timeago();
 
-				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 			}
 			prev = ident;
 		});
@@ -596,17 +584,28 @@ function updateConvItems(mode,data) {
 
 
 	function collapseHeight() {
-		$(".wall-item-body").each(function() {
-				if($(this).height() > 410) {
+		var isListMode = false;
+		$(".wall-item-listbody").each(function() {
+			isListMode = true;
+				if($(this).height() > 210) {
 				if(! $(this).hasClass('divmore')) {
-					$(this).divgrow({ initialHeight: 400, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
+					$(this).divgrow({ initialHeight: 200, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
 					$(this).addClass('divmore');
 				}
 			}					
 		});
+
+		$(".wall-item-body").each(function() {
+			if(! isListMode) {
+				if($(this).height() > 410) {
+					if(! $(this).hasClass('divmore')) {
+						$(this).divgrow({ initialHeight: 400, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
+						$(this).addClass('divmore');
+					}
+				}
+			}					
+		});
 	}
-
-
 
 	function liveUpdate() {
 		if((src == null) || (stopped) || (! profile_uid)) { $('.like-rotator').spin(false); return; }

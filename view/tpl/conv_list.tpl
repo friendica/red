@@ -32,7 +32,7 @@
 				</div>
 				<div class="wall-item-content" id="wall-item-content-{{$item.id}}">
 					<div class="wall-item-title-end"></div>
-					<div class="wall-item-body" id="wall-item-body-{{$item.id}}" >
+					<div class="wall-item-body wall-item-listbody" id="wall-item-body-{{$item.id}}" >
 						{{$item.body}}
 						{{if $item.tags}}
 						<div class="body-tag">
