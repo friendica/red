@@ -1160,7 +1160,7 @@ function photos_content(&$a) {
 	//$o = '';
 
 	$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
-		and ((photo_flags = %d) or (photo_flags & %d)) $sql_extra GROUP BY `resource_id`",
+		and ((photo_flags = %d) or (photo_flags & %d) > 0) $sql_extra GROUP BY `resource_id`",
 		intval($a->data['channel']['channel_id']),
 		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos')),
