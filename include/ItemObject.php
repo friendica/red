@@ -79,6 +79,7 @@ class Item extends BaseObject {
 		$indent = '';
 		$osparkle = '';
 		$total_children = $this->count_descendants();
+		$unseen_comments = (($item->real_uid) ? 0 : $this->count_unseen_descendants());
 
 		$conv = $this->get_conversation();
 		$observer = $conv->get_observer();
@@ -233,6 +234,8 @@ class Item extends BaseObject {
 		
 
 		$comment_count_txt = sprintf( tt('%d comment','%d comments',$total_children),$total_children );
+		$list_unseen_txt = (($unseen_comments) ? sprintf('%d unseen',$unseen_comments) : '');
+		
 		$children = $this->get_children();
 
 		$tmp_item = array(
@@ -290,8 +293,12 @@ class Item extends BaseObject {
 			'drop'      => $drop,
 			'multidrop' => ((feature_enabled($conv->get_profile_owner(),'multi_delete')) ? $multidrop : ''),
 // end toolbar buttons
+
+			'unseen_comments' => $unseen_comments,
 			'comment_count' => $total_children,
 			'comment_count_txt' => $comment_count_txt,
+			'list_unseen_txt' => $list_unseen_txt,
+			'markseen' => t('Mark all seen'),
 			'like_count' => $like_count,
 			'like_list' => $like_list,
 			'like_list_part' => $like_list_part,
@@ -544,6 +551,23 @@ class Item extends BaseObject {
 		}
 		return $total;
 	}
+
+	private function count_unseen_descendants() {
+		$children = $this->get_children();
+		$total = count($children);
+		if($total > 0) {
+			$total = 0;
+			foreach($children as $child) {
+				if((! visible_activity($child->data)) || array_key_exists('author_blocked',$child->data)) {
+					continue;
+				}
+				if($child->data['item_flags'] & ITEM_UNSEEN)
+					$total ++;
+			}
+		}
+		return $total;
+	}
+
 
 	/**
 	 * Get the template for the comment box

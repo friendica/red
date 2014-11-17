@@ -150,14 +150,14 @@ function ping_init(&$a) {
 	if(x($_REQUEST, 'markRead') && local_user()) {
 		switch($_REQUEST['markRead']) {
 			case 'network':
-				$r = q("update item set item_flags = ( item_flags & ~%d ) where (item_flags & %d)>0 and uid = %d", 
+				$r = q("update item set item_flags = ( item_flags & ~%d ) where (item_flags & %d) > 0 and uid = %d", 
 					intval(ITEM_UNSEEN),
 					intval(ITEM_UNSEEN),
 					intval(local_user())
 				);
 				break;
 			case 'home':
-				$r = q("update item set item_flags = ( item_flags & ~%d ) where (item_flags & %d)>0 and (item_flags & %d) and uid = %d", 
+				$r = q("update item set item_flags = ( item_flags & ~%d ) where (item_flags & %d) > 0 and (item_flags & %d) > 0  and uid = %d", 
 					intval(ITEM_UNSEEN),
 					intval(ITEM_UNSEEN),
 					intval(ITEM_WALL),
@@ -165,14 +165,14 @@ function ping_init(&$a) {
 				);
 				break;
 			case 'messages':
-				$r = q("update mail set mail_flags = ( mail_flags | %d ) where channel_id = %d and not (mail_flags & %d)>0",
+				$r = q("update mail set mail_flags = ( mail_flags | %d ) where channel_id = %d and not (mail_flags & %d) > 0",
 					intval(MAIL_SEEN),
 					intval(local_user()),
 					intval(MAIL_SEEN)
 				);
 				break;
 			case 'all_events':
-				$r = q("update event set `ignore` = 1 where `ignore` = 0 and uid = %d", 
+				$r = q("update event set ignore = 1 where ignore = 0 and uid = %d", 
 					intval(local_user())
 				);
 				break;
@@ -184,6 +184,14 @@ function ping_init(&$a) {
 			default:
 				break;
 		}
+	}
+
+	if(x($_REQUEST, 'markItemRead') && local_user()) {
+		$r = q("update item set item_flags = ( item_flags & ~%d ) where parent = %d and uid = %d", 
+			intval(ITEM_UNSEEN),
+			intval($_REQUEST['markItemRead']),
+			intval(local_user())
+		);
 	}
 
 

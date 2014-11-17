@@ -164,7 +164,8 @@
 					{{/if}}
 				</div>
 				<div class="clear"></div>
-				<div class="wall-item-list-comments"><a href="{{$item.llink}}">{{$item.comment_count_txt}}</a></div>
+				<div class="wall-item-list-comments"><a href="{{$item.llink}}">{{$item.comment_count_txt}}{{if $item.unseen_comments}}
+<span class="unseen-wall-indicator-{{$item.id}}">, {{$item.list_unseen_txt}}{{/if}}</span></a>{{if $item.unseen_comments}}<span class="unseen-wall-indicator-{{$item.id}}">&nbsp;&nbsp;&nbsp;<button class="btn btn-default" title="{{$item.markseen}}" onclick="markItemRead({{$item.id}}); return false;"><i class="icon-check"></i></span>{{/if}}</div>
 			</div>
 			<div class="wall-item-wrapper-end"></div>
 			<div class="wall-item-outside-wrapper-end {{$item.indent}}" ></div>

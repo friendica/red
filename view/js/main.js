@@ -180,6 +180,13 @@
 	timer = setTimeout(NavUpdate,2000);
   }
 
+  function markItemRead(itemId) {
+	$.get('ping?f=&markItemRead='+itemId);
+	$('.unseen-wall-indicator-'+itemId).hide();
+  }
+
+
+
 	var src = null;
 	var prev = null;
 	var livetime = null;
