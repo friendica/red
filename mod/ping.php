@@ -245,7 +245,7 @@ function ping_init(&$a) {
 	if(argc() > 1 && argv(1) === 'messages') {
 		$channel = $a->get_channel();
 		$t = q("select mail.*, xchan.* from mail left join xchan on xchan_hash = from_xchan 
-			where channel_id = %d and not ( mail_flags & %d )>0 and not (mail_flags & %d )>0 
+			where channel_id = %d and not ( mail_flags & %d ) > 0 and not (mail_flags & %d ) > 0 
 			and from_xchan != '%s' order by created desc limit 50",
 			intval(local_user()),
 			intval(MAIL_SEEN),
@@ -275,7 +275,7 @@ function ping_init(&$a) {
 		$result = array();
 
 		$r = q("SELECT * FROM item
-			WHERE item_restrict = %d and ( item_flags & %d )>0 and uid = %d",
+			WHERE item_restrict = %d and ( item_flags & %d ) > 0 and uid = %d",
 			intval(ITEM_VISIBLE),
 			intval(ITEM_UNSEEN),
 			intval(local_user())
@@ -297,7 +297,7 @@ function ping_init(&$a) {
 	if(argc() > 1 && (argv(1) === 'intros')) {
 		$result = array();
 
-		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d)>0 and not ((abook_flags & %d)>0 or (xchan_flags & %d)>0)",
+		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or (xchan_flags & %d) > 0)",
 			intval(local_user()),
 			intval(ABOOK_FLAG_PENDING),
 			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
@@ -381,7 +381,7 @@ function ping_init(&$a) {
 
 	if($vnotify & (VNOTIFY_NETWORK|VNOTIFY_CHANNEL)) {
 		$r = q("SELECT id, item_restrict, item_flags FROM item
-			WHERE (item_restrict = %d) and ( item_flags & %d )>0 and uid = %d",
+			WHERE (item_restrict = %d) and ( item_flags & %d ) > 0 and uid = %d",
 			intval(ITEM_VISIBLE),
 			intval(ITEM_UNSEEN),
 			intval(local_user())
@@ -408,7 +408,7 @@ function ping_init(&$a) {
 	$t2 = dba_timer();
 
 	if($vnotify & VNOTIFY_INTRO) {
-		$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d)>0 and not ((abook_flags & %d)>0 or (xchan_flags & %d)>0)",
+		$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or (xchan_flags & %d) > 0)",
 			intval(local_user()),
 			intval(ABOOK_FLAG_PENDING),
 			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
@@ -426,7 +426,7 @@ function ping_init(&$a) {
 
 	if($vnotify & VNOTIFY_MAIL) {
 		$mails = q("SELECT count(id) as total from mail
-			WHERE channel_id = %d AND not (mail_flags & %d)>0 and from_xchan != '%s' ",
+			WHERE channel_id = %d AND not (mail_flags & %d) > 0 and from_xchan != '%s' ",
 			intval(local_user()),
 			intval(MAIL_SEEN),		
 			dbesc($channel['channel_hash'])
@@ -437,7 +437,7 @@ function ping_init(&$a) {
 	
 	if($vnotify & VNOTIFY_REGISTER) {
 		if ($a->config['system']['register_policy'] == REGISTER_APPROVE && is_site_admin()) {
-			$regs = q("SELECT count(account_id) as total from account where (account_flags & %d)>0",
+			$regs = q("SELECT count(account_id) as total from account where (account_flags & %d) > 0",
 				intval(ACCOUNT_PENDING)
 			);
 			if($regs)
