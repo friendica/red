@@ -6,8 +6,6 @@
 
 [boot.php] Every process uses this to bootstrap the application structure
 
-[custom] site-specific overrides of modules in mod/, excluded from git
-
 [doc] Help Files
 
 [images] core required images
@@ -21,6 +19,8 @@
 [library] Third party modules (must be license compatible)
 
 [mod] Controller modules based on URL pathname (e.g. #^[url=http://sitename/foo]http://sitename/foo[/url] loads mod/foo.php)
+
+[mod/site/] site-specific mod overrides, excluded from git
 
 [util] translation tools, main English string database and other miscellaneous utilities
 
