@@ -273,6 +273,5 @@ ACL.prototype.populate = function(data){
 		$(el).removeAttr("data-src");
 	});
 	that.update_view();
-	$('#dbtn-submit, #dbtn-acl').prop('disabled', false);
 }
 

@@ -22,10 +22,10 @@
 				<input id="photos-upload-choose" type="file" name="userfile" />
 			</div>
 			<div class="btn-group pull-right">
-				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" disabled="disabled" onclick="return false;">
+				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
 					<i id="jot-perms-icon" class="icon-{{$lockstate}}"></i>
 				</button>
-				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="submit" disabled="disabled">{{$submit}}</button>
+				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="submit" >{{$submit}}</button>
 			</div>
 			{{/if}}
 

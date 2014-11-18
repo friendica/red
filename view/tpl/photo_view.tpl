@@ -68,10 +68,10 @@
 				<button class="btn btn-danger btn-sm" id="photo-edit-delete-button" type="submit" name="delete" value="{{$edit.delete}}" onclick="return confirmDelete();" />{{$edit.delete}}</button>
 			</div>
 			<div class="form-group btn-group pull-right">
-				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" disabled="disabled" onclick="return false;">
+				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
 					<i id="jot-perms-icon" class="icon-{{$edit.lockstate}}"></i>
 				</button>
-				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="submit" disabled="disabled">{{$edit.submit}}</button>
+				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="submit" >{{$edit.submit}}</button>
 			</div>
 		</form>
 		<div id="photo-edit-end" class="clear"></div>
