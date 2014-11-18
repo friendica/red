@@ -251,9 +251,14 @@ function channel_content(&$a, $update = 0, $load = false) {
 		// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
 		// because browser prefetching might change it on us. We have to deliver it with the page.
 
+		$maxheight = get_pconfig($a->profile['profile_uid'],'system','channel_divmore_height');
+		if(! $maxheight)
+			$maxheight = 400;
+
 		$o .= '<div id="live-channel"></div>' . "\r\n";
 		$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
-			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+			. "; var netargs = '?f='; var profile_page = " . $a->pager['page']
+			. "; divmore_height = " . intval($maxheight) . "; </script>\r\n";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),

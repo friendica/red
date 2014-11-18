@@ -143,6 +143,12 @@ function settings_post(&$a) {
 		$channel_list_mode = ((x($_POST,'channel_list_mode')) ? intval($_POST['channel_list_mode']) : 0);
 		$network_list_mode = ((x($_POST,'network_list_mode')) ? intval($_POST['network_list_mode']) : 0);
 
+		$channel_divmore_height = ((x($_POST,'channel_divmore_height')) ? intval($_POST['channel_divmore_height']) : 400);
+		if($channel_divmore_height < 50)
+			$channel_divmore_height = 50;
+		$network_divmore_height = ((x($_POST,'network_divmore_height')) ? intval($_POST['network_divmore_height']) : 400);
+		if($network_divmore_height < 50)
+			$network_divmore_height = 50;
 
 		$browser_update   = ((x($_POST,'browser_update')) ? intval($_POST['browser_update']) : 0);
 		$browser_update   = $browser_update * 1000;
@@ -165,6 +171,8 @@ function settings_post(&$a) {
 		set_pconfig(local_user(),'system','title_tosource',$title_tosource);
 		set_pconfig(local_user(),'system','channel_list_mode', $channel_list_mode);
 		set_pconfig(local_user(),'system','network_list_mode', $network_list_mode);
+		set_pconfig(local_user(),'system','channel_divmore_height', $channel_divmore_height);
+		set_pconfig(local_user(),'system','network_divmore_height', $network_divmore_height);
 
 		if ($theme == $a->channel['channel_theme']){
 			// call theme_post only if theme has not been changed
@@ -810,6 +818,9 @@ function settings_content(&$a) {
 			'$expert' => feature_enabled(local_user(),'expert'),
 			'$channel_list_mode' => array('channel_list_mode', t('Use blog/list mode on channel page'), get_pconfig(local_user(),'system','channel_list_mode'), t('(comments displayed separately)')),
 			'$network_list_mode' => array('network_list_mode', t('Use blog/list mode on matrix page'), get_pconfig(local_user(),'system','network_list_mode'), t('(comments displayed separately)')),
+			'$channel_divmore_height' => array('channel_divmore_height', t('Channel page max height of content (in pixels)'), ((get_pconfig(local_user(),'system','channel_divmore_height')) ? get_pconfig(local_user(),'system','channel_divmore_height') : 400), t('click to expand content exceeding this height')),
+			'$network_divmore_height' => array('network_divmore_height', t('Matrix page max height of content (in pixels)'), ((get_pconfig(local_user(),'system','network_divmore_height')) ? get_pconfig(local_user(),'system','network_divmore_height') : 400) , t('click to expand content exceeding this height')),
+
 
 		));
 		

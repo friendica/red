@@ -208,8 +208,15 @@ function network_content(&$a, $update = 0, $load = false) {
 		if($gid || $cid || $cmin || ($cmax != 99) || $star || $liked || $conv || $spam || $nouveau || $list)
 			$firehose = 0;
 
+		$maxheight = get_pconfig(local_user(),'system','network_divmore_height');
+		if(! $maxheight)
+			$maxheight = 400;
+
+
 		$o .= '<div id="live-network"></div>' . "\r\n";
-		$o .= "<script> var profile_uid = " . local_user() . "; var profile_page = " . $a->pager['page'] . ";</script>";
+		$o .= "<script> var profile_uid = " . local_user() 
+			. "; var profile_page = " . $a->pager['page'] 
+			. "; divmore_height = " . intval($maxheight) . "; </script>\r\n";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
