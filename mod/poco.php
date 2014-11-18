@@ -93,7 +93,7 @@ function poco_init(&$a) {
 
 	if($system_mode) {
 		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where ( abook_flags & " . ABOOK_FLAG_SELF . 
-			" )>0 and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = 1) limit %d offset %d ",
+			" )>0 and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = '1') limit %d offset %d ",
 			intval($itemsPerPage),
 			intval($startIndex)
 		);
