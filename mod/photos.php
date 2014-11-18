@@ -618,7 +618,7 @@ function photos_content(&$a) {
 		$album = hex2bin($datum);
 
 		$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			AND `scale` <= 4 and ((photo_flags = %d) or (photo_flags & %d )) $sql_extra GROUP BY `resource_id`",
+			AND `scale` <= 4 and ((photo_flags = %d) or (photo_flags & %d ) > 0) $sql_extra GROUP BY `resource_id`",
 			intval($owner_uid),
 			dbesc($album),
 			intval(PHOTO_NORMAL),
