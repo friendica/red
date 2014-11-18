@@ -180,6 +180,13 @@
 	timer = setTimeout(NavUpdate,2000);
   }
 
+  function markItemRead(itemId) {
+	$.get('ping?f=&markItemRead='+itemId);
+	$('.unseen-wall-indicator-'+itemId).hide();
+  }
+
+
+
 	var src = null;
 	var prev = null;
 	var livetime = null;
@@ -200,6 +207,7 @@
 	var loadingPage = true;
 	var pageHasMoreContent = true;
 	var updateCountsOnly = false;
+	var divmore_height = 400;
 
 	$(function() {
 		$.ajaxSetup({cache: false});
@@ -584,24 +592,11 @@ function updateConvItems(mode,data) {
 
 
 	function collapseHeight() {
-		var isListMode = false;
-		$(".wall-item-listbody").each(function() {
-			isListMode = true;
-				if($(this).height() > 210) {
-				if(! $(this).hasClass('divmore')) {
-					$(this).divgrow({ initialHeight: 200, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
-					$(this).addClass('divmore');
-				}
-			}					
-		});
-
 		$(".wall-item-body").each(function() {
-			if(! isListMode) {
-				if($(this).height() > 410) {
-					if(! $(this).hasClass('divmore')) {
-						$(this).divgrow({ initialHeight: 400, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
-						$(this).addClass('divmore');
-					}
+			if($(this).height() > divmore_height + 10) {
+				if(! $(this).hasClass('divmore')) {
+					$(this).divgrow({ initialHeight: divmore_height, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
+					$(this).addClass('divmore');
 				}
 			}					
 		});

@@ -5,7 +5,7 @@
 <form action="filestorage/{{$channelnick}}/{{$file.id}}/edit" method="post" >
 
 <div id="attach-edit-perms" >
-<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" disabled="disabled" onclick="return false;">
+<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
 	<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>
 </button>
 {{$aclselect}} {{$file.filename}}
@@ -30,7 +30,7 @@
 <input type="text" id="linkpasteinput" name="cutpasteextlink" value="{{$cloudpath}}" onclick="this.select();"/><br />
 
 <div class="clear"></div>
-<input id="dbtn-submit" type="submit" name="submit" value="{{$submit}}" disabled="disabled"/>
+<input id="dbtn-submit" type="submit" name="submit" value="{{$submit}}" />
 </form>
 
 

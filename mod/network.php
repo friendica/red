@@ -208,8 +208,15 @@ function network_content(&$a, $update = 0, $load = false) {
 		if($gid || $cid || $cmin || ($cmax != 99) || $star || $liked || $conv || $spam || $nouveau || $list)
 			$firehose = 0;
 
+		$maxheight = get_pconfig(local_user(),'system','network_divmore_height');
+		if(! $maxheight)
+			$maxheight = 400;
+
+
 		$o .= '<div id="live-network"></div>' . "\r\n";
-		$o .= "<script> var profile_uid = " . local_user() . "; var profile_page = " . $a->pager['page'] . ";</script>";
+		$o .= "<script> var profile_uid = " . local_user() 
+			. "; var profile_page = " . $a->pager['page'] 
+			. "; divmore_height = " . intval($maxheight) . "; </script>\r\n";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
@@ -317,6 +324,11 @@ function network_content(&$a, $update = 0, $load = false) {
 		$uids = " and item.uid = " . local_user() . " ";
 	}
 
+	if(get_pconfig(local_user(),'system','network_list_mode'))
+		$page_mode = 'list';
+	else
+		$page_mode = 'client';
+
 	$simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) > 0 " : '');
 
 	// This fixes a very subtle bug so I'd better explain it. You wake up in the morning or return after a day
@@ -414,9 +426,25 @@ function network_content(&$a, $update = 0, $load = false) {
 			$items = array();
 		}
 
-		if($parents_str)
-			$update_unseen = ' AND parent IN ( ' . dbesc($parents_str) . ' )';
+		if($page_mode === 'list') {
 
+			/**
+			 * in "list mode", only mark the parent item and any like activities as "seen". 
+			 * We won't distinguish between comment likes and post likes. The important thing
+			 * is that the number of unseen comments will be accurate. The SQL to separate the
+			 * comment likes could also get somewhat hairy. 
+			 */
+
+			if($parents_str) {
+				$update_unseen = " AND ( id IN ( " . dbesc($parents_str) . " )";
+				$update_unseen .= " OR ( parent IN ( " . dbesc($parents_str) . " ) AND verb in ( '" . dbesc(ACTIVITY_LIKE) . "','" . dbesc(ACTIVITY_DISLIKE) . "' ))) ";
+			}
+		}
+		else {
+			if($parents_str) {
+				$update_unseen = " AND parent IN ( " . dbesc($parents_str) . " )";
+			}
+		}
 	}
 
 	if(($update_unseen) && (! $firehose))
@@ -429,10 +457,6 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	$mode = (($nouveau) ? 'network-new' : 'network');
 
-	if(get_pconfig(local_user(),'system','network_list_mode'))
-		$page_mode = 'list';
-	else
-		$page_mode = 'client';
 
 	$o .= conversation($a,$items,$mode,$update,$page_mode);
 

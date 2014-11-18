@@ -66,6 +66,8 @@ function collect_recipients($item,&$private_envelope) {
 		// by the directives in $item['public_policy'].
 
 		$private_envelope = false;
+		require_once('include/identity.php');
+		$sys = get_sys_channel();
 
 		if(array_key_exists('public_policy',$item) && $item['public_policy'] !== 'self') {
 			$r = q("select abook_xchan, xchan_network from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d)>0 ",
@@ -95,6 +97,9 @@ function collect_recipients($item,&$private_envelope) {
 					}
 				}
 			}
+// we probably want to check that discovery channel delivery is allowed before uncommenting this.
+//			if($policy === 'pub')
+//				$recipients[] = $sys['xchan_hash'];
 		}
 	}
 
