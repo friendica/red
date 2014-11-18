@@ -6,6 +6,9 @@
 {{if $entry.connect}}
 <div class="directory-connect btn btn-default"><a href="{{$entry.connect}}"><i class="icon-plus connect-icon"></i> {{$entry.conn_label}}</a></div>
 {{/if}}
+{{if $entry.ignlink}}
+<div class="directory-ignore btn btn-default"><a href="{{$entry.ignlink}}"> {{$entry.ignore_label}}</a></div>
+{{/if}}
 </div>
 </div>
 
