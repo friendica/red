@@ -34,21 +34,21 @@
 		<i id="prvmail-attach" class="icon-paper-clip jot-icons" title="{{$attach}}"></i>
 	</button> 
 
-	<button id="prvmail-link-wrapper" class="btn btn-default btn-sm" >
-		<i id="prvmail-link" class="icon-link jot-icons" title="{{$insert}}" onclick="jotGetLink(); return false;"></i>
+	<button id="prvmail-link-wrapper" class="btn btn-default btn-sm" onclick="prvmailJotGetLink(); return false;" >
+		<i id="prvmail-link" class="icon-link jot-icons" title="{{$insert}}" ></i>
 	</button> 
 	{{if $feature_expire}}
-	<button id="prvmail-expire-wrapper" class="btn btn-default btn-sm" >
-		<i id="prvmail-expires" class="icon-eraser jot-icons" title="{{$expires}}" onclick="prvmailGetExpiry();return false;"></i>
+	<button id="prvmail-expire-wrapper" class="btn btn-default btn-sm" onclick="prvmailGetExpiry();return false;" >
+		<i id="prvmail-expires" class="icon-eraser jot-icons" title="{{$expires}}" ></i>
 	</button>
 	{{/if}}
 	{{if $feature_encrypt}}
-	<button id="prvmail-encrypt-wrapper" class="btn btn-default btn-sm" >
-		<i id="prvmail-encrypt" class="icon-key jot-icons" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#prvmail-text',$('#prvmail-text').val());return false;"></i>
+	<button id="prvmail-encrypt-wrapper" class="btn btn-default btn-sm" onclick="red_encrypt('{{$cipher}}','#prvmail-text',$('#prvmail-text').val());return false;">
+		<i id="prvmail-encrypt" class="icon-key jot-icons" title="{{$encrypt}}" ></i>
 	</button> 
 	{{/if}}
 	<div id="prvmail-rotator-wrapper" >
-		<img id="prvmail-rotator" src="images/rotator.gif" alt="{{$wait}}" title="{{$wait}}" style="display: none;" />
+		<div id="prvmail-rotator"></div>
 	</div> 
 </div>
 <div id="prvmail-end"></div>

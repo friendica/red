@@ -113,6 +113,7 @@ function mail_content(&$a) {
 	}
 
 	$channel = $a->get_channel();
+
 	head_set_icon($channel['xchan_photo_s']);
 
 	$cipher = get_pconfig(local_user(),'system','default_cipher');
@@ -163,13 +164,16 @@ function mail_content(&$a) {
 
 		$tpl = get_markup_template('msg-header.tpl');
 
-		$a->page['htmlhead'] .= replace_macros($tpl, array(
+		$header = replace_macros($tpl, array(
 			'$baseurl' => $a->get_baseurl(true),
 			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 			'$nickname' => $channel['channel_address'],
 			'$linkurl' => t('Please enter a link URL:'),
 			'$expireswhen' => t('Expires YYYY-MM-DD HH:MM')
 		));
+
+		$a->page['htmlhead'] .= $header;
+
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
 		$prename = $preurl = $preid = '';
@@ -276,7 +280,7 @@ function mail_content(&$a) {
 		$tpl = get_markup_template('msg-header.tpl');
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
-			'$nickname' => $channel['channel_addr'],
+			'$nickname' => $channel['channel_address'],
 			'$baseurl' => $a->get_baseurl(true),
 			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 			'$linkurl' => t('Please enter a link URL:'),

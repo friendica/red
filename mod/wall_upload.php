@@ -8,6 +8,7 @@ require_once('include/photos.php');
 
 function wall_upload_post(&$a) {
 
+
 	$using_api = ((x($_FILES,'media')) ? true : false); 
 
 	if($using_api) {
