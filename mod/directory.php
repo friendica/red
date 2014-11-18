@@ -1,6 +1,5 @@
 <?php
 
-require_once('include/socgraph.php');
 require_once('include/dir_fns.php');
 require_once('include/widgets.php');
 require_once('include/bbcode.php');
@@ -8,12 +7,6 @@ require_once('include/bbcode.php');
 function directory_init(&$a) {
 	$a->set_pager_itemspage(60);
 
-	if(x($_GET,'ignore')) {
-		q("insert into xign ( uid, xchan ) values ( %d, '%s' ) ",
-			intval(local_user()),
-			dbesc($_GET['ignore'])
-		);
-	}
 }
 
 function directory_content(&$a) {
@@ -49,32 +42,10 @@ function directory_content(&$a) {
 	else
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
-
 	if(strpos($search,'=') && local_user() && get_pconfig(local_user(),'feature','expert'))
 		$advanced = $search;
 
-
 	$keywords = (($_GET['keywords']) ? $_GET['keywords'] : '');
-
-	// Suggest channels if no search terms or keywords are given
-	$suggest = ($search == '' && $keywords == '' && local_user());
-
-	if($suggest) {
-		$r = suggestion_query(local_user(),get_observer_hash());
-
-		// Remember in which order the suggestions were
-		$addresses = array();
-		foreach($r as $rr) {
-			$addresses[$rr['xchan_addr']] = $index++;
-		}
-
-		// Build query to get info about suggested people
-		$advanced = '';
-		foreach(array_keys($addresses) as $address) {
-			$advanced .= "address=\"$address\" ";
-		}
-
-	}
 
 	$tpl = get_markup_template('directory_header.tpl');
 
@@ -256,27 +227,18 @@ function directory_content(&$a) {
 							'online' => $online,
 							'kw' => (($out) ? t('Keywords: ') : ''),
 							'keywords' => $out,
-							'ignlink' => $suggest ? $a->get_baseurl() . '/directory?ignore=' . $rr['hash'] : '',
-							'ignore_label' => "Don't suggest",
 						);
 
 						$arr = array('contact' => $rr, 'entry' => $entry);
 
 						call_hooks('directory_item', $arr);
 			
-						if($sort_order == '' && $suggest) {
-							$entries[$addresses[$rr['address']]] = $arr['entry']; // Use the same indexes as originally to get the best suggestion first
-						}
-						else {
-							$entries[] = $arr['entry'];
-						}
+						$entries[] = $arr['entry'];
 						unset($profile);
 						unset($location);
 
 
 					}
-
-					ksort($entries); // Sort array by key so that foreach-constructs work as expected
 
 					if($j['keywords']) {
 						$a->data['directory_keywords'] = $j['keywords'];
@@ -306,7 +268,7 @@ function directory_content(&$a) {
 							'$finddsc' => t('Finding:'),
 							'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
 							'$entries' => $entries,
-							'$dirlbl' => $suggest ? t('Channel Suggestions') : t('Directory'),
+							'$dirlbl' => t('Directory'),
 							'$submit' => t('Find'),
 							'$next' => alt_pager($a,$j['records'], t('next page'), t('previous page'))
 
