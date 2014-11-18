@@ -69,7 +69,7 @@ function poco_init(&$a) {
 
 	if($system_mode) {
 		$r = q("SELECT count(*) as `total` from abook where ( abook_flags & " . ABOOK_FLAG_SELF . 
-			" )>0 and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = 1) ");
+			" )>0 and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = '1') ");
 	}
 	else {
 		$r = q("SELECT count(*) as `total` from abook where abook_channel = %d 
