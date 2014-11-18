@@ -305,6 +305,12 @@ function dir_parse_query($s) {
 						$curr['value'] = substr($curr['value'],1);
 						continue;
 					}
+					elseif($curr['value'][0] == '"' && $curr['value'][strlen($curr['value'])-1] == '"') {
+						$curr['value'] = substr($curr['value'],1,strlen($curr['value'])-2);
+						$ret[] = $curr;
+						$curr = array();
+						continue;
+					}	
 					else {
 						$ret[] = $curr;
 						$curr = array();
