@@ -39,6 +39,12 @@ Some/many of these widgets have restrictions which may restrict the type of page
 * categories - categories filter (channel page)
 
 * tagcloud_wall - tagcloud for channel page only
+    * args: 'limit' - number of tags to return (default 50)
+<br />&nbsp;<br />
+
+* catcloud_wall - tagcloud for channel page categories
+    * args: 'limit' - number of categories to return (default 50)
+<br />&nbsp;<br />
 
 * affinity - affinity slider for network page - must be logged in
 
