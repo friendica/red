@@ -952,6 +952,7 @@ function photos_content(&$a) {
 				'lockstate' => $lockstate[0],
 				'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com'),
 				'item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
+				'adult_enabled' => feature_enabled($owner_uid,'adult_photo_flagging'),
 				'adult' => array('adult',t('Flag as adult in album view'), (($ph[0]['photo_flags'] & PHOTO_ADULT) ? 1 : 0),''),
 				'submit' => t('Submit'),
 				'delete' => t('Delete Photo')

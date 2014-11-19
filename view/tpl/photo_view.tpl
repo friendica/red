@@ -59,9 +59,12 @@
 				<label class="radio-inline" id="photo-edit-rotate-cw-label" for="photo-edit-rotate-cw"><input id="photo-edit-rotate-cw" type="radio" name="rotate" value="1" />{{$edit.rotatecw}}</label>
 				<label class="radio-inline" id="photo-edit-rotate-ccw-label" for="photo-edit-rotate-ccw"><input id="photo-edit-rotate-ccw" type="radio" name="rotate" value="2" />{{$edit.rotateccw}}</label>
 			</div>
+			{{if $edit.adult_enabled}}
 			<div class="form-group">
 			{{include file="field_checkbox.tpl" field=$edit.adult}}
 			</div>
+			{{/if}}
+
 			{{$edit.aclselect}}
 
 			<div class="form-group pull-left">
