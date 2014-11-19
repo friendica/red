@@ -104,7 +104,7 @@
 						</ul>
 					</div>
 					<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
-					<div class="wall-item-tools-left btn-group">
+					<div class="wall-item-tools-left{{if $item.unseen_comments || $item.like_count || $item.dislike_count}} btn-group{{/if}}">
 
 
 				<div class="wall-item-list-comments btn-group"><button class="btn btn-default btn-sm" onclick="window.location.href='{{$item.llink}}'; return false;">{{$item.comment_count_txt}}{{if $item.unseen_comments}}

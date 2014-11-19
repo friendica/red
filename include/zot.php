@@ -1428,7 +1428,12 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 			continue;
 		}
 
+
 		$channel = $r[0];
+
+		// allow public postings to the sys channel regardless of permissions
+		if(($channel['channel_pageflags'] & PAGE_SYSTEM) && (! $arr['item_private']))
+			$public = true;
 
 		$tag_delivery = tgroup_check($channel['channel_id'],$arr);
 
