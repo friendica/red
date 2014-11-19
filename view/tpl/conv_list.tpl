@@ -104,7 +104,12 @@
 						</ul>
 					</div>
 					<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
-					<div class="wall-item-tools-left{{if $item.like_count &&  $item.dislike_count}} btn-group{{/if}}">
+					<div class="wall-item-tools-left btn-group">
+
+
+				<div class="wall-item-list-comments btn-group"><button class="btn btn-default btn-sm" onclick="window.location.href='{{$item.llink}}'; return false;">{{$item.comment_count_txt}}{{if $item.unseen_comments}}
+<span class="unseen-wall-indicator-{{$item.id}}">, {{$item.list_unseen_txt}}{{/if}}</span></button></div>{{if $item.unseen_comments}}<div class="unseen-wall-indicator-{{$item.id}} btn-group"><button class="btn btn-default btn-sm" title="{{$item.markseen}}" onclick="markItemRead({{$item.id}}); return false;"><i class="icon-check"></i></div>{{/if}}
+
 						{{if $item.like_count}}
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="wall-item-like-{{$item.id}}">{{$item.like_count}} {{$item.like_button_label}}</button>
@@ -164,8 +169,6 @@
 					{{/if}}
 				</div>
 				<div class="clear"></div>
-				<div class="wall-item-list-comments"><a href="{{$item.llink}}">{{$item.comment_count_txt}}{{if $item.unseen_comments}}
-<span class="unseen-wall-indicator-{{$item.id}}">, {{$item.list_unseen_txt}}{{/if}}</span></a>{{if $item.unseen_comments}}<span class="unseen-wall-indicator-{{$item.id}}">&nbsp;&nbsp;&nbsp;<button class="btn btn-default" title="{{$item.markseen}}" onclick="markItemRead({{$item.id}}); return false;"><i class="icon-check"></i></span>{{/if}}</div>
 			</div>
 			<div class="wall-item-wrapper-end"></div>
 			<div class="wall-item-outside-wrapper-end {{$item.indent}}" ></div>
