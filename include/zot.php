@@ -1313,6 +1313,8 @@ function public_recips($msg) {
 
 	$r = array_merge($r,$x);
 
+logger('message: ' . print_r($msg['message'],true));
+
 	if($include_sys && array_key_exists('public_scope',$msg['message']) && $msg['message']['public_scope'] === 'public') {
 		$sys = get_sys_channel();
 		if($sys)
