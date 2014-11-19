@@ -1256,8 +1256,14 @@ function zot_import($arr, $sender_url) {
 
 function public_recips($msg) {
 
+
+	require_once('include/identity.php');
+
 	$check_mentions = false;
+	$include_sys = false;
+
 	if($msg['message']['type'] === 'activity') {
+		$include_sys = true;
 		$col = 'channel_w_stream';
 		$field = PERMS_W_STREAM;
 		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {
@@ -1306,6 +1312,12 @@ function public_recips($msg) {
 		$x = array();
 
 	$r = array_merge($r,$x);
+
+	if($include_sys && array_key_exists('public_scope',$msg['message']) && $msg['message']['public_scope'] === 'public') {
+		$sys = get_sys_channel();
+		if($sys)
+			$r[] = array('hash' => $sys['channel_hash']);
+	}
 
 	// look for any public mentions on this site
 	// They will get filtered by tgroup_check() so we don't need to check permissions now
