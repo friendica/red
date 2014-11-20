@@ -1395,7 +1395,12 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	$datarray['body'] = $body;
 
-	$datarray['app']  = 'Diaspora';
+	if(strstr($person['xchan_network'],'friendica'))
+		$app = 'Friendica';
+	else
+		$app = 'Diaspora';
+
+	$datarray['app']  = $app;
 	
 	if(! $parent_author_signature) {
 		$key = get_config('system','pubkey');
