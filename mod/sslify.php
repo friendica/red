@@ -3,7 +3,7 @@
 function sslify_init(&$a) {
 	$x = z_fetch_url($_REQUEST['url']);
 	if($x['success']) {
-		$h = explode("\n",$x['headers']);
+		$h = explode("\n",$x['header']);
 		foreach ($h as $l) {
 			list($k,$v) = array_map("trim", explode(":", trim($l), 2));
 			$hdrs[$k] = $v;
