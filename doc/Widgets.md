@@ -85,3 +85,10 @@ Some/many of these widgets have restrictions which may restrict the type of page
     * style - CSS style string
 <br />&nbsp;<br />
 
+* photo_rand - display a random photo from one of your photo albums. Photo permissions are honoured
+    * args: 
+    * album - album name (very strongly recommended if you have lots of photos)
+    * scale - typically 0 (original size), 1 (640px), or 2 (320px)
+    * style - CSS style string
+<br />&nbsp;<br />
+

@@ -810,7 +810,61 @@ function widget_photo($arr) {
 
 	$o .= '<img ' . (($zrl) ? ' class="zrl" ' : '') 
 				  . (($style) ? ' style="' . $style . '"' : '') 
-				  . ' src="' . $url . '" />';
+				  . ' src="' . $url . '" alt="' . t('photo/image') . '" />';
+
+	$o .= '</div>';
+
+	return $o;
+}
+
+
+function widget_photo_rand($arr) {
+
+	require_once('include/photos.php');
+	$style = $zrl = false;
+	$params = '';
+	if(array_key_exists('album',$arr) && isset($arr['album']))
+		$album = $arr['album'];
+	else
+		$album = '';
+
+	$channel_id = get_app()->profile_uid;
+	if(! $channel_id)
+		return '';
+
+	$scale = ((array_key_exists('scale',$arr)) ? intval($arr['scale']) : 0);
+
+	$ret = photos_list_photos(array('channel_id' => $channel_id),get_app()->get_observer(),$album);
+		
+	$filtered = array();
+	if($ret['success'] && $ret['photos'])
+	foreach($ret['photos'] as $p)
+		if($p['scale'] == $scale)
+			$filtered[] = $p['src'];
+
+	if($filtered) {
+		$e = mt_rand(0,count($filtered)-1);
+		$url = $filtered[$e];
+	}
+
+	if(strpos($url,'http') !== 0)
+		return '';
+
+	if(array_key_exists('style',$arr) && isset($arr['style']))
+		$style = $arr['style'];
+
+	// ensure they can't sneak in an eval(js) function
+
+	if(strpos($style,'(') !== false)
+		return '';
+
+	$url = zid($url);
+
+	$o = '<div class="widget">';
+
+	$o .= '<img class="zrl" ' 
+		. (($style) ? ' style="' . $style . '"' : '') 
+		. ' src="' . $url . '" alt="' . t('photo/image') . '" />';
 
 	$o .= '</div>';
 
