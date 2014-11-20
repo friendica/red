@@ -1176,7 +1176,7 @@ function photos_content(&$a) {
 	$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.album, p.scale, p.created FROM photo p INNER JOIN 
 		(SELECT resource_id, max(scale) scale FROM photo 
 			WHERE uid=%d AND album != '%s' AND album != '%s' 
-			AND (photo_flags = %d or photo_flags = %d ) $sql_extra group by resource_id) ph 
+			AND (photo_flags = %d or ( photo_flags & %d ) > 0 ) $sql_extra group by resource_id) ph 
 		ON (p.resource_id = ph.resource_id and p.scale = ph.scale) ORDER by p.created DESC LIMIT %d OFFSET %d",
 		intval($a->data['channel']['channel_id']),
 		dbesc('Contact Photos'),
