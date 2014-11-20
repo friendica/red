@@ -1313,7 +1313,7 @@ function public_recips($msg) {
 
 	$r = array_merge($r,$x);
 
-logger('message: ' . print_r($msg['message'],true));
+	//logger('message: ' . print_r($msg['message'],true));
 
 	if($include_sys && array_key_exists('public_scope',$msg['message']) && $msg['message']['public_scope'] === 'public') {
 		$sys = get_sys_channel();
@@ -1351,7 +1351,7 @@ logger('message: ' . print_r($msg['message'],true));
 function allowed_public_recips($msg) {
 
 
-	logger('allowed_public_recips: ' . print_r($msg,true));
+	logger('allowed_public_recips: ' . print_r($msg,true),LOGGER_DATA);
 
 	$recips = public_recips($msg);
 

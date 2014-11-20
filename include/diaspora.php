@@ -1788,7 +1788,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$msg['author']);
 	if(! $contact) {
-		logger('diaspora_like: cannot find contact: ' . $msg['author']);
+		logger('diaspora_like: cannot find contact: ' . $msg['author'] . ' for channel ' . $importer['channel_name']);
 		return;
 	}
 
