@@ -57,8 +57,10 @@ function run_sql($file, $db, &$err, &$n) {
 		exit();
 	}
 	foreach($sql as $stmt) {
-		if($stmt == '' || $stmt == "\n" || $stmt == "\n\n") 
+		if($stmt == '' || $stmt == "\n" || $stmt == "\n\n") {
+			$c--;
 			continue;
+		}
 		$r = $db->exec($stmt);
 		if($r===false) {
 			echo "\nError executing $stmt: ".var_export($db->errorInfo(), true)."\n";
@@ -109,7 +111,18 @@ foreach(array('install','include','mod','view') as $dir) {
 	}
 }
 
-$cfg = parse_htconfig('.htconfig.php');
+$cfgfile = '.htconfig.php';
+if($argv[1] == '--resume') {
+	if($argc < 4) {
+		echo "Resume usage {$argv[0]} --resume <table> <row>\n";
+		exit();
+	}
+	$starttable = $argv[2];
+	$startrow = $argv[3];
+	$cfgfile = '.htconfig.php-mysql';
+}
+
+$cfg = parse_htconfig($cfgfile);
 $type = get_configtype($cfg);
 if($type != 'mysql') {
 	echo "Error. Must start with standard mysql installation in .htconfig.php.\n";
@@ -124,6 +137,10 @@ try {
 	echo "Error connecting to mysql DB: " . $e->getMessage() . "\n";
 	exit();
 }
+
+// mysql insists on buffering even when you use fetch() instead of fetchAll() for some stupid reason
+// http://stackoverflow.com/questions/6895098/pdo-mysql-memory-consumption-with-large-result-set
+$mydb->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false); 
 
 if(!file_exists('.htconfig.php-pgsql')) {
 	echo "Enter postgres server info:\n";
@@ -181,29 +198,38 @@ $H = "\033[0;35m";
 $W = "\033[1;37m";
 $M = "\033[1;31m";
 $N = "\033[0m";
-$r = ask_question("Ready to migrate {$W}Red{$M}(#){$W}Matrix$N from mysql db @$B{$cfg['host']}$N/$B{$cfg['data']}$N to postgres db @$B{$pcfg['host']}$N/$B{$pcfg['data']}$N.
+
+if(isset($starttable)) {
+	$r = ask_question("Ready to migrate {$W}Red{$M}(#){$W}Matrix$N from mysql db @$B{$cfg['host']}$N/$B{$cfg['data']}$N to postgres db @$B{$pcfg['host']}$N/$B{$pcfg['data']}$N.
+
+Resuming failed migration ({$M}experimental$N) starting at table '$starttable' row $startrow. 
+Are you ready to begin (N/y)? ", 
+		array('y', 'n'), 
+		'n'
+	);
+	if($r == 'n')
+		exit();
+} else {
+	$r = ask_question("Ready to migrate {$W}Red{$M}(#){$W}Matrix$N from mysql db @$B{$cfg['host']}$N/$B{$cfg['data']}$N to postgres db @$B{$pcfg['host']}$N/$B{$pcfg['data']}$N.
 The site will be disabled during the migration by moving the $H.htconfig.php$N file to $H.htconfig.php-mysql$N. 
 If for any reason the migration fails, you will need to move the config file back into place manually before trying again.
 
 Are you ready to begin (N/y)? ", array('y','n'), 'n'
-);
-
-if($r == 'n')
-	exit();
-
-rename('.htconfig.php', '.htconfig.php-mysql');
-
-run_sql('install/schema_postgres.sql', $pgdb, $err, $n);
-if($err) {
-	echo "There were $err errors creating the pgsql schema. Unable to continue.\n";
-/*	$r = ask_question("There were $err errors (and $n ok) creating the schema. This shouldn't happen and continuing will probably fail.
-Do you want to continue migration anyway (N/y)? ", array('y','n'), 'n'
 	);
-	if($r == 'n')*/
-		exit();	
-}
 
-echo "pgsql schema created. $n queries executed successfully.\n";
+	if($r == 'n')
+		exit();
+
+	rename('.htconfig.php', '.htconfig.php-mysql');
+
+	run_sql('install/schema_postgres.sql', $pgdb, $err, $n);
+	if($err) {
+		echo "There were $err errors creating the pgsql schema. Unable to continue.\n";
+		exit();	
+	}
+
+	echo "pgsql schema created. $n queries executed successfully.\n";
+}
 
 $res = $pgdb->query("select relname, attname, pg_type.typname from ((pg_attribute inner join pg_class on attrelid=pg_class.oid) inner join pg_type on atttypid=pg_type.oid) inner join pg_namespace on relnamespace=pg_namespace.oid  where nspname='public' and atttypid not in (26,27,28,29) and relkind='r' and attname <> 'item_search_vector';");
 if($res === false) {
@@ -215,9 +241,23 @@ $schema = array();
 while(($row = $res->fetch()) !== false)
 	$schema[$row[0]][$row[1]] = $row[2];
 	
+$res = $pgdb->query("select relname, attname from pg_attribute inner join pg_class on attrelid=pg_class.oid inner join pg_constraint on conrelid=pg_class.oid and pg_attribute.attnum = any (conkey) where contype='p';");
+if($res === false) {
+	echo "Error reading back primary keys. Unable to continue.\n";
+	var_export($pgdb->errorInfo());
+	exit();
+}
+$pkeys = array();
+while(($row = $res->fetch()) !== false)
+	$pkeys[$row[0]] = $row[1];
+
 $err = 0; $n = 0;
 $reserved = array('ignore','key','with');
 foreach($schema as $table=>$fields) {
+	if(isset($starttable) && !$n && $table != $starttable) {
+		echo "Skipping table $table\n";
+		continue;
+	}
 	$fnames = array_keys($fields);
 	$pfnames = array_keys($fields);
 	
@@ -231,14 +271,16 @@ foreach($schema as $table=>$fields) {
 			$pfname = '"' . $pfname . '"';
 	$pfstr = implode(',', $pfnames);
 	
-	$res = $mydb->query("SELECT count(*) FROM $table;");
-	if($res === false) {
+	$cres = $mydb->query("SELECT count(*) FROM $table;");
+	if($cres === false) {
 		echo "Fatal error counting table $table: ".var_export($mydb->errorInfo(), true)."\n";
 		exit();
 	}
-	$nrows = $res->fetchColumn(0);
+	$nrows = $cres->fetchColumn(0);
+	$cres->closeCursor();
+	
 	if(!$nrows) {
-		echo "\nTABLE $table has 0 rows in mysql db.\n";
+		echo "TABLE $table has 0 rows in mysql db.\n";
 		continue;
 	}
 	
@@ -246,10 +288,17 @@ foreach($schema as $table=>$fields) {
 	for($x=0, $c=count($fields); $x < $c; $x++)
 		$pstr .= ($x ? ',?' : '?');
 
-	$crow = 0;
+	if(isset($starttable) && $table == $starttable) {
+		$selectsql = "SELECT $fstr FROM $table ORDER BY {$pkeys[$table]} LIMIT $nrows OFFSET $startrow;";
+		$crow = $startrow;
+	} else {
+		$selectsql = "SELECT $fstr FROM $table ORDER BY {$pkeys[$table]};";
+		$crow = 0;
+	}
+
 	echo "\033[255DTABLE: $table [$c fields]  $crow/$nrows    (".number_format(($crow/$nrows)*100,2)."%)\033[K";
-	
-	$res = $mydb->query("SELECT $fstr FROM $table;");
+		
+	$res = $mydb->query($selectsql);
 	if($res === false) {
 		echo "Fatal Error importing table $table: ".var_export($mydb->errorInfo(), true)."\n";
 		exit();
@@ -273,14 +322,16 @@ foreach($schema as $table=>$fields) {
 		$r = $istmt->execute();
 		if($r === false) {
 			$err++;
-			echo "\nInsert error: ".var_export(array($pgdb->errorInfo(), $table, $fields, $row), true)."\n";
-			//exit();
+			echo "Insert error: ".var_export(array($pgdb->errorInfo(), $table, $fields, $row), true)."\nResume with {$argv[0]} --resume $table $crow\n";
+			exit();
 		} else
 			$n++;
 		$crow++;
 		if(($crow % 10) == 0 || $crow == $nrows)
 			echo "\033[255DTABLE: $table [$c fields]  $crow/$nrows    (".number_format(($crow/$nrows)*100,2)."%)\033[K";
 	}
+	$res->closeCursor();
+	echo "\n";
 }
 
 echo "Done with $err errors and $n inserts.\n";

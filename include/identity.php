@@ -1473,7 +1473,7 @@ function get_channel_by_nick($nick) {
 
 function identity_selector() {
 	if(local_user()) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and not ( channel_pageflags & %d )>0 order by channel_name ",
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and (channel_pageflags & %d) = 0 order by channel_name ",
 			intval(get_account_id()),
 			intval(PAGE_REMOVED)
 		);
@@ -1573,7 +1573,7 @@ function notifications_on($channel_id,$value) {
 
 function get_channel_default_perms($uid) {
 
-	$r = q("select abook_my_perms from abook where abook_channel = %d and abook_flags & %d limit 1",
+	$r = q("select abook_my_perms from abook where abook_channel = %d and (abook_flags & %d) > 0 limit 1",
 		intval($uid),
 		intval(ABOOK_FLAG_SELF)
 	);
