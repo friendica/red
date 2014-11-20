@@ -1256,8 +1256,14 @@ function zot_import($arr, $sender_url) {
 
 function public_recips($msg) {
 
+
+	require_once('include/identity.php');
+
 	$check_mentions = false;
+	$include_sys = false;
+
 	if($msg['message']['type'] === 'activity') {
+		$include_sys = true;
 		$col = 'channel_w_stream';
 		$field = PERMS_W_STREAM;
 		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {
@@ -1307,6 +1313,14 @@ function public_recips($msg) {
 
 	$r = array_merge($r,$x);
 
+	//logger('message: ' . print_r($msg['message'],true));
+
+	if($include_sys && array_key_exists('public_scope',$msg['message']) && $msg['message']['public_scope'] === 'public') {
+		$sys = get_sys_channel();
+		if($sys)
+			$r[] = array('hash' => $sys['channel_hash']);
+	}
+
 	// look for any public mentions on this site
 	// They will get filtered by tgroup_check() so we don't need to check permissions now
 
@@ -1337,7 +1351,7 @@ function public_recips($msg) {
 function allowed_public_recips($msg) {
 
 
-	logger('allowed_public_recips: ' . print_r($msg,true));
+	logger('allowed_public_recips: ' . print_r($msg,true),LOGGER_DATA);
 
 	$recips = public_recips($msg);
 
@@ -1414,7 +1428,12 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 			continue;
 		}
 
+
 		$channel = $r[0];
+
+		// allow public postings to the sys channel regardless of permissions
+		if(($channel['channel_pageflags'] & PAGE_SYSTEM) && (! $arr['item_private']))
+			$public = true;
 
 		$tag_delivery = tgroup_check($channel['channel_id'],$arr);
 

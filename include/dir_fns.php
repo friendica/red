@@ -38,7 +38,7 @@ function check_upstream_directory() {
 	*/
 	$directory = get_config('system','directory_server');
 	if ($directory) {
-		$r = q("select * from site where site_url = '%s' and (site_flags & %d)>0 ",
+		$r = q("select * from site where site_url = '%s' and (site_flags & %d) > 0 ",
 			dbesc($directory),
 			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY|DIRECTORY_MODE_STANDALONE)
 		);
@@ -86,14 +86,14 @@ function sync_directories($dirmode) {
 
 	$realm = get_directory_realm();
 	if($realm == DIRECTORY_REALM) {
-		$r = q("select * from site where (site_flags & %d)>0 and site_url != '%s' and ( site_realm = '%s' or site_realm = '') ",
+		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s' and ( site_realm = '%s' or site_realm = '') ",
 			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
 			dbesc(z_root()),
 			dbesc($realm)
 		);
 	}
 	else {
-		$r = q("select * from site where (site_flags & %d)>0 and site_url != '%s' and site_realm like '%s' ",
+		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s' and site_realm like '%s' ",
 			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
 			dbesc(z_root()),
 			dbesc(protect_sprintf('%' . $realm . '%'))
@@ -120,7 +120,7 @@ function sync_directories($dirmode) {
 			dbesc($r[0]['site_realm'])
 		);
 
-		$r = q("select * from site where (site_flags & %d)>0 and site_url != '%s'",
+		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s'",
 			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
 			dbesc(z_root())
 		);

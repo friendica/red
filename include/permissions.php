@@ -257,7 +257,7 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 
 	$channel_perm = $global_perms[$permission][0];
 
-	$r = q("select %s, channel_hash from channel where channel_id = %d limit 1",
+	$r = q("select %s, channel_pageflags, channel_hash from channel where channel_id = %d limit 1",
 		dbesc($channel_perm),
 		intval($uid)
 	);

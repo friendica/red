@@ -79,7 +79,7 @@ class Item extends BaseObject {
 		$indent = '';
 		$osparkle = '';
 		$total_children = $this->count_descendants();
-		$unseen_comments = (($item->real_uid) ? 0 : $this->count_unseen_descendants());
+		$unseen_comments = (($item['real_uid']) ? 0 : $this->count_unseen_descendants());
 
 		$conv = $this->get_conversation();
 		$observer = $conv->get_observer();
