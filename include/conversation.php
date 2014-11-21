@@ -885,15 +885,18 @@ function item_photo_menu($item){
 	$vsrc_link = "";
 	$follow_url = "";
 
-	if(local_user()) {
+
+	$local_user = local_user();
+
+	if($local_user) {
 		$ssl_state = true;
 		if(! count($a->contacts))
-			load_contact_links(local_user());
+			load_contact_links($local_user);
 		$channel = $a->get_channel();
 		$channel_hash = (($channel) ? $channel['channel_hash'] : '');
 	}
 
-	if((local_user()) && local_user() == $item['uid']) {
+	if(($local_user) && $local_user == $item['uid']) {
 		$vsrc_link = 'javascript:viewsrc(' . $item['id'] . '); return false;';
 		if($item['parent'] == $item['id'] && $channel && ($channel_hash != $item['author_xchan'])) {
 			$sub_link = 'javascript:dosubthread(' . $item['id'] . '); return false;';
@@ -901,12 +904,13 @@ function item_photo_menu($item){
 	}
 
     $profile_link = chanlink_hash($item['author_xchan']);
-	$pm_url = $a->get_baseurl($ssl_state) . '/mail/new/?f=&hash=' . $item['author_xchan'];
+	if($item['uid'] > 0)
+		$pm_url = $a->get_baseurl($ssl_state) . '/mail/new/?f=&hash=' . $item['author_xchan'];
 
 	if($a->contacts && array_key_exists($item['author_xchan'],$a->contacts))
 		$contact = $a->contacts[$item['author_xchan']];
 	else
-		if(local_user() && $item['author']['xchan_addr'])
+		if($local_user && $item['author']['xchan_addr'])
 			$follow_url = z_root() . '/follow/?f=&url=' . $item['author']['xchan_addr'];
 
 	if($contact) {
