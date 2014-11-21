@@ -55,7 +55,7 @@ function onedirsync_run($argv, $argc){
 	$h = q("select * from hubloc where hubloc_addr = '%s' limit 1",
 		dbesc($r[0]['ud_addr'])
 	);
-	if($h && $h[0]['hubloc_status'] & HUBLOC_OFFLINE) {
+	if(($h) && ($h[0]['hubloc_status'] & HUBLOC_OFFLINE)) {
 		$y = q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and ( ud_flags & %d ) = 0 and ud_date < '%s' ",
 			intval(UPDATE_FLAGS_UPDATED),
 			dbesc($r[0]['ud_addr']),
@@ -66,6 +66,11 @@ function onedirsync_run($argv, $argc){
 		return;
 	}
 
+	// we might have to pull this out some day, but for now update_directory_entry() 
+	// runs zot_finger() and is kind of zot specific
+
+	if($h && $h[0]['hubloc_network'] !== 'zot')
+		return;
 
 	update_directory_entry($r[0]);		
 
