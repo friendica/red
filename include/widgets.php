@@ -828,7 +828,11 @@ function widget_photo_rand($arr) {
 	else
 		$album = '';
 
-	$channel_id = get_app()->profile_uid;
+	$channel_id = 0;
+	if(array_key_exists('channel_id',$arr) && intval($arr['channel_id']))
+		$channel_id = intval($arr['channel_id']);
+	if(! $channel_id)
+		$channel_id = get_app()->profile_uid;
 	if(! $channel_id)
 		return '';
 
