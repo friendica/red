@@ -4286,6 +4286,8 @@ function zot_feed($uid,$observer_xchan,$arr) {
 	$mindate = dbesc($mindate);
 
 	logger('zot_feed: requested for uid ' . $uid . ' from observer ' . $observer_xchan, LOGGER_DEBUG);
+	if($message_id)
+		logger('message_id: ' . $message_id,LOGGER_DEBUG);
 
 	if(! perm_is_allowed($uid,$observer_xchan,'view_stream')) {
 		logger('zot_feed: permission denied.');

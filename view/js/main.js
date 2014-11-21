@@ -343,7 +343,7 @@
 
 					if($('#live-network').length)   { src = 'network'; liveUpdate(); }
 					if($('#live-channel').length)   { src = 'channel'; liveUpdate(); }
-					if($('#live-community').length) { src = 'community'; liveUpdate(); }
+					if($('#live-home').length)      { src = 'home'; liveUpdate(); }
 					if($('#live-display').length)   { src = 'display'; liveUpdate(); }
 					if($('#live-search').length)    { src = 'search'; liveUpdate(); }
 
