@@ -33,7 +33,7 @@ function profile_photo_set_profile_perms($profileid = '') {
 
 		if (intval($profile['is_default']) != 1) {
 			$r0 = q("SELECT channel_hash FROM channel WHERE channel_id = %d LIMIT 1", intval(local_user()) );
-			$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = %d ", intval($profile['id'])); //Should not be needed in future. Catches old int-profile-ids.
+			$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%d' ", intval($profile['id'])); //Should not be needed in future. Catches old int-profile-ids.
 			$r2 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%s'", dbesc($profile['profile_guid']));
 			$allowcid = "<" . $r0[0]['channel_hash'] . ">";
 			foreach ($r1 as $entry) {

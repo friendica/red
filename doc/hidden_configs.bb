@@ -100,6 +100,8 @@ This document assumes you're an administrator.
         the main logs as well.
     [b]system > hide_in_statistics[/b]
         Tell the red statistics servers to completely hide this hub in hub lists.
+    [b]system > reserved_channels[/b]
+        Don't allow members to register channels with this comma separated list of names (no spaces)
 	
 #include doc/macros/main_footer.bb;
 

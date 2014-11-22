@@ -341,6 +341,8 @@ function dbesc_array_cb(&$item, $key) {
 	if(is_string($item)) {
 		if($item == '0000-00-00 00:00:00' && ACTIVE_DBTYPE == DBTYPE_POSTGRES)
 			$item = '0001-01-01 00:00:00';
+		else if($item == '0001-01-01 00:00:00' && ACTIVE_DBTYPE == DBTYPE_MYSQL)
+			$item = '0000-00-00 00:00:00';
 		$item = dbesc($item);
 	}
 }

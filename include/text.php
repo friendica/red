@@ -1815,8 +1815,13 @@ function legal_webbie($s) {
 
 function check_webbie($arr) {
 
+	$reservechan = get_config('system','reserved_channels');
+	if(strlen($reservechan))
+		$taken = explode(',', $reservechan);
+	else
+		$taken = array();
+		
 	$str = '';
-	$taken = array();
 	if(count($arr)) {
 		foreach($arr as $x) {
 			$y = legal_webbie($x);
