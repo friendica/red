@@ -2,8 +2,7 @@ var searchData=
 [
   ['randprof_2ephp',['randprof.php',['../randprof_8php.html',1,'']]],
   ['rbmark_2ephp',['rbmark.php',['../rbmark_8php.html',1,'']]],
-  ['readme_2emd',['README.md',['../apw_2README_8md.html',1,'']]],
-  ['readme_2emd',['README.md',['../blogga_2php_2README_8md.html',1,'']]],
+  ['readme_2emd',['README.md',['../README_8md.html',1,'']]],
   ['receive_2ephp',['receive.php',['../receive_8php.html',1,'']]],
   ['redable_2ephp',['redable.php',['../redable_8php.html',1,'']]],
   ['redbasic_2ephp',['redbasic.php',['../redbasic_8php.html',1,'']]],

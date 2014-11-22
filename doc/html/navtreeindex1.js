@@ -1,13 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"boot_8php.html#a4fefd7486d3b888a05cfd3dc9575f115":[6,0,4,248],
-"boot_8php.html#a505410c7edc5f5bb5fa227b98359793e":[6,0,4,215],
-"boot_8php.html#a50a6707a28c7d05d3f49eaabc7994501":[6,0,4,30],
-"boot_8php.html#a525ca93ff35d3535d1a2b8ba57876afa":[6,0,4,169],
-"boot_8php.html#a52b599cd13e152ebc80d7e4413683195":[6,0,4,44],
-"boot_8php.html#a53e4bdb6f225da55115acb9277f75e53":[6,0,4,88],
-"boot_8php.html#a5542c5c2806ab8bca04bad53d47b5209":[6,0,4,36],
-"boot_8php.html#a56fd673eaa7014150297ce1162502db5":[6,0,4,207],
 "boot_8php.html#a57eee7352714c004d36c26dda74af73e":[6,0,4,247],
 "boot_8php.html#a5a681a672e007cdc22b43345d71f07c6":[6,0,4,310],
 "boot_8php.html#a5ab6181607a090bcdbaa13b15b85aba1":[6,0,4,20],
@@ -217,10 +209,8 @@ var NAVTREEINDEX1 =
 "boot_8php.html#afe88b920aa285982edb817a0dd44eb37":[6,0,4,14],
 "boot_8php.html#afef254290febac854c85fc698d9483a6":[6,0,4,311],
 "boot_8php.html#aff210e8403dd72368522b17fb6e5d4e7":[6,0,4,233],
-"boxy_8php.html":[6,0,3,1,4,1,0],
+"boxy_8php.html":[6,0,3,1,3,1,0],
 "cache_8php.html":[6,0,0,15],
-"chanman_8php.html":[6,0,0,16],
-"chanman_8php.html#a21ba9a5c961e866ff27aee3ee67bf99b":[6,0,0,16,0],
 "channel_8php.html":[6,0,1,11],
 "channel_8php.html#a9c6a6179e0e626398ebecc6151905ef1":[6,0,1,11,0],
 "channel_8php.html#ac7c8c7845741baadf87fae6bc279f3dc":[6,0,1,11,1],
@@ -249,5 +239,15 @@ var NAVTREEINDEX1 =
 "classApp.html#a1f60d19d47021629faac7a0a6d917e94":[5,0,7,55],
 "classApp.html#a20d1890cc16b22ba79eeb0cbf2f719f7":[5,0,7,29],
 "classApp.html#a230e975296cf164da2fee35ef720964f":[5,0,7,33],
-"classApp.html#a244b2d53b21be269aad2269d23192f95":[5,0,7,73]
+"classApp.html#a244b2d53b21be269aad2269d23192f95":[5,0,7,73],
+"classApp.html#a2e82da4aecfc2017a8d1d332ca501f9f":[5,0,7,72],
+"classApp.html#a2eb832a8577dee7d40b93abdf6d1d35a":[5,0,7,12],
+"classApp.html#a33a8e90b60ec4438f6fbf299d0f6839c":[5,0,7,62],
+"classApp.html#a344d2b7dc2f276648d521aee4da1731c":[5,0,7,23],
+"classApp.html#a3694aa1907aa103a2adbc71f926f0fa0":[5,0,7,50],
+"classApp.html#a3d84af5e42082098672531cd1a618853":[5,0,7,22],
+"classApp.html#a4659785d13e4bac0bed50dbb1b0d4299":[5,0,7,6],
+"classApp.html#a4776d9322edea17fae56afa5d01a323e":[5,0,7,24],
+"classApp.html#a487332f8de40414ca1a54a4265570b70":[5,0,7,81],
+"classApp.html#a495ec082c2719314e536070ca1ce073d":[5,0,7,40]
 };

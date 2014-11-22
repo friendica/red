@@ -39,8 +39,6 @@ var searchData=
   ['dbunescbin',['dbunescbin',['../dba__driver_8php.html#afaaa1a7eff9c1b65b3b8c464ae37640e',1,'dba_driver.php']]],
   ['decode_5ftags',['decode_tags',['../items_8php.html#a56b2a4abcadfac71175cd50555528cc3',1,'items.php']]],
   ['default_2ephp',['default.php',['../php_2default_8php.html',1,'']]],
-  ['default_2ephp',['default.php',['../theme_2blogga_2php_2default_8php.html',1,'']]],
-  ['default_2ephp',['default.php',['../theme_2blogga_2view_2theme_2blog_2default_8php.html',1,'']]],
   ['default_2ephp',['default.php',['../theme_2mytheme_2php_2default_8php.html',1,'']]],
   ['default_5fdb_5fengine',['DEFAULT_DB_ENGINE',['../boot_8php.html#aa8a2b61e70900139d1ca28e46f1da49d',1,'boot.php']]],
   ['del_5fconfig',['del_config',['../include_2config_8php.html#a549910227348003efc3c05c9105c42da',1,'config.php']]],

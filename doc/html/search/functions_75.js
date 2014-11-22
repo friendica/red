@@ -18,6 +18,7 @@ var searchData=
   ['update_5fdirectory_5fentry',['update_directory_entry',['../dir__fns_8php.html#a44062d4b471d1e83f92f6c184585aa13',1,'dir_fns.php']]],
   ['update_5fdisplay_5fcontent',['update_display_content',['../update__display_8php.html#aa36ac524059e209d5d75a03c16206246',1,'update_display.php']]],
   ['update_5ffeed_5fitem',['update_feed_item',['../items_8php.html#a9b449eeae50003414b8b30ca927af434',1,'items.php']]],
+  ['update_5fhome_5fcontent',['update_home_content',['../update__home_8php.html#a668340089acd150b830134476a647d05',1,'update_home.php']]],
   ['update_5fimported_5fitem',['update_imported_item',['../zot_8php.html#a31aad56acf8ff8f2353e6ff8595544df',1,'zot.php']]],
   ['update_5flocal_5fposts_5fstat',['update_local_posts_stat',['../statistics__fns_8php.html#a9dd516dda693f17f5ce48a94876f7efa',1,'statistics_fns.php']]],
   ['update_5fmodtime',['update_modtime',['../zot_8php.html#ab319d1d9fff9c7775d9daef42d1f33dd',1,'zot.php']]],
