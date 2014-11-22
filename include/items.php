@@ -1094,7 +1094,8 @@ function encode_item($item,$mirror = false) {
 	$x['message_parent']  = $item['thr_parent'];
 	$x['created']         = $item['created'];
 	$x['edited']          = $item['edited'];
-	$x['expires']         = $item['expires'];
+	// always send 0's over the wire
+	$x['expires']         = (($item['expires'] == '0001-01-01 00:00:00') ? '0000-00-00 00:00:00' : $item['expires']);
 	$x['commented']       = $item['commented'];
 	$x['mimetype']        = $item['mimetype'];
 	$x['title']           = $item['title'];
