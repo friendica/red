@@ -874,3 +874,44 @@ function widget_photo_rand($arr) {
 
 	return $o;
 }
+
+
+function widget_random_block($arr) {
+
+	$channel_id = 0;
+	if(array_key_exists('channel_id',$arr) && intval($arr['channel_id']))
+		$channel_id = intval($arr['channel_id']);
+	if(! $channel_id)
+		$channel_id = get_app()->profile_uid;
+	if(! $channel_id)
+		return '';
+
+	if(array_key_exists('contains',$arr))
+		$contains = $arr['contains'];
+
+	$o = '';
+
+	require_once('include/security.php');
+	$sql_options = item_permissions_sql($channel_id);
+
+	$randfunc = db_getfunc('RAND');
+
+	$r = q("select item.* from item left join item_id on item.id = item_id.iid
+		where item.uid = %d and sid like '%s' and service = 'BUILDBLOCK' and 
+		item_restrict = %d $sql_options order by $randfunc limit 1",
+		intval($channel_id),
+		dbesc('%' . $contains . '%'),
+		intval(ITEM_BUILDBLOCK)
+	);
+
+	if($r) {
+		$o = '<div class="widget bblock">';
+		if($r[0]['title'])
+			$o .= '<h3>' . $r[0]['title'] . '</h3>';
+		$o .= prepare_text($r[0]['body'],$r[0]['mimetype']);
+		$o .= '</div>';
+
+	}
+	return $o;
+
+}

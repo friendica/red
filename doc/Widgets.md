@@ -90,5 +90,12 @@ Some/many of these widgets have restrictions which may restrict the type of page
     * album - album name (very strongly recommended if you have lots of photos)
     * scale - typically 0 (original size), 1 (640px), or 2 (320px)
     * style - CSS style string
+	* channel_id - if not your own
+<br />&nbsp;<br />
+
+* random_block - display a random block element from your webpage design tools collection. Permissions are honoured.
+    * args: 
+    * contains - only return blocks which include the contains string in the block name
+    * channel_id - if not your own
 <br />&nbsp;<br />
 
