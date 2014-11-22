@@ -109,4 +109,8 @@ class dba_postgres extends dba_driver {
 	function concat($fld, $sep) {
 		return 'string_agg(' . $fld . ',\'' . $sep . '\')';
 	}
+	
+	function getdriver() {
+		return 'pgsql';
+	}
 }
