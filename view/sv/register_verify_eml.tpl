@@ -1,6 +1,6 @@
 
-En begäran om registrering av en ny användare har mottagits på
-{{$sitename}} och behöver ditt godkännande.
+En begäran om registrering av en ny användare har mottagits på 
+{{$sitename}} och behöver ditt godkännande. 
 
 
 Inloggningsuppgifterna är:
@@ -22,4 +22,3 @@ För att avslå begäran och ta bort kontot, besök:
 
 
 Tack.
-
