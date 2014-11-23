@@ -55,6 +55,7 @@ function home_content(&$a, $update = 0, $load = false) {
 	
 	// See if the sys channel set a homepage
 	if (! $channel_address) {
+		require_once('include/identity.php');
 		$u = get_sys_channel();
 		if ($u) {
 			$u = array($u);
@@ -232,5 +233,7 @@ function home_content(&$a, $update = 0, $load = false) {
 		call_hooks('home_content',$o);
 		return $o;	
 	}
+
+	return $o;
 
 }
