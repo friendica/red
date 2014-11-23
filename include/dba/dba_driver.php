@@ -104,6 +104,12 @@ abstract class dba_driver {
 	 */
 	abstract function close();
 
+	/**
+	 * @brief Return text name for db driver
+	 *
+	 * This abstract function needs to be implemented in the real driver.
+	 */
+	abstract function getdriver();
 
 	function __construct($server, $port, $user,$pass,$db,$install = false) {
 		if(($install) && (! $this->install($server, $port, $user, $pass, $db))) {

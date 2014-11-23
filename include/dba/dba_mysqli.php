@@ -72,5 +72,9 @@ class dba_mysqli extends dba_driver {
 			$this->db->close();
 		$this->connected = false;
 	}
+	
+	function getdriver() {
+		return 'mysqli';
+	}
 
 }
