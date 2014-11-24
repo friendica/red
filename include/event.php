@@ -45,6 +45,56 @@ function format_event_html($ev) {
 	return $o;
 }
 
+
+
+function ical_wrapper($ev) {
+
+	if(! ((is_array($ev)) && count($ev)))
+		return '';
+
+	$o .= "BEGIN:VCALENDAR";
+	$o .= "\nVERSION:2.0";
+	$o .= "\nMETHOD:PUBLISH";
+	$o .= "\nPRODID:-//" . get_config('system','sitename') . "//" . RED_PLATFORM . "//" . strtoupper(get_app()->language). "\n";
+	if(array_key_exists('start',$ev))
+		$o .= format_event_ical($ev);
+	else {
+		foreach($ev as $e) {
+			$o .= format_event_ical($e);
+		}
+	}
+	$o .= "\nEND:VCALENDAR\n";
+
+	return $o;
+}
+
+function format_event_ical($ev) {
+
+	$o = '';
+
+	$o .= "\nBEGIN:VEVENT";
+	if($ev['start']) 
+		$o .= "\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\This' . (($ev['adjust']) ? '\\Z' : ''));
+	if($ev['finish'] && ! $ev['nofinish']) 
+		$o .= "\nDTEND:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\This' . (($ev['adjust']) ? '\\Z' : ''));
+	if($ev['summary']) 
+		$o .= "\nSUMMARY:" . format_ical_text($ev['summary']);
+	if($ev['location'])
+		$o .= "\nLOCATION:" . format_ical_text($ev['location']);
+	if($ev['description']) 
+		$o .= "\nDESCRIPTION:" . format_ical_text($ev['description']);
+	$o .= "\nEND:VEVENT\n";
+	return $o;
+}
+
+function format_ical_text($s) {
+
+	require_once('include/bbcode.php');
+	require_once('include/html2plain.php');
+	return(wordwrap(html2plain(bbcode($s)),72,"\n ",true));
+}
+
+
 function format_event_bbcode($ev) {
 
 	$o = '';
