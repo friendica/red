@@ -31,7 +31,7 @@ function receive_post(&$a) {
 
 		// Diaspora sites *may* provide a truncated guid. 
 
-		$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_guid like '%s' AND NOT (channel_pageflags & %d ) LIMIT 1",
+		$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_guid like '%s' AND NOT (channel_pageflags & %d )>0 LIMIT 1",
 			dbesc($guid . '%'),
 			intval(PAGE_REMOVED)
 		);

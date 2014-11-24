@@ -45,6 +45,7 @@ Zot is the great new communicaton protocol invented especially for the RedMatrix
 [zrl=[baseurl]/help/faq_admins]FAQ For Admins[/zrl]
 
 [size=large][b]Technical Documentation[/b][/size]
+[zrl=[baseurl]/help/history]RedMatrix history[/zrl]
 [zrl=[baseurl]/help/Zot---A-High-Level-Overview]A high level overview of Zot[/zrl]
 [zrl=[baseurl]/help/zot]An introduction to Zot[/zrl]
 [zrl=[baseurl]/help/zot_structures]Zot Stuctures[/zrl]
@@ -63,6 +64,7 @@ Zot is the great new communicaton protocol invented especially for the RedMatrix
 [zrl=[baseurl]/doc/html/]Code Reference (doxygen generated - sets cookies)[/zrl]
 [zrl=[baseurl]/help/to_do_doco]To-Do list for the Red Documentation Project[/zrl]
 [zrl=[baseurl]/help/to_do_code]To-Do list for Developers[/zrl]
+[zrl=[baseurl]/help/roadmap]Version 3 roadmap[/zrl]
 [zrl=[baseurl]/help/git_for_non_developers]Git for Non-Developers[/zrl]
 
 [size=large][b]Frequently Asked Questions For Developers[/b][/size]

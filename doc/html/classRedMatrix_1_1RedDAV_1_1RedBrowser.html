@@ -180,7 +180,7 @@ Private Attributes</h2></td></tr>
 
 <p>Constructor for <a class="el" href="classRedMatrix_1_1RedDAV_1_1RedBrowser.html" title="Provides a DAV frontend for the webbrowser.">RedBrowser</a> class. </p>
 <p>$enablePost will be activated through <a class="el" href="classRedMatrix_1_1RedDAV_1_1RedBrowser.html#aa1607857cb59738c4dce2fe8e73d8f19">set_writeable()</a> in a later stage. At the moment the write_storage permission is only valid for the whole folder. No file specific permissions yet. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>disable enablePost by default and only activate if permissions grant edit rights.</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>disable enablePost by default and only activate if permissions grant edit rights.</dd></dl>
 <p>Disable assets with $enableAssets = false. Should get some thumbnail views anyway.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -389,7 +389,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>The DAV browser is instantiated after the auth module and directory classes but before we know the current directory and who the owner and observer are. So we add a pointer to the browser into the auth module and vice versa. Then when we've figured out what directory is actually being accessed, we call the following function to decide whether or not to show web elements which include writeable objects.</p>
 <p>It only disable/enable the visible parts. Not the POST handler which handels the actual requests when uploading files or creating folders.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Maybe this whole way of doing this can be solved with some $server-&gt;subscribeEvent(). </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>Maybe this whole way of doing this can be solved with some $server-&gt;subscribeEvent(). </dd></dl>
 
 </div>
 </div>

@@ -196,7 +196,7 @@ function photos_post(&$a) {
 			}
 		}
 
-		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . $_SESSION['album_return']);
 	}
 
 	if(($a->argc > 2) && ((x($_POST,'desc') !== false) || (x($_POST,'newtag') !== false)) || (x($_POST,'albname') !== false)) {
@@ -206,6 +206,7 @@ function photos_post(&$a) {
 		$rawtags     = ((x($_POST,'newtag'))  ? notags(trim($_POST['newtag']))  : '');
 		$item_id     = ((x($_POST,'item_id')) ? intval($_POST['item_id'])       : 0);
 		$albname     = ((x($_POST,'albname')) ? notags(trim($_POST['albname'])) : '');
+		$adult       = ((x($_POST,'adult'))   ? intval($_POST['adult'])         : 0);
 		$str_group_allow   = perms2str($_POST['group_allow']);
 		$str_contact_allow = perms2str($_POST['contact_allow']);
 		$str_group_deny    = perms2str($_POST['group_deny']);
@@ -226,7 +227,7 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 			if(count($r)) {
-				$ph = photo_factory($r[0]['data'], $r[0]['type']);
+				$ph = photo_factory(dbunescbin($r[0]['data']), $r[0]['type']);
 				if($ph->is_valid()) {
 					$rotate_deg = ( (intval($_POST['rotate']) == 1) ? 270 : 90 );
 					$ph->rotate($rotate_deg);
@@ -234,8 +235,8 @@ function photos_post(&$a) {
 					$width  = $ph->getWidth();
 					$height = $ph->getHeight();
 
-					$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 0 limit 1",
-						dbesc($ph->imageString()),
+					$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 0",
+						dbescbin($ph->imageString()),
 						intval($height),
 						intval($width),
 						dbesc($resource_id),
@@ -247,8 +248,8 @@ function photos_post(&$a) {
 						$width  = $ph->getWidth();
 						$height = $ph->getHeight();
 		
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 1 limit 1",
-							dbesc($ph->imageString()),
+						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 1",
+							dbescbin($ph->imageString()),
 							intval($height),
 							intval($width),
 							dbesc($resource_id),
@@ -261,8 +262,8 @@ function photos_post(&$a) {
 						$width  = $ph->getWidth();
 						$height = $ph->getHeight();
 
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 2 limit 1",
-							dbesc($ph->imageString()),
+						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 2",
+							dbescbin($ph->imageString()),
 							intval($height),
 							intval($width),
 							dbesc($resource_id),
@@ -273,13 +274,11 @@ function photos_post(&$a) {
 			}
 		}
 
-		$p = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d and ( photo_flags = %d or photo_flags = %d ) ORDER BY `scale` DESC",
+		$p = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d ORDER BY `scale` DESC",
 			dbesc($resource_id),
-			intval($page_owner_uid),
-			intval(PHOTO_NORMAL),
-			intval(PHOTO_PROFILE)
+			intval($page_owner_uid)
 		);
-		if(count($p)) {
+		if($p) {
 			$ext = $phototypes[$p[0]['type']];
 
 			$r = q("UPDATE `photo` SET `description` = '%s', `album` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource_id` = '%s' AND `uid` = %d",
@@ -296,6 +295,14 @@ function photos_post(&$a) {
 
 		$item_private = (($str_contact_allow || $str_group_allow || $str_contact_deny || $str_group_deny) ? true : false);
 
+		$old_adult = (($p[0]['photo_flags'] & PHOTO_ADULT) ? 1 : 0);
+		if($old_adult != $adult) {
+			$r = q("update photo set photo_flags = ( photo_flags ^ %d) where resource_id = '%s' and uid = %d",
+				intval(PHOTO_ADULT),
+				dbesc($resource_id),
+				intval($page_owner_uid)
+			);
+		}
 
 		/* Don't make the item visible if the only change was the album name */
 
@@ -313,16 +320,17 @@ function photos_post(&$a) {
 				intval($item_id),
 				intval($page_owner_uid)
 			);
-		}
-		if($r) {
-			$old_tag    = $r[0]['tag'];
-			$old_inform = $r[0]['inform'];
+
+			if($r) {
+				$old_tag    = $r[0]['tag'];
+				$old_inform = $r[0]['inform'];
+			}
 		}
 
 
 		// make sure the linked item has the same permissions as the photo regardless of any other changes
 		$x = q("update item set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
-			where id = %d limit 1",
+			where id = %d",
 				dbesc($str_contact_allow),
 				dbesc($str_group_allow),
 				dbesc($str_contact_deny),
@@ -428,8 +436,11 @@ function photos_post(&$a) {
 	if(! $r['success']) {
 		notice($r['message'] . EOL);
 	}		
-
-	goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+	
+	if($_REQUEST['newalbum'])
+		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($_REQUEST['newalbum']));
+	else
+		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex(datetime_convert('UTC',date_default_timezone_get(),'now', 'Y')));		
 
 }
 
@@ -439,20 +450,17 @@ function photos_content(&$a) {
 
 	// URLs:
 	// photos/name
-	// photos/name/upload
-	// photos/name/upload/xxxxx (xxxxx is album name)
-	// photos/name/album/xxxxx
-	// photos/name/album/xxxxx/edit
+	// photos/name/album/xxxxx (xxxxx is album name)
 	// photos/name/image/xxxxx
-	// photos/name/image/xxxxx/edit
 
 
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}
-	
-	
+
+	$unsafe = ((array_key_exists('unsafe',$_REQUEST) && $_REQUEST['unsafe']) ? 1 : 0);
+		
 	require_once('include/bbcode.php');
 	require_once('include/security.php');
 	require_once('include/conversation.php');
@@ -476,11 +484,9 @@ function photos_content(&$a) {
 	if(argc() > 3) {
 		$datatype = argv(2);
 		$datum = argv(3);
-	}
-	elseif((argc() > 2) && (argv(2) === 'upload'))
-		$datatype = 'upload';
-	else
+	} else {
 		$datatype = 'summary';
+	}
 
 	if(argc() > 4)
 		$cmd = argv(4);
@@ -520,19 +526,11 @@ function photos_content(&$a) {
 	$_is_owner = (local_user() && (local_user() == $owner_uid));
 	$o .= profile_tabs($a,$_is_owner, $a->data['channel']['channel_address']);	
 
-	//
-	// dispatch request
-	//
-
 	/**
 	 * Display upload form
 	 */
 
-	if($datatype === 'upload') {
-		if(! ($can_post)) {
-			notice( t('Permission denied.'));
-			return;
-		}
+	if( $can_post) {
 
 		$uploader = '';
 
@@ -540,11 +538,7 @@ function photos_content(&$a) {
 				'addon_text' => $uploader,
 				'default_upload' => true);
 
-
 		call_hooks('photo_upload_form',$ret);
-
-		$default_upload = '<input id="photos-upload-choose" type="file" name="userfile" /> 	<div class="photos-upload-submit-wrapper" >
-		<input type="submit" name="submit" value="' . t('Submit') . '" id="photos-upload-submit" /> </div>';
 
 		/* Show space usage */
 
@@ -570,7 +564,9 @@ function photos_content(&$a) {
 				'deny_cid' => $channel['channel_deny_cid'], 
 				'deny_gid' => $channel['channel_deny_gid']
 			);
-		} 
+
+			$lockstate = (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock');
+		}
 
 		$aclselect_e = (($_is_owner) ? populate_acl($channel_acl,false) : '');
 
@@ -579,31 +575,39 @@ function photos_content(&$a) {
 		$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 
 		$tpl = get_markup_template('photos_upload.tpl');
-		$o .= replace_macros($tpl,array(
+		$upload_form = replace_macros($tpl,array(
 			'$pagename' => t('Upload Photos'),
 			'$sessid' => session_id(),
 			'$usage' => $usage_message,
 			'$nickname' => $a->data['channel']['channel_address'],
-			'$newalbum' => t('Enter a new album name or select an existing one:'),
+			'$newalbum_label' => t('Enter a new album name'),
+			'$newalbum_placeholder' => t('or select an existing one (doubleclick)'),
 			'$nosharetext' => t('Do not show a status post for this upload'),
 			'$albums' => $albums['albums'],
 			'$selname' => $selname,
 			'$permissions' => t('Permissions'),
 			'$aclselect' => $aclselect_e,
+			'$lockstate' => $lockstate,
 			'$uploader' => $ret['addon_text'],
-			'$default' => (($ret['default_upload']) ? $default_upload : ''),
-			'$uploadurl' => $ret['post_url']
+			'$default' => (($ret['default_upload']) ? true : false),
+			'$uploadurl' => $ret['post_url'],
+			'$submit' => t('Submit')
 
 		));
 
-		return $o; 
 	}
+
+	//
+	// dispatch request
+	//
 
 	/*
 	 * Display a single photo album
 	 */
 
 	if($datatype === 'album') {
+
+
 
 		if((strlen($datum) & 1) || (! ctype_xdigit($datum))) {
 			notice( t('Album name could not be decoded') . EOL);
@@ -614,15 +618,17 @@ function photos_content(&$a) {
 		$album = hex2bin($datum);
 
 		$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			AND `scale` <= 4 and (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY `resource_id`",
+			AND `scale` <= 4 and ((photo_flags = %d) or (photo_flags & %d ) > 0) $sql_extra GROUP BY `resource_id`",
 			intval($owner_uid),
 			dbesc($album),
 			intval(PHOTO_NORMAL),
-			intval(PHOTO_PROFILE)
+			intval(($unsafe) ? (PHOTO_PROFILE|PHOTO_ADULT) : PHOTO_PROFILE)
 		);
 		if(count($r)) {
 			$a->set_pager_total(count($r));
 			$a->set_pager_itemspage(60);
+		} else {
+			goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address']);
 		}
 
 		if($_GET['order'] === 'posted')
@@ -630,14 +636,17 @@ function photos_content(&$a) {
 		else
 			$order = 'DESC';
 
-		$r = q("SELECT `resource_id`, `id`, `filename`, type, max(`scale`) AS `scale`, `description` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			AND `scale` <= 4 and (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY `resource_id` ORDER BY `created` $order LIMIT %d , %d",
+			
+		$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.scale, p.description, p.created FROM photo p INNER JOIN
+				(SELECT resource_id, max(scale) scale FROM photo WHERE uid = %d AND album = '%s' AND scale <= 4 AND (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY resource_id) ph 
+				ON (p.resource_id = ph.resource_id AND p.scale = ph.scale)
+			ORDER BY created $order LIMIT %d OFFSET %d",
 			intval($owner_uid),
 			dbesc($album),
 			intvaL(PHOTO_NORMAL),
-			intval(PHOTO_PROFILE),
-			intval($a->pager['start']),
-			intval($a->pager['itemspage'])
+			intval(($unsafe) ? (PHOTO_PROFILE|PHOTO_ADULT) : PHOTO_PROFILE),
+			intval($a->pager['itemspage']),
+			intval($a->pager['start'])
 		);
 		
 		//edit album name
@@ -653,7 +662,8 @@ function photos_content(&$a) {
 				$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 				$edit_tpl = get_markup_template('album_edit.tpl');
 				$album_edit = replace_macros($edit_tpl,array(
-					'$nametext' => t('New album name: '),
+					'$nametext' => t('Enter a new album name'),
+					'$name_placeholder' => t('or select an existing one (doubleclick)'),
 					'$nickname' => $a->data['channel']['channel_address'],
 					'$album' => $album_e,
 					'$albums' => $albums['albums'],
@@ -727,7 +737,8 @@ function photos_content(&$a) {
 				'$can_post' => $can_post,
 				'$upload' => array(t('Upload'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album)),
 				'$order' => $order,
-
+				'$upload_form' => $upload_form,
+				'$usage' => $usage_message
 			));
 
 		}
@@ -753,25 +764,18 @@ function photos_content(&$a) {
 		// fetch image, item containing image, then comments
 
 		$ph = q("SELECT aid,uid,xchan,resource_id,created,edited,title,`description`,album,filename,`type`,height,width,`size`,scale,profile,photo_flags,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
-			and (photo_flags = %d or photo_flags = %d ) $sql_extra ORDER BY `scale` ASC ",
+			$sql_extra ORDER BY `scale` ASC ",
 			intval($owner_uid),
-			dbesc($datum),
-			intval(PHOTO_NORMAL),
-			intval(PHOTO_PROFILE)
-
+			dbesc($datum)
 		);
 
 		if(! $ph) {
 
 			/* Check again - this time without specifying permissions */
 
-			$ph = q("SELECT id FROM photo WHERE uid = %d AND resource_id = '%s' 
-				and ( photo_flags = %d or photo_flags = %d )
-				LIMIT 1",
+			$ph = q("SELECT id FROM photo WHERE uid = %d AND resource_id = '%s' LIMIT 1",
 				intval($owner_uid),
-				dbesc($datum),
-				intval(PHOTO_NORMAL),
-				intval(PHOTO_PROFILE)
+				dbesc($datum)
 			);
 			if($ph) 
 				notice( t('Permission denied. Access to this item may be restricted.') . EOL);
@@ -792,11 +796,9 @@ function photos_content(&$a) {
 
 
 		$prvnxt = q("SELECT `resource_id` FROM `photo` WHERE `album` = '%s' AND `uid` = %d AND `scale` = 0 
-			and ( photo_flags = %d or photo_flags = %d ) $sql_extra ORDER BY `created` $order ",
+			$sql_extra ORDER BY `created` $order ",
 			dbesc($ph[0]['album']),
-			intval($owner_uid),
-			intval(PHOTO_NORMAL),
-			intval(PHOTO_PROFILE)
+			intval($owner_uid)
 		); 
 
 		if(count($prvnxt)) {
@@ -840,11 +842,11 @@ function photos_content(&$a) {
 			);
 		}
 
-		// lock
-		$lock = ( ( (strlen($ph[0]['allow_cid']) || strlen($ph[0]['allow_gid'])
+		// lockstate
+		$lockstate = ( ( (strlen($ph[0]['allow_cid']) || strlen($ph[0]['allow_gid'])
 				|| strlen($ph[0]['deny_cid']) || strlen($ph[0]['deny_gid'])) )
-				? t('Private Photo')
-				: Null);
+				? array('lock', t('Private Photo'))
+				: array('unlock', Null));
 
 		$a->page['htmlhead'] .= '<script>$(document).keydown(function(event) {' . "\n";
 		if($prevlink)
@@ -907,7 +909,7 @@ function photos_content(&$a) {
 			}
 
 			if((local_user()) && (local_user() == $link_item['uid'])) {
-				q("UPDATE `item` SET item_flags = (item_flags ^ %d) WHERE parent = %d and uid = %d and (item_flags & %d)",
+				q("UPDATE `item` SET item_flags = (item_flags & ~%d) WHERE parent = %d and uid = %d and (item_flags & %d)>0",
 					intval(ITEM_UNSEEN),
 					intval($link_item['parent']),
 					intval(local_user()),
@@ -929,6 +931,8 @@ function photos_content(&$a) {
 			$aclselect_e = populate_acl($ph[0]);
 			$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 
+			$_SESSION['album_return'] = bin2hex($ph[0]['album']);
+
 			$edit = array(
 				'edit' => t('Edit photo'),
 				'id' => $link_item['id'],
@@ -936,7 +940,8 @@ function photos_content(&$a) {
 				'rotateccw' => t('Rotate CCW (left)'),
 				'albums' => $albums['albums'],
 				'album' => $album_e,
-				'newalbum' => t('New album name'), 
+				'newalbum_label' => t('Enter a new album name'),
+				'newalbum_placeholder' => t('or select an existing one (doubleclick)'),
 				'nickname' => $a->data['channel']['channel_address'],
 				'resource_id' => $ph[0]['resource_id'],
 				'capt_label' => t('Caption'),
@@ -944,8 +949,11 @@ function photos_content(&$a) {
 				'tag_label' => t('Add a Tag'),
 				'permissions' => t('Permissions'),
 				'aclselect' => $aclselect_e,
+				'lockstate' => $lockstate[0],
 				'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com'),
 				'item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
+				'adult_enabled' => feature_enabled($owner_uid,'adult_photo_flagging'),
+				'adult' => array('adult',t('Flag as adult in album view'), (($ph[0]['photo_flags'] & PHOTO_ADULT) ? 1 : 0),''),
 				'submit' => t('Submit'),
 				'delete' => t('Delete Photo')
 			);
@@ -1115,7 +1123,7 @@ function photos_content(&$a) {
 			'$id' => $link_item['id'], //$ph[0]['id'],
 			'$album' => $album_e,
 			'$tools' => $tools,
-			'$lock' => $lock,
+			'$lock' => $lockstate[1],
 			'$photo' => $photo,
 			'$prevlink' => $prevlink,
 			'$nextlink' => $nextlink,
@@ -1153,29 +1161,30 @@ function photos_content(&$a) {
 	//$o = '';
 
 	$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
-		and ( photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY `resource_id`",
+		and ((photo_flags = %d) or (photo_flags & %d) > 0) $sql_extra GROUP BY `resource_id`",
 		intval($a->data['channel']['channel_id']),
 		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos')),
 		intval(PHOTO_NORMAL),
-		intval(PHOTO_PROFILE)		
+		intval(($unsafe) ? (PHOTO_PROFILE|PHOTO_ADULT) : PHOTO_PROFILE)
 	);
 	if(count($r)) {
 		$a->set_pager_total(count($r));
 		$a->set_pager_itemspage(60);
 	}
-
-	$r = q("SELECT `resource_id`, `id`, `filename`, type, `album`, max(`scale`) AS `scale` FROM `photo`
-		WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s'
-		and ( photo_flags = %d or photo_flags = %d )  
-		$sql_extra GROUP BY `resource_id` ORDER BY `created` DESC LIMIT %d , %d",
+	
+	$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.album, p.scale, p.created FROM photo p INNER JOIN 
+		(SELECT resource_id, max(scale) scale FROM photo 
+			WHERE uid=%d AND album != '%s' AND album != '%s' 
+			AND (photo_flags = %d or ( photo_flags & %d ) > 0 ) $sql_extra group by resource_id) ph 
+		ON (p.resource_id = ph.resource_id and p.scale = ph.scale) ORDER by p.created DESC LIMIT %d OFFSET %d",
 		intval($a->data['channel']['channel_id']),
 		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos')),
 		intval(PHOTO_NORMAL),
-		intval(PHOTO_PROFILE),
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
+		intval(($unsafe) ? (PHOTO_PROFILE|PHOTO_ADULT) : PHOTO_PROFILE),
+		intval($a->pager['itemspage']),
+		intval($a->pager['start'])
 	);
 
 
@@ -1236,6 +1245,8 @@ function photos_content(&$a) {
 			'$can_post' => $can_post,
 			'$upload' => array(t('Upload'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
 			'$photos' => $photos,
+			'$upload_form' => $upload_form,
+			'$usage' => $usage_message
 		));
 
 	}

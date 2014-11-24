@@ -8,6 +8,7 @@ require_once('include/photos.php');
 
 function wall_upload_post(&$a) {
 
+
 	$using_api = ((x($_FILES,'media')) ? true : false); 
 
 	if($using_api) {
@@ -42,10 +43,6 @@ function wall_upload_post(&$a) {
 		notice($ret['message']);
 		killme();
 	}
-
-	$m = $ret['body'];
-
-
 
 	if($using_api)
 		return("\n\n" . $ret['body'] . "\n\n");

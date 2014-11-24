@@ -97,7 +97,7 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 			
 			if(! $abook_checked) {
 				$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash
-					where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
+					where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d )>0 limit 1",
 					intval($uid),
 					dbesc($observer_xchan),
 					intval(ABOOK_FLAG_SELF)
@@ -257,7 +257,7 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 
 	$channel_perm = $global_perms[$permission][0];
 
-	$r = q("select %s, channel_hash from channel where channel_id = %d limit 1",
+	$r = q("select %s, channel_pageflags, channel_hash from channel where channel_id = %d limit 1",
 		dbesc($channel_perm),
 		intval($uid)
 	);
@@ -269,7 +269,7 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 			return true;
 
 		$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash 
-			where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
+			where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d )>0 limit 1",
 			intval($uid),
 			dbesc($observer_xchan),
 			intval(ABOOK_FLAG_SELF)
@@ -549,7 +549,7 @@ function get_role_perms($role) {
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
 			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
-			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_stream']    = 0;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
 			$ret['channel_w_tagwall']   = PERMS_CONTACTS;
 			$ret['channel_w_comment']   = PERMS_CONTACTS;
@@ -581,7 +581,7 @@ function get_role_perms($role) {
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
 			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
-			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_stream']    = 0;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_CONTACTS;
@@ -614,7 +614,7 @@ function get_role_perms($role) {
 			$ret['channel_r_profile']   = PERMS_CONTACTS;
 			$ret['channel_r_photos']    = PERMS_CONTACTS; 			
 			$ret['channel_r_abook']     = PERMS_CONTACTS;
-			$ret['channel_w_stream']    = PERMS_CONTACTS;
+			$ret['channel_w_stream']    = 0;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
 			$ret['channel_w_tagwall']   = 0;
 			$ret['channel_w_comment']   = PERMS_CONTACTS;

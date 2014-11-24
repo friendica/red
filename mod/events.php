@@ -199,14 +199,14 @@ function events_content(&$a) {
 	nav_set_selected('all_events');
 
 	if((argc() > 2) && (argv(1) === 'ignore') && intval(argv(2))) {
-		$r = q("update event set ignore = 1 where id = %d and uid = %d limit 1",
+		$r = q("update event set ignore = 1 where id = %d and uid = %d",
 			intval(argv(2)),
 			intval(local_user())
 		);
 	}
 
 	if((argc() > 2) && (argv(1) === 'unignore') && intval(argv(2))) {
-		$r = q("update event set ignore = 0 where id = %d and uid = %d limit 1",
+		$r = q("update event set ignore = 0 where id = %d and uid = %d",
 			intval(argv(2)),
 			intval(local_user())
 		);
@@ -268,12 +268,17 @@ function events_content(&$a) {
 	if($mode == 'view') {
 		
 		
-	    $thisyear = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
-    	$thismonth = datetime_convert('UTC',date_default_timezone_get(),'now','m');
+		$thisyear = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
+		$thismonth = datetime_convert('UTC',date_default_timezone_get(),'now','m');
 		if(! $y)
 			$y = intval($thisyear);
 		if(! $m)
 			$m = intval($thismonth);
+
+		$export = false;
+		if(argc() === 4 && argv(3) === 'export')
+			$export = true;
+
 
 		// Put some limits on dates. The PHP date functions don't seem to do so well before 1900.
 		// An upper limit was chosen to keep search engines from exploring links millions of years in the future. 
@@ -330,8 +335,8 @@ function events_content(&$a) {
 			$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
                               from event left join item on event_hash = resource_id 
 				where resource_type = 'event' and event.uid = %d and event.ignore = %d 
-				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' ) 
-				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' )) ",
+				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' ) 
+				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' )) ",
 				intval(local_user()),
 				intval($ignored),
 				dbesc($start),
@@ -413,6 +418,12 @@ function events_content(&$a) {
 			}
 		}
 		 
+		if($export) {
+			header('Content-type: text/calendar');
+			echo ical_wrapper($r);
+			killme();
+		}
+
 		if ($a->argv[1] === 'json'){
 			echo json_encode($events); killme();
 		}
@@ -432,6 +443,7 @@ function events_content(&$a) {
 			'$new_event'=> array($a->get_baseurl().'/events/new',t('Create New Event'),'',''),
 			'$previus'	=> array($a->get_baseurl()."/events/$prevyear/$prevmonth",t('Previous'),'',''),
 			'$next'		=> array($a->get_baseurl()."/events/$nextyear/$nextmonth",t('Next'),'',''),
+			'$export'   => array($a->get_baseurl()."/events/$y/$m/export",t('Export'),'',''),
 			'$calendar' => cal($y,$m,$links, ' eventcal'),			
 			'$events'	=> $events,
 			
@@ -549,7 +561,6 @@ function events_content(&$a) {
 
 		$tpl = get_markup_template('event_form.tpl');
 
-
 		$o .= replace_macros($tpl,array(
 			'$post' => $a->get_baseurl() . '/events',
 			'$eid' => $eid, 
@@ -567,11 +578,11 @@ function events_content(&$a) {
 			'$ftext' => $ftext,
 			'$ModalCANCEL' => t('Cancel'),
 			'$ModalOK' => t('OK'),
-			'$s_dsel' => datetimesel($f,mktime(),mktime(0,0,0,0,0,$syear+5),mktime($shour,$sminute,$ssecond,$smonth,$sday,$syear),'start_text'),
+			'$s_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$syear+5),DateTime::createFromFormat('Y-m-d H:i',"$syear-$smonth-$sday $shour:$sminute"),'start_text'),
 			'$n_text' => t('Finish date/time is not known or not relevant'),
 			'$n_checked' => $n_checked,
 			'$f_text' => t('Event Finishes:'),
-			'$f_dsel' => datetimesel($f,mktime(),mktime(0,0,0,0,0,$fyear+5),mktime($fhour,$fminute,$fsecond,$fmonth,$fday,$fyear),'finish_text',true,true,'start_text'),
+			'$f_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$fyear+5),DateTime::createFromFormat('Y-m-d H:i',"$fyear-$fmonth-$fday $fhour:$fminute"),'finish_text',true,true,'start_text'),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$a_checked' => $a_checked,
 			'$d_text' => t('Description:'), 

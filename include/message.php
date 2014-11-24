@@ -243,7 +243,7 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 	$limit = '';
 
 	if($numitems)
-		$limit = " LIMIT " . intval($start) . ", " . intval($numitems);
+		$limit = " LIMIT " . intval($numitems) . " OFFSET " . intval($start);
 		
 	if($mailbox !== '') {
 		$x = q("select channel_hash from channel where channel_id = %d limit 1",
@@ -332,7 +332,7 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 	}
 
 	if($updateseen) {
-		$r = q("UPDATE `mail` SET mail_flags = (mail_flags ^ %d) where not (mail_flags & %d) and id = %d AND channel_id = %d",
+		$r = q("UPDATE `mail` SET mail_flags = (mail_flags | %d) where not (mail_flags & %d)>0 and id = %d AND channel_id = %d",
 			intval(MAIL_SEEN),
 			intval(MAIL_SEEN),
 			dbesc($messageitem_id),
@@ -363,7 +363,7 @@ function private_messages_drop($channel_id, $messageitem_id, $drop_conversation 
 		}
 	}
 	else {
-		$r = q("DELETE FROM mail WHERE id = %d AND channel_id = %d LIMIT 1",
+		$r = q("DELETE FROM mail WHERE id = %d AND channel_id = %d",
 			intval($messageitem_id),
 			intval($channel_id)
 		);
@@ -421,7 +421,7 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 
 
 	if($updateseen) {
-		$r = q("UPDATE `mail` SET mail_flags = (mail_flags ^ %d) where not (mail_flags & %d) and parent_mid = '%s' AND channel_id = %d",
+		$r = q("UPDATE `mail` SET mail_flags = (mail_flags | %d) where not (mail_flags & %d)>0 and parent_mid = '%s' AND channel_id = %d",
 			intval(MAIL_SEEN),
 			intval(MAIL_SEEN),
 			dbesc($r[0]['parent_mid']),

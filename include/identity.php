@@ -22,7 +22,7 @@ require_once('include/crypto.php');
 function identity_check_service_class($account_id) {
 	$ret = array('success' => false, $message => '');
 	
-	$r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d ) ",
+	$r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d )>0 ",
 		intval($account_id),
 		intval(PAGE_REMOVED)
 	);
@@ -104,7 +104,7 @@ function create_sys_channel() {
 }
 
 function get_sys_channel() {
-	$r = q("select * from channel left join xchan on channel_hash = xchan_hash where (channel_pageflags & %d) limit 1",
+	$r = q("select * from channel left join xchan on channel_hash = xchan_hash where (channel_pageflags & %d)>0 limit 1",
 		intval(PAGE_SYSTEM)
 	);
 	if($r)
@@ -132,7 +132,7 @@ function is_sys_channel($channel_id) {
  */
 
 function channel_total() {
-	$r = q("select channel_id from channel where not ( channel_pageflags & %d )",
+	$r = q("select channel_id from channel where not ( channel_pageflags & %d )>0",
 		intval(PAGE_REMOVED)
 	);
 
@@ -348,10 +348,13 @@ function create_identity($arr) {
 		dbesc($a->get_baseurl() . "/photo/profile/m/{$newuid}")
 	);
 
-	$myperms = 0;
 	if($role_permissions) {
 		$myperms = ((array_key_exists('perms_auto',$role_permissions) && $role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0);
 	}
+	else
+		$myperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
+			|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+			|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
 
 	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_closeness, abook_created, abook_updated, abook_flags, abook_my_perms )
 		values ( %d, %d, '%s', %d, '%s', '%s', %d, %d ) ",
@@ -373,6 +376,8 @@ function create_identity($arr) {
 			set_pconfig($newuid,'system','permissions_role',$arr['permissions_role']);
 			if(array_key_exists('online',$role_permissions))
 				set_pconfig($newuid,'system','hide_presence',1-intval($role_permissions['online']));
+			if(array_key_exists('perms_auto',$role_permissions))
+				set_pconfig($newuid,'system','autoperms',(($role_permissions['perms_auto']) ? $role_permissions['perms_accept'] : 0));
 		}
 
 		// Create a group with yourself as a member. This allows somebody to use it 
@@ -390,7 +395,7 @@ function create_identity($arr) {
 				dbesc( t('Friends') )
 			);
 			if($r) {
-				q("update channel set channel_default_group = '%s', channel_allow_gid = '%s' where channel_id = %d limit 1",
+				q("update channel set channel_default_group = '%s', channel_allow_gid = '%s' where channel_id = %d",
 					dbesc($r[0]['hash']),
 					dbesc('<' . $r[0]['hash'] . '>'),
 					intval($newuid)
@@ -446,7 +451,7 @@ function set_default_login_identity($account_id,$channel_id,$force = true) {
 	);
 	if($r) {
 		if((intval($r[0]['account_default_channel']) == 0) || ($force)) {
-			$r = q("update account set account_default_channel = %d where account_id = %d limit 1",
+			$r = q("update account set account_default_channel = %d where account_id = %d",
 				intval($channel_id),
 				intval($account_id)
 			);
@@ -584,7 +589,7 @@ function identity_basic_export($channel_id, $items = false) {
 
 	// warning: this may run into memory limits on smaller systems
 
-	$r = q("select * from item where (item_flags & %d) and not (item_restrict & %d) and uid = %d",
+	$r = q("select * from item where (item_flags & %d)>0 and not (item_restrict & %d)>0 and uid = %d",
 		intval(ITEM_WALL),
 		intval(ITEM_DELETED),
 		intval($channel_id)
@@ -673,7 +678,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 	if(! $p) {
 		$p = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
 			LEFT JOIN channel ON profile.uid = channel.channel_id
-			WHERE channel.channel_address = '%s' and not ( channel_pageflags & %d ) 
+			WHERE channel.channel_address = '%s' and not ( channel_pageflags & %d )>0 
 			AND profile.is_default = 1 LIMIT 1",
 			dbesc($nickname),
 			intval(PAGE_REMOVED)
@@ -884,6 +889,8 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 		|| (x($profile,'postal_code') == 1)
 		|| (x($profile,'country_name') == 1))
 		$location = t('Location:');
+
+	$profile['homepage'] = linkify($profile['homepage']);
 
 	$gender   = ((x($profile,'gender')   == 1) ? t('Gender:')   : False);
 	$marital  = ((x($profile,'marital')  == 1) ? t('Status:')   : False);
@@ -1466,7 +1473,7 @@ function get_channel_by_nick($nick) {
 
 function identity_selector() {
 	if(local_user()) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and not ( channel_pageflags & %d ) order by channel_name ",
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and (channel_pageflags & %d) = 0 order by channel_name ",
 			intval(get_account_id()),
 			intval(PAGE_REMOVED)
 		);
@@ -1546,7 +1553,7 @@ function notifications_off($channel_id) {
 	$r = q("select channel_notifyflags from channel where channel_id = %d limit 1",
 		intval($channel_id)
 	);
-	$x = q("update channel set channel_notifyflags = 0 where channel_id = %d limit 1",
+	$x = q("update channel set channel_notifyflags = 0 where channel_id = %d",
 		intval($channel_id)
 	);
 
@@ -1556,9 +1563,21 @@ function notifications_off($channel_id) {
 
 
 function notifications_on($channel_id,$value) {
-	$x = q("update channel set channel_notifyflags = %d where channel_id = %d limit 1",
+	$x = q("update channel set channel_notifyflags = %d where channel_id = %d",
 		intval($value),
 		intval($channel_id)
 	);
 	return $x;
+}
+
+
+function get_channel_default_perms($uid) {
+
+	$r = q("select abook_my_perms from abook where abook_channel = %d and (abook_flags & %d) > 0 limit 1",
+		intval($uid),
+		intval(ABOOK_FLAG_SELF)
+	);
+	if($r)
+		return $r[0]['abook_my_perms'];
+	return 0;
 }

@@ -43,5 +43,5 @@ var searchData=
   ['notify_5ftagself',['NOTIFY_TAGSELF',['../boot_8php.html#ab724491497ab2618b23a01d5da60aec0',1,'boot.php']]],
   ['notify_5ftagshare',['NOTIFY_TAGSHARE',['../boot_8php.html#af6937db5f581d006bf4a5c3d9c7e0461',1,'boot.php']]],
   ['notify_5fwall',['NOTIFY_WALL',['../boot_8php.html#a505410c7edc5f5bb5fa227b98359793e',1,'boot.php']]],
-  ['null_5fdate',['NULL_DATE',['../boot_8php.html#a6cd1b4081630b2bf7be38836cd9f410c',1,'boot.php']]]
+  ['null_5fdate',['NULL_DATE',['../classdba__driver.html#afce39394c010ea589d99a21579b2c31e',1,'dba_driver\NULL_DATE()'],['../classdba__postgres.html#aeb404a85974d6c5df30c21650888000b',1,'dba_postgres\NULL_DATE()']]]
 ];

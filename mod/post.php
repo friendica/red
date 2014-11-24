@@ -98,7 +98,7 @@ function post_init(&$a) {
 		// Any channel will do, providing it's currently active. We just need to have an 
 		// identity to attach to the packet we send back. So find one. 
 
-		$c = q("select * from channel where not ( channel_pageflags & %d ) limit 1",
+		$c = q("select * from channel where not ( channel_pageflags & %d )>0 limit 1",
 			intval(PAGE_REMOVED)
 		);
 
@@ -598,18 +598,24 @@ function post_post(&$a) {
 			$ret['success'] = true;
 			$ret['pickup'] = array();
 			foreach($r as $rr) {
-				$x = json_decode($rr['outq_msg'],true);
+				if($rr['outq_msg']) {
+					$x = json_decode($rr['outq_msg'],true);
 
-				if(array_key_exists('message_list',$x)) {
-					foreach($x['message_list'] as $xx)
-						$ret['pickup'][] = array('notify' => json_decode($rr['outq_notify'],true),'message' => $xx);
+					if(! $x)
+						continue;
+
+					if(array_key_exists('message_list',$x)) {
+						foreach($x['message_list'] as $xx) {
+							$ret['pickup'][] = array('notify' => json_decode($rr['outq_notify'],true),'message' => $xx);
+						}
+					}
+					else
+						$ret['pickup'][] = array('notify' => json_decode($rr['outq_notify'],true),'message' => $x);
+
+					$x = q("delete from outq where outq_hash = '%s'",
+						dbesc($rr['outq_hash'])
+					);
 				}
-				else
-					$ret['pickup'][] = array('notify' => json_decode($rr['outq_notify'],true),'message' => $x);
-
-				$x = q("delete from outq where outq_hash = '%s' limit 1",
-					dbesc($rr['outq_hash'])
-				);
 			}
 		}
 
@@ -653,7 +659,7 @@ function post_post(&$a) {
 	// Update our DB to show when we last communicated successfully with this hub
 	// This will allow us to prune dead hubs from using up resources
 
-	$r = q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d limit 1",
+	$r = q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d",
 		dbesc(datetime_convert()),
 		intval($hub['hubloc_id'])
 	);
@@ -661,17 +667,17 @@ function post_post(&$a) {
 	// a dead hub came back to life - reset any tombstones we might have
 
 	if($hub['hubloc_status'] & HUBLOC_OFFLINE) {
-		q("update hubloc set hubloc_status = (hubloc_status ^ %d) where hubloc_id = %d limit 1",
+		q("update hubloc set hubloc_status = (hubloc_status & ~%d) where hubloc_id = %d",
 			intval(HUBLOC_OFFLINE),
 			intval($hub['hubloc_id'])		
 		);
 		if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
-			q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
+			q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where hubloc_id = %d",
 				intval(HUBLOC_FLAGS_ORPHANCHECK),
 				intval($hub['hubloc_id'])
 			);
 		}
-		q("update xchan set xchan_flags = (xchan_flags ^ %d) where (xchan_flags & %d) and xchan_hash = '%s' limit 1",
+		q("update xchan set xchan_flags = (xchan_flags & ~%d) where (xchan_flags & %d)>0 and xchan_hash = '%s'",
 			intval(XCHAN_FLAGS_ORPHAN),
 			intval(XCHAN_FLAGS_ORPHAN),
 			dbesc($hub['hubloc_hash'])
@@ -726,7 +732,9 @@ function post_post(&$a) {
 		$sender_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 
 		// garbage collect any old unused notifications
-		q("delete from verify where type = 'auth' and created < UTC_TIMESTAMP() - INTERVAL 10 MINUTE");
+		q("delete from verify where type = 'auth' and created < %s - INTERVAL %s",
+			db_utcnow(), db_quoteinterval('10 MINUTE')
+		);
 
 		$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
 			dbesc($sender_hash)
@@ -775,7 +783,7 @@ function post_post(&$a) {
 				$ret['message'] .= 'verification key not found' . EOL;
 				json_return_and_die($ret);
 			}
-			$r = q("delete from verify where id = %d limit 1",
+			$r = q("delete from verify where id = %d",
 				intval($z[0]['id'])
 			);
 

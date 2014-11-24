@@ -1,6 +1,6 @@
 <?php
 
-// Set the following for your MySQL installation
+// Set the following for your database installation
 // Copy or rename this file to .htconfig.php
 
 $db_host = '{{$dbhost}}';
@@ -8,6 +8,7 @@ $db_port = '{{$dbport}}';
 $db_user = '{{$dbuser}}';
 $db_pass = '{{$dbpass}}';
 $db_data = '{{$dbdata}}';
+$db_type = '{{$dbtype}}'; // an integer. 0 or unset for mysql, 1 for postgres
 
 /*
  * Notice: Many of the following settings will be available in the admin panel 

@@ -419,8 +419,6 @@ function visible_activity($item) {
 
 function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $prepared_item = '') {
 
-	$tstart = dba_timer();
-	$t0 = $t1 = $t2 = $t3 = $t4 = $t5 = $t6 = null;
 	$content_html = '';
 	$o = '';
 
@@ -451,8 +449,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 	$previewing = (($preview) ? ' preview ' : '');
 
 	if($mode === 'network') {
-
-		$t1 = dba_timer();
 
 		$profile_owner = local_user();
 		$page_writeable = true;
@@ -790,29 +786,21 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$item['pagedrop'] = $page_dropping;
 
 				if($item['id'] == $item['parent']) {
-//					$tx1 = dba_timer();
+
 					$item_object = new Item($item);
 					$conv->add_thread($item_object);
-					if($page_mode === 'list') 
+					if($page_mode === 'list') {
 						$item_object->set_template('conv_list.tpl');
-
-//					$tx2 = dba_timer();
-//					if($mode === 'network')
-//						profiler($tx1,$tx2,'add thread ' . $item['id']);
+						$item_object->set_display_mode('list');
+					}
 				}
 			}
-			$t2 = dba_timer();
+
 			$threads = $conv->get_template_data($alike, $dlike);
 			if(!$threads) {
 				logger('[ERROR] conversation : Failed to get template data.', LOGGER_DEBUG);
 				$threads = array();
 			}
-			$t3 = dba_timer();
-			if($mode === 'network') {
-				profiler($t1,$t2,'Conversation prepare');
-				profiler($t2,$t3,'Conversation get_template');
-			}
-
 		}
 	}
 
@@ -847,14 +835,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 		'$wait' => t('Loading...'),
         '$dropping' => ($page_dropping?t('Delete Selected Items'):False),
     ));
-
-	if($mode === 'network') {
-		$t4 = dba_timer();
-		profiler($t3,$t4,'conversation template');
-	}
-
-	if($page_mode === 'preview')
-		logger('preview: ' . $o);
 
 	return $o;
 
@@ -905,15 +885,18 @@ function item_photo_menu($item){
 	$vsrc_link = "";
 	$follow_url = "";
 
-	if(local_user()) {
+
+	$local_user = local_user();
+
+	if($local_user) {
 		$ssl_state = true;
 		if(! count($a->contacts))
-			load_contact_links(local_user());
+			load_contact_links($local_user);
 		$channel = $a->get_channel();
 		$channel_hash = (($channel) ? $channel['channel_hash'] : '');
 	}
 
-	if((local_user()) && local_user() == $item['uid']) {
+	if(($local_user) && $local_user == $item['uid']) {
 		$vsrc_link = 'javascript:viewsrc(' . $item['id'] . '); return false;';
 		if($item['parent'] == $item['id'] && $channel && ($channel_hash != $item['author_xchan'])) {
 			$sub_link = 'javascript:dosubthread(' . $item['id'] . '); return false;';
@@ -921,12 +904,13 @@ function item_photo_menu($item){
 	}
 
     $profile_link = chanlink_hash($item['author_xchan']);
-	$pm_url = $a->get_baseurl($ssl_state) . '/mail/new/?f=&hash=' . $item['author_xchan'];
+	if($item['uid'] > 0)
+		$pm_url = $a->get_baseurl($ssl_state) . '/mail/new/?f=&hash=' . $item['author_xchan'];
 
 	if($a->contacts && array_key_exists($item['author_xchan'],$a->contacts))
 		$contact = $a->contacts[$item['author_xchan']];
 	else
-		if(local_user() && $item['author']['xchan_addr'])
+		if($local_user && $item['author']['xchan_addr'])
 			$follow_url = z_root() . '/follow/?f=&url=' . $item['author']['xchan_addr'];
 
 	if($contact) {
@@ -1493,8 +1477,12 @@ function network_tabs() {
 
 
 function profile_tabs($a, $is_owner=False, $nickname=Null){
-	//echo "<pre>"; var_dump($a->user); killme();
-		
+
+	// Don't provide any profile tabs if we're running as the sys channel
+	
+	if($a->is_sys)
+		return;
+	
 	$channel = $a->get_channel();
 
 	if (is_null($nickname))

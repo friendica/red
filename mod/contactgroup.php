@@ -9,7 +9,7 @@ function contactgroup_content(&$a) {
 	}
 
 	if((argc() > 2) && (intval(argv(1))) && (argv(2))) {
-		$r = q("SELECT abook_xchan from abook where abook_xchan = '%s' and abook_channel = %d and not ( abook_flags & %d ) limit 1",
+		$r = q("SELECT abook_xchan from abook where abook_xchan = '%s' and abook_channel = %d and not ( abook_flags & %d )>0 limit 1",
 			dbesc(base64url_decode(argv(2))),
 			intval(local_user()),
 			intval(ABOOK_FLAG_SELF)

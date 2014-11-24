@@ -13,7 +13,9 @@ function update_channels_total_stat() {
 
 function update_channels_active_halfyear_stat() {
 	$r = q("select channel_id from channel left join account on account_id = channel_account_id
-			where account_flags = 0 and account_lastlog > UTC_TIMESTAMP - INTERVAL 6 MONTH");
+			where account_flags = 0 and account_lastlog > %s - INTERVAL %s",
+		db_utcnow(), db_quoteinterval('6 MONTH')
+	);
 	if($r) {
 		$s = '';
 		foreach($r as $rr) {
@@ -21,8 +23,9 @@ function update_channels_active_halfyear_stat() {
 				$s .= ',';
 			$s .= intval($rr['channel_id']);
 		}
-		$x = q("select uid from item where uid in ( $s ) and (item_flags & %d) and created > UTC_TIMESTAMP - INTERVAL 6 MONTH group by uid",
-			intval(ITEM_WALL)
+		$x = q("select uid from item where uid in ( $s ) and (item_flags & %d)>0 and created > %s - INTERVAL %s group by uid",
+			intval(ITEM_WALL),
+			db_utcnow(), db_quoteinterval('6 MONTH')
 		);
 		if($x) {
 			$channels_active_halfyear_stat = count($x);
@@ -37,7 +40,9 @@ function update_channels_active_halfyear_stat() {
 
 function update_channels_active_monthly_stat() {
 	$r = q("select channel_id from channel left join account on account_id = channel_account_id
-			where account_flags = 0 and account_lastlog > UTC_TIMESTAMP - INTERVAL 1 MONTH");
+			where account_flags = 0 and account_lastlog > %s - INTERVAL %s",
+		db_utcnow(), db_quoteinterval('1 MONTH')
+	);
 	if($r) {
 		$s = '';
 		foreach($r as $rr) {
@@ -45,8 +50,9 @@ function update_channels_active_monthly_stat() {
 				$s .= ',';
 			$s .= intval($rr['channel_id']);
 		}
-		$x = q("select uid from item where uid in ( $s ) and ( item_flags & %d ) and created > UTC_TIMESTAMP - INTERVAL 1 MONTH group by uid",
-			intval(ITEM_WALL)
+		$x = q("select uid from item where uid in ( $s ) and ( item_flags & %d )>0 and created > %s - INTERVAL %s group by uid",
+			intval(ITEM_WALL),
+			db_utcnow(), db_quoteinterval('1 MONTH')
 		);
 		if($x) {
 			$channels_active_monthly_stat = count($x);
@@ -60,7 +66,7 @@ function update_channels_active_monthly_stat() {
 }
 
 function update_local_posts_stat() {
-	$posts = q("SELECT COUNT(*) AS local_posts FROM `item` WHERE (item_flags & %d) ",
+	$posts = q("SELECT COUNT(*) AS local_posts FROM `item` WHERE (item_flags & %d)>0 ",
 			intval(ITEM_WALL) );
 	if (is_array($posts)) {
 		$local_posts_stat = intval($posts[0]["local_posts"]);

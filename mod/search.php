@@ -68,7 +68,8 @@ function search_content(&$a,$update = 0, $load = false) {
 		);
 	}
 	else {
-		$sql_extra = sprintf(" AND `item`.`body` REGEXP '%s' ", dbesc(protect_sprintf(preg_quote($search))));
+		$regstr = db_getfunc('REGEXP');
+		$sql_extra = sprintf(" AND `item`.`body` $regstr '%s' ", dbesc(protect_sprintf(preg_quote($search))));
 	}
 
 	// Here is the way permissions work in the search module...
@@ -123,7 +124,7 @@ function search_content(&$a,$update = 0, $load = false) {
 	if(($update) && ($load)) {
 		$itemspage = get_pconfig(local_user(),'system','itemspage');
 		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
-		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
+		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']), intval($a->pager['start']));
 
 		// in case somebody turned off public access to sys channel content with permissions
 
@@ -132,29 +133,36 @@ function search_content(&$a,$update = 0, $load = false) {
 
 		if($load) {
 			$r = null;
-
+			
+			if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+				$prefix = 'distinct on (created, mid)';
+				$suffix = 'ORDER BY created DESC, mid';
+			} else {
+				$prefix = 'distinct';
+				$suffix = 'group by mid ORDER BY created DESC';
+			}
 			if(local_user()) {
-				$r = q("SELECT distinct mid, item.id as item_id, item.* from item
+				$r = q("SELECT $prefix mid, item.id as item_id, item.* from item
 					WHERE item_restrict = 0
 					AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
 					OR ( `item`.`uid` = %d )) OR item.owner_xchan = '%s' )
 					$sql_extra
-					group by mid ORDER BY created DESC $pager_sql ",
+					$suffix $pager_sql ",
 					intval(local_user()),
 					dbesc($sys['xchan_hash'])
 				);
 			}
 			if($r === null) {
-               $r = q("SELECT distinct mid, item.id as item_id, item.* from item
-                    WHERE item_restrict = 0
-                    AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = ''
-                    AND `item`.`deny_gid`  = '' AND item_private = 0 )
-                    and owner_xchan in ( " . stream_perms_xchans(($observer) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
-					$pub_sql ) OR owner_xchan = '%s')
-                    $sql_extra 
-                    group by mid ORDER BY created DESC $pager_sql",
+				$r = q("SELECT $prefix mid, item.id as item_id, item.* from item
+					WHERE item_restrict = 0
+					AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = ''
+					AND `item`.`deny_gid`  = '' AND item_private = 0 )
+					and owner_xchan in ( " . stream_perms_xchans(($observer) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
+						$pub_sql ) OR owner_xchan = '%s')
+					$sql_extra 
+					$suffix $pager_sql",
 					dbesc($sys['xchan_hash'])
-                );
+				);
 			}
 		}
 		else {

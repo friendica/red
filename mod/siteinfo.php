@@ -1,14 +1,15 @@
 <?php
 
 function siteinfo_init(&$a) {
-
+	global $db;
+	
 	if ($a->argv[1]=="json"){
 		$register_policy = Array('REGISTER_CLOSED', 'REGISTER_APPROVE', 'REGISTER_OPEN');
 		$directory_mode = Array('DIRECTORY_MODE_NORMAL', 'DIRECTORY_MODE_SECONDARY','DIRECTORY_MODE_PRIMARY', 'DIRECTORY_MODE_STANDALONE');
 		
 		$sql_extra = '';
 
-		$r = q("select * from channel left join account on account_id = channel_account_id where ( account_roles & 4096 ) and account_default_channel = channel_id");
+		$r = q("select * from channel left join account on account_id = channel_account_id where ( account_roles & 4096 )>0 and account_default_channel = channel_id");
 
 
 		if($r) {
@@ -71,6 +72,7 @@ function siteinfo_init(&$a) {
 			'admin' => $admin,
 			'site_name' => (($site_name) ? $site_name : ''),
 			'platform' => RED_PLATFORM,
+			'dbdriver' => $db->getdriver(),
 			'info' => (($site_info) ? $site_info : ''),
 			'channels_total' => $channels_total_stat,
 			'channels_active_halfyear' => $channels_active_halfyear_stat,

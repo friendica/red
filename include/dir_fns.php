@@ -38,7 +38,7 @@ function check_upstream_directory() {
 	*/
 	$directory = get_config('system','directory_server');
 	if ($directory) {
-		$r = q("select * from site where site_url = '%s' and (site_flags & %d) ",
+		$r = q("select * from site where site_url = '%s' and (site_flags & %d) > 0 ",
 			dbesc($directory),
 			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY|DIRECTORY_MODE_STANDALONE)
 		);
@@ -53,10 +53,11 @@ function check_upstream_directory() {
 function dir_sort_links() {
 
 	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(
-		'$header' => t('Sort Options'),
+		'$header' => t('Directory Options'),
 		'$normal' => t('Alphabetic'),
 		'$reverse' => t('Reverse Alphabetic'),
-		'$date' => t('Newest to Oldest')
+		'$date' => t('Newest to Oldest'),
+		'$pubforums' => t('Public Forums Only'),
 	));
 	return $o;
 }
@@ -86,14 +87,14 @@ function sync_directories($dirmode) {
 
 	$realm = get_directory_realm();
 	if($realm == DIRECTORY_REALM) {
-		$r = q("select * from site where (site_flags & %d) and site_url != '%s' and ( site_realm = '%s' or site_realm = '') ",
+		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s' and ( site_realm = '%s' or site_realm = '') ",
 			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
 			dbesc(z_root()),
 			dbesc($realm)
 		);
 	}
 	else {
-		$r = q("select * from site where (site_flags & %d) and site_url != '%s' and site_realm like '%s' ",
+		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s' and site_realm like '%s' ",
 			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
 			dbesc(z_root()),
 			dbesc(protect_sprintf('%' . $realm . '%'))
@@ -120,7 +121,7 @@ function sync_directories($dirmode) {
 			dbesc($r[0]['site_realm'])
 		);
 
-		$r = q("select * from site where (site_flags & %d) and site_url != '%s'",
+		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s'",
 			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
 			dbesc(z_root())
 		);
@@ -146,7 +147,7 @@ function sync_directories($dirmode) {
 		if((! $j['transactions']) || (! is_array($j['transactions'])))
 			continue;
 
-		q("update site set site_sync = '%s' where site_url = '%s' limit 1",
+		q("update site set site_sync = '%s' where site_url = '%s'",
 			dbesc(datetime_convert()),
 			dbesc($rr['site_url'])
 		);
@@ -267,7 +268,7 @@ function local_dir_update($uid,$force) {
 		
 		if($new_flags != $r[0]['xchan_flags']) {			
 
-			$r = q("update xchan set xchan_flags = %d  where xchan_hash = '%s' limit 1",
+			$r = q("update xchan set xchan_flags = %d  where xchan_hash = '%s'",
 				intval($new_flags),
 				dbesc($p[0]['channel_hash'])
 			);
@@ -281,10 +282,10 @@ function local_dir_update($uid,$force) {
 		}
 		else {
 			// they may have made it private
-			$r = q("delete from xprof where xprof_hash = '%s' limit 1",
+			$r = q("delete from xprof where xprof_hash = '%s'",
 				dbesc($hash)
 			);
-			$r = q("delete from xtag where xtag_hash = '%s' limit 1",
+			$r = q("delete from xtag where xtag_hash = '%s'",
 				dbesc($hash)
 			);
 		}

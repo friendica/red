@@ -142,8 +142,8 @@ Functions</h2></td></tr>
 <tr class="separator:a083aec6c900d244e1bfc1406f9461465"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a703f528ade8382cf374e4119bd6f7859"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a703f528ade8382cf374e4119bd6f7859">allowed_public_recips</a> ($msg)</td></tr>
 <tr class="separator:a703f528ade8382cf374e4119bd6f7859"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d9e6ca295e443b740d9960c304b3474"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a4d9e6ca295e443b740d9960c304b3474">process_delivery</a> ($sender, $arr, $deliveries, $relay, $public=false)</td></tr>
-<tr class="separator:a4d9e6ca295e443b740d9960c304b3474"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e3006e7a456b2175a9badc96bc5176d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a0e3006e7a456b2175a9badc96bc5176d">process_delivery</a> ($sender, $arr, $deliveries, $relay, $public=false, $request=false)</td></tr>
+<tr class="separator:a0e3006e7a456b2175a9badc96bc5176d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad25a3fe0e1566121d6fb8222979bc10"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#aad25a3fe0e1566121d6fb8222979bc10">remove_community_tag</a> ($sender, $arr, $uid)</td></tr>
 <tr class="separator:aad25a3fe0e1566121d6fb8222979bc10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31aad56acf8ff8f2353e6ff8595544df"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a31aad56acf8ff8f2353e6ff8595544df">update_imported_item</a> ($sender, $item, $uid)</td></tr>
@@ -174,7 +174,7 @@ Functions</h2></td></tr>
 <tr class="separator:ac301c67864917c35922257950ae0f95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e22dbc6f884be3644a892a876cbd972"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a8e22dbc6f884be3644a892a876cbd972">get_rpost_path</a> ($observer)</td></tr>
 <tr class="separator:a8e22dbc6f884be3644a892a876cbd972"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad149f1e98c0c5b88ff9147e6ee3f330d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#ad149f1e98c0c5b88ff9147e6ee3f330d">import_author_zot</a> ($<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>)</td></tr>
+<tr class="memitem:ad149f1e98c0c5b88ff9147e6ee3f330d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#ad149f1e98c0c5b88ff9147e6ee3f330d">import_author_zot</a> ($<a class="el" href="boot_8php.html#ae97836b0547953be182a2334c9c91d3c">x</a>)</td></tr>
 <tr class="separator:ad149f1e98c0c5b88ff9147e6ee3f330d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3920afe14fc1d82020161b4b86bcd9ac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a3920afe14fc1d82020161b4b86bcd9ac">zot_process_message_request</a> ($data)</td></tr>
 <tr class="separator:a3920afe14fc1d82020161b4b86bcd9ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -263,7 +263,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="zot_8php.html#a4d9e6ca295e443b740d9960c304b3474">process_delivery()</a>.</p>
+<p>Referenced by <a class="el" href="zot_8php.html#a0e3006e7a456b2175a9badc96bc5176d">process_delivery()</a>.</p>
 
 </div>
 </div>
@@ -513,7 +513,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a4d9e6ca295e443b740d9960c304b3474"></a>
+<a class="anchor" id="a0e3006e7a456b2175a9badc96bc5176d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -545,7 +545,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$public</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>$public</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$request</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -709,7 +715,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="zot_8php.html#a4d9e6ca295e443b740d9960c304b3474">process_delivery()</a>.</p>
+<p>Referenced by <a class="el" href="zot_8php.html#a0e3006e7a456b2175a9badc96bc5176d">process_delivery()</a>.</p>
 
 </div>
 </div>
@@ -777,7 +783,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="zot_8php.html#a4d9e6ca295e443b740d9960c304b3474">process_delivery()</a>.</p>
+<p>Referenced by <a class="el" href="zot_8php.html#a0e3006e7a456b2175a9badc96bc5176d">process_delivery()</a>.</p>
 
 </div>
 </div>
@@ -1112,6 +1118,9 @@ which will be processed and delivered before this function ultimately returns.
         </tr>
       </table>
 </div><div class="memdoc">
+<p>zot_process_message_request($data) If a site receives a comment to a post but finds they have no parent to attach it with, they may send a 'request' packet containing the message_id of the missing parent. This is the handler for that packet. We will create a message_list array of the entire conversation starting with the missing parent and invoke delivery to the sender of the packet.</p>
+<p><a class="el" href="deliver_8php.html">include/deliver.php</a> (for local delivery) and <a class="el" href="post_8php.html">mod/post.php</a> (for web delivery) detect the existence of this 'message_list' at the destination and split it into individual messages which are processed/delivered in order.</p>
+<p>Called from <a class="el" href="post_8php.html">mod/post.php</a> </p>
 
 <p>Referenced by <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>.</p>
 

@@ -12,7 +12,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		$_SESSION['authenticated'] = 1;
 		
 		if($login_initial || $update_lastlog) {
-			q("update account set account_lastlog = '%s' where account_id = %d limit 1",
+			q("update account set account_lastlog = '%s' where account_id = %d",
 				dbesc(datetime_convert()),
 				intval($_SESSION['account_id'])
 			);
@@ -59,7 +59,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 	/* This account has never created a channel. Send them to new_channel by default */
 
 	if($a->module === 'login') {
-		$r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d)",
+		$r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d)>0",
 			intval($a->account['account_id']),
 			intval(PAGE_REMOVED)
 		);
@@ -76,7 +76,7 @@ function change_channel($change_channel) {
 	$ret = false;
 
 	if($change_channel) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and channel_account_id = %d and not ( channel_pageflags & %d) limit 1",
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and channel_account_id = %d and not ( channel_pageflags & %d)>0 limit 1",
 			intval($change_channel),
 			intval(get_account_id()),
 			intval(PAGE_REMOVED)
@@ -86,7 +86,7 @@ function change_channel($change_channel) {
 	if (is_developer()) {
 		if (! $r) {
 			if (is_site_admin()) {
-				$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and ( channel_pageflags & %d) and not (channel_pageflags & %d ) limit 1",
+				$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and ( channel_pageflags & %d) and not (channel_pageflags & %d )>0 limit 1",
 				intval($change_channel),
 				intval(PAGE_SYSTEM),
 				intval(PAGE_REMOVED)
@@ -174,9 +174,10 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 				foreach($groups as $g)
 					$gs .= '|<' . $g . '>';
 			} 
+			$regexop = db_getfunc('REGEXP');
 			$sql = sprintf(
-				" AND ( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
-				  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+				" AND ( NOT (deny_cid like '%s' OR deny_gid $regexop '%s')
+				  AND ( allow_cid like '%s' OR allow_gid $regexop '%s' OR ( allow_cid = '' AND allow_gid = '') )
 				  )
 				",
 				dbesc(protect_sprintf( '%<' . $observer . '>%')),
@@ -204,7 +205,7 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 	 * default permissions - anonymous user
 	 */
 
-	$sql = " AND not item_private ";
+	$sql = " AND item_private=0 ";
 			
 
 	/**
@@ -235,10 +236,11 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 			if(is_array($groups) && count($groups)) {
 				foreach($groups as $g)
 					$gs .= '|<' . $g . '>';
-			} 
+			}
+			$regexop = db_getfunc('REGEXP');
 			$sql = sprintf(
-				" AND ( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
-				  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+				" AND ( NOT (deny_cid like '%s' OR deny_gid $regexop '%s')
+				  AND ( allow_cid like '%s' OR allow_gid $regexop '%s' OR ( allow_cid = '' AND allow_gid = '') )
 				  )
 				",
 				dbesc(protect_sprintf( '%<' . $observer . '>%')),
@@ -264,9 +266,10 @@ function public_permissions_sql($observer_hash) {
 	} 
 	$sql = '';
 	if($observer_hash) {
+		$regexop = db_getfunc('REGEXP');
 		$sql = sprintf(
-			" OR (( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
-			  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+			" OR (( NOT (deny_cid like '%s' OR deny_gid $regexop '%s')
+			  AND ( allow_cid like '%s' OR allow_gid $regexop '%s' OR ( allow_cid = '' AND allow_gid = '') )
 			  ))
 			",
 			dbesc(protect_sprintf( '%<' . $observer_hash . '>%')),
@@ -375,7 +378,7 @@ function stream_perms_api_uids($perms = NULL ) {
 	$ret = array();
 	if(local_user())
 		$ret[] = local_user();
-	$r = q("select channel_id from channel where channel_r_stream > 0 and (channel_r_stream & %d) and not (channel_pageflags & %d)",
+	$r = q("select channel_id from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0",
 		intval($perms),
 		intval(PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
 	);
@@ -402,7 +405,7 @@ function stream_perms_xchans($perms = NULL ) {
 	if(local_user())
 		$ret[] = get_observer_hash();
 
-	$r = q("select channel_hash from channel where channel_r_stream > 0 and (channel_r_stream & %d) and not (channel_pageflags & %d)",
+	$r = q("select channel_hash from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0",
 		intval($perms),
 		intval(PAGE_CENSORED|PAGE_SYETEM|PAGE_REMOVED)
 	);

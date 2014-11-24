@@ -159,7 +159,7 @@ function openid_content(&$a) {
 					$photos = import_profile_photo($pphoto,$url);
 					if($photos) {
 						$z = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', 
-							xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s' limit 1",
+							xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s'",
 							dbesc(datetime_convert()),
 							dbesc($photos[0]),
 							dbesc($photos[1]),

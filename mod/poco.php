@@ -15,7 +15,7 @@ function poco_init(&$a) {
 		$user = notags(trim(argv(1)));
 	}
 	if(! x($user)) {
-		$c = q("select * from pconfig where cat = 'system' and k = 'suggestme' and v = 1");
+		$c = q("select * from pconfig where cat = 'system' and k = 'suggestme' and v = '1'");
 		if(! $c) {
 			logger('mod_poco: system mode. No candidates.', LOGGER_DEBUG);
 			http_status_exit(404);
@@ -60,7 +60,7 @@ function poco_init(&$a) {
 	}
 
 	if($justme)
-		$sql_extra = " and ( abook_flags & " . ABOOK_FLAG_SELF . " ) ";
+		$sql_extra = " and ( abook_flags & " . ABOOK_FLAG_SELF . " )>0 ";
 	else
 		$sql_extra = " and abook_flags = 0 ";
 
@@ -69,14 +69,14 @@ function poco_init(&$a) {
 
 	if($system_mode) {
 		$r = q("SELECT count(*) as `total` from abook where ( abook_flags & " . ABOOK_FLAG_SELF . 
-			" ) and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = 1) ");
+			" )>0 and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = '1') ");
 	}
 	else {
 		$r = q("SELECT count(*) as `total` from abook where abook_channel = %d 
 			$sql_extra ",
 			intval($channel_id)
 		);
-		$c = q("select * from menu_item where ( mitem_flags & " . intval(MENU_ITEM_CHATROOM) . " ) and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = '' and mitem_channel_id = %d",
+		$c = q("select * from menu_item where ( mitem_flags & " . intval(MENU_ITEM_CHATROOM) . " )>0 and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = '' and mitem_channel_id = %d",
 			intval($channel_id)
 		);
 	}
@@ -93,17 +93,17 @@ function poco_init(&$a) {
 
 	if($system_mode) {
 		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where ( abook_flags & " . ABOOK_FLAG_SELF . 
-			" ) and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = 1) limit %d, %d ",
-			intval($startIndex),
-			intval($itemsPerPage)
+			" )>0 and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = '1') limit %d offset %d ",
+			intval($itemsPerPage),
+			intval($startIndex)
 		);
 	}
 	else {
 		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d 
-			$sql_extra LIMIT %d, %d",
+			$sql_extra LIMIT %d OFFSET %d",
 			intval($channel_id),
-			intval($startIndex),
-			intval($itemsPerPage)
+			intval($itemsPerPage),
+			intval($startIndex)
 		);
 	}
 

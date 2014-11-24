@@ -8,17 +8,21 @@
 .directory-photo {
 	margin-left: 25px;
 }
+.directory-photo-img {
+	margin-left: auto;
+	margin-right: auto;
+	display:block;
+}
 .directory-details {
 	text-align: center;
 	margin-left: 5px;
 	margin-right: 5px;
 }
 .directory-item {
-	float: left;
-	width: 225px;
-	height: 260px;
 	overflow: hidden;
 	margin: 2px;
+	border-bottom: 2px solid #f1f1f1;
+	padding-bottom: 3px;
 }
 
 #directory-search-wrapper {
@@ -41,4 +45,28 @@ div.dirtagblock.widget {
 .dirpopup {
 	float: left;
 	width: 225px;
+}
+
+.contact-photo {
+	float: left;
+	margin-right: 16px;
+}
+
+.contact-name {
+	font-size: larger;
+}
+
+.contact-info {
+	display: block;
+	overflow: hidden;
+}
+
+.directory-item {
+	margin: 16px;
+}
+.directory-connect {
+	margin-top: 3px;
+	display:block;
+	margin-left:auto;
+	margin-right: auto;
 }
