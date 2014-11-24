@@ -53,10 +53,11 @@ function check_upstream_directory() {
 function dir_sort_links() {
 
 	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(
-		'$header' => t('Sort Options'),
+		'$header' => t('Directory Options'),
 		'$normal' => t('Alphabetic'),
 		'$reverse' => t('Reverse Alphabetic'),
-		'$date' => t('Newest to Oldest')
+		'$date' => t('Newest to Oldest'),
+		'$pubforums' => t('Public Forums Only'),
 	));
 	return $o;
 }

@@ -96,10 +96,18 @@ function directory_content(&$a) {
 		if(! is_null($pubforums))
 			$query .= '&pubforums=' . intval($pubforums);
 
+		if(! is_null($pubforums))
+			$query .= '&pubforums=' . intval($pubforums);
+
 		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
+		if($pubforums)
+			$sort_order = 'normal';
+
 		if($sort_order)
 			$query .= '&order=' . urlencode($sort_order);
 
+
+			
 		if($a->pager['page'] != 1)
 			$query .= '&p=' . $a->pager['page'];
 
