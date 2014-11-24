@@ -45,6 +45,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/faq_admins]FAQ für Admins[/zrl]
 
 [size=large][b]Technische Dokumentation[/b][/size]
+[zrl=[baseurl]/help/history]Die Geschichte der RedMatrix[/zrl]
 [zrl=[baseurl]/help/Zot---A-High-Level-Overview]Zot – ein grober Überblick[/zrl]
 [zrl=[baseurl]/help/zot]Eine Einführung ins Zot-Protokoll[/zrl]
 [zrl=[baseurl]/help/zot_structures]Zot-Strukturen[/zrl]
@@ -63,6 +64,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/doc/html/]Code-Referenz (mit doxygen generiert - setzt Cookies)[/zrl]
 [zrl=[baseurl]/help/to_do_doco]To-Do-Liste für das Projekt Red-Dokumentation[/zrl]
 [zrl=[baseurl]/help/to_do_code]To-Do-Liste für Entwickler[/zrl]
+[zrl=[baseurl]/help/roadmap]Roadmap für Version 3[/zrl]
 [zrl=[baseurl]/help/git_for_non_developers]Git für Nicht-Entwickler[/zrl]
 
 [size=large][b]Häufig gestellte Fragen für Entwickler[/b][/size]
