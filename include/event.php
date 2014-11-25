@@ -74,9 +74,9 @@ function format_event_ical($ev) {
 
 	$o .= "\nBEGIN:VEVENT";
 	if($ev['start']) 
-		$o .= "\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\This' . (($ev['adjust']) ? '\\Z' : ''));
+		$o .= "\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['finish'] && ! $ev['nofinish']) 
-		$o .= "\nDTEND:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\This' . (($ev['adjust']) ? '\\Z' : ''));
+		$o .= "\nDTEND:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['summary']) 
 		$o .= "\nSUMMARY:" . format_ical_text($ev['summary']);
 	if($ev['location'])
