@@ -2388,3 +2388,11 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 	height: 300px;
 	width: 300px;
 }
+
+.bb_observer {
+	color: red;
+}
+
+.bb_observer img {
+	border: 3px solid red !important;
+}
