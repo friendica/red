@@ -35,6 +35,7 @@ var searchData=
   ['set_5fconfig',['set_config',['../include_2config_8php.html#ad6da879e4fb5b37d1e161d4e9be5c32a',1,'config.php']]],
   ['set_5fconversation',['set_conversation',['../classItem.html#aa8b1bbc4236890694635295e46d7fd72',1,'Item']]],
   ['set_5fdefault_5flogin_5fidentity',['set_default_login_identity',['../identity_8php.html#a78151baf4407a8482d2681a91a9c486b',1,'identity.php']]],
+  ['set_5fdisplay_5fmode',['set_display_mode',['../classItem.html#ac09a4728d37b7783714243f7f8167214',1,'Item']]],
   ['set_5fgroups',['set_groups',['../classApp.html#a3d84af5e42082098672531cd1a618853',1,'App']]],
   ['set_5fhostname',['set_hostname',['../classApp.html#a344d2b7dc2f276648d521aee4da1731c',1,'App']]],
   ['set_5fmode',['set_mode',['../classConversation.html#a66f121ca4026246f86a732e5faa0682c',1,'Conversation']]],

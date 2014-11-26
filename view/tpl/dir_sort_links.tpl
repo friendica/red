@@ -4,5 +4,6 @@
 	<li><a href="directory?f=&order=normal">{{$normal}}</a></li>
 	<li><a href="directory?f=&order=reverse">{{$reverse}}</a></li>
 	<li><a href="directory?f=&order=date">{{$date}}</a></li>
+	<li><a href="directory?f=&pubforums=1">{{$pubforums}}</a></li>
 </ul>
 </div>

@@ -31,8 +31,9 @@ function directory_content(&$a) {
 	if(x($_REQUEST,'safe'))
 		$safe_mode = (intval($_REQUEST['safe']));
 
-
-
+	$pubforums = null;
+	if(array_key_exists('pubforums',$_REQUEST))
+		$pubforums = intval($_REQUEST['pubforums']);
 
 	$o = '';
 	nav_set_selected('directory');
@@ -92,11 +93,21 @@ function directory_content(&$a) {
 			$query .= '&keywords=' . urlencode($keywords);
 		if($advanced)
 			$query .= '&query=' . urlencode($advanced);
+		if(! is_null($pubforums))
+			$query .= '&pubforums=' . intval($pubforums);
+
+		if(! is_null($pubforums))
+			$query .= '&pubforums=' . intval($pubforums);
 
 		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
+		if($pubforums)
+			$sort_order = 'normal';
+
 		if($sort_order)
 			$query .= '&order=' . urlencode($sort_order);
 
+
+			
 		if($a->pager['page'] != 1)
 			$query .= '&p=' . $a->pager['page'];
 

@@ -64,6 +64,9 @@ function dirsearch_content(&$a) {
 	$agege    = ((x($_REQUEST,'agege'))    ? intval($_REQUEST['agege']) : 0 );
 	$agele    = ((x($_REQUEST,'agele'))    ? intval($_REQUEST['agele']) : 0 );
 	$kw       = ((x($_REQUEST,'kw'))       ? intval($_REQUEST['kw'])    : 0 );
+	$forums   = ((array_key_exists('pubforums',$_REQUEST)) ? intval($_REQUEST['pubforums']) : null);
+
+
 
 	// by default use a safe search
 	$safe     = ((x($_REQUEST,'safe')));    // ? intval($_REQUEST['safe'])  : 1 );
@@ -107,6 +110,10 @@ function dirsearch_content(&$a) {
 		$sql_extra .= dir_query_build($joiner,'xprof_sexual',$sexual);
 	if($keywords)
 		$sql_extra .= dir_query_build($joiner,'xprof_keywords',$keywords);
+
+	if(! is_null($forums))
+		$sql_extra .= dir_flag_build($joiner,'xprof_flags',XCHAN_FLAGS_PUBFORUM, $forums);
+
 
 	// we only support an age range currently. You must set both agege 
 	// (greater than or equal) and agele (less than or equal) 
@@ -178,7 +185,6 @@ function dirsearch_content(&$a) {
 		$order = " order by xchan_name desc ";
 	else	
 		$order = " order by xchan_name_date desc ";
-
 
 	if($sync) {
 		$spkt = array('transactions' => array());
@@ -272,6 +278,11 @@ function dir_query_build($joiner,$field,$s) {
 		$ret .= dbesc($joiner) . " " . dbesc($field) . " like '" . protect_sprintf( '%' . dbesc($s) . '%' ) . "' ";
 	return $ret;
 }
+
+function dir_flag_build($joiner,$field,$bit,$s) {
+	return dbesc($joiner) . " ( " . dbesc('xchan_flags') . " & " . intval($bit) . " ) " . ((intval($s)) ? '>' : '=' ) . " 0 ";
+}
+
 
 function dir_parse_query($s) {
 

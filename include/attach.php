@@ -567,6 +567,7 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
  *    $arr['deny_cid']
  *    $arr['deny_gid']
  */
+
 function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 	$ret = array('success' => false);

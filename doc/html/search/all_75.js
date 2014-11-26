@@ -25,6 +25,8 @@ var searchData=
   ['update_5fflags_5fdeleted',['UPDATE_FLAGS_DELETED',['../boot_8php.html#aea392cb26ed617f3a8cde648385b5df0',1,'boot.php']]],
   ['update_5fflags_5fforced',['UPDATE_FLAGS_FORCED',['../boot_8php.html#ab9dca53455cd157d3c6ba2bdecdbd22d',1,'boot.php']]],
   ['update_5fflags_5fupdated',['UPDATE_FLAGS_UPDATED',['../boot_8php.html#a9690d73434125ce594a1f5e7c2a4f7c0',1,'boot.php']]],
+  ['update_5fhome_2ephp',['update_home.php',['../update__home_8php.html',1,'']]],
+  ['update_5fhome_5fcontent',['update_home_content',['../update__home_8php.html#a668340089acd150b830134476a647d05',1,'update_home.php']]],
   ['update_5fimported_5fitem',['update_imported_item',['../zot_8php.html#a31aad56acf8ff8f2353e6ff8595544df',1,'zot.php']]],
   ['update_5flocal_5fposts_5fstat',['update_local_posts_stat',['../statistics__fns_8php.html#a9dd516dda693f17f5ce48a94876f7efa',1,'statistics_fns.php']]],
   ['update_5fmodtime',['update_modtime',['../zot_8php.html#ab319d1d9fff9c7775d9daef42d1f33dd',1,'zot.php']]],

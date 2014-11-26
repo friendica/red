@@ -24,10 +24,11 @@
 			eventClick: function(calEvent, jsEvent, view) {
 				showEvent(calEvent.id);
 			},
-			
+
 			eventRender: function(event, element, view) {
 				//console.log(view.name);
 				if (event.item['author']['xchan_name']==null) return;
+
 				switch(view.name){
 					case "month":
 					element.find(".fc-event-title").html(

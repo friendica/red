@@ -212,7 +212,7 @@ function load_pconfig($uid) {
 	if(! array_key_exists($uid, $a->config))
 		$a->config[$uid] = array();
 
-	$r = q("SELECT * FROM `pconfig` WHERE `uid` = %d",
+	$r = q("SELECT * FROM pconfig WHERE uid = %d",
 		intval($uid)
 	);
 
@@ -390,7 +390,7 @@ function load_xconfig($xchan) {
 	if(! array_key_exists($xchan, $a->config))
 		$a->config[$xchan] = array();
 
-	$r = q("SELECT * FROM `xconfig` WHERE `xchan` = '%s'",
+	$r = q("SELECT * FROM xconfig WHERE xchan = '%s'",
 		dbesc($xchan)
 	);
 
@@ -517,7 +517,7 @@ function del_xconfig($xchan, $family, $key) {
 
 	if(x($a->config[$xchan][$family], $key))
 		unset($a->config[$xchan][$family][$key]);
-		$ret = q("DELETE FROM `xconfig` WHERE `xchan` = '%s' AND `cat` = '%s' AND `k` = '%s'",
+	$ret = q("DELETE FROM xconfig WHERE xchan = '%s' AND cat = '%s' AND k = '%s'",
 		dbesc($xchan),
 		dbesc($family),
 		dbesc($key)

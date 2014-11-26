@@ -126,6 +126,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "uexport.php", "uexport_8php.html", "uexport_8php" ],
     [ "update_channel.php", "update__channel_8php.html", "update__channel_8php" ],
     [ "update_display.php", "update__display_8php.html", "update__display_8php" ],
+    [ "update_home.php", "update__home_8php.html", "update__home_8php" ],
     [ "update_network.php", "update__network_8php.html", "update__network_8php" ],
     [ "update_search.php", "update__search_8php.html", "update__search_8php" ],
     [ "view.php", "view_8php.html", "view_8php" ],

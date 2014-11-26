@@ -20,7 +20,7 @@ var searchData=
   ['help_5fcontent',['help_content',['../help_8php.html#af055e15f600ffa6fbca9386fdf715224',1,'help.php']]],
   ['hivenet_5finit',['hivenet_init',['../hivenet_2php_2theme_8php.html#a3a8b539b112ae63936025236dbaf0a29',1,'theme.php']]],
   ['home_2ephp',['home.php',['../home_8php.html',1,'']]],
-  ['home_5fcontent',['home_content',['../home_8php.html#aa1cf697851a646755baf537f75334c46',1,'home.php']]],
+  ['home_5fcontent',['home_content',['../home_8php.html#a6e3dbf78f4ed74ab2577de221190b33f',1,'home.php']]],
   ['home_5finit',['home_init',['../home_8php.html#ac4642c38b6f23a8d065dd4a75c620bde',1,'home.php']]],
   ['hostxrd_2ephp',['hostxrd.php',['../hostxrd_8php.html',1,'']]],
   ['hostxrd_5finit',['hostxrd_init',['../hostxrd_8php.html#aa37ffc8e7900bc76c4828bd25916db92',1,'hostxrd.php']]],

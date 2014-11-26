@@ -798,12 +798,15 @@ function post_post(&$a) {
 				$ret['service_class'] = $u[0]['account_service_class'];
 
 			// Set "do not track" flag if this site or this channel's profile is restricted
+			// in some way
 
 			if(intval(get_config('system','block_public')))
 				$ret['DNT'] = true;
 			if(! perm_is_allowed($c[0]['channel_id'],'','view_profile'))
 				$ret['DNT'] = true;
 			if(get_pconfig($c[0]['channel_id'],'system','do_not_track'))
+				$ret['DNT'] = true;
+			if(get_pconfig($c[0]['channel_id'],'system','hide_online_status'))
 				$ret['DNT'] = true;
 
 			json_return_and_die($ret);

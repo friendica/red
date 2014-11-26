@@ -17,7 +17,7 @@ var searchData=
   ['help',['help',['../namespacefriendica-to-smarty-tpl.html#af6b2c793958aae2aadc294577431f749',1,'friendica-to-smarty-tpl.help()'],['../namespaceupdatetpl.html#ac9d11279fed403a329a719298feafc4f',1,'updatetpl.help()']]],
   ['help_5fcontent',['help_content',['../help_8php.html#af055e15f600ffa6fbca9386fdf715224',1,'help.php']]],
   ['hivenet_5finit',['hivenet_init',['../hivenet_2php_2theme_8php.html#a3a8b539b112ae63936025236dbaf0a29',1,'theme.php']]],
-  ['home_5fcontent',['home_content',['../home_8php.html#aa1cf697851a646755baf537f75334c46',1,'home.php']]],
+  ['home_5fcontent',['home_content',['../home_8php.html#a6e3dbf78f4ed74ab2577de221190b33f',1,'home.php']]],
   ['home_5finit',['home_init',['../home_8php.html#ac4642c38b6f23a8d065dd4a75c620bde',1,'home.php']]],
   ['hostxrd_5finit',['hostxrd_init',['../hostxrd_8php.html#aa37ffc8e7900bc76c4828bd25916db92',1,'hostxrd.php']]],
   ['html2bb_5fvideo',['html2bb_video',['../text_8php.html#a138a3a611fa7f4f3630674145fc826bf',1,'text.php']]],

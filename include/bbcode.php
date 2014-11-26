@@ -431,14 +431,16 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// replace [observer.baseurl]
 	if ($observer) {
+		$s1 = '<span class="bb_observer">';
+		$s2 = '</span>';
 		$obsBaseURL = $observer['xchan_connurl'];
 		$obsBaseURL = preg_replace("/\/poco\/.*$/", '', $obsBaseURL);
 		$Text = str_replace('[observer.baseurl]', $obsBaseURL, $Text);
 		$Text = str_replace('[observer.url]',$observer['xchan_url'], $Text);
-		$Text = str_replace('[observer.name]',$observer['xchan_name'], $Text);
-		$Text = str_replace('[observer.address]',$observer['xchan_addr'], $Text);
-		$Text = str_replace('[observer.webname]',substr($observer['xchan_addr'],0,strpos($observer['xchan_addr'],'@')), $Text);
-		$Text = str_replace('[observer.photo]','[zmg]'.$observer['xchan_photo_l'].'[/zmg]', $Text);				
+		$Text = str_replace('[observer.name]',$s1 . $observer['xchan_name'] . $s2, $Text);
+		$Text = str_replace('[observer.address]',$s1 . $observer['xchan_addr'] . $s2, $Text);
+		$Text = str_replace('[observer.webname]',$s1 . substr($observer['xchan_addr'],0,strpos($observer['xchan_addr'],'@')) . $s2, $Text);
+		$Text = str_replace('[observer.photo]',$s1 . '[zmg]'.$observer['xchan_photo_l'].'[/zmg]' . $s2, $Text);				
 	} else {
 		$Text = str_replace('[observer.baseurl]', '', $Text);
 		$Text = str_replace('[observer.url]','', $Text);

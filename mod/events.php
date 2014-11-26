@@ -275,6 +275,11 @@ function events_content(&$a) {
 		if(! $m)
 			$m = intval($thismonth);
 
+		$export = false;
+		if(argc() === 4 && argv(3) === 'export')
+			$export = true;
+
+
 		// Put some limits on dates. The PHP date functions don't seem to do so well before 1900.
 		// An upper limit was chosen to keep search engines from exploring links millions of years in the future. 
 
@@ -413,6 +418,12 @@ function events_content(&$a) {
 			}
 		}
 		 
+		if($export) {
+			header('Content-type: text/calendar');
+			echo ical_wrapper($r);
+			killme();
+		}
+
 		if ($a->argv[1] === 'json'){
 			echo json_encode($events); killme();
 		}
@@ -432,6 +443,7 @@ function events_content(&$a) {
 			'$new_event'=> array($a->get_baseurl().'/events/new',t('Create New Event'),'',''),
 			'$previus'	=> array($a->get_baseurl()."/events/$prevyear/$prevmonth",t('Previous'),'',''),
 			'$next'		=> array($a->get_baseurl()."/events/$nextyear/$nextmonth",t('Next'),'',''),
+			'$export'   => array($a->get_baseurl()."/events/$y/$m/export",t('Export'),'',''),
 			'$calendar' => cal($y,$m,$links, ' eventcal'),			
 			'$events'	=> $events,
 			
