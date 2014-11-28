@@ -1,17 +1,17 @@
 [b]Features[/b]
 
-[b][color= grey][size=24]Red Matrix Features[/size][/color][/b]
+[b][size=24]Red Matrix Features[/size][/b]
 
 
 The Red Matrix is a general-purpose communication network, with several unique features.  It is designed to be used by the widest range of users on the web, from non-technical bloggers, to expert PHP programmers and seasoned systems administrators.
 
 This page lists some of the core features of Red that are bundled with the official.  As with any free and open source software, there may be many other extensions, additions, plugins, themes and configurations that are limited only by the needs and imagination of Red's users.
 
-[b][color= grey][size=20]Built for Privacy and Freedom[/size][/color][/b]
+[b][size=20]Built for Privacy and Freedom[/size][/b]
 
 One of the design goals of Red is to enable easy communication on the web, while preserving privacy, if so desired by users.  To achieve this goal, Red includes a number of features allowing arbitrary levels of privacy:
 
-[b][color= grey]Affinity Slider[/color][/b]
+[b]Affinity Slider[/b]
 
 When adding contacts in the Red Matrix, users have the option of assigning affinity levels to the new member in their contact list.  For example, when adding someone who happens to be a person who's blog you follow, you could assign their channel an affinity level of &quot;Acquaintances&quot;. 
 
@@ -23,26 +23,26 @@ At this point, Red's [i]Affinity Slider[/i] tool, which usually appears at the t
 
 The Affinity Slider allows instantaneous filtering of large amounts of content, grouped by levels of closeness.
 
-[b][color= grey]Access Control Lists[/color][/b]
+[b]Access Control Lists[/b]
 
 When sharing content with someone in their contact list, users have the option of restricting who sees the content.  By clicking on the padlock underneath the sharing box, one could choose desired recipients of the post, by clicking on their names.
 
 Once sent, the message will be viewable only by the sender and the selected recipients.  In other words, the message will not appear on any public walls.
 
 
-[b][color=grey]Private Message Encryption and Privacy Concerns[/color][/b]
+[b]Private Message Encryption and Privacy Concerns[/b]
 
 In the Red Matrix, public messages are not encrypted prior to leaving the originating server, they are also stored in the database in clear text.
 
-Messages marked [b][color=black]private[/color][/b], however, are encrypted with AES-CBC 256-bit symmetric cipher, which is then protected (encrypted in turn) by public key cryptography, based on 4096-bit RSA keys, associated with the channel that is sending the message.  
+Messages marked [b]private[/b], however, are encrypted with AES-CBC 256-bit symmetric cipher, which is then protected (encrypted in turn) by public key cryptography, based on 4096-bit RSA keys, associated with the channel that is sending the message.  
 
 Each Red channel has it's own unique set of private and associated public RSA 4096-bit keys, generated when the channels is first created.  
 
-[b][color= grey]TLS/SSL[/color][/b]
+[b]TLS/SSL[/b]
 
 For Red hubs that use TLS/SSL, client to server communications are encrypted via TLS/SSL.  Given recent disclosures in the media regarding widespread, global surveillance and encryption circumvention by the NSA and GCHQ, it is reasonable to assume that HTTPS-protected communications may be compromised in various ways.
 
-[b][color= grey]Channel Settings[/color][/b]
+[b]Channel Settings[/b]
 
 In Red, each channel allows fine-grained permissions to be set for various aspects of communication.  For example, under the &quot;Security and Privacy Settings&quot; heading, each aspect on the left side of the page, has six (6) possible viewing/access options, that can be selected by clicking on the dropdown menu.
 
@@ -58,11 +58,11 @@ The six options are:
  - Anybody on the Internet.
 
 
-[b][color= grey]Account Cloning[/color][/b]
+[b]Account Cloning[/b]
 
 Accounts in the Red Matrix are referred to as [i]nomadic identities[/i], because a user's identity is not bound to the hub where the identity was originally created (see What is Zot? for the full explanation).  For example, when you create a Facebook or Gmail account, it is tied to those services.  They cannot function without Facebook.com or Gmail.com.  
 
-By contrast, say you've created a Red identity called [b][color=black]tina@redhub.com[/color][/b].  You can clone it to another Red hub by choosing the same, or a different name: [b][color=black]liveForever@SomeRedMatrixHub.info[/color][/b]
+By contrast, say you've created a Red identity called [b]tina@redhub.com[/b].  You can clone it to another Red hub by choosing the same, or a different name: [b]liveForever@SomeRedMatrixHub.info[/b]
 
 Both channels are now synchronized, which means all your contacts and preferences will be duplicated on your clone.  It doesn't matter whether you send a post from your original hub, or the new hub.  Posts will be mirrored on both accounts.
 
@@ -72,26 +72,26 @@ This is a rather revolutionary feature, if we consider some scenarios:
 
  - The administrator of your hub can no longer afford to pay for his free and public Red Matrix hub. He announces that the hub will be shutting down in two weeks.  This gives you ample time to clone your identity(ies) and preserve your Red relationships, friends and content.
 
- - What if your identity is subject to government censorship?  Your hub provider is compelled to delete your account, along with any identities and associated data.  With cloning, the Red Matrix offers [b][color=black]censorship resistance [/color][/b].  You can have hundreds of clones, if you wanted to, all named different, and existing on many different hubs, strewn around the internet.  
+ - What if your identity is subject to government censorship?  Your hub provider is compelled to delete your account, along with any identities and associated data.  With cloning, the Red Matrix offers [b]censorship resistance[/b].  You can have hundreds of clones, if you wanted to, all named different, and existing on many different hubs, strewn around the internet.  
 
 Red offers interesting new possibilities for privacy. You can read more at the &lt;&lt;Private Communications Best Practices&gt;&gt; page.
 
 Some caveats apply. For a full explanation of identity cloning, read the &lt;HOW TO CLONE MY IDENTITY&gt;.
 
 
-[b][color= grey]Account Backup[/color][/b]
+[b]Account Backup[/b]
 
 Red offers a simple, one-click account backup, where you can download a complete backup of your profile(s).  
 
 Backups can then be used to clone or restore a profile.
 
-[b][color= grey]Account Deletion[/color][/b]
+[b]Account Deletion[/b]
 
 Accounts can be immediately deleted by clicking on a link. That's it.  All associated content is immediately deleted from the matrix (this includes posts and any other content produced by the deleted profile).
 
-[b][color=grey][size=20]Content Creation[/size][/color][/b]
+[b][size=20]Content Creation[/size][/b]
 
-[b][color=black]Writing Posts[/color][/b]
+[b]Writing Posts[/b]
 
 Red supports a number of different ways of adding content, from a graphical text editor, to various types of markup and pure HTML.
 
@@ -99,13 +99,13 @@ Red bundles the TinyMCE rich text editor, which can be turned on under &quot;Set
 For user who prefer not to use TinyMCE, content can be entered by typing BBCode markup.
 Furthermore, when creating &quot;Websites&quot; or using &quot;Comanche&quot; and its PCL[FINISH], content can be entered in HTML, Markdown and plain text.
 
-[b][color=black]Deletion of content[/color][/b]
+[b]Deletion of content[/b]
 Any content created in the Red Matrix remains under the control of the user (or channel) that originally created.  At any time, a user can delete a message, or a range of messages.  The deletion process ensures that the content is deleted, regardless of whether it was posted on a channel's primary (home) hub, or on another hub, where the channel was remotely authenticated via Zot.
 
-[b][color=black]Media[/color][/b]
+[b]Media[/b]
 Similar to any other modern blogging system, social network, or a micro-blogging service, Red supports the uploading of files, embedding of videos, linking web pages.
 
-[b][color=black]Previewing[/color][/b] 
+[b]Previewing[/b] 
 Post can be previewed prior to sending.
 
 #include doc/macros/main_footer.bb;
