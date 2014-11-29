@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-21 00:03-0800\n"
-"PO-Revision-Date: 2014-11-25 19:27+0000\n"
+"POT-Creation-Date: 2014-11-28 00:04-0800\n"
+"PO-Revision-Date: 2014-11-29 10:37+0000\n"
 "Last-Translator: Erik Lundin <sby8zrm8v1@asdf.asdfasdf.eu>\n"
 "Language-Team: Swedish (http://www.transifex.com/projects/p/red-matrix/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../../include/dba/dba_driver.php:136
+#: ../../include/dba/dba_driver.php:142
 #, php-format
 msgid "Cannot locate DNS info for database server '%s'"
 msgstr "Kan inte hitta DNS-information för databasserver '%s'"
@@ -192,7 +192,7 @@ msgstr "Matrisaktivitet"
 #: ../../include/conversation.php:932 ../../include/identity.php:840
 #: ../../include/widgets.php:135 ../../include/widgets.php:175
 #: ../../include/Contact.php:107 ../../mod/suggest.php:51
-#: ../../mod/match.php:62 ../../mod/directory.php:224
+#: ../../mod/match.php:62 ../../mod/directory.php:235
 msgid "Connect"
 msgstr "Ta kontakt"
 
@@ -388,7 +388,7 @@ msgstr "rensa plats"
 msgid "Set title"
 msgstr "Ange titel"
 
-#: ../../include/conversation.php:1136 ../../mod/events.php:562
+#: ../../include/conversation.php:1136 ../../mod/events.php:574
 #: ../../mod/editblock.php:167 ../../mod/editlayout.php:162
 #: ../../mod/editpost.php:134 ../../mod/editwebpage.php:200
 msgid "Categories (comma-separated list)"
@@ -427,13 +427,13 @@ msgstr "Ange utgångsdatum"
 msgid "Encrypt text"
 msgstr "Kryptera text"
 
-#: ../../include/conversation.php:1165 ../../mod/events.php:568
+#: ../../include/conversation.php:1165 ../../mod/events.php:580
 #: ../../mod/editpost.php:150
 msgid "OK"
 msgstr "OK"
 
 #: ../../include/conversation.php:1166 ../../mod/settings.php:564
-#: ../../mod/settings.php:590 ../../mod/events.php:567
+#: ../../mod/settings.php:590 ../../mod/events.php:579
 #: ../../mod/editpost.php:151 ../../mod/fbrowser.php:82
 #: ../../mod/fbrowser.php:117 ../../mod/tagrm.php:11 ../../mod/tagrm.php:134
 msgid "Cancel"
@@ -664,7 +664,7 @@ msgid "Examples: Robert Morgenstein, Fishing"
 msgstr "Exempel: Robert Morgenstein, Fiske"
 
 #: ../../include/contact_widgets.php:26 ../../mod/connections.php:412
-#: ../../mod/directory.php:267 ../../mod/directory.php:272
+#: ../../mod/directory.php:278 ../../mod/directory.php:283
 msgid "Find"
 msgstr "Sök"
 
@@ -769,7 +769,7 @@ msgstr "Visa"
 msgid "Don't show"
 msgstr "Visa inte"
 
-#: ../../include/acl_selectors.php:248 ../../mod/events.php:584
+#: ../../include/acl_selectors.php:248 ../../mod/events.php:596
 #: ../../mod/chat.php:209 ../../mod/filestorage.php:137
 #: ../../mod/photos.php:588 ../../mod/photos.php:950
 msgid "Permissions"
@@ -801,8 +801,8 @@ msgid "Finishes:"
 msgstr "Slutar:"
 
 #: ../../include/bb2diaspora.php:485 ../../include/identity.php:891
-#: ../../include/event.php:40 ../../mod/events.php:578
-#: ../../mod/directory.php:159
+#: ../../include/event.php:40 ../../mod/events.php:590
+#: ../../mod/directory.php:170
 msgid "Location:"
 msgstr "Plats:"
 
@@ -810,8 +810,8 @@ msgstr "Plats:"
 #: ../../include/attach.php:226 ../../include/attach.php:240
 #: ../../include/attach.php:280 ../../include/attach.php:294
 #: ../../include/attach.php:318 ../../include/attach.php:511
-#: ../../include/attach.php:584 ../../include/photos.php:15
-#: ../../include/items.php:4018 ../../include/chat.php:116
+#: ../../include/attach.php:585 ../../include/photos.php:15
+#: ../../include/items.php:4019 ../../include/chat.php:116
 #: ../../mod/mood.php:112 ../../mod/mitem.php:106
 #: ../../mod/achievements.php:30 ../../mod/register.php:72
 #: ../../mod/sources.php:66 ../../mod/poke.php:128 ../../mod/api.php:26
@@ -886,23 +886,23 @@ msgstr "Den lagrade filen kunde inte verifieras. Uppladdning misslyckad."
 msgid "Path not available."
 msgstr "Sökväg inte tillgänglig."
 
-#: ../../include/attach.php:589
+#: ../../include/attach.php:590
 msgid "Empty pathname"
 msgstr "Tom sökväg"
 
-#: ../../include/attach.php:605
+#: ../../include/attach.php:606
 msgid "duplicate filename or path"
 msgstr "filnamn eller sökväg finns redan"
 
-#: ../../include/attach.php:629
+#: ../../include/attach.php:630
 msgid "Path not found."
 msgstr "Sökväg hittas inte."
 
-#: ../../include/attach.php:680
+#: ../../include/attach.php:681
 msgid "mkdir failed."
 msgstr "mkdir misslyckades."
 
-#: ../../include/attach.php:684
+#: ../../include/attach.php:685
 msgid "database storage failed."
 msgstr "databaslagring misslyckades."
 
@@ -989,7 +989,7 @@ msgstr "Ladda upp"
 msgid "%1$s's bookmarks"
 msgstr "%1$ss bokmärken"
 
-#: ../../include/nav.php:95 ../../include/nav.php:128 ../../boot.php:1486
+#: ../../include/nav.php:95 ../../include/nav.php:128 ../../boot.php:1485
 msgid "Logout"
 msgstr "Logga ut"
 
@@ -1049,7 +1049,7 @@ msgstr "Dina bokmärken"
 msgid "Your webpages"
 msgstr "Dina webbsidor"
 
-#: ../../include/nav.php:125 ../../include/apps.php:129 ../../boot.php:1487
+#: ../../include/nav.php:125 ../../include/apps.php:129 ../../boot.php:1486
 msgid "Login"
 msgstr "Logga in"
 
@@ -1074,7 +1074,7 @@ msgstr "Klicka för att autentisera mot din hemmahubb"
 msgid "Home Page"
 msgstr "Hemsida"
 
-#: ../../include/nav.php:163 ../../mod/register.php:224 ../../boot.php:1465
+#: ../../include/nav.php:163 ../../mod/register.php:224 ../../boot.php:1464
 msgid "Register"
 msgstr "Skapa konto"
 
@@ -1111,7 +1111,7 @@ msgid "Search site content"
 msgstr "Sök innehåll"
 
 #: ../../include/nav.php:176 ../../include/apps.php:139
-#: ../../mod/directory.php:271
+#: ../../mod/directory.php:282
 msgid "Directory"
 msgstr "Katalog"
 
@@ -1192,7 +1192,7 @@ msgid "New Message"
 msgstr "Nytt meddelande"
 
 #: ../../include/nav.php:212 ../../include/apps.php:138
-#: ../../mod/events.php:431
+#: ../../mod/events.php:442
 msgid "Events"
 msgstr "Händelser"
 
@@ -1284,7 +1284,7 @@ msgid "RSS/Atom"
 msgstr "RSS/Atom"
 
 #: ../../include/contact_selectors.php:79 ../../mod/admin.php:726
-#: ../../mod/admin.php:735 ../../boot.php:1489
+#: ../../mod/admin.php:735 ../../boot.php:1488
 msgid "Email"
 msgstr "E-post"
 
@@ -1363,9 +1363,9 @@ msgid "Requested channel is not available."
 msgstr "Den begärda kanalen är inte tillgänglig"
 
 #: ../../include/identity.php:691 ../../mod/achievements.php:11
-#: ../../mod/profile.php:16 ../../mod/blocks.php:29 ../../mod/webpages.php:29
-#: ../../mod/editblock.php:29 ../../mod/editlayout.php:28
-#: ../../mod/connect.php:13 ../../mod/editwebpage.php:28
+#: ../../mod/profile.php:16 ../../mod/blocks.php:29 ../../mod/connect.php:13
+#: ../../mod/webpages.php:29 ../../mod/editblock.php:29
+#: ../../mod/editlayout.php:28 ../../mod/editwebpage.php:28
 #: ../../mod/filestorage.php:48 ../../mod/layouts.php:29 ../../mod/hcard.php:8
 msgid "Requested profile is not available."
 msgstr "Begärd profil är inte tillgänglig."
@@ -1567,17 +1567,17 @@ msgstr "Skola/utbildning:"
 msgid "Like this thing"
 msgstr "Gilla den här saken"
 
-#: ../../include/bbcode.php:112 ../../include/bbcode.php:653
-#: ../../include/bbcode.php:656 ../../include/bbcode.php:661
-#: ../../include/bbcode.php:664 ../../include/bbcode.php:667
-#: ../../include/bbcode.php:670 ../../include/bbcode.php:675
-#: ../../include/bbcode.php:678 ../../include/bbcode.php:683
-#: ../../include/bbcode.php:686 ../../include/bbcode.php:689
-#: ../../include/bbcode.php:692
+#: ../../include/bbcode.php:112 ../../include/bbcode.php:655
+#: ../../include/bbcode.php:658 ../../include/bbcode.php:663
+#: ../../include/bbcode.php:666 ../../include/bbcode.php:669
+#: ../../include/bbcode.php:672 ../../include/bbcode.php:677
+#: ../../include/bbcode.php:680 ../../include/bbcode.php:685
+#: ../../include/bbcode.php:688 ../../include/bbcode.php:691
+#: ../../include/bbcode.php:694
 msgid "Image/photo"
 msgstr "Bild/foto"
 
-#: ../../include/bbcode.php:147 ../../include/bbcode.php:703
+#: ../../include/bbcode.php:147 ../../include/bbcode.php:705
 msgid "Encrypted content"
 msgstr "Krypterat innehåll"
 
@@ -1598,11 +1598,11 @@ msgstr "%1$s skrev följande %2$s %3$s"
 msgid "post"
 msgstr "post"
 
-#: ../../include/bbcode.php:621
+#: ../../include/bbcode.php:623
 msgid "$1 spoiler"
 msgstr "$1 spoiler"
 
-#: ../../include/bbcode.php:641
+#: ../../include/bbcode.php:643
 msgid "$1 wrote:"
 msgstr "$1 skrev:"
 
@@ -1751,8 +1751,8 @@ msgid "Public Timeline"
 msgstr "Offentlig tidslinje"
 
 #: ../../include/dir_fns.php:56
-msgid "Sort Options"
-msgstr "Sorteringsalternativ"
+msgid "Directory Options"
+msgstr "Katalogalternativ"
 
 #: ../../include/dir_fns.php:57
 msgid "Alphabetic"
@@ -1766,15 +1766,19 @@ msgstr "Omvänd alfabetisk"
 msgid "Newest to Oldest"
 msgstr "Nyast till äldst"
 
-#: ../../include/dir_fns.php:71
+#: ../../include/dir_fns.php:60
+msgid "Public Forums Only"
+msgstr "Endast offentliga forum"
+
+#: ../../include/dir_fns.php:72
 msgid "Enable Safe Search"
 msgstr "Aktivera säker sökning"
 
-#: ../../include/dir_fns.php:73
+#: ../../include/dir_fns.php:74
 msgid "Disable Safe Search"
 msgstr "Avaktivera säker sökning"
 
-#: ../../include/dir_fns.php:75
+#: ../../include/dir_fns.php:76
 msgid "Safe Mode"
 msgstr "Säkert läge"
 
@@ -1974,7 +1978,7 @@ msgstr "Besök %s för att bevilja eller avslå förslaget."
 msgid "[Red:Notify]"
 msgstr "[Red:Notifiering]"
 
-#: ../../include/event.php:326
+#: ../../include/event.php:376
 msgid "This event has been added to your calendar."
 msgstr "Händelsen har lagts till i din kalender."
 
@@ -2267,320 +2271,6 @@ msgstr "Taggmoln"
 msgid "Provide a personal tag cloud on your channel page"
 msgstr "Tillhandahåll ett personligt taggmoln på din kanalsida"
 
-#: ../../include/account.php:23
-msgid "Not a valid email address"
-msgstr "Inte en giltig e-postadress"
-
-#: ../../include/account.php:25
-msgid "Your email domain is not among those allowed on this site"
-msgstr "Din e-postdomän är inte bland de som tillåts på den här servern"
-
-#: ../../include/account.php:31
-msgid "Your email address is already registered at this site."
-msgstr "Din e-postadress är redan registrerad på den här servern."
-
-#: ../../include/account.php:64
-msgid "An invitation is required."
-msgstr "En inbjudan behövs."
-
-#: ../../include/account.php:68
-msgid "Invitation could not be verified."
-msgstr "Inbjudningen kunde inte bekräftas."
-
-#: ../../include/account.php:119
-msgid "Please enter the required information."
-msgstr "Ange den begärda informationen."
-
-#: ../../include/account.php:187
-msgid "Failed to store account information."
-msgstr "Misslyckades att spara kontoinformation."
-
-#: ../../include/account.php:245
-#, php-format
-msgid "Registration confirmation for %s"
-msgstr "Registreringsbekräftelse för %s"
-
-#: ../../include/account.php:313
-#, php-format
-msgid "Registration request at %s"
-msgstr "Registreringsförfrågan på %s"
-
-#: ../../include/account.php:315 ../../include/account.php:342
-#: ../../include/account.php:399
-msgid "Administrator"
-msgstr "Administratör"
-
-#: ../../include/account.php:337
-msgid "your registration password"
-msgstr "ditt registreringslösenord"
-
-#: ../../include/account.php:340 ../../include/account.php:397
-#, php-format
-msgid "Registration details for %s"
-msgstr "Registreringsdetaljer för %s"
-
-#: ../../include/account.php:406
-msgid "Account approved."
-msgstr "Konto godkänt."
-
-#: ../../include/account.php:440
-#, php-format
-msgid "Registration revoked for %s"
-msgstr "Registrering avslagen för %s"
-
-#: ../../include/account.php:486
-msgid "Account verified. Please login."
-msgstr "Konto bekräftat. Du kan nu logga in."
-
-#: ../../include/account.php:648 ../../include/account.php:650
-msgid "Click here to upgrade."
-msgstr "Klicka här för att uppgradera."
-
-#: ../../include/account.php:656
-msgid "This action exceeds the limits set by your subscription plan."
-msgstr "Den här funktionen går utanför vad som anges i ditt avtal."
-
-#: ../../include/account.php:661
-msgid "This action is not available under your subscription plan."
-msgstr "Den här funktionen är inte tillgänglig med ditt avtal."
-
-#: ../../include/permissions.php:13
-msgid "Can view my normal stream and posts"
-msgstr "Kan se mina normala strömmar och inlägg"
-
-#: ../../include/permissions.php:14
-msgid "Can view my default channel profile"
-msgstr "Kan se min standardkanalprofil"
-
-#: ../../include/permissions.php:15
-msgid "Can view my photo albums"
-msgstr "Kan se mina fotoalbum"
-
-#: ../../include/permissions.php:16
-msgid "Can view my connections"
-msgstr "Kan se mina kontakter"
-
-#: ../../include/permissions.php:17
-msgid "Can view my file storage"
-msgstr "Kan se mitt filutrymme"
-
-#: ../../include/permissions.php:18
-msgid "Can view my webpages"
-msgstr "Kan se mina webbsidor"
-
-#: ../../include/permissions.php:21
-msgid "Can send me their channel stream and posts"
-msgstr "Kan skicka sina kanalströmmar och inlägg till mig"
-
-#: ../../include/permissions.php:22
-msgid "Can post on my channel page (\"wall\")"
-msgstr "Kan posta inlägg på min kanalsida (\"vägg\")"
-
-#: ../../include/permissions.php:23
-msgid "Can comment on or like my posts"
-msgstr "Kan kommentera eller gilla mina inlägg"
-
-#: ../../include/permissions.php:24
-msgid "Can send me private mail messages"
-msgstr "Kan skicka privata meddelanden till mig"
-
-#: ../../include/permissions.php:25
-msgid "Can post photos to my photo albums"
-msgstr "Kan lägga till foton i mitt fotoalbum"
-
-#: ../../include/permissions.php:26
-msgid "Can like/dislike stuff"
-msgstr "Kan gilla/ogilla saker"
-
-#: ../../include/permissions.php:26
-msgid "Profiles and things other than posts/comments"
-msgstr "Profiler och annat än inlägg/kommentarer"
-
-#: ../../include/permissions.php:28
-msgid "Can forward to all my channel contacts via post @mentions"
-msgstr "Kan vidarebefordra till alla mina kanalkontakter genom @omnämnanden"
-
-#: ../../include/permissions.php:28
-msgid "Advanced - useful for creating group forum channels"
-msgstr "Avancerat - användbart för att skapa kanaler för gruppforum"
-
-#: ../../include/permissions.php:29
-msgid "Can chat with me (when available)"
-msgstr "Kan chatta med mig (när tillgänglig)"
-
-#: ../../include/permissions.php:30
-msgid "Can write to my file storage"
-msgstr "Har skrivrättigheter i mitt filutrymme"
-
-#: ../../include/permissions.php:31
-msgid "Can edit my webpages"
-msgstr "Kan redigera mina webbsidor"
-
-#: ../../include/permissions.php:33
-msgid "Can source my public posts in derived channels"
-msgstr "Kan använda mina offentliga inlägg i kanaler nedströms"
-
-#: ../../include/permissions.php:33
-msgid "Somewhat advanced - very useful in open communities"
-msgstr "Ganska avancerat - väldigt användbart i öppna gemenskaper"
-
-#: ../../include/permissions.php:35
-msgid "Can administer my channel resources"
-msgstr "Kan administrera mina kanalresurser"
-
-#: ../../include/permissions.php:35
-msgid ""
-"Extremely advanced. Leave this alone unless you know what you are doing"
-msgstr "Extremt avancerat. Låt detta vara om du inte vet vad du gör"
-
-#: ../../include/permissions.php:785
-msgid "Social Networking"
-msgstr "Socialt nätverkande"
-
-#: ../../include/permissions.php:786 ../../include/permissions.php:788
-#: ../../include/permissions.php:790
-msgid "Mostly Public"
-msgstr "Mestadels offentligt"
-
-#: ../../include/permissions.php:786 ../../include/permissions.php:788
-#: ../../include/permissions.php:790
-msgid "Restricted"
-msgstr "Begränsat"
-
-#: ../../include/permissions.php:786 ../../include/permissions.php:788
-msgid "Private"
-msgstr "Privat"
-
-#: ../../include/permissions.php:787
-msgid "Community Forum"
-msgstr "Gemenskapsforum"
-
-#: ../../include/permissions.php:789
-msgid "Feed Republish"
-msgstr "Vidarepublicering av flöde"
-
-#: ../../include/permissions.php:791
-msgid "Special Purpose"
-msgstr "Särskilt syfte"
-
-#: ../../include/permissions.php:792
-msgid "Celebrity/Soapbox"
-msgstr "Kändis/talarstol"
-
-#: ../../include/permissions.php:792
-msgid "Group Repository"
-msgstr "Gruppförråd"
-
-#: ../../include/permissions.php:793 ../../include/profile_selectors.php:6
-#: ../../include/profile_selectors.php:23
-#: ../../include/profile_selectors.php:61
-#: ../../include/profile_selectors.php:97
-msgid "Other"
-msgstr "Annat"
-
-#: ../../include/permissions.php:794
-msgid "Custom/Expert Mode"
-msgstr "Anpassat/expertläge"
-
-#: ../../include/photos.php:105
-#, php-format
-msgid "Image exceeds website size limit of %lu bytes"
-msgstr "Bild överskrider webbplatsens storleksbegränsning på %lu byte"
-
-#: ../../include/photos.php:112
-msgid "Image file is empty."
-msgstr "Bildfil är tom."
-
-#: ../../include/photos.php:141 ../../mod/profile_photo.php:216
-msgid "Unable to process image"
-msgstr "Kunde inte bearbeta bild"
-
-#: ../../include/photos.php:213
-msgid "Photo storage failed."
-msgstr "Fotolagring misslyckades."
-
-#: ../../include/photos.php:345
-msgid "Upload New Photos"
-msgstr "Ladda upp nya foton"
-
-#: ../../include/items.php:382 ../../mod/profperm.php:23
-#: ../../mod/subthread.php:49 ../../mod/like.php:246 ../../mod/group.php:68
-#: ../../index.php:389
-msgid "Permission denied"
-msgstr "Behörighet saknas"
-
-#: ../../include/items.php:969 ../../include/items.php:1014
-msgid "(Unknown)"
-msgstr "(Okänt)"
-
-#: ../../include/items.php:1170
-msgid "Visible to anybody on the internet."
-msgstr "Kan ses av vem som helst på Internet."
-
-#: ../../include/items.php:1172
-msgid "Visible to you only."
-msgstr "Kan bara ses av dig."
-
-#: ../../include/items.php:1174
-msgid "Visible to anybody in this network."
-msgstr "Kan ses av alla på det här nätverket."
-
-#: ../../include/items.php:1176
-msgid "Visible to anybody authenticated."
-msgstr "Kan ses av alla inloggade."
-
-#: ../../include/items.php:1178
-#, php-format
-msgid "Visible to anybody on %s."
-msgstr "Kan ses av alla på %s."
-
-#: ../../include/items.php:1180
-msgid "Visible to all connections."
-msgstr "Kan ses av alla kontakter."
-
-#: ../../include/items.php:1182
-msgid "Visible to approved connections."
-msgstr "Kan ses av godkända kontakter."
-
-#: ../../include/items.php:1184
-msgid "Visible to specific connections."
-msgstr "Kan ses av valda kontakter."
-
-#: ../../include/items.php:3951 ../../mod/thing.php:76
-#: ../../mod/display.php:32 ../../mod/filestorage.php:26
-#: ../../mod/admin.php:168 ../../mod/admin.php:896 ../../mod/admin.php:1099
-#: ../../mod/viewsrc.php:20
-msgid "Item not found."
-msgstr "Posten hittades inte."
-
-#: ../../include/items.php:4409 ../../mod/group.php:38 ../../mod/group.php:140
-msgid "Collection not found."
-msgstr "Kretsen hittades inte."
-
-#: ../../include/items.php:4424
-msgid "Collection is empty."
-msgstr "Kretsen är tom."
-
-#: ../../include/items.php:4431
-#, php-format
-msgid "Collection: %s"
-msgstr "Krets: %s"
-
-#: ../../include/items.php:4442
-#, php-format
-msgid "Connection: %s"
-msgstr "Kontakt: %s"
-
-#: ../../include/items.php:4445
-msgid "Connection not found."
-msgstr "Kontakten hittades inte."
-
-#: ../../include/security.php:323
-msgid ""
-"The form security token was not correct. This probably happened because the "
-"form has been opened for too long (>3 hours) before submitting it."
-msgstr "Formulärets kontrollkod var inte korrekt. Antagligen beror det på att formuläret har varit öppet för länge (> 3 timmar) innan det skickades."
-
 #: ../../include/text.php:321
 msgid "prev"
 msgstr "föregående"
@@ -2851,7 +2541,7 @@ msgstr "ta bort från fil"
 msgid "Click to open/close"
 msgstr "Klicka för att öppna/stänga"
 
-#: ../../include/text.php:1527 ../../mod/events.php:409
+#: ../../include/text.php:1527 ../../mod/events.php:414
 msgid "Link to Source"
 msgstr "Länk till källa"
 
@@ -2875,25 +2565,339 @@ msgstr "Välj ett alternativt språk"
 msgid "activity"
 msgstr "aktivitet"
 
-#: ../../include/text.php:2041
+#: ../../include/text.php:2046
 msgid "Design"
 msgstr "Design"
 
-#: ../../include/text.php:2044
+#: ../../include/text.php:2049
 msgid "Blocks"
 msgstr "Block"
 
-#: ../../include/text.php:2045
+#: ../../include/text.php:2050
 msgid "Menus"
 msgstr "Menyer"
 
-#: ../../include/text.php:2046
+#: ../../include/text.php:2051
 msgid "Layouts"
 msgstr "Layouter"
 
-#: ../../include/text.php:2047
+#: ../../include/text.php:2052
 msgid "Pages"
 msgstr "Sidor"
+
+#: ../../include/account.php:23
+msgid "Not a valid email address"
+msgstr "Inte en giltig e-postadress"
+
+#: ../../include/account.php:25
+msgid "Your email domain is not among those allowed on this site"
+msgstr "Din e-postdomän är inte bland de som tillåts på den här servern"
+
+#: ../../include/account.php:31
+msgid "Your email address is already registered at this site."
+msgstr "Din e-postadress är redan registrerad på den här servern."
+
+#: ../../include/account.php:64
+msgid "An invitation is required."
+msgstr "En inbjudan behövs."
+
+#: ../../include/account.php:68
+msgid "Invitation could not be verified."
+msgstr "Inbjudningen kunde inte bekräftas."
+
+#: ../../include/account.php:119
+msgid "Please enter the required information."
+msgstr "Ange den begärda informationen."
+
+#: ../../include/account.php:187
+msgid "Failed to store account information."
+msgstr "Misslyckades att spara kontoinformation."
+
+#: ../../include/account.php:245
+#, php-format
+msgid "Registration confirmation for %s"
+msgstr "Registreringsbekräftelse för %s"
+
+#: ../../include/account.php:313
+#, php-format
+msgid "Registration request at %s"
+msgstr "Registreringsförfrågan på %s"
+
+#: ../../include/account.php:315 ../../include/account.php:342
+#: ../../include/account.php:399
+msgid "Administrator"
+msgstr "Administratör"
+
+#: ../../include/account.php:337
+msgid "your registration password"
+msgstr "ditt registreringslösenord"
+
+#: ../../include/account.php:340 ../../include/account.php:397
+#, php-format
+msgid "Registration details for %s"
+msgstr "Registreringsdetaljer för %s"
+
+#: ../../include/account.php:406
+msgid "Account approved."
+msgstr "Konto godkänt."
+
+#: ../../include/account.php:440
+#, php-format
+msgid "Registration revoked for %s"
+msgstr "Registrering avslagen för %s"
+
+#: ../../include/account.php:486
+msgid "Account verified. Please login."
+msgstr "Konto bekräftat. Du kan nu logga in."
+
+#: ../../include/account.php:648 ../../include/account.php:650
+msgid "Click here to upgrade."
+msgstr "Klicka här för att uppgradera."
+
+#: ../../include/account.php:656
+msgid "This action exceeds the limits set by your subscription plan."
+msgstr "Den här funktionen går utanför vad som anges i ditt avtal."
+
+#: ../../include/account.php:661
+msgid "This action is not available under your subscription plan."
+msgstr "Den här funktionen är inte tillgänglig med ditt avtal."
+
+#: ../../include/permissions.php:13
+msgid "Can view my normal stream and posts"
+msgstr "Kan se mina normala strömmar och inlägg"
+
+#: ../../include/permissions.php:14
+msgid "Can view my default channel profile"
+msgstr "Kan se min standardkanalprofil"
+
+#: ../../include/permissions.php:15
+msgid "Can view my photo albums"
+msgstr "Kan se mina fotoalbum"
+
+#: ../../include/permissions.php:16
+msgid "Can view my connections"
+msgstr "Kan se mina kontakter"
+
+#: ../../include/permissions.php:17
+msgid "Can view my file storage"
+msgstr "Kan se mitt filutrymme"
+
+#: ../../include/permissions.php:18
+msgid "Can view my webpages"
+msgstr "Kan se mina webbsidor"
+
+#: ../../include/permissions.php:21
+msgid "Can send me their channel stream and posts"
+msgstr "Kan skicka sina kanalströmmar och inlägg till mig"
+
+#: ../../include/permissions.php:22
+msgid "Can post on my channel page (\"wall\")"
+msgstr "Kan posta inlägg på min kanalsida (\"vägg\")"
+
+#: ../../include/permissions.php:23
+msgid "Can comment on or like my posts"
+msgstr "Kan kommentera eller gilla mina inlägg"
+
+#: ../../include/permissions.php:24
+msgid "Can send me private mail messages"
+msgstr "Kan skicka privata meddelanden till mig"
+
+#: ../../include/permissions.php:25
+msgid "Can post photos to my photo albums"
+msgstr "Kan lägga till foton i mitt fotoalbum"
+
+#: ../../include/permissions.php:26
+msgid "Can like/dislike stuff"
+msgstr "Kan gilla/ogilla saker"
+
+#: ../../include/permissions.php:26
+msgid "Profiles and things other than posts/comments"
+msgstr "Profiler och annat än inlägg/kommentarer"
+
+#: ../../include/permissions.php:28
+msgid "Can forward to all my channel contacts via post @mentions"
+msgstr "Kan vidarebefordra till alla mina kanalkontakter genom @omnämnanden"
+
+#: ../../include/permissions.php:28
+msgid "Advanced - useful for creating group forum channels"
+msgstr "Avancerat - användbart för att skapa kanaler för gruppforum"
+
+#: ../../include/permissions.php:29
+msgid "Can chat with me (when available)"
+msgstr "Kan chatta med mig (när tillgänglig)"
+
+#: ../../include/permissions.php:30
+msgid "Can write to my file storage"
+msgstr "Har skrivrättigheter i mitt filutrymme"
+
+#: ../../include/permissions.php:31
+msgid "Can edit my webpages"
+msgstr "Kan redigera mina webbsidor"
+
+#: ../../include/permissions.php:33
+msgid "Can source my public posts in derived channels"
+msgstr "Kan använda mina offentliga inlägg i kanaler nedströms"
+
+#: ../../include/permissions.php:33
+msgid "Somewhat advanced - very useful in open communities"
+msgstr "Ganska avancerat - väldigt användbart i öppna gemenskaper"
+
+#: ../../include/permissions.php:35
+msgid "Can administer my channel resources"
+msgstr "Kan administrera mina kanalresurser"
+
+#: ../../include/permissions.php:35
+msgid ""
+"Extremely advanced. Leave this alone unless you know what you are doing"
+msgstr "Extremt avancerat. Låt detta vara om du inte vet vad du gör"
+
+#: ../../include/permissions.php:785
+msgid "Social Networking"
+msgstr "Socialt nätverkande"
+
+#: ../../include/permissions.php:786 ../../include/permissions.php:788
+#: ../../include/permissions.php:790
+msgid "Mostly Public"
+msgstr "Mestadels offentligt"
+
+#: ../../include/permissions.php:786 ../../include/permissions.php:788
+#: ../../include/permissions.php:790
+msgid "Restricted"
+msgstr "Begränsat"
+
+#: ../../include/permissions.php:786 ../../include/permissions.php:788
+msgid "Private"
+msgstr "Privat"
+
+#: ../../include/permissions.php:787
+msgid "Community Forum"
+msgstr "Gemenskapsforum"
+
+#: ../../include/permissions.php:789
+msgid "Feed Republish"
+msgstr "Vidarepublicering av flöde"
+
+#: ../../include/permissions.php:791
+msgid "Special Purpose"
+msgstr "Särskilt syfte"
+
+#: ../../include/permissions.php:792
+msgid "Celebrity/Soapbox"
+msgstr "Kändis/talarstol"
+
+#: ../../include/permissions.php:792
+msgid "Group Repository"
+msgstr "Gruppförråd"
+
+#: ../../include/permissions.php:793 ../../include/profile_selectors.php:6
+#: ../../include/profile_selectors.php:23
+#: ../../include/profile_selectors.php:61
+#: ../../include/profile_selectors.php:97
+msgid "Other"
+msgstr "Annat"
+
+#: ../../include/permissions.php:794
+msgid "Custom/Expert Mode"
+msgstr "Anpassat/expertläge"
+
+#: ../../include/photos.php:105
+#, php-format
+msgid "Image exceeds website size limit of %lu bytes"
+msgstr "Bild överskrider webbplatsens storleksbegränsning på %lu byte"
+
+#: ../../include/photos.php:112
+msgid "Image file is empty."
+msgstr "Bildfil är tom."
+
+#: ../../include/photos.php:141 ../../mod/profile_photo.php:216
+msgid "Unable to process image"
+msgstr "Kunde inte bearbeta bild"
+
+#: ../../include/photos.php:213
+msgid "Photo storage failed."
+msgstr "Fotolagring misslyckades."
+
+#: ../../include/photos.php:345
+msgid "Upload New Photos"
+msgstr "Ladda upp nya foton"
+
+#: ../../include/items.php:382 ../../mod/profperm.php:23
+#: ../../mod/subthread.php:49 ../../mod/like.php:246 ../../mod/group.php:68
+#: ../../index.php:389
+msgid "Permission denied"
+msgstr "Behörighet saknas"
+
+#: ../../include/items.php:969 ../../include/items.php:1014
+msgid "(Unknown)"
+msgstr "(Okänt)"
+
+#: ../../include/items.php:1171
+msgid "Visible to anybody on the internet."
+msgstr "Kan ses av vem som helst på Internet."
+
+#: ../../include/items.php:1173
+msgid "Visible to you only."
+msgstr "Kan bara ses av dig."
+
+#: ../../include/items.php:1175
+msgid "Visible to anybody in this network."
+msgstr "Kan ses av alla på det här nätverket."
+
+#: ../../include/items.php:1177
+msgid "Visible to anybody authenticated."
+msgstr "Kan ses av alla inloggade."
+
+#: ../../include/items.php:1179
+#, php-format
+msgid "Visible to anybody on %s."
+msgstr "Kan ses av alla på %s."
+
+#: ../../include/items.php:1181
+msgid "Visible to all connections."
+msgstr "Kan ses av alla kontakter."
+
+#: ../../include/items.php:1183
+msgid "Visible to approved connections."
+msgstr "Kan ses av godkända kontakter."
+
+#: ../../include/items.php:1185
+msgid "Visible to specific connections."
+msgstr "Kan ses av valda kontakter."
+
+#: ../../include/items.php:3952 ../../mod/thing.php:76
+#: ../../mod/display.php:32 ../../mod/filestorage.php:26
+#: ../../mod/admin.php:168 ../../mod/admin.php:896 ../../mod/admin.php:1099
+#: ../../mod/viewsrc.php:20
+msgid "Item not found."
+msgstr "Posten hittades inte."
+
+#: ../../include/items.php:4410 ../../mod/group.php:38 ../../mod/group.php:140
+msgid "Collection not found."
+msgstr "Kretsen hittades inte."
+
+#: ../../include/items.php:4425
+msgid "Collection is empty."
+msgstr "Kretsen är tom."
+
+#: ../../include/items.php:4432
+#, php-format
+msgid "Collection: %s"
+msgstr "Krets: %s"
+
+#: ../../include/items.php:4443
+#, php-format
+msgid "Connection: %s"
+msgstr "Kontakt: %s"
+
+#: ../../include/items.php:4446
+msgid "Connection not found."
+msgstr "Kontakten hittades inte."
+
+#: ../../include/security.php:323
+msgid ""
+"The form security token was not correct. This probably happened because the "
+"form has been opened for too long (>3 hours) before submitting it."
+msgstr "Formulärets kontrollkod var inte korrekt. Antagligen beror det på att formuläret har varit öppet för länge (> 3 timmar) innan det skickades."
 
 #: ../../include/widgets.php:87
 msgid "System"
@@ -3029,15 +3033,15 @@ msgstr "Hämta meddelanden"
 msgid "Chat Rooms"
 msgstr "Chattrum"
 
-#: ../../include/widgets.php:666
+#: ../../include/widgets.php:668
 msgid "Bookmarked Chatrooms"
 msgstr "Bokmärkta chattrum"
 
-#: ../../include/widgets.php:684
+#: ../../include/widgets.php:688
 msgid "Suggested Chatrooms"
 msgstr "Föreslagna chattrum"
 
-#: ../../include/widgets.php:813 ../../include/widgets.php:871
+#: ../../include/widgets.php:817 ../../include/widgets.php:875
 msgid "photo/image"
 msgstr "foto/bild"
 
@@ -3601,10 +3605,10 @@ msgstr "Det här är du"
 #: ../../mod/setup.php:313 ../../mod/setup.php:358 ../../mod/settings.php:563
 #: ../../mod/settings.php:675 ../../mod/settings.php:704
 #: ../../mod/settings.php:728 ../../mod/settings.php:805
-#: ../../mod/settings.php:997 ../../mod/events.php:586 ../../mod/chat.php:177
-#: ../../mod/chat.php:211 ../../mod/connedit.php:555 ../../mod/thing.php:284
-#: ../../mod/thing.php:327 ../../mod/profiles.php:633 ../../mod/pdledit.php:58
-#: ../../mod/connect.php:92 ../../mod/fsuggest.php:108
+#: ../../mod/settings.php:997 ../../mod/events.php:598 ../../mod/chat.php:177
+#: ../../mod/chat.php:211 ../../mod/connect.php:93 ../../mod/connedit.php:555
+#: ../../mod/thing.php:284 ../../mod/thing.php:327 ../../mod/profiles.php:633
+#: ../../mod/pdledit.php:58 ../../mod/fsuggest.php:108
 #: ../../mod/filestorage.php:146 ../../mod/group.php:81
 #: ../../mod/import.php:480 ../../mod/admin.php:412 ../../mod/admin.php:723
 #: ../../mod/admin.php:859 ../../mod/admin.php:992 ../../mod/admin.php:1191
@@ -4082,7 +4086,7 @@ msgstr "Se filen \"install/INSTALL.txt\"."
 msgid "System check"
 msgstr "Systemkontroll"
 
-#: ../../mod/setup.php:265 ../../mod/events.php:434 ../../mod/photos.php:868
+#: ../../mod/setup.php:265 ../../mod/events.php:445 ../../mod/photos.php:868
 msgid "Next"
 msgstr "Nästa"
 
@@ -4996,60 +5000,64 @@ msgstr "Händelsen behöver titel och starttid."
 msgid "Event not found."
 msgstr "Händelsen hittades inte."
 
-#: ../../mod/events.php:364
+#: ../../mod/events.php:369
 msgid "l, F j"
 msgstr "l, j F"
 
-#: ../../mod/events.php:386
+#: ../../mod/events.php:391
 msgid "Edit event"
 msgstr "Redigera händelse"
 
-#: ../../mod/events.php:432
+#: ../../mod/events.php:443
 msgid "Create New Event"
 msgstr "Skapa ny händelse"
 
-#: ../../mod/events.php:433 ../../mod/photos.php:859
+#: ../../mod/events.php:444 ../../mod/photos.php:859
 msgid "Previous"
 msgstr "Föregående"
 
-#: ../../mod/events.php:559
+#: ../../mod/events.php:446
+msgid "Export"
+msgstr "Exportera"
+
+#: ../../mod/events.php:571
 msgid "Event details"
 msgstr "Detaljer för händelse"
 
-#: ../../mod/events.php:560
+#: ../../mod/events.php:572
 msgid "Starting date and Title are required."
 msgstr "Startdatum och titel är obligatoriska."
 
-#: ../../mod/events.php:564
+#: ../../mod/events.php:576
 msgid "Event Starts:"
 msgstr "Händelsen börjar:"
 
-#: ../../mod/events.php:564 ../../mod/events.php:580 ../../mod/appman.php:91
+#: ../../mod/events.php:576 ../../mod/events.php:592 ../../mod/appman.php:91
 #: ../../mod/appman.php:92
 msgid "Required"
 msgstr "Behövs"
 
-#: ../../mod/events.php:570
+#: ../../mod/events.php:582
 msgid "Finish date/time is not known or not relevant"
 msgstr "Slutdatum/tid är okänt eller inte relevant"
 
-#: ../../mod/events.php:572
+#: ../../mod/events.php:584
 msgid "Event Finishes:"
 msgstr "Händelsen slutar:"
 
-#: ../../mod/events.php:574
+#: ../../mod/events.php:586
 msgid "Adjust for viewer timezone"
 msgstr "Justera för betraktarens tidszon"
 
-#: ../../mod/events.php:576
+#: ../../mod/events.php:588
 msgid "Description:"
 msgstr "Beskrivning:"
 
-#: ../../mod/events.php:580
+#: ../../mod/events.php:592
 msgid "Title:"
 msgstr "Titel:"
 
-#: ../../mod/events.php:582
+#: ../../mod/events.php:594
 msgid "Share this event"
 msgstr "Dela den här händelsen"
 
@@ -5147,6 +5155,53 @@ msgstr "Namn på chattrum"
 msgid "%1$s's Chatrooms"
 msgstr "%1$ss chattrum"
 
+#: ../../mod/siteinfo.php:92
+#, php-format
+msgid "Version %s"
+msgstr "Version %s"
+
+#: ../../mod/siteinfo.php:113
+msgid "Installed plugins/addons/apps:"
+msgstr "Installerade tillägg/moduler/appar:"
+
+#: ../../mod/siteinfo.php:126
+msgid "No installed plugins/addons/apps"
+msgstr "Inga installerade tillägg/moduler/appar"
+
+#: ../../mod/siteinfo.php:134
+msgid "Red"
+msgstr "Red"
+
+#: ../../mod/siteinfo.php:135
+msgid ""
+"This is a hub of the Red Matrix - a global cooperative network of "
+"decentralized privacy enhanced websites."
+msgstr "Det här är en hubb som ingår i Red Matrix - ett globalt samverkande nätverk av decentraliserade webbplatser med bättre integritetskydd."
+
+#: ../../mod/siteinfo.php:139
+msgid "Running at web location"
+msgstr "Kör på webbutrymmet"
+
+#: ../../mod/siteinfo.php:140
+msgid ""
+"Please visit <a href=\"http://getzot.com\">GetZot.com</a> to learn more "
+"about the Red Matrix."
+msgstr "Besök <a href=\"http://getzot.com\">GetZot.com</a> lära dig mer om Red Matrix."
+
+#: ../../mod/siteinfo.php:141
+msgid "Bug reports and issues: please visit"
+msgstr "Buggrapporter och problem: besök"
+
+#: ../../mod/siteinfo.php:144
+msgid ""
+"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
+"com"
+msgstr "Förslag, uppskattning, etc. - maila \"redmatrix\" at librelist - dot com"
+
+#: ../../mod/siteinfo.php:146
+msgid "Site Administrators"
+msgstr "Serveradministratörer"
+
 #: ../../mod/chatsvc.php:111
 msgid "Away"
 msgstr "Borta"
@@ -5159,52 +5214,48 @@ msgstr "Online"
 msgid "Please login."
 msgstr "Logga in."
 
-#: ../../mod/siteinfo.php:90
-#, php-format
-msgid "Version %s"
-msgstr "Version %s"
+#: ../../mod/connect.php:56 ../../mod/connect.php:104
+msgid "Continue"
+msgstr "Fortsätt"
 
-#: ../../mod/siteinfo.php:111
-msgid "Installed plugins/addons/apps:"
-msgstr "Installerade tillägg/moduler/appar:"
+#: ../../mod/connect.php:85
+msgid "Premium Channel Setup"
+msgstr "Inställning av premiumkanal"
 
-#: ../../mod/siteinfo.php:124
-msgid "No installed plugins/addons/apps"
-msgstr "Inga installerade tillägg/moduler/appar"
+#: ../../mod/connect.php:87
+msgid "Enable premium channel connection restrictions"
+msgstr "Aktivera kontaktrestriktioner för premiumkanal"
 
-#: ../../mod/siteinfo.php:132
-msgid "Red"
-msgstr "Red"
-
-#: ../../mod/siteinfo.php:133
+#: ../../mod/connect.php:88
 msgid ""
-"This is a hub of the Red Matrix - a global cooperative network of "
-"decentralized privacy enhanced websites."
-msgstr "Det här är en hubb som ingår i Red Matrix - ett globalt samverkande nätverk av decentraliserade webbplatser med bättre integritetskydd."
+"Please enter your restrictions or conditions, such as paypal receipt, usage "
+"guidelines, etc."
+msgstr "Ange dina restriktioner och villkor, som Paypal-kvitto, användarriktlinjer, etc."
 
-#: ../../mod/siteinfo.php:137
-msgid "Running at web location"
-msgstr "Kör på webbutrymmet"
-
-#: ../../mod/siteinfo.php:138
+#: ../../mod/connect.php:90 ../../mod/connect.php:110
 msgid ""
-"Please visit <a href=\"http://getzot.com\">GetZot.com</a> to learn more "
-"about the Red Matrix."
-msgstr "Besök <a href=\"http://getzot.com\">GetZot.com</a> lära dig mer om Red Matrix."
+"This channel may require additional steps or acknowledgement of the "
+"following conditions prior to connecting:"
+msgstr "Den här kanalen kan kräva ytterligare steg eller godkännande av följande villkor innan anslutning:"
 
-#: ../../mod/siteinfo.php:139
-msgid "Bug reports and issues: please visit"
-msgstr "Buggrapporter och problem: besök"
-
-#: ../../mod/siteinfo.php:142
+#: ../../mod/connect.php:91
 msgid ""
-"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
-"com"
-msgstr "Förslag, uppskattning, etc. - maila \"redmatrix\" at librelist - dot com"
+"Potential connections will then see the following text before proceeding:"
+msgstr "Potentiella kontakter kommer sedan att se följande text innan de går vidare:"
 
-#: ../../mod/siteinfo.php:144
-msgid "Site Administrators"
-msgstr "Serveradministratörer"
+#: ../../mod/connect.php:92 ../../mod/connect.php:113
+msgid ""
+"By continuing, I certify that I have complied with any instructions provided"
+" on this page."
+msgstr "Genom att fortsätta intygar jag att jag har följt alla instruktioner som ges på den här sidan."
+
+#: ../../mod/connect.php:101
+msgid "(No specific instructions have been provided by the channel owner.)"
+msgstr "(Inga specifika instruktioner har givits av kanalägaren.)"
+
+#: ../../mod/connect.php:109
+msgid "Restricted or Premium Channel"
+msgstr "Begränsad kanal eller premiumkanal"
 
 #: ../../mod/removeme.php:29
 msgid ""
@@ -5819,7 +5870,7 @@ msgid ""
 "Password reset failed."
 msgstr "Begäran kunde inte bekräftas. (Du kan ha skickat den tidigare.) Lösenordsåterställningen misslyckades."
 
-#: ../../mod/lostpass.php:85 ../../boot.php:1495
+#: ../../mod/lostpass.php:85 ../../boot.php:1494
 msgid "Password Reset"
 msgstr "Lösenordsåterställning"
 
@@ -6129,7 +6180,7 @@ msgstr "Skola/utbildning"
 msgid "This is your default profile."
 msgstr "Det här är din standardprofil."
 
-#: ../../mod/profiles.php:694 ../../mod/directory.php:148
+#: ../../mod/profiles.php:694 ../../mod/directory.php:159
 msgid "Age: "
 msgstr "Ålder:"
 
@@ -6217,49 +6268,6 @@ msgstr "Posten går ej att redigera"
 #: ../../mod/editpost.php:53
 msgid "Delete item?"
 msgstr "Ta bort posten?"
-
-#: ../../mod/connect.php:55 ../../mod/connect.php:103
-msgid "Continue"
-msgstr "Fortsätt"
-
-#: ../../mod/connect.php:84
-msgid "Premium Channel Setup"
-msgstr "Inställning av premiumkanal"
-
-#: ../../mod/connect.php:86
-msgid "Enable premium channel connection restrictions"
-msgstr "Aktivera kontaktrestriktioner för premiumkanal"
-
-#: ../../mod/connect.php:87
-msgid ""
-"Please enter your restrictions or conditions, such as paypal receipt, usage "
-"guidelines, etc."
-msgstr "Ange dina restriktioner och villkor, som Paypal-kvitto, användarriktlinjer, etc."
-
-#: ../../mod/connect.php:89 ../../mod/connect.php:109
-msgid ""
-"This channel may require additional steps or acknowledgement of the "
-"following conditions prior to connecting:"
-msgstr "Den här kanalen kan kräva ytterligare steg eller godkännande av följande villkor innan anslutning:"
-
-#: ../../mod/connect.php:90
-msgid ""
-"Potential connections will then see the following text before proceeding:"
-msgstr "Potentiella kontakter kommer sedan att se följande text innan de går vidare:"
-
-#: ../../mod/connect.php:91 ../../mod/connect.php:112
-msgid ""
-"By continuing, I certify that I have complied with any instructions provided"
-" on this page."
-msgstr "Genom att fortsätta intygar jag att jag har följt alla instruktioner som ges på den här sidan."
-
-#: ../../mod/connect.php:100
-msgid "(No specific instructions have been provided by the channel owner.)"
-msgstr "(Inga specifika instruktioner har givits av kanalägaren.)"
-
-#: ../../mod/connect.php:108
-msgid "Restricted or Premium Channel"
-msgstr "Begränsad kanal eller premiumkanal"
 
 #: ../../mod/editwebpage.php:140
 msgid "Edit Webpage"
@@ -6544,7 +6552,7 @@ msgstr "Klicka på en kanal för att lägga till eller ta bort."
 msgid "Red Matrix - &quot;The Network&quot;"
 msgstr "Red Matrix - &quot;Nätverket&quot;"
 
-#: ../../mod/home.php:100
+#: ../../mod/home.php:101
 #, php-format
 msgid "Welcome to %s"
 msgstr "Välkommen till %s"
@@ -7765,47 +7773,47 @@ msgstr "Kunde inte hitta din hubb."
 msgid "Post successful."
 msgstr "Sändning lyckades."
 
-#: ../../mod/directory.php:161
+#: ../../mod/directory.php:172
 msgid "Gender: "
 msgstr "Kön:"
 
-#: ../../mod/directory.php:163
+#: ../../mod/directory.php:174
 msgid "Status: "
 msgstr "Status: "
 
-#: ../../mod/directory.php:165
+#: ../../mod/directory.php:176
 msgid "Homepage: "
 msgstr "Hemsida: "
 
-#: ../../mod/directory.php:168
+#: ../../mod/directory.php:179
 msgid "Hometown: "
 msgstr "Hemort: "
 
-#: ../../mod/directory.php:170
+#: ../../mod/directory.php:181
 msgid "About: "
 msgstr "Om: "
 
-#: ../../mod/directory.php:225
+#: ../../mod/directory.php:236
 msgid "Public Forum:"
 msgstr "Offentligt forum:"
 
-#: ../../mod/directory.php:228
+#: ../../mod/directory.php:239
 msgid "Keywords: "
 msgstr "Nyckelord: "
 
-#: ../../mod/directory.php:268
+#: ../../mod/directory.php:279
 msgid "Finding:"
 msgstr "Sökning efter:"
 
-#: ../../mod/directory.php:273
+#: ../../mod/directory.php:284
 msgid "next page"
 msgstr "nästa sida"
 
-#: ../../mod/directory.php:273
+#: ../../mod/directory.php:284
 msgid "previous page"
 msgstr "föregående sida"
 
-#: ../../mod/directory.php:290
+#: ../../mod/directory.php:301
 msgid "No entries (some entries may be hidden)."
 msgstr "Inga resultat (vissa resultat kan vara dolda)."
 
@@ -8312,41 +8320,41 @@ msgstr "Oordnade fotoalbum"
 msgid "Are you a clean desk or a messy desk person?"
 msgstr "Föredrar du ett tomt eller stökigt skrivbord?"
 
-#: ../../boot.php:1294
+#: ../../boot.php:1293
 #, php-format
 msgid "Update %s failed. See error logs."
 msgstr "Uppdatering %s misslyckades. Se felloggar."
 
-#: ../../boot.php:1297
+#: ../../boot.php:1296
 #, php-format
 msgid "Update Error at %s"
 msgstr "Uppdateringsfel på %s"
 
-#: ../../boot.php:1464
+#: ../../boot.php:1463
 msgid ""
 "Create an account to access services and applications within the Red Matrix"
 msgstr "Skapa ett konto för att komma åt tjänster och applikationer inom Red Matrix"
 
-#: ../../boot.php:1490
+#: ../../boot.php:1489
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../../boot.php:1491
+#: ../../boot.php:1490
 msgid "Remember me"
 msgstr "Kom ihåg mig"
 
-#: ../../boot.php:1494
+#: ../../boot.php:1493
 msgid "Forgot your password?"
 msgstr "Glömt lösenordet?"
 
-#: ../../boot.php:1568
+#: ../../boot.php:1567
 msgid "permission denied"
 msgstr "behörighet saknas"
 
-#: ../../boot.php:1569
+#: ../../boot.php:1568
 msgid "Got Zot?"
 msgstr "Got Zot?"
 
-#: ../../boot.php:2031
+#: ../../boot.php:2030
 msgid "toggle mobile"
 msgstr "växla mobil"
