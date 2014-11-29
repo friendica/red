@@ -10,6 +10,7 @@ var classdba__driver =
     [ "escapebin", "classdba__driver.html#a7dbe8318587ff1694825042bf58f4fbd", null ],
     [ "get_install_script", "classdba__driver.html#a8d6a79d39d7eaee5aea4e952c4529d48", null ],
     [ "get_null_date", "classdba__driver.html#a65a5c7b355ab5529a43049e160006426", null ],
+    [ "getdriver", "classdba__driver.html#a02165fc4bee63d040ebd963a4fa82a14", null ],
     [ "install", "classdba__driver.html#a4ccb27243e62a8ca30dd8e1b8cc67746", null ],
     [ "optimize_table", "classdba__driver.html#a77e59dcbeab30ca6000131d2e9ad4092", null ],
     [ "q", "classdba__driver.html#a558e738b88ae893cc5d79ffa3793d555", null ],
