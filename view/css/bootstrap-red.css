@@ -17,6 +17,20 @@ nav .badge {
 	cursor: pointer;
 }
 
+nav i {
+	font-size: 14px;
+}
+
+nav ul li {
+	max-height: 49px;
+}
+
+nav img {
+	height: 48px;
+	width: 48px;
+	margin-top: 1px;
+}
+
 nav .dropdown-menu {
 	top: 50px;
 	max-height: 450px;
@@ -51,6 +65,10 @@ nav .navbar-collapse .navbar-left {
 
 nav .navbar-collapse .navbar-right {
 	float: right;
+}
+
+nav .navbar-toggle {
+	margin-bottom: 7px;
 }
 
 /* nav overrides end */

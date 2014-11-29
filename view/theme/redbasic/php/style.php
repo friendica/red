@@ -108,7 +108,7 @@ if(! $a->install) {
 	if (! $navtabs_bgchover)
 		$navtabs_bgchover = "rgba(238,238,238,0.8)";
 	if (! $link_colour)
-		$link_colour = "#428BCA";
+		$link_colour = "";
 	if (! $navaside_bghover)
 		$navaside_bghover = "#eee";
 	if (! $link_font_weight)
