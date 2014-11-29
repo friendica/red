@@ -25,6 +25,7 @@ var widgets_8php =
     [ "widget_photo_albums", "widgets_8php.html#a702e2fc0adc9b615999eca18b7311b5e", null ],
     [ "widget_photo_rand", "widgets_8php.html#af8eb466ef91d9e96e13335ead5eba380", null ],
     [ "widget_profile", "widgets_8php.html#abd2e508a2a0b911c4a838e3cb7599923", null ],
+    [ "widget_random_block", "widgets_8php.html#a829c5a5c7448129266fc1df3ae1a3c2e", null ],
     [ "widget_savedsearch", "widgets_8php.html#a94203eb9bcd63cbdecbbcb15163598d8", null ],
     [ "widget_settings_menu", "widgets_8php.html#aaa73bcf1702eaadd9dcd253502f55e01", null ],
     [ "widget_suggestedchats", "widgets_8php.html#a50b1410238100c8a94c06b0aa63ee3b8", null ],

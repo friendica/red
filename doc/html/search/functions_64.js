@@ -72,6 +72,7 @@ var searchData=
   ['diaspora_5ftransmit',['diaspora_transmit',['../diaspora_8php.html#aa704d6aa2ac77be345c0f501168e6e56',1,'diaspora.php']]],
   ['diaspora_5ful',['diaspora_ul',['../bb2diaspora_8php.html#adc92ccda5f85ed27e64fcc17712c89cc',1,'bb2diaspora.php']]],
   ['diaspora_5funshare',['diaspora_unshare',['../diaspora_8php.html#ab736d6f32b5de31c97cb579fc730e200',1,'diaspora.php']]],
+  ['dir_5fflag_5fbuild',['dir_flag_build',['../dirsearch_8php.html#ab6d5fefa98da249a994b910434a669c2',1,'dirsearch.php']]],
   ['dir_5fparse_5fquery',['dir_parse_query',['../dirsearch_8php.html#a7d4cd9890d5ed23c3efc58e2a778a305',1,'dirsearch.php']]],
   ['dir_5fquery_5fbuild',['dir_query_build',['../dirsearch_8php.html#a52bcac49b0e35cc8c6b70066143c2ee2',1,'dirsearch.php']]],
   ['dir_5fsafe_5fmode',['dir_safe_mode',['../dir__fns_8php.html#acf621621e929d49441da30aad76a58cf',1,'dir_fns.php']]],

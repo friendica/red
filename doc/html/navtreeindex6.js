@@ -1,5 +1,13 @@
 var NAVTREEINDEX6 =
 {
+"include_2config_8php.html#ad58a4913937179adb13201c2ee3261ad":[6,0,0,20,5],
+"include_2config_8php.html#ad6da879e4fb5b37d1e161d4e9be5c32a":[6,0,0,20,10],
+"include_2config_8php.html#aee4b619839cf4b64220f34edf5c67b52":[6,0,0,20,9],
+"include_2config_8php.html#af02c96e6b37335774b548914ede1d22e":[6,0,0,20,3],
+"include_2config_8php.html#af08b7adb63adfb2eda7c466fba0cce74":[6,0,0,20,4],
+"include_2config_8php.html#afe117b70f1bba2f6348d9300b601f86e":[6,0,0,20,12],
+"include_2directory_8php.html":[6,0,0,33],
+"include_2directory_8php.html#aa75d3b0697ca1456aaabdb37a74aa0f0":[6,0,0,33,0],
 "include_2follow_8php.html":[6,0,0,39],
 "include_2follow_8php.html#ae387d4ae097c23d69f3247e7f08140c7":[6,0,0,39,0],
 "include_2group_8php.html":[6,0,0,41],
@@ -241,13 +249,5 @@ var NAVTREEINDEX6 =
 "mod_2attach_8php.html#aa88eb5ad87aa1036a30e70339cc6c1b1":[6,0,1,7,0],
 "mod_2bookmarks_8php.html":[6,0,1,10],
 "mod_2bookmarks_8php.html#a6b7942f3d27e40f0f47c88704127b9b3":[6,0,1,10,1],
-"mod_2bookmarks_8php.html#a774364b1c8404529581083631703527a":[6,0,1,10,0],
-"mod_2chat_8php.html":[6,0,1,13],
-"mod_2chat_8php.html#a8b0b8bee6fef6477e8c64c5e951b1b4f":[6,0,1,13,0],
-"mod_2chat_8php.html#a999d594745597c656c9760253ae297ad":[6,0,1,13,2],
-"mod_2chat_8php.html#aa9ae4782e9baef0b7314ab9527c2707e":[6,0,1,13,1],
-"mod_2directory_8php.html":[6,0,1,22],
-"mod_2directory_8php.html#a5ee59c213508b6b9787612a8219cb5bf":[6,0,1,22,1],
-"mod_2directory_8php.html#aac79396570d759da2efac24fcedf5b44":[6,0,1,22,0],
-"mod_2follow_8php.html":[6,0,1,35]
+"mod_2bookmarks_8php.html#a774364b1c8404529581083631703527a":[6,0,1,10,0]
 };

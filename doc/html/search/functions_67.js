@@ -116,6 +116,7 @@ var searchData=
   ['getcontenttype',['getContentType',['../classRedMatrix_1_1RedDAV_1_1RedFile.html#af5c88b75d0c1f590af03755534cb167e',1,'RedMatrix::RedDAV::RedFile']]],
   ['getcurrentuser',['getCurrentUser',['../classRedMatrix_1_1RedDAV_1_1RedBasicAuth.html#aa0b2a5fa9186d7dc0e637f1ecb379c42',1,'RedMatrix::RedDAV::RedBasicAuth']]],
   ['getdir',['getDir',['../classRedMatrix_1_1RedDAV_1_1RedDirectory.html#a825dc5f3e0f83f50736c16daa6a4809d',1,'RedMatrix::RedDAV::RedDirectory']]],
+  ['getdriver',['getdriver',['../classdba__driver.html#a02165fc4bee63d040ebd963a4fa82a14',1,'dba_driver\getdriver()'],['../classdba__mysql.html#a31011edd67b6b394355bf04cedb498d0',1,'dba_mysql\getdriver()'],['../classdba__mysqli.html#a6eb6c578c6928908321e5e6da866e1db',1,'dba_mysqli\getdriver()'],['../classdba__postgres.html#ae0f834413e57cf0735ae7b64b2f71e68',1,'dba_postgres\getdriver()']]],
   ['getetag',['getETag',['../classRedMatrix_1_1RedDAV_1_1RedFile.html#a9f14682acf3ccb70df5af5dd0687c689',1,'RedMatrix::RedDAV::RedFile']]],
   ['getext',['getExt',['../classphoto__driver.html#aa2efb5b2a6af3fd67e3f1c2b9852a5ba',1,'photo_driver']]],
   ['getheight',['getHeight',['../classphoto__driver.html#af769e9abb144e57002c59aa2aa8f3468',1,'photo_driver']]],

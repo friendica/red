@@ -1405,7 +1405,7 @@ div.jGrowl div.jGrowl-notification {
 
 #nav-search-text-ac .autocomplete {
 	position: fixed;
-	top: 51px;
+	top: 50px;
 	border: 1px solid $nav_bd;
 	border-top: none;
 }
@@ -2058,19 +2058,9 @@ img.mail-list-sender-photo {
 
 /* nav bootstrap */
 
-nav i {
-	font-size: 14px;
-}
 
 nav img {
-	height: 47px;
-	width: 47px;
-	margin-top: 2px;
 	border-radius: $radiuspx;
-}
-
-nav ul li {
-	max-height: 50px
 }
 
 nav .dropdown-menu {
