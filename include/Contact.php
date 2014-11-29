@@ -129,11 +129,11 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 function abook_toggle_flag($abook,$flag) {
 
     $r = q("UPDATE abook set abook_flags = (abook_flags %s %d) where abook_id = %d and abook_channel = %d",
-        db_getfunc('^'),
-        intval($flag),
-        intval($abook['abook_id']),
-        intval($abook['abook_channel'])
-        );
+			db_getfunc('^'),
+			intval($flag),
+			intval($abook['abook_id']),
+			intval($abook['abook_channel'])
+	);
 
 
 	// if unsetting the archive bit, update the timestamps so we'll try to connect for an additional 30 days. 
