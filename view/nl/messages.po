@@ -4669,7 +4669,7 @@ msgstr "Maximale hoogte berichtinhoud op kanaalpagina (in pixels)"
 
 #: ../../mod/settings.php:821 ../../mod/settings.php:822
 msgid "click to expand content exceeding this height"
-msgstr "klik om inhoud uit te klappen die deze hoogte overschrijddt"
+msgstr "klik om inhoud uit te klappen die deze hoogte overschrijdt"
 
 #: ../../mod/settings.php:822
 msgid "Matrix page max height of content (in pixels)"
