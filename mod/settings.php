@@ -763,13 +763,18 @@ function settings_content(&$a) {
 				$is_experimental = file_exists('view/theme/' . $th . '/experimental');
 				$unsupported = file_exists('view/theme/' . $th . '/unsupported');
 				$is_mobile = file_exists('view/theme/' . $th . '/mobile');
+				$is_library = file_exists('view/theme/'. $th . '/library');
+
 				if (!$is_experimental or ($is_experimental && (get_config('experimentals','exp_themes')==1 or get_config('experimentals','exp_themes')===false))){ 
 					$theme_name = (($is_experimental) ?  sprintf(t('%s - (Experimental)'), $f) : $f);
-					if($is_mobile) {
-						$mobile_themes[$f]=$theme_name;
-					}
-					else {
-						$themes[$f]=$theme_name;
+
+					if (! $is_library) {
+						if($is_mobile) {
+							$themes[$f]=$theme_name . ' (' . t('mobile') . ')';
+						}
+						else {
+							$themes[$f]=$theme_name;
+						}
 					}
 				}
 			}
@@ -807,7 +812,7 @@ function settings_content(&$a) {
 			'$uid' => local_user(),
 		
 			'$theme'	=> array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview'),
-			'$mobile_theme'	=> array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, ''),
+			'$mobile_theme'	=> array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $themes, ''),
 			'$user_scalable' => array('user_scalable', t("Enable user zoom on mobile devices"), $user_scalable, ''),
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),

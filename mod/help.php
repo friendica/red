@@ -98,7 +98,7 @@ function preg_callback_help_include($matches) {
 
 	if($matches[1]) {
 		$include = str_replace($matches[0],load_doc_file($matches[1]),$matches[0]);
-		if(preg_match('/\.bb$/', $matches[1])) {
+		if(preg_match('/\.bb$/', $matches[1]) || preg_match('/\.txt$/', $matches[1])) {
 			require_once('include/bbcode.php');
 			$include = bbcode($include);
 		} elseif(preg_match('/\.md$/', $matches[1])) {

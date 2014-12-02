@@ -1419,6 +1419,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 	}
 	
 	foreach($deliveries as $d) {
+		$public = false;
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
 			dbesc($d['hash'])
 		);
