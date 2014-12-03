@@ -293,7 +293,7 @@ msgstr "cogne"
 
 #: ../../include/text.php:897 ../../include/conversation.php:243
 msgid "poked"
-msgstr "s'est fait cogner"
+msgstr "s'est fait cogner par"
 
 #: ../../include/text.php:898
 msgid "ping"
@@ -301,7 +301,7 @@ msgstr "solliciter"
 
 #: ../../include/text.php:898
 msgid "pinged"
-msgstr "a sollicité"
+msgstr "sollicité"
 
 #: ../../include/text.php:899
 msgid "prod"
@@ -317,7 +317,7 @@ msgstr "giffle"
 
 #: ../../include/text.php:900
 msgid "slapped"
-msgstr "a gifflé"
+msgstr "gifflé"
 
 #: ../../include/text.php:901
 msgid "finger"
@@ -325,7 +325,7 @@ msgstr "pointer"
 
 #: ../../include/text.php:901
 msgid "fingered"
-msgstr "a pointé"
+msgstr "pointé"
 
 #: ../../include/text.php:902
 msgid "rebuff"
@@ -333,7 +333,7 @@ msgstr "rejetter"
 
 #: ../../include/text.php:902
 msgid "rebuffed"
-msgstr "a rejetté"
+msgstr "rejetté"
 
 #: ../../include/text.php:911
 msgid "happy"
@@ -3872,7 +3872,7 @@ msgstr "Thème mobile&nbsp;:"
 
 #: ../../mod/settings.php:760
 msgid "Enable user zoom on mobile devices"
-msgstr "Permettre à l'tilisateur d'un mobile d'agrandir le contenu"
+msgstr "Permettre à l'utilisateur d'un mobile d'agrandir le contenu"
 
 #: ../../mod/settings.php:761
 msgid "Update browser every xx seconds"
