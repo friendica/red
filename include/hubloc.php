@@ -96,7 +96,7 @@ function remove_obsolete_hublocs() {
 			? intval(get_config('system','delivery_interval')) : 2 );
 
 	foreach($r as $rr) {
-		q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_id = %d limit 1",
+		q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_id = %d",
 			intval(HUBLOC_FLAGS_DELETED),
 			intval($rr['hubloc_id'])
 		);
@@ -134,7 +134,7 @@ function hubloc_change_primary($hubloc) {
 		dbesc($hubloc['hubloc_hash'])
 	);
 	if(($r) && (! $r[0]['channel_primary'])) {
-		q("update channel set channel_primary = 1 where channel_id = %d limit 1",
+		q("update channel set channel_primary = 1 where channel_id = %d",
 			intval($r[0]['channel_id'])
 		);
 	}
@@ -156,7 +156,7 @@ function hubloc_change_primary($hubloc) {
 	$url = $hubloc['hubloc_url'];
 	$lwebbie = substr($hubloc['hubloc_addr'],0,strpos($hubloc['hubloc_addr'],'@'));
 
-	$r = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_follow = '%s', xchan_connurl = '%s' where xchan_hash = '%s' limit 1",
+	$r = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_follow = '%s', xchan_connurl = '%s' where xchan_hash = '%s'",
 		dbesc($hubloc['hubloc_addr']),
 		dbesc($url . '/channel/' . $lwebbie),
 		dbesc($url . '/follow?f=&url=%s'),
@@ -214,7 +214,7 @@ function xchan_store($arr) {
 		return $r;
 
 	$photos = import_profile_photo($arr['photo'],$arr['hash']);
-	$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s' limit 1",
+	$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s'",
 		dbesc(datetime_convert()),
 		dbesc($photos[0]),
 		dbesc($photos[1]),

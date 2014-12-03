@@ -1,7 +1,8 @@
 
 Hej {{$username}},
-	Ditt lösenord har bytts enligt begäran. Spara den här informationen
-(eller byt genast lösenordet till något du kan komma ihåg).
+	Ditt lösenord har bytts enligt begäran. Spara den här 
+informationen (eller byt genast lösenordet till något du 
+kan komma ihåg).
 
 
 Dina inloggningsuppgifter är:

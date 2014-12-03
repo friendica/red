@@ -99,7 +99,7 @@ function notifier_run($argv, $argc){
 		// Get the recipient	
 		$r = q("select abook.*, hubloc.* from abook 
 			left join hubloc on hubloc_hash = abook_xchan
-			where abook_id = %d and not ( abook_flags & %d ) limit 1",
+			where abook_id = %d and not ( abook_flags & %d )>0 limit 1",
 			intval($item_id),
 			intval(ABOOK_FLAG_SELF)
 		);
@@ -205,11 +205,12 @@ function notifier_run($argv, $argc){
 
 		$normal_mode = false;
 		$expire = true;
-		$items = q("SELECT * FROM item WHERE uid = %d AND ( item_flags & %d )
-			AND ( item_restrict & %d ) AND `changed` > UTC_TIMESTAMP() - INTERVAL 10 MINUTE",
+		$items = q("SELECT * FROM item WHERE uid = %d AND ( item_flags & %d )>0
+			AND ( item_restrict & %d )>0 AND `changed` > %s - INTERVAL %s",
 			intval($item_id),
 			intval(ITEM_WALL),
-			intval(ITEM_DELETED)
+			intval(ITEM_DELETED),
+			db_utcnow(), db_quoteinterval('10 MINUTE')
 		);
 		$uid = $item_id;
 		$item_id = 0;
@@ -495,13 +496,19 @@ function notifier_run($argv, $argc){
 			where hubloc_hash in (" . implode(',',$recipients) . ") group by hubloc_sitekey order by hubloc_connected desc limit 1");
 	} 
 	else {
-
+		if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+			$r = q("select distinct on (hubloc_sitekey) hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+				where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)>0  and not (hubloc_status & %d)>0",
+				intval(HUBLOC_FLAGS_DELETED),
+				intval(HUBLOC_OFFLINE)
+			);
+		} else {
 		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)  and not (hubloc_status & %d) group by hubloc_sitekey",
+			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)>0  and not (hubloc_status & %d)>0 group by hubloc_sitekey",
 			intval(HUBLOC_FLAGS_DELETED),
 			intval(HUBLOC_OFFLINE)
 		);
-
+		}
 	}
 
 	if(! $r) {

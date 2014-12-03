@@ -11,8 +11,12 @@
 {{/if}}
 {{include file="field_input.tpl" field=$ajaxint}}
 {{include file="field_input.tpl" field=$itemspage}}
+{{include file="field_input.tpl" field=$channel_divmore_height}}
+{{include file="field_input.tpl" field=$network_divmore_height}}
 {{include file="field_checkbox.tpl" field=$nosmile}}
 {{include file="field_checkbox.tpl" field=$title_tosource}}
+{{include file="field_checkbox.tpl" field=$channel_list_mode}}
+{{include file="field_checkbox.tpl" field=$network_list_mode}}
 
 <div class="settings-submit-wrapper" >
 <input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />

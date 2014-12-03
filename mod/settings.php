@@ -140,6 +140,16 @@ function settings_post(&$a) {
 		$user_scalable = ((x($_POST,'user_scalable')) ? intval($_POST['user_scalable'])  : 0);
 		$nosmile = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0); 
 		$title_tosource = ((x($_POST,'title_tosource')) ? intval($_POST['title_tosource'])  : 0);		 
+		$channel_list_mode = ((x($_POST,'channel_list_mode')) ? intval($_POST['channel_list_mode']) : 0);
+		$network_list_mode = ((x($_POST,'network_list_mode')) ? intval($_POST['network_list_mode']) : 0);
+
+		$channel_divmore_height = ((x($_POST,'channel_divmore_height')) ? intval($_POST['channel_divmore_height']) : 400);
+		if($channel_divmore_height < 50)
+			$channel_divmore_height = 50;
+		$network_divmore_height = ((x($_POST,'network_divmore_height')) ? intval($_POST['network_divmore_height']) : 400);
+		if($network_divmore_height < 50)
+			$network_divmore_height = 50;
+
 		$browser_update   = ((x($_POST,'browser_update')) ? intval($_POST['browser_update']) : 0);
 		$browser_update   = $browser_update * 1000;
 		if($browser_update < 10000)
@@ -159,6 +169,10 @@ function settings_post(&$a) {
 		set_pconfig(local_user(),'system','itemspage', $itemspage);
 		set_pconfig(local_user(),'system','no_smilies',$nosmile);
 		set_pconfig(local_user(),'system','title_tosource',$title_tosource);
+		set_pconfig(local_user(),'system','channel_list_mode', $channel_list_mode);
+		set_pconfig(local_user(),'system','network_list_mode', $network_list_mode);
+		set_pconfig(local_user(),'system','channel_divmore_height', $channel_divmore_height);
+		set_pconfig(local_user(),'system','network_divmore_height', $network_divmore_height);
 
 		if ($theme == $a->channel['channel_theme']){
 			// call theme_post only if theme has not been changed
@@ -168,7 +182,7 @@ function settings_post(&$a) {
 			}
 		}
 
-		$r = q("UPDATE channel SET channel_theme = '%s' WHERE channel_id = %d LIMIT 1",
+		$r = q("UPDATE channel SET channel_theme = '%s' WHERE channel_id = %d",
 				dbesc($theme),
 				intval(local_user())
 		);
@@ -205,7 +219,7 @@ function settings_post(&$a) {
 				$salt = random_string(32);
 				$password_encoded = hash('whirlpool', $salt . $newpass);
 				$r = q("update account set account_salt = '%s', account_password = '%s', account_password_changed = '%s' 
-					where account_id = %d limit 1",
+					where account_id = %d",
 					dbesc($salt),
 					dbesc($password_encoded),
 					dbesc(datetime_convert()),
@@ -235,7 +249,7 @@ function settings_post(&$a) {
 				$email = $a->user['email'];
 			}
 			if(! $errs) {
-				$r = q("update account set account_email = '%s' where account_id = %d limit 1",
+				$r = q("update account set account_email = '%s' where account_id = %d",
 					dbesc($email),
 					intval($account['account_id'])
 				);
@@ -267,7 +281,7 @@ function settings_post(&$a) {
 			$hide_presence    = (((x($_POST,'hide_presence')) && (intval($_POST['hide_presence']) == 1)) ? 1: 0);
 			$publish          = (((x($_POST,'profile_in_directory')) && (intval($_POST['profile_in_directory']) == 1)) ? 1: 0);
 			$def_group        = ((x($_POST,'group-selection')) ? notags(trim($_POST['group-selection'])) : '');
-			$r = q("update channel set channel_default_group = '%s' where channel_id = %d limit 1",
+			$r = q("update channel set channel_default_group = '%s' where channel_id = %d",
 				dbesc($def_group),
 				intval(local_user())
 			);	
@@ -283,7 +297,7 @@ function settings_post(&$a) {
 			$str_group_deny    = perms2str($_POST['group_deny']);
 			$str_contact_deny  = perms2str($_POST['contact_deny']);
 			$r = q("update channel set channel_allow_cid = '%s', channel_allow_gid = '%s', channel_deny_cid = '%s', channel_deny_gid = '%s'
-				where channel_id = %d limit 1",
+				where channel_id = %d",
 				dbesc($str_contact_allow),
 				dbesc($str_group_allow),
 				dbesc($str_contact_deny),
@@ -313,7 +327,7 @@ function settings_post(&$a) {
 					);
 				}
 				if($r) {
-					q("update channel set channel_default_group = '%s', channel_allow_gid = '%s', channel_allow_cid = '', channel_deny_gid = '', channel_deny_cid = '' where channel_id = %d limit 1",
+					q("update channel set channel_default_group = '%s', channel_allow_gid = '%s', channel_allow_cid = '', channel_deny_gid = '', channel_deny_cid = '' where channel_id = %d",
 						dbesc($r[0]['hash']),
 						dbesc('<' . $r[0]['hash'] . '>'),
 						intval(local_user())
@@ -327,12 +341,12 @@ function settings_post(&$a) {
 			// no default collection
 			else {
 				q("update channel set channel_default_group = '', channel_allow_gid = '', channel_allow_cid = '', channel_deny_gid = '', 
-					channel_deny_cid = '' where channel_id = %d limit 1",
+					channel_deny_cid = '' where channel_id = %d",
 						intval(local_user())
 				);
 			}
 
-			$r = q("update abook set abook_my_perms  = %d where abook_channel = %d and (abook_flags & %d) limit 1",
+			$r = q("update abook set abook_my_perms  = %d where abook_channel = %d and (abook_flags & %d)>0",
 				intval(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0),
 				intval(local_user()),
 				intval(ABOOK_FLAG_SELF)
@@ -464,7 +478,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','vnotify',$vnotify);
 	set_pconfig(local_user(),'system','evdays',$evdays);
 
-	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d $set_perms where channel_id = %d limit 1",
+	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d $set_perms where channel_id = %d",
 		dbesc($username),
 		intval($pageflags),
 		dbesc($timezone),
@@ -479,14 +493,14 @@ function settings_post(&$a) {
 		info( t('Settings updated.') . EOL);
 
 	if(! is_null($publish)) {
-		$r = q("UPDATE profile SET publish = %d WHERE is_default = 1 AND uid = %d LIMIT 1",
+		$r = q("UPDATE profile SET publish = %d WHERE is_default = 1 AND uid = %d",
 			intval($publish),
 			intval(local_user())
 		);
 	}
 
 	if($name_change) {
-		$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s' where xchan_hash = '%s' limit 1",
+		$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s' where xchan_hash = '%s'",
 			dbesc($username),
 			dbesc(datetime_convert()),
 			dbesc($channel['channel_hash'])
@@ -722,6 +736,7 @@ function settings_content(&$a) {
 	/*
 	 * DISPLAY SETTINGS
 	 */
+
 	if((argc() > 1) && (argv(1) === 'display')) {
 		$default_theme = get_config('system','theme');
 		if(! $default_theme)
@@ -748,13 +763,18 @@ function settings_content(&$a) {
 				$is_experimental = file_exists('view/theme/' . $th . '/experimental');
 				$unsupported = file_exists('view/theme/' . $th . '/unsupported');
 				$is_mobile = file_exists('view/theme/' . $th . '/mobile');
+				$is_library = file_exists('view/theme/'. $th . '/library');
+
 				if (!$is_experimental or ($is_experimental && (get_config('experimentals','exp_themes')==1 or get_config('experimentals','exp_themes')===false))){ 
 					$theme_name = (($is_experimental) ?  sprintf(t('%s - (Experimental)'), $f) : $f);
-					if($is_mobile) {
-						$mobile_themes[$f]=$theme_name;
-					}
-					else {
-						$themes[$f]=$theme_name;
+
+					if (! $is_library) {
+						if($is_mobile) {
+							$themes[$f]=$theme_name . ' (' . t('mobile') . ')';
+						}
+						else {
+							$themes[$f]=$theme_name;
+						}
 					}
 				}
 			}
@@ -792,7 +812,7 @@ function settings_content(&$a) {
 			'$uid' => local_user(),
 		
 			'$theme'	=> array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview'),
-			'$mobile_theme'	=> array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, ''),
+			'$mobile_theme'	=> array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $themes, ''),
 			'$user_scalable' => array('user_scalable', t("Enable user zoom on mobile devices"), $user_scalable, ''),
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
@@ -801,6 +821,12 @@ function settings_content(&$a) {
 			'$layout_editor' => t('System Page Layout Editor - (advanced)'),
 			'$theme_config' => $theme_config,
 			'$expert' => feature_enabled(local_user(),'expert'),
+			'$channel_list_mode' => array('channel_list_mode', t('Use blog/list mode on channel page'), get_pconfig(local_user(),'system','channel_list_mode'), t('(comments displayed separately)')),
+			'$network_list_mode' => array('network_list_mode', t('Use blog/list mode on matrix page'), get_pconfig(local_user(),'system','network_list_mode'), t('(comments displayed separately)')),
+			'$channel_divmore_height' => array('channel_divmore_height', t('Channel page max height of content (in pixels)'), ((get_pconfig(local_user(),'system','channel_divmore_height')) ? get_pconfig(local_user(),'system','channel_divmore_height') : 400), t('click to expand content exceeding this height')),
+			'$network_divmore_height' => array('network_divmore_height', t('Matrix page max height of content (in pixels)'), ((get_pconfig(local_user(),'system','network_divmore_height')) ? get_pconfig(local_user(),'system','network_divmore_height') : 400) , t('click to expand content exceeding this height')),
+
+
 		));
 		
 		return $o;

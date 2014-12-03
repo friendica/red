@@ -7,9 +7,10 @@ function expire_run($argv, $argc){
 
 	cli_startup();
 
-	$r = q("select id from item where (item_restrict & %d) and not (item_restrict & %d) and changed < UTC_TIMESTAMP() - INTERVAL 10 DAY",
+	$r = q("select id from item where (item_restrict & %d)>0 and not (item_restrict & %d)>0 and changed < %s - INTERVAL %s",
 		intval(ITEM_DELETED),
-		intval(ITEM_PENDING_REMOVE)
+		intval(ITEM_PENDING_REMOVE),
+		db_utcnow(), db_quoteinterval('10 DAY')
 	);
 	if($r) {
 		foreach($r as $rr) {
@@ -19,8 +20,9 @@ function expire_run($argv, $argc){
 
 	// physically remove anything that has been deleted for more than two months
 
-	$r = q("delete from item where ( item_restrict & %d ) and changed < UTC_TIMESTAMP() - INTERVAL 36 DAY",
-		intval(ITEM_PENDING_REMOVE)
+	$r = q("delete from item where ( item_restrict & %d )>0 and changed < %s - INTERVAL %s",
+		intval(ITEM_PENDING_REMOVE),
+		db_utcnow(), db_quoteinterval('36 DAY')
 	);
 
 	// make this optional as it could have a performance impact on large sites

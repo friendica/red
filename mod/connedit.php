@@ -117,7 +117,7 @@ function connedit_post(&$a) {
 	}
 
 	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_flags = %d
-		where abook_id = %d AND abook_channel = %d LIMIT 1",
+		where abook_id = %d AND abook_channel = %d",
 		dbesc($profile_id),
 		intval($abook_my_perms),
 		intval($closeness),
@@ -300,7 +300,7 @@ function connedit_content(&$a) {
 		$cmd = argv(2);
 
 		$orig_record = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook_xchan = xchan_hash
-			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d ) LIMIT 1",
+			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d )>0 LIMIT 1",
 			intval($contact_id),
 			intval(local_user()),
 			intval(ABOOK_FLAG_SELF)
@@ -504,6 +504,7 @@ function connedit_content(&$a) {
 			$slider_tpl = get_markup_template('contact_slider.tpl');
 			$slide = replace_macros($slider_tpl,array(
 				'$me' => t('Me'),
+                '$min' => 1,
 				'$val' => (($contact['abook_closeness']) ? $contact['abook_closeness'] : 99),
 				'$intimate' => t('Best Friends'),
 				'$friends' => t('Friends'),

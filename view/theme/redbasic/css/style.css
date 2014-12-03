@@ -1405,7 +1405,7 @@ div.jGrowl div.jGrowl-notification {
 
 #nav-search-text-ac .autocomplete {
 	position: fixed;
-	top: 51px;
+	top: 50px;
 	border: 1px solid $nav_bd;
 	border-top: none;
 }
@@ -2019,10 +2019,6 @@ img.mail-list-sender-photo {
 	-moz-border-radius: $radiuspx;
 }
 
-#saved-search-ul {
-	list-style-type: none;
-}
-
 .fileas-ul {
 	list-style-type: none;
 }
@@ -2032,15 +2028,6 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 	-moz-border-radius: $radiuspx;
 }
-/*
-.categories-ul {
-	list-style-type: none;
-}
-
-#sidebar-group-list ul, #posted-date-selector {
-	list-style-type: none;
-}
-*/
 
 .profile-thing-list img, .thing-show img, .thing-edit-links a {
 	margin-top: 8px;
@@ -2071,19 +2058,9 @@ img.mail-list-sender-photo {
 
 /* nav bootstrap */
 
-nav i {
-	font-size: 14px;
-}
 
 nav img {
-	height: 47px;
-	width: 47px;
-	margin-top: 2px;
 	border-radius: $radiuspx;
-}
-
-nav ul li {
-	max-height: 50px
 }
 
 nav .dropdown-menu {
@@ -2143,6 +2120,10 @@ blockquote {
 	border-radius: $radiuspx;
 }
 
+nav .badge:hover {
+	background-color: #999;
+}
+
 .dropdown-menu {
 	font-size: $body_font_size;
 	border-radius: $radiuspx;
@@ -2163,10 +2144,6 @@ blockquote {
 aside .nav > li > a:hover, aside .nav > li > a:focus {
 	text-decoration: $navtabs_decohover;
 	background-color: $navaside_bghover;
-}
-
-aside .nav-pills > li > a {
-	padding: 6px 10px;
 }
 
 .dropdown-menu img {
@@ -2400,4 +2377,12 @@ aside .nav-pills > li > a {
 .shareable_element_text {
 	height: 300px;
 	width: 300px;
+}
+
+.bb_observer {
+	color: red;
+}
+
+.bb_observer img {
+	border: 3px solid red !important;
 }

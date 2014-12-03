@@ -238,7 +238,6 @@ function admin_page_site_post(&$a){
 	$language			=	((x($_POST,'language'))			? notags(trim($_POST['language']))			: '');
 	$theme				=	((x($_POST,'theme'))			? notags(trim($_POST['theme']))				: '');
 	$theme_mobile			=	((x($_POST,'theme_mobile'))		? notags(trim($_POST['theme_mobile']))			: '');
-	$theme_accessibility		=	((x($_POST,'theme_accessibility'))	? notags(trim($_POST['theme_accessibility']))		: '');
 //	$site_channel			=	((x($_POST,'site_channel'))	? notags(trim($_POST['site_channel']))				: '');
 	$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))				:  0);
 	
@@ -298,12 +297,6 @@ function admin_page_site_post(&$a){
 	} else {
 		set_config('system','mobile_theme', $theme_mobile);
         }
-        if ( $theme_accessibility === '---' ) {
-		del_config('system','accessibility_theme');
-	} else {
-		set_config('system','accessibility_theme', $theme_accessibility);
-        }
-      
 //	set_config('system','site_channel', $site_channel);
 	set_config('system','maximagesize', $maximagesize);
 	
@@ -357,27 +350,32 @@ function admin_page_site(&$a) {
 	}
 
 	/* Installed themes */
-	$theme_choices = array();
-	$theme_choices_mobile = array();
-	$theme_choices_mobile["---"] = t("No special theme for mobile devices");
-	$theme_choices_accessibility = array();
-	$theme_choices_accessibility["---"] =t("No special theme for accessibility");
-	$files = glob('view/theme/*');
-	if($files) {
-		foreach($files as $file) {
-			$f = basename($file);
-			$theme_name = ((file_exists($file . '/experimental')) ?  sprintf("%s - Experimental", $f) : $f);
-		if (file_exists($file . '/mobile')) {
-			$theme_choices_mobile[$f] = $theme_name;
+    $theme_choices_mobile["---"] = t("Default");
+    $theme_choices = array();
+    $files = glob('view/theme/*');
+    if($files) {
+        foreach($files as $file) {
+		    $vars = '';
+            $f = basename($file);
+            if (file_exists($file . '/library'))
+			    continue;
+            if (file_exists($file . '/mobile'))
+			    $vars = t('mobile');
+			if (file_exists($file . '/experimental'))
+				$vars .= t('experimental');
+			if (file_exists($file . '/unsupported'))
+				$vars .= t('unsupported');
+			if ($vars) {
+				$theme_choices[$f] = $f . ' (' . $vars . ')';
+				$theme_choices_mobile[$f] = $f . ' (' . $vars . ')';
             }
-		if (file_exists($file . '/accessibility')) {
-                $theme_choices_accessibility[$f] = $theme_name;
-            }
-			$theme_choices[$f] = $theme_name;
-		}
-	}
-	
-	
+			else {
+                $theme_choices[$f] = $f;
+                $theme_choices_mobile[$f] = $f;
+                }
+        }
+    }
+
 	/* Banner */
 	$banner = get_config('system','banner');
 	if($banner == false) 
@@ -425,7 +423,6 @@ function admin_page_site(&$a) {
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 		'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),
-		'$theme_accessibility' 	=> array('theme_accessibility', t("Accessibility system theme"), get_config('system','accessibility_theme'), t("Accessibility theme"), $theme_choices_accessibility),
 //		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
 		'$diaspora_enabled'  => array('diaspora_enabled',t('Enable Diaspora Protocol'), get_config('system','diaspora_enabled'), t('Communicate with Diaspora and Friendica - experimental')),
 		'$feed_contacts'    => array('feed_contacts', t('Allow Feeds as Connections'),get_config('system','feed_contacts'),t('(Heavy system resource usage)')), 
@@ -594,7 +591,7 @@ function admin_page_users_post(&$a){
 
 	if (x($_POST,'page_users_block')){
 		foreach($users as $uid){
-			q("UPDATE account SET account_flags = (account_flags & %d) where account_id = %d limit 1",
+			q("UPDATE account SET account_flags = (account_flags & %d) where account_id = %d",
 				intval(ACCOUNT_BLOCKED),
 				intval( $uid )
 			);
@@ -650,7 +647,7 @@ function admin_page_users(&$a){
 			}; break;
 			case "block":{
                 check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
-				q("UPDATE account SET account_flags = ( account_flags ^ %d ) where account_id = %d",
+				q("UPDATE account SET account_flags = ( account_flags & ~%d ) where account_id = %d",
 					intval(ACCOUNT_BLOCKED),
 					intval( $uid )
 				);
@@ -664,13 +661,13 @@ function admin_page_users(&$a){
 	}
 	
 	/* get pending */
-	$pending = q("SELECT account.*, register.hash from account left join register on account_id = register.uid where (account_flags & %d ) ",
+	$pending = q("SELECT account.*, register.hash from account left join register on account_id = register.uid where (account_flags & %d )>0 ",
 		intval(ACCOUNT_PENDING)
 	);	
 	
 	/* get users */
 
-	$total = q("SELECT count(*) as total FROM account where 1");
+	$total = q("SELECT count(*) as total FROM account");
 	if(count($total)) {
 		$a->set_pager_total($total[0]['total']);
 		$a->set_pager_itemspage(100);
@@ -690,14 +687,15 @@ function admin_page_users(&$a){
     if($_REQUEST['order'] === 'created')
 		$order = " order by account_created desc ";
 		
-	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d ) > 0 as `blocked`, " .
-			"(SELECT GROUP_CONCAT( ch.channel_address SEPARATOR ' ') FROM channel as ch " .
-			"WHERE ch.channel_account_id = ac.account_id and not (ch.channel_pageflags & %d )) as `channels` " .
-		"FROM account as ac where true $serviceclass $order limit %d , %d ",
+	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d )>0 as `blocked`, " .
+			"(SELECT %s FROM channel as ch " .
+			"WHERE ch.channel_account_id = ac.account_id and not (ch.channel_pageflags & %d )>0) as `channels` " .
+		"FROM account as ac where true $serviceclass $order limit %d offset %d ",
 		intval(ACCOUNT_BLOCKED),
+		db_concat('ch.channel_address', ' '),
 		intval(PAGE_REMOVED),		
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
+		intval($a->pager['itemspage']),
+		intval($a->pager['start'])
 	);
 					
 //	function _setup_users($e){
@@ -764,7 +762,7 @@ function admin_page_channels_post(&$a){
 
 	if (x($_POST,'page_channels_block')){
 		foreach($channels as $uid){
-			q("UPDATE channel SET channel_pageflags = ( channel_pageflags ^ %d ) where channel_id = %d",
+			q("UPDATE channel SET channel_pageflags = ( channel_pageflags & ~%d ) where channel_id = %d",
 				intval(PAGE_CENSORED),
 				intval( $uid )
 				);
@@ -812,7 +810,7 @@ function admin_page_channels(&$a){
 
 			case "block":{
 				check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels', 't');
-				q("UPDATE channel SET channel_pageflags = ( channel_pageflags ^ %d ) where channel_id = %d",
+				q("UPDATE channel SET channel_pageflags = ( channel_pageflags & ~%d ) where channel_id = %d",
 					intval(PAGE_CENSORED),
 					intval( $uid )
 				);
@@ -828,7 +826,7 @@ function admin_page_channels(&$a){
 	
 	/* get channels */
 
-	$total = q("SELECT count(*) as total FROM channel where not (channel_pageflags & %d)",
+	$total = q("SELECT count(*) as total FROM channel where not (channel_pageflags & %d)>0",
 		intval(PAGE_REMOVED)
 	);
 	if($total) {
@@ -838,10 +836,10 @@ function admin_page_channels(&$a){
 	
 	$order = " order by channel_name asc ";
 
-	$channels = q("SELECT * from channel where not ( channel_pageflags & %d ) $order limit %d , %d ",
+	$channels = q("SELECT * from channel where not ( channel_pageflags & %d )>0 $order limit %d offset %d ",
 		intval(PAGE_REMOVED),
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
+		intval($a->pager['itemspage']),
+		intval($a->pager['start'])
 	);
 					
 	if($channels) {
@@ -1295,7 +1293,7 @@ readable.");
 function admin_page_profs_post(&$a) {
 
 	if($_REQUEST['id']) {
-		$r = q("update profdef set field_name = '%s', field_type = '%s', field_desc = '%s' field_help = '%s', field_inputs = '%s' where id = %d limit 1",
+		$r = q("update profdef set field_name = '%s', field_type = '%s', field_desc = '%s' field_help = '%s', field_inputs = '%s' where id = %d",
 			dbesc($_REQUEST['field_name']),
 			dbesc($_REQUEST['field_type']),
 			dbesc($_REQUEST['field_desc']),
@@ -1323,7 +1321,7 @@ function admin_page_profs_post(&$a) {
 function admin_page_profs(&$a) {
 
 	if((argc() > 3) && argv(2) == 'drop' && intval(argv(3))) {
-		$r = q("delete from profdef where id = %d limit 1",
+		$r = q("delete from profdef where id = %d",
 			intval(argv(3))
 		);
 		// remove from allowed fields

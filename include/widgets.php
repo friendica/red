@@ -155,7 +155,7 @@ function widget_follow($args) {
 		return '';
 	$a = get_app();
 	$uid =$a->channel['channel_id'];
-	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d) ",
+	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d)>0 ",
 		intval($uid),
 		intval(ABOOK_FLAG_SELF)
 	);
@@ -220,7 +220,7 @@ function widget_savedsearch($arr) {
 	}
 
 	if(x($_GET,'searchremove') && $search) {
-		q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
+		q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s'",
 			intval(local_user()),
 			intval(TERM_SAVEDSEARCH),
 			dbesc($search)
@@ -456,7 +456,7 @@ function widget_settings_menu($arr) {
 
 	$role = get_pconfig(local_user(),'system','permissions_role');
 
-	$abk = q("select abook_id from abook where abook_channel = %d and ( abook_flags & %d ) limit 1",
+	$abk = q("select abook_id from abook where abook_channel = %d and ( abook_flags & %d )>0 limit 1",
 		intval(local_user()),
 		intval(ABOOK_FLAG_SELF)
 	);
@@ -585,7 +585,7 @@ function widget_design_tools($arr) {
 	// otherwise local_user() is sufficient for permissions.
 
 	if($a->profile['profile_uid']) 
-		if($a->profile['profile_uid'] != local_user())
+		if(($a->profile['profile_uid'] != local_user()) && (! $a->is_sys))
 				return '';
  
 	if(! local_user())
@@ -659,9 +659,11 @@ function widget_bookmarkedchats($arr) {
 	$r = q("select * from xchat where xchat_xchan = '%s' group by xchat_url order by xchat_desc",
 			dbesc($h)
 	);
-
-	for($x = 0; $x < count($r); $x ++)
-		$r[$x]['xchat_url'] = zid($r[$x]['xchat_url']);
+	if($r) {
+		for($x = 0; $x < count($r); $x ++) {
+			$r[$x]['xchat_url'] = zid($r[$x]['xchat_url']);
+		}
+	}
 	return replace_macros(get_markup_template('bookmarkedchats.tpl'),array(
 		'$header' => t('Bookmarked Chatrooms'),
 		'$rooms' => $r
@@ -677,9 +679,11 @@ function widget_suggestedchats($arr) {
 	if(! $h)
 		return;
 	$r = q("select *, count(xchat_url) as total from xchat group by xchat_url order by total desc, xchat_desc limit 24");
-
-	for($x = 0; $x < count($r); $x ++)
-		$r[$x]['xchat_url'] = zid($r[$x]['xchat_url']);
+	if($r) {
+		for($x = 0; $x < count($r); $x ++) {
+			$r[$x]['xchat_url'] = zid($r[$x]['xchat_url']);
+		}
+	}
 	return replace_macros(get_markup_template('bookmarkedchats.tpl'),array(
 		'$header' => t('Suggested Chatrooms'),
 		'$rooms' => $r
@@ -810,9 +814,108 @@ function widget_photo($arr) {
 
 	$o .= '<img ' . (($zrl) ? ' class="zrl" ' : '') 
 				  . (($style) ? ' style="' . $style . '"' : '') 
-				  . ' src="' . $url . '" />';
+				  . ' src="' . $url . '" alt="' . t('photo/image') . '" />';
 
 	$o .= '</div>';
 
 	return $o;
+}
+
+
+function widget_photo_rand($arr) {
+
+	require_once('include/photos.php');
+	$style = $zrl = false;
+	$params = '';
+	if(array_key_exists('album',$arr) && isset($arr['album']))
+		$album = $arr['album'];
+	else
+		$album = '';
+
+	$channel_id = 0;
+	if(array_key_exists('channel_id',$arr) && intval($arr['channel_id']))
+		$channel_id = intval($arr['channel_id']);
+	if(! $channel_id)
+		$channel_id = get_app()->profile_uid;
+	if(! $channel_id)
+		return '';
+
+	$scale = ((array_key_exists('scale',$arr)) ? intval($arr['scale']) : 0);
+
+	$ret = photos_list_photos(array('channel_id' => $channel_id),get_app()->get_observer(),$album);
+		
+	$filtered = array();
+	if($ret['success'] && $ret['photos'])
+	foreach($ret['photos'] as $p)
+		if($p['scale'] == $scale)
+			$filtered[] = $p['src'];
+
+	if($filtered) {
+		$e = mt_rand(0,count($filtered)-1);
+		$url = $filtered[$e];
+	}
+
+	if(strpos($url,'http') !== 0)
+		return '';
+
+	if(array_key_exists('style',$arr) && isset($arr['style']))
+		$style = $arr['style'];
+
+	// ensure they can't sneak in an eval(js) function
+
+	if(strpos($style,'(') !== false)
+		return '';
+
+	$url = zid($url);
+
+	$o = '<div class="widget">';
+
+	$o .= '<img class="zrl" ' 
+		. (($style) ? ' style="' . $style . '"' : '') 
+		. ' src="' . $url . '" alt="' . t('photo/image') . '" />';
+
+	$o .= '</div>';
+
+	return $o;
+}
+
+
+function widget_random_block($arr) {
+
+	$channel_id = 0;
+	if(array_key_exists('channel_id',$arr) && intval($arr['channel_id']))
+		$channel_id = intval($arr['channel_id']);
+	if(! $channel_id)
+		$channel_id = get_app()->profile_uid;
+	if(! $channel_id)
+		return '';
+
+	if(array_key_exists('contains',$arr))
+		$contains = $arr['contains'];
+
+	$o = '';
+
+	require_once('include/security.php');
+	$sql_options = item_permissions_sql($channel_id);
+
+	$randfunc = db_getfunc('RAND');
+
+	$r = q("select item.* from item left join item_id on item.id = item_id.iid
+		where item.uid = %d and sid like '%s' and service = 'BUILDBLOCK' and 
+		item_restrict = %d $sql_options order by $randfunc limit 1",
+		intval($channel_id),
+		dbesc('%' . $contains . '%'),
+		intval(ITEM_BUILDBLOCK)
+	);
+
+	if($r) {
+		$o = '<div class="widget bblock">';
+		if($r[0]['title'])
+			$o .= '<h3>' . $r[0]['title'] . '</h3>';
+		$o .= prepare_text($r[0]['body'],$r[0]['mimetype']);
+		$o .= '</div>';
+
+	}
+	return $o;
+
 }

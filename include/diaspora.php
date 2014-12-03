@@ -657,7 +657,7 @@ function diaspora_request($importer,$xml) {
 
 		$newperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT|PERMS_R_STORAGE|PERMS_R_PAGES;
 
-		$r = q("update abook set abook_their_perms = %d where abook_id = %d and abook_channel = %d limit 1",
+		$r = q("update abook set abook_their_perms = %d where abook_id = %d and abook_channel = %d",
 			intval($newperms),
 			intval($contact['abook_id']),
 			intval($importer['channel_id'])
@@ -1395,7 +1395,12 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	$datarray['body'] = $body;
 
-	$datarray['app']  = 'Diaspora';
+	if(strstr($person['xchan_network'],'friendica'))
+		$app = 'Friendica';
+	else
+		$app = 'Diaspora';
+
+	$datarray['app']  = $app;
 	
 	if(! $parent_author_signature) {
 		$key = get_config('system','pubkey');
@@ -1788,7 +1793,7 @@ function diaspora_like($importer,$xml,$msg) {
 
 	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$msg['author']);
 	if(! $contact) {
-		logger('diaspora_like: cannot find contact: ' . $msg['author']);
+		logger('diaspora_like: cannot find contact: ' . $msg['author'] . ' for channel ' . $importer['channel_name']);
 		return;
 	}
 

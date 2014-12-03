@@ -137,21 +137,26 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	$sql_extra = item_permissions_sql($a->profile['profile_uid'],$remote_contact,$groups);
 
+	if(get_pconfig($a->profile['profile_uid'],'system','channel_list_mode'))
+		$page_mode = 'list';
+	else
+		$page_mode = 'client';
+
 
 	if(($update) && (! $load)) {
 		if ($mid) {
 			$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d AND item_restrict = 0
-				AND (item_flags &  %d) AND (item_flags & %d) $sql_extra limit 1",
+				AND (item_flags &  %d)>0 AND (item_flags & %d)>0 $sql_extra limit 1",
 				dbesc($mid),
 				intval($a->profile['profile_uid']),
 				intval(ITEM_WALL),
 				intval(ITEM_UNSEEN)
 			);
 		} else {
-			$r = q("SELECT distinct parent AS `item_id` from item
+			$r = q("SELECT distinct parent AS `item_id`, created from item
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE uid = %d AND item_restrict = 0
-				AND (item_flags &  %d) AND ( item_flags & %d ) 
+				AND (item_flags &  %d)>0 AND ( item_flags & %d )>0
 				AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra
 				ORDER BY created DESC",
@@ -179,12 +184,12 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 		$itemspage = get_pconfig(local_user(),'system','itemspage');
 		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
-		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
+		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']), intval($a->pager['start']));
 
 		if($load || ($_COOKIE['jsAvailable'] != 1)) {
 			if ($mid) {
 				$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d AND item_restrict = 0
-					AND (item_flags &  %d) $sql_extra limit 1",
+					AND (item_flags &  %d)>0 $sql_extra limit 1",
 					dbesc($mid),
 					intval($a->profile['profile_uid']),
 					intval(ITEM_WALL)
@@ -194,10 +199,10 @@ function channel_content(&$a, $update = 0, $load = false) {
 				}
 
 			} else {
-				$r = q("SELECT distinct id AS item_id FROM item 
+				$r = q("SELECT distinct id AS item_id, created FROM item 
 					left join abook on item.author_xchan = abook.abook_xchan
 					WHERE uid = %d AND item_restrict = 0
-					AND (item_flags &  %d) and (item_flags & %d)
+					AND (item_flags &  %d)>0 and (item_flags & %d)>0
 					AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 					$sql_extra $sql_extra2
 					ORDER BY created DESC $pager_sql ",
@@ -246,9 +251,14 @@ function channel_content(&$a, $update = 0, $load = false) {
 		// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
 		// because browser prefetching might change it on us. We have to deliver it with the page.
 
+		$maxheight = get_pconfig($a->profile['profile_uid'],'system','channel_divmore_height');
+		if(! $maxheight)
+			$maxheight = 400;
+
 		$o .= '<div id="live-channel"></div>' . "\r\n";
 		$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
-			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+			. "; var netargs = '?f='; var profile_page = " . $a->pager['page']
+			. "; divmore_height = " . intval($maxheight) . "; </script>\r\n";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
@@ -279,12 +289,31 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	}
 
+	$update_unseen = '';
 
+	if($page_mode === 'list') {
 
-	if($is_owner) {
+		/**
+		 * in "list mode", only mark the parent item and any like activities as "seen". 
+		 * We won't distinguish between comment likes and post likes. The important thing
+		 * is that the number of unseen comments will be accurate. The SQL to separate the
+		 * comment likes could also get somewhat hairy. 
+		 */
 
-		$r = q("UPDATE item SET item_flags = (item_flags ^ %d)
-			WHERE (item_flags & %d) AND (item_flags & %d) AND uid = %d ",
+		if($parents_str) {
+			$update_unseen = " AND ( id IN ( " . dbesc($parents_str) . " )";
+			$update_unseen .= " OR ( parent IN ( " . dbesc($parents_str) . " ) AND verb in ( '" . dbesc(ACTIVITY_LIKE) . "','" . dbesc(ACTIVITY_DISLIKE) . "' ))) ";
+		}
+	}
+	else {
+		if($parents_str) {
+			$update_unseen = " AND parent IN ( " . dbesc($parents_str) . " )";
+		}
+	}
+
+	if($is_owner && $update_unseen) {
+		$r = q("UPDATE item SET item_flags = (item_flags & ~%d)
+			WHERE (item_flags & %d) > 0 AND (item_flags & %d) > 0 AND uid = %d $update_unseen",
 			intval(ITEM_UNSEEN),
 			intval(ITEM_UNSEEN),
 			intval(ITEM_WALL),
@@ -294,7 +323,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 
 	if($_COOKIE['jsAvailable'] == 1) {
-		$o .= conversation($a,$items,'channel',$update,'client');
+		$o .= conversation($a,$items,'channel',$update,$page_mode);
 	} else {
 		$o .= conversation($a,$items,'channel',$update,'traditional');
 	}

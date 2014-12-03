@@ -14,6 +14,8 @@ function externals_run($argv, $argc){
 	$total = 0;
 	$attempts = 0;
 
+	logger('externals: startup', LOGGER_DEBUG);
+
 	// pull in some public posts
 
 
@@ -25,7 +27,8 @@ function externals_run($argv, $argc){
 			$url = $arr['url'];
 		} 
 		else {
-			$r = q("select site_url, site_pull from site where site_url != '%s' and site_flags != %d order by rand() limit 1",
+			$randfunc = db_getfunc('RAND');
+			$r = q("select site_url, site_pull from site where site_url != '%s' and site_flags != %d order by $randfunc limit 1",
 				dbesc(z_root()),
 				intval(DIRECTORY_MODE_STANDALONE)
 			);
@@ -76,7 +79,7 @@ function externals_run($argv, $argc){
 			$x = z_fetch_url($feedurl);
 			if(($x) && ($x['success'])) {
 
-				q("update site set site_pull = '%s' where site_url = '%s' limit 1",
+				q("update site set site_pull = '%s' where site_url = '%s'",
 					dbesc(datetime_convert()),
 					dbesc($url)
 				);
@@ -99,12 +102,12 @@ $z = null;
 							$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
 							// preserve the source
 
-							$r = q("update item set source_xchan = owner_xchan where id = %d limit 1",
+							$r = q("update item set source_xchan = owner_xchan where id = %d",
 								intval($z[0]['id'])
 							);
 
     						$r = q("update item set item_flags = ( item_flags | %d ), owner_xchan = '%s' 
-								where id = %d limit 1",
+								where id = %d",
 								intval($flag_bits),
 								dbesc($sys['xchan_hash']),
 								intval($z[0]['id'])

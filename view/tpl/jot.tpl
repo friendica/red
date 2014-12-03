@@ -76,7 +76,7 @@
 			</div>
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				{{if $showacl}}
-				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
+				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
 					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons">{{$bang}}</i>
 				</button>
 				{{/if}}
@@ -85,7 +85,7 @@
 					<i class="icon-eye-open jot-icons" ></i>
 				</button>
 				{{/if}}
-				<button class="btn btn-primary btn-sm" type="submit" name="button-submit">{{$share}}</button>
+				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="button-submit" >{{$share}}</button>
 			</div>
 			<div id="profile-jot-perms-end"></div>
 			<div id="profile-jot-plugin-wrapper">
@@ -108,12 +108,7 @@
       </div>
      <!--  <div class="modal-body"> -->
             <div class="modal-body form-group" style="width:90%">
-                <div class="input-group input-group-sm date" id="datetimepicker1">
-                    <span class="input-group-addon"><!-- <span class="glyphicon glyphicon-calendar"></span> -->
-                    <span class="icon-calendar"></span>
-                    </span>
-                    <input id="expiration-date" type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm" size="20"/>
-                </div>
+		<div class='date'><input type='text' placeholder='yyyy-mm-dd HH:MM' name='start_text' id='expiration-date' class="form-control" /></div><script type='text/javascript'>$(function () {var picker = $('#expiration-date').datetimepicker({format:'Y-m-d H:i', minDate: 0 }); })</script>
             </div>
       <!-- </div> -->
       <div class="modal-footer">

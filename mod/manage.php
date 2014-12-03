@@ -17,7 +17,7 @@ function manage_content(&$a) {
 			intval(get_account_id())
 		);
 		if($r) {
-			q("update account set account_default_channel = %d where account_id = %d limit 1",
+			q("update account set account_default_channel = %d where account_id = %d",
 				intval($change_channel),
 				intval(get_account_id())
 			);
@@ -36,7 +36,7 @@ function manage_content(&$a) {
 	$channels = null;
 
 	if(local_user()) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and not ( channel_pageflags & %d ) order by channel_name ",
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and not ( channel_pageflags & %d )>0 order by channel_name ",
 			intval(get_account_id()),
 			intval(PAGE_REMOVED)
 		);
@@ -55,7 +55,7 @@ function manage_content(&$a) {
 
 
 				$c = q("SELECT id, item_restrict, item_flags FROM item
-					WHERE (item_restrict = %d) and ( item_flags & %d ) and uid = %d",
+					WHERE (item_restrict = %d) and ( item_flags & %d )>0 and uid = %d",
 					intval(ITEM_VISIBLE),
 					intval(ITEM_UNSEEN),
 					intval($channels[$x]['channel_id'])
@@ -71,7 +71,7 @@ function manage_content(&$a) {
 				}
 
 
-				$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) and not ((abook_flags & %d) or (xchan_flags & %d))",
+				$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d)>0 and not ((abook_flags & %d)>0 or (xchan_flags & %d)>0)",
 					intval($channels[$x]['channel_id']),
 					intval(ABOOK_FLAG_PENDING),
 					intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
@@ -82,7 +82,7 @@ function manage_content(&$a) {
 					$channels[$x]['intros'] = intval($intr[0]['total']);
 
 
-				$mails = q("SELECT count(id) as total from mail WHERE channel_id = %d AND not (mail_flags & %d) and from_xchan != '%s' ",
+				$mails = q("SELECT count(id) as total from mail WHERE channel_id = %d AND not (mail_flags & %d)>0 and from_xchan != '%s' ",
 					intval($channels[$x]['channel_id']),
 					intval(MAIL_SEEN),		
 					dbesc($channels[$x]['channel_hash'])
@@ -127,7 +127,7 @@ function manage_content(&$a) {
 			}
 		}
 		
-	    $r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d )",
+	    $r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d )>0",
 			intval(get_account_id()),
 			intval(PAGE_REMOVED)
 		);

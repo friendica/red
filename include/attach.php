@@ -400,11 +400,11 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$created = datetime_convert();
 
 	if($options === 'replace') {
-		$r = q("update attach set filename = '%s', filetype = '%s', filesize = %d, data = '%s', edited = '%s' where id = %d and uid = %d limit 1",
+		$r = q("update attach set filename = '%s', filetype = '%s', filesize = %d, data = '%s', edited = '%s' where id = %d and uid = %d",
 			dbesc($filename),
 			dbesc($mimetype),
 			intval($filesize),
-			dbesc(@file_get_contents($src)),
+			dbescbin(@file_get_contents($src)),
 			dbesc($created),
 			intval($existing_id),
 			intval($channel_id)
@@ -421,7 +421,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc($mimetype),
 			intval($filesize),
 			intval($x[0]['revision'] + 1),
-			dbesc(@file_get_contents($src)),
+			dbescbin(@file_get_contents($src)),
 			dbesc($created),
 			dbesc($created),
 			dbesc($x[0]['allow_cid']),
@@ -432,7 +432,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	}
 	elseif($options === 'update') {
 		$r = q("update attach set filename = '%s', filetype = '%s', edited = '%s', 
-			allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid  = '%s' where id = %d and uid = %d limit 1",
+			allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid  = '%s' where id = %d and uid = %d",
 			dbesc((array_key_exists('filename',$arr))  ? $arr['filename']  : $x[0]['filename']),
 			dbesc((array_key_exists('filetype',$arr))  ? $arr['filetype']  : $x[0]['filetype']),
 			dbesc($created),
@@ -455,7 +455,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc($mimetype),
 			intval($filesize),
 			intval(0),
-			dbesc(@file_get_contents($src)),
+			dbescbin(@file_get_contents($src)),
 			dbesc($created),
 			dbesc($created),
 			dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : '<' . $channel['channel_hash'] . '>'),
@@ -517,7 +517,7 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 		if(count($paths) > 1) {
 			$curpath = array_shift($paths);
 
-			$r = q("select hash, id from attach where uid = %d and filename = '%s' and (flags & %d ) " . permissions_sql($channel_id) . " limit 1",
+			$r = q("select hash, id from attach where uid = %d and filename = '%s' and (flags & %d )>0 " . permissions_sql($channel_id) . " limit 1",
 				intval($channel_id),
 				dbesc($curpath),
 				intval(ATTACH_FLAG_DIR)
@@ -533,7 +533,7 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 	else
 		$paths = array($pathname);
 	
-	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and (flags & %d ) " . permissions_sql($channel_id),
+	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and (flags & %d )>0 " . permissions_sql($channel_id),
 		intval($channel_id),
 		dbesc($parent_hash),
 		dbesc($paths[0]),
@@ -567,6 +567,7 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
  *    $arr['deny_cid']
  *    $arr['deny_gid']
  */
+
 function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 	$ret = array('success' => false);
@@ -617,7 +618,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 		$sql_options = permissions_sql($channel['channel_id']);
 
 		do {
-			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d ) 
+			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d )>0 
 				$sql_options limit 1",
 				intval($channel['channel_id']),
 				dbesc($lfile),
@@ -669,7 +670,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 			$ret['data'] = $arr;
 
 			// update the parent folder's lastmodified timestamp
-			$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+			$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d",
 				dbesc($created),
 				dbesc($arr['folder']),
 				intval($channel_id)
@@ -722,7 +723,7 @@ function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gi
 		}
 	}
 
-	$x = q("update attach set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s' where hash = '%s' and uid = %d limit 1",
+	$x = q("update attach set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s' where hash = '%s' and uid = %d",
 		dbesc($allow_cid),
 		dbesc($allow_gid),
 		dbesc($deny_cid),
@@ -790,13 +791,13 @@ function attach_delete($channel_id, $resource) {
 	}
 
 	// delete from database
-	$z = q("DELETE FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
+	$z = q("DELETE FROM attach WHERE hash = '%s' AND uid = %d",
 		dbesc($resource),
 		intval($channel_id)
 	);
 
 	// update the parent folder's lastmodified timestamp
-	$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+	$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d",
 		dbesc(datetime_convert()),
 		dbesc($r[0]['folder']),
 		intval($channel_id)
@@ -831,7 +832,7 @@ function get_cloudpath($arr) {
 		$lfile = $arr['folder'];
 
 		do {
-			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d ) 
+			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d )>0 
 				limit 1",
 				intval($arr['uid']),
 				dbesc($lfile),

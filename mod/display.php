@@ -149,7 +149,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 		$updateable = false;
 
-		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
+		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']),intval($a->pager['start']));
 
 		if($load || ($_COOKIE['jsAvailable'] != 1)) {
 			$r = null;
@@ -189,7 +189,7 @@ function display_content(&$a, $update = 0, $load = false) {
 					and owner_xchan in ( " . stream_perms_xchans(($observer_hash) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
 					OR owner_xchan = '%s')
 					$sql_extra )
-					group by mid limit 1",
+					limit 1",
 					dbesc($target_item['parent_mid']),
 					dbesc($sys['xchan_hash'])
 				);
@@ -228,8 +228,8 @@ function display_content(&$a, $update = 0, $load = false) {
 	}
 
 	if($updateable) {
-		$x = q("UPDATE item SET item_flags = ( item_flags ^ %d )
-			WHERE (item_flags & %d) AND uid = %d and parent = %d ",
+		$x = q("UPDATE item SET item_flags = ( item_flags & ~%d )
+			WHERE (item_flags & %d)>0 AND uid = %d and parent = %d ",
 			intval(ITEM_UNSEEN),
 			intval(ITEM_UNSEEN),
 			intval(local_user()),

@@ -22,7 +22,7 @@ function rconnect_url($channel_id,$xchan) {
 	if(($r) && ($r[0]['xchan_follow']))
 		return $r[0]['xchan_follow'];
 
-	$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d ) limit 1",
+	$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d )>0 limit 1",
 		dbesc($xchan),
 		intval(HUBLOC_FLAGS_PRIMARY)
 	);
@@ -35,7 +35,7 @@ function rconnect_url($channel_id,$xchan) {
 
 function abook_connections($channel_id, $sql_conditions = '') {
 	$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d
-		and not ( abook_flags & %d ) $sql_conditions",
+		and not ( abook_flags & %d )>0 $sql_conditions",
 		intval($channel_id),
 		intval(ABOOK_FLAG_SELF)
 	);
@@ -44,7 +44,7 @@ function abook_connections($channel_id, $sql_conditions = '') {
 
 function abook_self($channel_id) {
 	$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d
-		and ( abook_flags & %d ) limit 1",
+		and ( abook_flags & %d )>0 limit 1",
 		intval($channel_id),
 		intval(ABOOK_FLAG_SELF)
 	);
@@ -52,7 +52,7 @@ function abook_self($channel_id) {
 }	
 
 function channelx_by_nick($nick) {
-	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s'  and not ( channel_pageflags & %d ) LIMIT 1",
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s'  and not ( channel_pageflags & %d )>0 LIMIT 1",
 		dbesc($nick),
 		intval(PAGE_REMOVED)
 	);
@@ -60,7 +60,7 @@ function channelx_by_nick($nick) {
 }
 
 function channelx_by_hash($hash) {
-	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_hash = '%s'  and not ( channel_pageflags & %d ) LIMIT 1",
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_hash = '%s'  and not ( channel_pageflags & %d )>0 LIMIT 1",
 		dbesc($hash),
 		intval(PAGE_REMOVED)
 	);
@@ -68,7 +68,7 @@ function channelx_by_hash($hash) {
 }
 
 function channelx_by_n($id) {
-	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_id = %d  and not ( channel_pageflags & %d ) LIMIT 1",
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_id = %d  and not ( channel_pageflags & %d )>0 LIMIT 1",
 		dbesc($id),
 		intval(PAGE_REMOVED)
 	);
@@ -128,17 +128,19 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 
 function abook_toggle_flag($abook,$flag) {
 
-	$r = q("UPDATE abook set abook_flags = (abook_flags ^ %d) where abook_id = %d and abook_channel = %d limit 1",
-		intval($flag),
-		intval($abook['abook_id']),
-		intval($abook['abook_channel'])
+    $r = q("UPDATE abook set abook_flags = (abook_flags %s %d) where abook_id = %d and abook_channel = %d",
+			db_getfunc('^'),
+			intval($flag),
+			intval($abook['abook_id']),
+			intval($abook['abook_channel'])
 	);
+
 
 	// if unsetting the archive bit, update the timestamps so we'll try to connect for an additional 30 days. 
 
 	if(($flag === ABOOK_FLAG_ARCHIVED) && ($abook['abook_flags'] & ABOOK_FLAG_ARCHIVED)) {
 		$r = q("update abook set abook_connected = '%s', abook_updated = '%s' 
-			where abook_id = %d and abook_channel = %d limit 1",
+			where abook_id = %d and abook_channel = %d",
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			intval($abook['abook_id']),
@@ -173,7 +175,7 @@ function account_remove($account_id,$local = true,$unset_session=true) {
 
 	// Don't let anybody nuke the only admin account.
 
-	$r = q("select account_id from account where (account_roles & %d)",
+	$r = q("select account_id from account where (account_roles & %d)>0",
 		intval(ACCOUNT_ROLE_ADMIN)
 	);
 
@@ -201,7 +203,7 @@ function account_remove($account_id,$local = true,$unset_session=true) {
 		}
 	}
 
-	$r = q("delete from account where account_id = %d limit 1",
+	$r = q("delete from account where account_id = %d",
 		intval($account_id)
 	);
 
@@ -239,7 +241,7 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 			channel_r_photos = 0, channel_r_abook = 0, channel_w_stream = 0, channel_w_wall = 0, channel_w_tagwall = 0,
 			channel_w_comment = 0, channel_w_mail = 0, channel_w_photos = 0, channel_w_chat = 0, channel_a_delegate = 0,
 			channel_r_storage = 0, channel_w_storage = 0, channel_r_pages = 0, channel_w_pages = 0, channel_a_republish = 0 
-			where channel_id = %d limit 1",
+			where channel_id = %d",
 			dbesc(datetime_convert()),
 			intval(PAGE_REMOVED),
 			intval($channel_id)
@@ -275,12 +277,12 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 	q("DELETE FROM `spam` WHERE `uid` = %d", intval($channel_id));
 
 
-	q("delete from abook where abook_xchan = '%s' and (abook_flags & %d) limit 1",
+	q("delete from abook where abook_xchan = '%s' and (abook_flags & %d)>0",
 		dbesc($channel['channel_hash']),
 		dbesc(ABOOK_FLAG_SELF)
 	);
 
-	$r = q("update channel set channel_deleted = '%s', channel_pageflags = (channel_pageflags | %d) where channel_id = %d limit 1",
+	$r = q("update channel set channel_deleted = '%s', channel_pageflags = (channel_pageflags | %d) where channel_id = %d",
 		dbesc(datetime_convert()),
 		intval(PAGE_REMOVED),
 		intval($channel_id)
@@ -296,7 +298,7 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 
 	$hublocs = 0;
 
-	$r = q("select hubloc_id from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d)",
+	$r = q("select hubloc_id from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d)>0",
 		dbesc($channel['channel_hash']),
 		intval(HUBLOC_FLAGS_DELETED)
 	);
@@ -335,10 +337,11 @@ function mark_orphan_hubsxchans() {
 	if($dirmode == DIRECTORY_MODE_NORMAL)
 		return;
 
-    $r = q("update hubloc set hubloc_status = (hubloc_status | %d) where not (hubloc_status & %d) 
-		and hubloc_network = 'zot' and hubloc_connected < utc_timestamp() - interval 36 day",
+    $r = q("update hubloc set hubloc_status = (hubloc_status | %d) where not (hubloc_status & %d)>0 
+		and hubloc_network = 'zot' and hubloc_connected < %s - interval %s",
         intval(HUBLOC_OFFLINE),
-        intval(HUBLOC_OFFLINE)
+        intval(HUBLOC_OFFLINE),
+        db_utcnow(), db_quoteinterval('36 day')
     );
 
 //	$realm = get_directory_realm();
@@ -354,7 +357,7 @@ function mark_orphan_hubsxchans() {
 //	}
 
 
-	$r = q("select hubloc_id, hubloc_hash from hubloc where (hubloc_status & %d) and not (hubloc_flags & %d)",
+	$r = q("select hubloc_id, hubloc_hash from hubloc where (hubloc_status & %d)>0 and not (hubloc_flags & %d)>0",
 		intval(HUBLOC_OFFLINE),
 		intval(HUBLOC_FLAGS_ORPHANCHECK)
 	);
@@ -364,7 +367,7 @@ function mark_orphan_hubsxchans() {
 
 			// see if any other hublocs are still alive for this channel
 
-			$x = q("select * from hubloc where hubloc_hash = '%s' and not (hubloc_status & %d)",
+			$x = q("select * from hubloc where hubloc_hash = '%s' and not (hubloc_status & %d)>0",
 				dbesc($rr['hubloc_hash']),
 				intval(HUBLOC_OFFLINE)
 			);
@@ -372,7 +375,7 @@ function mark_orphan_hubsxchans() {
 
 				// yes - if the xchan was marked as an orphan, undo it
 
-				$y = q("update xchan set xchan_flags = (xchan_flags ^ %d) where (xchan_flags & %d) and xchan_hash = '%s' limit 1",
+				$y = q("update xchan set xchan_flags = (xchan_flags & ~%d) where (xchan_flags & %d)>0 and xchan_hash = '%s'",
 					intval(XCHAN_FLAGS_ORPHAN),
 					intval(XCHAN_FLAGS_ORPHAN),
 					dbesc($rr['hubloc_hash'])
@@ -383,7 +386,7 @@ function mark_orphan_hubsxchans() {
 
 				// nope - mark the xchan as an orphan
 
-				$y = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s' limit 1",
+				$y = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
 					intval(XCHAN_FLAGS_ORPHAN),
 					dbesc($rr['hubloc_hash'])
 				);
@@ -391,7 +394,7 @@ function mark_orphan_hubsxchans() {
 
 			// mark that we've checked this entry so we don't need to do it again
 
-			$y = q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_id = %d limit 1",
+			$y = q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_id = %d",
 				intval(HUBLOC_FLAGS_ORPHANCHECK),
 				dbesc($rr['hubloc_id'])
 			);
@@ -449,7 +452,7 @@ function remove_all_xchan_resources($xchan, $channel_id = 0) {
 
 		if($dirmode === false || $dirmode == DIRECTORY_MODE_NORMAL) {
 
-			$r = q("delete from xchan where xchan_hash = '%s' limit 1",
+			$r = q("delete from xchan where xchan_hash = '%s'",
 				dbesc($xchan)
 			);
 			$r = q("delete from hubloc where hubloc_hash = '%s'",
@@ -482,7 +485,7 @@ function contact_remove($channel_id, $abook_id) {
 
 	$archive = get_pconfig($channel_id, 'system','archive_removed_contacts');
 	if($archive) {
-		q("update abook set abook_flags = ( abook_flags | %d ) where abook_id = %d and abook_channel = %d limit 1",
+		q("update abook set abook_flags = ( abook_flags | %d ) where abook_id = %d and abook_channel = %d",
 			intval(ABOOK_FLAG_ARCHIVED),
 			intval($abook_id),
 			intval($channel_id)
@@ -514,7 +517,7 @@ function contact_remove($channel_id, $abook_id) {
 		}
 	}
 	
-	q("delete from abook where abook_id = %d and abook_channel = %d limit 1",
+	q("delete from abook where abook_id = %d and abook_channel = %d",
 		intval($abook['abook_id']),
 		intval($channel_id)
 	);
@@ -541,7 +544,10 @@ function contact_remove($channel_id, $abook_id) {
 
 
 function random_profile() {
-	$r = q("select xchan_url from xchan left join hubloc on hubloc_hash = xchan_hash where hubloc_connected > UTC_TIMESTAMP() - interval 30 day order by rand() limit 1");
+	$randfunc = db_getfunc('rand');
+	$r = q("select xchan_url from xchan left join hubloc on hubloc_hash = xchan_hash where hubloc_connected > %s - interval %s order by $randfunc limit 1",
+		db_utcnow(), db_quoteinterval('30 day')
+	);
 	if($r)
 		return $r[0]['xchan_url'];
 	return '';

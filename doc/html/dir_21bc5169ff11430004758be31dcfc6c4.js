@@ -6,5 +6,8 @@ var dir_21bc5169ff11430004758be31dcfc6c4 =
     ] ],
     [ "dba_mysqli.php", "dba__mysqli_8php.html", [
       [ "dba_mysqli", "classdba__mysqli.html", "classdba__mysqli" ]
+    ] ],
+    [ "dba_postgres.php", "dba__postgres_8php.html", [
+      [ "dba_postgres", "classdba__postgres.html", "classdba__postgres" ]
     ] ]
 ];

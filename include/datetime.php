@@ -134,10 +134,17 @@ function dob($dob) {
 	if(! $f)
 		$f = 'ymd';
 
-	if ($dob && $dob != '0000-00-00')
-		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),mktime(0,0,0,$month,$day,$year),'dob');
+	if($dob === '0000-00-00')
+		$value = '';
 	else
-		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),false,'dob');
+		$value = (($year) ? datetime_convert('UTC','UTC',$dob,'Y-m-d') : datetime_convert('UTC','UTC',$dob,'m-d'));
+
+	$o = '<input type="text" name="dob" value="' . $value . '" placeholder="' . t('YYYY-MM-DD or MM-DD') . '" />';
+
+//	if ($dob && $dob != '0000-00-00')
+//		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),mktime(0,0,0,$month,$day,$year),'dob');
+//	else
+//		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),false,'dob');
 
 	return $o;
 }
@@ -156,12 +163,12 @@ function dob($dob) {
  * @param $id
  *  id and name of datetimepicker (defaults to "datetimepicker")
  */
-function datesel($format, $min, $max, $default,$id = 'datepicker') {
-	return datetimesel($format,$min,$max,$default,$id,true,false);
+function datesel($format, $min, $max, $default, $id = 'datepicker') {
+	return datetimesel($format,$min,$max,$default,$id,true,false, '','');
 }
 
 /**
- * returns a date selector
+ * returns a time selector
  * @param $format
  *  format string, e.g. 'ymd' or 'mdy'. Not currently supported
  * @param $h
@@ -171,8 +178,8 @@ function datesel($format, $min, $max, $default,$id = 'datepicker') {
  * @param $id
  *  id and name of datetimepicker (defaults to "timepicker")
  */
-function timesel($format,$h,$m,$id='timepicker') {
-	return datetimesel($format,mktime(),mktime(),mktime($h,$m),$id,false,true);
+function timesel($format, $h, $m, $id='timepicker') {
+	return datetimesel($format,new DateTime(),new DateTime(),new DateTime("$h:$m"),$id,false,true);
 }
 
 /**
@@ -197,31 +204,42 @@ function timesel($format,$h,$m,$id='timepicker') {
  *  set maximum date from picker with id $maxfrom (none by default)
  */
 function datetimesel($format, $min, $max, $default, $id = 'datetimepicker', $pickdate = true, $picktime = true, $minfrom = '', $maxfrom = '') {
+	// Once browser support is better this could probably be replaced with native HTML5 date picker
 	$o = '';
 
 	$dateformat = '';
-	if($pickdate) $dateformat .= 'YYYY-MM-DD';
-	if($pickdate && $picktime) $dateformat .= ' ';
-	if($picktime) $dateformat .= 'HH:mm';
 
-	$mindate = $min ? "new Date($min*1000)" : '';
-	$maxdate = $max ? "new Date($max*1000)" : '';
+	if($pickdate) $dateformat .= 'Y-m-d';
+	if($pickdate && $picktime) $dateformat .= ' ';
+	if($picktime) $dateformat .= 'H:i';
+
+	$minjs = $min ? ",minDate: new Date({$min->getTimestamp()}*1000), yearStart: " . $min->format('Y') : '';
+	$maxjs = $max ? ",maxDate: new Date({$max->getTimestamp()}*1000), yearEnd: " . $max->format('Y') : '';
 	
-	$defaultDate = $default ? ", defaultDate: new Date($default*1000)" : '';
+	$input_text = $default ? 'value="' . date($dateformat, $default->getTimestamp()) . '"' : '';
+	$defaultdatejs = $default ? ",defaultDate: new Date({$default->getTimestamp()}*1000)" : '';
 
 	$pickers = '';
-	if(!$pickdate) $pickers .= 'pickDate: false,';
-	if(!$picktime) $pickers .= 'pickTime: false,';
+	if(!$pickdate) $pickers .= ',datepicker: false';
+	if(!$picktime) $pickers .= ',timepicker: false';
 
 	$extra_js = '';
 	if($minfrom != '') 
-		$extra_js .= "\$('#$minfrom').on('dp.change',function (e) { \$('#$id').data('DateTimePicker').setMinDate(e.date); });";
+		$extra_js .= "\$('#$minfrom').data('xdsoft_datetimepicker').setOptions({onChangeDateTime: function (currentDateTime) { \$('#$id').data('xdsoft_datetimepicker').setOptions({minDate: currentDateTime})}})";
 
 	if($maxfrom != '') 
-		$extra_js .= "\$('#$maxfrom').on('dp.change',function (e) { \$('#$id').data('DateTimePicker').setMaxDate(e.date); });";
+		$extra_js .= "\$('#$maxfrom').data('xdsoft_datetimepicker').setOptions({onChangeDateTime: function (currentDateTime) { \$('#$id').data('xdsoft_datetimepicker').setOptions({maxDate: currentDateTime})}})";
 
-	$o .= "<div class='date' id='$id'><input type='text' placeholder='$dateformat' name='$id'/></div>";
-	$o .= "<script type='text/javascript'>\$(function () {\$('#$id').datetimepicker({sideBySide: true, $pickers minDate: $mindate, maxDate: $maxdate, format: '$dateformat', useCurrent: false $defaultDate}); $extra_js});</script>";
+	$readable_format = $dateformat;
+	$readable_format = str_replace('Y','yyyy',$readable_format);
+	$readable_format = str_replace('m','mm',$readable_format);
+	$readable_format = str_replace('d','dd',$readable_format);
+	$readable_format = str_replace('H','HH',$readable_format);
+	$readable_format = str_replace('i','MM',$readable_format);
+
+	$o .= "<div class='date'><input type='text' placeholder='$readable_format' name='$id' id='$id' $input_text />";
+	$o .= '</div>';
+	$o .= "<script type='text/javascript'>\$(function () {var picker = \$('#$id').datetimepicker({step:5,format:'$dateformat' $minjs $maxjs $pickers $defaultdatejs}); $extra_js})</script>";
 	return $o;
 }
 
@@ -453,7 +471,10 @@ function update_birthdays() {
 	require_once('include/permissions.php');
 
     $r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash 
-		WHERE abook_dob > utc_timestamp() + interval 7 day and abook_dob < utc_timestamp() + interval 14 day");
+		WHERE abook_dob > %s + interval %s and abook_dob < %s + interval %s",
+		db_utcnow(), db_quoteinterval('7 day'),
+		db_utcnow(), db_quoteinterval('14 day')
+		);
 	if($r) {
 		foreach($r as $rr) {
 			
@@ -475,7 +496,7 @@ function update_birthdays() {
 			$z = event_store_event($ev);
 			if($z) {
 				$item_id = event_store_item($ev,$z);
-				q("update abook set abook_dob = '%s' where abook_id = %d limit 1",
+				q("update abook set abook_dob = '%s' where abook_id = %d",
 					dbesc(intval($rr['abook_dob']) + 1 . substr($rr['abook_dob'],4)),
 					intval($rr['abook_id'])
 				);

@@ -7,10 +7,10 @@ Die Red-Matrix ist eine dezentrale Kommunikations- und Publishing-Plattform. Sie
 
 [zrl=[baseurl]/help/features]Features der Red-Matrix[/zrl]
 Die Red-Matrix funktioniert schon heute als ein globales verteiltes Netzwerk und beweist täglich ihre Vielseitigkeit und Skalierbarkeit auf kleinen Privatservern wie auch auf riesigen Sites.
-Kommunikationsplattformen für Familien (auf Wunsch auch ohne Verbindung zum restlichen Red-Netzwerk), verteilte Online-Communities, Support-Foren, Homepages. Oder auch professionelle Inhalte-Anbieter mit kommerziellen Premium-Kanälen und eingeschränktem Zugriff – was immer Du willst, die Red-Matrix unterstützt Dich in Deinem kreativen Schaffen.
+Kommunikationsplattformen für Familien, verteilte Online-Communities, Support-Foren, Blogs und Homepages. Oder auch professionelle Inhalte-Anbieter mit kommerziellen Premium-Kanälen und eingeschränktem Zugriff – was immer Du willst, die Red-Matrix unterstützt Dich in Deinem kreativen Schaffen.
 
 [zrl=[baseurl]/help/what_is_zot]Got Zot? Hast Du schon Zot? Wenn nicht wird es Zeit.[/zrl]
-Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Matrix entwickelt wurde. Als Teilnehmer bist Du dank „Nomadischer Identität“ nicht länger an einen Hoster gebunden. Ziehe einfach auf einen anderen Server um und behalte dabei alle Deine Kontakte, oder klone Deinen Kanal und lasse ihn auf mehreren Servern gleichzeitig laufen – sollte einer davon plötzlich geschlossen werden, ist das kein Problem für Dich. Und bist Du erst Teil der Red-Matrix, musst Du Dich nie wieder mehrfach anmelden, selbst wenn Du Seiten auf einem andere Red-Server betrachtest. Zot ist, was die Red-Matrix besonders macht.
+Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Matrix entwickelt wurde. Als Mitglied bist Du dank „Nomadischer Identität“ nicht länger an einen einzigen Server oder Anbieter gebunden. Ziehe einfach auf einen anderen Server um und behalte dabei alle Deine Kontakte, oder klone Deinen Kanal und lasse ihn auf mehreren Servern gleichzeitig laufen – sollte einer davon plötzlich geschlossen werden, ist das kein Problem für Dich. Und bist Du erst Teil der Red-Matrix, musst Du Dich nie wieder mehrfach anmelden, selbst wenn Du Seiten auf einem andere Red-Server betrachtest. Zot ist, was die Red-Matrix besonders macht.
 
 [size=large][b]Erste Schritte[/b][/size]
 [zrl=[baseurl]/help/Privacy]Datenschutz[/zrl]
@@ -18,6 +18,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/accounts_profiles_channels_basics]Du in der Red-Matrix: Konten, Profile und Kanäle kurz erklärt[/zrl]
 [zrl=[baseurl]/help/profiles]Profile[/zrl]
 [zrl=[baseurl]/help/channels]Kanäle[/zrl]
+[zrl=[baseurl]/help/roles]Zugriffsrechte-Kategorien und Kanaltypen[/zrl]
 [zrl=[baseurl]/help/first-post]Dein erster Beitrag[/zrl]
 [zrl=[baseurl]/help/connecting_to_channels]Sich mit anderen Kanälen verbinden[/zrl]
 [zrl=[baseurl]/help/permissions]Zugriffsrechte und Verschlüsselung: Du hast alles unter Kontrolle[/zrl]
@@ -44,6 +45,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/faq_admins]FAQ für Admins[/zrl]
 
 [size=large][b]Technische Dokumentation[/b][/size]
+[zrl=[baseurl]/help/history]Die Geschichte der RedMatrix[/zrl]
 [zrl=[baseurl]/help/Zot---A-High-Level-Overview]Zot – ein grober Überblick[/zrl]
 [zrl=[baseurl]/help/zot]Eine Einführung ins Zot-Protokoll[/zrl]
 [zrl=[baseurl]/help/zot_structures]Zot-Strukturen[/zrl]
@@ -62,6 +64,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/doc/html/]Code-Referenz (mit doxygen generiert - setzt Cookies)[/zrl]
 [zrl=[baseurl]/help/to_do_doco]To-Do-Liste für das Projekt Red-Dokumentation[/zrl]
 [zrl=[baseurl]/help/to_do_code]To-Do-Liste für Entwickler[/zrl]
+[zrl=[baseurl]/help/roadmap]Roadmap für Version 3[/zrl]
 [zrl=[baseurl]/help/git_for_non_developers]Git für Nicht-Entwickler[/zrl]
 
 [size=large][b]Häufig gestellte Fragen für Entwickler[/b][/size]

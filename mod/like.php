@@ -263,26 +263,18 @@ function like_content(&$a) {
 		else
 			killme();
 
-
-		$r = q("SELECT * FROM item WHERE verb = '%s' AND item_restrict = 0 
+		$r = q("SELECT id FROM item WHERE verb = '%s' AND item_restrict = 0 
 			AND author_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') LIMIT 1",
 			dbesc($activity),
 			dbesc($observer['xchan_hash']),
 			intval($item_id),
 			dbesc($item['mid'])
 		);
+
 		if($r) {
-			$like_item = $r[0];
-
-			// Already liked/disliked it, delete it
-
-			$r = q("UPDATE item SET item_restrict = ( item_restrict ^ %d ), changed = '%s' WHERE id = %d LIMIT 1",
-				intval(ITEM_DELETED),
-				dbesc(datetime_convert()),
-				intval($like_item['id'])
-			);
-
-			proc_run('php',"include/notifier.php","like",$like_item['id']);
+			// already liked it. Drop that item.
+			require_once('include/items.php');
+			drop_item($r[0]['id'],false,DROPITEM_PHASE1);
 			return;
 		}
 
@@ -332,7 +324,7 @@ function like_content(&$a) {
 		// if this was a linked photo and was hidden, unhide it.
 
 		if($item['item_restrict'] & ITEM_HIDDEN) {
-			$r = q("update item set item_restrict = (item_restrict ^ %d) where id = %d limit 1",
+			$r = q("update item set item_restrict = (item_restrict ^ %d) where id = %d",
 				intval(ITEM_HIDDEN),
 				intval($item['id'])
 			);

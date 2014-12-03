@@ -59,19 +59,22 @@
 				<label class="radio-inline" id="photo-edit-rotate-cw-label" for="photo-edit-rotate-cw"><input id="photo-edit-rotate-cw" type="radio" name="rotate" value="1" />{{$edit.rotatecw}}</label>
 				<label class="radio-inline" id="photo-edit-rotate-ccw-label" for="photo-edit-rotate-ccw"><input id="photo-edit-rotate-ccw" type="radio" name="rotate" value="2" />{{$edit.rotateccw}}</label>
 			</div>
+			{{if $edit.adult_enabled}}
 			<div class="form-group">
 			{{include file="field_checkbox.tpl" field=$edit.adult}}
 			</div>
+			{{/if}}
+
 			{{$edit.aclselect}}
 
 			<div class="form-group pull-left">
 				<button class="btn btn-danger btn-sm" id="photo-edit-delete-button" type="submit" name="delete" value="{{$edit.delete}}" onclick="return confirmDelete();" />{{$edit.delete}}</button>
 			</div>
 			<div class="form-group btn-group pull-right">
-				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
-					<i id="jot-perms-icon" class="{{$edit.lockstate}}"></i>
+				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
+					<i id="jot-perms-icon" class="icon-{{$edit.lockstate}}"></i>
 				</button>
-				<button class="btn btn-primary btn-sm" type="submit" name="submit" id="photos-edit-submit">{{$edit.submit}}</button>
+				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="submit" >{{$edit.submit}}</button>
 			</div>
 		</form>
 		<div id="photo-edit-end" class="clear"></div>

@@ -38,6 +38,7 @@ var searchData=
   ['perms_5fw_5fstream',['PERMS_W_STREAM',['../boot_8php.html#a8bb0395933b5e886f086f6a2fb0bfa55',1,'boot.php']]],
   ['perms_5fw_5ftagwall',['PERMS_W_TAGWALL',['../boot_8php.html#a99a4a17cb644e7e6826ea07ecaf09777',1,'boot.php']]],
   ['perms_5fw_5fwall',['PERMS_W_WALL',['../boot_8php.html#a6b14a31a8aa9f3452a13383f413bffa2',1,'boot.php']]],
+  ['photo_5fadult',['PHOTO_ADULT',['../boot_8php.html#a921c55b9fa59a327a5f0e07fa1ccb2e0',1,'boot.php']]],
   ['photo_5fnormal',['PHOTO_NORMAL',['../boot_8php.html#a4a49b29838ef2c45ab3556b52baec6a4',1,'boot.php']]],
   ['photo_5fprofile',['PHOTO_PROFILE',['../boot_8php.html#ab4bc9c50ecc927b92d519e36562b0df0',1,'boot.php']]],
   ['photo_5fthing',['PHOTO_THING',['../boot_8php.html#a78849a1bf8ce8d9804b4cbb502e8f383',1,'boot.php']]],

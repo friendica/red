@@ -59,5 +59,9 @@ class dba_mysql extends dba_driver {
 			mysql_close($this->db);
 		$this->connected = false;
 	}
+	
+	function getdriver() {
+		return 'mysql';
+	}
 
 }	

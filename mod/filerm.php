@@ -18,7 +18,7 @@ function filerm_content(&$a) {
 	logger('filerm: tag ' . $term . ' item ' . $item_id);
 
 	if($item_id && strlen($term)) {
-		$r = q("delete from term where uid = %d and type = %d and oid = %d and term = '%s' limit 1",
+		$r = q("delete from term where uid = %d and type = %d and oid = %d and term = '%s'",
 			intval(local_user()),
 			intval(($category) ? TERM_CATEGORY : TERM_FILE),
 			intval($item_id),

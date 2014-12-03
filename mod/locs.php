@@ -19,12 +19,12 @@ function locs_post(&$a) {
 				notice( t('Location not found.') . EOL);
 				return;
 			}
-			$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where (hubloc_flags & %d) and hubloc_hash = '%s' ",
+			$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where (hubloc_flags & %d)>0 and hubloc_hash = '%s' ",
 				intval(HUBLOC_FLAGS_PRIMARY),
 				intval(HUBLOC_FLAGS_PRIMARY),
 				dbesc($channel['channel_hash'])
 			);
-			$r = q("update hubloc set hubloc_flags = (hubloc_flags & %d) where hubloc_id = %d and hubloc_hash = '%s' limit 1",
+			$r = q("update hubloc set hubloc_flags = (hubloc_flags & %d) where hubloc_id = %d and hubloc_hash = '%s'",
 				intval(HUBLOC_FLAGS_PRIMARY),
 				intval($hubloc_id),
 				dbesc($channel['channel_hash'])
@@ -50,7 +50,7 @@ function locs_post(&$a) {
 				notice( t('Primary location cannot be removed.') . EOL);
 				return;
 			}
-			$r = q("update hubloc set hubloc_flags = (hubloc_flags & %d) where hubloc_id = %d and hubloc_hash = '%s' limit 1",
+			$r = q("update hubloc set hubloc_flags = (hubloc_flags & %d) where hubloc_id = %d and hubloc_hash = '%s'",
 				intval(HUBLOC_FLAGS_DELETED),
 				intval($hubloc_id),
 				dbesc($channel['channel_hash'])
