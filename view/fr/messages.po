@@ -91,7 +91,7 @@ msgstr "Favoris"
 
 #: ../../include/apps.php:125
 msgid "Address Book"
-msgstr "Carnet d'adresse"
+msgstr "Carnet d'adresses"
 
 #: ../../include/apps.php:126 ../../include/nav.php:106 ../../boot.php:1498
 msgid "Login"
@@ -289,7 +289,7 @@ msgstr "Sauver"
 
 #: ../../include/text.php:897
 msgid "poke"
-msgstr "cogne"
+msgstr "cogner"
 
 #: ../../include/text.php:897 ../../include/conversation.php:243
 msgid "poked"
@@ -377,7 +377,7 @@ msgstr "amer"
 
 #: ../../include/text.php:921
 msgid "cheerful"
-msgstr "entrain"
+msgstr "joyeux"
 
 #: ../../include/text.php:922
 msgid "alive"
@@ -385,7 +385,7 @@ msgstr "énergique"
 
 #: ../../include/text.php:923
 msgid "annoyed"
-msgstr "agaçé"
+msgstr "agacé"
 
 #: ../../include/text.php:924
 msgid "anxious"
@@ -517,7 +517,7 @@ msgstr "Cliquer pour ouvrir/fermer"
 
 #: ../../include/text.php:1512 ../../mod/events.php:374
 msgid "Link to Source"
-msgstr "Lien vers la Source"
+msgstr "Lien vers la source"
 
 #: ../../include/text.php:1531
 msgid "Select a page layout: "
@@ -563,7 +563,7 @@ msgstr "Menus"
 
 #: ../../include/text.php:2008
 msgid "Layouts"
-msgstr "Mises-en-page"
+msgstr "Mises en page"
 
 #: ../../include/text.php:2009
 msgid "Pages"
@@ -766,7 +766,7 @@ msgstr "Fermer"
 
 #: ../../include/activities.php:39
 msgid " and "
-msgstr "et"
+msgstr " et "
 
 #: ../../include/activities.php:47
 msgid "public profile"
@@ -780,12 +780,12 @@ msgstr "%1$s a changé %2$s en &ldquo;%3$s&rdquo;"
 #: ../../include/activities.php:53
 #, php-format
 msgid "Visit %1$s's %2$s"
-msgstr "Visiter %1$s de %2$s"
+msgstr "Visiter %1$s sur %2$s"
 
 #: ../../include/activities.php:56
 #, php-format
 msgid "%1$s has an updated %2$s, changing %3$s."
-msgstr "%1$s a mis-à-jour %2$s, modifiant %3$s."
+msgstr "%1$s a mis à jour %2$s, modifiant %3$s."
 
 #: ../../include/api.php:1036
 msgid "Public Timeline"
@@ -805,7 +805,7 @@ msgstr "Impossible de trouver le fichier à remplacer."
 
 #: ../../include/attach.php:370
 msgid "Cannot locate file to revise/update"
-msgstr "Impossible de trouver le fichier à corriger/mettre-à-jour"
+msgstr "Impossible de trouver le fichier à corriger/mettre à jour"
 
 #: ../../include/attach.php:381
 #, php-format
@@ -3567,7 +3567,7 @@ msgstr "Menu introuvable."
 
 #: ../../mod/mitem.php:47
 msgid "Menu element updated."
-msgstr "Entrée de menu mis-à-jour."
+msgstr "Entrée de menu mis à jour."
 
 #: ../../mod/mitem.php:51
 msgid "Unable to update menu element."
@@ -3716,7 +3716,7 @@ msgstr "Le mot de passe a été changé."
 
 #: ../../mod/settings.php:216
 msgid "Password update failed. Please try again."
-msgstr "La mise-à-jour du mot de passe a échoué. Merci de recommencer."
+msgstr "La mise à jour du mot de passe a échoué. Merci de recommencer."
 
 #: ../../mod/settings.php:230
 msgid "Not valid email."
@@ -5292,7 +5292,7 @@ msgstr "Supprimer le contact"
 
 #: ../../mod/connedit.php:549
 msgid "Last update:"
-msgstr "Dernière mise-à-jour&nbsp;:"
+msgstr "Dernière mise à jour&nbsp;:"
 
 #: ../../mod/connedit.php:551
 msgid "Update public posts"
@@ -5549,7 +5549,7 @@ msgstr "Impossible de trouver une version CLI de PHP dans le PATH du serveur web
 msgid ""
 "If you don't have a command line version of PHP installed on server, you "
 "will not be able to run background polling via cron."
-msgstr "En l'absence de version CLI de PHP sur votre serveur, vous ne pourrez pas utiliser la mise-à-jour en arrière-plan via cron."
+msgstr "En l'absence de version CLI de PHP sur votre serveur, vous ne pourrez pas utiliser la mise à jour en arrière-plan via cron."
 
 #: ../../mod/setup.php:392
 msgid "PHP executable path"
@@ -5802,7 +5802,7 @@ msgstr "<h1>Et maintenant</h1>"
 msgid ""
 "IMPORTANT: You will need to [manually] setup a scheduled task for the "
 "poller."
-msgstr "IMPORTANT&nbsp;: Vous devez créer [manuellement] une tâche planifiée pour les mises-à-jour."
+msgstr "IMPORTANT&nbsp;: Vous devez créer [manuellement] une tâche planifiée pour les mises à jour."
 
 #: ../../mod/editblock.php:8 ../../mod/editblock.php:27
 #: ../../mod/editblock.php:53 ../../mod/editlayout.php:36
@@ -6279,7 +6279,7 @@ msgstr "Impossible de créer la collection."
 
 #: ../../mod/group.php:54
 msgid "Collection updated."
-msgstr "Collection mise-à-jour."
+msgstr "Collection mise à jour."
 
 #: ../../mod/group.php:86
 msgid "Create a collection of channels."
@@ -6936,7 +6936,7 @@ msgstr "Niveau de journalisation"
 
 #: ../../mod/thing.php:98
 msgid "Thing updated"
-msgstr "Chose mise-à-jour"
+msgstr "Chose mise à jour"
 
 #: ../../mod/thing.php:158
 msgid "Object store: failed"
@@ -7997,12 +7997,12 @@ msgstr "Vous êtes plutôt \"bureau bien rangé\" ou \"gros foutoir\"?"
 #: ../../boot.php:1296
 #, php-format
 msgid "Update %s failed. See error logs."
-msgstr "La mise-à-jour %s a échoué. Merci de consulter les journaux d'erreur."
+msgstr "La mise à jour %s a échoué. Merci de consulter les journaux d'erreur."
 
 #: ../../boot.php:1299
 #, php-format
 msgid "Update Error at %s"
-msgstr "Erreur de mise-à-jour sur %s"
+msgstr "Erreur de mise à jour sur %s"
 
 #: ../../boot.php:1473
 msgid ""
