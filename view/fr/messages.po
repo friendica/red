@@ -305,11 +305,11 @@ msgstr "a sollicité"
 
 #: ../../include/text.php:899
 msgid "prod"
-msgstr "aiguillonner"
+msgstr "encourager"
 
 #: ../../include/text.php:899
 msgid "prodded"
-msgstr "a aiguillonné"
+msgstr "a encouragé"
 
 #: ../../include/text.php:900
 msgid "slap"
@@ -4122,7 +4122,7 @@ msgstr "Vous êtes étiqueté dans une publication"
 
 #: ../../mod/settings.php:994
 msgid "You are poked/prodded/etc. in a post"
-msgstr "Vous êtes cogné/pointé/etc. dans une publication"
+msgstr "Vous êtes cogné/encouragé/etc. dans une publication"
 
 #: ../../mod/settings.php:997
 msgid "Advanced Account/Page Type Settings"
@@ -4152,11 +4152,11 @@ msgstr "Supprimer ce canal"
 
 #: ../../mod/poke.php:159
 msgid "Poke/Prod"
-msgstr "Cogner/Solliciter"
+msgstr "Cogner/Encourager"
 
 #: ../../mod/poke.php:160
 msgid "poke, prod or do other things to somebody"
-msgstr "Cogner, pointer, et autres choses à faire à quelqu'un"
+msgstr "Cogner, encourager, et autres choses à faire à quelqu'un"
 
 #: ../../mod/poke.php:161
 msgid "Recipient"
