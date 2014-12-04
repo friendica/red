@@ -504,7 +504,7 @@ function connedit_content(&$a) {
 			$slider_tpl = get_markup_template('contact_slider.tpl');
 			$slide = replace_macros($slider_tpl,array(
 				'$me' => t('Me'),
-                '$min' => 1,
+				'$min' => 1,
 				'$val' => (($contact['abook_closeness']) ? $contact['abook_closeness'] : 99),
 				'$intimate' => t('Best Friends'),
 				'$friends' => t('Friends'),
