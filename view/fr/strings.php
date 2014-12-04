@@ -1141,7 +1141,7 @@ $a->strings["By default only the instance of the channel located on this hub wil
 $a->strings["Remove Channel"] = "Enlever le canal";
 $a->strings["No channel."] = "Pas de canal.";
 $a->strings["Common connections"] = "Relations communes";
-$a->strings["No connections in common."] = "Pas de relations en commun.";
+$a->strings["No connections in common."] = "Pas de relation en commun.";
 $a->strings["We encountered a problem while logging in with the OpenID you provided. Please check the correct spelling of the ID."] = "Nous avons rencontré un problème avec l'OpenID que vous nous avez fourni. Merci de vérifier que l'ID est bien saisi.";
 $a->strings["The error message was:"] = "Le message d'erreur était&nbsp;:";
 $a->strings["Authentication failed."] = "Échec de l'authentification.";
@@ -1703,7 +1703,7 @@ $a->strings["Action completed."] = "Action complétée.";
 $a->strings["Thank you."] = "Merci.";
 $a->strings["Remote privacy information not available."] = "Les informations de vie privée à distance ne sont pas disponibles.";
 $a->strings["Visible to:"] = "Visible par&nbsp;:";
-$a->strings["No connections."] = "Pas de relations.";
+$a->strings["No connections."] = "Pas de relation.";
 $a->strings["Visit %s's profile [%s]"] = "Visiter le profil de %s [%s]";
 $a->strings["View Connnections"] = "Voir les relations";
 $a->strings["No valid account found."] = "Aucun compte valide trouvé.";

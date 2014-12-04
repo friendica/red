@@ -4822,7 +4822,7 @@ msgstr "Relations communes"
 
 #: ../../mod/common.php:44
 msgid "No connections in common."
-msgstr "Pas de relations en commun."
+msgstr "Pas de relation en commun."
 
 #: ../../mod/rmagic.php:38
 msgid ""
@@ -7224,7 +7224,7 @@ msgstr "Visible par&nbsp;:"
 
 #: ../../mod/viewconnections.php:58
 msgid "No connections."
-msgstr "Pas de relations."
+msgstr "Pas de relation."
 
 #: ../../mod/viewconnections.php:71
 #, php-format
