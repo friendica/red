@@ -606,6 +606,7 @@ function widget_photo_albums($arr) {
 	$channelx = channelx_by_n($a->profile['profile_uid']);
 	if((! $channelx) || (! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_photos')))
 		return '';
+	require_once('include/photos.php');
 	return photos_album_widget($channelx,$a->get_observer());	
 
 }
