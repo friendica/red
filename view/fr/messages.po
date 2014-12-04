@@ -293,7 +293,7 @@ msgstr "cogne"
 
 #: ../../include/text.php:897 ../../include/conversation.php:243
 msgid "poked"
-msgstr "s'est fait cogner par"
+msgstr "a cogné"
 
 #: ../../include/text.php:898
 msgid "ping"
@@ -301,7 +301,7 @@ msgstr "solliciter"
 
 #: ../../include/text.php:898
 msgid "pinged"
-msgstr "sollicité"
+msgstr "a sollicité"
 
 #: ../../include/text.php:899
 msgid "prod"
@@ -309,15 +309,15 @@ msgstr "aiguillonner"
 
 #: ../../include/text.php:899
 msgid "prodded"
-msgstr "aiguillonné"
+msgstr "a aiguillonné"
 
 #: ../../include/text.php:900
 msgid "slap"
-msgstr "giffle"
+msgstr "gifler"
 
 #: ../../include/text.php:900
 msgid "slapped"
-msgstr "gifflé"
+msgstr "a giflé"
 
 #: ../../include/text.php:901
 msgid "finger"
@@ -325,15 +325,15 @@ msgstr "pointer"
 
 #: ../../include/text.php:901
 msgid "fingered"
-msgstr "pointé"
+msgstr "a pointé"
 
 #: ../../include/text.php:902
 msgid "rebuff"
-msgstr "rejetter"
+msgstr "rejeter"
 
 #: ../../include/text.php:902
 msgid "rebuffed"
-msgstr "rejetté"
+msgstr "a rejeté"
 
 #: ../../include/text.php:911
 msgid "happy"
@@ -357,7 +357,7 @@ msgstr "impertinent"
 
 #: ../../include/text.php:916
 msgid "angry"
-msgstr "colèrique"
+msgstr "colérique"
 
 #: ../../include/text.php:917
 msgid "stupified"
@@ -1490,7 +1490,7 @@ msgstr "Merci de visiter %s pour voir et/ou répondre sur cette conversation."
 #: ../../include/enotify.php:182
 #, php-format
 msgid "[Red:Notify] %s posted to your profile wall"
-msgstr "[Matrice Rouge:Notification] %s a publié sur votre profil"
+msgstr "[Red:Notification] %s a publié sur votre profil"
 
 #: ../../include/enotify.php:184
 #, php-format
@@ -1525,7 +1525,7 @@ msgstr "[Red:Notification] %1$s vous a cogné"
 #: ../../include/enotify.php:226
 #, php-format
 msgid "%1$s, %2$s poked you at %3$s"
-msgstr "%1$s, vous avez été cogné/pointé/sollicité par %2$s sur %3$s"
+msgstr "%1$s, %2$s vous a cogné sur %3$s
 
 #: ../../include/enotify.php:227
 #, php-format
@@ -1535,7 +1535,7 @@ msgstr "%1$s, %2$s [zrl=%2$s]vous a cogné[/zrl]."
 #: ../../include/enotify.php:243
 #, php-format
 msgid "[Red:Notify] %s tagged your post"
-msgstr "[Matrice Rouge:Notification] %s a étiqueté votre publication"
+msgstr "[Red:Notification] %s a étiqueté votre publication"
 
 #: ../../include/enotify.php:244
 #, php-format
@@ -1574,7 +1574,7 @@ msgstr "Merci de visiter %s avant d'approuver (ou non) cette demande de relation
 
 #: ../../include/enotify.php:272
 msgid "[Red:Notify] Friend suggestion received"
-msgstr "[Matrice Rouge:Notification] Nouvelle suggestion d'amitié"
+msgstr "[Red:Notification] Nouvelle suggestion d'amitié"
 
 #: ../../include/enotify.php:273
 #, php-format
@@ -3126,7 +3126,7 @@ msgstr "Indice pour la phrase de passe"
 
 #: ../../include/js_strings.php:16
 msgid "Notice: Permissions have changed but have not yet been submitted."
-msgstr "Note&nbsp;: Les permissions ont changées, mais n'ont pas encore été sauvées."
+msgstr "Note&nbsp;: Les permissions ont changé, mais n'ont pas encore été soumises."
 
 #: ../../include/js_strings.php:17
 msgid "close all"
