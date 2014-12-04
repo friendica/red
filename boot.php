@@ -75,7 +75,8 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://zotid.net', 
 	'https://redmatrix.nl', 
 	'https://red.zottel.red',
-	'https://red.pixelbits.de'
+	'https://red.pixelbits.de',
+	'https://whogotzot.com'
 );
 
 
