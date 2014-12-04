@@ -23,7 +23,7 @@ msgstr ""
 #: ../../include/dba/dba_driver.php:50
 #, php-format
 msgid "Cannot locate DNS info for database server '%s'"
-msgstr "Impossible de trouver les infos DNS du serveur de BD '%s'"
+msgstr "Impossible de trouver les infos DNS du serveur de base de données '%s'"
 
 #: ../../include/photo/photo_driver.php:653 ../../include/photos.php:51
 #: ../../mod/profile_photo.php:142 ../../mod/profile_photo.php:301
@@ -183,7 +183,7 @@ msgstr "Suggérer"
 
 #: ../../include/apps.php:145
 msgid "Random Channel"
-msgstr "Un Canal au Hasard"
+msgstr "Un canal au hasard"
 
 #: ../../include/apps.php:146
 msgid "Invite"
@@ -203,12 +203,12 @@ msgstr "Envoyer"
 
 #: ../../include/apps.php:150
 msgid "Profile Photo"
-msgstr "Photo du Profil"
+msgstr "Photo du profil"
 
 #: ../../include/apps.php:239 ../../mod/settings.php:79
 #: ../../mod/settings.php:543
 msgid "Update"
-msgstr "Mise-à-jour"
+msgstr "Mise à jour"
 
 #: ../../include/apps.php:239
 msgid "Install"
@@ -293,7 +293,7 @@ msgstr "cogne"
 
 #: ../../include/text.php:897 ../../include/conversation.php:243
 msgid "poked"
-msgstr "C'est fait cogner"
+msgstr "s'est fait cogner par"
 
 #: ../../include/text.php:898
 msgid "ping"
@@ -2408,7 +2408,7 @@ msgstr "Visible sur toute la Matrice."
 
 #: ../../include/items.php:965
 msgid "Visible to anybody authenticated."
-msgstr "Visible aux usagers authentifiés."
+msgstr "Visible aux utilisateurs authentifiés."
 
 #: ../../include/items.php:967
 #, php-format
@@ -3872,7 +3872,7 @@ msgstr "Thème mobile&nbsp;:"
 
 #: ../../mod/settings.php:760
 msgid "Enable user zoom on mobile devices"
-msgstr "Permettre à l'usager d'un mobile d'agrandir le contenu"
+msgstr "Permettre à l'utilisateur d'un mobile d'agrandir le contenu"
 
 #: ../../mod/settings.php:761
 msgid "Update browser every xx seconds"
@@ -4776,7 +4776,7 @@ msgstr "Merci de vous connecter."
 
 #: ../../mod/cloud.php:126
 msgid "Red Matrix - Guests: Username: {your email address}, Password: +++"
-msgstr "Matrice Rouge - Pour les invités: Usager = {votre courriel}, Mot de passe = +++"
+msgstr "Matrice Rouge - Pour les invités: Nom d'utilisateur = {votre courriel}, Mot de passe = +++"
 
 #: ../../mod/removeme.php:29
 msgid ""
@@ -7675,7 +7675,7 @@ msgstr "URL vers le serveur Friendica"
 
 #: ../../mod/frphotos.php:82
 msgid "Friendica Login Username"
-msgstr "Nom d'usager Friendica"
+msgstr "Nom d'utilisateur Friendica"
 
 #: ../../mod/frphotos.php:83
 msgid "Friendica Login Password"
