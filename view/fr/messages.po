@@ -3134,7 +3134,7 @@ msgstr "fermer tout"
 
 #: ../../include/js_strings.php:19
 msgid "timeago.prefixAgo"
-msgstr "timeago.prefixAgo"
+msgstr "Il y a"
 
 #: ../../include/js_strings.php:20
 msgid "timeago.prefixFromNow"
@@ -3142,7 +3142,7 @@ msgstr "timeago.prefixFromNow"
 
 #: ../../include/js_strings.php:21
 msgid "ago"
-msgstr "auparavant"
+msgstr " "
 
 #: ../../include/js_strings.php:22
 msgid "from now"
