@@ -100,8 +100,6 @@ function directory_content(&$a) {
 			$query .= '&pubforums=' . intval($pubforums);
 
 		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
-		if($pubforums)
-			$sort_order = 'normal';
 
 		if($sort_order)
 			$query .= '&order=' . urlencode($sort_order);
