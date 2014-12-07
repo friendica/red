@@ -58,13 +58,14 @@ function directory_content(&$a) {
 	$keywords = (($_GET['keywords']) ? $_GET['keywords'] : '');
 
 	// Suggest channels if no search terms or keywords are given
-	$suggest = ($search == '' && $keywords == '' && local_user());
+	$suggest = (local_user() && x($_REQUEST,'suggest')) ? $_REQUEST['suggest'] : '';
 
 	if($suggest) {
 		$r = suggestion_query(local_user(),get_observer_hash());
 
 		// Remember in which order the suggestions were
 		$addresses = array();
+		$index = 0;
 		foreach($r as $rr) {
 			$addresses[$rr['xchan_addr']] = $index++;
 		}
@@ -74,12 +75,13 @@ function directory_content(&$a) {
 		foreach(array_keys($addresses) as $address) {
 			$advanced .= "address=\"$address\" ";
 		}
+		// Remove last space in the advanced query
+		$advanced = rtrim($advanced);
 
 	}
 
 	$tpl = get_markup_template('directory_header.tpl');
 
-		
 	$dirmode = intval(get_config('system','directory_mode'));
 
 	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
