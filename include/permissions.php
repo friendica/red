@@ -1,6 +1,19 @@
-<?php /** @file */
+<?php
+/**
+ * @file incldue/permissions.php
+ *
+ * This file conntains functions to check and work with permissions.
+ */
 
-
+/**
+ * @brief Return an array with all available permissions.
+ *
+ * These are channel specific permissions.
+ * The list of available permissions can get manipulated by the <i>hook</i>
+ * <b>global_permissions</b>.
+ *
+ * @return array associative array containing all permissions
+ */
 function get_perms() {
 
 // thinking about making element[2] a bitmask instead of boolean so that we can provide a list of applicable selections
@@ -14,8 +27,8 @@ function get_perms() {
 		'view_profile'  => array('channel_r_profile', intval(PERMS_R_PROFILE), true, t('Can view my default channel profile'), ''),
 		'view_photos'   => array('channel_r_photos',  intval(PERMS_R_PHOTOS),  true, t('Can view my photo albums'), ''),
 		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true, t('Can view my connections'), ''),
-		'view_storage' => array('channel_r_storage',   intval(PERMS_R_STORAGE),   true, t('Can view my file storage'), ''),
-		'view_pages' => array('channel_r_pages',   intval(PERMS_R_PAGES),   true, t('Can view my webpages'), ''),
+		'view_storage'  => array('channel_r_storage', intval(PERMS_R_STORAGE), true, t('Can view my file storage'), ''),
+		'view_pages'    => array('channel_r_pages',   intval(PERMS_R_PAGES),   true, t('Can view my webpages'), ''),
 
 		// Write permissions
 		'send_stream'   => array('channel_w_stream',  intval(PERMS_W_STREAM),  false, t('Can send me their channel stream and posts'), ''),
@@ -23,19 +36,20 @@ function get_perms() {
 		'post_comments' => array('channel_w_comment', intval(PERMS_W_COMMENT), false, t('Can comment on or like my posts'), ''),
 		'post_mail'     => array('channel_w_mail',    intval(PERMS_W_MAIL),    false, t('Can send me private mail messages'), ''),
 		'post_photos'   => array('channel_w_photos',  intval(PERMS_W_PHOTOS),  false, t('Can post photos to my photo albums'), ''),
-		'post_like'   => array('channel_w_like',  intval(PERMS_W_LIKE),  false, t('Can like/dislike stuff'), t('Profiles and things other than posts/comments')),
+		'post_like'     => array('channel_w_like',    intval(PERMS_W_LIKE),    false, t('Can like/dislike stuff'), t('Profiles and things other than posts/comments')),
 
 		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false, t('Can forward to all my channel contacts via post @mentions'), t('Advanced - useful for creating group forum channels')),
 		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Can chat with me (when available)'), t('')),
-		'write_storage' => array('channel_w_storage',   intval(PERMS_W_STORAGE),   false, t('Can write to my file storage'), ''),
-		'write_pages' => array('channel_w_pages',   intval(PERMS_W_PAGES),   false, t('Can edit my webpages'), ''),
+		'write_storage' => array('channel_w_storage', intval(PERMS_W_STORAGE), false, t('Can write to my file storage'), ''),
+		'write_pages'   => array('channel_w_pages',   intval(PERMS_W_PAGES),   false, t('Can edit my webpages'), ''),
 
-		'republish' => array('channel_a_republish', intval(PERMS_A_REPUBLISH), false, t('Can source my public posts in derived channels'), t('Somewhat advanced - very useful in open communities')),
+		'republish'     => array('channel_a_republish', intval(PERMS_A_REPUBLISH), false, t('Can source my public posts in derived channels'), t('Somewhat advanced - very useful in open communities')),
 
-		'delegate'      => array('channel_a_delegate', intval(PERMS_A_DELEGATE),    false, t('Can administer my channel resources'), t('Extremely advanced. Leave this alone unless you know what you are doing')),
+		'delegate'      => array('channel_a_delegate', intval(PERMS_A_DELEGATE),   false, t('Can administer my channel resources'), t('Extremely advanced. Leave this alone unless you know what you are doing')),
 	);
 	$ret = array('global_permissions' => $global_perms);
-	call_hooks('global_permissions',$ret);
+	call_hooks('global_permissions', $ret);
+
 	return $ret['global_permissions'];
 }
 
@@ -43,13 +57,13 @@ function get_perms() {
 /**
  * get_all_perms($uid,$observer_xchan)
  *
- * @param $uid : The channel_id associated with the resource owner
- * @param $observer_xchan: The xchan_hash representing the observer
+ * @param int $uid The channel_id associated with the resource owner
+ * @param string $observer_xchan The xchan_hash representing the observer
+ * @param bool $internal_use (default true)
  *
- * @returns: array of all permissions, key is permission name, value is true or false
+ * @returns array of all permissions, key is permission name, value is true or false
  */
-
-function get_all_perms($uid,$observer_xchan,$internal_use = true) {
+function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 	$global_perms = get_perms();
 
@@ -85,7 +99,6 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 			continue;
 		}
 
-
 		// Next we're going to check for blocked or ignored contacts.
 		// These take priority over all other settings.
 
@@ -94,7 +107,7 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 				$ret[$perm_name] = true;
 				continue;
 			}
-			
+
 			if(! $abook_checked) {
 				$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash
 					where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d )>0 limit 1",
@@ -105,7 +118,7 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 				if(! $x) {
 					// not in address book, see if they've got an xchan
 					$y = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
-	            		dbesc($observer_xchan)
+						dbesc($observer_xchan)
 					);
 				}
 
@@ -113,7 +126,7 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 			}
 
 			// If they're blocked - they can't read or write
- 
+
 			if(($x) && ($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED)) {
 				$ret[$perm_name] = false;
 				continue;
@@ -130,7 +143,7 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 
 		// system is blocked to anybody who is not authenticated
 
-		if((! $observer_xchan) && intval(get_config('system','block_public'))) {
+		if((! $observer_xchan) && intval(get_config('system', 'block_public'))) {
 			$ret[$perm_name] = false;
 			continue;
 		}
@@ -177,14 +190,14 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 
 				$onsite_checked = true;
 			}
-	
+
 			if($c)
 				$ret[$perm_name] = true;
 			else
 				$ret[$perm_name] = false;
 
 			continue;
-		}	
+		}
 
 		// From here on we require that the observer be a connection and
 		// handle whether we're allowing any, approved or specific ones
@@ -226,7 +239,6 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 
 		$ret[$perm_name] = false;
 		continue;
-
 	}
 
 	$arr = array(
@@ -235,11 +247,23 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 		'permissions'   => $ret);
 
 	call_hooks('get_all_perms',$arr);
+
 	return $arr['permissions'];
 }
 
-
-function perm_is_allowed($uid,$observer_xchan,$permission) {
+/**
+ * @brief Checks if given permission is allowed for given observer on a channel.
+ *
+ * Checks if the given observer with the hash $observer_xchan has permission
+ * $permission on channel_id $uid.
+ * $permission is one defined in get_perms();
+ *
+ * @param int $uid The channel_id associated with the resource owner
+ * @param string $observer_xchan The xchan_hash representing the observer
+ * @param string $permission
+ * @return bool true if permission is allowed for observer on channel
+ */
+function perm_is_allowed($uid, $observer_xchan, $permission) {
 
 	$arr = array(
 		'channel_id'    => $uid,
@@ -247,7 +271,7 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 		'permission'    => $permission,
 		'result'        => false);
 
-	call_hooks('perm_is_allowed',$arr);
+	call_hooks('perm_is_allowed', $arr);
 	if($arr['result'])
 		return true;
 
@@ -279,21 +303,21 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
  
 		if(($x) && ($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED))
 			return false;
-		
+
 		if(($x) && (! $global_perms[$permission][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED))
 			return false;
 
 		if(! $x) {
 			// not in address book, see if they've got an xchan
 			$y = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
-	            dbesc($observer_xchan)
+				dbesc($observer_xchan)
 			);
 		}
 	}
 
 	// system is blocked to anybody who is not authenticated
 
-	if((! $observer_xchan) && intval(get_config('system','block_public')))
+	if((! $observer_xchan) && intval(get_config('system', 'block_public')))
 		return false;
 
 	// Check if this $uid is actually the $observer_xchan
@@ -301,7 +325,6 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 	if($r[0]['channel_hash'] === $observer_xchan)
 		return true;
 
-	
 	if($r[0][$channel_perm] & PERMS_PUBLIC)
 		return true;
 
@@ -326,6 +349,7 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 		);
 		if($c)
 			return true;
+
 		return false;
 	}
 
@@ -361,24 +385,31 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 
 	// No permissions allowed.
 
-	return false;		
+	return false;
 }
 
 
 // Check a simple array of observers against a permissions
 // return a simple array of those with permission
 
-function check_list_permissions($uid,$arr,$perm) {
+function check_list_permissions($uid, $arr, $perm) {
 	$result = array();
 	if($arr)
 		foreach($arr as $x)
-			if(perm_is_allowed($uid,$x,$perm))
+			if(perm_is_allowed($uid, $x, $perm))
 				$result[] = $x;
+
 	return($result);
 }
 
-
+/**
+ * @brief Sets site wide default permissions.
+ *
+ * @return array
+ */
 function site_default_perms() {
+
+	$ret = array();
 
 	$typical = array(
 		'view_stream'   => PERMS_PUBLIC,
@@ -401,14 +432,14 @@ function site_default_perms() {
 	);
 
 	$global_perms = get_perms();
-	$ret = array();
 
 	foreach($global_perms as $perm => $v) {
-		$x = get_config('default_perms',$perm);
+		$x = get_config('default_perms', $perm);
 		if($x === false)
 			$x = $typical[$perm];
 		$ret[$perm] = $x;
 	}
+
 	return $ret;
 }
 
@@ -449,7 +480,7 @@ function get_role_perms($role) {
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
 			$ret['channel_r_stream']    = PERMS_PUBLIC;
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
-			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_photos']    = PERMS_PUBLIC;
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
 			$ret['channel_w_stream']    = PERMS_CONTACTS;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
@@ -465,9 +496,8 @@ function get_role_perms($role) {
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_NETWORK;
-			
-			break;
 
+			break;
 
 		case 'social_restricted':
 			$ret['perms_auto'] = false;
@@ -482,7 +512,7 @@ function get_role_perms($role) {
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
 			$ret['channel_r_stream']    = PERMS_PUBLIC;
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
-			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_photos']    = PERMS_PUBLIC;
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
 			$ret['channel_w_stream']    = PERMS_CONTACTS;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
@@ -498,9 +528,8 @@ function get_role_perms($role) {
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_CONTACTS;
-			
-			break;
 
+			break;
 
 		case 'social_private':
 			$ret['perms_auto'] = false;
@@ -515,7 +544,7 @@ function get_role_perms($role) {
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
 			$ret['channel_r_stream']    = PERMS_PUBLIC;
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
-			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_photos']    = PERMS_PUBLIC;
 			$ret['channel_r_abook']     = PERMS_CONTACTS;
 			$ret['channel_w_stream']    = PERMS_CONTACTS;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
@@ -531,7 +560,7 @@ function get_role_perms($role) {
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_CONTACTS;
-			
+
 			break;
 
 		case 'forum':
@@ -547,7 +576,7 @@ function get_role_perms($role) {
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE|PERMS_W_TAGWALL;
 			$ret['channel_r_stream']    = PERMS_PUBLIC;
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
-			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_photos']    = PERMS_PUBLIC;
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
 			$ret['channel_w_stream']    = 0;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
@@ -563,7 +592,7 @@ function get_role_perms($role) {
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_NETWORK;
-			
+
 			break;
 
 		case 'forum_restricted':
@@ -579,7 +608,7 @@ function get_role_perms($role) {
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE|PERMS_W_TAGWALL;
 			$ret['channel_r_stream']    = PERMS_PUBLIC;
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
-			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_photos']    = PERMS_PUBLIC;
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
 			$ret['channel_w_stream']    = 0;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
@@ -595,9 +624,8 @@ function get_role_perms($role) {
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_CONTACTS;
-			
-			break;
 
+			break;
 
 		case 'forum_private':
 			$ret['perms_auto'] = false;
@@ -612,7 +640,7 @@ function get_role_perms($role) {
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
 			$ret['channel_r_stream']    = PERMS_PUBLIC;
 			$ret['channel_r_profile']   = PERMS_CONTACTS;
-			$ret['channel_r_photos']    = PERMS_CONTACTS; 			
+			$ret['channel_r_photos']    = PERMS_CONTACTS;
 			$ret['channel_r_abook']     = PERMS_CONTACTS;
 			$ret['channel_w_stream']    = 0;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
@@ -628,7 +656,7 @@ function get_role_perms($role) {
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_CONTACTS;
-			
+
 			break;
 
 		case 'feed':
@@ -644,7 +672,7 @@ function get_role_perms($role) {
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
 			$ret['channel_r_stream']    = PERMS_PUBLIC;
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
-			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_photos']    = PERMS_PUBLIC;
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
 			$ret['channel_w_stream']    = PERMS_CONTACTS;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
@@ -660,11 +688,10 @@ function get_role_perms($role) {
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_NETWORK;
 			$ret['channel_w_like']      = PERMS_NETWORK;
-			
+
 			break;
 
 		case 'feed_restricted':
-
 			$ret['perms_auto'] = false;
 			$ret['default_collection'] = true;
 			$ret['directory_publish'] = false;
@@ -677,7 +704,7 @@ function get_role_perms($role) {
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
 			$ret['channel_r_stream']    = PERMS_PUBLIC;
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
-			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_photos']    = PERMS_PUBLIC;
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
 			$ret['channel_w_stream']    = PERMS_CONTACTS;
 			$ret['channel_w_wall']      = PERMS_CONTACTS;
@@ -693,7 +720,7 @@ function get_role_perms($role) {
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_NETWORK;
-			
+
 			break;
 
 		case 'soapbox':
@@ -707,7 +734,7 @@ function get_role_perms($role) {
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE;
 			$ret['channel_r_stream']    = PERMS_PUBLIC;
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
-			$ret['channel_r_photos']    = PERMS_PUBLIC; 			
+			$ret['channel_r_photos']    = PERMS_PUBLIC;
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
 			$ret['channel_w_stream']    = 0;
 			$ret['channel_w_wall']      = 0;
@@ -723,7 +750,7 @@ function get_role_perms($role) {
 			$ret['channel_w_pages']     = 0;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_NETWORK;
-			
+
 			break;
 
 		case 'repository':
@@ -755,14 +782,11 @@ function get_role_perms($role) {
 			$ret['channel_w_pages']     = PERMS_CONTACTS;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_NETWORK;
-			
+
 			break;
-
-
 
 		default:
 			break;
-	
 	}
 
 	$x = get_config('system','role_perms');
@@ -775,7 +799,12 @@ function get_role_perms($role) {
 	return $ret;
 }
 
-
+/**
+ * @brief Creates a HTML select field with all available roles.
+ *
+ * @param string $current The current role
+ * @return string Returns the complete HTML code for this privacy-role-select field.
+ */
 function role_selector($current) {
 
 	if(! $current)
@@ -792,16 +821,17 @@ function role_selector($current) {
 			array('soapbox' => t('Celebrity/Soapbox'), 'repository' => t('Group Repository'))),
 		'other' => array( t('Other'),
 			array('custom' => t('Custom/Expert Mode'))));
+
 	$o = '<select name="permissions_role" id="privacy-role-select">';
 	foreach($roles as $k => $v) {
-		$o .= '<optgroup label="'. htmlspecialchars($v[0]) . '" >';
+		$o .= '<optgroup label="'. htmlspecialchars($v[0]) . '">';
 		foreach($v[1] as $kk => $vv) {
-			$selected = (($kk === $current)	? ' selected="selected" ' : '');
-			$o .= '<option value="' . $kk . '" ' . $selected . '>' . htmlspecialchars($vv) . '</option>';
+			$selected = (($kk === $current) ? ' selected="selected"' : '');
+			$o .= '<option value="' . $kk . '"' . $selected . '>' . htmlspecialchars($vv) . '</option>';
 		}
 		$o .= '</optgroup>';
 	}
 	$o .= '</select>';
-	return $o;
-}	
 
+	return $o;
+}

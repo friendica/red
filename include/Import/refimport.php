@@ -13,8 +13,6 @@ require_once('include/hubloc.php');
 // with a browser until all the posts had been imported.     
 
 
-
-
 define('REDMATRIX_IMPORTCHANNEL','mike');
 define('REFLECT_EXPORTUSERNAME','mike');
 define('REFLECT_BLOGNAME','Diary and Other Rantings');
