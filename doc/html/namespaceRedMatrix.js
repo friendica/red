@@ -1,4 +1,4 @@
-var namespaceRedMatrix =
+var namespaceRedmatrix =
 [
-    [ "RedDAV", "namespaceRedMatrix_1_1RedDAV.html", "namespaceRedMatrix_1_1RedDAV" ]
+    [ "Import", "namespaceRedmatrix_1_1Import.html", "namespaceRedmatrix_1_1Import" ]
 ];
