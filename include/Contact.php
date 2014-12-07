@@ -336,7 +336,7 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 	}
 	
 	//remove from file system
-   $r = q("select channel_address from channel where channel_id = %d",
+   $r = q("select channel_address from channel where channel_id = %d limit 1",
 			intval($channel_id)
 		);
 		if($r)
