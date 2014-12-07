@@ -2087,3 +2087,259 @@ function extra_query_args() {
 	}
 	return $s;
 }
+
+/**
+ * This function removes the tag $tag from the text $body and replaces it with 
+ * the appropiate link. 
+ * 
+ * @param unknown_type $body the text to replace the tag in
+ * @param unknown_type $access_tag  - used to return tag ACL exclusions e.g. @!foo
+ * @param unknown_type $str_tags string to add the tag to
+ * @param unknown_type $profile_uid
+ * @param unknown_type $tag the tag to replace
+ *
+ * @return boolean true if replaced, false if not replaced
+ */
+function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
+
+	$replaced = false;
+	$r = null;
+
+
+	$termtype = ((strpos($tag,'#') === 0)   ? TERM_HASHTAG : TERM_UNKNOWN);
+	$termtype = ((strpos($tag,'@') === 0)   ? TERM_MENTION : $termtype);
+	$termtype = ((strpos($tag,'#^[') === 0) ? TERM_BOOKMARK : $termtype);
+	
+
+	//is it a hash tag? 
+	if(strpos($tag,'#') === 0) {
+		if(strpos($tag,'#^[') === 0) {
+			if(preg_match('/#\^\[(url|zrl)(.*?)\](.*?)\[\/(url|zrl)\]/',$tag,$match)) {
+				$basetag = $match[3];
+				$url = ((substr($match[2],0,1) === '=') ? substr($match[2],1) : $match[3]);
+				$replaced = true;
+
+			}
+		}
+		// if the tag is already replaced...
+		elseif((strpos($tag,'[zrl=')) || (strpos($tag,'[url='))) {
+			//...do nothing
+			return $replaced;
+		}
+		if($tag == '#getzot') {
+			$basetag = 'getzot'; 
+			$url = 'https://redmatrix.me';
+			$newtag = '#[zrl=' . $url . ']' . $basetag . '[/zrl]';
+			$body = str_replace($tag,$newtag,$body);
+			$replaced = true;
+		}
+		if(! $replaced) {
+
+			//base tag has the tags name only
+
+			if((substr($tag,0,7) === '#&quot;') && (substr($tag,-6,6) === '&quot;')) {
+				$basetag = substr($tag,7);
+				$basetag = substr($basetag,0,-6);
+			}
+			else
+				$basetag = str_replace('_',' ',substr($tag,1));
+
+			//create text for link
+			$url = $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag);
+			$newtag = '#[zrl=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/zrl]';
+			//replace tag by the link
+			$body = str_replace($tag, $newtag, $body);
+			$replaced = true;
+		}
+		//is the link already in str_tags?
+		if(! stristr($str_tags,$newtag)) {
+			//append or set str_tags
+			if(strlen($str_tags))
+				$str_tags .= ',';
+			$str_tags .= $newtag;
+		}
+		return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $basetag, 'url' => $url, 'contact' => $r[0]);	
+	}
+
+	//is it a person tag? 
+
+	if(strpos($tag,'@') === 0) {
+
+		// The @! tag will alter permissions
+		$exclusive = ((strpos($tag,'!') === 1) ? true : false);
+
+		//is it already replaced? 
+		if(strpos($tag,'[zrl='))
+			return $replaced;
+
+		//get the person's name
+
+		$name = substr($tag,(($exclusive) ? 2 : 1)); // The name or name fragment we are going to replace
+		$newname = $name; // a copy that we can mess with 
+		$tagcid = 0;
+
+		$r = null;
+
+		// is it some generated name?
+
+		$forum = false;
+		$trailing_plus_name = false;
+
+		// @channel+ is a forum or network delivery tag
+
+		if(substr($newname,-1,1) === '+') {
+			$forum = true;
+			$newname = substr($newname,0,-1);
+		}
+
+		// Here we're looking for an address book entry as provided by the auto-completer
+		// of the form something+nnn where nnn is an abook_id or the first chars of xchan_hash
+
+		if(strrpos($newname,'+')) {
+			//get the id
+
+			if(strrpos($tagcid,' '))
+				$tagcid = substr($tagcid,0,strrpos($tagcid,' '));
+			
+			$tagcid = substr($newname,strrpos($newname,'+') + 1);
+
+			if(strlen($tagcid) < 16)
+				$abook_id = intval($tagcid);
+			//remove the next word from tag's name
+			if(strpos($name,' ')) {
+				$name = substr($name,0,strpos($name,' '));
+			}
+
+			if($abook_id) { // if there was an id
+				// select channel with that id from the logged in user's address book
+				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash 
+					WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
+						intval($abook_id),
+						intval($profile_uid)
+				);
+			}
+			else {
+				$r = q("SELECT * FROM xchan 
+					WHERE xchan_hash like '%s%%' LIMIT 1",
+						dbesc($tagcid)
+				);
+			}
+		}
+
+		if(! $r) {
+
+			// look for matching names in the address book
+
+			// Two ways to deal with spaces - double quote the name or use underscores
+			// we see this after input filtering so quotes have been html entity encoded
+
+			if((substr($name,0,6) === '&quot;') && (substr($name,-6,6) === '&quot;')) {
+				$newname = substr($name,6);
+				$newname = substr($newname,0,-6);
+			}
+			else
+				$newname = str_replace('_',' ',$name);
+
+			// do this bit over since we started over with $name
+
+			if(substr($newname,-1,1) === '+') {
+				$forum = true;
+				$newname = substr($newname,0,-1);
+			}
+
+			//select someone from this user's contacts by name
+			$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
+				WHERE xchan_name = '%s' AND abook_channel = %d LIMIT 1",
+					dbesc($newname),
+					intval($profile_uid)
+			);
+
+			if(! $r) {
+				//select someone by attag or nick and the name passed in
+				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
+					WHERE xchan_addr like ('%s') AND abook_channel = %d LIMIT 1",
+						dbesc(((strpos($newname,'@')) ? $newname : $newname . '@%')),
+						intval($profile_uid)
+				);
+			}
+
+			if(! $r) {
+
+				// it's possible somebody has a name ending with '+', which we stripped off as a forum indicator
+				// This is very rare but we want to get it right.
+
+				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
+					WHERE xchan_name = '%s' AND abook_channel = %d LIMIT 1",
+						dbesc($newname . '+'),
+						intval($profile_uid)
+				);
+				if($r)
+					$trailing_plus_name = true;
+			}
+		}
+
+		// $r is set if we found something
+
+		$channel = get_app()->get_channel();
+
+		if($r) {
+			$profile = $r[0]['xchan_url'];
+			$newname = $r[0]['xchan_name'];
+			// add the channel's xchan_hash to $access_tag if exclusive
+			if($exclusive) {
+				$access_tag .= 'cid:' . $r[0]['xchan_hash'];
+			}
+		}
+		else {
+			// check for a group/collection exclusion tag			
+
+			// note that we aren't setting $replaced even though we're replacing text.
+			// This tag isn't going to get a term attached to it. It's only used for
+			// access control. The link points to out own channel just so it doesn't look
+			// weird - as all the other tags are linked to something. 
+
+			if(local_user() && local_user() == $profile_uid) {
+				require_once('include/group.php');
+				$grp = group_byname($profile_uid,$name);
+
+				if($grp) {
+					$g = q("select hash from groups where id = %d and visible = 1 limit 1",
+						intval($grp)
+					);
+					if($g && $exclusive) {
+						$access_tag .= 'gid:' . $g[0]['hash'];
+					}
+					$channel = get_app()->get_channel();
+					if($channel) {
+						$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . z_root() . '/channel/' . $channel['channel_address'] . ']' . $newname . '[/zrl]';
+						$body = str_replace('@' . (($exclusive) ? '!' : '') . $name, $newtag, $body);
+					}
+				}		
+			}
+		}
+
+		if(($exclusive) && (! $access_tag)) {
+			$access_tag .= 'cid:' . $channel['channel_hash'];
+		}			
+
+		// if there is an url for this channel
+
+		if(isset($profile)) {
+			$replaced = true;
+			//create profile link
+			$profile = str_replace(',','%2c',$profile);
+			$url = $profile;
+			$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . $profile . ']' . $newname	. (($forum &&  ! $trailing_plus_name) ? '+' : '') . '[/zrl]';
+			$body = str_replace('@' . (($exclusive) ? '!' : '') . $name, $newtag, $body);
+			//append tag to str_tags
+			if(! stristr($str_tags,$newtag)) {
+				if(strlen($str_tags))
+					$str_tags .= ',';
+				$str_tags .= $newtag;
+			}
+		}
+	}
+
+
+	return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $newname, 'url' => $url, 'contact' => $r[0]);
+}
