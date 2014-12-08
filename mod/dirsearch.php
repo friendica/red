@@ -64,7 +64,7 @@ function dirsearch_content(&$a) {
 	$agege    = ((x($_REQUEST,'agege'))    ? intval($_REQUEST['agege']) : 0 );
 	$agele    = ((x($_REQUEST,'agele'))    ? intval($_REQUEST['agele']) : 0 );
 	$kw       = ((x($_REQUEST,'kw'))       ? intval($_REQUEST['kw'])    : 0 );
-	$forums   = ((array_key_exists('pubforums',$_REQUEST)) ? intval($_REQUEST['pubforums']) : null);
+	$forums   = ((array_key_exists('pubforums',$_REQUEST)) ? intval($_REQUEST['pubforums']) : 0);
 
 
 
@@ -111,7 +111,7 @@ function dirsearch_content(&$a) {
 	if($keywords)
 		$sql_extra .= dir_query_build($joiner,'xprof_keywords',$keywords);
 
-	if(! is_null($forums))
+	if($forums)
 		$sql_extra .= dir_flag_build($joiner,'xprof_flags',XCHAN_FLAGS_PUBFORUM, $forums);
 
 
@@ -183,6 +183,8 @@ function dirsearch_content(&$a) {
 		$order = " order by xchan_name asc ";
 	elseif($sort_order == 'reverse')
 		$order = " order by xchan_name desc ";
+	elseif($sort_order == 'reversedate')
+		$order = " order by xchan_name_date asc ";
 	else	
 		$order = " order by xchan_name_date desc ";
 
