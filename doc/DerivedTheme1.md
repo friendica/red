@@ -74,5 +74,4 @@ Now create the actual CSS file for your theme.  Put it in view/theme/mytheme/css
 
 You've just successfully created a derived theme. This needs to be enabled in the admin "themes" panel, and then anybody on the site can use it by selecting it in Settings->Display Settings as their default theme.  
 
-
- 
+#include doc/macros/main_footer.bb;

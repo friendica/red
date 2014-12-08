@@ -166,4 +166,4 @@ Please note that pasting this example into a layout page is not likely to do any
 
 	[/region]
 
-
+#include doc/macros/main_footer.bb;

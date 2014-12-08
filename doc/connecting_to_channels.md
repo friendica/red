@@ -31,3 +31,4 @@ Here's their meaning:
 
 Some channels are designated "Premium Channels" and **may** require some action on your part before a connection can be established. The Connect button will for these channels will take you to a page which lists in detail what terms the channel owner has set. If the terms are accepted, the connection will then proceed normally. In some cases, such as with celebrities and world-reknowned publishers, this **may** involve payment. If you do not agree to the terms, the connection will not proceed, or it may proceed but with reduced permissions allowed on your interactions with that channel. 
 
+#include doc/macros/main_footer.bb;

@@ -49,4 +49,3 @@ Shorthand test to see if variable $var is set and is not empty. Tests vary by ty
 If variable is set, returns 1 if has 'non-zero' value, otherwise returns 0. -- e.g. x('') or x(0) returns 0;
 
 #include doc/macros/main_footer.bb;
-
