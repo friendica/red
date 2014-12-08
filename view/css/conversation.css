@@ -263,3 +263,7 @@ a.wall-item-name-link {
 	color: #FF0000;
 	font-size: 1.5em !important;
 }
+
+.jot-share-group {
+	margin-right: 8px;
+}

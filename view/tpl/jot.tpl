@@ -36,8 +36,9 @@
 			<textarea class="profile-jot-text" id="profile-jot-text" name="body" placeholder="{{$share}}">{{$content}}</textarea>
 		</div>
 		<div id="profile-jot-submit-wrapper" class="jothidden">
-			<div id="profile-jot-submit-left" class="btn-group pull-left">
+			<div id="profile-jot-submit-left" class="pull-left">
 				{{if $visitor}}
+				<span class='btn-group jot-share-group'>
 				<button id="wall-image-upload" class="btn btn-default btn-sm" title="{{$upload}}" >
 					<i class="icon-camera jot-icons"></i>
 				</button>
@@ -53,6 +54,8 @@
 				<button id="profile-audio-wrapper" class="btn btn-default btn-sm" title="{{$audio}}" onclick="jotAudioURL();return false;">
 					<i id="profile-audio" class="icon-volume-up jot-icons"></i>
 				</button>
+				</span>
+				<span class='btn-group'>
 				<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" style="display: none;" title="{{$noloc}}" onclick="jotClearLocation();return false;">
 					<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
 				</button>
@@ -70,6 +73,7 @@
 					<i id="profile-encrypt" class="icon-key jot-icons"></i>
 				</button>
 				{{/if}}
+</span>
 			</div>
 			<div id="profile-rotator-wrapper">
 				<div id="profile-rotator"></div>
