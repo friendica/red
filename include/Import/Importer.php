@@ -1,25 +1,27 @@
 <?php /** @file */
 
-namespace Redmatrix\Import;
+namespace RedMatrix\Import;
 
-
+/**
+ * @brief Class Import
+ *
+ * @package RedMatrix\Import
+ */
 class Import {
 
-	$credentials = null;
-	$itemlist    = null;
-	$src_items   = null;
+	private $credentials = null;
 
-	$items       = null;
+	protected $itemlist    = null;
+	protected $src_items   = null;
+	protected $items       = null;
 
 	function get_credentials() {
-
+		return $this->credentials;
 	}
 
 	function get_itemlist() {
-
-
+		return $this->itemlist;
 	}
-
 
 	function get_item_ident($item) {
 
@@ -43,19 +45,17 @@ class Import {
 
 	function convert_taxonomy($item_ident) {
 
-
 	}
 
 	function convert_child($child) {
 
 	}
 
-	function store($item,$update = false) {
+	function store($item, $update = false) {
 
 	}
 
 	function run() {
-
 		$this->credentials = $this->get_credentials();
 		$this->itemlist = $this->get_itemlist();
 		if($this->itemlist) {
@@ -77,18 +77,6 @@ class Import {
 				}
 				$cnt ++;
 			}
-
-
-
-
 		}
-
-
-
-
-
-
 	}
-
-
 }
