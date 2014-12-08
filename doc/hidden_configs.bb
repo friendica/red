@@ -102,6 +102,10 @@ This document assumes you're an administrator.
         Tell the red statistics servers to completely hide this hub in hub lists.
     [b]system > reserved_channels[/b]
         Don't allow members to register channels with this comma separated list of names (no spaces)
-	
+    [b]system > default_features[/b]
+	Array of default features for new channels. List of features in include/features.php
+
+[b]Setting array pconfigs[/b]
+[code]# util/config system default_features `php -r 'echo serialize(array("edit_posts","preview","nav_channel_select"));'`[/code]
 #include doc/macros/main_footer.bb;
 
