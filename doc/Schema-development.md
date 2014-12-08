@@ -74,3 +74,5 @@ theme are as follows:
 * reply_photo
 * sloppy_photos
 	Determins whether photos are "sloppy" or aligned.  Set or unset (1 or '')		
+
+#include doc/macros/main_footer.bb;

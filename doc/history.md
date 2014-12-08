@@ -46,5 +46,4 @@ Over time a few federation components re-emerged. The ability to view RSS feeds 
 
 That brings us up to the present. Where will RedMatrix go from here? I don't know. That's up to you. 
 
-
-            
+#include doc/macros/main_footer.bb;

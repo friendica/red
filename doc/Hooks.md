@@ -134,4 +134,3 @@ Hooks - Complete List
 * $a->module . '_pre_' . $selname
 
 #include doc/macros/main_footer.bb;
-

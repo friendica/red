@@ -99,3 +99,4 @@ Some/many of these widgets have restrictions which may restrict the type of page
     * channel_id - if not your own
 <br />&nbsp;<br />
 
+#include doc/macros/main_footer.bb;

@@ -89,3 +89,5 @@ and this would place a profile widget into the "foo" region you created.
 Use the CSS file to position the region on the page where desired and optionally control its size.
 
 [To be continued] 
+
+#include doc/macros/main_footer.bb;
