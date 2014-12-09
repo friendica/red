@@ -60,7 +60,7 @@
 						<i id="profile-location" class="icon-globe jot-icons"></i>
 					</button>
 					{{if $noloc}}
-					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" style="display: none;" title="{{$noloc}}" onclick="jotClearLocation();return false;">
+					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$noloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
 						<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
 					</button>
 					{{/if}}
