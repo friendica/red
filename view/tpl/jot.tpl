@@ -56,12 +56,14 @@
 					</button>
 				</div>
 				<div class='btn-group'>
-					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" style="display: none;" title="{{$noloc}}" onclick="jotClearLocation();return false;">
-						<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
-					</button>
 					<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
 						<i id="profile-location" class="icon-globe jot-icons"></i>
 					</button>
+					{{if $noloc}}
+					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" style="display: none;" title="{{$noloc}}" onclick="jotClearLocation();return false;">
+						<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
+					</button>
+					{{/if}}
 				{{else}}
 				<div class='btn-group'>
 				{{/if}}
