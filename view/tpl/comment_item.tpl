@@ -21,35 +21,41 @@
 				{{/if}}
 				<div class="clear"></div>
 				<div id="comment-tools-{{$id}}" class="comment-tools">
-					<div id="comment-edit-bb-{{$id}}" class="btn-group pull-left">
-						<button class="btn btn-default btn-xs" title="{{$edbold}}" onclick="insertbbcomment('{{$comment}}','b', {{$id}}); return false;">
-							<i class="icon-bold comment-icon"></i>
-						</button>
-						<button class="btn btn-default btn-xs" title="{{$editalic}}" onclick="insertbbcomment('{{$comment}}','i', {{$id}}); return false;">
-							<i class="icon-italic comment-icon"></i>
-						</button>
-						<button class="btn btn-default btn-xs" title="{{$eduline}}" onclick="insertbbcomment('{{$comment}}','u', {{$id}}); return false;">
-							<i class="icon-underline comment-icon"></i>
-						</button>
-						<button class="btn btn-default btn-xs" title="{{$edquote}}" onclick="insertbbcomment('{{$comment}}','quote', {{$id}}); return false;">
-							<i class="icon-quote-left comment-icon"></i>
-						</button>
-						<button class="btn btn-default btn-xs" title="{{$edcode}}" onclick="insertbbcomment('{{$comment}}','code', {{$id}}); return false;">
-							<i class="icon-terminal comment-icon"></i>
-						</button>
-						<button class="btn btn-default btn-xs" title="{{$edimg}}" onclick="insertbbcomment('{{$comment}}','img', {{$id}}); return false;">
-							<i class="icon-camera comment-icon"></i>
-						</button>
-						<button class="btn btn-default btn-xs" title="{{$edurl}}" onclick="insertbbcomment('{{$comment}}','url', {{$id}}); return false;">
-							<i class="icon-link comment-icon"></i>
-						</button>
-						<button class="btn btn-default btn-xs" title="{{$edvideo}}" onclick="insertbbcomment('{{$comment}}','video', {{$id}}); return false;">
-							<i class="icon-facetime-video comment-icon"></i>
-						</button>
+					<div id="comment-edit-bb-{{$id}}" class="btn-toolbar pull-left">
+						<div class='btn-group'>
+							<button class="btn btn-default btn-xs" title="{{$edbold}}" onclick="insertbbcomment('{{$comment}}','b', {{$id}}); return false;">
+								<i class="icon-bold comment-icon"></i>
+							</button>
+							<button class="btn btn-default btn-xs" title="{{$editalic}}" onclick="insertbbcomment('{{$comment}}','i', {{$id}}); return false;">
+								<i class="icon-italic comment-icon"></i>
+							</button>
+							<button class="btn btn-default btn-xs" title="{{$eduline}}" onclick="insertbbcomment('{{$comment}}','u', {{$id}}); return false;">
+								<i class="icon-underline comment-icon"></i>
+							</button>
+							<button class="btn btn-default btn-xs" title="{{$edquote}}" onclick="insertbbcomment('{{$comment}}','quote', {{$id}}); return false;">
+								<i class="icon-quote-left comment-icon"></i>
+							</button>
+							<button class="btn btn-default btn-xs" title="{{$edcode}}" onclick="insertbbcomment('{{$comment}}','code', {{$id}}); return false;">
+								<i class="icon-terminal comment-icon"></i>
+							</button>
+						</div>
+						<div class='btn-group'>
+							<button class="btn btn-default btn-xs" title="{{$edimg}}" onclick="insertbbcomment('{{$comment}}','img', {{$id}}); return false;">
+								<i class="icon-camera comment-icon"></i>
+							</button>
+							<button class="btn btn-default btn-xs" title="{{$edurl}}" onclick="insertbbcomment('{{$comment}}','url', {{$id}}); return false;">
+								<i class="icon-link comment-icon"></i>
+							</button>
+							<button class="btn btn-default btn-xs" title="{{$edvideo}}" onclick="insertbbcomment('{{$comment}}','video', {{$id}}); return false;">
+								<i class="icon-facetime-video comment-icon"></i>
+							</button>
+						</div>
 						{{if $feature_encrypt}}
-						<button class="btn btn-default btn-xs" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#comment-edit-text-' + '{{$id}}',''); return false;">
-							<i class="icon-key comment-icon"></i>
-						</button>
+						<div class='btn-group'>
+							<button class="btn btn-default btn-xs" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#comment-edit-text-' + '{{$id}}',''); return false;">
+								<i class="icon-key comment-icon"></i>
+							</button>
+						</div>
 						{{/if}}
 					</div>
 					<div class="btn-group pull-right" id="comment-edit-submit-wrapper-{{$id}}">
