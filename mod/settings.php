@@ -161,7 +161,7 @@ function settings_post(&$a) {
 
 
 		if ($mobile_theme == "---") 
-			del_pconfig(local_user(),'system',mobile_theme);
+			del_pconfig(local_user(),'system','mobile_theme');
 		else {
 			set_pconfig(local_user(),'system','mobile_theme',$mobile_theme);
 		}
