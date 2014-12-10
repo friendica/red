@@ -431,13 +431,18 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 	$arr_blocked = null;
 
-	if(local_user()) {
+	if(local_user()) 
 		$str_blocked = get_pconfig(local_user(),'system','blocked');
-		if($str_blocked) {
+	if(! local_user() && ($mode == 'network')) {
+		$sys = get_sys_channel();
+		$id = $sys['channel_id'];
+ 		$str_blocked = get_pconfig($id,'system','blocked');
+	}
+	
+	if($str_blocked) {
 			$arr_blocked = explode(',',$str_blocked);
 			for($x = 0; $x < count($arr_blocked); $x ++)
-				$arr_blocked[$x] = trim($arr_blocked[$x]);
-		}
+			$arr_blocked[$x] = trim($arr_blocked[$x]);
 	}
 
 
