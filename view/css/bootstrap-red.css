@@ -26,7 +26,6 @@ nav img {
 }
 
 nav .dropdown-menu {
-	top: 50px;
 	max-height: 450px;
 	max-width: 300px;
 	overflow-y: auto;

@@ -29,9 +29,9 @@
 			</div>
 			{{/if}}
 
-			<div id="photos-upload-new-end" class="clear"></div>
+			<div class="clear"></div>
 
-			<div class="checkbox pull-left">
+			<div class="checkbox">
 				<label class="checkbox-inline" for="photos-upload-noshare" >
 					<input class="checkbox-inline" id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" />{{$nosharetext}}
 				</label>
