@@ -380,7 +380,7 @@ function stream_perms_api_uids($perms = NULL ) {
 		$ret[] = local_user();
 	$r = q("select channel_id from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0",
 		intval($perms),
-		intval(PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
+		intval(PAGE_ADULT|PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
 	);
 	if($r)
 		foreach($r as $rr)
@@ -407,7 +407,7 @@ function stream_perms_xchans($perms = NULL ) {
 
 	$r = q("select channel_hash from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0",
 		intval($perms),
-		intval(PAGE_CENSORED|PAGE_SYETEM|PAGE_REMOVED)
+		intval(PAGE_ADULT|PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
 	);
 	if($r)
 		foreach($r as $rr)
