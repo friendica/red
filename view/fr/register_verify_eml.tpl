@@ -1,15 +1,15 @@
 
-Une demande d'enregistrement pour un nouvel usager a été reçue de {{$sitename}} laquelle requiert 
+Une demande d'enregistrement pour un nouvel utilisateur a été reçue par {{$sitename}} qui requiert 
 votre accord. 
 
 
-Voici les détails de connections:
+Voici les détails de connexion:
 
 Emplacement du site:⇥{{$siteurl}}
-Usager:⇥{{$email}}
+Utilisateur:⇥{{$email}}
 Adresse IP: {{$details}}
 
-Pour confirmer votre accord, veuillez visiter le lien suivant:
+Pour confirmer votre accord, veuillez suivre le lien suivant:
 
 
 {{$siteurl}}/regmod/allow/{{$hash}} 

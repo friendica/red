@@ -63,6 +63,4 @@ A public forum which allows members to post files/photos/webpages.
 
 Set all the privacy and permissions manually to suit your specific needs. 
 
-
- 
-
+#include doc/macros/main_footer.bb;

@@ -89,3 +89,5 @@ Links
 ------
 [1]:   http://www.transifex.com/projects/p/red-matrix/
 
+
+#include doc/macros/main_footer.bb;

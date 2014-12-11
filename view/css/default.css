@@ -23,10 +23,6 @@ aside#region_1 {
 	padding: 65px 7px 0px 7px;
 }
 
-aside input[type='text'] {
-	width: 100%;
-}
-
 section {
 	width: 100%;
 	display: table-cell;

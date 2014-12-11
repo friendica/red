@@ -27,3 +27,5 @@ For translating documentation, create a directory in */doc* named by the languag
 * Administration Guide (post-install)
 
 * Administration Guide (pre-install)
+
+#include doc/macros/main_footer.bb;

@@ -1113,7 +1113,7 @@ logger('online: ' . $profile['online']);
 
 
 function advanced_profile(&$a) {
-
+	require_once('include/text.php');
 	if(! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_profile'))
 		return '';
 
@@ -1205,7 +1205,18 @@ function advanced_profile(&$a) {
 
 		if($txt = prepare_text($a->profile['contact'])) $profile['contact'] = array( t('Contact information and Social Networks:'), $txt);
 
-		if($txt = prepare_text($a->profile['channels'])) $profile['channels'] = array( t('My other channels:'), $txt);
+		// Support tags in the other channels field (probably want to restrict it to channels only?)
+		$txt = $a->profile['channels'];
+		$matches = get_tags($txt);
+		$access_tag = '';
+		$str_tags = '';
+		foreach($matches as $m) {
+			$success = handle_tag($a, $txt, $access_tag, $str_tags, $a->profile_uid, $m);  // Use uid of the profile maker
+		}
+
+		if($txt = prepare_text($txt)) {
+			$profile['channels'] = array( t('My other channels:'), $txt);
+		}
 
 		if($txt = prepare_text($a->profile['music'])) $profile['music'] = array( t('Musical interests:'), $txt);
 		

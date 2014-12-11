@@ -23,7 +23,7 @@ msgstr ""
 #: ../../include/dba/dba_driver.php:50
 #, php-format
 msgid "Cannot locate DNS info for database server '%s'"
-msgstr "Impossible de trouver les infos DNS du serveur de BD '%s'"
+msgstr "Impossible de trouver les infos DNS du serveur de base de données '%s'"
 
 #: ../../include/photo/photo_driver.php:653 ../../include/photos.php:51
 #: ../../mod/profile_photo.php:142 ../../mod/profile_photo.php:301
@@ -91,7 +91,7 @@ msgstr "Favoris"
 
 #: ../../include/apps.php:125
 msgid "Address Book"
-msgstr "Carnet d'adresse"
+msgstr "Carnet d'adresses"
 
 #: ../../include/apps.php:126 ../../include/nav.php:106 ../../boot.php:1498
 msgid "Login"
@@ -183,7 +183,7 @@ msgstr "Suggérer"
 
 #: ../../include/apps.php:145
 msgid "Random Channel"
-msgstr "Un Canal au Hasard"
+msgstr "Un canal au hasard"
 
 #: ../../include/apps.php:146
 msgid "Invite"
@@ -203,12 +203,12 @@ msgstr "Envoyer"
 
 #: ../../include/apps.php:150
 msgid "Profile Photo"
-msgstr "Photo du Profil"
+msgstr "Photo du profil"
 
 #: ../../include/apps.php:239 ../../mod/settings.php:79
 #: ../../mod/settings.php:543
 msgid "Update"
-msgstr "Mise-à-jour"
+msgstr "Mise à jour"
 
 #: ../../include/apps.php:239
 msgid "Install"
@@ -289,11 +289,11 @@ msgstr "Sauver"
 
 #: ../../include/text.php:897
 msgid "poke"
-msgstr "cogne"
+msgstr "cogner"
 
 #: ../../include/text.php:897 ../../include/conversation.php:243
 msgid "poked"
-msgstr "C'est fait cogner"
+msgstr "a cogné"
 
 #: ../../include/text.php:898
 msgid "ping"
@@ -301,23 +301,23 @@ msgstr "solliciter"
 
 #: ../../include/text.php:898
 msgid "pinged"
-msgstr "sollicité"
+msgstr "a sollicité"
 
 #: ../../include/text.php:899
 msgid "prod"
-msgstr "aiguillonner"
+msgstr "encourager"
 
 #: ../../include/text.php:899
 msgid "prodded"
-msgstr "aiguillonné"
+msgstr "a encouragé"
 
 #: ../../include/text.php:900
 msgid "slap"
-msgstr "giffle"
+msgstr "gifler"
 
 #: ../../include/text.php:900
 msgid "slapped"
-msgstr "gifflé"
+msgstr "a giflé"
 
 #: ../../include/text.php:901
 msgid "finger"
@@ -325,15 +325,15 @@ msgstr "pointer"
 
 #: ../../include/text.php:901
 msgid "fingered"
-msgstr "pointé"
+msgstr "a pointé"
 
 #: ../../include/text.php:902
 msgid "rebuff"
-msgstr "rejetter"
+msgstr "rejeter"
 
 #: ../../include/text.php:902
 msgid "rebuffed"
-msgstr "rejetté"
+msgstr "a rejeté"
 
 #: ../../include/text.php:911
 msgid "happy"
@@ -357,7 +357,7 @@ msgstr "impertinent"
 
 #: ../../include/text.php:916
 msgid "angry"
-msgstr "colèrique"
+msgstr "colérique"
 
 #: ../../include/text.php:917
 msgid "stupified"
@@ -377,7 +377,7 @@ msgstr "amer"
 
 #: ../../include/text.php:921
 msgid "cheerful"
-msgstr "entrain"
+msgstr "joyeux"
 
 #: ../../include/text.php:922
 msgid "alive"
@@ -385,7 +385,7 @@ msgstr "énergique"
 
 #: ../../include/text.php:923
 msgid "annoyed"
-msgstr "agaçé"
+msgstr "agacé"
 
 #: ../../include/text.php:924
 msgid "anxious"
@@ -517,7 +517,7 @@ msgstr "Cliquer pour ouvrir/fermer"
 
 #: ../../include/text.php:1512 ../../mod/events.php:374
 msgid "Link to Source"
-msgstr "Lien vers la Source"
+msgstr "Lien vers la source"
 
 #: ../../include/text.php:1531
 msgid "Select a page layout: "
@@ -563,7 +563,7 @@ msgstr "Menus"
 
 #: ../../include/text.php:2008
 msgid "Layouts"
-msgstr "Mises-en-page"
+msgstr "Mises en page"
 
 #: ../../include/text.php:2009
 msgid "Pages"
@@ -766,7 +766,7 @@ msgstr "Fermer"
 
 #: ../../include/activities.php:39
 msgid " and "
-msgstr "et"
+msgstr " et "
 
 #: ../../include/activities.php:47
 msgid "public profile"
@@ -780,12 +780,12 @@ msgstr "%1$s a changé %2$s en &ldquo;%3$s&rdquo;"
 #: ../../include/activities.php:53
 #, php-format
 msgid "Visit %1$s's %2$s"
-msgstr "Visiter %1$s de %2$s"
+msgstr "Visiter %1$s sur %2$s"
 
 #: ../../include/activities.php:56
 #, php-format
 msgid "%1$s has an updated %2$s, changing %3$s."
-msgstr "%1$s a mis-à-jour %2$s, modifiant %3$s."
+msgstr "%1$s a mis à jour %2$s, modifiant %3$s."
 
 #: ../../include/api.php:1036
 msgid "Public Timeline"
@@ -805,7 +805,7 @@ msgstr "Impossible de trouver le fichier à remplacer."
 
 #: ../../include/attach.php:370
 msgid "Cannot locate file to revise/update"
-msgstr "Impossible de trouver le fichier à corriger/mettre-à-jour"
+msgstr "Impossible de trouver le fichier à corriger/mettre à jour"
 
 #: ../../include/attach.php:381
 #, php-format
@@ -1490,7 +1490,7 @@ msgstr "Merci de visiter %s pour voir et/ou répondre sur cette conversation."
 #: ../../include/enotify.php:182
 #, php-format
 msgid "[Red:Notify] %s posted to your profile wall"
-msgstr "[Matrice Rouge:Notification] %s a publié sur votre profil"
+msgstr "[Red:Notification] %s a publié sur votre profil"
 
 #: ../../include/enotify.php:184
 #, php-format
@@ -1525,7 +1525,7 @@ msgstr "[Red:Notification] %1$s vous a cogné"
 #: ../../include/enotify.php:226
 #, php-format
 msgid "%1$s, %2$s poked you at %3$s"
-msgstr "%1$s, vous avez été cogné/pointé/sollicité par %2$s sur %3$s"
+msgstr "%1$s, %2$s vous a cogné sur %3$s
 
 #: ../../include/enotify.php:227
 #, php-format
@@ -1535,7 +1535,7 @@ msgstr "%1$s, %2$s [zrl=%2$s]vous a cogné[/zrl]."
 #: ../../include/enotify.php:243
 #, php-format
 msgid "[Red:Notify] %s tagged your post"
-msgstr "[Matrice Rouge:Notification] %s a étiqueté votre publication"
+msgstr "[Red:Notification] %s a étiqueté votre publication"
 
 #: ../../include/enotify.php:244
 #, php-format
@@ -1574,7 +1574,7 @@ msgstr "Merci de visiter %s avant d'approuver (ou non) cette demande de relation
 
 #: ../../include/enotify.php:272
 msgid "[Red:Notify] Friend suggestion received"
-msgstr "[Matrice Rouge:Notification] Nouvelle suggestion d'amitié"
+msgstr "[Red:Notification] Nouvelle suggestion d'amitié"
 
 #: ../../include/enotify.php:273
 #, php-format
@@ -2408,7 +2408,7 @@ msgstr "Visible sur toute la Matrice."
 
 #: ../../include/items.php:965
 msgid "Visible to anybody authenticated."
-msgstr "Visible aux usagers authentifiés."
+msgstr "Visible aux utilisateurs authentifiés."
 
 #: ../../include/items.php:967
 #, php-format
@@ -3126,7 +3126,7 @@ msgstr "Indice pour la phrase de passe"
 
 #: ../../include/js_strings.php:16
 msgid "Notice: Permissions have changed but have not yet been submitted."
-msgstr "Note&nbsp;: Les permissions ont changées, mais n'ont pas encore été sauvées."
+msgstr "Note&nbsp;: Les permissions ont changé, mais n'ont pas encore été soumises."
 
 #: ../../include/js_strings.php:17
 msgid "close all"
@@ -3134,7 +3134,7 @@ msgstr "fermer tout"
 
 #: ../../include/js_strings.php:19
 msgid "timeago.prefixAgo"
-msgstr "timeago.prefixAgo"
+msgstr "Il y a"
 
 #: ../../include/js_strings.php:20
 msgid "timeago.prefixFromNow"
@@ -3142,7 +3142,7 @@ msgstr "timeago.prefixFromNow"
 
 #: ../../include/js_strings.php:21
 msgid "ago"
-msgstr "auparavant"
+msgstr " "
 
 #: ../../include/js_strings.php:22
 msgid "from now"
@@ -3567,7 +3567,7 @@ msgstr "Menu introuvable."
 
 #: ../../mod/mitem.php:47
 msgid "Menu element updated."
-msgstr "Entrée de menu mis-à-jour."
+msgstr "Entrée de menu mis à jour."
 
 #: ../../mod/mitem.php:51
 msgid "Unable to update menu element."
@@ -3716,7 +3716,7 @@ msgstr "Le mot de passe a été changé."
 
 #: ../../mod/settings.php:216
 msgid "Password update failed. Please try again."
-msgstr "La mise-à-jour du mot de passe a échoué. Merci de recommencer."
+msgstr "La mise à jour du mot de passe a échoué. Merci de recommencer."
 
 #: ../../mod/settings.php:230
 msgid "Not valid email."
@@ -3872,7 +3872,7 @@ msgstr "Thème mobile&nbsp;:"
 
 #: ../../mod/settings.php:760
 msgid "Enable user zoom on mobile devices"
-msgstr "Permettre à l'usager d'un mobile d'agrandir le contenu"
+msgstr "Permettre à l'utilisateur d'un mobile d'agrandir le contenu"
 
 #: ../../mod/settings.php:761
 msgid "Update browser every xx seconds"
@@ -4122,7 +4122,7 @@ msgstr "Vous êtes étiqueté dans une publication"
 
 #: ../../mod/settings.php:994
 msgid "You are poked/prodded/etc. in a post"
-msgstr "Vous êtes cogné/pointé/etc. dans une publication"
+msgstr "Vous êtes cogné/encouragé/etc. dans une publication"
 
 #: ../../mod/settings.php:997
 msgid "Advanced Account/Page Type Settings"
@@ -4152,11 +4152,11 @@ msgstr "Supprimer ce canal"
 
 #: ../../mod/poke.php:159
 msgid "Poke/Prod"
-msgstr "Cogner/Solliciter"
+msgstr "Cogner/Encourager"
 
 #: ../../mod/poke.php:160
 msgid "poke, prod or do other things to somebody"
-msgstr "Cogner, pointer, et autres choses à faire à quelqu'un"
+msgstr "Cogner, encourager, et autres choses à faire à quelqu'un"
 
 #: ../../mod/poke.php:161
 msgid "Recipient"
@@ -4776,7 +4776,7 @@ msgstr "Merci de vous connecter."
 
 #: ../../mod/cloud.php:126
 msgid "Red Matrix - Guests: Username: {your email address}, Password: +++"
-msgstr "Matrice Rouge - Pour les invités: Usager = {votre courriel}, Mot de passe = +++"
+msgstr "Matrice Rouge - Pour les invités: Nom d'utilisateur = {votre courriel}, Mot de passe = +++"
 
 #: ../../mod/removeme.php:29
 msgid ""
@@ -4822,7 +4822,7 @@ msgstr "Relations communes"
 
 #: ../../mod/common.php:44
 msgid "No connections in common."
-msgstr "Pas de relations en commun."
+msgstr "Pas de relation en commun."
 
 #: ../../mod/rmagic.php:38
 msgid ""
@@ -5292,7 +5292,7 @@ msgstr "Supprimer le contact"
 
 #: ../../mod/connedit.php:549
 msgid "Last update:"
-msgstr "Dernière mise-à-jour&nbsp;:"
+msgstr "Dernière mise à jour&nbsp;:"
 
 #: ../../mod/connedit.php:551
 msgid "Update public posts"
@@ -5549,7 +5549,7 @@ msgstr "Impossible de trouver une version CLI de PHP dans le PATH du serveur web
 msgid ""
 "If you don't have a command line version of PHP installed on server, you "
 "will not be able to run background polling via cron."
-msgstr "En l'absence de version CLI de PHP sur votre serveur, vous ne pourrez pas utiliser la mise-à-jour en arrière-plan via cron."
+msgstr "En l'absence de version CLI de PHP sur votre serveur, vous ne pourrez pas utiliser la mise à jour en arrière-plan via cron."
 
 #: ../../mod/setup.php:392
 msgid "PHP executable path"
@@ -5802,7 +5802,7 @@ msgstr "<h1>Et maintenant</h1>"
 msgid ""
 "IMPORTANT: You will need to [manually] setup a scheduled task for the "
 "poller."
-msgstr "IMPORTANT&nbsp;: Vous devez créer [manuellement] une tâche planifiée pour les mises-à-jour."
+msgstr "IMPORTANT&nbsp;: Vous devez créer [manuellement] une tâche planifiée pour les mises à jour."
 
 #: ../../mod/editblock.php:8 ../../mod/editblock.php:27
 #: ../../mod/editblock.php:53 ../../mod/editlayout.php:36
@@ -6279,7 +6279,7 @@ msgstr "Impossible de créer la collection."
 
 #: ../../mod/group.php:54
 msgid "Collection updated."
-msgstr "Collection mise-à-jour."
+msgstr "Collection mise à jour."
 
 #: ../../mod/group.php:86
 msgid "Create a collection of channels."
@@ -6936,7 +6936,7 @@ msgstr "Niveau de journalisation"
 
 #: ../../mod/thing.php:98
 msgid "Thing updated"
-msgstr "Chose mise-à-jour"
+msgstr "Chose mise à jour"
 
 #: ../../mod/thing.php:158
 msgid "Object store: failed"
@@ -7224,7 +7224,7 @@ msgstr "Visible par&nbsp;:"
 
 #: ../../mod/viewconnections.php:58
 msgid "No connections."
-msgstr "Pas de relations."
+msgstr "Pas de relation."
 
 #: ../../mod/viewconnections.php:71
 #, php-format
@@ -7675,7 +7675,7 @@ msgstr "URL vers le serveur Friendica"
 
 #: ../../mod/frphotos.php:82
 msgid "Friendica Login Username"
-msgstr "Nom d'usager Friendica"
+msgstr "Nom d'utilisateur Friendica"
 
 #: ../../mod/frphotos.php:83
 msgid "Friendica Login Password"
@@ -7997,12 +7997,12 @@ msgstr "Vous êtes plutôt \"bureau bien rangé\" ou \"gros foutoir\"?"
 #: ../../boot.php:1296
 #, php-format
 msgid "Update %s failed. See error logs."
-msgstr "La mise-à-jour %s a échoué. Merci de consulter les journaux d'erreur."
+msgstr "La mise à jour %s a échoué. Merci de consulter les journaux d'erreur."
 
 #: ../../boot.php:1299
 #, php-format
 msgid "Update Error at %s"
-msgstr "Erreur de mise-à-jour sur %s"
+msgstr "Erreur de mise à jour sur %s"
 
 #: ../../boot.php:1473
 msgid ""

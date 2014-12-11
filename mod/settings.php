@@ -160,7 +160,9 @@ function settings_post(&$a) {
 			$itemspage = 100;
 
 
-		if($mobile_theme !== '') {
+		if ($mobile_theme == "---") 
+			del_pconfig(local_user(),'system','mobile_theme');
+		else {
 			set_pconfig(local_user(),'system','mobile_theme',$mobile_theme);
 		}
 
@@ -755,7 +757,6 @@ function settings_content(&$a) {
 
 		
 		$themes = array();
-		$mobile_themes = array("---" => t('No special theme for mobile devices'));
 		$files = glob('view/theme/*');
 		if($allowed_themes) {
 			foreach($allowed_themes as $th) {
@@ -764,19 +765,20 @@ function settings_content(&$a) {
 				$unsupported = file_exists('view/theme/' . $th . '/unsupported');
 				$is_mobile = file_exists('view/theme/' . $th . '/mobile');
 				$is_library = file_exists('view/theme/'. $th . '/library');
+				$mobile_themes["---"] = t("No special theme for mobile devices");
 
 				if (!$is_experimental or ($is_experimental && (get_config('experimentals','exp_themes')==1 or get_config('experimentals','exp_themes')===false))){ 
 					$theme_name = (($is_experimental) ?  sprintf(t('%s - (Experimental)'), $f) : $f);
-
 					if (! $is_library) {
 						if($is_mobile) {
-							$themes[$f]=$theme_name . ' (' . t('mobile') . ')';
+							$mobile_themes[$f] = $themes[$f] = $theme_name . ' (' . t('mobile') . ')';
 						}
 						else {
-							$themes[$f]=$theme_name;
+							$mobile_themes[$f] = $themes[$f] = $theme_name;
 						}
 					}
 				}
+
 			}
 		}
 		$theme_selected = (!x($_SESSION,'theme')? $default_theme : $_SESSION['theme']);
@@ -812,7 +814,7 @@ function settings_content(&$a) {
 			'$uid' => local_user(),
 		
 			'$theme'	=> array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview'),
-			'$mobile_theme'	=> array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $themes, ''),
+			'$mobile_theme'	=> array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, ''),
 			'$user_scalable' => array('user_scalable', t("Enable user zoom on mobile devices"), $user_scalable, ''),
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),

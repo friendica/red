@@ -1,4 +1,9 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/widgets.php
+ *
+ * @brief This file contains the widgets.
+ */
 
 require_once('include/dir_fns.php');
 require_once('include/contact_widgets.php');
@@ -6,7 +11,7 @@ require_once('include/contact_widgets.php');
 
 function widget_profile($args) {
 	$a = get_app();
-	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
+	$block = (((get_config('system', 'block_public')) && (! local_user()) && (! remote_user())) ? true : false);
 	return profile_sidebar($a->profile, $block, true);
 }
 
@@ -16,14 +21,15 @@ function widget_profile($args) {
 function widget_tagcloud($args) {
 
 	$o = '';
-	$tab = 0;
+	//$tab = 0;
 	$a = get_app();
 	$uid = $a->profile_uid;
 	$count = ((x($args,'count')) ? intval($args['count']) : 24);
 	$flags = 0;
 	$type = TERM_CATEGORY;
 
-	$r = tagadelic($uid,$count,$authors,$flags,ITEM_WEBPAGE,$type);
+	// FIXME there exists no $authors variable
+	$r = tagadelic($uid, $count, $authors, $flags, ITEM_WEBPAGE, $type);
 
 	if($r) {
 		$o = '<div class="tagblock widget"><h3>' . t('Categories') . '</h3><div class="tags" align="center">';
@@ -75,9 +81,8 @@ function widget_collections($args) {
 			return '';
 			break;
 	}
-			
-	return group_side($every, $each, $edit, $current, $abook_id, $wmode);
 
+	return group_side($every, $each, $edit, $current, $abook_id, $wmode);
 }
 
 
@@ -91,7 +96,6 @@ function widget_appselect($arr) {
 		'$edit' => t('Edit Personal App')
 	));
 }
-
 
 
 function widget_suggestions($arr) {
@@ -114,16 +118,13 @@ function widget_suggestions($arr) {
 	// This will throw some entropy intot he situation so you won't 
 	// be looking at the same two mug shots every time the widget runs
 
-
 	$index = ((count($r) > 2) ? mt_rand(0,count($r) - 2) : 0);
-		
 
 	for($x = $index; $x <= ($index+1); $x ++) {
-
 		$rr = $r[$x];
 		if(! $rr['xchan_url'])
 			break;
-		
+
 		$connlnk = z_root() . '/follow/?url=' . $rr['xchan_addr'];
 
 		$arr[] = array(
@@ -138,7 +139,6 @@ function widget_suggestions($arr) {
 		);
 	}
 
-
 	$o = replace_macros(get_markup_template('suggest_widget.tpl'),array(
 		'$title' => t('Suggestions'),
 		'$more' => t('See more...'),
@@ -146,13 +146,13 @@ function widget_suggestions($arr) {
 	));
 
 	return $o;
-
 }
 
 
 function widget_follow($args) {
 	if(! local_user())
 		return '';
+
 	$a = get_app();
 	$uid =$a->channel['channel_id'];
 	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d)>0 ",
@@ -163,10 +163,10 @@ function widget_follow($args) {
 		$total_channels = $r[0]['total'];	
 	$limit = service_class_fetch($uid,'total_channels');
 	if($limit !== false) {
-			$abook_usage_message = sprintf( t("You have %1$.0f of %2$.0f allowed connections."), $total_channels, $limit);
+		$abook_usage_message = sprintf( t("You have %1$.0f of %2$.0f allowed connections."), $total_channels, $limit);
 	}
 	else {
-			$abook_usage_message = '';
+		$abook_usage_message = '';
  	}
 	return replace_macros(get_markup_template('follow.tpl'),array(
 		'$connect' => t('Add New Connection'),
@@ -175,7 +175,6 @@ function widget_follow($args) {
 		'$follow' => t('Connect'),
 		'$abook_usage_message' => $abook_usage_message
 	));
-
 }
 
 
@@ -192,6 +191,7 @@ function widget_notes($arr) {
 		'$text' => $text,
 		'$save' => t('Save'),
 	));
+
 	return $o;
 }
 
@@ -228,8 +228,6 @@ function widget_savedsearch($arr) {
 		$search = '';
 	}
 
-
-
 	$srchurl = $a->query_string;
 
 	$srchurl =  rtrim(preg_replace('/searchsave\=[^\&].*?(\&|$)/is','',$srchurl),'&');
@@ -240,7 +238,7 @@ function widget_savedsearch($arr) {
 	$srchurl =  rtrim(preg_replace('/search\=[^\&].*?(\&|$)/is','',$srchurl),'&');
 	$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
 	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
-	
+
 	$o = '';
 
 	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and `type` = %d ",
@@ -252,31 +250,28 @@ function widget_savedsearch($arr) {
 
 	if(count($r)) {
 		foreach($r as $rr) {
-
 			$saved[] = array(
 				'id'            => $rr['tid'],
-				'term'			=> $rr['term'],
+				'term'          => $rr['term'],
 				'dellink'       => z_root() . '/' . $srchurl . (($hasq) ? '' : '?f=') . '&amp;searchremove=1&amp;search=' . urlencode($rr['term']),
 				'srchlink'      => z_root() . '/' . $srchurl . (($hasq) ? '' : '?f=') . '&amp;search=' . urlencode($rr['term']),
 				'displayterm'   => htmlspecialchars($rr['term'], ENT_COMPAT,'UTF-8'),
-				'encodedterm' 	=> urlencode($rr['term']),
-				'delete'		=> t('Remove term'),
-				'selected'		=> ($search==$rr['term']),
+				'encodedterm'   => urlencode($rr['term']),
+				'delete'        => t('Remove term'),
+				'selected'      => ($search==$rr['term']),
 			);
 		}
-	}		
+	}
 
-	
 	$tpl = get_markup_template("saved_searches.tpl");
 	$o = replace_macros($tpl, array(
 		'$title'	 => t('Saved Searches'),
 		'$add'		 => t('add'),
-		'$searchbox' => searchbox($search,'netsearch-box',$srchurl . (($hasq) ? '' : '?f='),true),
+		'$searchbox' => searchbox($search, 'netsearch-box', $srchurl . (($hasq) ? '' : '?f='), true),
 		'$saved' 	 => $saved,
 	));
 
 	return $o;
-
 }
 
 
@@ -306,7 +301,6 @@ function widget_filer($arr) {
 		'$all' => t('Everything'),
 		'$terms' => $terms,
 		'$base' => z_root() . '/' . $a->cmd
-
 	));
 }
 
@@ -327,7 +321,6 @@ function widget_archive($arr) {
 	if(! perm_is_allowed($uid,get_observer_hash(),'view_stream'))
 		return '';
 
-
 	$wall = ((array_key_exists('wall', $arr)) ? intval($arr['wall']) : 0);
 	$style = ((array_key_exists('style', $arr)) ? $arr['style'] : 'select');
 	$showend = ((get_pconfig($uid,'system','archive_show_end_date')) ? true : false);
@@ -336,9 +329,7 @@ function widget_archive($arr) {
 	if(! $visible_years)
 		$visible_years = 5;
 
-
 	$url = z_root() . '/' . $a->cmd;
-
 
 	$ret = list_post_dates($uid,$wall,$mindate);
 
@@ -367,7 +358,7 @@ function widget_fullprofile($arr) {
 	if(! $a->profile['profile_uid'])
 		return;
 
-	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
+	$block = (((get_config('system', 'block_public')) && (! local_user()) && (! remote_user())) ? true : false);
 
 	return profile_sidebar($a->profile, $block);
 }
@@ -375,41 +366,43 @@ function widget_fullprofile($arr) {
 function widget_categories($arr) {
 	$a = get_app();
 
-
 	if($a->profile['profile_uid'] && (! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_stream')))
 		return '';
-
 
 	$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat'],ENT_COMPAT,'UTF-8') : '');
 	$srchurl = $a->query_string;
 	$srchurl =  rtrim(preg_replace('/cat\=[^\&].*?(\&|$)/is','',$srchurl),'&');
 	$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
-	return categories_widget($srchurl,$cat);
 
+	return categories_widget($srchurl, $cat);
 }
 
 function widget_tagcloud_wall($arr) {
 	$a = get_app();
+
 	if((! $a->profile['profile_uid']) || (! $a->profile['channel_hash']))
 		return '';
-	if(! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_stream'))
+	if(! perm_is_allowed($a->profile['profile_uid'], get_observer_hash(), 'view_stream'))
 		return '';
 
-	$limit = ((array_key_exists('limit',$arr)) ? intval($arr['limit']) : 50);
-	if(feature_enabled($a->profile['profile_uid'],'tagadelic'))
-		return tagblock('search',$a->profile['profile_uid'],$limit,$a->profile['channel_hash'],ITEM_WALL);
+	$limit = ((array_key_exists('limit', $arr)) ? intval($arr['limit']) : 50);
+	if(feature_enabled($a->profile['profile_uid'], 'tagadelic'))
+		return tagblock('search', $a->profile['profile_uid'], $limit, $a->profile['channel_hash'], ITEM_WALL);
+
 	return '';
 }
+
 function widget_catcloud_wall($arr) {
 	$a = get_app();
+
 	if((! $a->profile['profile_uid']) || (! $a->profile['channel_hash']))
 		return '';
-	if(! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_stream'))
+	if(! perm_is_allowed($a->profile['profile_uid'], get_observer_hash(), 'view_stream'))
 		return '';
 
 	$limit = ((array_key_exists('limit',$arr)) ? intval($arr['limit']) : 50);
-	return catblock($a->profile['profile_uid'],$limit,$a->profile['channel_hash'],ITEM_WALL);
-	return '';
+
+	return catblock($a->profile['profile_uid'], $limit, $a->profile['channel_hash'], ITEM_WALL);
 }
 
 
@@ -438,6 +431,7 @@ function widget_affinity($arr) {
 		call_hooks('main_slider',$arr);
 		return $arr['html']; 
 	}
+
  	return '';
 }
 
@@ -463,20 +457,19 @@ function widget_settings_menu($arr) {
 	if($abk)
 		$abook_self_id = $abk[0]['abook_id'];
 
-
 	$tabs = array(
 		array(
 			'label'	=> t('Account settings'),
 			'url' 	=> $a->get_baseurl(true).'/settings/account',
 			'selected'	=> ((argv(1) === 'account') ? 'active' : ''),
 		),
-	
+
 		array(
 			'label'	=> t('Channel settings'),
 			'url' 	=> $a->get_baseurl(true).'/settings/channel',
 			'selected'	=> ((argv(1) === 'channel') ? 'active' : ''),
 		),
-	
+
 		array(
 			'label'	=> t('Additional features'),
 			'url' 	=> $a->get_baseurl(true).'/settings/features',
@@ -494,7 +487,7 @@ function widget_settings_menu($arr) {
 			'url' 	=> $a->get_baseurl(true).'/settings/display',
 			'selected'	=> ((argv(1) === 'display') ? 'active' : ''),
 		),	
-		
+
 		array(
 			'label' => t('Connected apps'),
 			'url' => $a->get_baseurl(true) . '/settings/oauth',
@@ -512,7 +505,6 @@ function widget_settings_menu($arr) {
 			'url' => $a->get_baseurl(true) . '/uexport/complete',
 			'selected' => ''
 		),
-
 	);
 
 	if($role === false || $role === 'custom') {
@@ -529,7 +521,6 @@ function widget_settings_menu($arr) {
 			'url' => $a->get_baseurl(true) . '/connect/' . $channel['channel_address'],
 			'selected' => ''
 		);
-
 	}
 
 	if(feature_enabled(local_user(),'channel_sources')) {
@@ -538,18 +529,14 @@ function widget_settings_menu($arr) {
 			'url' => $a->get_baseurl(true) . '/sources',
 			'selected' => ''
 		);
-
 	}
 
-
-	
 	$tabtpl = get_markup_template("generic_links_widget.tpl");
 	return replace_macros($tabtpl, array(
 		'$title' => t('Settings'),
 		'$class' => 'settings-widget',
 		'$items' => $tabs,
 	));
-
 }
 
 
@@ -560,9 +547,7 @@ function widget_mailmenu($arr) {
 	$a = get_app();
 	return replace_macros(get_markup_template('message_side.tpl'), array(
 		'$title' => t('Messages'),
-
 		'$tabs'=> array(),
-
 		'$check'=>array(
 			'label' => t('Check Mail'),
 			'url' => $a->get_baseurl(true) . '/message',
@@ -573,9 +558,7 @@ function widget_mailmenu($arr) {
 			'url' => $a->get_baseurl(true) . '/mail/new',
 			'sel'=> (argv(1) == 'new'),
 		)
-
 	));
-
 }
 
 function widget_design_tools($arr) {
@@ -586,7 +569,7 @@ function widget_design_tools($arr) {
 
 	if($a->profile['profile_uid']) 
 		if(($a->profile['profile_uid'] != local_user()) && (! $a->is_sys))
-				return '';
+			return '';
  
 	if(! local_user())
 		return '';
@@ -601,23 +584,25 @@ function widget_findpeople($arr) {
 
 function widget_photo_albums($arr) {
 	$a = get_app();
+
 	if(! $a->profile['profile_uid'])
 		return '';
 	$channelx = channelx_by_n($a->profile['profile_uid']);
-	if((! $channelx) || (! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_photos')))
+	if((! $channelx) || (! perm_is_allowed($a->profile['profile_uid'], get_observer_hash(), 'view_photos')))
 		return '';
-	return photos_album_widget($channelx,$a->get_observer());	
+	require_once('include/photos.php');
 
+	return photos_album_widget($channelx, $a->get_observer());
 }
 
 
 function widget_vcard($arr) {
 	require_once ('include/Contact.php');
-	return vcard_from_xchan('',get_app()->get_observer());
+	return vcard_from_xchan('', get_app()->get_observer());
 }
 
 
-/**
+/*
  * The following directory widgets are only useful on the directory page
  */
 
@@ -630,21 +615,23 @@ function widget_dirsort($arr) {
 }
 
 function widget_dirtags($arr) {
-	return dir_tagblock(z_root() . '/directory',null);
+	return dir_tagblock(z_root() . '/directory', null);
 }
 
 function widget_menu_preview($arr) {
 	if(! get_app()->data['menu_item'])
 		return;
 	require_once('include/menu.php');
+
 	return menu_render(get_app()->data['menu_item']);
 }
 
 function widget_chatroom_list($arr) {
 	$a = get_app();
+
 	require_once("include/chat.php");
 	$r = chatroom_list($a->profile['profile_uid']);
-	return replace_macros(get_markup_template('chatroomlist.tpl'),array(
+	return replace_macros(get_markup_template('chatroomlist.tpl'), array(
 		'$header' => t('Chat Rooms'),
 		'$baseurl' => z_root(),
 		'$nickname' => $a->profile['channel_address'],
@@ -657,7 +644,7 @@ function widget_bookmarkedchats($arr) {
 	if(! $h)
 		return;
 	$r = q("select * from xchat where xchat_xchan = '%s' group by xchat_url order by xchat_desc",
-			dbesc($h)
+		dbesc($h)
 	);
 	if($r) {
 		for($x = 0; $x < count($r); $x ++) {
@@ -691,16 +678,16 @@ function widget_suggestedchats($arr) {
 }
 
 function widget_item($arr) {
+	// FIXME there is no $a here
 	$uid = $a->profile['profile_uid'];
 	if((! $uid) || (! $arr['mid']))
 		return '';
 
-	if(! perm_is_allowed($uid,get_observer_hash(),'view_pages'))
+	if(! perm_is_allowed($uid, get_observer_hash(), 'view_pages'))
 		return '';
 
 	require_once('include/security.php');
 	$sql_extra = item_permissions_sql($uid);
-
 
 	$r = q("select * from item where mid = '%s' and uid = %d and item_restrict = " . intval(ITEM_WEBPAGE) . " $sql_extra limit 1",
 		dbesc($arr['mid']),
@@ -711,11 +698,10 @@ function widget_item($arr) {
 		return '';
 
 	xchan_query($r);
-	$r = fetch_post_tags($r,true);
+	$r = fetch_post_tags($r, true);
 
-	$o .= prepare_page($r[0]);
+	$o = prepare_page($r[0]);
 	return $o;
-
 }
 
 function widget_clock($arr) {
@@ -785,18 +771,17 @@ return $o;
  * URL must be an http or https URL
  */
 
-
 function widget_photo($arr) {
 
 	$style = $zrl = false;
-	$params = '';
-	if(array_key_exists('src',$arr) && isset($arr['src']))
+
+	if(array_key_exists('src', $arr) && isset($arr['src']))
 		$url = $arr['src'];
 
 	if(strpos($url,'http') !== 0)
 		return '';
 
-	if(array_key_exists('style',$arr) && isset($arr['style']))
+	if(array_key_exists('style', $arr) && isset($arr['style']))
 		$style = $arr['style'];
 
 	// ensure they can't sneak in an eval(js) function
@@ -804,7 +789,7 @@ function widget_photo($arr) {
 	if(strpos($style,'(') !== false)
 		return '';
 
-	if(array_key_exists('zrl',$arr) && isset($arr['zrl']))
+	if(array_key_exists('zrl', $arr) && isset($arr['zrl']))
 		$zrl = (($arr['zrl']) ? true : false);
 
 	if($zrl)
@@ -814,7 +799,7 @@ function widget_photo($arr) {
 
 	$o .= '<img ' . (($zrl) ? ' class="zrl" ' : '') 
 				  . (($style) ? ' style="' . $style . '"' : '') 
-				  . ' src="' . $url . '" alt="' . t('photo/image') . '" />';
+				  . ' src="' . $url . '" alt="' . t('photo/image') . '">';
 
 	$o .= '</div>';
 
@@ -825,15 +810,15 @@ function widget_photo($arr) {
 function widget_photo_rand($arr) {
 
 	require_once('include/photos.php');
-	$style = $zrl = false;
-	$params = '';
-	if(array_key_exists('album',$arr) && isset($arr['album']))
+	$style = false;
+
+	if(array_key_exists('album', $arr) && isset($arr['album']))
 		$album = $arr['album'];
 	else
 		$album = '';
 
 	$channel_id = 0;
-	if(array_key_exists('channel_id',$arr) && intval($arr['channel_id']))
+	if(array_key_exists('channel_id', $arr) && intval($arr['channel_id']))
 		$channel_id = intval($arr['channel_id']);
 	if(! $channel_id)
 		$channel_id = get_app()->profile_uid;
@@ -843,7 +828,7 @@ function widget_photo_rand($arr) {
 	$scale = ((array_key_exists('scale',$arr)) ? intval($arr['scale']) : 0);
 
 	$ret = photos_list_photos(array('channel_id' => $channel_id),get_app()->get_observer(),$album);
-		
+
 	$filtered = array();
 	if($ret['success'] && $ret['photos'])
 	foreach($ret['photos'] as $p)
@@ -851,14 +836,14 @@ function widget_photo_rand($arr) {
 			$filtered[] = $p['src'];
 
 	if($filtered) {
-		$e = mt_rand(0,count($filtered)-1);
+		$e = mt_rand(0, count($filtered) - 1);
 		$url = $filtered[$e];
 	}
 
-	if(strpos($url,'http') !== 0)
+	if(strpos($url, 'http') !== 0)
 		return '';
 
-	if(array_key_exists('style',$arr) && isset($arr['style']))
+	if(array_key_exists('style', $arr) && isset($arr['style']))
 		$style = $arr['style'];
 
 	// ensure they can't sneak in an eval(js) function
@@ -872,7 +857,7 @@ function widget_photo_rand($arr) {
 
 	$o .= '<img class="zrl" ' 
 		. (($style) ? ' style="' . $style . '"' : '') 
-		. ' src="' . $url . '" alt="' . t('photo/image') . '" />';
+		. ' src="' . $url . '" alt="' . t('photo/image') . '">';
 
 	$o .= '</div>';
 
@@ -912,10 +897,10 @@ function widget_random_block($arr) {
 		$o = '<div class="widget bblock">';
 		if($r[0]['title'])
 			$o .= '<h3>' . $r[0]['title'] . '</h3>';
+
 		$o .= prepare_text($r[0]['body'],$r[0]['mimetype']);
 		$o .= '</div>';
-
 	}
-	return $o;
 
+	return $o;
 }

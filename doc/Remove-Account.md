@@ -21,3 +21,4 @@ If you have identity clones on other sites this only removes the channel instanc
 on this site. 
 
 
+#include doc/macros/main_footer.bb;
