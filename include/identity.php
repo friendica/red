@@ -418,6 +418,14 @@ function create_identity($arr) {
 					new_contact($newuid,trim($acct),$ret['channel'],false);
 			}
 		}
+		
+		$feats = get_config('system', 'default_features');
+		if($feats) {
+			if(! is_array($feats))
+				$feats = array($feats);
+			foreach($feats as $feat)
+				set_pconfig($newuid, 'feature', $feat, 1);
+		}
 
 		call_hooks('register_account', $newuid);
 	
