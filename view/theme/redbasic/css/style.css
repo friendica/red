@@ -369,10 +369,6 @@ footer {
 	clear: both;
 }
 
-
-.aprofile dt {
-	font-weight: bold;
-}
 #page-profile .title {
 	font-weight: bold;
 }
@@ -415,14 +411,6 @@ footer {
 #profile-edit-drop-link {
 	color: #FFF;
 	font-weight: normal;
-}
-
-#profile-like {
-	margin-left: 15px;
-}
-
-#profile-like-wrapper {
-	margin-bottom: 15px;
 }
 
 .fn {
@@ -1658,17 +1646,6 @@ header {
     font-size : 2.8em !important;
   }
 
-.profile-thing-list {
-	list-style-type: none;
-}
-
-.profile-thing-list img {
-	margin-bottom: 5px;
-}
-
-.profile-thing-list li {
-	margin-bottom: 15px;
-}
 
 div.page-list-item {
 margin: 20px;
