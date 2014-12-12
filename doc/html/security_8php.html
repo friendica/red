@@ -115,10 +115,13 @@ Functions</h2></td></tr>
 <tr class="memitem:adc7bf51e3b8d67bd80e9348f9ab03733"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="security_8php.html#adc7bf51e3b8d67bd80e9348f9ab03733">authenticate_success</a> ($user_record, $login_initial=false, $interactive=false, $return=false, $update_lastlog=false)</td></tr>
 <tr class="separator:adc7bf51e3b8d67bd80e9348f9ab03733"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d23d2597aae380a3341872fe9513380"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="security_8php.html#a8d23d2597aae380a3341872fe9513380">change_channel</a> ($change_channel)</td></tr>
+<tr class="memdesc:a8d23d2597aae380a3341872fe9513380"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change to another channel with current logged-in account.  <a href="#a8d23d2597aae380a3341872fe9513380">More...</a><br/></td></tr>
 <tr class="separator:a8d23d2597aae380a3341872fe9513380"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa683bc025a1d2fe9065e2f6cd71a22f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="security_8php.html#afa683bc025a1d2fe9065e2f6cd71a22f">permissions_sql</a> ($owner_id, $remote_verified=false, $groups=null)</td></tr>
+<tr class="memdesc:afa683bc025a1d2fe9065e2f6cd71a22f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an addiontal SQL where statement to check permissions.  <a href="#afa683bc025a1d2fe9065e2f6cd71a22f">More...</a><br/></td></tr>
 <tr class="separator:afa683bc025a1d2fe9065e2f6cd71a22f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9355488460ab11d6058656ff919e5cf9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="security_8php.html#a9355488460ab11d6058656ff919e5cf9">item_permissions_sql</a> ($owner_id, $remote_verified=false, $groups=null)</td></tr>
+<tr class="memdesc:a9355488460ab11d6058656ff919e5cf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an addiontal SQL where statement to check permissions for an item.  <a href="#a9355488460ab11d6058656ff919e5cf9">More...</a><br/></td></tr>
 <tr class="separator:a9355488460ab11d6058656ff919e5cf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3bdd30dc60d9ee72370b866aa4a2d01"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="security_8php.html#ab3bdd30dc60d9ee72370b866aa4a2d01">public_permissions_sql</a> ($observer_hash)</td></tr>
 <tr class="separator:ab3bdd30dc60d9ee72370b866aa4a2d01"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,7 +140,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a3ef2be6a7e4928e39d50059d6feb457c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="security_8php.html#a3ef2be6a7e4928e39d50059d6feb457c">stream_perms_xchans</a> ($perms=NULL)</td></tr>
 <tr class="separator:a3ef2be6a7e4928e39d50059d6feb457c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Some security related functions. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="adc7bf51e3b8d67bd80e9348f9ab03733"></a>
 <div class="memitem">
 <div class="memproto">
@@ -179,6 +184,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$user_record</td><td>The account_id </td></tr>
+    <tr><td class="paramtype">bool</td><td class="paramname">$login_initial</td><td>default false </td></tr>
+    <tr><td class="paramtype">bool</td><td class="paramname">$interactive</td><td>default false </td></tr>
+    <tr><td class="paramtype">bool</td><td class="paramname">$return</td><td></td></tr>
+    <tr><td class="paramtype">bool</td><td class="paramname">$update_lastlog</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Referenced by <a class="el" href="include_2api_8php.html#afe534f826e4282b72d66e8cadca7bb73">api_login()</a>, <a class="el" href="openid_8php.html#a9a13827dbcf61ae4e45f0b6b33a88f43">openid_content()</a>, and <a class="el" href="register_8php.html#a51731dcc1917c58a790eb1c0f6132271">register_post()</a>.</p>
 
@@ -197,6 +212,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Change to another channel with current logged-in account. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$change_channel</td><td>The channel_id of the channel you want to change to</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool|array false or channel record of the new channel </dd></dl>
 
 <p>Referenced by <a class="el" href="include_2api_8php.html#afe534f826e4282b72d66e8cadca7bb73">api_login()</a>, <a class="el" href="include_2api_8php.html#afb99daa6b731bf497b81f2128084852c">api_user()</a>, <a class="el" href="security_8php.html#adc7bf51e3b8d67bd80e9348f9ab03733">authenticate_success()</a>, <a class="el" href="import_8php.html#af17fef0410518f7eac205d0ea416eaa2">import_post()</a>, <a class="el" href="classFKOAuth1.html#a2b1dac2ed31fc6ef84668afdda8b263f">FKOAuth1\loginUser()</a>, <a class="el" href="manage_8php.html#a2bca247b5296827638959138367db4f5">manage_content()</a>, <a class="el" href="new__channel_8php.html#a180b0646957db8290482f02454ad7f23">new_channel_post()</a>, and <a class="el" href="rpost_8php.html#a8190354d789000806d9879aea276728f">rpost_content()</a>.</p>
 
@@ -356,6 +380,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Creates an addiontal SQL where statement to check permissions for an item. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$owner_id</td><td></td></tr>
+    <tr><td class="paramtype">bool</td><td class="paramname">$remote_verified</td><td>default false, not used at all </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$groups</td><td>this param is not used at all</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string additional SQL where statement </dd></dl>
 <p>Construct permissions</p>
 <p>default permissions - anonymous user</p>
 <p>Profile owner - everything is visible</p>
@@ -394,6 +429,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Creates an addiontal SQL where statement to check permissions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$owner_id</td><td></td></tr>
+    <tr><td class="paramtype">bool</td><td class="paramname">$remote_verified</td><td>default false, not used at all </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$groups</td><td>this param is not used at all</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string additional SQL where statement </dd></dl>
 <p>Construct permissions</p>
 <p>default permissions - anonymous user</p>
 <p>Profile owner - everything is visible</p>
@@ -416,6 +462,13 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$observer_hash</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string additional SQL where statement </dd></dl>
 
 <p>Referenced by <a class="el" href="display_8php.html#a37137c98d47bf3306f4c2bb9f5b60de0">display_content()</a>, and <a class="el" href="search_8php.html#ab2568591359edde5b483a6cd9a24b2cc">search_content()</a>.</p>
 

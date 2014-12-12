@@ -37,15 +37,15 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BS-Default_8php.html",
-"boot_8php.html#a57eee7352714c004d36c26dda74af73e",
-"classApp.html#a4b67935096f66d1f14b657399a8461ac",
-"classTemplate.html#a8f4d17e49f42b876a97364c13fb572d1",
-"dba__driver_8php.html#a2a38996670c2936b5769270c49c57593",
-"globals_0x6a.html",
-"include_2config_8php.html#ad58a4913937179adb13201c2ee3261ad",
+"boot_8php.html#a56fd673eaa7014150297ce1162502db5",
+"classApp.html#a495ec082c2719314e536070ca1ce073d",
+"classTemplate.html#a86e8fd27955ef10cadfd86f3fca70677",
+"dba__driver_8php.html#a2994daa03b1c23229a27e39bcab75e67",
+"globals_0x69.html",
+"include_2config_8php.html#aa3dc1d3de2d091ac702e675acd3a085e",
 "mod_2chat_8php.html",
-"refimport_8php.html#a54003135d7c8994a76e831fb6faa2fe6",
-"text_8php.html#ae4df74296fbe55051ed3c035e55205e5"
+"refimport_8php.html#a6c3e0475fde9fe72ff2492a5e3e5259c",
+"text_8php.html#af8a3e3a66a7b862d4510f145d2e13186"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

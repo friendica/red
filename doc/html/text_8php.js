@@ -34,6 +34,7 @@ var text_8php =
     [ "get_poke_verbs", "text_8php.html#aa46f941155c2ac1155f2f17ffb0adb66", null ],
     [ "get_rel_link", "text_8php.html#a3972701c5c83624ec4e2d06242f614e7", null ],
     [ "get_tags", "text_8php.html#a4659fbc4e54ddc700c3aa66b9092c623", null ],
+    [ "handle_tag", "text_8php.html#aa22feef4de326e1d7078dedd892e615c", null ],
     [ "html2bb_video", "text_8php.html#a138a3a611fa7f4f3630674145fc826bf", null ],
     [ "ids_to_querystr", "text_8php.html#a436a8de00c942364c2d0fcfc7e1f4b5a", null ],
     [ "in_arrayi", "text_8php.html#a75c326298519ed14ebe762194c8a3f2a", null ],

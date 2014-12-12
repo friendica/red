@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['import',['Import',['../namespaceRedmatrix_1_1Import.html',1,'Redmatrix']]],
+  ['import',['Import',['../namespaceRedMatrix_1_1Import.html',1,'RedMatrix']]],
   ['random_5fprofile',['random_profile',['../Contact_8php.html#a7e3f5bef8ea1d2bf8434c9be36a2b713',1,'Contact.php']]],
   ['random_5fstring',['random_string',['../text_8php.html#a9d6a5ee1290de7a8b483fe78585daade',1,'text.php']]],
   ['random_5fstring_5fhex',['RANDOM_STRING_HEX',['../text_8php.html#aad557c054cf2ed915633701018fc7e3f',1,'text.php']]],
@@ -41,7 +41,7 @@ var searchData=
   ['redfile',['RedFile',['../classRedMatrix_1_1RedDAV_1_1RedFile.html',1,'RedMatrix::RedDAV']]],
   ['redfile_2ephp',['RedFile.php',['../RedFile_8php.html',1,'']]],
   ['redfiledata',['RedFileData',['../reddav_8php.html#a9f531641dfb4e43cd88ac1a9ae7e2088',1,'reddav.php']]],
-  ['redmatrix',['RedMatrix',['../namespaceRedMatrix.html',1,'RedMatrix'],['../namespaceRedmatrix.html',1,'Redmatrix']]],
+  ['redmatrix',['RedMatrix',['../namespaceRedMatrix.html',1,'']]],
   ['redmatrix_5fimportchannel',['REDMATRIX_IMPORTCHANNEL',['../refimport_8php.html#a54003135d7c8994a76e831fb6faa2fe6',1,'refimport.php']]],
   ['reduce',['reduce',['../docblox__errorchecker_8php.html#ae9562cf60aa693114603d27b55d2185f',1,'docblox_errorchecker.php']]],
   ['ref_5fsession_5fclose',['ref_session_close',['../session_8php.html#a5e1c616e02b863d5450317d101366bb7',1,'session.php']]],
@@ -110,11 +110,12 @@ var searchData=
   ['rpost_2ephp',['rpost.php',['../rpost_8php.html',1,'']]],
   ['rpost_5fcallback',['rpost_callback',['../bbcode_8php.html#a5165a5221a52cf1bc1d7812ebd2069c7',1,'bbcode.php']]],
   ['rpost_5fcontent',['rpost_content',['../rpost_8php.html#a8190354d789000806d9879aea276728f',1,'rpost.php']]],
+  ['rrmdir',['rrmdir',['../Contact_8php.html#ab5895b75a3b2abdddf1cb351a8c6b58b',1,'Contact.php']]],
   ['rsa_5fsign',['rsa_sign',['../crypto_8php.html#a920e5f222d0020f47556033d8b2b6552',1,'crypto.php']]],
   ['rsa_5fverify',['rsa_verify',['../crypto_8php.html#ab4f21d8f6b8ece0915e7c8bb73379f96',1,'crypto.php']]],
   ['rsatopem',['rsatopem',['../crypto_8php.html#a7f7e650aaeaa3832580a73eb00966b26',1,'crypto.php']]],
   ['rsd_5fxml_2ephp',['rsd_xml.php',['../rsd__xml_8php.html',1,'']]],
   ['rsd_5fxml_5fcontent',['rsd_xml_content',['../rsd__xml_8php.html#a740cd02fa15e5a53f8547fac73f0ab82',1,'rsd_xml.php']]],
-  ['run',['run',['../classRedmatrix_1_1Import_1_1Import.html#af432ecbc45b812a03d58dfb378a212f7',1,'Redmatrix::Import::Import']]],
+  ['run',['run',['../classRedMatrix_1_1Import_1_1Import.html#a8d138a9a7d4f79b81d3446ca216a602c',1,'RedMatrix::Import::Import']]],
   ['runs',['runs',['../docblox__errorchecker_8php.html#a21b4bbe5aae2d85db33affc7126a67ec',1,'docblox_errorchecker.php']]]
 ];

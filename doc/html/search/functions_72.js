@@ -68,10 +68,11 @@ var searchData=
   ['rotate',['rotate',['../classphoto__driver.html#a2f2b6337cf9aa0688d10b422123f0eec',1,'photo_driver\rotate()'],['../classphoto__gd.html#a77f87730b11093b76980c541159df37d',1,'photo_gd\rotate()'],['../classphoto__imagick.html#a9df5738a4a18e76dd304c440e96f045f',1,'photo_imagick\rotate()']]],
   ['rpost_5fcallback',['rpost_callback',['../bbcode_8php.html#a5165a5221a52cf1bc1d7812ebd2069c7',1,'bbcode.php']]],
   ['rpost_5fcontent',['rpost_content',['../rpost_8php.html#a8190354d789000806d9879aea276728f',1,'rpost.php']]],
+  ['rrmdir',['rrmdir',['../Contact_8php.html#ab5895b75a3b2abdddf1cb351a8c6b58b',1,'Contact.php']]],
   ['rsa_5fsign',['rsa_sign',['../crypto_8php.html#a920e5f222d0020f47556033d8b2b6552',1,'crypto.php']]],
   ['rsa_5fverify',['rsa_verify',['../crypto_8php.html#ab4f21d8f6b8ece0915e7c8bb73379f96',1,'crypto.php']]],
   ['rsatopem',['rsatopem',['../crypto_8php.html#a7f7e650aaeaa3832580a73eb00966b26',1,'crypto.php']]],
   ['rsd_5fxml_5fcontent',['rsd_xml_content',['../rsd__xml_8php.html#a740cd02fa15e5a53f8547fac73f0ab82',1,'rsd_xml.php']]],
-  ['run',['run',['../classRedmatrix_1_1Import_1_1Import.html#af432ecbc45b812a03d58dfb378a212f7',1,'Redmatrix::Import::Import']]],
+  ['run',['run',['../classRedMatrix_1_1Import_1_1Import.html#a8d138a9a7d4f79b81d3446ca216a602c',1,'RedMatrix::Import::Import']]],
   ['runs',['runs',['../docblox__errorchecker_8php.html#a21b4bbe5aae2d85db33affc7126a67ec',1,'docblox_errorchecker.php']]]
 ];

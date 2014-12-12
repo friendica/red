@@ -114,6 +114,9 @@ $(document).ready(function(){initNavTree('classApp.html','');});
 <div class="title">App Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Our main application structure for the life of this page.  
+ <a href="classApp.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -170,6 +173,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a94a1ed2dc493c58612d17035b74ae736"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classApp.html#a94a1ed2dc493c58612d17035b74ae736">template_engine</a> ($name= '')</td></tr>
 <tr class="separator:a94a1ed2dc493c58612d17035b74ae736"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb27e607fe4c82603444676e25c36b70"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classApp.html#acb27e607fe4c82603444676e25c36b70">get_template_engine</a> ()</td></tr>
+<tr class="memdesc:acb27e607fe4c82603444676e25c36b70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the active template engine.  <a href="#acb27e607fe4c82603444676e25c36b70">More...</a><br/></td></tr>
 <tr class="separator:acb27e607fe4c82603444676e25c36b70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20d1890cc16b22ba79eeb0cbf2f719f7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classApp.html#a20d1890cc16b22ba79eeb0cbf2f719f7">set_template_engine</a> ($engine= 'smarty3')</td></tr>
 <tr class="separator:a20d1890cc16b22ba79eeb0cbf2f719f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -299,8 +303,9 @@ Private Attributes</h2></td></tr>
 <tr class="separator:acad5896b7a79ae31433ad8f89606c728"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>class: <a class="el" href="classApp.html">App</a></p>
-<p>Our main application structure for the life of this page Primarily deals with the URL that got us here and tries to make some sense of it, and stores our page contents and config storage and anything else that might need to be passed around before we spit the page out. </p>
+<div class="textblock"><p>Our main application structure for the life of this page. </p>
+<p>class: <a class="el" href="classApp.html" title="Our main application structure for the life of this page.">App</a></p>
+<p>Primarily deals with the URL that got us here and tries to make some sense of it, and stores our page contents and config storage and anything else that might need to be passed around before we spit the page out. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="af6d39f63fb7116bbeb04e51696f99474"></a>
 <div class="memitem">
@@ -314,6 +319,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p><a class="el" href="classApp.html" title="Our main application structure for the life of this page.">App</a> constructor. </p>
 <p>Figure out if we are running at the top of a domain or in a sub-directory and adjust accordingly</p>
 <p>Break the URL path into C style argc/argv style arguments for our modules. Given "http://example.com/module/arg1/arg2", $this-&gt;argc will be 3 (integer) and $this-&gt;argv will contain: [0] =&gt; 'module' [1] =&gt; 'arg1' [2] =&gt; 'arg2'</p>
 <p>There will always be one argument. If provided a naked domain URL, $this-&gt;argv[0] is set to "home".</p>
@@ -489,6 +495,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the active template engine. </p>
+<dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
 </div>
 </div>
@@ -851,7 +860,7 @@ Private Attributes</h2></td></tr>
 <p>return template engine instance. If $name is not defined, return engine defined by theme, or default</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$name</td><td><a class="el" href="classTemplate.html">Template</a> engine name </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$name</td><td><a class="el" href="classTemplate.html">Template</a> engine name</td></tr>
   </table>
   </dd>
 </dl>

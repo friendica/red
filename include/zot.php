@@ -1433,8 +1433,18 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 		$channel = $r[0];
 
 		// allow public postings to the sys channel regardless of permissions
-		if(($channel['channel_pageflags'] & PAGE_SYSTEM) && (! $arr['item_private']))
+		if(($channel['channel_pageflags'] & PAGE_SYSTEM) && (! $arr['item_private'])) {
 			$local_public = true;
+
+			$r = q("select xchan_flags from xchan where xchan_hash = '%s' limit 1",
+				dbesc($sender['hash'])
+			);
+			// don't import sys channel posts from selfcensored authors
+			if($r && ($r[0]['xchan_flags'] & XCHAN_FLAGS_SELFCENSORED)) {
+				$local_public = false;
+				continue;
+			}
+		}
 
 		$tag_delivery = tgroup_check($channel['channel_id'],$arr);
 

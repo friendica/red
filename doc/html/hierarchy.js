@@ -21,7 +21,7 @@ var hierarchy =
     [ "IFile", null, [
       [ "RedMatrix\\RedDAV\\RedFile", "classRedMatrix_1_1RedDAV_1_1RedFile.html", null ]
     ] ],
-    [ "Redmatrix\\Import\\Import", "classRedmatrix_1_1Import_1_1Import.html", null ],
+    [ "RedMatrix\\Import\\Import", "classRedMatrix_1_1Import_1_1Import.html", null ],
     [ "IQuota", null, [
       [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ]
     ] ],
