@@ -585,7 +585,7 @@ function profiles_content(&$a) {
 			$fields = $profile_fields_basic;
 
 
-		$opt_tpl = get_markup_template("profile-hide_friends.tpl");
+		$opt_tpl = get_markup_template("profile_hide_friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array(
 			'$desc'         => t('Hide your contact/friend list from viewers of this profile?'),
 			'$yes_str'      => t('Yes'),
