@@ -182,10 +182,10 @@ class RedBrowser extends DAV\Browser\Plugin {
 					}
 				}
 			}
-	
-			$parentHash = "";
+
+			$parentHash = '';
 			$owner = $this->auth->owner_id;
-			$splitPath = split("/", $fullPath);
+			$splitPath = split('/', $fullPath);
 			if (count($splitPath) > 3) {
 				for ($i = 3; $i < count($splitPath); $i++) {
 					$attachName = urldecode($splitPath[$i]);
@@ -233,6 +233,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 		}
 
 		// prepare quota for template
+		$quota = array();
 		$quota['used'] = $used;
 		$quota['limit'] = $limit;
 		$quota['desc'] = $quotaDesc;
@@ -257,7 +258,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 			$this->server->broadcastEvent('onHTMLActionsPanel', array($parent, &$output));
 		}
 		$html .= $output;
-	
+
 		get_app()->page['content'] = $html;
 		load_pdl(get_app());
 		construct_page(get_app());
