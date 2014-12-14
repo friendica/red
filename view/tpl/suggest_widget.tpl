@@ -1,4 +1,4 @@
-<div class="widget">
+<div class="widget suggestions-widget">
 <h3>{{$title}}</h3>
 {{if $entries}}
 {{foreach $entries as $child}}
