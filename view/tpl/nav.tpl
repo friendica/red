@@ -165,7 +165,7 @@
 			<ul class="nav navbar-nav navbar-right">
 				<li class="hidden-xs">
 					<form method="get" action="search" role="search">
-						<div id="nav-search-spinner"></div><input class="icon-search" id="nav-search-text" type="text" value="" placeholder="&#xf002;" name="search" title="{{$nav.search.3}}" onclick="this.submit();"/>
+						<div id="nav-search-spinner"></div><input class="icon-search" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();"/>
 					</form>
 				</li>
 				<li class="visible-xs">

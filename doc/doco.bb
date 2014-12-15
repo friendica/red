@@ -22,4 +22,12 @@ Therefore, if using BBCode, try to make the most of it:
 [li]Use baseurl or observer.baseurl tags where appropriate instead of example.com for authenticated viewers.[/li]
 [li]Support non-authenticated users with observer=0 tags.  We presently do not do this due to historical oversights.  This needs adding everywhere[/li]
 
+[b]Translations[/b]
+
+To translate documentation, or provided documentation in languages other than English:
+[li]Create a directory in doc/ with your two letter country code if it doesn't already exist (eg, doc/de/ for German or doc/fr/ for French)[/li]
+[li]Create a document with the same filename as the English version, but with content in your own language.  This allows us to fallback to the English if the translation for a particular page is not provided[/li]
+
+To create documentation that has no equivalent file in English, you can create a new file with a name of your choosing - but you'll also need to provide a localised version of the index page (main.bb in English) to make it accessible from the menu.
+
 #include doc/macros/main_footer.bb;

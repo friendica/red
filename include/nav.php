@@ -259,6 +259,7 @@ $powered_by = '';
 		'$localuser' => local_user(),
 		'$sel' => 	$a->nav_sel,
 		'$powered_by' => $powered_by,
+		'$help' => t('@name, #tag, content'),
 		'$pleasewait' => t('Please wait...')
 	));
 
