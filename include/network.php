@@ -1092,7 +1092,9 @@ function discover_by_webbie($webbie) {
 			$r = q("select * from xchan where xchan_hash = '%s' limit 1",
 				dbesc($webbie)
 			);
-			if(! $r) {
+			if($r)
+				return true;
+
 			$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_pubkey, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_instance_url, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 				dbesc($addr),
 				dbesc($guid),
@@ -1104,7 +1106,6 @@ function discover_by_webbie($webbie) {
 				dbesc(z_root()),
 				dbescdate(datetime_convert())
 			);
-			}
 
 			$r = q("select * from hubloc where hubloc_hash = '%s' limit 1",
 				dbesc($webbie)
