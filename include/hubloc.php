@@ -33,7 +33,7 @@ function prune_hub_reinstalls() {
 				// allow some slop period, say 3 days - just in case this is a glitch or transient occurrence
 				// Then remove any hublocs pointing to the oldest entry.
 
-				if($d1 < $d2) {
+				if(($d1 < $d2) && ($x[0]['hubloc_sitekey'])) {
 					logger('prune_hub_reinstalls: removing dead hublocs at ' . $rr['site_url']);
 					$y = q("delete from hubloc where hubloc_sitekey = '%s'",
 						dbesc($x[0]['hubloc_sitekey'])
