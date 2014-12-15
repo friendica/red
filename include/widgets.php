@@ -496,15 +496,10 @@ function widget_settings_menu($arr) {
 
 		array(
 			'label' => t('Export channel'),
-			'url' => $a->get_baseurl(true) . '/uexport/basic',
+			'url' => $a->get_baseurl(true) . '/uexport',
 			'selected' => ''
 		),
 
-		array(
-			'label' => t('Export content'),
-			'url' => $a->get_baseurl(true) . '/uexport/complete',
-			'selected' => ''
-		),
 	);
 
 	if($role === false || $role === 'custom') {
