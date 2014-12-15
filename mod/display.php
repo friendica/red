@@ -133,6 +133,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'$order' => '',
 			'$file' => '',
 			'$cats' => '',
+			'$tags' => '',
 			'$dend' => '',
 			'$dbegin' => '',
 			'$mid' => $item_hash

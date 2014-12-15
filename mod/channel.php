@@ -57,6 +57,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 	}
 
 	$category = ((x($_REQUEST,'cat')) ? $_REQUEST['cat'] : '');
+	$hashtags = ((x($_REQUEST,'tag')) ? $_REQUEST['tag'] : '');
 
 	$groups = array();
 
@@ -174,6 +175,9 @@ function channel_content(&$a, $update = 0, $load = false) {
 		if(x($category)) {
 		        $sql_extra .= protect_sprintf(term_query('item', $category, TERM_CATEGORY));
 		}
+		if(x($hashtags)) {
+		        $sql_extra .= protect_sprintf(term_query('item', $hashtags, TERM_HASHTAG));
+		}
 
 		if($datequery) {
 			$sql_extra2 .= protect_sprintf(sprintf(" AND item.created <= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$datequery))));
@@ -281,6 +285,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 			'$file' => '',
 			'$cats' => (($category) ? $category : ''),
+			'$tags' => (($hashtags) ? $hashtags : ''),
 			'$mid' => $mid,
 			'$dend' => $datequery,
 			'$dbegin' => $datequery2

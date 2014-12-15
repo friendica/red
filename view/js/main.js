@@ -903,7 +903,7 @@ function updateConvItems(mode,data) {
 	function preview_post() {
 		$("#jot-preview").val("1");
 		$("#jot-preview-content").show();
-		tinyMCE.triggerSave();
+//		tinyMCE.triggerSave();
 		$.post(  
 			"item",  
 			$("#profile-jot-form").serialize(),
@@ -1020,6 +1020,8 @@ function fcFileBrowser (field_name, url, type, win) {
   }
 
 function setupFieldRichtext(){
+	return;
+/*
 	tinyMCE.init({
 		theme : "advanced",
 		mode : "specific_textareas",
@@ -1043,6 +1045,7 @@ function setupFieldRichtext(){
 		theme_advanced_path : false,
 		file_browser_callback : "fcFileBrowser",
 	});
+*/
 }
 
 

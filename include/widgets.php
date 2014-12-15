@@ -236,8 +236,12 @@ function widget_savedsearch($arr) {
 	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
 
 	$srchurl =  rtrim(preg_replace('/search\=[^\&].*?(\&|$)/is','',$srchurl),'&');
+	$srchurl =  rtrim(preg_replace('/submit\=[^\&].*?(\&|$)/is','',$srchurl),'&');
 	$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
+
+
 	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
+
 
 	$o = '';
 
@@ -387,7 +391,7 @@ function widget_tagcloud_wall($arr) {
 
 	$limit = ((array_key_exists('limit', $arr)) ? intval($arr['limit']) : 50);
 	if(feature_enabled($a->profile['profile_uid'], 'tagadelic'))
-		return tagblock('search', $a->profile['profile_uid'], $limit, $a->profile['channel_hash'], ITEM_WALL);
+		return wtagblock($a->profile['profile_uid'], $limit, $a->profile['channel_hash'], ITEM_WALL);
 
 	return '';
 }

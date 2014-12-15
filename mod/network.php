@@ -34,6 +34,21 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	$channel = $a->get_channel();
 
+
+	$datequery = $datequery2 = '';
+
+	$group = 0;
+
+	$nouveau    = false;
+
+	$datequery  = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
+	$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
+	$nouveau    = ((x($_GET,'new')) ? intval($_GET['new']) : 0);
+	$gid        = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
+	$category   = ((x($_REQUEST,'cat')) ? $_REQUEST['cat'] : '');
+	$hashtags   = ((x($_REQUEST,'tag')) ? $_REQUEST['tag'] : '');
+
+
 	$search = (($_GET['search']) ? $_GET['search'] : '');
 	if($search) {
 		if(strpos($search,'@') === 0) {
@@ -47,22 +62,10 @@ function network_content(&$a, $update = 0, $load = false) {
 			}
 		}
 		elseif(strpos($search,'#') === 0) {
-			$search = $_GET['search'] = substr($search,1);
+			$hashtags = substr($search,1);
+			$search = $_GET['search'] = '';
 		}
 	}
-
-
-	$datequery = $datequery2 = '';
-
-	$group = 0;
-
-	$nouveau    = false;
-
-	$datequery  = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
-	$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
-	$nouveau    = ((x($_GET,'new')) ? intval($_GET['new']) : 0);
-	$gid        = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
-
 
 	if($datequery)
 		$_GET['order'] = 'post';
@@ -199,6 +202,12 @@ function network_content(&$a, $update = 0, $load = false) {
 		}
 	}
 
+	if(x($category)) {
+		$sql_extra .= protect_sprintf(term_query('item', $category, TERM_CATEGORY));
+	}
+	if(x($hashtags)) {
+		$sql_extra .= protect_sprintf(term_query('item', $hashtags, TERM_HASHTAG));
+	}
 
 	if(! $update) {
 		// The special div is needed for liveUpdate to kick in for this page.
@@ -238,7 +247,8 @@ function network_content(&$a, $update = 0, $load = false) {
 			'$search'  => (($search) ? $search : ''),
 			'$order'   => $order,
 			'$file'    => $file,
-			'$cats'    => '',
+			'$cats'    => $category,
+			'$tags'    => $hashtags,
 			'$dend'    => $datequery,
 			'$mid'     => '',
 			'$dbegin'  => $datequery2

@@ -141,6 +141,7 @@ function home_content(&$a, $update = 0, $load = false) {
 					'$order'   => 'comment',
 					'$file'    => '',
 					'$cats'    => '',
+					'$tags'    => '',
 					'$dend'    => '',
 					'$mid'     => '',
 					'$dbegin'  => ''
