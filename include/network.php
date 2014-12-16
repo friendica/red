@@ -1094,23 +1094,25 @@ function discover_by_webbie($webbie) {
 			);
 			if(! $r) {
 
-			$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_pubkey, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_instance_url, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
-				dbesc($addr),
-				dbesc($guid),
-				dbesc($pubkey),
-				dbesc($addr),
-				dbesc($profile),
-				dbesc($vcard['fn']),
-				dbesc($network),
-				dbesc(z_root()),
-				dbescdate(datetime_convert())
-			);
+				$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_pubkey, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_instance_url, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+					dbesc($addr),
+					dbesc($guid),
+					dbesc($pubkey),
+					dbesc($addr),
+					dbesc($profile),
+					dbesc($vcard['fn']),
+					dbesc($network),
+					dbesc(z_root()),
+					dbescdate(datetime_convert())
+				);
 			}
 
 			$r = q("select * from hubloc where hubloc_hash = '%s' limit 1",
 				dbesc($webbie)
 			);
+
 			if(! $r) {
+
 				$r = q("insert into hubloc ( hubloc_guid, hubloc_hash, hubloc_addr, hubloc_network, hubloc_url, hubloc_host, hubloc_callback, hubloc_updated, hubloc_flags ) values ('%s','%s','%s','%s','%s','%s','%s','%s', %d)",
 					dbesc($guid),
 					dbesc($addr),
