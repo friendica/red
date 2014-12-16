@@ -137,7 +137,7 @@ function editpost_content(&$a) {
 		'$acl' => '', 
 		'$bang' => '',
 		'$profile_uid' => local_user(),
-		'$preview' => ((feature_enabled(local_user(),'preview')) ? t('Preview') : ''),
+		'$preview' => true, // ((feature_enabled(local_user(),'preview')) ? t('Preview') : ''),
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),
 		'$catsenabled' => $catsenabled,

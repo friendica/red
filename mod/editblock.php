@@ -170,7 +170,7 @@ function editblock_content(&$a) {
 		'$acl'                 => '', 
 		'$bang'                => '',
 		'$profile_uid'         => (intval($channel['channel_id'])),
-		'$preview'             => ((feature_enabled($uid,'preview')) ? t('Preview') : ''),
+		'$preview'             => true, // ((feature_enabled($uid,'preview')) ? t('Preview') : ''),
 		'$jotplugins'          => $jotplugins,
 		'$sourceapp'           => $itm[0]['app'],
 		'$defexpire'           => '',

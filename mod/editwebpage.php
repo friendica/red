@@ -202,7 +202,7 @@ function editwebpage_content(&$a) {
 		'lockstate' => (((strlen($itm[0]['allow_cid'])) || (strlen($itm[0]['allow_gid'])) || (strlen($itm[0]['deny_cid'])) || (strlen($itm[0]['deny_gid']))) ? 'lock' : 'unlock'),
 		'$bang' => '',
 		'$profile_uid' => (intval($owner)),
-		'$preview' => ((feature_enabled($uid,'preview')) ? t('Preview') : ''),
+		'$preview' => true, // ((feature_enabled($uid,'preview')) ? t('Preview') : ''),
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => $a->sourcename,
 		'$defexpire' => '',

@@ -45,7 +45,7 @@ function get_features() {
 			t('Post Composition Features'),
 //			array('richtext',       t('Richtext Editor'),			t('Enable richtext editor')),
 			array('markdown',       t('Use Markdown'),              t('Allow use of "Markdown" to format posts')),
-			array('preview',        t('Post Preview'),				t('Allow previewing posts and comments before publishing them')),
+//			array('preview',        t('Post Preview'),				t('Allow previewing posts and comments before publishing them')),
 			array('channel_sources', t('Channel Sources'),          t('Automatically import channel content from other channels or feeds')),
 			array('content_encrypt', t('Even More Encryption'),          t('Allow optional encryption of content end-to-end with a shared secret key')),
 			array('adult_photo_flagging', t('Flag Adult Photos'),   t('Provide photo edit option to hide adult photos from default album view')), 
@@ -67,7 +67,7 @@ function get_features() {
 		'tools' => array(
 			t('Post/Comment Tools'),
 //			array('multi_delete',   t('Multiple Deletion'),			t('Select and delete multiple posts/comments at once')),
-			array('edit_posts',     t('Edit Sent Posts'),			t('Edit and correct posts and comments after sending')),
+//			array('edit_posts',     t('Edit Sent Posts'),			t('Edit and correct posts and comments after sending')),
 			array('commtag',        t('Tagging'),					t('Ability to tag existing posts')),
 			array('categories',     t('Post Categories'),			t('Add categories to your posts')),
 			array('filing',         t('Saved Folders'),				t('Ability to file posts under folders')),
