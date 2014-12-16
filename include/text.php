@@ -1306,6 +1306,13 @@ function format_filer(&$item) {
 }
 
 
+function generate_map($coord) {
+	$arr = array('lat' => substr($coord,0,strpos($coord,' ')), 'lon' => substr($coord,strpos($coord,' ')+1), 'html' => '');
+	call_hooks('generate_map',$arr);
+	return $arr['html'];
+}
+
+
 
 function prepare_body(&$item,$attach = false) {
 
@@ -1322,6 +1329,13 @@ function prepare_body(&$item,$attach = false) {
 	if(! $attach) {
 		return $s;
 	}
+
+	if(strpos($s,'<div class="map">') !== false && $item['coord']) {
+		$x = generate_map(trim($item['coord']));
+		if($x) {
+			$s = preg_replace('/\<div class\=\"map\"\>/','$0' . $x,$s);
+		}
+	}		 
 
 	$s .= theme_attachments($item);
 

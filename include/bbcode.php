@@ -492,6 +492,14 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = preg_replace("/\[mail\]([$MAILSearchString]*)\[\/mail\]/", '<a href="mailto:$1">$1</a>', $Text);
 		$Text = preg_replace("/\[mail\=([$MAILSearchString]*)\](.*?)\[\/mail\]/", '<a href="mailto:$1">$2</a>', $Text);
 	}
+
+	// leave open the posibility of [map=something]
+	// this is replaced in prepare_body() which has knowledge of the item location
+
+	if (strpos($Text,'[map]') !== false) {	
+		$Text = preg_replace("/\[map\]/", '<div class="map"></div>', $Text);
+	}
+
 	// Check for bold text
 	if (strpos($Text,'[b]') !== false) {	
 		$Text = preg_replace("(\[b\](.*?)\[\/b\])ism",'<strong>$1</strong>',$Text);
