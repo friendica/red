@@ -107,7 +107,7 @@
 					<div class="wall-item-tools-left{{if $item.unseen_comments || $item.like_count || $item.dislike_count}} btn-group{{/if}}">
 
 
-				<div class="wall-item-list-comments btn-group"><button class="btn btn-default btn-sm" onclick="window.location.href='{{$item.llink}}'; return false;">{{$item.comment_count_txt}}{{if $item.unseen_comments}}
+				<div class="wall-item-list-comments btn-group"><button class="btn btn-default btn-sm" onclick="window.location.href='{{$item.viewthread}}'; return false;">{{$item.comment_count_txt}}{{if $item.unseen_comments}}
 <span class="unseen-wall-indicator-{{$item.id}}">, {{$item.list_unseen_txt}}{{/if}}</span></button></div>{{if $item.unseen_comments}}<div class="unseen-wall-indicator-{{$item.id}} btn-group"><button class="btn btn-default btn-sm" title="{{$item.markseen}}" onclick="markItemRead({{$item.id}}); return false;"><i class="icon-check"></i></div>{{/if}}
 
 						{{if $item.like_count}}

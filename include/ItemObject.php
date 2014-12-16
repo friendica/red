@@ -231,7 +231,14 @@ class Item extends BaseObject {
 
 		localize_item($item);
 		$body = prepare_body($item,true);
-		
+
+		// $viewthread (below) is only valid in list mode. If this is a channel page, build the thread viewing link
+		// since we can't depend on llink or plink pointing to the right local location.
+ 
+		$owner_address = substr($item['owner']['xchan_addr'],0,strpos($item['owner']['xchan_addr'],'@'));
+		$viewthread = $item['llink'];
+		if($conv->get_mode() === 'channel')
+			$viewthread = z_root() . '/channel/' . $owner_address . '?f=&mid=' . $item['mid'];
 
 		$comment_count_txt = sprintf( tt('%d comment','%d comments',$total_children),$total_children );
 		$list_unseen_txt = (($unseen_comments) ? sprintf('%d unseen',$unseen_comments) : '');
@@ -249,6 +256,7 @@ class Item extends BaseObject {
 			'linktitle' => sprintf( t('View %s\'s profile - %s'), $profile_name, $item['author']['xchan_addr']),
 			'olinktitle' => sprintf( t('View %s\'s profile - %s'), $this->get_owner_name(), $item['owner']['xchan_addr']),
 			'llink' => $item['llink'],
+			'viewthread' => $viewthread,
 			'to' => t('to'),
 			'via' => t('via'),
 			'wall' => t('Wall-to-Wall'),
