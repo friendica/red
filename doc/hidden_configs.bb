@@ -105,6 +105,11 @@ This document assumes you're an administrator.
         list of names (no spaces)
     [b]system > auto_follow[/b]
         Make the first channel of an account auto-follow channels listed here.
-	
+	[b]system > admin_email[/b]
+		Specifies the administrators email for this site.  This is initially set during install.
+	[b]system > cron_hour[/b]
+		Specify an hour in which to run cron_daily.  By default with no config, this will run at midnight.
+	[b]system > minimum_feedcheck_minutes[/b]
+		The minimum interval between polling RSS feeds.  If this is lower than the cron interval, feeds will be polled with each cronjob
 #include doc/macros/main_footer.bb;
 

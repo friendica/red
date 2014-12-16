@@ -34,7 +34,7 @@ function uexport_content(&$a) {
 		'$basictitle' => t('Export Channel'),
 		'$basic' => t('Export your basic channel information to a small file.  This acts as a backup of your connections, permissions, profile and basic data, which can be used to import your data to a new hub, but	does not contain your content.'),
 		'$fulltitle' => t('Export Content'),
-		'$full' => t('Export your channel information and all the content to a JSON backup. This backs up all of your connections, permissions, profile data and all of your content, but is generally not suitable for importing a channel to a new site as this file may be VERY large.  Please be patient - it may take several minutes for this download to begin.')
+		'$full' => t('Export your channel information and all the content to a JSON backup. This backs up all of your connections, permissions, profile data and all of your content, but is generally not suitable for importing a channel to a new hub as this file may be VERY large.  Please be patient - it may take several minutes for this download to begin.')
 	));
 return $o;
 }
