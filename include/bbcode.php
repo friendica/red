@@ -278,6 +278,17 @@ function rpost_callback($match) {
 	}
 }
 
+function bb_map_coords($match) {
+	// the extra space in the following line is intentional
+	return str_replace($match[0],'<div class="map"  >' . generate_map(str_replace('/',' ',$match[1])) . '</div>', $match[0]);
+}
+
+function bb_map_location($match) {
+	// the extra space in the following line is intentional
+	return str_replace($match[0],'<div class="map"  >' . generate_named_map($match[1]) . '</div>', $match[0]);
+}
+
+
 function bb_sanitize_style($input) {
 	//whitelist	property			limits (0 = no limitation)
 	$w = array(	// color properties
@@ -495,6 +506,14 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// leave open the posibility of [map=something]
 	// this is replaced in prepare_body() which has knowledge of the item location
+
+	if (strpos($Text,'[/map]') !== false) {	
+		$Text = preg_replace_callback("/\[map\](.*?)\[\/map\]/ism",'bb_map_location',$Text);
+	}
+
+	if (strpos($Text,'[map=') !== false) {	
+		$Text = preg_replace_callback("/\[map=(.*?)\]/ism",'bb_map_coords',$Text);
+	}
 
 	if (strpos($Text,'[map]') !== false) {	
 		$Text = preg_replace("/\[map\]/", '<div class="map"></div>', $Text);

@@ -1312,6 +1312,12 @@ function generate_map($coord) {
 	return $arr['html'];
 }
 
+function generate_named_map($location) {
+	$arr = array('location' => $location, 'html' => '');
+	call_hooks('generate_named_map',$arr);
+	return $arr['html'];
+}
+
 
 
 function prepare_body(&$item,$attach = false) {
