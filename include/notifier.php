@@ -493,40 +493,33 @@ function notifier_run($argv, $argc){
 
 
 		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") group by hubloc_sitekey order by hubloc_connected desc limit 1");
+			where hubloc_hash in (" . implode(',',$recipients) . ") order by hubloc_connected desc limit 1");
 	} 
 	else {
-		if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
-			$r = q("select distinct on (hubloc_sitekey) hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-				where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)>0  and not (hubloc_status & %d)>0",
-				intval(HUBLOC_FLAGS_DELETED),
-				intval(HUBLOC_OFFLINE)
-			);
-		} else {
 		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d)>0  and not (hubloc_status & %d)>0 group by hubloc_sitekey",
+			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0",
 			intval(HUBLOC_FLAGS_DELETED),
 			intval(HUBLOC_OFFLINE)
-		);
-		}
-	}
+		);		
+	} 
 
 	if(! $r) {
 		logger('notifier: no hubs');
 		return;
 	}
+
 	$hubs = $r;
 
 	$hublist = array();
+	$dhubs = array();
 	$keys = array();
 
 	foreach($hubs as $hub) {
-		// don't try to deliver to deleted hublocs - and inexplicably SQL "distinct" and "group by"
-		// both return records with duplicate keys in rare circumstances
-// FIXME this is probably redundant now.
-		if((! ($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && (! in_array($hub['hubloc_sitekey'],$keys))) {
+		if((! $hub['hubloc_sitekey']) || (! in_array($hub['hubloc_sitekey'],$keys))) {
 			$hublist[] = $hub['hubloc_host'];
-			$keys[] = $hub['hubloc_sitekey'];
+			$dhubs[] = $hub;
+			if($hub['hubloc_sitekey'])
+				$keys[] = $hub['hubloc_sitekey'];
 		}
 	}
 
@@ -542,7 +535,7 @@ function notifier_run($argv, $argc){
 
 	$deliver = array();
 
-	foreach($hubs as $hub) {
+	foreach($dhubs as $hub) {
 
 		if(defined('DIASPORA_RELIABILITY_EMULATION')) {
 			$cointoss = mt_rand(0,2);
