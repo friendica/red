@@ -437,6 +437,8 @@ function updatePageItems(mode,data) {
 		pageHasMoreContent = false;		
 	}
 
+	collapseHeight();
+
 }
 
 
