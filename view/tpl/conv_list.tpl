@@ -4,7 +4,7 @@
 </div>
 <div id="collapsed-comments-{{$item.id}}" class="collapsed-comments" style="display: none;">
 {{/if}}
-	<div id="thread-wrapper-{{$item.id}}" class="thread-wrapper {{$item.toplevel}}">
+	<div id="thread-wrapper-{{$item.id}}" class="thread-wrapper {{$item.toplevel}} conv-list-mode">
 		<a name="{{$item.id}}" ></a>
 		<div class="wall-item-outside-wrapper {{$item.indent}}{{$item.previewing}}" id="wall-item-outside-wrapper-{{$item.id}}" >
 			<div class="wall-item-content-wrapper {{$item.indent}}" id="wall-item-content-wrapper-{{$item.id}}" style="clear:both;">
@@ -30,7 +30,7 @@
 				<div class="wall-item-ago"  id="wall-item-ago-{{$item.id}}">
 					{{if $item.verified}}<i class="icon-ok item-verified" title="{{$item.verified}}"></i>&nbsp;{{elseif $item.forged}}<i class="icon-remove item-forged" title="{{$item.forged}}"></i>&nbsp;{{/if}}{{if $item.location}}<span class="wall-item-location" id="wall-item-location-{{$item.id}}">{{$item.location}},&nbsp;</span>{{/if}}<span class="autotime" title="{{$item.isotime}}">{{$item.localtime}}{{if $item.editedtime}}&nbsp;{{$item.editedtime}}{{/if}}{{if $item.expiretime}}&nbsp;{{$item.expiretime}}{{/if}}</span>{{if $item.editedtime}}&nbsp;<i class="icon-pencil"></i>{{/if}}&nbsp;{{if $item.app}}<span class="item.app">{{$item.str_app}}</span>{{/if}}
 				</div>
-				<div class="wall-item-content" id="wall-item-content-{{$item.id}}">
+				<div class="wall-item-content conv-list-mode" id="wall-item-content-{{$item.id}}">
 					<div class="wall-item-title-end"></div>
 					<div class="wall-item-body wall-item-listbody" id="wall-item-body-{{$item.id}}" >
 						{{$item.body}}

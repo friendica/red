@@ -838,6 +838,11 @@ footer {
 	margin-bottom: 25px;
 }
 
+
+#conversation-end {
+	clear: both;
+}
+
 #nav-searchbar {
 	float: right;
 	margin-top: 2px;
