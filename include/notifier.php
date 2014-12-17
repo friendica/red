@@ -510,16 +510,34 @@ function notifier_run($argv, $argc){
 
 	$hubs = $r;
 
-	$hublist = array();
-	$dhubs = array();
-	$keys = array();
+
+	/**
+	 * Reduce the hubs to those that are unique. For zot hubs, we need to verify uniqueness by the sitekey, since it may have been 
+	 * a re-install which has not yet been detected and pruned.
+	 * For other networks which don't have or require sitekeys, we'll have to use the URL
+	 */
+
+
+	$hublist = array(); // this provides an easily printable list for the logs
+	$dhubs   = array(); // delivery hubs where we store our resulting unique array
+	$keys    = array(); // array of keys to check uniquness for zot hubs
+	$urls    = array(); // array of urls to check uniqueness of hubs from other networks
+
 
 	foreach($hubs as $hub) {
-		if((! $hub['hubloc_sitekey']) || (! in_array($hub['hubloc_sitekey'],$keys))) {
-			$hublist[] = $hub['hubloc_host'];
-			$dhubs[] = $hub;
-			if($hub['hubloc_sitekey'])
+		if($hub['hubloc_network'] == 'zot') {
+			if(! in_array($hub['hubloc_sitekey'],$keys)) {
+				$hublist[] = $hub['hubloc_host'];
+				$dhubs[] = $hub;
 				$keys[] = $hub['hubloc_sitekey'];
+			}
+		}
+		else {
+			if(! in_array($hub['hubloc_url'],$urls)) {
+				$hublist[] = $hub['hubloc_host'];
+				$dhubs[] = $hub;
+				$urls[] = $hub['hubloc_url'];
+			}
 		}
 	}
 
