@@ -111,5 +111,18 @@ This document assumes you're an administrator.
 		Specify an hour in which to run cron_daily.  By default with no config, this will run at midnight.
 	[b]system > minimum_feedcheck_minutes[/b]
 		The minimum interval between polling RSS feeds.  If this is lower than the cron interval, feeds will be polled with each cronjob
+	[b]system > blacklisted_sites[/b]
+		An array of specific hubs to block from this hub completely.
+	[b]system > ignore_imagick[/b]
+		Ignore imagick and use GD, even if imagick is installed on the server.
+	[b]system > no_age_restriction[/b]
+		Do not restric registration to people over the age of 13
+	[b]system > override_poll_lockfile[/b]
+		Ignore the lock file in the poller process to allow more than one process to run at a time.
+	[b]system > projecthome[/b]
+		Display the project page on your home page for logged out viewers.
+	[b]system > sellpage[/b]
+		A URL shown in the public sites list to sell your hub - display service classes, etc.
+		
 #include doc/macros/main_footer.bb;
 
