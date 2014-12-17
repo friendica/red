@@ -1099,7 +1099,7 @@ function status_editor($a,$x,$popup=false) {
 	$jotplugins = '';
 	$jotnets = '';
 
-	$preview = true;
+	$preview = t('Preview');
 //	$preview = ((feature_enabled($x['profile_uid'],'preview')) ? t('Preview') : '');
 	if(x($x,'nopreview'))
 		$preview = '';

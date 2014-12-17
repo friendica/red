@@ -635,7 +635,7 @@ class Item extends BaseObject {
 			'$edimg' => t('Image'),
 			'$edurl' => t('Link'),
 			'$edvideo' => t('Video'),
-			'$preview' => true, // ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
+			'$preview' => t('Preview'), // ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
 			'$indent' => $indent,
 			'$feature_encrypt' => ((feature_enabled($conv->get_profile_owner(),'content_encrypt')) ? true : false),
 			'$encrypt' => t('Encrypt text'),
