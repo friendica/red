@@ -309,8 +309,9 @@ function directory_content(&$a) {
 						killme();
 					}
 					else {
+						$maxheight = 175;
 
-						$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
+						$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; divmore_height = " . intval($maxheight) . ";  </script>";
 						$o .= replace_macros($tpl, array(
 							'$search' => $search,
 							'$desc' => t('Find'),

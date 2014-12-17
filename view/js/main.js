@@ -592,7 +592,7 @@ function updateConvItems(mode,data) {
 
 
 	function collapseHeight() {
-		$(".wall-item-body").each(function() {
+		$(".wall-item-body, .directory-item").each(function() {
 			if($(this).height() > divmore_height + 10) {
 				if(! $(this).hasClass('divmore')) {
 					$(this).divgrow({ initialHeight: divmore_height, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
