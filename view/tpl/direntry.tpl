@@ -1,4 +1,4 @@
-<div class="directory-item lframe divmore" id="directory-item-{{$entry.id}}" >
+<div class="directory-item lframe" id="directory-item-{{$entry.id}}" >
 
 <div class="contact-photo-wrapper" id="directory-photo-wrapper-{{$entry.id}}" >
 <div class="contact-photo" id="directory-photo-{{$entry.id}}" >

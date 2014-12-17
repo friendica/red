@@ -8,4 +8,4 @@ function dirdetails(hash) {
 
 $(document).ready(function() {
 	collapseHeight();
-}
+});

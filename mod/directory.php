@@ -130,7 +130,7 @@ function directory_content(&$a) {
 		if(! is_null($pubforums))
 			$query .= '&pubforums=' . intval($pubforums);
 
-		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
+		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : 'normal');
 
 		if($sort_order)
 			$query .= '&order=' . urlencode($sort_order);
