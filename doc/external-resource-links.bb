@@ -4,7 +4,6 @@
 [b]Third-Party Themes[/b]
 
 [*][url=https://github.com/omigeot/redstrap3]Redstrap[/url]
-[*][url=https://github.com/23n/Pluto]Pluto[/url]
 [*][url=https://bitbucket.org/tobiasd/red-clean]Clean[/url]
 [*][url=https://github.com/tonybaldwin/redmatrixthemes/]nubasic[/url]
 
