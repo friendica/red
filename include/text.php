@@ -1307,7 +1307,9 @@ function format_filer(&$item) {
 
 
 function generate_map($coord) {
-	$arr = array('lat' => substr($coord,0,strpos($coord,' ')), 'lon' => substr($coord,strpos($coord,' ')+1), 'html' => '');
+	$coord = trim($coord);
+	$coord = str_replace(array(',','/','  '),array(' ',' ',' '),$coord);
+	$arr = array('lat' => trim(substr($coord,0,strpos($coord,' '))), 'lon' => trim(substr($coord,strpos($coord,' ')+1)), 'html' => '');
 	call_hooks('generate_map',$arr);
 	return $arr['html'];
 }
