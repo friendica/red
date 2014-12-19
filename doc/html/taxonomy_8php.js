@@ -15,5 +15,6 @@ var taxonomy_8php =
     [ "tagadelic", "taxonomy_8php.html#aaf90ba8b839d6459065f39a4f1109b8a", null ],
     [ "tagblock", "taxonomy_8php.html#ac21d1dff16d569e7d110167aea4e63c2", null ],
     [ "tags_sort", "taxonomy_8php.html#aaeded36bcc983b35d9205fe5b6c18c43", null ],
-    [ "term_query", "taxonomy_8php.html#a7a913d19c77610da689be48fbbf6734c", null ]
+    [ "term_query", "taxonomy_8php.html#a7a913d19c77610da689be48fbbf6734c", null ],
+    [ "wtagblock", "taxonomy_8php.html#a83f0a60f9e0c07d8451dc5be95b17287", null ]
 ];

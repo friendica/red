@@ -134,6 +134,8 @@ Functions</h2></td></tr>
 <tr class="separator:a088371f4bc19155b2291508f5cd63332"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac21d1dff16d569e7d110167aea4e63c2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taxonomy_8php.html#ac21d1dff16d569e7d110167aea4e63c2">tagblock</a> ($link, $uid, $count=0, $authors= '', $flags=0, $restrict=0, $type=<a class="el" href="boot_8php.html#a2750985ec445617d7e82ae3098c91e3f">TERM_HASHTAG</a>)</td></tr>
 <tr class="separator:ac21d1dff16d569e7d110167aea4e63c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83f0a60f9e0c07d8451dc5be95b17287"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taxonomy_8php.html#a83f0a60f9e0c07d8451dc5be95b17287">wtagblock</a> ($uid, $count=0, $authors= '', $flags=0, $restrict=0, $type=<a class="el" href="boot_8php.html#a2750985ec445617d7e82ae3098c91e3f">TERM_HASHTAG</a>)</td></tr>
+<tr class="separator:a83f0a60f9e0c07d8451dc5be95b17287"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8f8a1ff85daef046298e93c83e7a1b4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taxonomy_8php.html#aa8f8a1ff85daef046298e93c83e7a1b4">catblock</a> ($uid, $count=0, $authors= '', $flags=0, $restrict=0, $type=<a class="el" href="boot_8php.html#af33d1b2e98a1e21af672005525d46dfe">TERM_CATEGORY</a>)</td></tr>
 <tr class="separator:aa8f8a1ff85daef046298e93c83e7a1b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a599ee71dd3194c8127b00dabec77abc1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taxonomy_8php.html#a599ee71dd3194c8127b00dabec77abc1">dir_tagblock</a> ($link, $r)</td></tr>
@@ -518,7 +520,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="taxonomy_8php.html#aa8f8a1ff85daef046298e93c83e7a1b4">catblock()</a>, <a class="el" href="taxonomy_8php.html#ac21d1dff16d569e7d110167aea4e63c2">tagblock()</a>, and <a class="el" href="widgets_8php.html#a6dbc227aac750774284ee39c45f0a200">widget_tagcloud()</a>.</p>
+<p>Referenced by <a class="el" href="taxonomy_8php.html#aa8f8a1ff85daef046298e93c83e7a1b4">catblock()</a>, <a class="el" href="taxonomy_8php.html#ac21d1dff16d569e7d110167aea4e63c2">tagblock()</a>, <a class="el" href="widgets_8php.html#a6dbc227aac750774284ee39c45f0a200">widget_tagcloud()</a>, and <a class="el" href="taxonomy_8php.html#a83f0a60f9e0c07d8451dc5be95b17287">wtagblock()</a>.</p>
 
 </div>
 </div>
@@ -575,8 +577,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Referenced by <a class="el" href="widgets_8php.html#ae4ced69d83dbdd9e6b51660d9eba8653">widget_tagcloud_wall()</a>.</p>
 
 </div>
 </div>
@@ -637,6 +637,58 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="channel_8php.html#a9c6a6179e0e626398ebecc6151905ef1">channel_content()</a>, <a class="el" href="items_8php.html#a756738301f2ed96be50232500677d58a">items_fetch()</a>, and <a class="el" href="mod_2network_8php.html#a43f2f29b90c5e29072c561934bc8f8b4">network_content()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a83f0a60f9e0c07d8451dc5be95b17287"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">wtagblock </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$uid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$count</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$authors</em> = <code>''</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$flags</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$restrict</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$type</em> = <code><a class="el" href="boot_8php.html#a2750985ec445617d7e82ae3098c91e3f">TERM_HASHTAG</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="widgets_8php.html#ae4ced69d83dbdd9e6b51660d9eba8653">widget_tagcloud_wall()</a>.</p>
 
 </div>
 </div>
