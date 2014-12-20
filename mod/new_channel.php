@@ -116,6 +116,8 @@ function new_channel_content(&$a) {
 		'$label_import' => t('Or <a href="import">import an existing channel</a> from another location'),
 		'$name'         => $name,
 		'$label_role'   => t('Channel Type'),
+		'$questionmark' => t('?'),
+		'$what_is_role' => t('What is this?'),
 		'$help_role'   => t('Please choose a channel type (such as social networking or community forum) and privacy requirements so we can select the best permissions for you'),
 		'$role_select'  => role_selector(($privacy_role) ? $privacy_role : 'social'),
 		'$nickname'     => $nickname,

@@ -31,6 +31,7 @@ var searchData=
   ['locs_5fcontent',['locs_content',['../locs_8php.html#a6c900f53970c0d0e738d2fe06d27ca44',1,'locs.php']]],
   ['locs_5fpost',['locs_post',['../locs_8php.html#a6b43654592919ac863d67a1f787a69b9',1,'locs.php']]],
   ['log',['log',['../classRedMatrix_1_1RedDAV_1_1RedBasicAuth.html#abf6fe89b0a8239ed93c3b07e1fbce75b',1,'RedMatrix\RedDAV\RedBasicAuth\log()'],['../classRedMatrix_1_1RedDAV_1_1RedDirectory.html#af90a1a74cfd643a5c56b9a17ea250d59',1,'RedMatrix\RedDAV\RedDirectory\log()']]],
+  ['log_5ffailed_5flogin',['log_failed_login',['../auth_8php.html#ae3ecb5f34f202c7f9a61c5d589f6c6e1',1,'auth.php']]],
   ['logger',['logger',['../text_8php.html#a030fa5ecc64168af0c4f44897a9bce63',1,'text.php']]],
   ['login',['login',['../boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4',1,'boot.php']]],
   ['login_5fcontent',['login_content',['../login_8php.html#a1d69ca88eb9005a7026e128b9a645904',1,'login.php']]],

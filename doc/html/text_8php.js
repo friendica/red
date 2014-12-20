@@ -28,6 +28,8 @@ var text_8php =
     [ "format_filer", "text_8php.html#a4e4d42b0a805148d9f9a92bcac89bf91", null ],
     [ "format_hashtags", "text_8php.html#a3a0c432a484c17d7720b8ba2d6bfdd59", null ],
     [ "format_mentions", "text_8php.html#ad8c6e13d6accf057136c5f30a23a5f08", null ],
+    [ "generate_map", "text_8php.html#ae0333c304ec5b4b72e66bb2933fa7357", null ],
+    [ "generate_named_map", "text_8php.html#af5eb4a9c1599764f80c5bc71e0125d4b", null ],
     [ "get_mentions", "text_8php.html#a76d1b3435c067978d7b484c45f56472b", null ],
     [ "get_mood_verbs", "text_8php.html#a736db13a966b8abaf8c9198faa35911a", null ],
     [ "get_plink", "text_8php.html#aac0969ae09853205992ba06ab9f9f61a", null ],

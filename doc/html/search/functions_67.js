@@ -3,6 +3,8 @@ var searchData=
   ['gen_5ftoken',['gen_token',['../classFKOAuthDataStore.html#aa1a268be88ad3979bb4cc35bbb4dc819',1,'FKOAuthDataStore']]],
   ['gender_5fselector',['gender_selector',['../profile__selectors_8php.html#ae2b2c087e6530c61c0b256fd26d52355',1,'profile_selectors.php']]],
   ['gender_5fselector_5fmin',['gender_selector_min',['../profile__selectors_8php.html#a8bfa1ca2d1598a3d65f1f9bb803ca816',1,'profile_selectors.php']]],
+  ['generate_5fmap',['generate_map',['../text_8php.html#ae0333c304ec5b4b72e66bb2933fa7357',1,'text.php']]],
+  ['generate_5fnamed_5fmap',['generate_named_map',['../text_8php.html#af5eb4a9c1599764f80c5bc71e0125d4b',1,'text.php']]],
   ['generatedirectoryindex',['generateDirectoryIndex',['../classRedMatrix_1_1RedDAV_1_1RedBrowser.html#af764d5f14df751f9ec86c34fab300c09',1,'RedMatrix::RedDAV::RedBrowser']]],
   ['get',['get',['../classCache.html#a70392b109331897bf9fdd7f1960e21de',1,'Cache\get()'],['../classRedMatrix_1_1RedDAV_1_1RedFile.html#a7241beecd01f5bb4e74659863dd85bd8',1,'RedMatrix\RedDAV\RedFile\get()']]],
   ['get_5faccount',['get_account',['../classApp.html#a08bc87aff64f39fbc084e9d6545cee4d',1,'App']]],

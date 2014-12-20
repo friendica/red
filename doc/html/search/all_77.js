@@ -49,5 +49,6 @@ var searchData=
   ['widget_5ftagcloud_5fwall',['widget_tagcloud_wall',['../widgets_8php.html#ae4ced69d83dbdd9e6b51660d9eba8653',1,'widgets.php']]],
   ['widget_5fvcard',['widget_vcard',['../widgets_8php.html#abe03366fd22fd27d683518fa0765da50',1,'widgets.php']]],
   ['widgets_2ephp',['widgets.php',['../widgets_8php.html',1,'']]],
-  ['writepages_5fwidget',['writepages_widget',['../page__widgets_8php.html#a1a1e729da27f252cab6678288a17958f',1,'page_widgets.php']]]
+  ['writepages_5fwidget',['writepages_widget',['../page__widgets_8php.html#a1a1e729da27f252cab6678288a17958f',1,'page_widgets.php']]],
+  ['wtagblock',['wtagblock',['../taxonomy_8php.html#a83f0a60f9e0c07d8451dc5be95b17287',1,'taxonomy.php']]]
 ];

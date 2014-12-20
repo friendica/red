@@ -10,6 +10,8 @@ var searchData=
   ['bb2diaspora_5fitemwallwall',['bb2diaspora_itemwallwall',['../bb2diaspora_8php.html#aab32042f8bd63552d3fadeeae9eab083',1,'bb2diaspora.php']]],
   ['bb2dmention_5fcallback',['bb2dmention_callback',['../bb2diaspora_8php.html#a5258d2f1addeb0a2a6b54c4f9e7d0f34',1,'bb2diaspora.php']]],
   ['bb_5flocation',['bb_location',['../bbcode_8php.html#a3435c82a6c7693557800cdeb6848d0bd',1,'bbcode.php']]],
+  ['bb_5fmap_5fcoords',['bb_map_coords',['../bbcode_8php.html#a02d5f2434e7bb5cf683e52a9b4787f24',1,'bbcode.php']]],
+  ['bb_5fmap_5flocation',['bb_map_location',['../bbcode_8php.html#a7cb403fd1c36d7376c2f3932a1ceb54d',1,'bbcode.php']]],
   ['bb_5fparse_5fapp',['bb_parse_app',['../bbcode_8php.html#abb02f1044ff1c635d12af690d0f2cfa2',1,'bbcode.php']]],
   ['bb_5fparse_5fcrypt',['bb_parse_crypt',['../bbcode_8php.html#a851f5aafefe52474201b83f9fd65931f',1,'bbcode.php']]],
   ['bb_5fparse_5felement',['bb_parse_element',['../bbcode_8php.html#aa73fb62e7be1fa5fce4ad5f3d4487fc9',1,'bbcode.php']]],
