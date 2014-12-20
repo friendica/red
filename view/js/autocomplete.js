@@ -46,6 +46,14 @@ function replace(item) {
 		replace: replace,
 		template: format,
 	}
-	this.textcomplete([contacts],{});
+
+	smilies = {
+		match: /(^|\s)(:[a-z]{2,})$/,
+		index: 2,
+		search: function(term, callback) { $.getJSON('https://caterva.eu/smilies/json').done(function(data) { callback($.map(data, function(entry) { return entry['text'].indexOf(term) === 0 ? entry : null })) }) },
+		template: function(item) { return item['icon'] + item['text'] },
+		replace: function(item) { return item['text'] + ' '; },
+	}
+	this.textcomplete([contacts,smilies],{});
   };
 })( jQuery );
