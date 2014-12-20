@@ -958,37 +958,10 @@ function get_mood_verbs() {
 	return $arr;
 }
 
-
-/**
- * 
- * Function: smilies
- *
- * Description:
- * Replaces text emoticons with graphical images
- *
- * @Parameter: string $s
- *
- * Returns string
- *
- * It is expected that this function will be called using HTML text.
- * We will escape text between HTML pre and code blocks, and HTML attributes
- * (such as urls) from being processed.
- * 
- * At a higher level, the bbcode [nosmile] tag can be used to prevent this 
- * function from being executed by the prepare_text() routine when preparing
- * bbcode source for HTML display
- *
- */
-function smilies($s, $sample = false) {
+// Function to list all smilies, both internal and from addons
+// Returns array with keys 'texts' and 'icons'
+function list_smilies() {
 	$a = get_app();
-
-	if(intval(get_config('system','no_smilies')) 
-		|| (local_user() && intval(get_pconfig(local_user(),'system','no_smilies'))))
-		return $s;
-
-	$s = preg_replace_callback('{<(pre|code)>.*?</\1>}ism','smile_shield',$s);
-	$s = preg_replace_callback('/<[a-z]+ .*?>/ism','smile_shield',$s);
-
 	$texts =  array( 
 		'&lt;3', 
 		'&lt;/3', 
@@ -1066,8 +1039,42 @@ function smilies($s, $sample = false) {
 
 	);
 
-	$params = array('texts' => $texts, 'icons' => $icons, 'string' => $s);
+	$params = array('texts' => $texts, 'icons' => $icons);
 	call_hooks('smilie', $params);
+	return $params;
+}
+/**
+ * 
+ * Function: smilies
+ *
+ * Description:
+ * Replaces text emoticons with graphical images
+ *
+ * @Parameter: string $s
+ *
+ * Returns string
+ *
+ * It is expected that this function will be called using HTML text.
+ * We will escape text between HTML pre and code blocks, and HTML attributes
+ * (such as urls) from being processed.
+ * 
+ * At a higher level, the bbcode [nosmile] tag can be used to prevent this 
+ * function from being executed by the prepare_text() routine when preparing
+ * bbcode source for HTML display
+ *
+ */
+function smilies($s, $sample = false) {
+	$a = get_app();
+
+	if(intval(get_config('system','no_smilies')) 
+		|| (local_user() && intval(get_pconfig(local_user(),'system','no_smilies'))))
+		return $s;
+
+	$s = preg_replace_callback('{<(pre|code)>.*?</\1>}ism','smile_shield',$s);
+	$s = preg_replace_callback('/<[a-z]+ .*?>/ism','smile_shield',$s);
+
+	$params = list_smilies();
+	$params['string'] = $s;
 
 	if($sample) {
 		$s = '<div class="smiley-sample">';

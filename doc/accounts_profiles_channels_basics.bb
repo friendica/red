@@ -7,7 +7,7 @@ You have [i]one[/i] account. This consists of your email account and your passwo
 [i]Think of your account as the way you authenticate at one Red Matrix site. It lets you do things, such as creating profiles and channels with which you can connect to other people.[/i]
 
 [b]Profile[/b]
-You have surely registered with some other internet services, such as forums or online communities. For all of them you provided some information about yourself, such as date of birth, country, age and the likes. If you like you can see your profile here: [baseurl]/profile/[observer.webname] and edit it by clicking on the pencil icon next to your avatar image. 
+You have surely registered with some other internet services, such as forums or online communities. For all of them you provided some information about yourself, such as date of birth, country, age and the likes. [observer=1]If you like you can see your profile here: [baseurl]/profile/[observer.webname] and edit it by clicking on the pencil icon next to your avatar image. [/observer]
 Unlike other services Red Matrix offers you the advantage of creating [i]many more profiles[/i]. That way you are able to distinguish between profiles targeted specially at everyone (your public profile), your work mates, your family and your partner.
 [i]Think of your profile as the basic information about yourself you tell other people.[/i]
 

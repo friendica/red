@@ -2,7 +2,7 @@
 
 The API allows you to post to the red# by HTTP POST request. Below you see an example using the command line tool cURL:
 
-[code]curl -ssl -u [color=blue]$E-Mail[/color]:[color=blue]$Password[/color] -d "[color=blue]$Parameters[/color]" [url][observer.baseurl]/api/statuses/update
+[code]curl -ssl -u [color=blue]$E-Mail[/color]:[color=blue]$Password[/color] -d "[color=blue]$Parameters[/color]" [url][observer=1][observer.baseurl][/observer][observer=0]example.com[/observer]/api/statuses/update
 [/url][/code]
 [table][tr][td]$E-Mail:[/td][td]The E-Mail Adress you use to login[/td][/tr]
 [tr][td]$Password:[/td][td]The Password you use to login[/td][/tr]
@@ -18,6 +18,6 @@ The API allows you to post to the red# by HTTP POST request. Below you see an ex
 [/ul]
 
 
-Instead of calling [observer.baseurl]/api/statuses/update which returns a json (you could also add .json on the end to clarify) output, you can use [observer.baseurl]/api/statuses/update.xml to get an xml formatted return.
+Instead of calling [observer=1][observer.baseurl][/observer][observer=0]example.com[/observer]/api/statuses/update which returns a json (you could also add .json on the end to clarify) output, you can use [observer.baseurl]/api/statuses/update.xml to get an xml formatted return.
 
 Instead of Basic HTTP Authentification you could also use oAuth.
