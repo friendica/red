@@ -4,7 +4,6 @@
  * require jQuery, jquery.textcomplete
  */
 function mysearch(term, callback, backend_url) {
-	console.log("Searching for: "+term);
 	var postdata = {
 		start:0,
 		count:100,
@@ -39,12 +38,11 @@ function replace(item) {
 (function( $ ){
 	$.fn.contact_autocomplete = function(backend_url) {
 
-	console.log('autocomplete using '+backend_url);
 	// Autocomplete contacts
 	contacts = {
 		match: /(^|\s)(@!?)(\w{2,})$/,
 		index: 3,
-		search: function(term, callback) { console.log("serching for:"+term); mysearch(term, callback, backend_url); },
+		search: function(term, callback) { mysearch(term, callback, backend_url); },
 		replace: replace,
 		template: format,
 	}
