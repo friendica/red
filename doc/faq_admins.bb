@@ -35,6 +35,16 @@ Don't listen on port 443 if you cannot use it.  It is strongly recommended to so
 valid SSL certificate rather than disabling port 443.
 
 [*]
+[b]How do I update a non-Git install?[/b]
+1) Backup .htconfig.php
+2) Backup everything in store/
+3) Backup any custom changes in mod/site/ and view/site
+3) Delete your existing installation
+4) Upload the new version.
+5) Upload the new version of themes and addons.
+6) Restore everything backed up earlier.
+
+[*]
 [b]What do I need to do when moving my hub to a different server[/b]
 
 1) Git clone on the new server.  Repeat the process for any custom themes, and addons.

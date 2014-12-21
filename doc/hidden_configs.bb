@@ -25,7 +25,7 @@ This document assumes you're an administrator.
                     1 - check 3 octets
                     2 - check 2 octets
                     3 - check for any difference at all
-    [b]system > protect_tag_hijacking[/b]
+    [b]system > prevent_tag_hijacking[/b]
         Prevent foreign networks hijacking hashtags in your posts and directing them at its own resources.
     [b]system > blocked[/b]
         An array of xchans blocked by this channel.  Technically, this is a
