@@ -146,7 +146,8 @@ function filestorage_content(&$a) {
 			'$submit' => t('Submit')
 		));
 
-		return $o;
+		echo $o;
+		killme();
 	}
 
 	goaway(z_root() . '/cloud/' . $which);
