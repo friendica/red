@@ -1,5 +1,5 @@
 <div class="generic-content-wrapper-styled">
-<h1>{{$header}}</h1>
+
 <table id="cloud-index">
 	<tr>
 		<th></th>
@@ -26,8 +26,9 @@
 		<td style="min-width: 15em"><a href="{{$item.fullPath}}">{{$item.displayName}}</a></td>
 {{if $item.is_owner}}
 		<td>{{$item.attachIcon}}</td>
-		<td style="position:relative;"><a href="{{$item.fileStorageUrl}}/{{$item.attachId}}/edit" title="{{$edit}}"><i class="icon-pencil btn btn-default"></i></a></td>
-		<td><a href="{{$item.fileStorageUrl}}/{{$item.attachId}}/delete" title="{{$delete}}" onclick="return confirmDelete();"><i class="icon-remove btn btn-default drop-icons"></i></a></td>
+		<td style="position:relative;"><i id="file-edit-{{$item.attachId}}" class="fakelink icon-pencil" onclick="filestorage(event, '{{$nick}}', {{$item.attachId}});"></i></td>
+		<td><a href="{{$item.fileStorageUrl}}/{{$item.attachId}}/delete" title="{{$delete}}" onclick="return confirmDelete();"><i class="icon-remove drop-icons"></i></a></td>
+
 {{else}}
 		<td></td><td></td><td></td>
 {{/if}}
@@ -35,11 +36,8 @@
 		<td>{{$item.sizeFormatted}}</td>
 		<td>{{$item.lastmodified}}</td>
 	</tr>
+	<tr><td id="perms-panel-{{$item.attachId}}" colspan="8"></td></tr>
 {{/foreach}}
-	<tr><td colspan="8"><hr></td></tr>
-</table>
 
-{{if $quota.limit || $quota.used}}
-	<p><strong>{{$total}}</strong> {{$quota.desc}}</p>
-{{/if}}
+</table>
 </div>

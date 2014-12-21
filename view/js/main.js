@@ -208,6 +208,7 @@
 	var pageHasMoreContent = true;
 	var updateCountsOnly = false;
 	var divmore_height = 400;
+	var last_filestorage_id = null;
 
 	$(function() {
 		$.ajaxSetup({cache: false});
@@ -839,6 +840,17 @@ function updateConvItems(mode,data) {
 	function lockview(event,id) {
 		$.get('lockview/' + id, function(data) {
 			$('#panel-' + id).html(data);
+		});
+	}
+
+	function filestorage(event,nick,id) {
+		$('#perms-panel-' + last_filestorage_id).html('');
+		$('#file-edit-' + id).spin('tiny');
+		delete acl;
+		$.get('filestorage/' + nick + '/' + id + '/edit', function(data) {
+			$('#perms-panel-' + id).html(data);
+			$('#file-edit-' + id).spin(false);
+			last_filestorage_id = id;
 		});
 	}
 

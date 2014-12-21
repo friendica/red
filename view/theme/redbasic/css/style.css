@@ -1746,44 +1746,23 @@ img.mail-list-sender-photo {
 	max-width: $converse_width;
 }
 
-#jot-title,
-#jot-category,
-#jot-pagetitle {
+.jothidden {
 	font-weight: bold;
-	border: solid 1px #ffffff;
 	border-radius: $radiuspx;
 }
 
-#jot-category::-webkit-input-placeholder {
+.jothidden input::-webkit-input-placeholder {
 	font-weight: bold;
 }
 
-#jot-category:-moz-placeholder {
+.jothidden input::-moz-placeholder {
 	font-weight: bold;
 }
 
-#jot-title::-webkit-input-placeholder {
-	font-weight: bold;
+.jothidden >input, .jothidden >input {
+	border: 1px solid #fff;
 }
-
-#jot-title:-moz-placeholder {
-	font-weight: bold;
-}
-
-#jot-pagetitle::-webkit-input-placeholder {
-	font-weight: bold;
-}
-
-#jot-pagetitle:-moz-placeholder {
-	font-weight: bold;
-}
-
-#jot-title:hover,
-#jot-title:focus,
-#jot-pagetitle:hover,
-#jot-pagetitle:focus,
-#jot-category:hover,
-#jot-category:focus {
+.jothidden >input:hover, .jothidden >input:focus {
 	border: 1px solid #cccccc;
 }
 
@@ -2076,17 +2055,7 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	color: $nav_active_icon_colour;
 }
 
-/* Files */
-
-#attach-edit-perms {
-	margin-top: 25px;
-	margin-bottom: 20px;
-	font-weight: bold;
-	font-size: 17px;
-}
-
 /* bootstrap overrides */
-
 
 blockquote {
 	font-size: $font_size;
@@ -2367,4 +2336,29 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 .bb_observer img {
 	border: 3px solid red !important;
+}
+
+.bootstrap-tagsinput .tag:before {
+	/* Copied from icon-asterisk, is there a better way to do it? */
+	font-family: FontAwesome;
+	font-weight: normal;
+	font-style: normal;
+	text-decoration: inherit;
+	content:"\f069";
+}
+
+/* Modified original CSS to match input in Redbasic */
+.bootstrap-tagsinput {
+	border-color:#fff;
+	background-color: #fff;
+	box-shadow: none;
+	display: inline-block;
+	border-radius: $radiuspx;
+	cursor: text;
+	padding: 0 6px;
+	width: 70% !important;
+}
+
+.jothidden .bootstrap-tagsinput:hover, .jothidden .bootstrap-tagsinput:focus {
+	border: 1px solid #cccccc;
 }
