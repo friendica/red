@@ -8,9 +8,7 @@ code {
 
 /* jot */
 
-#jot-title,
-#jot-category,
-#jot-pagetitle {
+.jothidden input {
 	border: 0px;
 	margin: 0px;
 	padding: 8px;
