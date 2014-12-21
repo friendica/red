@@ -1,4 +1,4 @@
 url: $baseurl/connections
 requires: local_user
-name: Address Book
+name: Connections
 photo: $baseurl/app/connections.png
