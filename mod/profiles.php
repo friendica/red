@@ -611,7 +611,7 @@ function profiles_content(&$a) {
 			}
 		}
 
-logger('extra_fields: ' . print_r($extra_fields,true));
+//logger('extra_fields: ' . print_r($extra_fields,true));
 
 		$f = get_config('system','birthday_input_format');
 		if(! $f)
