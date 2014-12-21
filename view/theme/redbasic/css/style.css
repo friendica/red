@@ -2055,17 +2055,7 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	color: $nav_active_icon_colour;
 }
 
-/* Files */
-
-#attach-edit-perms {
-	margin-top: 25px;
-	margin-bottom: 20px;
-	font-weight: bold;
-	font-size: 17px;
-}
-
 /* bootstrap overrides */
-
 
 blockquote {
 	font-size: $font_size;

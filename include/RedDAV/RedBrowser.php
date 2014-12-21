@@ -238,11 +238,21 @@ class RedBrowser extends DAV\Browser\Plugin {
 		$quota['limit'] = $limit;
 		$quota['desc'] = $quotaDesc;
 
-		$html .= replace_macros(get_markup_template('cloud_directory.tpl'), array(
+		$output = '';
+		if ($this->enablePost) {
+			$this->server->broadcastEvent('onHTMLActionsPanel', array($parent, &$output));
+		}
+
+		$html .= replace_macros(get_markup_template('cloud_header.tpl'), array(
 				'$header' => t('Files') . ": " . $this->escapeHTML($path) . "/",
+				'$quota' => $quota,
+				'$total' => t('Total'),
+				'$actionspanel' => $output
+			));
+
+		$html .= replace_macros(get_markup_template('cloud_directory.tpl'), array(
 				'$parentpath' => $parentpath,
 				'$entries' => $f,
-				'$quota' => $quota,
 				'$name' => t('Name'),
 				'$type' => t('Type'),
 				'$size' => t('Size'),
@@ -250,14 +260,8 @@ class RedBrowser extends DAV\Browser\Plugin {
 				'$parent' => t('parent'),
 				'$edit' => t('Edit'),
 				'$delete' => t('Delete'),
-				'$total' => t('Total')		
+				'$nick' => $this->auth->getCurrentUser()
 			));
-
-		$output = '';
-		if ($this->enablePost) {
-			$this->server->broadcastEvent('onHTMLActionsPanel', array($parent, &$output));
-		}
-		$html .= $output;
 
 		get_app()->page['content'] = $html;
 		load_pdl(get_app());
