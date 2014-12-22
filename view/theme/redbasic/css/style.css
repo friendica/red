@@ -1338,35 +1338,8 @@ footer {
 	margin-top: 10px;
 }
 
-
-
-/* autocomplete popup */
-.acpopup {
-	max-height:150px;
-	background-color:$acpopup_bgcolour;
-	overflow:auto;
-	border:1px solid $acpopup_bordercolour;
-}
-.acpopupitem {
-	background-color:$acpopup_bgcolour;
-	clear:left;
-}
-.acpopupitem.taggable {
-	background-color: $acpopup_tgbl_bgcolour;
-}
-.acpopupitem img {
-	float: left;
-	margin-right: 4px;
-}
-
-.acpopupitem:hover {
-	text-decoration: underline;
-	color: $acpopup_hovercolour;
-	cursor:pointer;
-}
-
-.acpopupitem.selected {
-	color: #FFFFFF; background: #3465A4;
+.acpopup li div.taggable {
+	color:#cc0000;
 }
 
 /* popup notifications */
