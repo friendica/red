@@ -106,24 +106,29 @@ This document assumes you're an administrator.
         list of names (no spaces)
     [b]system > auto_follow[/b]
         Make the first channel of an account auto-follow channels listed here - comma separated list of webbies (member@hub addresses).
-	[b]system > admin_email[/b]
-		Specifies the administrators email for this site.  This is initially set during install.
-	[b]system > cron_hour[/b]
-		Specify an hour in which to run cron_daily.  By default with no config, this will run at midnight UTC.
-	[b]system > minimum_feedcheck_minutes[/b]
-		The minimum interval between polling RSS feeds.  If this is lower than the cron interval, feeds will be polled with each cronjob
-	[b]system > blacklisted_sites[/b]
-		An array of specific hubs to block from this hub completely.
-	[b]system > ignore_imagick[/b]
-		Ignore imagick and use GD, even if imagick is installed on the server. Prevents some issues with PNG files in older versions of imagick.
-	[b]system > no_age_restriction[/b]
-		Do not restric registration to people over the age of 13
-	[b]system > override_poll_lockfile[/b]
-		Ignore the lock file in the poller process to allow more than one process to run at a time.
-	[b]system > projecthome[/b]
-		Display the project page on your home page for logged out viewers.
-	[b]system > sellpage[/b]
-		A URL shown in the public sites list to sell your hub - display service classes, etc.
+    [b]system > admin_email[/b]
+        Specifies the administrators email for this site.  This is initially set during install.
+    [b]system > cron_hour[/b]
+        Specify an hour in which to run cron_daily.  By default with no config, this will run at midnight UTC.
+    [b]system > minimum_feedcheck_minutes[/b]
+        The minimum interval between polling RSS feeds.  If this is lower than the cron interval, feeds will be polled with each cronjob
+    [b]system > blacklisted_sites[/b]
+        An array of specific hubs to block from this hub completely.
+    [b]system > ignore_imagick[/b]
+        Ignore imagick and use GD, even if imagick is installed on the server. Prevents some issues with PNG files in older versions of imagick.
+    [b]system > no_age_restriction[/b]
+        Do not restric registration to people over the age of 13
+    [b]system > override_poll_lockfile[/b]
+        Ignore the lock file in the poller process to allow more than one process to run at a time.
+    [b]system > projecthome[/b]
+        Display the project page on your home page for logged out viewers.
+    [b]system > sellpage[/b]
+        A URL shown in the public sites list to sell your hub - display service classes, etc.
+    [b]randprofile > check[/b]
+        When requesting a random profile, check that it actually exists first
+    [b]randprofile > retry[/b]
+        Number of times to retry getting a random profile
+
 		
 #include doc/macros/main_footer.bb;
 
