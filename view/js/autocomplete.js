@@ -24,7 +24,7 @@ function mysearch(term, callback, backend_url) {
 }
 
 function format(item) {
-	return "<img src='{0}' height='16px' width='16px'>{1} ({2})".format(item.photo, item.name, ((item.label) ? item.nick + ' ' + item.label : item.nick) )
+	return "<div class='{0}'><img src='{1}'>{2} ({3})</div>".format(item.taggable, item.photo, item.name, ((item.label) ? item.nick + ' ' + item.label : item.nick) )
 }
 
 function replace(item) {
@@ -54,6 +54,6 @@ function replace(item) {
 		template: function(item) { return item['icon'] + item['text'] },
 		replace: function(item) { return "$1"+item['text'] + ' '; },
 	}
-	this.textcomplete([contacts,smilies],{});
+	this.textcomplete([contacts,smilies],{className:'acpopup'});
   };
 })( jQuery );
