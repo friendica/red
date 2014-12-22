@@ -2171,3 +2171,13 @@ function get_directory_realm() {
 
 	return DIRECTORY_REALM;
 }
+
+
+/**
+ * @brief return relative date of last completed poller execution
+ */
+
+function get_poller_runtime() {
+	$t = get_config('system','lastpoll');
+	return relative_date($t);
+}

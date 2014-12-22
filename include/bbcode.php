@@ -368,11 +368,6 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/ism", 'bb_spacefy',$Text);
 	}
 
-//  Not yet implemented - thinking this should display a map or perhaps be a map directive
-//	if (strpos($Text,'[location]') !== false) {
-//		$Text = preg_replace_callback("/\[location\](.*?)\[\/location\]/ism", 'bb_location',$Text);
-//	}
-
 
 
 	// If we find any event code, turn it into an event.
