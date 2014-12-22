@@ -30,6 +30,7 @@ function apps_content(&$a) {
 	}
 
 	return replace_macros(get_markup_template('myapps.tpl'), array(
+		'$sitename' => get_config('system','sitename'),
 		'$title' => t('Apps'),
 		'$apps' => $apps,
 	));
