@@ -116,6 +116,7 @@ function diaspora_mention_callback($matches) {
 function diaspora2bb($s,$use_zrl = false) {
 
 
+	$s = str_replace("&#xD;","\r",$s);
 	$s = str_replace("&#xD;\n&gt;","",$s);
 
 	$s = html_entity_decode($s,ENT_COMPAT,'UTF-8');
@@ -123,11 +124,11 @@ function diaspora2bb($s,$use_zrl = false) {
 	// Too many new lines. So deactivated the following line
 	// $s = str_replace("\r","\n",$s);
 	// Simply remove cr.
-	$s = str_replace("\r","",$s);
+//	$s = str_replace("\r","",$s);
 
 	// <br/> is invalid. Replace it with the valid expression
-	$s = str_replace("<br/>","<br />",$s);
-	$s = str_replace("\n","<br />",$s);
+//	$s = str_replace("<br/>","<br />",$s);
+//	$s = str_replace("\n","<br />",$s);
 
 
 //	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
@@ -146,6 +147,8 @@ function diaspora2bb($s,$use_zrl = false) {
 	$s = preg_replace_callback('/\[share(.*?)\]/ism','share_shield',$s);
 
 	$s = Markdown($s);
+
+	$s = str_replace("\r","",$s);
 
 	$s = str_replace('&#35;','#',$s);
 // we seem to have double linebreaks
@@ -174,7 +177,6 @@ function diaspora2bb($s,$use_zrl = false) {
 	$s = bb_tag_preg_replace("/\[url\=https?:\/\/vimeo.com\/([0-9]+)\](.*?)\[\/url\]/ism",'[vimeo]$1[/vimeo]','url',$s);
 	// remove duplicate adjacent code tags
 	$s = preg_replace("/(\[code\])+(.*?)(\[\/code\])+/ism","[code]$2[/code]", $s);
-
 
 	$s = preg_replace_callback('/\[share(.*?)\]/ism','share_unshield',$s);
 
