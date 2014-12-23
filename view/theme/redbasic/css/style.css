@@ -583,8 +583,15 @@ footer {
 }
 
 .app-name {
-	width: 125px;
 	overflow: none;
+}
+
+.app-container img {
+	margin-left: auto;
+	margin-right: auto;
+	width: 80px;
+	height: 80px;
+	display: block;
 }
 
 
