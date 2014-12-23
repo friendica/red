@@ -1868,8 +1868,11 @@ require_once('include/items.php');
 		
 		require_once("include/message.php");
 
-		$r = q("SELECT `abook_id` FROM `abook` WHERE `abook_channel`=%d ",
-				intval(api_user())
+		// in a decentralised world the screen name is ambiguous
+
+		$r = q("SELECT `abook_id` FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel`=%d and xchan_addr like '%s'",
+				intval(api_user()),
+				dbesc($_POST['screen_name'] . '@%')
 		);
 
 		$recipient = api_get_user($a, $r[0]['abook_id']);			
@@ -1951,10 +1954,12 @@ require_once('include/items.php');
 			foreach($r as $item) {
 				if ($box == "inbox" || $item['from-url'] != $profile_url){
 					$recipient = $user_info;
-					$sender = api_get_user($a,$item['contact-id']);
+					// fixme to lookup recipient
+					$sender = api_get_user($a);
 				}
 				elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
-					$recipient = api_get_user($a,$item['contact-id']);
+					// fixme to lookup recipient
+					$recipient = api_get_user($a);
 					$sender = $user_info;
 				}
 	
