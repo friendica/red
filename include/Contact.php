@@ -581,12 +581,29 @@ function contact_remove($channel_id, $abook_id) {
 
 function random_profile() {
 	$randfunc = db_getfunc('rand');
-	$r = q("select xchan_url from xchan left join hubloc on hubloc_hash = xchan_hash where hubloc_connected > %s - interval %s order by $randfunc limit 1",
-		db_utcnow(), db_quoteinterval('30 day')
-	);
-	if($r)
-		return $r[0]['xchan_url'];
+	
+	$checkrandom = get_config('randprofile','check'); // False by default
+	$retryrandom = intval(get_config('randprofile','retry'));
+	if($retryrandom === false) $retryrandom = 5;
+
+	for($i = 0; $i < $retryrandom; $i++) {
+		$r = q("select xchan_url from xchan left join hubloc on hubloc_hash = xchan_hash where hubloc_connected > %s - interval %s order by $randfunc limit 1",
+			db_utcnow(), db_quoteinterval('30 day')
+		);
+
+		if(!$r) return ''; // Couldn't get a random channel
+
+		if($checkrandom) {
+			if(z_fetch_url($r[0]['xchan_url'])['success'])
+				return $r[0]['xchan_url'];
+			else
+				logger('Random channel turned out to be bad.');
+		}
+		else {
+			return $r[0]['xchan_url'];
+		}
+
+	}
 	return '';
 }
-
 
