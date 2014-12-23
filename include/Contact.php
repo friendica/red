@@ -594,7 +594,8 @@ function random_profile() {
 		if(!$r) return ''; // Couldn't get a random channel
 
 		if($checkrandom) {
-			if(z_fetch_url($r[0]['xchan_url'])['success'])
+			$x = z_fetch_url($r[0]['xchan_url']);
+			if($x['success'])
 				return $r[0]['xchan_url'];
 			else
 				logger('Random channel turned out to be bad.');
