@@ -7,7 +7,6 @@ function mysearch(term, callback, backend_url) {
 	var postdata = {
 		start:0,
 		count:100,
-		//search:term.substring(1),
 		search:term,
 		type:'c',
 	}
@@ -40,7 +39,7 @@ function replace(item) {
 
 	// Autocomplete contacts
 	contacts = {
-		match: /(^|\s)(@!?)(\w{2,})$/,
+		match: /(^|\s)(@\!*)([^ \n]+)$/,
 		index: 3,
 		search: function(term, callback) { mysearch(term, callback, backend_url); },
 		replace: replace,
