@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"datetime_8php.html#aea356409ba69f9de412298c998595dd2":[6,0,0,28,1],
 "datetime_8php.html#af1cd77c97c901d9239cb7a61f97f9826":[6,0,0,28,13],
 "db__update_8php.html":[6,0,2,1],
 "dba__driver_8php.html":[6,0,0,0,0],
@@ -225,8 +226,8 @@ var NAVTREEINDEX4 =
 "functions_0x76.html":[5,3,0,20],
 "functions_8php.html":[6,0,3,1,0,1,1],
 "functions_8php.html#adefe514c95680928b3aae250cbc3c663":[6,0,3,1,0,1,1,0],
-"functions_func.html":[5,3,1,0],
 "functions_func.html":[5,3,1],
+"functions_func.html":[5,3,1,0],
 "functions_func_0x61.html":[5,3,1,1],
 "functions_func_0x62.html":[5,3,1,2],
 "functions_func_0x63.html":[5,3,1,3],
@@ -247,7 +248,6 @@ var NAVTREEINDEX4 =
 "functions_func_0x75.html":[5,3,1,18],
 "functions_func_0x76.html":[5,3,1,19],
 "functions_vars.html":[5,3,2],
-"globals.html":[6,1,0,0],
 "globals.html":[6,1,0],
-"globals_0x5f.html":[6,1,0,1]
+"globals.html":[6,1,0,0]
 };

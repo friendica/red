@@ -38,14 +38,14 @@ var NAVTREEINDEX =
 [
 "BS-Default_8php.html",
 "boot_8php.html#a52b599cd13e152ebc80d7e4413683195",
-"classApp.html#a4659785d13e4bac0bed50dbb1b0d4299",
-"classTemplate.html#a4e86b566c3f728e95ce5db1b33665c10",
-"datetime_8php.html#af1cd77c97c901d9239cb7a61f97f9826",
-"globals_0x61.html",
-"include_2chat_8php.html#aedcb532a0627b8644001a2fadab4e87a",
-"mod_2api_8php.html#a6fe77f05c07cb51048df0d557b4b9bd2",
-"reddav_8php.html#a5df0d09893f2e65dc5cf6bbab6cfb266",
-"text_8php.html#acedb584f65114a33f389efb796172a91"
+"classApp.html#a3d84af5e42082098672531cd1a618853",
+"classTemplate.html#a4b933954086d9e01a1804b0b1c6ee93e",
+"datetime_8php.html#aea356409ba69f9de412298c998595dd2",
+"globals_0x5f.html",
+"include_2chat_8php.html#acea6b176eb7aff44d9ba3ae24ce511d3",
+"mod_2api_8php.html#a33315b5bbf5418f6850b2038107b526d",
+"reddav_8php.html",
+"text_8php.html#ac2ff88e800f74b22e9cc091c10809c54"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

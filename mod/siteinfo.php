@@ -73,7 +73,7 @@ function siteinfo_init(&$a) {
 			'site_name' => (($site_name) ? $site_name : ''),
 			'platform' => RED_PLATFORM,
 			'dbdriver' => $db->getdriver(),
-			'lastpoll' => get_poller_runtime(),
+			'lastpoll' => get_config('system','lastpoll'),
 			'info' => (($site_info) ? $site_info : ''),
 			'channels_total' => $channels_total_stat,
 			'channels_active_halfyear' => $channels_active_halfyear_stat,

@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"globals_0x5f.html":[6,1,0,1],
 "globals_0x61.html":[6,1,0,2],
 "globals_0x62.html":[6,1,0,3],
 "globals_0x63.html":[6,1,0,4],
@@ -25,8 +26,8 @@ var NAVTREEINDEX5 =
 "globals_0x77.html":[6,1,0,24],
 "globals_0x78.html":[6,1,0,25],
 "globals_0x7a.html":[6,1,0,26],
-"globals_func.html":[6,1,1,0],
 "globals_func.html":[6,1,1],
+"globals_func.html":[6,1,1,0],
 "globals_func_0x61.html":[6,1,1,1],
 "globals_func_0x62.html":[6,1,1,2],
 "globals_func_0x63.html":[6,1,1,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "include_2chat_8php.html#a26abdccc2a278a59899896dbbfc6f049":[6,0,0,16,6],
 "include_2chat_8php.html#a2ba3af6884ecdce95de69262fe599639":[6,0,0,16,2],
 "include_2chat_8php.html#a2c95b545e46bfee64faa05ecf0afea91":[6,0,0,16,3],
-"include_2chat_8php.html#acdc80dba4eb796c7472b21129b435422":[6,0,0,16,1],
-"include_2chat_8php.html#acea6b176eb7aff44d9ba3ae24ce511d3":[6,0,0,16,0]
+"include_2chat_8php.html#acdc80dba4eb796c7472b21129b435422":[6,0,0,16,1]
 };

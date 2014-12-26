@@ -50,6 +50,7 @@ var text_8php =
     [ "legal_webbie", "text_8php.html#a2690ad67bb6fb97ef69de3e8d23f2728", null ],
     [ "link_compare", "text_8php.html#a47c1e4a5f3f53027daacd8a9db24f285", null ],
     [ "linkify", "text_8php.html#a11255c8c4e5245b6c24f97684826aa54", null ],
+    [ "list_smilies", "text_8php.html#a4446c7f8996a280f7e08b7bfe6c6c8bc", null ],
     [ "logger", "text_8php.html#a030fa5ecc64168af0c4f44897a9bce63", null ],
     [ "magic_link", "text_8php.html#a1e510c53624933ce9b7d6715784894db", null ],
     [ "magiclink_url", "text_8php.html#a24d441d30df4b8e6bf6780bf62a5e2c6", null ],

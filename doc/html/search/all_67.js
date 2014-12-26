@@ -84,6 +84,7 @@ var searchData=
   ['get_5fplink',['get_plink',['../text_8php.html#aac0969ae09853205992ba06ab9f9f61a',1,'text.php']]],
   ['get_5fplugin_5finfo',['get_plugin_info',['../plugin_8php.html#aff0178bd8d0b34a94d5efddc883edd35',1,'plugin.php']]],
   ['get_5fpoke_5fverbs',['get_poke_verbs',['../text_8php.html#aa46f941155c2ac1155f2f17ffb0adb66',1,'text.php']]],
+  ['get_5fpoller_5fruntime',['get_poller_runtime',['../boot_8php.html#aa561f801e962b67a5c4d0548ea95fd17',1,'boot.php']]],
   ['get_5fprofile_5felements',['get_profile_elements',['../items_8php.html#a251343637ff40a50cca93452cd530c26',1,'items.php']]],
   ['get_5fprofile_5ffields_5fadvanced',['get_profile_fields_advanced',['../identity_8php.html#a224710dfb7465b706c91134247c20afa',1,'identity.php']]],
   ['get_5fprofile_5ffields_5fbasic',['get_profile_fields_basic',['../identity_8php.html#a4ff59df0f0a668a06a8411f87496aa21',1,'identity.php']]],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"mod_2api_8php.html#a33315b5bbf5418f6850b2038107b526d":[6,0,1,4,0],
 "mod_2api_8php.html#a6fe77f05c07cb51048df0d557b4b9bd2":[6,0,1,4,1],
 "mod_2apps_8php.html":[6,0,1,6],
 "mod_2apps_8php.html#a546016cb960d0b110ee8e489dfa6c27c":[6,0,1,6,0],
@@ -53,8 +54,8 @@ var NAVTREEINDEX7 =
 "mytheme_2php_2theme_8php.html#a6ce5df8ece6acc09c1fddaccbeb244e8":[6,0,3,1,2,0,2,0],
 "namespaceFriendica.html":[4,0,1],
 "namespaceFriendica.html":[5,0,1],
-"namespaceRedMatrix.html":[5,0,3],
 "namespaceRedMatrix.html":[4,0,3],
+"namespaceRedMatrix.html":[5,0,3],
 "namespaceRedMatrix_1_1Import.html":[5,0,3,0],
 "namespaceRedMatrix_1_1Import.html":[4,0,3,0],
 "namespaceRedMatrix_1_1RedDAV.html":[5,0,3,1],
@@ -67,8 +68,8 @@ var NAVTREEINDEX7 =
 "namespacemembers_func.html":[4,1,1],
 "namespacemembers_vars.html":[4,1,2],
 "namespaces.html":[4,0],
-"namespaceupdatetpl.html":[4,0,4],
 "namespaceupdatetpl.html":[5,0,4],
+"namespaceupdatetpl.html":[4,0,4],
 "namespaceutil.html":[5,0,5],
 "namespaceutil.html":[4,0,5],
 "nav_8php.html":[6,0,0,53],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "redbasic_2php_2style_8php.html#ab3afb90d611eca90819f597a2c0bb459":[6,0,3,1,3,0,1,1],
 "redbasic_2php_2theme_8php.html":[6,0,3,1,3,0,2],
 "redbasic_2php_2theme_8php.html#af6eb813e9fc7e2d76ac1b82bc5c0ed9b":[6,0,3,1,3,0,2,0],
-"redbasic_8php.html":[6,0,3,1,0,2,9],
-"reddav_8php.html":[6,0,0,71]
+"redbasic_8php.html":[6,0,3,1,0,2,9]
 };
