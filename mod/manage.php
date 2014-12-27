@@ -49,7 +49,7 @@ function manage_content(&$a) {
 			for($x = 0; $x < count($channels); $x ++) {
 				$channels[$x]['link'] = 'manage/' . intval($channels[$x]['channel_id']);
 				if($channels[$x]['channel_id'] == local_user())
-					$selected_channel = $channels[$x];
+					$selected_channel = &$channels[$x]; // Needs to be a reference!
 				$channels[$x]['default'] = (($channels[$x]['channel_id'] == $account['account_default_channel']) ? "1" : ''); 
 				$channels[$x]['default_links'] = '1';
 
@@ -153,6 +153,8 @@ function manage_content(&$a) {
 		'$msg_make_default' => t('Make Default'),
 		'$links'            => $links,
 		'$all_channels'     => $channels,
+		'$mail_format'        => t('%d new messages'),
+		'$intros_format'        => t('%d new introductions'),
 		'$channel_usage_message' => $channel_usage_message,
 	));
 
