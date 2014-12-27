@@ -28,8 +28,13 @@ function manage_content(&$a) {
 	if($change_channel) {
 		$r = change_channel($change_channel);
 
-		if($r && $r['channel_startpage'])
-			goaway(z_root() . '/' . $r['channel_startpage']);
+		if((argc() > 2) && !(argv(2) === 'default')) {
+			goaway(z_root() . '/' . implode('/',array_slice($a->argv,2))); // Go to whatever is after /manage/, but with the new channel
+		}
+		else {
+			if($r && $r['channel_startpage'])
+				goaway(z_root() . '/' . $r['channel_startpage']); // If nothing extra is specified, go to the default page
+		}
 		goaway(z_root());
 	}
 
