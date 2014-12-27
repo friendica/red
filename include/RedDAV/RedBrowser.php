@@ -173,6 +173,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 			$type = $this->escapeHTML($type);
 
 			$icon = '';
+
 			if ($this->enableAssets) {
 				$node = $this->server->tree->getNodeForPath(($path ? $path . '/' : '') . $name);
 				foreach (array_reverse($this->iconMap) as $class=>$iconName) {
@@ -209,6 +210,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 			$ft['size'] = $size;
 			$ft['sizeFormatted'] = $this->userReadableSize($size);
 			$ft['lastmodified'] = (($lastmodified) ? datetime_convert('UTC', date_default_timezone_get(), $lastmodified) : '');
+			$ft['iconFromType'] = $this->getIconFromType($type);
 
 			$f[] = $ft;
 		}
@@ -323,6 +325,45 @@ class RedBrowser extends DAV\Browser\Plugin {
 	 */
 	protected function getAssetUrl($assetName) {
 		return z_root() . '/cloud/?sabreAction=asset&assetName=' . urlencode($assetName);
+	}
+
+	/**
+	 * @brief returns icon name for use with e.g. font-awesome based on filetype
+	 *
+	 * @param string $type
+	 * @return string
+	 */
+	protected function getIconFromType($type) {
+		$iconMap = array(
+					//Folder
+					t('Collection') => 'icon-folder-close',
+
+					//Common file
+					'application/octet-stream' => 'icon-file-alt',
+
+					//Text
+					'application/msword' => 'icon-file-text-alt',
+					'application/pdf' => 'icon-file-text-alt',
+					'application/vnd.oasis.opendocument.text' => 'icon-file-text-alt',
+
+					//Spreadsheet
+					 'application/vnd.oasis.opendocument.spreadsheet' => 'icon-table',
+
+					//Image
+					'image/jpeg' => 'icon-picture',
+					'image/png' => 'icon-picture',
+					'image/gif' => 'icon-picture',
+					'image/svg+xml' => 'icon-picture',
+				);
+
+		$iconFromType = 'icon-file-alt';
+
+		if (array_key_exists($type, $iconMap))
+			{
+			    $iconFromType = $iconMap[$type];
+			}
+
+		return $iconFromType;
 	}
 
 	/**

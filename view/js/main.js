@@ -844,11 +844,11 @@ function updateConvItems(mode,data) {
 	}
 
 	function filestorage(event,nick,id) {
-		$('#perms-panel-' + last_filestorage_id).html('');
+		$('#perms-panel-' + last_filestorage_id).hide().html('');
 		$('#file-edit-' + id).spin('tiny');
 		delete acl;
 		$.get('filestorage/' + nick + '/' + id + '/edit', function(data) {
-			$('#perms-panel-' + id).html(data);
+			$('#perms-panel-' + id).html(data).show();
 			$('#file-edit-' + id).spin(false);
 			last_filestorage_id = id;
 		});

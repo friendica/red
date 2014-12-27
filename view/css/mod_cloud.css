@@ -1,5 +1,18 @@
 #files-mkdir-tools,
-#files-upload-tools {
+#files-upload-tools,
+[id^="perms-panel-"] {
 	display: none;
+}
+
+#cloud-index {
+	width: 100%;
+}
+
+#cloud-index td:nth-child(1){
+	padding: 3px 4px 3px 0px;
+}
+
+.cloud-index-tool {
+	padding: 3px 4px;
 }
 
