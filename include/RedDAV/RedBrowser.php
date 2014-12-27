@@ -328,7 +328,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 	}
 
 	/**
-	 * @brief returns icon name for use with e.g. font-awesome based on filetype
+	 * @brief returns icon name for use with e.g. font-awesome based on mime-type
 	 *
 	 * @param string $type
 	 * @return string
@@ -345,15 +345,26 @@ class RedBrowser extends DAV\Browser\Plugin {
 					'application/msword' => 'icon-file-text-alt',
 					'application/pdf' => 'icon-file-text-alt',
 					'application/vnd.oasis.opendocument.text' => 'icon-file-text-alt',
+					'application/epub+zip' => 'icon-book',
 
 					//Spreadsheet
-					 'application/vnd.oasis.opendocument.spreadsheet' => 'icon-table',
+					'application/vnd.oasis.opendocument.spreadsheet' => 'icon-table',
+					'application/vnd.ms-excel' => 'icon-table',
 
 					//Image
 					'image/jpeg' => 'icon-picture',
 					'image/png' => 'icon-picture',
 					'image/gif' => 'icon-picture',
 					'image/svg+xml' => 'icon-picture',
+
+					//Archive
+					'application/zip' => 'icon-archive',
+					'application/x-rar-compressed' => 'icon-archive',
+
+					//Audio
+					'audio/mpeg' => 'icon-music',
+					'audio/wav' => 'icon-music',
+					'application/ogg' => 'icon-music',
 				);
 
 		$iconFromType = 'icon-file-alt';
