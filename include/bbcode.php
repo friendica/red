@@ -22,7 +22,7 @@ function tryzrlaudio($match) {
 	$zrl = is_matrix_url($link);
 	if($zrl)
 		$link = zid($link);
-	return	'<audio src="' .  $link . '" controls="controls" ><a href="' . $link . '">' . $link . '</a></audio>';
+	return	'<audio src="' .  str_replace(' ','%20',$link) . '" controls="controls" ><a href="' . str_replace(' ','%20',$link) . '">' . $link . '</a></audio>';
 }
 
 function tryzrlvideo($match) {
@@ -30,7 +30,7 @@ function tryzrlvideo($match) {
 	$zrl = is_matrix_url($link);
 	if($zrl)
 		$link = zid($link);
-	return	'<video controls="controls" src="' . $link . '" style="width:100%; max-width:' . get_app()->videowidth . 'px"><a href="' . $link . '">' . $link . '</a></video>';
+	return	'<video controls="controls" src="' . str_replace(' ','%20',$link) . '" style="width:100%; max-width:' . get_app()->videowidth . 'px"><a href="' . str_replace(' ','%20',$link) . '">' . $link . '</a></video>';
 
 }
 
