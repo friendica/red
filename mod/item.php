@@ -683,7 +683,8 @@ function item_post(&$a) {
 		}
 	}
 
-	$item_flags |= ITEM_UNSEEN;
+	if(local_user() != $profile_uid)
+		$item_flags |= ITEM_UNSEEN;
 	
 	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$item_flags = $item_flags | ITEM_WALL;
