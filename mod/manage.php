@@ -28,8 +28,13 @@ function manage_content(&$a) {
 	if($change_channel) {
 		$r = change_channel($change_channel);
 
-		if($r && $r['channel_startpage'])
-			goaway(z_root() . '/' . $r['channel_startpage']);
+		if((argc() > 2) && !(argv(2) === 'default')) {
+			goaway(z_root() . '/' . implode('/',array_slice($a->argv,2))); // Go to whatever is after /manage/, but with the new channel
+		}
+		else {
+			if($r && $r['channel_startpage'])
+				goaway(z_root() . '/' . $r['channel_startpage']); // If nothing extra is specified, go to the default page
+		}
 		goaway(z_root());
 	}
 
@@ -49,7 +54,7 @@ function manage_content(&$a) {
 			for($x = 0; $x < count($channels); $x ++) {
 				$channels[$x]['link'] = 'manage/' . intval($channels[$x]['channel_id']);
 				if($channels[$x]['channel_id'] == local_user())
-					$selected_channel = $channels[$x];
+					$selected_channel = &$channels[$x]; // Needs to be a reference!
 				$channels[$x]['default'] = (($channels[$x]['channel_id'] == $account['account_default_channel']) ? "1" : ''); 
 				$channels[$x]['default_links'] = '1';
 
@@ -153,6 +158,8 @@ function manage_content(&$a) {
 		'$msg_make_default' => t('Make Default'),
 		'$links'            => $links,
 		'$all_channels'     => $channels,
+		'$mail_format'        => t('%d new messages'),
+		'$intros_format'        => t('%d new introductions'),
 		'$channel_usage_message' => $channel_usage_message,
 	));
 
