@@ -1,4 +1,4 @@
 url: $baseurl/profile/$nick
 requires: local_user
-name: Profile
-
+name: View profile
+photo: $baseurl/app/profile.png
