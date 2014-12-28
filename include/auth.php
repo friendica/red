@@ -283,7 +283,7 @@ else {
 				@file_put_contents($authlog, datetime_convert() . ':' . session_id() . ' ' . $error . "\n", FILE_APPEND);
 
 			notice( t('Login failed.') . EOL );
-			goaway(z_root());
+			goaway(z_root() . '/login');
 		}
 
 		// If the user specified to remember the authentication, then change the cookie
