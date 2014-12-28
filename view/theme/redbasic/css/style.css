@@ -2056,13 +2056,15 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	border-bottom-right-radius: $radiuspx;
 }
 
-#cloud-index tr {
+.section-content-wrapper-np {
 	background-color: $comment_item_colour;
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
 }
 
 [id^="cloud-index-"]:hover,
 .cloud-index-active {
-	background-color: $item_colour !important;
+	background-color: $item_colour;
 }
 
 /* bootstrap overrides */

@@ -14,6 +14,10 @@
 	width: 100%;
 }
 
+#cloud-index th {
+	padding-top: 7px;
+}
+
 #cloud-index td:nth-child(1){
 	padding: 7px 3px 7px 10px;
 }
