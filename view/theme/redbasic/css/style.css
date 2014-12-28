@@ -1774,7 +1774,6 @@ img.mail-list-sender-photo {
 	color: #777;
 }
 
-#jot-perms-icon,
 .jot-icons {
 	color: $toolicon_colour;
 }
@@ -2031,6 +2030,38 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	color: $nav_active_icon_colour;
 }
 
+.section-title-wrapper {
+	padding: 7px 10px;
+	background-color: $item_colour;
+	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radiuspx;
+	margin-bottom: 3px;
+}
+
+.section-title-wrapper h2 {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.section-content-tools-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	margin-bottom: 3px;
+}
+
+.section-content-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
+}
+
+[id^="cloud-index-"]:hover,
+.cloud-index-active {
+	background-color: $item_colour;
+}
+
+
 /* bootstrap overrides */
 
 blockquote {
@@ -2224,32 +2255,6 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 	background-color: $advperm_bgcolour;
 	border: 1px solid $advperm_bordercol;
 	background-image: linear-gradient(to bottom, $advperm_gradientcol 0px, $advperm_bgcolour 100%);
-}
-
-.section-title-wrapper {
-	padding: 7px 10px;
-	background-color: $item_colour;
-	border-top-left-radius: $radiuspx;
-	border-top-right-radius: $radiuspx;
-	margin-bottom: 3px;
-}
-
-.section-title-wrapper h2 {
-	margin-top: 0px;
-	margin-bottom: 0px;
-}
-
-.section-content-tools-wrapper {
-	padding: 7px 10px;
-	background-color: $comment_item_colour;
-	margin-bottom: 3px;
-}
-
-.section-content-wrapper {
-	padding: 7px 10px;
-	background-color: $comment_item_colour;
-	border-bottom-left-radius: $radiuspx;
-	border-bottom-right-radius: $radiuspx;
 }
 
 @media screen and (max-width: 767px) {
