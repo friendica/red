@@ -468,7 +468,7 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 			}
 			else {
 				$('img',this).each(function() {
@@ -479,7 +479,7 @@ function updateConvItems(mode,data) {
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 			}
 			prev = ident;
 		});
@@ -510,7 +510,7 @@ function updateConvItems(mode,data) {
 				$('#threads-end').before($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 			}
 			else {
 				$('img',this).each(function() {
@@ -521,7 +521,7 @@ function updateConvItems(mode,data) {
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 			}
 		});
 
@@ -555,7 +555,7 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 
 			}
 			prev = ident;
