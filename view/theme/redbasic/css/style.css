@@ -689,18 +689,6 @@ footer {
   overflow: hidden;
 }
 
-#photos-upload-perms-menu, #photos-upload-perms-menu:visited, #photos-upload-perms-menu:link {
-	color: #8888FF;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-#photos-upload-perms-menu:hover {
-	color: #0000FF;
-	text-decoration: underline;
-	cursor: pointer;
-}
-
 #photo-view-wrapper {
 	background-color: $item_colour;
 }

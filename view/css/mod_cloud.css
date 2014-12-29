@@ -2,7 +2,10 @@
 #files-upload-tools,
 [id^="perms-panel-"] {
 	display: none;
-	padding: 3px 10px 3px 10px !important;
+}
+
+[id^="perms-panel-"] {
+	padding: 3px 10px 0px 10px !important;
 }
 
 #attach-code,
@@ -32,4 +35,8 @@
 
 .cloud-index-tool {
 	padding: 7px 10px;
+}
+
+#files-upload {
+    padding: 2px;
 }
