@@ -22,7 +22,7 @@ When looking for the hub for you a couple resources are prevalent right now to d
 2. [Built With] (https://www.builtwith.com) for a fundamental hardware software technology profile of the hub domains.
 
 - One can type in the search box the domain of there hub and be brought to the technology profile of that page
-  - There are also browser extensions *in the resources nav bar* for Firefox, Chrome and Safari.
+  - There are also browser extensions *in the resources nav bar of the builtwith site* for Firefox, Chrome and Safari. These allow a quicker process at the click of a button in your browser toolbar then having to leave a dedicated tab open and type in domains in the search bar.
 
 
 ####Some reasons one might want to shop around for a hub:
