@@ -14,19 +14,17 @@
 	width: 100%;
 }
 
-#cloud-index th {
-	padding-top: 7px;
-}
-
 #cloud-index td:nth-child(1){
 	padding: 7px 3px 7px 10px;
 }
 
+#cloud-index th:nth-child(8),
 #cloud-index td:nth-child(8){
 	padding: 7px 3px;
 	white-space: nowrap;
 }
 
+#cloud-index th:nth-child(9),
 #cloud-index td:nth-child(9){
 	padding: 7px 10px 7px 7px;
 	white-space: nowrap;
