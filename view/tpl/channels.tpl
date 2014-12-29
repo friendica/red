@@ -13,14 +13,6 @@
 {{$channel_usage_message}}
 </div>
 {{/if}}
-{{if $selected}}
-<div id="selected-channel">
-<div id="channels-selected">{{$msg_selected}}</div>
-{{include file="channel.tpl" channel=$selected}}
-</div>
-<div class="channels-end selected"></div>
-{{/if}}
-<br />
 <div id="channels-desc" class="descriptive-text">{{$desc}}</div>
 
 <div id="all-channels">
