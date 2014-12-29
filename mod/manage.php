@@ -46,15 +46,12 @@ function manage_content(&$a) {
 			intval(PAGE_REMOVED)
 		);
 
-		$selected_channel = null;
 		$account = get_app()->get_account();
 
 		if($r && count($r)) {
 			$channels = $r;
 			for($x = 0; $x < count($channels); $x ++) {
 				$channels[$x]['link'] = 'manage/' . intval($channels[$x]['channel_id']);
-				if($channels[$x]['channel_id'] == local_user())
-					$selected_channel = &$channels[$x]; // Needs to be a reference!
 				$channels[$x]['default'] = (($channels[$x]['channel_id'] == $account['account_default_channel']) ? "1" : ''); 
 				$channels[$x]['default_links'] = '1';
 
@@ -152,8 +149,8 @@ function manage_content(&$a) {
 	$o = replace_macros(get_markup_template('channels.tpl'), array(
 		'$header'           => t('Channel Manager'),
 		'$msg_selected'     => t('Current Channel'),
-		'$selected'         => $selected_channel,
-		'$desc'             => t('Attach to one of your channels by selecting it.'),
+		'$selected'         => local_user(),
+		'$desc'             => t('Switch to one of your channels by selecting it.'),
 		'$msg_default'      => t('Default Channel'),
 		'$msg_make_default' => t('Make Default'),
 		'$links'            => $links,
