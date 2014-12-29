@@ -18,7 +18,6 @@
 	<li><a href='{{$admin.channels.0}}'>{{$admin.channels.1}}</a></li>
 	<li><a href='{{$admin.plugins.0}}'>{{$admin.plugins.1}}</a></li>
 	<li><a href='{{$admin.themes.0}}'>{{$admin.themes.1}}</a></li>
-	<li><a href='{{$admin.hubloc.0}}'>{{$admin.hubloc.1}}</a></li>
 	<li><a href='{{$admin.dbsync.0}}'>{{$admin.dbsync.1}}</a></li>
 </ul>
 </div>
