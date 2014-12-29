@@ -7,7 +7,9 @@ Being an open source project people have been free to create a mashup of technol
 ##Hub "Shopping", Statistics and Technology Profiles
 
 When looking for the hub for you a couple resources are prevalent right now to do your consumer investigation.
+
 1. [Red Stats] (redstats.tarine.net) for a general overview of hub statistics
+
 - When you **click on the little eye beside the the hub domain** you are shown
   - Activity of the Hub's channels
   - Version of Redmatrix running
@@ -16,6 +18,7 @@ When looking for the hub for you a couple resources are prevalent right now to d
   - Default Language supported (Although this can be changed - ask your admin)
   - A link to the administrater for the hubs page 
   - Add-ons and features included in the initial hub.
+
 2. [Built With] (https://www.builtwith.com) for a fundamental hardware software technology profile of the hub domains.
 - One can type in the search box the domain of there hub and be brought to the technology profile of that page
 - There are also browser extensions *in the resources nav bar* for Firefox, Chrome and Safari.
