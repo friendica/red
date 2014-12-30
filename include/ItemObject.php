@@ -231,7 +231,14 @@ class Item extends BaseObject {
 
 		localize_item($item);
 		$body = prepare_body($item,true);
-		
+
+		// $viewthread (below) is only valid in list mode. If this is a channel page, build the thread viewing link
+		// since we can't depend on llink or plink pointing to the right local location.
+ 
+		$owner_address = substr($item['owner']['xchan_addr'],0,strpos($item['owner']['xchan_addr'],'@'));
+		$viewthread = $item['llink'];
+		if($conv->get_mode() === 'channel')
+			$viewthread = z_root() . '/channel/' . $owner_address . '?f=&mid=' . $item['mid'];
 
 		$comment_count_txt = sprintf( tt('%d comment','%d comments',$total_children),$total_children );
 		$list_unseen_txt = (($unseen_comments) ? sprintf('%d unseen',$unseen_comments) : '');
@@ -249,6 +256,7 @@ class Item extends BaseObject {
 			'linktitle' => sprintf( t('View %s\'s profile - %s'), $profile_name, $item['author']['xchan_addr']),
 			'olinktitle' => sprintf( t('View %s\'s profile - %s'), $this->get_owner_name(), $item['owner']['xchan_addr']),
 			'llink' => $item['llink'],
+			'viewthread' => $viewthread,
 			'to' => t('to'),
 			'via' => t('via'),
 			'wall' => t('Wall-to-Wall'),
@@ -284,7 +292,7 @@ class Item extends BaseObject {
 			'share'     => $share,
 			'rawmid'	=> $item['mid'],
 			'plink'     => get_plink($item),
-			'edpost'    => ((feature_enabled($conv->get_profile_owner(),'edit_posts')) ? $edpost : ''),
+			'edpost'    => $edpost, // ((feature_enabled($conv->get_profile_owner(),'edit_posts')) ? $edpost : ''),
 			'star'      => ((feature_enabled($conv->get_profile_owner(),'star_posts')) ? $star : ''),
 			'tagger'    => ((feature_enabled($conv->get_profile_owner(),'commtag')) ? $tagger : ''),
 			'filer'     => ((feature_enabled($conv->get_profile_owner(),'filing')) ? $filer : ''),
@@ -627,7 +635,7 @@ class Item extends BaseObject {
 			'$edimg' => t('Image'),
 			'$edurl' => t('Link'),
 			'$edvideo' => t('Video'),
-			'$preview' => ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
+			'$preview' => t('Preview'), // ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
 			'$indent' => $indent,
 			'$feature_encrypt' => ((feature_enabled($conv->get_profile_owner(),'content_encrypt')) ? true : false),
 			'$encrypt' => t('Encrypt text'),

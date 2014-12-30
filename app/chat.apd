@@ -1,4 +1,4 @@
 url: $baseurl/chat/$nick
 requires: local_user
-name: Chat
+name: My chatrooms
 photo: $baseurl/app/chat.png

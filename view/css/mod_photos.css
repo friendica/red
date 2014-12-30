@@ -25,6 +25,6 @@
 }
 
 #photos-upload-choose {
-	border: unset;
-	padding: unset;
+	padding: 4px;
+	width: 100%;
 }

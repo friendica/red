@@ -105,3 +105,5 @@ Good enough. Podunk.edu checks out the story and indeed, it is example.com, and 
 
  
 And that's the package (the original message). Example.com converts this into a form suitable for viewing by Nickordo and notifies Nickordo that there's a new message. Podunk.edu **might** discover that there are other packages waiting for example.com. If this happens it may also send any and all other waiting packages at this time. Each has the original tracking number attached.  
+
+#include doc/macros/main_footer.bb;

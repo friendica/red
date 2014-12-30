@@ -118,8 +118,11 @@ class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
 				}
 			}
 		}
-		logger('password failed for ' . $username);
-		// @TODO add security logger
+
+		$error = 'password failed for ' . $username;
+		logger($error);
+		log_failed_login($error);
+
 		return false;
 	}
 

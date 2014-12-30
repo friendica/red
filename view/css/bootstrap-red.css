@@ -1,11 +1,5 @@
 /* override some bootstrap settings */
 
-/* this might be a bug in bootstrap */
-.input-group-addon,
-.input-group-btn {
-	width: unset;
-}
-
 /* nav overrides */
 
 nav .badge {
@@ -32,7 +26,6 @@ nav img {
 }
 
 nav .dropdown-menu {
-	top: 50px;
 	max-height: 450px;
 	max-width: 300px;
 	overflow-y: auto;

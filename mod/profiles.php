@@ -156,9 +156,14 @@ function profiles_init(&$a) {
 
 	// Run profile_load() here to make sure the theme is set before
 	// we start loading content
-	if((argc() > 1) && (intval(argv(1)))) {
+	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_user(),'multi_profiles')) {
+		if(feature_enabled(local_user(),'multi_profiles'))
+			$id = $a->argv[1];
+		else
+			$id = q("select id from profile where uid = %d and is_default = 1",local_user())[0]['id'];
+
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($a->argv[1]),
+			intval($id),
 			intval(local_user())
 		);
 		if(! count($r)) {
@@ -556,9 +561,14 @@ function profiles_content(&$a) {
 	$profile_fields_basic    = get_profile_fields_basic();
 	$profile_fields_advanced = get_profile_fields_advanced();
 
-	if((argc() > 1) && (intval(argv(1)))) {
+	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_user(),'multi_profiles')) {
+		if(feature_enabled(local_user(),'multi_profiles'))
+			$id = $a->argv[1];
+		else
+			$id = q("select id from profile where uid = %d and is_default = 1",local_user())[0]['id'];
+		
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($a->argv[1]),
+			intval($id),
 			intval(local_user())
 		);
 		if(! count($r)) {
@@ -585,7 +595,7 @@ function profiles_content(&$a) {
 			$fields = $profile_fields_basic;
 
 
-		$opt_tpl = get_markup_template("profile-hide_friends.tpl");
+		$opt_tpl = get_markup_template("profile_hide_friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array(
 			'$desc'         => t('Hide your contact/friend list from viewers of this profile?'),
 			'$yes_str'      => t('Yes'),
@@ -611,7 +621,7 @@ function profiles_content(&$a) {
 			}
 		}
 
-logger('extra_fields: ' . print_r($extra_fields,true));
+//logger('extra_fields: ' . print_r($extra_fields,true));
 
 		$f = get_config('system','birthday_input_format');
 		if(! $f)

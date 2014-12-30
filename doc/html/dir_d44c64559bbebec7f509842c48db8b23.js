@@ -45,6 +45,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "expire.php", "expire_8php.html", "expire_8php" ],
     [ "externals.php", "externals_8php.html", "externals_8php" ],
     [ "features.php", "features_8php.html", "features_8php" ],
+    [ "fixd.php", "fixd_8php.html", "fixd_8php" ],
     [ "follow.php", "include_2follow_8php.html", "include_2follow_8php" ],
     [ "gprobe.php", "gprobe_8php.html", "gprobe_8php" ],
     [ "group.php", "include_2group_8php.html", "include_2group_8php" ],

@@ -1,0 +1,43 @@
+#files-mkdir-tools,
+#files-upload-tools,
+[id^="perms-panel-"] {
+	display: none;
+}
+
+[id^="perms-panel-"] {
+	padding: 3px 10px 0px 10px !important;
+}
+
+#attach-code,
+#link-code {
+	display: none;
+}
+
+#cloud-index {
+	width: 100%;
+}
+
+#cloud-index td:nth-child(1){
+	padding: 7px 3px 7px 10px;
+}
+
+#cloud-index th:nth-child(8),
+#cloud-index td:nth-child(8){
+	padding: 7px 3px;
+	white-space: nowrap;
+}
+
+#cloud-index th:nth-child(9),
+#cloud-index td:nth-child(9){
+	padding: 7px 10px 7px 7px;
+	white-space: nowrap;
+}
+
+.cloud-index-tool {
+	padding: 7px 10px;
+}
+
+#files-upload {
+	padding: 4px;
+	width: 100%;
+}

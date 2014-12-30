@@ -8,6 +8,7 @@
 
 	<label for="newchannel-role" id="label-newchannel-role" class="newchannel-label" >{{$label_role}}</label>
 	{{$role_select}}
+	<div class="newchannel-role-morehelp"><a href="help/roles" title="{{$what_is_role}}" target="_blank">{{$questionmark}}</a></div>
 	<div id="newchannel-role-end"  class="newchannel-field-end"></div>
 
 

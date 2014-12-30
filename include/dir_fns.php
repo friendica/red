@@ -51,13 +51,32 @@ function check_upstream_directory() {
 }
 	
 function dir_sort_links() {
+	// Build urls without order and pubforums so it's easy to tack on the changed value
+	// Probably there's an easier way to do this
+
+	$current_order = (($_REQUEST['order']) ? $_REQUEST['order'] : 'normal');
+	$url = 'directory?';
+	$tmp = $_REQUEST;
+	unset($tmp['order']);
+	$sorturl = $url . http_build_query($tmp);
+	$tmp = $_REQUEST;
+
+	unset($tmp['pubforums']);
+	$forumsurl = $url . http_build_query($tmp);
 
 	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(
 		'$header' => t('Directory Options'),
 		'$normal' => t('Alphabetic'),
 		'$reverse' => t('Reverse Alphabetic'),
 		'$date' => t('Newest to Oldest'),
+		'$reversedate' => t('Oldest to Newest'),
 		'$pubforums' => t('Public Forums Only'),
+		'$pubforumsonly' => x($_REQUEST,'pubforums') ? $_REQUEST['pubforums'] : '',
+		'$sort' => t('Sort'),
+		'$selected_sort' => $current_order,
+		'$sorturl' => $sorturl,
+		'$forumsurl' => $forumsurl,
+
 	));
 	return $o;
 }
@@ -213,7 +232,7 @@ function update_directory_entry($ud) {
 
 function local_dir_update($uid,$force) {
 
-	logger('local_dir_update', LOGGER_DEBUG);
+	logger('local_dir_update: uid: ' . $uid, LOGGER_DEBUG);
 
 	$p = q("select channel.channel_hash, channel_address, channel_timezone, profile.* from profile left join channel on channel_id = uid where uid = %d and is_default = 1",
 		intval($uid)

@@ -1,12 +1,24 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/security.php
+ *
+ * Some security related functions.
+ */
 
-function authenticate_success($user_record, $login_initial = false, $interactive = false,$return = false,$update_lastlog = false) {
+/**
+ * @param int $user_record The account_id
+ * @param bool $login_initial default false
+ * @param bool $interactive default false
+ * @param bool $return
+ * @param bool $update_lastlog
+ */
+function authenticate_success($user_record, $login_initial = false, $interactive = false, $return = false, $update_lastlog = false) {
 
 	$a = get_app();
 
 	$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
-	if(x($user_record,'account_id')) {
+	if(x($user_record, 'account_id')) {
 		$a->account = $user_record;
 		$_SESSION['account_id'] = $user_record['account_id'];
 		$_SESSION['authenticated'] = 1;
@@ -39,7 +51,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		// might want to log success here
 	}
 
-	if($return || x($_SESSION,'workflow')) {
+	if($return || x($_SESSION, 'workflow')) {
 		unset($_SESSION['workflow']);
 		return;
 	}
@@ -70,7 +82,13 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 	/* else just return */
 }
 
-
+/**
+ * @brief Change to another channel with current logged-in account.
+ *
+ * @param int $change_channel The channel_id of the channel you want to change to
+ *
+ * @return bool|array false or channel record of the new channel
+ */
 function change_channel($change_channel) {
 
 	$ret = false;
@@ -83,17 +101,17 @@ function change_channel($change_channel) {
 		);
 
 		// It's not there.  Is this an administrator, and is this the sys channel?
-	if (is_developer()) {
-		if (! $r) {
-			if (is_site_admin()) {
-				$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and ( channel_pageflags & %d) and not (channel_pageflags & %d )>0 limit 1",
-				intval($change_channel),
-				intval(PAGE_SYSTEM),
-				intval(PAGE_REMOVED)
-				);
+		if (is_developer()) {
+			if (! $r) {
+				if (is_site_admin()) {
+					$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and ( channel_pageflags & %d) and not (channel_pageflags & %d )>0 limit 1",
+						intval($change_channel),
+						intval(PAGE_SYSTEM),
+						intval(PAGE_REMOVED)
+					);
+				}
 			}
 		}
-	}
 
 		if($r) {
 			$hash = $r[0]['channel_hash'];
@@ -109,23 +127,28 @@ function change_channel($change_channel) {
 		);
 		if($x) {
 			$_SESSION['my_url'] = $x[0]['xchan_url'];
-			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . substr(get_app()->get_baseurl(),strpos(get_app()->get_baseurl(),'://')+3);
+			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . substr(get_app()->get_baseurl(), strpos(get_app()->get_baseurl(), '://') + 3);
 
 			get_app()->set_observer($x[0]);
-			get_app()->set_perms(get_all_perms(local_user(),$hash));
+			get_app()->set_perms(get_all_perms(local_user(), $hash));
 		}
 		if(! is_dir('store/' . $r[0]['channel_address']))
 			@os_mkdir('store/' . $r[0]['channel_address'], STORAGE_DEFAULT_PERMISSIONS,true);
-
 	}
 
 	return $ret;
-
 }
 
-
-
-function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
+/**
+ * @brief Creates an addiontal SQL where statement to check permissions.
+ *
+ * @param int $owner_id
+ * @param bool $remote_verified default false, not used at all
+ * @param string $groups this param is not used at all
+ *
+ * @return string additional SQL where statement
+ */
+function permissions_sql($owner_id, $remote_verified = false, $groups = null) {
 
 	if(defined('STATUSNET_PRIVACY_COMPATIBILITY'))
 		return '';
@@ -142,8 +165,7 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 	$sql = " AND allow_cid = '' 
 			 AND allow_gid = '' 
 			 AND deny_cid  = '' 
-			 AND deny_gid  = ''  
-			
+			 AND deny_gid  = '' 
 	";
 
 	/**
@@ -161,7 +183,6 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 	 * If pre-verified, the caller is expected to have already
 	 * done this and passed the groups into this function.
 	 */
-
 
 	else {
 		$observer = get_observer_hash();
@@ -191,7 +212,16 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 	return $sql;
 }
 
-function item_permissions_sql($owner_id,$remote_verified = false,$groups = null) {
+/**
+ * @brief Creates an addiontal SQL where statement to check permissions for an item.
+ *
+ * @param int $owner_id
+ * @param bool $remote_verified default false, not used at all
+ * @param string $groups this param is not used at all
+ *
+ * @return string additional SQL where statement
+ */
+function item_permissions_sql($owner_id, $remote_verified = false, $groups = null) {
 
 	if(defined('STATUSNET_PRIVACY_COMPATIBILITY'))
 		return '';
@@ -206,7 +236,6 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 	 */
 
 	$sql = " AND item_private=0 ";
-			
 
 	/**
 	 * Profile owner - everything is visible
@@ -223,7 +252,6 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 	 * If pre-verified, the caller is expected to have already
 	 * done this and passed the groups into this function.
 	 */
-
 
 	else {
 		$observer = get_observer_hash();
@@ -250,12 +278,18 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 			);
 		}
 	}
+
 	return $sql;
 }
 
+/**
+ * @param string $observer_hash
+ *
+ * @return string additional SQL where statement
+ */
 function public_permissions_sql($observer_hash) {
 
-	$observer = get_app()->get_observer();
+	//$observer = get_app()->get_observer();
 	$groups = init_groups_visitor($observer_hash);
 
 	$gs = '<<>>'; // should be impossible to match
@@ -263,7 +297,7 @@ function public_permissions_sql($observer_hash) {
 	if(is_array($groups) && count($groups)) {
 		foreach($groups as $g)
 			$gs .= '|<' . $g . '>';
-	} 
+	}
 	$sql = '';
 	if($observer_hash) {
 		$regexop = db_getfunc('REGEXP');
@@ -341,10 +375,10 @@ function check_form_security_token_ForbiddenOnErr($typename = '', $formname = 'f
 	}
 }
 
+
 // Returns an array of group id's this contact is a member of.
 // This array will only contain group id's related to the uid of this
 // DFRN contact. They are *not* neccessarily unique across the entire site. 
-
 
 if(! function_exists('init_groups_visitor')) {
 function init_groups_visitor($contact_id) {
@@ -358,8 +392,6 @@ function init_groups_visitor($contact_id) {
 	}
 	return $groups;
 }}
-
-
 
 
 
@@ -380,21 +412,24 @@ function stream_perms_api_uids($perms = NULL ) {
 		$ret[] = local_user();
 	$r = q("select channel_id from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0",
 		intval($perms),
-		intval(PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
+		intval(PAGE_ADULT|PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
 	);
-	if($r)
+	if($r) {
 		foreach($r as $rr)
-			if(! in_array($rr['channel_id'],$ret))
+			if(! in_array($rr['channel_id'], $ret))
 				$ret[] = $rr['channel_id']; 
+	}
 
 	$str = '';
-	if($ret)
+	if($ret) {
 		foreach($ret as $rr) {
 			if($str)
 				$str .= ',';
 			$str .= intval($rr); 
 		}
+	}
 	logger('stream_perms_api_uids: ' . $str, LOGGER_DEBUG);
+
 	return $str;
 }
 
@@ -407,21 +442,23 @@ function stream_perms_xchans($perms = NULL ) {
 
 	$r = q("select channel_hash from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0",
 		intval($perms),
-		intval(PAGE_CENSORED|PAGE_SYETEM|PAGE_REMOVED)
+		intval(PAGE_ADULT|PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
 	);
-	if($r)
+	if($r) {
 		foreach($r as $rr)
-			if(! in_array($rr['channel_hash'],$ret))
+			if(! in_array($rr['channel_hash'], $ret))
 				$ret[] = $rr['channel_hash']; 
+	}
 
 	$str = '';
-	if($ret)
+	if($ret) {
 		foreach($ret as $rr) {
 			if($str)
 				$str .= ',';
 			$str .= "'" . dbesc($rr) . "'"; 
 		}
+	}
 	logger('stream_perms_xchans: ' . $str, LOGGER_DEBUG);
+
 	return $str;
 }
-

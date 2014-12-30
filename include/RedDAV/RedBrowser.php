@@ -173,6 +173,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 			$type = $this->escapeHTML($type);
 
 			$icon = '';
+
 			if ($this->enableAssets) {
 				$node = $this->server->tree->getNodeForPath(($path ? $path . '/' : '') . $name);
 				foreach (array_reverse($this->iconMap) as $class=>$iconName) {
@@ -182,10 +183,10 @@ class RedBrowser extends DAV\Browser\Plugin {
 					}
 				}
 			}
-	
-			$parentHash = "";
+
+			$parentHash = '';
 			$owner = $this->auth->owner_id;
-			$splitPath = split("/", $fullPath);
+			$splitPath = split('/', $fullPath);
 			if (count($splitPath) > 3) {
 				for ($i = 3; $i < count($splitPath); $i++) {
 					$attachName = urldecode($splitPath[$i]);
@@ -209,6 +210,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 			$ft['size'] = $size;
 			$ft['sizeFormatted'] = $this->userReadableSize($size);
 			$ft['lastmodified'] = (($lastmodified) ? datetime_convert('UTC', date_default_timezone_get(), $lastmodified) : '');
+			$ft['iconFromType'] = $this->getIconFromType($type);
 
 			$f[] = $ft;
 		}
@@ -233,15 +235,26 @@ class RedBrowser extends DAV\Browser\Plugin {
 		}
 
 		// prepare quota for template
+		$quota = array();
 		$quota['used'] = $used;
 		$quota['limit'] = $limit;
 		$quota['desc'] = $quotaDesc;
 
-		$html .= replace_macros(get_markup_template('cloud_directory.tpl'), array(
+		$output = '';
+		if ($this->enablePost) {
+			$this->server->broadcastEvent('onHTMLActionsPanel', array($parent, &$output));
+		}
+
+		$html .= replace_macros(get_markup_template('cloud_header.tpl'), array(
 				'$header' => t('Files') . ": " . $this->escapeHTML($path) . "/",
+				'$quota' => $quota,
+				'$total' => t('Total'),
+				'$actionspanel' => $output
+			));
+
+		$html .= replace_macros(get_markup_template('cloud_directory.tpl'), array(
 				'$parentpath' => $parentpath,
 				'$entries' => $f,
-				'$quota' => $quota,
 				'$name' => t('Name'),
 				'$type' => t('Type'),
 				'$size' => t('Size'),
@@ -249,15 +262,9 @@ class RedBrowser extends DAV\Browser\Plugin {
 				'$parent' => t('parent'),
 				'$edit' => t('Edit'),
 				'$delete' => t('Delete'),
-				'$total' => t('Total')		
+				'$nick' => $this->auth->getCurrentUser()
 			));
 
-		$output = '';
-		if ($this->enablePost) {
-			$this->server->broadcastEvent('onHTMLActionsPanel', array($parent, &$output));
-		}
-		$html .= $output;
-	
 		get_app()->page['content'] = $html;
 		load_pdl(get_app());
 		construct_page(get_app());
@@ -318,6 +325,62 @@ class RedBrowser extends DAV\Browser\Plugin {
 	 */
 	protected function getAssetUrl($assetName) {
 		return z_root() . '/cloud/?sabreAction=asset&assetName=' . urlencode($assetName);
+	}
+
+	/**
+	 * @brief returns icon name for use with e.g. font-awesome based on mime-type
+	 *
+	 * @param string $type
+	 * @return string
+	 */
+	protected function getIconFromType($type) {
+		$iconMap = array(
+					//Folder
+					t('Collection') => 'icon-folder-close',
+
+					//Common file
+					'application/octet-stream' => 'icon-file-alt',
+
+					//Text
+					'text/plain' => 'icon-file-text-alt',
+					'application/msword' => 'icon-file-text-alt',
+					'application/pdf' => 'icon-file-text-alt',
+					'application/vnd.oasis.opendocument.text' => 'icon-file-text-alt',
+					'application/epub+zip' => 'icon-book',
+
+					//Spreadsheet
+					'application/vnd.oasis.opendocument.spreadsheet' => 'icon-table',
+					'application/vnd.ms-excel' => 'icon-table',
+
+					//Image
+					'image/jpeg' => 'icon-picture',
+					'image/png' => 'icon-picture',
+					'image/gif' => 'icon-picture',
+					'image/svg+xml' => 'icon-picture',
+
+					//Archive
+					'application/zip' => 'icon-archive',
+					'application/x-rar-compressed' => 'icon-archive',
+
+					//Audio
+					'audio/mpeg' => 'icon-music',
+					'audio/wav' => 'icon-music',
+					'application/ogg' => 'icon-music',
+
+					//Video
+					'video/quicktime' => 'icon-film',
+
+
+				);
+
+		$iconFromType = 'icon-file-alt';
+
+		if (array_key_exists($type, $iconMap))
+			{
+			    $iconFromType = $iconMap[$type];
+			}
+
+		return $iconFromType;
 	}
 
 	/**

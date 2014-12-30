@@ -101,9 +101,33 @@ function import_post(&$a) {
 	// We should probably also verify the hash 
 
 	if($r) {
-		logger('mod_import: duplicate channel. ', print_r($channel,true));
-		notice( t('Cannot create a duplicate channel identifier on this system. Import failed.') . EOL);
-		return;
+		if($r[0]['channel_guid'] === $channel['channel_guid'] || $r[0]['channel_hash'] === $channel['channel_hash']) {
+			logger('mod_import: duplicate channel. ', print_r($channel,true));
+			notice( t('Cannot create a duplicate channel identifier on this system. Import failed.') . EOL);
+			return;
+		}
+		else {
+			// try at most ten times to generate a unique address.
+			$x = 0;
+			$found_unique = false;
+			do {
+				$tmp = $channel['channel_address'] . mt_rand(1000,9999);
+				$r = q("select * from channel where channel_address = '%s' limit 1",
+					dbesc($tmp)
+				);
+				if(! $r) {
+					$channel['channel_address'] = $tmp;
+					$found_unique = true;
+					break;
+				}
+				$x ++;
+			} while ($x < 10);
+			if(! $found_unique) {
+				logger('mod_import: duplicate channel. randomisation failed.', print_r($channel,true));
+				notice( t('Unable to create a unique channel address. Import failed.') . EOL);
+				return;
+			}
+		}		
 	}
 
 	unset($channel['channel_id']);

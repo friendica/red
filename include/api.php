@@ -1868,11 +1868,14 @@ require_once('include/items.php');
 		
 		require_once("include/message.php");
 
-		$r = q("SELECT `id` FROM `contact` WHERE `uid`=%d AND `nick`='%s'",
-				intval(api_user()),
-				dbesc($_POST['screen_name']));
+		// in a decentralised world the screen name is ambiguous
 
-		$recipient = api_get_user($a, $r[0]['id']);			
+		$r = q("SELECT `abook_id` FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel`=%d and xchan_addr like '%s'",
+				intval(api_user()),
+				dbesc($_POST['screen_name'] . '@%')
+		);
+
+		$recipient = api_get_user($a, $r[0]['abook_id']);			
 		$replyto = '';
 		$sub     = '';
 		if (x($_REQUEST,'replyto')) {
@@ -1925,10 +1928,11 @@ require_once('include/items.php');
 		if ($page<0) $page=0;
 		
 		$start = $page*$count;
-		
-		$profile_url = $a->get_baseurl() . '/channel/' . $a->user['nickname'];
+		$channel = $a->get_channel();		
+
+		$profile_url = $a->get_baseurl() . '/channel/' . $channel['channel_address'];
 		if ($box=="sentbox") {
-			$sql_extra = "`from-url`='".dbesc( $profile_url )."'";
+			$sql_extra = "`from_xchan`='".dbesc( $channel['channel_hash'] )."'";
 		}
 		elseif ($box=="conversation") {
 			$sql_extra = "`parent_mid`='".dbesc( $_GET["uri"] )  ."'";
@@ -1937,10 +1941,10 @@ require_once('include/items.php');
 			$sql_extra = "true";
 		}
 		elseif ($box=="inbox") {
-			$sql_extra = "`from-url`!='".dbesc( $profile_url )."'";
+			$sql_extra = "`from_xchan`!='".dbesc( $channel['channel_hash'] )."'";
 		}
 		
-		$r = q("SELECT * FROM `mail` WHERE uid=%d AND $sql_extra ORDER BY created DESC LIMIT %d OFFSET %d",
+		$r = q("SELECT * FROM `mail` WHERE channel_id = %d AND $sql_extra ORDER BY created DESC LIMIT %d OFFSET %d",
 				intval(api_user()),
 				intval($count), intval($start)
 		);
@@ -1950,10 +1954,12 @@ require_once('include/items.php');
 			foreach($r as $item) {
 				if ($box == "inbox" || $item['from-url'] != $profile_url){
 					$recipient = $user_info;
-					$sender = api_get_user($a,$item['contact-id']);
+					// fixme to lookup recipient
+					$sender = api_get_user($a);
 				}
 				elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
-					$recipient = api_get_user($a,$item['contact-id']);
+					// fixme to lookup recipient
+					$recipient = api_get_user($a);
 					$sender = $user_info;
 				}
 	

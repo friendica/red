@@ -431,13 +431,18 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 	$arr_blocked = null;
 
-	if(local_user()) {
+	if(local_user()) 
 		$str_blocked = get_pconfig(local_user(),'system','blocked');
-		if($str_blocked) {
+	if(! local_user() && ($mode == 'network')) {
+		$sys = get_sys_channel();
+		$id = $sys['channel_id'];
+ 		$str_blocked = get_pconfig($id,'system','blocked');
+	}
+	
+	if($str_blocked) {
 			$arr_blocked = explode(',',$str_blocked);
 			for($x = 0; $x < count($arr_blocked); $x ++)
-				$arr_blocked[$x] = trim($arr_blocked[$x]);
-		}
+			$arr_blocked[$x] = trim($arr_blocked[$x]);
 	}
 
 
@@ -661,7 +666,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 				$body = prepare_body($item,true);
 
-				//$tmp_item = replace_macros($tpl,array(
 				$tmp_item = array(
 					'template' => $tpl,
 					'toplevel' => 'toplevel_item',
@@ -1095,8 +1099,8 @@ function status_editor($a,$x,$popup=false) {
 	$jotplugins = '';
 	$jotnets = '';
 
-
-	$preview = ((feature_enabled($x['profile_uid'],'preview')) ? t('Preview') : '');
+	$preview = t('Preview');
+//	$preview = ((feature_enabled($x['profile_uid'],'preview')) ? t('Preview') : '');
 	if(x($x,'nopreview'))
 		$preview = '';
 
@@ -1128,13 +1132,13 @@ function status_editor($a,$x,$popup=false) {
 		'$shortaudio' => t('audio link'),
 		'$setloc' => t('Set your location'),
 		'$shortsetloc' => t('set location'),
-		'$noloc' => t('Clear browser location'),
+		'$noloc' => ((get_pconfig($x['profile_uid'],'system','use_browser_location')) ? t('Clear browser location') : ''),
 		'$shortnoloc' => t('clear location'),
 		'$title' => ((x($x,'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
-		'$placeholdertitle' => t('Set title'),
+		'$placeholdertitle' => t('Title (optional)'),
 		'$catsenabled' => ((feature_enabled($x['profile_uid'],'categories') && (! $webpage)) ? 'categories' : ''),
 		'$category' => "",
-		'$placeholdercategory' => t('Categories (comma-separated list)'),
+		'$placeholdercategory' => t('Categories (optional, comma-separated list)'),
 		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
 		'$shortpermset' => t('permissions'),

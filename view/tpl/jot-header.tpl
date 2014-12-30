@@ -309,7 +309,7 @@ function enableOnUser(){
 
 	function jotClearLocation() {
 		$('#jot-coord').val('');
-		$('#profile-nolocation-wrapper').hide();
+		$('#profile-nolocation-wrapper').attr('disabled', true);
 	}
 
 

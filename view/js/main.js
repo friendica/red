@@ -208,6 +208,7 @@
 	var pageHasMoreContent = true;
 	var updateCountsOnly = false;
 	var divmore_height = 400;
+	var last_filestorage_id = null;
 
 	$(function() {
 		$.ajaxSetup({cache: false});
@@ -437,6 +438,8 @@ function updatePageItems(mode,data) {
 		pageHasMoreContent = false;		
 	}
 
+	collapseHeight();
+
 }
 
 
@@ -465,7 +468,7 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 			}
 			else {
 				$('img',this).each(function() {
@@ -476,7 +479,7 @@ function updateConvItems(mode,data) {
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 			}
 			prev = ident;
 		});
@@ -507,7 +510,7 @@ function updateConvItems(mode,data) {
 				$('#threads-end').before($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 			}
 			else {
 				$('img',this).each(function() {
@@ -518,7 +521,7 @@ function updateConvItems(mode,data) {
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 			}
 		});
 
@@ -552,7 +555,7 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 
 			}
 			prev = ident;
@@ -592,7 +595,7 @@ function updateConvItems(mode,data) {
 
 
 	function collapseHeight() {
-		$(".wall-item-body").each(function() {
+		$(".wall-item-body, .contact-info").each(function() {
 			if($(this).height() > divmore_height + 10) {
 				if(! $(this).hasClass('divmore')) {
 					$(this).divgrow({ initialHeight: divmore_height, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
@@ -840,6 +843,19 @@ function updateConvItems(mode,data) {
 		});
 	}
 
+	function filestorage(event,nick,id) {
+		$('#cloud-index-' + last_filestorage_id).removeClass('cloud-index-active');
+		$('#perms-panel-' + last_filestorage_id).hide().html('');
+		$('#file-edit-' + id).spin('tiny');
+		delete acl;
+		$.get('filestorage/' + nick + '/' + id + '/edit', function(data) {
+			$('#cloud-index-' + id).addClass('cloud-index-active');
+			$('#perms-panel-' + id).html(data).show();
+			$('#file-edit-' + id).spin(false);
+			last_filestorage_id = id;
+		});
+	}
+
 	function post_comment(id) {
 		unpause();
 		commentBusy = true;
@@ -903,7 +919,7 @@ function updateConvItems(mode,data) {
 	function preview_post() {
 		$("#jot-preview").val("1");
 		$("#jot-preview-content").show();
-		tinyMCE.triggerSave();
+//		tinyMCE.triggerSave();
 		$.post(  
 			"item",  
 			$("#profile-jot-form").serialize(),
@@ -1020,6 +1036,8 @@ function fcFileBrowser (field_name, url, type, win) {
   }
 
 function setupFieldRichtext(){
+	return;
+/*
 	tinyMCE.init({
 		theme : "advanced",
 		mode : "specific_textareas",
@@ -1043,6 +1061,7 @@ function setupFieldRichtext(){
 		theme_advanced_path : false,
 		file_browser_callback : "fcFileBrowser",
 	});
+*/
 }
 
 

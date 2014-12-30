@@ -66,6 +66,14 @@
 <li>[rpost=title]Text to post[/rpost] The observer will be returned to their home hub to enter a post with the specified title and body. Both are optional <br />
 <li>[qr]text to post[/qr] - create a QR code.<br />
 <br />
+</ul>
+
+<p>These require a suitable map plugin/addon such as openstreetmap or else the result will be blank</p>
+<ul>
+<li>[map] Generate an inline map using the current browser coordinates of the poster, if browser location is enabled<br />
+<li>[map=latitude,longitude] Generate a map using global coordinates.<br />
+<li>[map]Place Name[/map] Generate a map for a given named location. The first matching location is returned. For instance "Sydney" will usually return Sydney, Australia and not Sydney, Nova Scotia, Canada unless the more precise location is specified. It is highly recommended to use the post preview utility to ensure you have the correct location before submitting the post.<br /> 
+</ul>
 
 #include doc/macros/main_footer.bb;
 </div>

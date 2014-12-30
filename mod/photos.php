@@ -697,13 +697,10 @@ function photos_content(&$a) {
 				$imagelink = ($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $rr['resource_id']
 				. (($_GET['order'] === 'posted') ? '?f=&order=posted' : ''));
 
-				$rel=("photo");
-
 				$photos[] = array(
 					'id' => $rr['id'],
 					'twist' => ' ' . $twist . rand(2,4),
 					'link' => $imagelink,
-					'rel' => $rel,
 					'title' => t('View Photo'),
 					'src' => $a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
 					'alt' => $imgalt_e,

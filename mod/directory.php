@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/socgraph.php');
 require_once('include/dir_fns.php');
 require_once('include/widgets.php');
 require_once('include/bbcode.php');
@@ -7,6 +8,12 @@ require_once('include/bbcode.php');
 function directory_init(&$a) {
 	$a->set_pager_itemspage(60);
 
+	if(x($_GET,'ignore')) {
+		q("insert into xign ( uid, xchan ) values ( %d, '%s' ) ",
+			intval(local_user()),
+			dbesc($_GET['ignore'])
+		);
+	}
 }
 
 function directory_content(&$a) {
@@ -43,14 +50,38 @@ function directory_content(&$a) {
 	else
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
+
 	if(strpos($search,'=') && local_user() && get_pconfig(local_user(),'feature','expert'))
 		$advanced = $search;
 
+
 	$keywords = (($_GET['keywords']) ? $_GET['keywords'] : '');
+
+	// Suggest channels if no search terms or keywords are given
+	$suggest = (local_user() && x($_REQUEST,'suggest')) ? $_REQUEST['suggest'] : '';
+
+	if($suggest) {
+		$r = suggestion_query(local_user(),get_observer_hash());
+
+		// Remember in which order the suggestions were
+		$addresses = array();
+		$index = 0;
+		foreach($r as $rr) {
+			$addresses[$rr['xchan_addr']] = $index++;
+		}
+
+		// Build query to get info about suggested people
+		$advanced = '';
+		foreach(array_keys($addresses) as $address) {
+			$advanced .= "address=\"$address\" ";
+		}
+		// Remove last space in the advanced query
+		$advanced = rtrim($advanced);
+
+	}
 
 	$tpl = get_markup_template('directory_header.tpl');
 
-		
 	$dirmode = intval(get_config('system','directory_mode'));
 
 	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
@@ -99,9 +130,7 @@ function directory_content(&$a) {
 		if(! is_null($pubforums))
 			$query .= '&pubforums=' . intval($pubforums);
 
-		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
-		if($pubforums)
-			$sort_order = 'normal';
+		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : 'normal');
 
 		if($sort_order)
 			$query .= '&order=' . urlencode($sort_order);
@@ -238,18 +267,27 @@ function directory_content(&$a) {
 							'online' => $online,
 							'kw' => (($out) ? t('Keywords: ') : ''),
 							'keywords' => $out,
+							'ignlink' => $suggest ? $a->get_baseurl() . '/directory?ignore=' . $rr['hash'] : '',
+							'ignore_label' => "Don't suggest",
 						);
 
 						$arr = array('contact' => $rr, 'entry' => $entry);
 
 						call_hooks('directory_item', $arr);
 			
-						$entries[] = $arr['entry'];
+						if($sort_order == '' && $suggest) {
+							$entries[$addresses[$rr['address']]] = $arr['entry']; // Use the same indexes as originally to get the best suggestion first
+						}
+						else {
+							$entries[] = $arr['entry'];
+						}
 						unset($profile);
 						unset($location);
 
 
 					}
+
+					ksort($entries); // Sort array by key so that foreach-constructs work as expected
 
 					if($j['keywords']) {
 						$a->data['directory_keywords'] = $j['keywords'];
@@ -271,15 +309,16 @@ function directory_content(&$a) {
 						killme();
 					}
 					else {
+						$maxheight = 175;
 
-						$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
+						$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; divmore_height = " . intval($maxheight) . ";  </script>";
 						$o .= replace_macros($tpl, array(
 							'$search' => $search,
 							'$desc' => t('Find'),
 							'$finddsc' => t('Finding:'),
 							'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
 							'$entries' => $entries,
-							'$dirlbl' => t('Directory'),
+							'$dirlbl' => $suggest ? t('Channel Suggestions') : t('Directory'),
 							'$submit' => t('Find'),
 							'$next' => alt_pager($a,$j['records'], t('next page'), t('previous page'))
 

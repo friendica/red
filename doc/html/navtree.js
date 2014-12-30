@@ -37,15 +37,15 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BS-Default_8php.html",
-"boot_8php.html#a57eee7352714c004d36c26dda74af73e",
-"classApp.html#a4b67935096f66d1f14b657399a8461ac",
-"classTemplate.html#a8f4d17e49f42b876a97364c13fb572d1",
-"dba__driver_8php.html#a2a38996670c2936b5769270c49c57593",
-"globals_0x6a.html",
-"include_2config_8php.html#ad58a4913937179adb13201c2ee3261ad",
-"mod_2chat_8php.html",
-"refimport_8php.html#a54003135d7c8994a76e831fb6faa2fe6",
-"text_8php.html#ae4df74296fbe55051ed3c035e55205e5"
+"boot_8php.html#a52b599cd13e152ebc80d7e4413683195",
+"classApp.html#a3d84af5e42082098672531cd1a618853",
+"classTemplate.html#a4b933954086d9e01a1804b0b1c6ee93e",
+"datetime_8php.html#aea356409ba69f9de412298c998595dd2",
+"globals_0x5f.html",
+"include_2chat_8php.html#acea6b176eb7aff44d9ba3ae24ce511d3",
+"mod_2api_8php.html#a33315b5bbf5418f6850b2038107b526d",
+"reddav_8php.html",
+"text_8php.html#ac2ff88e800f74b22e9cc091c10809c54"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

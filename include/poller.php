@@ -403,6 +403,8 @@ function poller_run($argv, $argc){
 		}
 	}
 
+	set_config('system','lastpoll',datetime_convert());
+
 	//All done - clear the lockfile	
 	@unlink($lockfile);
 

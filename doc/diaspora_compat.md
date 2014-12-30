@@ -54,12 +54,4 @@ Diaspora members will not appear in the directory.
 
 There are differences in oembed compatibility between the networks. Some embedded resources will turn into a link on one side or the other.  
 
-
-
-
-
-
-
-
-
- 
+#include doc/macros/main_footer.bb;

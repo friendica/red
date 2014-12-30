@@ -13,6 +13,7 @@ var Contact_8php =
     [ "random_profile", "Contact_8php.html#a7e3f5bef8ea1d2bf8434c9be36a2b713", null ],
     [ "rconnect_url", "Contact_8php.html#a2f4f495d53f2a334ab75292af79d3c91", null ],
     [ "remove_all_xchan_resources", "Contact_8php.html#acc12cda999c88c4d6185cca967c15125", null ],
+    [ "rrmdir", "Contact_8php.html#ab5895b75a3b2abdddf1cb351a8c6b58b", null ],
     [ "user_remove", "Contact_8php.html#a2fc191067dd571a79603c66b04b1ca15", null ],
     [ "vcard_from_xchan", "Contact_8php.html#a6348a532c9d26cd1c9afbc9aa6aa8960", null ]
 ];

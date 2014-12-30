@@ -1,6 +1,6 @@
 <div class="app-container">
 <a href="{{$app.url}}" {{if $ap.target}}target="{{$ap.target}}" {{/if}}{{if $app.desc}}title="{{$app.desc}}{{if $app.price}} ({{$app.price}}){{/if}}"{{else}}title="{{$app.name}}"{{/if}}><img src="{{$app.photo}}" width="80" height="80" />
-<div class="app-name">{{$app.name}}</div>
+<div class="app-name" style="text-align:center;">{{$app.name}}</div>
 </a>
 {{if $app.type !== 'system'}}
 {{if $purchase}}

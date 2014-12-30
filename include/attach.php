@@ -717,7 +717,7 @@ function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gi
 			);
 			if($r) {
 				foreach($r as $rr) {
-					attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse);
+					attach_change_permissions($channel_id, $rr['hash'], $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse);
 				}
 			}
 		}

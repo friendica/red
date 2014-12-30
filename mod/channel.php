@@ -47,7 +47,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	$category = $datequery = $datequery2 = '';
 
-	$mid = $_GET['mid'];
+	$mid = ((x($_REQUEST,'mid')) ? $_REQUEST['mid'] : '');
 
 	$datequery = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
 	$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
@@ -57,6 +57,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 	}
 
 	$category = ((x($_REQUEST,'cat')) ? $_REQUEST['cat'] : '');
+	$hashtags = ((x($_REQUEST,'tag')) ? $_REQUEST['tag'] : '');
 
 	$groups = array();
 
@@ -137,7 +138,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	$sql_extra = item_permissions_sql($a->profile['profile_uid'],$remote_contact,$groups);
 
-	if(get_pconfig($a->profile['profile_uid'],'system','channel_list_mode'))
+	if(get_pconfig($a->profile['profile_uid'],'system','channel_list_mode') && (! $mid))
 		$page_mode = 'list';
 	else
 		$page_mode = 'client';
@@ -146,7 +147,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 	if(($update) && (! $load)) {
 		if ($mid) {
 			$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d AND item_restrict = 0
-				AND (item_flags &  %d)>0 AND (item_flags & %d)>0 $sql_extra limit 1",
+				AND (item_flags &  %d) > 0 AND (item_flags & %d) > 0 $sql_extra limit 1",
 				dbesc($mid),
 				intval($a->profile['profile_uid']),
 				intval(ITEM_WALL),
@@ -156,7 +157,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			$r = q("SELECT distinct parent AS `item_id`, created from item
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE uid = %d AND item_restrict = 0
-				AND (item_flags &  %d)>0 AND ( item_flags & %d )>0
+				AND (item_flags &  %d) > 0 AND ( item_flags & %d ) > 0
 				AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra
 				ORDER BY created DESC",
@@ -170,9 +171,11 @@ function channel_content(&$a, $update = 0, $load = false) {
 	}
 	else {
 
-
 		if(x($category)) {
 		        $sql_extra .= protect_sprintf(term_query('item', $category, TERM_CATEGORY));
+		}
+		if(x($hashtags)) {
+		        $sql_extra .= protect_sprintf(term_query('item', $hashtags, TERM_HASHTAG));
 		}
 
 		if($datequery) {
@@ -281,6 +284,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 			'$file' => '',
 			'$cats' => (($category) ? $category : ''),
+			'$tags' => (($hashtags) ? $hashtags : ''),
 			'$mid' => $mid,
 			'$dend' => $datequery,
 			'$dbegin' => $datequery2
