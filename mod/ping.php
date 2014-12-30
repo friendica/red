@@ -277,7 +277,7 @@ function ping_init(&$a) {
 
 		$r = q("SELECT * FROM item
 			WHERE item_restrict = %d and ( item_flags & %d ) > 0 and uid = %d
-			and author_xchan != '%s' ",
+			and author_xchan != '%s' ORDER BY created DESC",
 			intval(ITEM_VISIBLE),
 			intval(ITEM_UNSEEN),
 			intval(local_user()),
@@ -300,7 +300,7 @@ function ping_init(&$a) {
 	if(argc() > 1 && (argv(1) === 'intros')) {
 		$result = array();
 
-		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or (xchan_flags & %d) > 0)",
+		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or (xchan_flags & %d) > 0) ORDER BY abook_created DESC",
 			intval(local_user()),
 			intval(ABOOK_FLAG_PENDING),
 			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
