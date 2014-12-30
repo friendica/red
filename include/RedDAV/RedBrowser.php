@@ -342,6 +342,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 					'application/octet-stream' => 'icon-file-alt',
 
 					//Text
+					'text/plain' => 'icon-file-text-alt',
 					'application/msword' => 'icon-file-text-alt',
 					'application/pdf' => 'icon-file-text-alt',
 					'application/vnd.oasis.opendocument.text' => 'icon-file-text-alt',
@@ -365,6 +366,11 @@ class RedBrowser extends DAV\Browser\Plugin {
 					'audio/mpeg' => 'icon-music',
 					'audio/wav' => 'icon-music',
 					'application/ogg' => 'icon-music',
+
+					//Video
+					'video/quicktime' => 'icon-film',
+
+
 				);
 
 		$iconFromType = 'icon-file-alt';
