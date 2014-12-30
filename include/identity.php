@@ -856,7 +856,8 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 		);
 
 
-		if(feature_enabled(local_user(),'multi_profiles')) {
+		$multi_profiles = feature_enabled(local_user(), 'multi_profiles');
+		if($multi_profiles) {
 			$profile['edit'] = array($a->get_baseurl(). '/profiles', t('Profiles'),"", t('Manage/edit profiles'));
 			$profile['menu']['cr_new'] = t('Create New Profile');
 		}
@@ -869,6 +870,8 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 
 		if($r) {
 			foreach($r as $rr) {
+				if(!($multi_profiles || $rr['is_default']))
+					 continue;
 				$profile['menu']['entries'][] = array(
 					'photo'                => $rr['thumb'],
 					'id'                   => $rr['id'],
