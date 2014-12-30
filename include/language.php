@@ -250,8 +250,7 @@ function detect_language($s) {
  * By default we use the localized language name. You can switch the result
  * to any language with the optional 2nd parameter $l.
  *
- * $s and $l can be in any format that PHP's Locale understands. We will mostly
- * use the 2-letter ISO 639-1 (en, de, fr) format.
+ * $s and $l should be in 2-letter ISO 639-1 format
  *
  * If nothing could be looked up it returns $s.
  *
@@ -275,7 +274,12 @@ function get_language_name($s, $l = null) {
 	catch(CommerceGuys\Intl\Exception\UnknownLanguageException $e) {
 		$s = substr($s,0,2);
 		if($l !== null) $l = substr($s,0,2);
-		$language = $languageRepository->get($s, $l);
+		try {
+			$language = $languageRepository->get($s, $l);
+		}
+		catch(CommerceGuys\Intl\Exception\UnknownLanguageException $e) {
+			return $s; // Give up
+		}
 	} 
 
 	return $language->getName();
