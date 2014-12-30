@@ -18,7 +18,7 @@
 			{{$aclselect}}
 
 			{{if $default}}
-			<div class="pull-left">
+			<div class="form-group">
 				<input id="photos-upload-choose" type="file" name="userfile" />
 			</div>
 			<div class="btn-group pull-right">
@@ -29,13 +29,12 @@
 			</div>
 			{{/if}}
 
-			<div class="clear"></div>
-
-			<div class="checkbox">
+			<div class="checkbox pull-left">
 				<label class="checkbox-inline" for="photos-upload-noshare" >
 					<input class="checkbox-inline" id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" />{{$nosharetext}}
 				</label>
 			</div>
+			<div class="clear"></div>
 
 			{{if $uploader}}
 			<div id="photos-upload-perms" class="pull-right">
