@@ -468,7 +468,7 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 			}
 			else {
 				$('img',this).each(function() {
@@ -479,7 +479,7 @@ function updateConvItems(mode,data) {
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 			}
 			prev = ident;
 		});
@@ -510,7 +510,7 @@ function updateConvItems(mode,data) {
 				$('#threads-end').before($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 			}
 			else {
 				$('img',this).each(function() {
@@ -521,7 +521,7 @@ function updateConvItems(mode,data) {
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 			}
 		});
 
@@ -555,7 +555,7 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 
 			}
 			prev = ident;
@@ -844,10 +844,12 @@ function updateConvItems(mode,data) {
 	}
 
 	function filestorage(event,nick,id) {
+		$('#cloud-index-' + last_filestorage_id).removeClass('cloud-index-active');
 		$('#perms-panel-' + last_filestorage_id).hide().html('');
 		$('#file-edit-' + id).spin('tiny');
 		delete acl;
 		$.get('filestorage/' + nick + '/' + id + '/edit', function(data) {
+			$('#cloud-index-' + id).addClass('cloud-index-active');
 			$('#perms-panel-' + id).html(data).show();
 			$('#file-edit-' + id).spin(false);
 			last_filestorage_id = id;

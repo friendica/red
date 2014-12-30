@@ -73,7 +73,7 @@ function po2php_run($argv, $argc) {
 			}
 			$match=Array();
 			preg_match("|\[([0-9]*)\] (.*)|", $l, $match);
-			$out .= "\t". 
+			$out .= "\t".
 				preg_replace_callback($escape_s_exp,'escape_s',$match[1])
 				." => "
 				.preg_replace_callback($escape_s_exp,'escape_s',$match[2]) .",\n";
@@ -83,7 +83,7 @@ function po2php_run($argv, $argc) {
 
 
 		if ($ink) {
-			$k .= trim($l,"\"\r\n"); 
+			$k .= trim_message($l);
 			$k = preg_replace_callback($escape_s_exp,'escape_s',$k);
 			//$out .= '$a->strings['.$k.'] = ';
 		}
@@ -93,7 +93,7 @@ function po2php_run($argv, $argc) {
 			if ($k!="") $out .= $arr?");\n":";\n";
 			$arr=False;
 			$k = str_replace("msgid ","",$l);
-			$k = trim($k,"\"\r\n");
+			$k = trim_message($k);
 			$k = $ctx.$k;
 		//	echo $ctx ? $ctx."\nX\n":"";
 			$k = preg_replace_callback($escape_s_exp,'escape_s',$k);
@@ -102,14 +102,14 @@ function po2php_run($argv, $argc) {
 		}
 		
 		if ($inv && substr($l,0,6)!="msgstr" && substr($l,0,7)!="msgctxt") {
-			$v .= trim($l,"\"\r\n"); 
+			$v .= trim_message($l);
 			$v = preg_replace_callback($escape_s_exp,'escape_s',$v);
 			//$out .= '$a->strings['.$k.'] = ';
 		}
 
 		if (substr($l,0,7)=="msgctxt") {
 			$ctx = str_replace("msgctxt ","",$l);
-			$ctx = trim($ctx,"\"\r\n");
+			$ctx = trim_message($ctx);
 			$ctx = "__ctx:".$ctx."__ ";
 			$ctx = preg_replace_callback($escape_s_exp,'escape_s',$ctx);
 		}
@@ -121,6 +121,14 @@ function po2php_run($argv, $argc) {
 	
 	file_put_contents($outfile, $out);
 	
+}
+
+function trim_message($str) {
+	// Almost same as trim("\"\r\n") except that escaped quotes are preserved
+	$str = trim($str, "\r\n");
+	$str = ltrim($str, "\"");
+	$str = preg_replace('/(?<!\\\)"+$/', '', $str);
+	return $str;
 }
 
 if (array_search(__file__,get_included_files())===0){

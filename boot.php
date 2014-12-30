@@ -242,6 +242,8 @@ define ( 'PHOTO_XCHAN',            0x0002 );
 define ( 'PHOTO_THING',            0x0004 );
 define ( 'PHOTO_ADULT',            0x0008 );
 
+define ( 'PHOTO_FLAG_OS',          0x4000 );
+
 /**
  * Menu types
  */
