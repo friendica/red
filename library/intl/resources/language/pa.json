@@ -1,0 +1,738 @@
+{
+    "ast": {
+        "code": "ast",
+        "name": "Asturian"
+    },
+    "bas": {
+        "code": "bas",
+        "name": "Basaa"
+    },
+    "ksh": {
+        "code": "ksh",
+        "name": "Colognian"
+    },
+    "ewo": {
+        "code": "ewo",
+        "name": "Ewondo"
+    },
+    "fur": {
+        "code": "fur",
+        "name": "Friulian"
+    },
+    "ff": {
+        "code": "ff",
+        "name": "Fulah"
+    },
+    "gd": {
+        "code": "gd",
+        "name": "Scottish Gaelic"
+    },
+    "wae": {
+        "code": "wae",
+        "name": "Walser"
+    },
+    "yav": {
+        "code": "yav",
+        "name": "Yangben"
+    },
+    "ug": {
+        "code": "ug",
+        "name": "ਉਇਗੁਰ"
+    },
+    "uz": {
+        "code": "uz",
+        "name": "ਉਜ਼ਬੇਕ"
+    },
+    "se": {
+        "code": "se",
+        "name": "ਉੱਤਰੀ ਸਾਮੀ"
+    },
+    "nd": {
+        "code": "nd",
+        "name": "ਉੱਤਰੀ ਨਡੇਬੇਲੇ"
+    },
+    "ur": {
+        "code": "ur",
+        "name": "ਉਰਦੂ"
+    },
+    "or": {
+        "code": "or",
+        "name": "ਉੜੀਆ"
+    },
+    "asa": {
+        "code": "asa",
+        "name": "ਅਸੂ"
+    },
+    "ak": {
+        "code": "ak",
+        "name": "ਅਕਾਨ"
+    },
+    "en": {
+        "code": "en",
+        "name": "ਅੰਗਰੇਜ਼ੀ"
+    },
+    "agq": {
+        "code": "agq",
+        "name": "ਅਗੇਮ"
+    },
+    "az": {
+        "code": "az",
+        "name": "ਅਜ਼ਰਬਾਈਜਾਨੀ"
+    },
+    "hsb": {
+        "code": "hsb",
+        "name": "ਅੱਪਰ ਸੋਰਬੀਅਨ"
+    },
+    "af": {
+        "code": "af",
+        "name": "ਅਫ਼ਰੀਕੀ"
+    },
+    "am": {
+        "code": "am",
+        "name": "ਅਮਹਾਰਿਕ"
+    },
+    "en-US": {
+        "code": "en-US",
+        "name": "ਅਮਰੀਕੀ ਅੰਗਰੇਜ਼ੀ"
+    },
+    "ar": {
+        "code": "ar",
+        "name": "ਅਰਬੀ"
+    },
+    "hy": {
+        "code": "hy",
+        "name": "ਅਰਮੀਨੀਆਈ"
+    },
+    "sq": {
+        "code": "sq",
+        "name": "ਅਲਬਾਨੀਆਈ"
+    },
+    "ga": {
+        "code": "ga",
+        "name": "ਆਇਰੀ"
+    },
+    "is": {
+        "code": "is",
+        "name": "ਆਈਸਲੈਂਡਿਕ"
+    },
+    "de-AT": {
+        "code": "de-AT",
+        "name": "ਆਸਟਰੀਆਈ ਜਰਮਨ"
+    },
+    "en-AU": {
+        "code": "en-AU",
+        "name": "ਆਸਟ੍ਰੇਲੀਆਈ ਅੰਗਰੇਜ਼ੀ"
+    },
+    "ar-001": {
+        "code": "ar-001",
+        "name": "ਆਧੁਨਿਕ ਮਿਆਰੀ ਅਰਬੀ"
+    },
+    "et": {
+        "code": "et",
+        "name": "ਇਸਟੋਨੀਆਈ"
+    },
+    "eo": {
+        "code": "eo",
+        "name": "ਇਸਪੇਰਾਂਟੋ"
+    },
+    "id": {
+        "code": "id",
+        "name": "ਇੰਡੋਨੇਸ਼ੀਆਈ"
+    },
+    "it": {
+        "code": "it",
+        "name": "ਇਤਾਲਵੀ"
+    },
+    "ebu": {
+        "code": "ebu",
+        "name": "ਇੰਬੂ"
+    },
+    "ee": {
+        "code": "ee",
+        "name": "ਈਵਈ"
+    },
+    "es": {
+        "code": "es",
+        "name": "ਸਪੇਨੀ"
+    },
+    "ksb": {
+        "code": "ksb",
+        "name": "ਸ਼ੰਬਾਲਾ"
+    },
+    "saq": {
+        "code": "saq",
+        "name": "ਸਮਬੁਰੂ"
+    },
+    "sr": {
+        "code": "sr",
+        "name": "ਸਰਬੀਆਈ"
+    },
+    "zh-Hans": {
+        "code": "zh-Hans",
+        "name": "ਸਰਲ ਚੀਨੀ"
+    },
+    "sk": {
+        "code": "sk",
+        "name": "ਸਲੋਵਾਕ"
+    },
+    "sl": {
+        "code": "sl",
+        "name": "ਸਲੋਵੇਨੀਆਈ"
+    },
+    "sw": {
+        "code": "sw",
+        "name": "ਸਵਾਹਿਲੀ"
+    },
+    "de-CH": {
+        "code": "de-CH",
+        "name": "ਸਵਿਸ ਹਾਈ ਜਰਮਨ"
+    },
+    "gsw": {
+        "code": "gsw",
+        "name": "ਸਵਿਸ ਜਰਮਨ"
+    },
+    "fr-CH": {
+        "code": "fr-CH",
+        "name": "ਸਵਿਸ ਫਰਾਂਸੀਸੀ"
+    },
+    "sv": {
+        "code": "sv",
+        "name": "ਸਵੀਡਿਸ਼"
+    },
+    "sg": {
+        "code": "sg",
+        "name": "ਸਾਂਗੋ"
+    },
+    "si": {
+        "code": "si",
+        "name": "ਸਿੰਹਾਲਾ"
+    },
+    "sbp": {
+        "code": "sbp",
+        "name": "ਸੇਂਗੋ"
+    },
+    "seh": {
+        "code": "seh",
+        "name": "ਸੇਨਾ"
+    },
+    "xog": {
+        "code": "xog",
+        "name": "ਸੋਗਾ"
+    },
+    "sn": {
+        "code": "sn",
+        "name": "ਸ਼ੋਨਾ"
+    },
+    "so": {
+        "code": "so",
+        "name": "ਸੋਮਾਲੀ"
+    },
+    "hu": {
+        "code": "hu",
+        "name": "ਹੰਗਰੀਆਈ"
+    },
+    "hi": {
+        "code": "hi",
+        "name": "ਹਿੰਦੀ"
+    },
+    "he": {
+        "code": "he",
+        "name": "ਹਿਬਰੂ"
+    },
+    "ha": {
+        "code": "ha",
+        "name": "ਹੌਸਾ"
+    },
+    "ks": {
+        "code": "ks",
+        "name": "ਕਸ਼ਮੀਰੀ"
+    },
+    "kk": {
+        "code": "kk",
+        "name": "ਕਜ਼ਾਖ਼"
+    },
+    "kn": {
+        "code": "kn",
+        "name": "ਕੰਨੜ"
+    },
+    "kam": {
+        "code": "kam",
+        "name": "ਕੰਬਾ"
+    },
+    "kab": {
+        "code": "kab",
+        "name": "ਕਬਾਇਲ"
+    },
+    "kl": {
+        "code": "kl",
+        "name": "ਕਲਾਅੱਲੀਸੁਟ"
+    },
+    "kln": {
+        "code": "kln",
+        "name": "ਕਲੇਜਿਨ"
+    },
+    "nmg": {
+        "code": "nmg",
+        "name": "ਕਵਾਸਿਓ"
+    },
+    "hr": {
+        "code": "hr",
+        "name": "ਕ੍ਰੋਏਸ਼ਿਆਈ"
+    },
+    "swc": {
+        "code": "swc",
+        "name": "ਕਾਂਗੋ ਸਵਾਹਿਲੀ"
+    },
+    "kea": {
+        "code": "kea",
+        "name": "ਕਾਬੁਵੇਰਦਿਆਨੂ"
+    },
+    "ki": {
+        "code": "ki",
+        "name": "ਕਿਕੂਯੂ"
+    },
+    "ky": {
+        "code": "ky",
+        "name": "ਕਿਰਗੀਜ਼"
+    },
+    "ca": {
+        "code": "ca",
+        "name": "ਕੈਟਾਲਾਨ"
+    },
+    "en-CA": {
+        "code": "en-CA",
+        "name": "ਕੈਨੇਡੀਅਨ ਅੰਗਰੇਜ਼ੀ"
+    },
+    "fr-CA": {
+        "code": "fr-CA",
+        "name": "ਕੈਨੇਡੀਅਨ ਫਰਾਂਸੀਸੀ"
+    },
+    "ses": {
+        "code": "ses",
+        "name": "ਕੋਇਰਾਬੋਰੋ ਸੇਂਨੀ"
+    },
+    "khq": {
+        "code": "khq",
+        "name": "ਕੋਯਰਾ ਚੀਨੀ"
+    },
+    "ko": {
+        "code": "ko",
+        "name": "ਕੋਰੀਆਈ"
+    },
+    "km": {
+        "code": "km",
+        "name": "ਖਮੇਰ"
+    },
+    "lg": {
+        "code": "lg",
+        "name": "ਗਾਂਡਾ"
+    },
+    "guz": {
+        "code": "guz",
+        "name": "ਗੁਸੀ"
+    },
+    "gu": {
+        "code": "gu",
+        "name": "ਗੁਜਰਾਤੀ"
+    },
+    "gl": {
+        "code": "gl",
+        "name": "ਗੈਲਿਸ਼ਿਅਨ"
+    },
+    "cgg": {
+        "code": "cgg",
+        "name": "ਚੀਗਾ"
+    },
+    "zh": {
+        "code": "zh",
+        "name": "ਚੀਨੀ"
+    },
+    "chr": {
+        "code": "chr",
+        "name": "ਚੇਰੋਕੀ"
+    },
+    "cs": {
+        "code": "cs",
+        "name": "ਚੈਕ"
+    },
+    "ja": {
+        "code": "ja",
+        "name": "ਜਪਾਨੀ"
+    },
+    "de": {
+        "code": "de",
+        "name": "ਜਰਮਨ"
+    },
+    "ka": {
+        "code": "ka",
+        "name": "ਜਾਰਜੀਆਈ"
+    },
+    "dje": {
+        "code": "dje",
+        "name": "ਜ਼ਾਰਮਾ"
+    },
+    "zu": {
+        "code": "zu",
+        "name": "ਜ਼ੁਲੂ"
+    },
+    "dz": {
+        "code": "dz",
+        "name": "ਜ਼ੋਂਗਖਾ"
+    },
+    "dyo": {
+        "code": "dyo",
+        "name": "ਜੋਲਾ-ਫੋਇਨੀ"
+    },
+    "shi": {
+        "code": "shi",
+        "name": "ਟਚੇਲਹਿਟ"
+    },
+    "teo": {
+        "code": "teo",
+        "name": "ਟੇਸੋ"
+    },
+    "dav": {
+        "code": "dav",
+        "name": "ਟੇਟਾ"
+    },
+    "to": {
+        "code": "to",
+        "name": "ਟੌਂਗਨ"
+    },
+    "nl": {
+        "code": "nl",
+        "name": "ਡੱਚ"
+    },
+    "da": {
+        "code": "da",
+        "name": "ਡੈਨਿਸ਼"
+    },
+    "ta": {
+        "code": "ta",
+        "name": "ਤਮਿਲ"
+    },
+    "twq": {
+        "code": "twq",
+        "name": "ਤਾਸਾਵਿਕ"
+    },
+    "ti": {
+        "code": "ti",
+        "name": "ਤਿਗ੍ਰੀਨਿਆ"
+    },
+    "bo": {
+        "code": "bo",
+        "name": "ਤਿੱਬਤੀ"
+    },
+    "tr": {
+        "code": "tr",
+        "name": "ਤੁਰਕੀ"
+    },
+    "te": {
+        "code": "te",
+        "name": "ਤੇਲਗੂ"
+    },
+    "th": {
+        "code": "th",
+        "name": "ਥਾਈ"
+    },
+    "jgo": {
+        "code": "jgo",
+        "name": "ਨਗੋਂਬਾ"
+    },
+    "naq": {
+        "code": "naq",
+        "name": "ਨਾਮਾ"
+    },
+    "nn": {
+        "code": "nn",
+        "name": "ਨਾਰਵੇਜਿਆਈ ਨਿਓਨੌਰਸਕ"
+    },
+    "nb": {
+        "code": "nb",
+        "name": "ਨਾਰਵੇਜਿਆਈ ਬੋਕਮਲ"
+    },
+    "nyn": {
+        "code": "nyn",
+        "name": "ਨਿਆਂਕੋਲੇ"
+    },
+    "nus": {
+        "code": "nus",
+        "name": "ਨੁਏਰ"
+    },
+    "ne": {
+        "code": "ne",
+        "name": "ਨੇਪਾਲੀ"
+    },
+    "ps": {
+        "code": "ps",
+        "name": "ਪਸ਼ਤੋ"
+    },
+    "fy": {
+        "code": "fy",
+        "name": "ਪੱਛਮੀ ਫ੍ਰਿਸੀਅਨ"
+    },
+    "pa": {
+        "code": "pa",
+        "name": "ਪੰਜਾਬੀ"
+    },
+    "pt": {
+        "code": "pt",
+        "name": "ਪੁਰਤਗਾਲੀ"
+    },
+    "pl": {
+        "code": "pl",
+        "name": "ਪੋਲੈਂਡੀ"
+    },
+    "fr": {
+        "code": "fr",
+        "name": "ਫਰਾਂਸੀਸੀ"
+    },
+    "nl-BE": {
+        "code": "nl-BE",
+        "name": "ਫਲੈਮਿਸ਼"
+    },
+    "fa": {
+        "code": "fa",
+        "name": "ਫ਼ਾਰਸੀ"
+    },
+    "fi": {
+        "code": "fi",
+        "name": "ਫਿਨਿਸ਼"
+    },
+    "fil": {
+        "code": "fil",
+        "name": "ਫਿਲੀਪਿਨੋ"
+    },
+    "fo": {
+        "code": "fo",
+        "name": "ਫ਼ੇਰੋਸੇ"
+    },
+    "bn": {
+        "code": "bn",
+        "name": "ਬੰਗਾਲੀ"
+    },
+    "ksf": {
+        "code": "ksf",
+        "name": "ਬਫ਼ੀਆ"
+    },
+    "bm": {
+        "code": "bm",
+        "name": "ਬੰਬਾਰਾ"
+    },
+    "en-GB": {
+        "code": "en-GB",
+        "name": "ਬਰਤਾਨਵੀ ਅੰਗਰੇਜ਼ੀ"
+    },
+    "my": {
+        "code": "my",
+        "name": "ਬਰਮੀ"
+    },
+    "br": {
+        "code": "br",
+        "name": "ਬਰੇਟਨ"
+    },
+    "pt-BR": {
+        "code": "pt-BR",
+        "name": "ਬ੍ਰਾਜ਼ੀਲੀਆਈ ਪੁਰਤਗਾਲੀ"
+    },
+    "eu": {
+        "code": "eu",
+        "name": "ਬਾਸਕ"
+    },
+    "bg": {
+        "code": "bg",
+        "name": "ਬੁਲਗਾਰੀਆਈ"
+    },
+    "bez": {
+        "code": "bez",
+        "name": "ਬੇਨਾ"
+    },
+    "be": {
+        "code": "be",
+        "name": "ਬੇਲਾਰੂਸੀ"
+    },
+    "bs": {
+        "code": "bs",
+        "name": "ਬੋਸਨੀਆਈ"
+    },
+    "brx": {
+        "code": "brx",
+        "name": "ਬੋਡੋ"
+    },
+    "mas": {
+        "code": "mas",
+        "name": "ਮਸਾਈ"
+    },
+    "kde": {
+        "code": "kde",
+        "name": "ਮਕੋਂਡ"
+    },
+    "mgh": {
+        "code": "mgh",
+        "name": "ਮਖੋਵਾ-ਮਿੱਟੋ"
+    },
+    "mn": {
+        "code": "mn",
+        "name": "ਮੰਗੋਲੀਅਨ"
+    },
+    "jmc": {
+        "code": "jmc",
+        "name": "ਮਚਾਮੇ"
+    },
+    "tzm": {
+        "code": "tzm",
+        "name": "ਮੱਧ ਐਟਲਸ ਤਮਾਜ਼ਿਤ"
+    },
+    "mr": {
+        "code": "mr",
+        "name": "ਮਰਾਠੀ"
+    },
+    "ms": {
+        "code": "ms",
+        "name": "ਮਲਯ"
+    },
+    "ml": {
+        "code": "ml",
+        "name": "ਮਲਿਆਲਮ"
+    },
+    "mt": {
+        "code": "mt",
+        "name": "ਮਾਲਟੀਜ਼"
+    },
+    "zgh": {
+        "code": "zgh",
+        "name": "ਮਿਆਰੀ ਮੋਰੋਕੇਨ ਟਾਮਾਜ਼ਿਕ"
+    },
+    "mua": {
+        "code": "mua",
+        "name": "ਮੁੰਡੇਂਗ"
+    },
+    "mer": {
+        "code": "mer",
+        "name": "ਮੇਰੂ"
+    },
+    "mg": {
+        "code": "mg",
+        "name": "ਮੇਲੇਗਸੀ"
+    },
+    "es-MX": {
+        "code": "es-MX",
+        "name": "ਮੈਕਸੀਕਨ ਸਪੈਨਿਸ਼"
+    },
+    "mk": {
+        "code": "mk",
+        "name": "ਮੈਕਡੋਨੀਆਈ"
+    },
+    "mfe": {
+        "code": "mfe",
+        "name": "ਮੋਰੀਸਿਅਨ"
+    },
+    "ro-MD": {
+        "code": "ro-MD",
+        "name": "ਮੋਲਡਾਵੀਆਈ"
+    },
+    "uk": {
+        "code": "uk",
+        "name": "ਯੂਕਰੇਨੀਆਈ"
+    },
+    "el": {
+        "code": "el",
+        "name": "ਯੂਨਾਨੀ"
+    },
+    "es-ES": {
+        "code": "es-ES",
+        "name": "ਯੂਰਪੀ ਸਪੇਨੀ"
+    },
+    "pt-PT": {
+        "code": "pt-PT",
+        "name": "ਯੂਰਪੀ ਪੁਰਤਗਾਲੀ"
+    },
+    "yo": {
+        "code": "yo",
+        "name": "ਯੋਰੂਬਾ"
+    },
+    "rwk": {
+        "code": "rwk",
+        "name": "ਰਵਾ"
+    },
+    "zh-Hant": {
+        "code": "zh-Hant",
+        "name": "ਰਵਾਇਤੀ ਚੀਨੀ"
+    },
+    "rn": {
+        "code": "rn",
+        "name": "ਰੁੰਡੀ"
+    },
+    "ru": {
+        "code": "ru",
+        "name": "ਰੂਸੀ"
+    },
+    "rof": {
+        "code": "rof",
+        "name": "ਰੋਮਬੋ"
+    },
+    "rm": {
+        "code": "rm",
+        "name": "ਰੋਮਾਂਸ਼"
+    },
+    "ro": {
+        "code": "ro",
+        "name": "ਰੋਮਾਨੀਆਈ"
+    },
+    "lb": {
+        "code": "lb",
+        "name": "ਲਕਜ਼ਮਬਰਗਿਸ਼"
+    },
+    "lag": {
+        "code": "lag",
+        "name": "ਲੰਗਾਈ"
+    },
+    "lo": {
+        "code": "lo",
+        "name": "ਲਾਓ"
+    },
+    "lv": {
+        "code": "lv",
+        "name": "ਲਾਟਵਿਅਨ"
+    },
+    "ln": {
+        "code": "ln",
+        "name": "ਲਿੰਗਾਲਾ"
+    },
+    "lt": {
+        "code": "lt",
+        "name": "ਲਿਥੁਆਨੀਅਨ"
+    },
+    "luo": {
+        "code": "luo",
+        "name": "ਲੂਓ"
+    },
+    "luy": {
+        "code": "luy",
+        "name": "ਲੂਈਆ"
+    },
+    "lu": {
+        "code": "lu",
+        "name": "ਲੂਬਾ-ਕਾਟਾਂਗਾ"
+    },
+    "dsb": {
+        "code": "dsb",
+        "name": "ਲੋਅਰ ਸੋਰਬੀਅਨ"
+    },
+    "vai": {
+        "code": "vai",
+        "name": "ਵਾਈ"
+    },
+    "vi": {
+        "code": "vi",
+        "name": "ਵੀਅਤਨਾਮੀ"
+    },
+    "vun": {
+        "code": "vun",
+        "name": "ਵੂੰਜੋ"
+    },
+    "cy": {
+        "code": "cy",
+        "name": "ਵੈਲਜ਼"
+    }
+}

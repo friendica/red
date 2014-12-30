@@ -1629,7 +1629,7 @@ function lang_selector() {
 			$ll = substr($l,5);
 			$ll = substr($ll,0,strrpos($ll,'/'));
 			$selected = (($ll === $a->language && (x($_SESSION, 'language'))) ? $ll : $selected);
-			$lang_options[$ll]=$ll;
+			$lang_options[$ll] = get_language_name($ll, $ll) . " ($ll)";
 		}
 	}
 
