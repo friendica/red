@@ -1,0 +1,738 @@
+{
+    "ast": {
+        "code": "ast",
+        "name": "Asturian"
+    },
+    "ksh": {
+        "code": "ksh",
+        "name": "Colognian"
+    },
+    "es-MX": {
+        "code": "es-MX",
+        "name": "es_MX"
+    },
+    "ewo": {
+        "code": "ewo",
+        "name": "Ewondo"
+    },
+    "fur": {
+        "code": "fur",
+        "name": "Friulian"
+    },
+    "ff": {
+        "code": "ff",
+        "name": "Fulah"
+    },
+    "ro-MD": {
+        "code": "ro-MD",
+        "name": "ro_MD"
+    },
+    "gd": {
+        "code": "gd",
+        "name": "Scottish Gaelic"
+    },
+    "wae": {
+        "code": "wae",
+        "name": "Walser"
+    },
+    "yav": {
+        "code": "yav",
+        "name": "Yangben"
+    },
+    "fr-CA": {
+        "code": "fr-CA",
+        "name": "ကနေဒါ ပြင်သစ်"
+    },
+    "en-CA": {
+        "code": "en-CA",
+        "name": "ကနေဒါ အင်္ဂလိပ်"
+    },
+    "ca": {
+        "code": "ca",
+        "name": "ကာတာလန်"
+    },
+    "ko": {
+        "code": "ko",
+        "name": "ကိုးရီးယား"
+    },
+    "ks": {
+        "code": "ks",
+        "name": "ကက်ရှ်မီရီ"
+    },
+    "kn": {
+        "code": "kn",
+        "name": "ကန္နာဒါ"
+    },
+    "kea": {
+        "code": "kea",
+        "name": "ခဘူဗာဒီအာနူ"
+    },
+    "kab": {
+        "code": "kab",
+        "name": "ခဘိုင်လ်"
+    },
+    "km": {
+        "code": "km",
+        "name": "ခမာ"
+    },
+    "ky": {
+        "code": "ky",
+        "name": "ခရူဂစ်"
+    },
+    "hr": {
+        "code": "hr",
+        "name": "ခရိုအေရှန်"
+    },
+    "kl": {
+        "code": "kl",
+        "name": "ခလာအ်လီဆပ်"
+    },
+    "kk": {
+        "code": "kk",
+        "name": "ခါဇါခ်"
+    },
+    "kln": {
+        "code": "kln",
+        "name": "ခါလိမ်ဂျင်"
+    },
+    "ki": {
+        "code": "ki",
+        "name": "ခီခူယူ"
+    },
+    "khq": {
+        "code": "khq",
+        "name": "ခိုရာ ချီအီနီ"
+    },
+    "ses": {
+        "code": "ses",
+        "name": "ခိုရာဘိုရို ဆမ်နီ"
+    },
+    "kam": {
+        "code": "kam",
+        "name": "ခမ်ဘာ"
+    },
+    "chr": {
+        "code": "chr",
+        "name": "ချာရိုကီ"
+    },
+    "cgg": {
+        "code": "cgg",
+        "name": "ချီဂါ"
+    },
+    "cs": {
+        "code": "cs",
+        "name": "ချက်"
+    },
+    "swc": {
+        "code": "swc",
+        "name": "ခွန်ဂို စွာဟီလီ"
+    },
+    "el": {
+        "code": "el",
+        "name": "ဂရိ"
+    },
+    "gl": {
+        "code": "gl",
+        "name": "ဂါလာစီယံ"
+    },
+    "gu": {
+        "code": "gu",
+        "name": "ဂူဂျာရသီ"
+    },
+    "guz": {
+        "code": "guz",
+        "name": "ဂူစီး"
+    },
+    "lg": {
+        "code": "lg",
+        "name": "ဂန်ဒီ"
+    },
+    "ja": {
+        "code": "ja",
+        "name": "ဂျပန်"
+    },
+    "de": {
+        "code": "de",
+        "name": "ဂျာမန်"
+    },
+    "ka": {
+        "code": "ka",
+        "name": "ဂျော်ဂျီယန်"
+    },
+    "dyo": {
+        "code": "dyo",
+        "name": "ဂျိုလာ-ဖွန်ရီ"
+    },
+    "jgo": {
+        "code": "jgo",
+        "name": "ဂွမ်ဘာ"
+    },
+    "es": {
+        "code": "es",
+        "name": "စပိန်"
+    },
+    "es-ES": {
+        "code": "es-ES",
+        "name": "စပိန်(ဥရောပ)"
+    },
+    "sl": {
+        "code": "sl",
+        "name": "စလိုဗေးနီးယမ်း"
+    },
+    "sk": {
+        "code": "sk",
+        "name": "စလိုဗက်"
+    },
+    "seh": {
+        "code": "seh",
+        "name": "စီနာ"
+    },
+    "sr": {
+        "code": "sr",
+        "name": "ဆားဗီးယန်း"
+    },
+    "xog": {
+        "code": "xog",
+        "name": "ဆိုဂါ"
+    },
+    "so": {
+        "code": "so",
+        "name": "ဆိုမာလီ"
+    },
+    "si": {
+        "code": "si",
+        "name": "ဆင်ဟာလ"
+    },
+    "sbp": {
+        "code": "sbp",
+        "name": "ဆန်ဂု"
+    },
+    "saq": {
+        "code": "saq",
+        "name": "ဆန်ဘူရု"
+    },
+    "sg": {
+        "code": "sg",
+        "name": "ဆမ်ဂို"
+    },
+    "sw": {
+        "code": "sw",
+        "name": "ဆြာဟီလီ"
+    },
+    "sv": {
+        "code": "sv",
+        "name": "ဆွီဒင်"
+    },
+    "gsw": {
+        "code": "gsw",
+        "name": "ဆွစ် ဂျာမန်"
+    },
+    "fr-CH": {
+        "code": "fr-CH",
+        "name": "ဆွစ် ပြင်သစ်"
+    },
+    "de-CH": {
+        "code": "de-CH",
+        "name": "ဆွစ် အမြင့် ဂျာမန်"
+    },
+    "dje": {
+        "code": "dje",
+        "name": "ဇာမာ"
+    },
+    "zu": {
+        "code": "zu",
+        "name": "ဇူလူ"
+    },
+    "ta": {
+        "code": "ta",
+        "name": "တမီးလ်"
+    },
+    "zh": {
+        "code": "zh",
+        "name": "တရုတ်"
+    },
+    "tr": {
+        "code": "tr",
+        "name": "တာကစ်"
+    },
+    "shi": {
+        "code": "shi",
+        "name": "တာချယ်လ်ဟစ်"
+    },
+    "twq": {
+        "code": "twq",
+        "name": "တာဆာဝါခ်"
+    },
+    "bo": {
+        "code": "bo",
+        "name": "တိဘက်"
+    },
+    "teo": {
+        "code": "teo",
+        "name": "တီဆို"
+    },
+    "te": {
+        "code": "te",
+        "name": "တီလီဂု"
+    },
+    "ti": {
+        "code": "ti",
+        "name": "တီဂ်ရင်ရာ"
+    },
+    "se": {
+        "code": "se",
+        "name": "တောင်ဆာမိ"
+    },
+    "nd": {
+        "code": "nd",
+        "name": "တောင်ဒီဘီလီ"
+    },
+    "dav": {
+        "code": "dav",
+        "name": "တိုင်တာ"
+    },
+    "to": {
+        "code": "to",
+        "name": "တွန်ဂါ"
+    },
+    "th": {
+        "code": "th",
+        "name": "ထိုင်း"
+    },
+    "nl": {
+        "code": "nl",
+        "name": "ဒတ်ချ်"
+    },
+    "da": {
+        "code": "da",
+        "name": "ဒိန်းမတ်"
+    },
+    "dz": {
+        "code": "dz",
+        "name": "ဒွန်ကာ"
+    },
+    "naq": {
+        "code": "naq",
+        "name": "နာမာ"
+    },
+    "ne": {
+        "code": "ne",
+        "name": "နီပါလီ"
+    },
+    "nus": {
+        "code": "nus",
+        "name": "နူအာ"
+    },
+    "nn": {
+        "code": "nn",
+        "name": "နော်ဝေး နီးနော်စ်ခ်"
+    },
+    "fa": {
+        "code": "fa",
+        "name": "ပါရှန်"
+    },
+    "ps": {
+        "code": "ps",
+        "name": "ပါရှ်တို"
+    },
+    "pt": {
+        "code": "pt",
+        "name": "ပေါ်တူဂီ"
+    },
+    "pl": {
+        "code": "pl",
+        "name": "ပိုလန်"
+    },
+    "pa": {
+        "code": "pa",
+        "name": "ပန်ချာပီ"
+    },
+    "fr": {
+        "code": "fr",
+        "name": "ပြင်သစ်"
+    },
+    "nl-BE": {
+        "code": "nl-BE",
+        "name": "ဖလီမစ်ရှ်"
+    },
+    "fo": {
+        "code": "fo",
+        "name": "ဖာရိုအိစ်"
+    },
+    "fil": {
+        "code": "fil",
+        "name": "ဖိလစ်ပီနို"
+    },
+    "fi": {
+        "code": "fi",
+        "name": "ဖင်နစ်ရှ်"
+    },
+    "my": {
+        "code": "my",
+        "name": "ဗမာ"
+    },
+    "vi": {
+        "code": "vi",
+        "name": "ဗီယက်နမ်"
+    },
+    "brx": {
+        "code": "brx",
+        "name": "ဗိုဒို"
+    },
+    "vai": {
+        "code": "vai",
+        "name": "ဗိုင်"
+    },
+    "vun": {
+        "code": "vun",
+        "name": "ဗန်ဂျို"
+    },
+    "en-GB": {
+        "code": "en-GB",
+        "name": "ဗြိတိသျှ အင်္ဂလိပ်"
+    },
+    "pt-BR": {
+        "code": "pt-BR",
+        "name": "ဘရာဇီး ပေါ်တူဂီ"
+    },
+    "br": {
+        "code": "br",
+        "name": "ဘရီတွန်"
+    },
+    "bas": {
+        "code": "bas",
+        "name": "ဘာဆာ"
+    },
+    "ksf": {
+        "code": "ksf",
+        "name": "ဘာဖီအာ"
+    },
+    "bez": {
+        "code": "bez",
+        "name": "ဘီနာ"
+    },
+    "be": {
+        "code": "be",
+        "name": "ဘီလာရု"
+    },
+    "bg": {
+        "code": "bg",
+        "name": "ဘူဂေးရီးယား"
+    },
+    "bs": {
+        "code": "bs",
+        "name": "ဘော့စ်နီးယား"
+    },
+    "bn": {
+        "code": "bn",
+        "name": "ဘင်္ဂါလီ"
+    },
+    "eu": {
+        "code": "eu",
+        "name": "ဘစ်က္ကီ"
+    },
+    "bm": {
+        "code": "bm",
+        "name": "ဘန်ဘာရာ"
+    },
+    "nb": {
+        "code": "nb",
+        "name": "ဘွတ်မော်လ်"
+    },
+    "jmc": {
+        "code": "jmc",
+        "name": "မချာမီ"
+    },
+    "ms": {
+        "code": "ms",
+        "name": "မလေး"
+    },
+    "ml": {
+        "code": "ml",
+        "name": "မလေးရာလမ်"
+    },
+    "mgh": {
+        "code": "mgh",
+        "name": "မာခူဝါ-မီအီတို"
+    },
+    "kde": {
+        "code": "kde",
+        "name": "မာခွန်ဒီ"
+    },
+    "mk": {
+        "code": "mk",
+        "name": "မာစီဒိုနီယံ"
+    },
+    "mas": {
+        "code": "mas",
+        "name": "မာဆိုင်"
+    },
+    "mr": {
+        "code": "mr",
+        "name": "မာရသီ"
+    },
+    "mer": {
+        "code": "mer",
+        "name": "မီရု"
+    },
+    "zgh": {
+        "code": "zgh",
+        "name": "မိုရိုကန် တွမ်မဇိုတ် စံ"
+    },
+    "mfe": {
+        "code": "mfe",
+        "name": "မိုရှီစ်ယန်း"
+    },
+    "mua": {
+        "code": "mua",
+        "name": "မန်ဒန်း"
+    },
+    "mt": {
+        "code": "mt",
+        "name": "မောလ္တီစ်"
+    },
+    "mn": {
+        "code": "mn",
+        "name": "မွန်ဂိုလီးယန်း"
+    },
+    "uk": {
+        "code": "uk",
+        "name": "ယူကရိန်း"
+    },
+    "nyn": {
+        "code": "nyn",
+        "name": "ယန်ကိုလီ"
+    },
+    "ru": {
+        "code": "ru",
+        "name": "ရုရှ"
+    },
+    "rm": {
+        "code": "rm",
+        "name": "ရောမ"
+    },
+    "ro": {
+        "code": "ro",
+        "name": "ရိုမေနီယား"
+    },
+    "yo": {
+        "code": "yo",
+        "name": "ရိုရုဘာ"
+    },
+    "zh-Hans": {
+        "code": "zh-Hans",
+        "name": "ရိုးရှင်းသော တရုတ်"
+    },
+    "rn": {
+        "code": "rn",
+        "name": "ရွန်ဒီ"
+    },
+    "rof": {
+        "code": "rof",
+        "name": "ရွမ်ဘို"
+    },
+    "sn": {
+        "code": "sn",
+        "name": "ရှိနာ"
+    },
+    "zh-Hant": {
+        "code": "zh-Hant",
+        "name": "ရှေးရိုးစဉ်လာ တရုတ်"
+    },
+    "ksb": {
+        "code": "ksb",
+        "name": "ရှန်ဘာလာ"
+    },
+    "lo": {
+        "code": "lo",
+        "name": "လာအို"
+    },
+    "lb": {
+        "code": "lb",
+        "name": "လူဇင်ဘတ်က်"
+    },
+    "lu": {
+        "code": "lu",
+        "name": "လူဘာ-ခါတန်ဂါ"
+    },
+    "luy": {
+        "code": "luy",
+        "name": "လူရီအာ"
+    },
+    "luo": {
+        "code": "luo",
+        "name": "လူအို"
+    },
+    "lv": {
+        "code": "lv",
+        "name": "လက္ဘီအံ"
+    },
+    "ln": {
+        "code": "ln",
+        "name": "လင်ဂါလာ"
+    },
+    "lt": {
+        "code": "lt",
+        "name": "လစ္သူအာနီယံ"
+    },
+    "lag": {
+        "code": "lag",
+        "name": "လန်ဂီ"
+    },
+    "rwk": {
+        "code": "rwk",
+        "name": "ဝါ"
+    },
+    "nmg": {
+        "code": "nmg",
+        "name": "ဝါဆီအို"
+    },
+    "ee": {
+        "code": "ee",
+        "name": "ဝီ"
+    },
+    "ug": {
+        "code": "ug",
+        "name": "ဝီဂါ"
+    },
+    "cy": {
+        "code": "cy",
+        "name": "ဝေလ"
+    },
+    "ha": {
+        "code": "ha",
+        "name": "ဟာဥစာ"
+    },
+    "he": {
+        "code": "he",
+        "name": "ဟီးဘရူး"
+    },
+    "hu": {
+        "code": "hu",
+        "name": "ဟန်ဂေရီ"
+    },
+    "hi": {
+        "code": "hi",
+        "name": "ဟိန္ဒီ"
+    },
+    "fy": {
+        "code": "fy",
+        "name": "အနောက်ပိုင်း ဖရီစီရန်"
+    },
+    "hsb": {
+        "code": "hsb",
+        "name": "အပေါ်ဆိုဘီအမ်"
+    },
+    "en-US": {
+        "code": "en-US",
+        "name": "အမေရိကန် အင်္ဂလိပ်"
+    },
+    "ar-001": {
+        "code": "ar-001",
+        "name": "အရေဗီ(ပုံမှန်)"
+    },
+    "tzm": {
+        "code": "tzm",
+        "name": "အလယ်အက်တ်လက်စ် တာမာဇိုက်"
+    },
+    "ak": {
+        "code": "ak",
+        "name": "အာကိန်"
+    },
+    "asa": {
+        "code": "asa",
+        "name": "အာစု"
+    },
+    "af": {
+        "code": "af",
+        "name": "အာဖရိကန်းစ်"
+    },
+    "hy": {
+        "code": "hy",
+        "name": "အာမေနီအန်"
+    },
+    "ar": {
+        "code": "ar",
+        "name": "အာရေဗီ"
+    },
+    "mg": {
+        "code": "mg",
+        "name": "အာလာဂါစီ"
+    },
+    "it": {
+        "code": "it",
+        "name": "အီတလီ"
+    },
+    "pt-PT": {
+        "code": "pt-PT",
+        "name": "ဥရောပ ပေါ်တူဂီ"
+    },
+    "uz": {
+        "code": "uz",
+        "name": "ဦးဇ်ဘက်"
+    },
+    "de-AT": {
+        "code": "de-AT",
+        "name": "ဩစတြီးယ ဂျာမန်"
+    },
+    "en-AU": {
+        "code": "en-AU",
+        "name": "ဩစတြေးလျှ အင်္ဂလိပ်"
+    },
+    "az": {
+        "code": "az",
+        "name": "အော်ဇောဘိုင်ဂျောနီ"
+    },
+    "ur": {
+        "code": "ur",
+        "name": "အော်ဒူ"
+    },
+    "or": {
+        "code": "or",
+        "name": "အိုရီရာ"
+    },
+    "eo": {
+        "code": "eo",
+        "name": "အက္စပရန္တို"
+    },
+    "et": {
+        "code": "et",
+        "name": "အက်စ်တိုးနီးရန်း"
+    },
+    "dsb": {
+        "code": "dsb",
+        "name": "အောက်ဆိုဘီအမ်"
+    },
+    "agq": {
+        "code": "agq",
+        "name": "အာဂ်ဟိန်း"
+    },
+    "en": {
+        "code": "en",
+        "name": "အင်္ဂလိပ်"
+    },
+    "id": {
+        "code": "id",
+        "name": "အင်ဒိုနီးရှား"
+    },
+    "is": {
+        "code": "is",
+        "name": "အိုင်စ်လန္ဒီ"
+    },
+    "ga": {
+        "code": "ga",
+        "name": "အိုင်းရစ်"
+    },
+    "am": {
+        "code": "am",
+        "name": "အန်ဟာရစျချ"
+    },
+    "ebu": {
+        "code": "ebu",
+        "name": "အမ်ဘူ"
+    },
+    "sq": {
+        "code": "sq",
+        "name": "အယ်လ်ဘေးနီးယန်း"
+    }
+}

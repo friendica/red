@@ -1,0 +1,738 @@
+{
+    "ast": {
+        "code": "ast",
+        "name": "Asturian"
+    },
+    "bas": {
+        "code": "bas",
+        "name": "Basaa"
+    },
+    "ksh": {
+        "code": "ksh",
+        "name": "Colognian"
+    },
+    "ewo": {
+        "code": "ewo",
+        "name": "Ewondo"
+    },
+    "fur": {
+        "code": "fur",
+        "name": "Friulian"
+    },
+    "ff": {
+        "code": "ff",
+        "name": "Fulah"
+    },
+    "wae": {
+        "code": "wae",
+        "name": "Walser"
+    },
+    "yav": {
+        "code": "yav",
+        "name": "Yangben"
+    },
+    "ur": {
+        "code": "ur",
+        "name": "اردو"
+    },
+    "hy": {
+        "code": "hy",
+        "name": "ارمینی"
+    },
+    "uz": {
+        "code": "uz",
+        "name": "ازبیک"
+    },
+    "et": {
+        "code": "et",
+        "name": "اسٹونی"
+    },
+    "zgh": {
+        "code": "zgh",
+        "name": "اسٹینڈرڈ مراقشی تمازیقی"
+    },
+    "it": {
+        "code": "it",
+        "name": "اطالوی"
+    },
+    "agq": {
+        "code": "agq",
+        "name": "اغم"
+    },
+    "af": {
+        "code": "af",
+        "name": "افریقی"
+    },
+    "ak": {
+        "code": "ak",
+        "name": "اکان"
+    },
+    "sq": {
+        "code": "sq",
+        "name": "البانی"
+    },
+    "ebu": {
+        "code": "ebu",
+        "name": "امبو"
+    },
+    "en-US": {
+        "code": "en-US",
+        "name": "امریکی انگریزی"
+    },
+    "am": {
+        "code": "am",
+        "name": "امہاری"
+    },
+    "id": {
+        "code": "id",
+        "name": "انڈونیثیائی"
+    },
+    "en": {
+        "code": "en",
+        "name": "انگریزی"
+    },
+    "or": {
+        "code": "or",
+        "name": "اورِیا"
+    },
+    "eo": {
+        "code": "eo",
+        "name": "ایسپرانٹو"
+    },
+    "ee": {
+        "code": "ee",
+        "name": "ایو"
+    },
+    "az": {
+        "code": "az",
+        "name": "آزربائیجانی"
+    },
+    "zh-Hans": {
+        "code": "zh-Hans",
+        "name": "آسان چینی"
+    },
+    "de-AT": {
+        "code": "de-AT",
+        "name": "آسٹریائی جرمن"
+    },
+    "en-AU": {
+        "code": "en-AU",
+        "name": "آسٹریلیائی انگریزی"
+    },
+    "asa": {
+        "code": "asa",
+        "name": "آسو"
+    },
+    "is": {
+        "code": "is",
+        "name": "آئس لینڈک"
+    },
+    "ug": {
+        "code": "ug",
+        "name": "آئغور"
+    },
+    "ga": {
+        "code": "ga",
+        "name": "آئیرِش"
+    },
+    "eu": {
+        "code": "eu",
+        "name": "باسکی"
+    },
+    "ksf": {
+        "code": "ksf",
+        "name": "بافيا"
+    },
+    "hsb": {
+        "code": "hsb",
+        "name": "بالائی صوربی"
+    },
+    "bm": {
+        "code": "bm",
+        "name": "بامبرا"
+    },
+    "pt-BR": {
+        "code": "pt-BR",
+        "name": "برازیلی پرتگالی"
+    },
+    "en-GB": {
+        "code": "en-GB",
+        "name": "برطانوی انگریزی"
+    },
+    "my": {
+        "code": "my",
+        "name": "برمی"
+    },
+    "br": {
+        "code": "br",
+        "name": "بریٹن"
+    },
+    "bg": {
+        "code": "bg",
+        "name": "بلغاری"
+    },
+    "bn": {
+        "code": "bn",
+        "name": "بنگالی"
+    },
+    "brx": {
+        "code": "brx",
+        "name": "بوڈو"
+    },
+    "bs": {
+        "code": "bs",
+        "name": "بوسنی"
+    },
+    "be": {
+        "code": "be",
+        "name": "بیلاروسی"
+    },
+    "bez": {
+        "code": "bez",
+        "name": "بینا"
+    },
+    "pt": {
+        "code": "pt",
+        "name": "پُرتگالی"
+    },
+    "ps": {
+        "code": "ps",
+        "name": "پشتو"
+    },
+    "pa": {
+        "code": "pa",
+        "name": "پنجابی"
+    },
+    "pl": {
+        "code": "pl",
+        "name": "پولستانی"
+    },
+    "twq": {
+        "code": "twq",
+        "name": "تاساواق"
+    },
+    "bo": {
+        "code": "bo",
+        "name": "تبتی"
+    },
+    "tr": {
+        "code": "tr",
+        "name": "ترکی"
+    },
+    "shi": {
+        "code": "shi",
+        "name": "تشلحيت"
+    },
+    "ta": {
+        "code": "ta",
+        "name": "تمل"
+    },
+    "dav": {
+        "code": "dav",
+        "name": "تیتا"
+    },
+    "teo": {
+        "code": "teo",
+        "name": "تیسو"
+    },
+    "te": {
+        "code": "te",
+        "name": "تیلگو"
+    },
+    "th": {
+        "code": "th",
+        "name": "تھائی"
+    },
+    "ti": {
+        "code": "ti",
+        "name": "ٹگرینیا"
+    },
+    "to": {
+        "code": "to",
+        "name": "ٹونگن"
+    },
+    "ja": {
+        "code": "ja",
+        "name": "جاپانی"
+    },
+    "ka": {
+        "code": "ka",
+        "name": "جارجی"
+    },
+    "ar-001": {
+        "code": "ar-001",
+        "name": "جدید معیاری عربی"
+    },
+    "de": {
+        "code": "de",
+        "name": "جرمن"
+    },
+    "dyo": {
+        "code": "dyo",
+        "name": "جولا فونيا"
+    },
+    "chr": {
+        "code": "chr",
+        "name": "چیروکی"
+    },
+    "cs": {
+        "code": "cs",
+        "name": "چیک"
+    },
+    "zh": {
+        "code": "zh",
+        "name": "چینی"
+    },
+    "km": {
+        "code": "km",
+        "name": "خمیر"
+    },
+    "nl": {
+        "code": "nl",
+        "name": "ڈچ"
+    },
+    "da": {
+        "code": "da",
+        "name": "ڈینش"
+    },
+    "rwk": {
+        "code": "rwk",
+        "name": "روا"
+    },
+    "zh-Hant": {
+        "code": "zh-Hant",
+        "name": "روایتی چینی"
+    },
+    "ru": {
+        "code": "ru",
+        "name": "روسی"
+    },
+    "rm": {
+        "code": "rm",
+        "name": "رومانش"
+    },
+    "ro": {
+        "code": "ro",
+        "name": "رومانوی"
+    },
+    "rof": {
+        "code": "rof",
+        "name": "رومبو"
+    },
+    "rn": {
+        "code": "rn",
+        "name": "رونڈی"
+    },
+    "dje": {
+        "code": "dje",
+        "name": "زرمہ"
+    },
+    "zu": {
+        "code": "zu",
+        "name": "زولو"
+    },
+    "dz": {
+        "code": "dz",
+        "name": "ژونگکھا"
+    },
+    "saq": {
+        "code": "saq",
+        "name": "سامبورو"
+    },
+    "sg": {
+        "code": "sg",
+        "name": "سانجو"
+    },
+    "sbp": {
+        "code": "sbp",
+        "name": "سانگو"
+    },
+    "gd": {
+        "code": "gd",
+        "name": "سکاٹ گیلِک"
+    },
+    "sk": {
+        "code": "sk",
+        "name": "سلوواک"
+    },
+    "sl": {
+        "code": "sl",
+        "name": "سلووینیائی"
+    },
+    "si": {
+        "code": "si",
+        "name": "سنہالا"
+    },
+    "sw": {
+        "code": "sw",
+        "name": "سواحلی"
+    },
+    "xog": {
+        "code": "xog",
+        "name": "سوگا"
+    },
+    "sv": {
+        "code": "sv",
+        "name": "سویڈش"
+    },
+    "gsw": {
+        "code": "gsw",
+        "name": "سوئس جرمن"
+    },
+    "fr-CH": {
+        "code": "fr-CH",
+        "name": "سوئس فرینچ"
+    },
+    "de-CH": {
+        "code": "de-CH",
+        "name": "سوئس ہائی جرمن"
+    },
+    "seh": {
+        "code": "seh",
+        "name": "سینا"
+    },
+    "ksb": {
+        "code": "ksb",
+        "name": "شامبالا"
+    },
+    "nd": {
+        "code": "nd",
+        "name": "شمالی دبیل"
+    },
+    "se": {
+        "code": "se",
+        "name": "شمالی سامی"
+    },
+    "sn": {
+        "code": "sn",
+        "name": "شونا"
+    },
+    "cgg": {
+        "code": "cgg",
+        "name": "شیغا"
+    },
+    "sr": {
+        "code": "sr",
+        "name": "صربی"
+    },
+    "so": {
+        "code": "so",
+        "name": "صومالی"
+    },
+    "he": {
+        "code": "he",
+        "name": "عبرانی"
+    },
+    "ar": {
+        "code": "ar",
+        "name": "عربی"
+    },
+    "fa": {
+        "code": "fa",
+        "name": "فارسی"
+    },
+    "fo": {
+        "code": "fo",
+        "name": "فارويز"
+    },
+    "fr": {
+        "code": "fr",
+        "name": "فرانسیسی"
+    },
+    "fil": {
+        "code": "fil",
+        "name": "فلیپینو"
+    },
+    "nl-BE": {
+        "code": "nl-BE",
+        "name": "فیلنڈری"
+    },
+    "fi": {
+        "code": "fi",
+        "name": "فینیش"
+    },
+    "kab": {
+        "code": "kab",
+        "name": "قبائلی"
+    },
+    "kk": {
+        "code": "kk",
+        "name": "قزاخ"
+    },
+    "kam": {
+        "code": "kam",
+        "name": "کامبا"
+    },
+    "swc": {
+        "code": "swc",
+        "name": "کانگو سواحلی"
+    },
+    "ca": {
+        "code": "ca",
+        "name": "کتالان"
+    },
+    "hr": {
+        "code": "hr",
+        "name": "کراتی"
+    },
+    "ky": {
+        "code": "ky",
+        "name": "کرغیزی"
+    },
+    "ks": {
+        "code": "ks",
+        "name": "کشمیری"
+    },
+    "kn": {
+        "code": "kn",
+        "name": "کنڑ"
+    },
+    "ko": {
+        "code": "ko",
+        "name": "کوریائی"
+    },
+    "ki": {
+        "code": "ki",
+        "name": "کیکویو"
+    },
+    "en-CA": {
+        "code": "en-CA",
+        "name": "کینیڈین انگریزی"
+    },
+    "fr-CA": {
+        "code": "fr-CA",
+        "name": "کینیڈین فرانسیسی"
+    },
+    "gl": {
+        "code": "gl",
+        "name": "گالیشیائی"
+    },
+    "gu": {
+        "code": "gu",
+        "name": "گجراتی"
+    },
+    "guz": {
+        "code": "guz",
+        "name": "گسی"
+    },
+    "lg": {
+        "code": "lg",
+        "name": "گینڈا"
+    },
+    "lag": {
+        "code": "lag",
+        "name": "لانگی"
+    },
+    "lo": {
+        "code": "lo",
+        "name": "لاؤ"
+    },
+    "lu": {
+        "code": "lu",
+        "name": "لبا-كاتانجا"
+    },
+    "lt": {
+        "code": "lt",
+        "name": "لتھُواینین"
+    },
+    "lv": {
+        "code": "lv",
+        "name": "لٹويای"
+    },
+    "lb": {
+        "code": "lb",
+        "name": "لکسمبرگی"
+    },
+    "ln": {
+        "code": "ln",
+        "name": "لِنگَلا"
+    },
+    "luo": {
+        "code": "luo",
+        "name": "لو"
+    },
+    "luy": {
+        "code": "luy",
+        "name": "لویا"
+    },
+    "dsb": {
+        "code": "dsb",
+        "name": "لوئر صوربی"
+    },
+    "mgh": {
+        "code": "mgh",
+        "name": "ماخاوا-ميتو"
+    },
+    "mas": {
+        "code": "mas",
+        "name": "ماسای"
+    },
+    "jmc": {
+        "code": "jmc",
+        "name": "ماشیم"
+    },
+    "ml": {
+        "code": "ml",
+        "name": "مالایالم"
+    },
+    "ms": {
+        "code": "ms",
+        "name": "مالائی"
+    },
+    "mt": {
+        "code": "mt",
+        "name": "مالٹی"
+    },
+    "ro-MD": {
+        "code": "ro-MD",
+        "name": "مالدووا"
+    },
+    "kde": {
+        "code": "kde",
+        "name": "ماكونده"
+    },
+    "mua": {
+        "code": "mua",
+        "name": "مڈدانگ"
+    },
+    "mr": {
+        "code": "mr",
+        "name": "مراٹهی"
+    },
+    "fy": {
+        "code": "fy",
+        "name": "مغربی فریسیائی"
+    },
+    "mk": {
+        "code": "mk",
+        "name": "مقدونیائی"
+    },
+    "mg": {
+        "code": "mg",
+        "name": "ملاگاسی"
+    },
+    "mn": {
+        "code": "mn",
+        "name": "منگؤلی"
+    },
+    "mfe": {
+        "code": "mfe",
+        "name": "موریسیین"
+    },
+    "mer": {
+        "code": "mer",
+        "name": "میرو"
+    },
+    "es-MX": {
+        "code": "es-MX",
+        "name": "میکسیکن ہسپانوی"
+    },
+    "nb": {
+        "code": "nb",
+        "name": "نارویجین بوکمل"
+    },
+    "naq": {
+        "code": "naq",
+        "name": "ناما"
+    },
+    "jgo": {
+        "code": "jgo",
+        "name": "نگومبا"
+    },
+    "nn": {
+        "code": "nn",
+        "name": "نورویجینی نینورسک"
+    },
+    "nus": {
+        "code": "nus",
+        "name": "نویر"
+    },
+    "ne": {
+        "code": "ne",
+        "name": "نیپالی"
+    },
+    "nyn": {
+        "code": "nyn",
+        "name": "نینکول"
+    },
+    "vai": {
+        "code": "vai",
+        "name": "وائی"
+    },
+    "tzm": {
+        "code": "tzm",
+        "name": "وسطی اٹلس تمازغت"
+    },
+    "vun": {
+        "code": "vun",
+        "name": "ونجو"
+    },
+    "vi": {
+        "code": "vi",
+        "name": "ویتنامی"
+    },
+    "cy": {
+        "code": "cy",
+        "name": "ویلش"
+    },
+    "es": {
+        "code": "es",
+        "name": "ہسپانوی"
+    },
+    "hi": {
+        "code": "hi",
+        "name": "ہندی"
+    },
+    "hu": {
+        "code": "hu",
+        "name": "ہنگیرین"
+    },
+    "ha": {
+        "code": "ha",
+        "name": "ہؤسا"
+    },
+    "pt-PT": {
+        "code": "pt-PT",
+        "name": "یورپی پرتگالی"
+    },
+    "es-ES": {
+        "code": "es-ES",
+        "name": "یورپی ہسپانوی"
+    },
+    "yo": {
+        "code": "yo",
+        "name": "یوروبا"
+    },
+    "uk": {
+        "code": "uk",
+        "name": "یوکرینیائی"
+    },
+    "el": {
+        "code": "el",
+        "name": "یونانی"
+    },
+    "kea": {
+        "code": "kea",
+        "name": "كابويرديانو"
+    },
+    "kl": {
+        "code": "kl",
+        "name": "كالاليست"
+    },
+    "kln": {
+        "code": "kln",
+        "name": "كالينجين"
+    },
+    "nmg": {
+        "code": "nmg",
+        "name": "كوايسو"
+    },
+    "khq": {
+        "code": "khq",
+        "name": "كويرا شيني"
+    },
+    "ses": {
+        "code": "ses",
+        "name": "كويرابورو سينی"
+    }
+}

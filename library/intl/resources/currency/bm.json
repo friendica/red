@@ -1,0 +1,634 @@
+{
+    "AFN": {
+        "name": "AFN",
+        "symbol": "AFN"
+    },
+    "DZD": {
+        "name": "alizeri Dinar",
+        "symbol": "DZD"
+    },
+    "ALL": {
+        "name": "ALL",
+        "symbol": "ALL"
+    },
+    "AMD": {
+        "name": "AMD",
+        "symbol": "AMD"
+    },
+    "USD": {
+        "name": "ameriki Dolar",
+        "symbol": "US$"
+    },
+    "ANG": {
+        "name": "ANG",
+        "symbol": "ANG"
+    },
+    "GBP": {
+        "name": "angilɛ Livri Siterlingi",
+        "symbol": "£"
+    },
+    "AOA": {
+        "name": "angola Kwanza",
+        "symbol": "AOA"
+    },
+    "AED": {
+        "name": "arabu mara kafoli Diram",
+        "symbol": "AED"
+    },
+    "ARS": {
+        "name": "ARS",
+        "symbol": "ARS"
+    },
+    "AWG": {
+        "name": "AWG",
+        "symbol": "AWG"
+    },
+    "AZN": {
+        "name": "AZN",
+        "symbol": "AZN"
+    },
+    "BAM": {
+        "name": "BAM",
+        "symbol": "BAM"
+    },
+    "BHD": {
+        "name": "bareyini Dinar",
+        "symbol": "BHD"
+    },
+    "BBD": {
+        "name": "BBD",
+        "symbol": "BBD"
+    },
+    "BDT": {
+        "name": "BDT",
+        "symbol": "BDT"
+    },
+    "BGN": {
+        "name": "BGN",
+        "symbol": "BGN"
+    },
+    "BMD": {
+        "name": "BMD",
+        "symbol": "BMD"
+    },
+    "BND": {
+        "name": "BND",
+        "symbol": "BND"
+    },
+    "BOB": {
+        "name": "BOB",
+        "symbol": "BOB"
+    },
+    "BWP": {
+        "name": "bɔtisiwana Pula",
+        "symbol": "BWP"
+    },
+    "BRL": {
+        "name": "BRL",
+        "symbol": "R$"
+    },
+    "BSD": {
+        "name": "BSD",
+        "symbol": "BSD"
+    },
+    "BTN": {
+        "name": "BTN",
+        "symbol": "BTN"
+    },
+    "BIF": {
+        "name": "burundi Fraŋ",
+        "symbol": "BIF"
+    },
+    "BYR": {
+        "name": "BYR",
+        "symbol": "BYR"
+    },
+    "BZD": {
+        "name": "BZD",
+        "symbol": "BZD"
+    },
+    "CVE": {
+        "name": "capivɛrdi Esekudo",
+        "symbol": "CVE"
+    },
+    "CLP": {
+        "name": "CLP",
+        "symbol": "CLP"
+    },
+    "COP": {
+        "name": "COP",
+        "symbol": "COP"
+    },
+    "CRC": {
+        "name": "CRC",
+        "symbol": "CRC"
+    },
+    "CUC": {
+        "name": "CUC",
+        "symbol": "CUC"
+    },
+    "CUP": {
+        "name": "CUP",
+        "symbol": "CUP"
+    },
+    "CZK": {
+        "name": "CZK",
+        "symbol": "CZK"
+    },
+    "DKK": {
+        "name": "DKK",
+        "symbol": "DKK"
+    },
+    "DOP": {
+        "name": "DOP",
+        "symbol": "DOP"
+    },
+    "ERN": {
+        "name": "eritere Nafika",
+        "symbol": "ERN"
+    },
+    "EUR": {
+        "name": "ero",
+        "symbol": "€"
+    },
+    "ETB": {
+        "name": "etiopi Bir",
+        "symbol": "ETB"
+    },
+    "EGP": {
+        "name": "eziputi Livri",
+        "symbol": "EGP"
+    },
+    "SHP": {
+        "name": "Ɛlɛni-Senu Livri",
+        "symbol": "SHP"
+    },
+    "INR": {
+        "name": "Ɛndu Rupi",
+        "symbol": "₹"
+    },
+    "FJD": {
+        "name": "FJD",
+        "symbol": "FJD"
+    },
+    "FKP": {
+        "name": "FKP",
+        "symbol": "FKP"
+    },
+    "GMD": {
+        "name": "gambi Dalasi",
+        "symbol": "GMD"
+    },
+    "GEL": {
+        "name": "GEL",
+        "symbol": "GEL"
+    },
+    "GHS": {
+        "name": "GHS",
+        "symbol": "GHS"
+    },
+    "GIP": {
+        "name": "GIP",
+        "symbol": "GIP"
+    },
+    "GNF": {
+        "name": "GNF",
+        "symbol": "GNF"
+    },
+    "GTQ": {
+        "name": "GTQ",
+        "symbol": "GTQ"
+    },
+    "GYD": {
+        "name": "GYD",
+        "symbol": "GYD"
+    },
+    "HKD": {
+        "name": "HKD",
+        "symbol": "HK$"
+    },
+    "HNL": {
+        "name": "HNL",
+        "symbol": "HNL"
+    },
+    "HRK": {
+        "name": "HRK",
+        "symbol": "HRK"
+    },
+    "HTG": {
+        "name": "HTG",
+        "symbol": "HTG"
+    },
+    "HUF": {
+        "name": "HUF",
+        "symbol": "HUF"
+    },
+    "IDR": {
+        "name": "IDR",
+        "symbol": "IDR"
+    },
+    "ILS": {
+        "name": "ILS",
+        "symbol": "₪"
+    },
+    "IQD": {
+        "name": "IQD",
+        "symbol": "IQD"
+    },
+    "IRR": {
+        "name": "IRR",
+        "symbol": "IRR"
+    },
+    "ISK": {
+        "name": "ISK",
+        "symbol": "ISK"
+    },
+    "DJF": {
+        "name": "jibuti Fraŋ",
+        "symbol": "DJF"
+    },
+    "JMD": {
+        "name": "JMD",
+        "symbol": "JMD"
+    },
+    "JOD": {
+        "name": "JOD",
+        "symbol": "JOD"
+    },
+    "CAD": {
+        "name": "kanada Dolar",
+        "symbol": "CA$"
+    },
+    "KES": {
+        "name": "keniya Siling",
+        "symbol": "KES"
+    },
+    "KGS": {
+        "name": "KGS",
+        "symbol": "KGS"
+    },
+    "KHR": {
+        "name": "KHR",
+        "symbol": "KHR"
+    },
+    "KMF": {
+        "name": "komɔri Fraŋ",
+        "symbol": "KMF"
+    },
+    "CDF": {
+        "name": "kongole Fraŋ",
+        "symbol": "CDF"
+    },
+    "KPW": {
+        "name": "KPW",
+        "symbol": "KPW"
+    },
+    "KRW": {
+        "name": "KRW",
+        "symbol": "₩"
+    },
+    "KWD": {
+        "name": "KWD",
+        "symbol": "KWD"
+    },
+    "KYD": {
+        "name": "KYD",
+        "symbol": "KYD"
+    },
+    "KZT": {
+        "name": "KZT",
+        "symbol": "KZT"
+    },
+    "LAK": {
+        "name": "LAK",
+        "symbol": "LAK"
+    },
+    "LBP": {
+        "name": "LBP",
+        "symbol": "LBP"
+    },
+    "LSL": {
+        "name": "lesoto Loti",
+        "symbol": "LSL"
+    },
+    "LRD": {
+        "name": "liberiya Dolar",
+        "symbol": "LRD"
+    },
+    "LYD": {
+        "name": "libi Dinar",
+        "symbol": "LYD"
+    },
+    "LKR": {
+        "name": "LKR",
+        "symbol": "LKR"
+    },
+    "LTL": {
+        "name": "LTL",
+        "symbol": "LTL"
+    },
+    "MGA": {
+        "name": "madagasikari Fraŋ",
+        "symbol": "MGA"
+    },
+    "MWK": {
+        "name": "malawi Kwaca",
+        "symbol": "MWK"
+    },
+    "MAD": {
+        "name": "marɔku Diram",
+        "symbol": "MAD"
+    },
+    "MDL": {
+        "name": "MDL",
+        "symbol": "MDL"
+    },
+    "MKD": {
+        "name": "MKD",
+        "symbol": "MKD"
+    },
+    "MMK": {
+        "name": "MMK",
+        "symbol": "MMK"
+    },
+    "MNT": {
+        "name": "MNT",
+        "symbol": "MNT"
+    },
+    "MOP": {
+        "name": "MOP",
+        "symbol": "MOP"
+    },
+    "MUR": {
+        "name": "morisi Rupi",
+        "symbol": "MUR"
+    },
+    "MRO": {
+        "name": "mɔritani Uguwiya",
+        "symbol": "MRO"
+    },
+    "MVR": {
+        "name": "MVR",
+        "symbol": "MVR"
+    },
+    "MXN": {
+        "name": "MXN",
+        "symbol": "MX$"
+    },
+    "MYR": {
+        "name": "MYR",
+        "symbol": "MYR"
+    },
+    "MZN": {
+        "name": "MZN",
+        "symbol": "MZN"
+    },
+    "NAD": {
+        "name": "namibi Dolar",
+        "symbol": "NAD"
+    },
+    "NIO": {
+        "name": "NIO",
+        "symbol": "NIO"
+    },
+    "NGN": {
+        "name": "nizeriya Nɛra",
+        "symbol": "NGN"
+    },
+    "NOK": {
+        "name": "NOK",
+        "symbol": "NOK"
+    },
+    "NPR": {
+        "name": "NPR",
+        "symbol": "NPR"
+    },
+    "NZD": {
+        "name": "NZD",
+        "symbol": "NZ$"
+    },
+    "OMR": {
+        "name": "OMR",
+        "symbol": "OMR"
+    },
+    "AUD": {
+        "name": "ositirali Dolar",
+        "symbol": "A$"
+    },
+    "PAB": {
+        "name": "PAB",
+        "symbol": "PAB"
+    },
+    "PEN": {
+        "name": "PEN",
+        "symbol": "PEN"
+    },
+    "PGK": {
+        "name": "PGK",
+        "symbol": "PGK"
+    },
+    "PHP": {
+        "name": "PHP",
+        "symbol": "PHP"
+    },
+    "PKR": {
+        "name": "PKR",
+        "symbol": "PKR"
+    },
+    "PLN": {
+        "name": "PLN",
+        "symbol": "PLN"
+    },
+    "PYG": {
+        "name": "PYG",
+        "symbol": "PYG"
+    },
+    "QAR": {
+        "name": "QAR",
+        "symbol": "QAR"
+    },
+    "RON": {
+        "name": "RON",
+        "symbol": "RON"
+    },
+    "RSD": {
+        "name": "RSD",
+        "symbol": "RSD"
+    },
+    "RUB": {
+        "name": "RUB",
+        "symbol": "RUB"
+    },
+    "RWF": {
+        "name": "ruwanda Fraŋ",
+        "symbol": "RWF"
+    },
+    "STD": {
+        "name": "sawotome Dobra",
+        "symbol": "STD"
+    },
+    "SAR": {
+        "name": "sawudiya Riyal",
+        "symbol": "SAR"
+    },
+    "SBD": {
+        "name": "SBD",
+        "symbol": "SBD"
+    },
+    "XOF": {
+        "name": "sefa Fraŋ (BCEAO)",
+        "symbol": "CFA"
+    },
+    "XAF": {
+        "name": "sefa Fraŋ (BEAC)",
+        "symbol": "FCFA"
+    },
+    "SEK": {
+        "name": "SEK",
+        "symbol": "SEK"
+    },
+    "SCR": {
+        "name": "sesɛli Rupi",
+        "symbol": "SCR"
+    },
+    "SGD": {
+        "name": "SGD",
+        "symbol": "SGD"
+    },
+    "CNY": {
+        "name": "siniwa Yuwan",
+        "symbol": "CN¥"
+    },
+    "SLL": {
+        "name": "siyeralewɔni Lewɔni",
+        "symbol": "SLL"
+    },
+    "SOS": {
+        "name": "somali Siling",
+        "symbol": "SOS"
+    },
+    "SRD": {
+        "name": "SRD",
+        "symbol": "SRD"
+    },
+    "SSP": {
+        "name": "SSP",
+        "symbol": "SSP"
+    },
+    "ZAR": {
+        "name": "sudafriki Randi",
+        "symbol": "ZAR"
+    },
+    "SDG": {
+        "name": "sudani Dinar",
+        "symbol": "SDG"
+    },
+    "CHF": {
+        "name": "suwisi Fraŋ",
+        "symbol": "CHF"
+    },
+    "SVC": {
+        "name": "SVC",
+        "symbol": "SVC"
+    },
+    "SZL": {
+        "name": "swazilandi Lilangeni",
+        "symbol": "SZL"
+    },
+    "SYP": {
+        "name": "SYP",
+        "symbol": "SYP"
+    },
+    "TZS": {
+        "name": "tanzani Siling",
+        "symbol": "TZS"
+    },
+    "THB": {
+        "name": "THB",
+        "symbol": "THB"
+    },
+    "TJS": {
+        "name": "TJS",
+        "symbol": "TJS"
+    },
+    "TMT": {
+        "name": "TMT",
+        "symbol": "TMT"
+    },
+    "TOP": {
+        "name": "TOP",
+        "symbol": "TOP"
+    },
+    "TRY": {
+        "name": "TRY",
+        "symbol": "TRY"
+    },
+    "TTD": {
+        "name": "TTD",
+        "symbol": "TTD"
+    },
+    "TND": {
+        "name": "tunizi Dinar",
+        "symbol": "TND"
+    },
+    "TWD": {
+        "name": "TWD",
+        "symbol": "NT$"
+    },
+    "UAH": {
+        "name": "UAH",
+        "symbol": "UAH"
+    },
+    "UGX": {
+        "name": "uganda Siling",
+        "symbol": "UGX"
+    },
+    "UYU": {
+        "name": "UYU",
+        "symbol": "UYU"
+    },
+    "UZS": {
+        "name": "UZS",
+        "symbol": "UZS"
+    },
+    "VEF": {
+        "name": "VEF",
+        "symbol": "VEF"
+    },
+    "VND": {
+        "name": "VND",
+        "symbol": "₫"
+    },
+    "VUV": {
+        "name": "VUV",
+        "symbol": "VUV"
+    },
+    "WST": {
+        "name": "WST",
+        "symbol": "WST"
+    },
+    "XCD": {
+        "name": "XCD",
+        "symbol": "EC$"
+    },
+    "XPF": {
+        "name": "XPF",
+        "symbol": "CFPF"
+    },
+    "YER": {
+        "name": "YER",
+        "symbol": "YER"
+    },
+    "ZMW": {
+        "name": "zambi Kwaca",
+        "symbol": "ZMW"
+    },
+    "JPY": {
+        "name": "zapɔne Yɛn",
+        "symbol": "JP¥"
+    },
+    "ZWL": {
+        "name": "ZWL",
+        "symbol": "ZWL"
+    }
+}

@@ -1,0 +1,738 @@
+{
+    "af": {
+        "code": "af",
+        "name": "Afrikaans"
+    },
+    "agq": {
+        "code": "agq",
+        "name": "Aghem"
+    },
+    "ak": {
+        "code": "ak",
+        "name": "Akahnesch"
+    },
+    "sq": {
+        "code": "sq",
+        "name": "Albaanesch"
+    },
+    "en-US": {
+        "code": "en-US",
+        "name": "Amärrekaanesch Änglesch"
+    },
+    "am": {
+        "code": "am",
+        "name": "Amhahresch"
+    },
+    "en": {
+        "code": "en",
+        "name": "Änglesch"
+    },
+    "en-AU": {
+        "code": "en-AU",
+        "name": "Änglesch uß Außtraalije"
+    },
+    "en-GB": {
+        "code": "en-GB",
+        "name": "Änglesch uß Jruußbrettannije"
+    },
+    "en-CA": {
+        "code": "en-CA",
+        "name": "Änglesch uß Kanada"
+    },
+    "ar": {
+        "code": "ar",
+        "name": "Arahbesch"
+    },
+    "hy": {
+        "code": "hy",
+        "name": "Armeenesch"
+    },
+    "az": {
+        "code": "az",
+        "name": "Asserbaidschahnesch"
+    },
+    "et": {
+        "code": "et",
+        "name": "Äßnesch"
+    },
+    "ast": {
+        "code": "ast",
+        "name": "Astuhrejahnesch"
+    },
+    "ksf": {
+        "code": "ksf",
+        "name": "Bafia"
+    },
+    "bm": {
+        "code": "bm",
+        "name": "Bambara"
+    },
+    "bn": {
+        "code": "bn",
+        "name": "Bängjaalesch"
+    },
+    "bas": {
+        "code": "bas",
+        "name": "Basaa"
+    },
+    "eu": {
+        "code": "eu",
+        "name": "Baskesch"
+    },
+    "bez": {
+        "code": "bez",
+        "name": "Bena"
+    },
+    "br": {
+        "code": "br",
+        "name": "Bettohnesch"
+    },
+    "brx": {
+        "code": "brx",
+        "name": "Boddo"
+    },
+    "bs": {
+        "code": "bs",
+        "name": "Boßnesch"
+    },
+    "pt-BR": {
+        "code": "pt-BR",
+        "name": "Brasilljaanesch Pochtojesesch"
+    },
+    "bg": {
+        "code": "bg",
+        "name": "Bulljaaresch"
+    },
+    "my": {
+        "code": "my",
+        "name": "Burmessesch"
+    },
+    "dz": {
+        "code": "dz",
+        "name": "Butahnesch"
+    },
+    "tzm": {
+        "code": "tzm",
+        "name": "Central Atlas Tamazight"
+    },
+    "chr": {
+        "code": "chr",
+        "name": "Cherokee"
+    },
+    "cgg": {
+        "code": "cgg",
+        "name": "Chiga"
+    },
+    "swc": {
+        "code": "swc",
+        "name": "Congo Swahili"
+    },
+    "da": {
+        "code": "da",
+        "name": "Dähnesch"
+    },
+    "de": {
+        "code": "de",
+        "name": "Deutsch"
+    },
+    "de-CH": {
+        "code": "de-CH",
+        "name": "Deutsch uß de Schweijz"
+    },
+    "de-AT": {
+        "code": "de-AT",
+        "name": "Deutsch uß Ößterich"
+    },
+    "ebu": {
+        "code": "ebu",
+        "name": "Embu"
+    },
+    "eo": {
+        "code": "eo",
+        "name": "Esperanto"
+    },
+    "it": {
+        "code": "it",
+        "name": "Etalljänesch"
+    },
+    "ee": {
+        "code": "ee",
+        "name": "Ewe"
+    },
+    "ewo": {
+        "code": "ewo",
+        "name": "Ewondo"
+    },
+    "fo": {
+        "code": "fo",
+        "name": "Färröeresch"
+    },
+    "fil": {
+        "code": "fil",
+        "name": "Filipino"
+    },
+    "fi": {
+        "code": "fi",
+        "name": "Finnesch"
+    },
+    "nl-BE": {
+        "code": "nl-BE",
+        "name": "Flämesch"
+    },
+    "fr": {
+        "code": "fr",
+        "name": "Franzüüsesch"
+    },
+    "fr-CH": {
+        "code": "fr-CH",
+        "name": "Franzüüsesch uß de Schweijz"
+    },
+    "fr-CA": {
+        "code": "fr-CA",
+        "name": "Franzüüsesch uß Kanada"
+    },
+    "fur": {
+        "code": "fur",
+        "name": "Friulian"
+    },
+    "ff": {
+        "code": "ff",
+        "name": "Fulah"
+    },
+    "lg": {
+        "code": "lg",
+        "name": "Ganda"
+    },
+    "guz": {
+        "code": "guz",
+        "name": "Gusii"
+    },
+    "gu": {
+        "code": "gu",
+        "name": "Gutscharatesch"
+    },
+    "ha": {
+        "code": "ha",
+        "name": "Haußa"
+    },
+    "he": {
+        "code": "he",
+        "name": "Hebräjesch"
+    },
+    "hi": {
+        "code": "hi",
+        "name": "Hindi"
+    },
+    "nl": {
+        "code": "nl",
+        "name": "Holländesch"
+    },
+    "ga": {
+        "code": "ga",
+        "name": "Ieresch"
+    },
+    "id": {
+        "code": "id",
+        "name": "Indoneesesch"
+    },
+    "is": {
+        "code": "is",
+        "name": "Ißländesch"
+    },
+    "gl": {
+        "code": "gl",
+        "name": "Jalliizesch"
+    },
+    "ja": {
+        "code": "ja",
+        "name": "Japaanesch"
+    },
+    "ka": {
+        "code": "ka",
+        "name": "Je’orjesch"
+    },
+    "dyo": {
+        "code": "dyo",
+        "name": "Jola-Fonyi"
+    },
+    "yo": {
+        "code": "yo",
+        "name": "Joruuba"
+    },
+    "el": {
+        "code": "el",
+        "name": "Jrihschesch"
+    },
+    "rn": {
+        "code": "rn",
+        "name": "K-Rundesch"
+    },
+    "kab": {
+        "code": "kab",
+        "name": "Kabyle"
+    },
+    "kl": {
+        "code": "kl",
+        "name": "Kalaallisut"
+    },
+    "kln": {
+        "code": "kln",
+        "name": "Kalenjin"
+    },
+    "kam": {
+        "code": "kam",
+        "name": "Kamba"
+    },
+    "kn": {
+        "code": "kn",
+        "name": "Kannada"
+    },
+    "kea": {
+        "code": "kea",
+        "name": "Kapvärdesch"
+    },
+    "ks": {
+        "code": "ks",
+        "name": "Kaschmieresch"
+    },
+    "kk": {
+        "code": "kk",
+        "name": "Kassakesch"
+    },
+    "ca": {
+        "code": "ca",
+        "name": "Kattalahnesch"
+    },
+    "km": {
+        "code": "km",
+        "name": "Khmer"
+    },
+    "ki": {
+        "code": "ki",
+        "name": "Kikuyu"
+    },
+    "ky": {
+        "code": "ky",
+        "name": "Kirjihsesch"
+    },
+    "rof": {
+        "code": "rof",
+        "name": "Kirombo"
+    },
+    "ksh": {
+        "code": "ksh",
+        "name": "Kölsch"
+    },
+    "ko": {
+        "code": "ko",
+        "name": "Korrejaanesch"
+    },
+    "khq": {
+        "code": "khq",
+        "name": "Koyra Chiini"
+    },
+    "ses": {
+        "code": "ses",
+        "name": "Koyraboro Senni"
+    },
+    "hr": {
+        "code": "hr",
+        "name": "Krowatesch"
+    },
+    "nmg": {
+        "code": "nmg",
+        "name": "Kwasio"
+    },
+    "lo": {
+        "code": "lo",
+        "name": "Lahootesch"
+    },
+    "lag": {
+        "code": "lag",
+        "name": "Langi"
+    },
+    "lv": {
+        "code": "lv",
+        "name": "Lättesch"
+    },
+    "ln": {
+        "code": "ln",
+        "name": "Lingjalla"
+    },
+    "lt": {
+        "code": "lt",
+        "name": "Littouesch"
+    },
+    "lu": {
+        "code": "lu",
+        "name": "Luba-Katanga"
+    },
+    "luo": {
+        "code": "luo",
+        "name": "Luo"
+    },
+    "lb": {
+        "code": "lb",
+        "name": "Luxemborjesch"
+    },
+    "luy": {
+        "code": "luy",
+        "name": "Luyjanesch"
+    },
+    "jmc": {
+        "code": "jmc",
+        "name": "Machame"
+    },
+    "mg": {
+        "code": "mg",
+        "name": "Madajaßkesch"
+    },
+    "mgh": {
+        "code": "mgh",
+        "name": "Makhuwa-Meetto"
+    },
+    "kde": {
+        "code": "kde",
+        "name": "Makonde"
+    },
+    "ms": {
+        "code": "ms",
+        "name": "Mallaijesch"
+    },
+    "ml": {
+        "code": "ml",
+        "name": "Mallajalam"
+    },
+    "mt": {
+        "code": "mt",
+        "name": "Malteesesch"
+    },
+    "mr": {
+        "code": "mr",
+        "name": "Marraatesch"
+    },
+    "mas": {
+        "code": "mas",
+        "name": "Masai"
+    },
+    "mk": {
+        "code": "mk",
+        "name": "Mazedoonesch"
+    },
+    "mer": {
+        "code": "mer",
+        "name": "Meru"
+    },
+    "mn": {
+        "code": "mn",
+        "name": "Mongjolesch"
+    },
+    "mfe": {
+        "code": "mfe",
+        "name": "Morisyen"
+    },
+    "mua": {
+        "code": "mua",
+        "name": "Mundang"
+    },
+    "naq": {
+        "code": "naq",
+        "name": "Nama"
+    },
+    "ne": {
+        "code": "ne",
+        "name": "Nepallessesch"
+    },
+    "nn": {
+        "code": "nn",
+        "name": "Neu-Norrweejesch"
+    },
+    "jgo": {
+        "code": "jgo",
+        "name": "Ngomba"
+    },
+    "dsb": {
+        "code": "dsb",
+        "name": "Niddersorbesch"
+    },
+    "se": {
+        "code": "se",
+        "name": "Nood-Lappländesch"
+    },
+    "nd": {
+        "code": "nd",
+        "name": "Nood-Ndebele"
+    },
+    "nb": {
+        "code": "nb",
+        "name": "Norrweejesch Bokmål"
+    },
+    "nus": {
+        "code": "nus",
+        "name": "Nuer"
+    },
+    "nyn": {
+        "code": "nyn",
+        "name": "Nyankole"
+    },
+    "or": {
+        "code": "or",
+        "name": "Oriija"
+    },
+    "pa": {
+        "code": "pa",
+        "name": "Panschaabesch"
+    },
+    "asa": {
+        "code": "asa",
+        "name": "Pare"
+    },
+    "fa": {
+        "code": "fa",
+        "name": "Pärsesch"
+    },
+    "ps": {
+        "code": "ps",
+        "name": "Paschtuunesch"
+    },
+    "pt": {
+        "code": "pt",
+        "name": "Pochtojesesch"
+    },
+    "pt-PT": {
+        "code": "pt-PT",
+        "name": "Pochtojesesch uß Pochtojall"
+    },
+    "pl": {
+        "code": "pl",
+        "name": "Pollnesch"
+    },
+    "rm": {
+        "code": "rm",
+        "name": "Rätoromaanesch"
+    },
+    "ro-MD": {
+        "code": "ro-MD",
+        "name": "ro_MD"
+    },
+    "ro": {
+        "code": "ro",
+        "name": "Rumänesch"
+    },
+    "ru": {
+        "code": "ru",
+        "name": "Rußßesch"
+    },
+    "rwk": {
+        "code": "rwk",
+        "name": "Rwa"
+    },
+    "saq": {
+        "code": "saq",
+        "name": "Samburu"
+    },
+    "sg": {
+        "code": "sg",
+        "name": "Sangjo"
+    },
+    "sbp": {
+        "code": "sbp",
+        "name": "Sangu"
+    },
+    "sr": {
+        "code": "sr",
+        "name": "Särbesch"
+    },
+    "sn": {
+        "code": "sn",
+        "name": "Schi-Schona"
+    },
+    "zh": {
+        "code": "zh",
+        "name": "Schineesesch"
+    },
+    "zh-Hans": {
+        "code": "zh-Hans",
+        "name": "Schineesesch en de eijfacher Schreff"
+    },
+    "zh-Hant": {
+        "code": "zh-Hant",
+        "name": "Schineesesch en de tradizjonälle Schreff"
+    },
+    "es": {
+        "code": "es",
+        "name": "Schpahnesch"
+    },
+    "es-MX": {
+        "code": "es-MX",
+        "name": "Schpahnesch en Mäxikoh"
+    },
+    "es-ES": {
+        "code": "es-ES",
+        "name": "Schpahnesch en Schpahneje"
+    },
+    "ar-001": {
+        "code": "ar-001",
+        "name": "Schtandatt Arahbesch"
+    },
+    "sv": {
+        "code": "sv",
+        "name": "Schweedesch"
+    },
+    "gsw": {
+        "code": "gsw",
+        "name": "Schwitzerdütsch"
+    },
+    "gd": {
+        "code": "gd",
+        "name": "Scottish Gaelic"
+    },
+    "seh": {
+        "code": "seh",
+        "name": "Sena"
+    },
+    "ksb": {
+        "code": "ksb",
+        "name": "Shambala"
+    },
+    "si": {
+        "code": "si",
+        "name": "Singjaleesesch"
+    },
+    "xog": {
+        "code": "xog",
+        "name": "Soga"
+    },
+    "so": {
+        "code": "so",
+        "name": "Somaalesch"
+    },
+    "sk": {
+        "code": "sk",
+        "name": "ẞlovakesch"
+    },
+    "sl": {
+        "code": "sl",
+        "name": "ẞloveenesch"
+    },
+    "zgh": {
+        "code": "zgh",
+        "name": "Standard Moroccan Tamazight"
+    },
+    "sw": {
+        "code": "sw",
+        "name": "Suaheelesch"
+    },
+    "zu": {
+        "code": "zu",
+        "name": "Suulu"
+    },
+    "shi": {
+        "code": "shi",
+        "name": "Tachelhit"
+    },
+    "th": {
+        "code": "th",
+        "name": "Tailändesch"
+    },
+    "dav": {
+        "code": "dav",
+        "name": "Taita"
+    },
+    "ta": {
+        "code": "ta",
+        "name": "Tamiilesch"
+    },
+    "twq": {
+        "code": "twq",
+        "name": "Tasawaq"
+    },
+    "te": {
+        "code": "te",
+        "name": "Telluuju"
+    },
+    "teo": {
+        "code": "teo",
+        "name": "Teso"
+    },
+    "bo": {
+        "code": "bo",
+        "name": "Tibehtesch"
+    },
+    "ti": {
+        "code": "ti",
+        "name": "Tijrenejaanesch"
+    },
+    "to": {
+        "code": "to",
+        "name": "Tongjaanesch"
+    },
+    "tr": {
+        "code": "tr",
+        "name": "Törkesch"
+    },
+    "cs": {
+        "code": "cs",
+        "name": "Tschäschesch"
+    },
+    "ug": {
+        "code": "ug",
+        "name": "Uj’juuersch"
+    },
+    "uk": {
+        "code": "uk",
+        "name": "Ukrainesch"
+    },
+    "hu": {
+        "code": "hu",
+        "name": "Unjarresch"
+    },
+    "hsb": {
+        "code": "hsb",
+        "name": "Upper Sorbian"
+    },
+    "ur": {
+        "code": "ur",
+        "name": "Urdu\/Hindi"
+    },
+    "uz": {
+        "code": "uz",
+        "name": "Ußbeekesch"
+    },
+    "vai": {
+        "code": "vai",
+        "name": "Vai"
+    },
+    "vi": {
+        "code": "vi",
+        "name": "Vijätnammeesesch"
+    },
+    "vun": {
+        "code": "vun",
+        "name": "Vunjo"
+    },
+    "cy": {
+        "code": "cy",
+        "name": "Wallihsesch"
+    },
+    "wae": {
+        "code": "wae",
+        "name": "Walserdütsch"
+    },
+    "fy": {
+        "code": "fy",
+        "name": "Wäßfriisesch"
+    },
+    "be": {
+        "code": "be",
+        "name": "Wiißrußesch"
+    },
+    "yav": {
+        "code": "yav",
+        "name": "Yangben"
+    },
+    "dje": {
+        "code": "dje",
+        "name": "Zarma"
+    }
+}
