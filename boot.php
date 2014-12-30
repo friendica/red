@@ -45,7 +45,8 @@ require_once('include/Contact.php');
 require_once('include/account.php');
 
 
-define ( 'RED_PLATFORM',            'redmatrix' );
+define ( 'RED_PLATFORM',            'trinidad' );
+define ( 'TRINIDAD',                true );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 

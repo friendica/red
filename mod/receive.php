@@ -12,7 +12,7 @@ function receive_post(&$a) {
 
 
 	$enabled = intval(get_config('system','diaspora_enabled'));
-	if(! $enabled) {
+	if(! $enabled || defined('TRINIDAD')) {
 		logger('mod-diaspora: disabled');
 		http_status_exit(500);
 	}
