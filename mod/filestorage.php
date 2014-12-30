@@ -32,7 +32,7 @@ function filestorage_post(&$a) {
 	$str_group_deny    = perms2str($_REQUEST['group_deny']);
 	$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
  
-	attach_change_permissions($channel_id, $resource, $str_contact_allow, $str_group_allow, $str_contact_deny,$str_group_deny, $recurse = false);
+	attach_change_permissions($channel_id, $resource, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny, $recurse);
 
 	//Build directory tree and redirect
 	$channel = $a->get_channel();
