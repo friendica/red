@@ -1,0 +1,634 @@
+{
+    "LSL": {
+        "name": "LSL",
+        "symbol": "LSL"
+    },
+    "SVC": {
+        "name": "SVC",
+        "symbol": "SVC"
+    },
+    "ZWL": {
+        "name": "ZWL",
+        "symbol": "ZWL"
+    },
+    "UZS": {
+        "name": "ਉਜ਼ਬੇਕਿਸਤਾਨ ਸੋਮ",
+        "symbol": "UZS"
+    },
+    "KPW": {
+        "name": "ਉੱਤਰੀ ਕੋਰੀਆਈ ਵੋਨ",
+        "symbol": "KPW"
+    },
+    "UYU": {
+        "name": "ਉਰੂਗੁਵਾਇਨ ਪੇਸੋ",
+        "symbol": "UYU"
+    },
+    "OMR": {
+        "name": "ਓਮਾਨੀ ਰਿਆਲ",
+        "symbol": "OMR"
+    },
+    "AOA": {
+        "name": "ਅੰਗੋਲਾ ਕਵਾਂਜਾ",
+        "symbol": "AOA"
+    },
+    "AZN": {
+        "name": "ਅਜ਼ਰਬਾਈਜਾਨ ਮਾਨਤ",
+        "symbol": "AZN"
+    },
+    "AFN": {
+        "name": "ਅਫ਼ਗਾਨ ਅਫ਼ਗਾਨੀ",
+        "symbol": "AFN"
+    },
+    "ARS": {
+        "name": "ਅਰਜਨਟੀਨੀ ਪੇਸੋ",
+        "symbol": "ARS"
+    },
+    "AMD": {
+        "name": "ਅਰਮੀਨੀਆਈ ਦਰਮ",
+        "symbol": "AMD"
+    },
+    "AWG": {
+        "name": "ਅਰੂਬਨ ਫਲੋਰਿਨ",
+        "symbol": "AWG"
+    },
+    "DZD": {
+        "name": "ਅਲਜੀਰਿਆਈ ਦਿਨਾਰ",
+        "symbol": "DZD"
+    },
+    "ALL": {
+        "name": "ਅਲਬਾਨੀਆਈ ਲੇਕ",
+        "symbol": "ALL"
+    },
+    "ISK": {
+        "name": "ਆਈਸਲੈਂਡਿਕ ਕਰੌਨ",
+        "symbol": "ISK"
+    },
+    "AUD": {
+        "name": "ਆਸਟ੍ਰੇਲੀਆਈ ਡਾਲਰ",
+        "symbol": "A$"
+    },
+    "ILS": {
+        "name": "ਇਜ਼ਰਾਈਲੀ ਨਵੀਂ ਸ਼ੇਕੇਲ",
+        "symbol": "₪"
+    },
+    "IDR": {
+        "name": "ਇੰਡੋਨੇਸ਼ੀਆਈ ਰੁਪਿਆਹ",
+        "symbol": "IDR"
+    },
+    "ETB": {
+        "name": "ਇਥੋਪੀਆਈ ਬਿਰ",
+        "symbol": "ETB"
+    },
+    "IQD": {
+        "name": "ਇਰਾਕੀ ਦਿਨਾਰ",
+        "symbol": "IQD"
+    },
+    "ERN": {
+        "name": "ਇਰੀਟ੍ਰਿਆਈ ਨਾਫ਼ਾ",
+        "symbol": "ERN"
+    },
+    "IRR": {
+        "name": "ਈਰਾਨੀ ਰਿਆਲ",
+        "symbol": "IRR"
+    },
+    "AED": {
+        "name": "ਸੰਯੁਕਤ ਅਰਬ ਅਮੀਰਾਤ ਦਿਰਹਾਮ",
+        "symbol": "AED"
+    },
+    "RSD": {
+        "name": "ਸਰਬੀਆਈ ਦਿਨਾਰ",
+        "symbol": "RSD"
+    },
+    "SZL": {
+        "name": "ਸਵਾਜ਼ੀ ਲਾਇਲੈਂਗਨੀ",
+        "symbol": "SZL"
+    },
+    "CHF": {
+        "name": "ਸਵਿਸ ਫ੍ਰੈਂਕ",
+        "symbol": "CHF"
+    },
+    "SEK": {
+        "name": "ਸਵੀਡਿਸ਼ ਕਰੋਨਾ",
+        "symbol": "SEK"
+    },
+    "LKR": {
+        "name": "ਸ੍ਰੀਲੰਕਾਈ ਰੁਪਇਆ",
+        "symbol": "LKR"
+    },
+    "STD": {
+        "name": "ਸਾਉ ਟੋਮੀ ਐਂਡ ਪ੍ਰਿੰਸਪੀ ਡੋਬਰਾ",
+        "symbol": "STD"
+    },
+    "SAR": {
+        "name": "ਸਾਊਦੀ ਰਿਆਲ",
+        "symbol": "SAR"
+    },
+    "WST": {
+        "name": "ਸਾਮੋਆਈ ਤਾਲਾ",
+        "symbol": "WST"
+    },
+    "SLL": {
+        "name": "ਸਿਏਰਾ ਲਿਓਨੀਅਨ ਲਿਓਨ",
+        "symbol": "SLL"
+    },
+    "SGD": {
+        "name": "ਸਿੰਗਾਪੁਰ ਡਾਲਰ",
+        "symbol": "SGD"
+    },
+    "SYP": {
+        "name": "ਸੀਰੀਆਈ ਪੌਂਡ",
+        "symbol": "SYP"
+    },
+    "SDG": {
+        "name": "ਸੂਡਾਨੀ ਪੌਂਡ",
+        "symbol": "SDG"
+    },
+    "SRD": {
+        "name": "ਸੂਰੀਨਾਮੀ ਡਾਲਰ",
+        "symbol": "SRD"
+    },
+    "SCR": {
+        "name": "ਸੇਸ਼ਲਸ ਰੁਪਇਆ",
+        "symbol": "SCR"
+    },
+    "SHP": {
+        "name": "ਸੇਂਟ ਹੇਲੇਨਾ ਪੌਂਡ",
+        "symbol": "SHP"
+    },
+    "SOS": {
+        "name": "ਸੋਮਾਲੀ ਸ਼ਿਲਿੰਗ",
+        "symbol": "SOS"
+    },
+    "SBD": {
+        "name": "ਸੋਲੋਮਨ ਆਈਲੈਂਡਸ ਡਾਲਰ",
+        "symbol": "SBD"
+    },
+    "HUF": {
+        "name": "ਹੰਗਰੀ ਫੋਰਿੰਟ",
+        "symbol": "HUF"
+    },
+    "HKD": {
+        "name": "ਹਾਂਗ ਕਾਂਗ ਡਾਲਰ",
+        "symbol": "HK$"
+    },
+    "HNL": {
+        "name": "ਹਾਨਡੂਰਨ ਲੇਮਪਿਰਾ",
+        "symbol": "HNL"
+    },
+    "HTG": {
+        "name": "ਹੈਤੀ ਗੌਰਡੇ",
+        "symbol": "HTG"
+    },
+    "KZT": {
+        "name": "ਕਜ਼ਾਖਸਤਾਨੀ ਤੇਂਗੇ",
+        "symbol": "KZT"
+    },
+    "QAR": {
+        "name": "ਕਤਰੀ ਰਿਆਲ",
+        "symbol": "QAR"
+    },
+    "KHR": {
+        "name": "ਕੰਬੋਡੀਆਈ ਰੀਅਲ",
+        "symbol": "KHR"
+    },
+    "HRK": {
+        "name": "ਕਰੋਏਸ਼ੀਆਈ ਕੁਨਾ",
+        "symbol": "HRK"
+    },
+    "CDF": {
+        "name": "ਕਾਂਗੋਲੀਜ਼ ਫ੍ਰੈਂਕ",
+        "symbol": "CDF"
+    },
+    "CUP": {
+        "name": "ਕਿਊਬਨ ਪੇਸੋ",
+        "symbol": "CUP"
+    },
+    "CUC": {
+        "name": "ਕਿਊਬਨ ਬਦਲਣਯੋਗ ਪੇਸੋ",
+        "symbol": "CUC"
+    },
+    "KGS": {
+        "name": "ਕਿਰਗਿਸਤਾਨੀ ਸੋਮ",
+        "symbol": "KGS"
+    },
+    "KES": {
+        "name": "ਕੀਨੀਆਈ ਸ਼ਿਲਿੰਗ",
+        "symbol": "KES"
+    },
+    "KWD": {
+        "name": "ਕੁਵੈਤੀ ਦਿਨਾਰ",
+        "symbol": "KWD"
+    },
+    "CAD": {
+        "name": "ਕੇਨੇਡਿਆਈ ਡਾਲਰ",
+        "symbol": "CA$"
+    },
+    "CVE": {
+        "name": "ਕੇਪ ਵਰਡੀਅਨ ਸਕੂਡੋ",
+        "symbol": "CVE"
+    },
+    "KYD": {
+        "name": "ਕੇਮੈਨ ਆਈਲੈਂਡਸ ਡਾਲਰ",
+        "symbol": "KYD"
+    },
+    "CRC": {
+        "name": "ਕੋਸਟਾ ਰੀਕਨ ਕੋਲਨ",
+        "symbol": "CRC"
+    },
+    "KMF": {
+        "name": "ਕੋਮੋਰੀਅਨ ਫ੍ਰੈਂਕ",
+        "symbol": "KMF"
+    },
+    "COP": {
+        "name": "ਕੋਲੰਬਿਆਈ ਪੇਸੋ",
+        "symbol": "COP"
+    },
+    "GNF": {
+        "name": "ਗਿਨੀ ਫ੍ਰੈਂਕ",
+        "symbol": "GNF"
+    },
+    "GTQ": {
+        "name": "ਗੁਆਟੇਮਾਲਾ ਕੁਏਟਜ਼ਲ",
+        "symbol": "GTQ"
+    },
+    "GYD": {
+        "name": "ਗੁਆਨਾਆਈ ਡਾਲਰ",
+        "symbol": "GYD"
+    },
+    "GMD": {
+        "name": "ਗੈਂਬੀਆਈ ਦਲਾਸੀ",
+        "symbol": "GMD"
+    },
+    "GHS": {
+        "name": "ਘਾਨਾਈ ਸੇਡੀ",
+        "symbol": "GHS"
+    },
+    "CLP": {
+        "name": "ਚਿਲੀ ਪੇਸੋ",
+        "symbol": "CLP"
+    },
+    "CNY": {
+        "name": "ਚੀਨੀ ਯੁਆਨ",
+        "symbol": "CN¥"
+    },
+    "CZK": {
+        "name": "ਚੈਕ ਗਣਰਾਜ ਕੋਰੁਨਾ",
+        "symbol": "CZK"
+    },
+    "JPY": {
+        "name": "ਜਪਾਨੀ ਯੇਨ",
+        "symbol": "JP¥"
+    },
+    "JMD": {
+        "name": "ਜਮਾਇਕਨ ਡਾਲਰ",
+        "symbol": "JMD"
+    },
+    "ZMW": {
+        "name": "ਜ਼ਾਮਬੀਆਈ ਕਵਾਚਾ",
+        "symbol": "ZMW"
+    },
+    "GEL": {
+        "name": "ਜਾਰਜੀਆਈ ਲਾਰੀ",
+        "symbol": "GEL"
+    },
+    "JOD": {
+        "name": "ਜਾਰਡਨ ਦਿਨਾਰ",
+        "symbol": "JOD"
+    },
+    "GIP": {
+        "name": "ਜਿਬਰਾਲਟਰ ਪੌਂਡ",
+        "symbol": "GIP"
+    },
+    "DJF": {
+        "name": "ਜ਼ੀਬੂਤੀਅਨ ਫ੍ਰੈਂਕ",
+        "symbol": "DJF"
+    },
+    "TTD": {
+        "name": "ਟ੍ਰਿਨੀਡਾਡ ਅਤੇ ਟੋਬਾਗੋ ਡਾਲਰ",
+        "symbol": "TTD"
+    },
+    "TND": {
+        "name": "ਟਿਉਨੀਸ਼ੀਆਈ ਦਿਨਾਰ",
+        "symbol": "TND"
+    },
+    "TOP": {
+        "name": "ਟੌਂਗਨ ਪੈਂਗਾ",
+        "symbol": "TOP"
+    },
+    "DKK": {
+        "name": "ਡੈਨਿਸ਼ ਕਰੌਨ",
+        "symbol": "DKK"
+    },
+    "DOP": {
+        "name": "ਡੌਮਿਨਿਕਨ ਪੇਸੋ",
+        "symbol": "DOP"
+    },
+    "TZS": {
+        "name": "ਤਨਜ਼ਾਨੀਆਈ ਸ਼ਿਲਿੰਗ",
+        "symbol": "TZS"
+    },
+    "TJS": {
+        "name": "ਤਾਜਿਕਿਸਤਾਨੀ ਸੋਮੋਨੀ",
+        "symbol": "TJS"
+    },
+    "TMT": {
+        "name": "ਤੁਰਕਮੇਨਿਸਤਾਨੀ ਮਾਨਤ",
+        "symbol": "TMT"
+    },
+    "TRY": {
+        "name": "ਤੁਰਕੀ ਲੀਰਾ",
+        "symbol": "TRY"
+    },
+    "THB": {
+        "name": "ਥਾਈ ਬਾਹਤ",
+        "symbol": "฿"
+    },
+    "ZAR": {
+        "name": "ਦੱਖਣੀ ਅਫਰੀਕੀ ਰੈਂਡ",
+        "symbol": "ZAR"
+    },
+    "SSP": {
+        "name": "ਦੱਖਣੀ ਸੂਡਾਨੀ ਪੌਂਡ",
+        "symbol": "SSP"
+    },
+    "KRW": {
+        "name": "ਦੱਖਣੀ ਕੋਰੀਆਈ ਵੋਨ",
+        "symbol": "₩"
+    },
+    "TWD": {
+        "name": "ਨਵਾਂ ਤਾਇਵਾਨ ਡਾਲਰ",
+        "symbol": "NT$"
+    },
+    "NGN": {
+        "name": "ਨਾਇਜੀਰੀਆਈ ਨਾਇਰਾ",
+        "symbol": "NGN"
+    },
+    "NAD": {
+        "name": "ਨਾਮੀਬੀਆਈ ਡਾਲਰ",
+        "symbol": "NAD"
+    },
+    "NOK": {
+        "name": "ਨਾਰਵੇਜੀਆਈ ਕਰੌਨ",
+        "symbol": "NOK"
+    },
+    "NZD": {
+        "name": "ਨਿਊਜ਼ੀਲੈਂਡ ਡਾਲਰ",
+        "symbol": "NZ$"
+    },
+    "NIO": {
+        "name": "ਨਿਕਾਰਾਗੁਆਈ ਕੋਰਡੋਬਾ",
+        "symbol": "NIO"
+    },
+    "ANG": {
+        "name": "ਨੀਦਰਲੈਂਡਸ ਐਂਟੀਲੀਅਨ ਗਿਲਡਰ",
+        "symbol": "ANG"
+    },
+    "NPR": {
+        "name": "ਨੇਪਾਲੀ ਰੁਪਇਆ",
+        "symbol": "NPR"
+    },
+    "PAB": {
+        "name": "ਪਨਾਮੇਨੀਅਨ ਬਾਲਬੋਆ",
+        "symbol": "PAB"
+    },
+    "PKR": {
+        "name": "ਪਾਕਿਸਤਾਨੀ ਰੁਪਇਆ",
+        "symbol": "PKR"
+    },
+    "PGK": {
+        "name": "ਪਾਪੂਆ ਨਿਊ ਗਿਨੀਆਈ ਕੀਨਾ",
+        "symbol": "PGK"
+    },
+    "XCD": {
+        "name": "ਪੂਰਬੀ ਕੈਰੇਬੀਅਨ ਡਾਲਰ",
+        "symbol": "EC$"
+    },
+    "PEN": {
+        "name": "ਪੇਰੂਵੀਅਨ ਨਿਊਵੋ ਸੋਲ",
+        "symbol": "PEN"
+    },
+    "PYG": {
+        "name": "ਪੈਰਾਗੁਵਾਇਨ ਗੁਆਰਾਨੀ",
+        "symbol": "PYG"
+    },
+    "PLN": {
+        "name": "ਪੋਲੈਂਡੀ ਜ਼ਲੌਟੀ",
+        "symbol": "PLN"
+    },
+    "XOF": {
+        "name": "ਫ੍ਰੈਂਕ (CFA BCEAO)",
+        "symbol": "CFA"
+    },
+    "XAF": {
+        "name": "ਫ੍ਰੈਂਕ (CFA BEAC)",
+        "symbol": "FCFA"
+    },
+    "XPF": {
+        "name": "ਫ੍ਰੈਂਕ (CFP)",
+        "symbol": "CFPF"
+    },
+    "FKP": {
+        "name": "ਫ਼ਾਕਲੈਂਡ ਆਈਲੈਂਡਸ ਪੌਂਡ",
+        "symbol": "FKP"
+    },
+    "FJD": {
+        "name": "ਫ਼ਿਜ਼ੀ ਡਾਲਰ",
+        "symbol": "FJD"
+    },
+    "PHP": {
+        "name": "ਫਿਲਿਪੀਨੀ ਪੇਸੋ",
+        "symbol": "PHP"
+    },
+    "BHD": {
+        "name": "ਬਹਿਰੀਨੀ ਦਿਨਾਰ",
+        "symbol": "BHD"
+    },
+    "BDT": {
+        "name": "ਬੰਗਲਾਦੇਸ਼ੀ ਟਕਾ",
+        "symbol": "BDT"
+    },
+    "BMD": {
+        "name": "ਬਰਮੂਡਾ ਡਾਲਰ",
+        "symbol": "BMD"
+    },
+    "BND": {
+        "name": "ਬਰੂਨੇਈ ਡਾਲਰ",
+        "symbol": "BND"
+    },
+    "BRL": {
+        "name": "ਬ੍ਰਾਜ਼ੀਲੀਆਈ ਰੀਅਲ",
+        "symbol": "R$"
+    },
+    "GBP": {
+        "name": "ਬ੍ਰਿਟਿਸ਼ ਪੌਂਡ ਸਟਰਲਿੰਗ",
+        "symbol": "£"
+    },
+    "BSD": {
+        "name": "ਬਾਹਾਮੀਅਨ ਡਾਲਰ",
+        "symbol": "BSD"
+    },
+    "BBD": {
+        "name": "ਬਾਰਬਾਡੀਅਨ ਡਾਲਰ",
+        "symbol": "BBD"
+    },
+    "BIF": {
+        "name": "ਬੁਰੁੰਡੀਆਈ ਫ੍ਰੈਂਕ",
+        "symbol": "BIF"
+    },
+    "BGN": {
+        "name": "ਬੁਲਗਾਰੀਆਈ ਲੇਵ",
+        "symbol": "BGN"
+    },
+    "BYR": {
+        "name": "ਬੇਲਾਰੂਸੀ ਰੂਬਲ",
+        "symbol": "BYR"
+    },
+    "BZD": {
+        "name": "ਬੇਲੀਜ਼ ਡਾਲਰ",
+        "symbol": "BZD"
+    },
+    "BAM": {
+        "name": "ਬੋਸਨੀਆ-ਹਰਜ਼ੇਗੋਵੀਨਾ ਬਦਲਣਯੋਗ ਮਾਰਕ",
+        "symbol": "BAM"
+    },
+    "BWP": {
+        "name": "ਬੋਟਸਵਾਨਾ ਪੁਲਾ",
+        "symbol": "BWP"
+    },
+    "BOB": {
+        "name": "ਬੋਲੀਵੀਅਨ ਬੋਲੀਵੀਅਨੋ",
+        "symbol": "BOB"
+    },
+    "INR": {
+        "name": "ਭਾਰਤੀ ਰੁਪਇਆ",
+        "symbol": "₹"
+    },
+    "BTN": {
+        "name": "ਭੂਟਾਨੀ ਐਂਗਲਟ੍ਰਮ",
+        "symbol": "BTN"
+    },
+    "MNT": {
+        "name": "ਮੰਗੋਲੀਆਈ ਤੁਗਰਿਕ",
+        "symbol": "MNT"
+    },
+    "MYR": {
+        "name": "ਮਲੇਸ਼ੀਆਈ ਰਿੰਗਿਟ",
+        "symbol": "MYR"
+    },
+    "MVR": {
+        "name": "ਮਾਲਦੀਵੀ ਰੁਫੀਆ",
+        "symbol": "MVR"
+    },
+    "MGA": {
+        "name": "ਮਾਲਾਗਾਸੀ ਅਰਾਇਰੀ",
+        "symbol": "MGA"
+    },
+    "MWK": {
+        "name": "ਮਾਲਾਵੀਆਈ ਕਵਾਚਾ",
+        "symbol": "MWK"
+    },
+    "MMK": {
+        "name": "ਮਿਆਂਮਾਰ ਕਿਆਤ",
+        "symbol": "MMK"
+    },
+    "EGP": {
+        "name": "ਮਿਸਰੀ ਪੌਂਡ",
+        "symbol": "EGP"
+    },
+    "MOP": {
+        "name": "ਮੇਕਾਨੀ ਪਟਾਕਾ",
+        "symbol": "MOP"
+    },
+    "MXN": {
+        "name": "ਮੈਕਸੀਕਨ ਪੇਸੋ",
+        "symbol": "MX$"
+    },
+    "MKD": {
+        "name": "ਮੈਕਡੋਨੀਆਈ ਡੇਨਾਰ",
+        "symbol": "MKD"
+    },
+    "MZN": {
+        "name": "ਮੋਜ਼ਾਮਬੀਕਨ ਮੈਟੀਕਲ",
+        "symbol": "MZN"
+    },
+    "MAD": {
+        "name": "ਮੋਰੱਕਨ ਦਿਰਹਾਮ",
+        "symbol": "MAD"
+    },
+    "MRO": {
+        "name": "ਮੋਰਿਟਾਨੀਆਈ ਊਗੀਆ",
+        "symbol": "MRO"
+    },
+    "MDL": {
+        "name": "ਮੋਲਡੋਵਨ ਲੇਉ",
+        "symbol": "MDL"
+    },
+    "MUR": {
+        "name": "ਮੌਰਿਸ਼ੀਆਈ ਰੁਪਇਆ",
+        "symbol": "MUR"
+    },
+    "YER": {
+        "name": "ਯਮਨੀ ਰਿਆਲ",
+        "symbol": "YER"
+    },
+    "USD": {
+        "name": "ਯੂ.ਐਸ. ਡਾਲਰ",
+        "symbol": "US$"
+    },
+    "UAH": {
+        "name": "ਯੂਕਰੇਨੀਆਈ ਰਿਵਨਿਆ",
+        "symbol": "UAH"
+    },
+    "UGX": {
+        "name": "ਯੂਗਾਂਡੀਆਈ ਸ਼ਿਲਿੰਗ",
+        "symbol": "UGX"
+    },
+    "EUR": {
+        "name": "ਯੂਰੋ",
+        "symbol": "€"
+    },
+    "RWF": {
+        "name": "ਰਵਾਂਡਨ ਫ੍ਰੈਂਕ",
+        "symbol": "RWF"
+    },
+    "RUB": {
+        "name": "ਰੂਸੀ ਰੂਬਲ",
+        "symbol": "RUB"
+    },
+    "RON": {
+        "name": "ਰੋਮਾਨੀਆਈ ਲੇਉ",
+        "symbol": "RON"
+    },
+    "LAK": {
+        "name": "ਲਾਓਟਿਆਈ ਕਿਪ",
+        "symbol": "LAK"
+    },
+    "LRD": {
+        "name": "ਲਾਈਬੀਰੀਆਈ ਡਾਲਰ",
+        "symbol": "LRD"
+    },
+    "LTL": {
+        "name": "ਲਿਥੁਆਨੀਆਈ ਲਿਤਾਸ",
+        "symbol": "LTL"
+    },
+    "LYD": {
+        "name": "ਲੀਬੀਅਨ ਦਿਨਾਰ",
+        "symbol": "LYD"
+    },
+    "LBP": {
+        "name": "ਲੈਬਨਾਨੀ ਪੌਂਡ",
+        "symbol": "LBP"
+    },
+    "VUV": {
+        "name": "ਵਾਨੂਆਟੂ ਵਾਟੂ",
+        "symbol": "VUV"
+    },
+    "VND": {
+        "name": "ਵੀਅਤਨਾਮੀ ਡੋਂਗ",
+        "symbol": "₫"
+    },
+    "VEF": {
+        "name": "ਵੇਨੇਜ਼ੂਏਲਨ ਬੋਲੀਵਰ",
+        "symbol": "VEF"
+    }
+}

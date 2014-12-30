@@ -1,0 +1,10 @@
+
+#cropimage-wrapper, #cropimage-preview-wrapper {
+	float: left;
+	padding: 30px;
+}
+
+#crop-image-form {
+	margin-top: 30px;
+	clear: both;
+}

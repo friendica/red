@@ -449,6 +449,8 @@ function settings_post(&$a) {
 	if(x($_POST,'vnotify11'))
 		$vnotify += intval($_POST['vnotify11']);
 
+	$always_show_in_notices = x($_POST,'always_show_in_notices') ? 1 : 0;
+
 	$channel = $a->get_channel();
 
 	$err = '';
@@ -478,6 +480,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','blocktags',$blocktags);
 	set_pconfig(local_user(),'system','channel_menu',$channel_menu);
 	set_pconfig(local_user(),'system','vnotify',$vnotify);
+	set_pconfig(local_user(),'system','always_show_in_notices',$always_show_in_notices);
 	set_pconfig(local_user(),'system','evdays',$evdays);
 
 	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d $set_perms where channel_id = %d",
@@ -995,6 +998,7 @@ function settings_content(&$a) {
 		$permissions_role = get_pconfig(local_user(),'system','permissions_role');
 		$permissions_set = (($permissions_role && $permissions_role != 'custom') ? true : false);
 		$vnotify = get_pconfig(local_user(),'system','vnotify');
+		$always_show_in_notices = get_pconfig(local_user(),'system','always_show_in_notices');
 		if($vnotify === false)
 			$vnotify = (-1);
 
@@ -1080,6 +1084,7 @@ function settings_content(&$a) {
 			'$vnotify9'  => array('vnotify9', t('System critical alerts'), ($vnotify & VNOTIFY_ALERT), VNOTIFY_ALERT, t('Recommended')),		
 			'$vnotify10'  => array('vnotify10', t('New connections'), ($vnotify & VNOTIFY_INTRO), VNOTIFY_INTRO, t('Recommended')),		
 			'$vnotify11'  => array('vnotify11', t('System Registrations'), ($vnotify & VNOTIFY_REGISTER), VNOTIFY_REGISTER, ''),		
+			'$always_show_in_notices'  => array('always_show_in_notices', t('Also show new wall posts, private messages and connections under Notices'), $always_show_in_notices, 1, ''),		
 
 			'$evdays' => array('evdays', t('Notify me of events this many days in advance'), $evdays, t('Must be greater than 0')),			
 

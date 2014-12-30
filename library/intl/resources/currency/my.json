@@ -1,0 +1,634 @@
+{
+    "LSL": {
+        "name": "LSL",
+        "symbol": "LSL"
+    },
+    "SVC": {
+        "name": "SVC",
+        "symbol": "SVC"
+    },
+    "XPF": {
+        "name": "XPFဖရန့်",
+        "symbol": "CFPF"
+    },
+    "ZWL": {
+        "name": "ZWL",
+        "symbol": "ZWL"
+    },
+    "CAD": {
+        "name": "ကနေဒါ ဒေါ်လာ",
+        "symbol": "CA$"
+    },
+    "QAR": {
+        "name": "ကာတာရီအော်လ်",
+        "symbol": "QAR"
+    },
+    "KWD": {
+        "name": "ကူဝိတ်ဒီနာ",
+        "symbol": "KWD"
+    },
+    "KYD": {
+        "name": "ကေမန် ကျွန်းစု ဒေါ်လာ",
+        "symbol": "KYD"
+    },
+    "CRC": {
+        "name": "ကော့စ်တာရီကာ ခိုလုံး",
+        "symbol": "CRC"
+    },
+    "KMF": {
+        "name": "ကိုမိုရိုစ် ဖရန့်",
+        "symbol": "KMF"
+    },
+    "COP": {
+        "name": "ကိုလံဘီယာ ပီဆို",
+        "symbol": "COP"
+    },
+    "KES": {
+        "name": "ကင်ညာသျှီလင်",
+        "symbol": "KES"
+    },
+    "XAF": {
+        "name": "ကင်မရွန်းဖရန့်",
+        "symbol": "FCFA"
+    },
+    "KHR": {
+        "name": "ကမ္ဘောဒီးယား ရီးယဲ",
+        "symbol": "KHR"
+    },
+    "CUP": {
+        "name": "ကျူးဘား ပီဆို",
+        "symbol": "CUP"
+    },
+    "CDF": {
+        "name": "ကွန်ဂို ဖရန့်",
+        "symbol": "CDF"
+    },
+    "KGS": {
+        "name": "ခရူဂစ်စတန်ဆော်မ်",
+        "symbol": "KGS"
+    },
+    "KZT": {
+        "name": "ခရူဂစ်စတန်ထိန်ဂျီ",
+        "symbol": "KZT"
+    },
+    "HRK": {
+        "name": "ခရိုအေးရှားခူးနာ",
+        "symbol": "HRK"
+    },
+    "CVE": {
+        "name": "ခေ့ပ်ဗာဒူ အက်စ်ခူဒို",
+        "symbol": "CVE"
+    },
+    "CLP": {
+        "name": "ချီလီ ပီဆို",
+        "symbol": "CLP"
+    },
+    "CZK": {
+        "name": "ချက်ခိုရိုနာ",
+        "symbol": "CZK"
+    },
+    "GHS": {
+        "name": "ဂါနာ ဆဲဒီ",
+        "symbol": "GHS"
+    },
+    "GNF": {
+        "name": "ဂီးနီ ဖရန့်",
+        "symbol": "GNF"
+    },
+    "GYD": {
+        "name": "ဂူရာနာ ဒေါ်လာ",
+        "symbol": "GYD"
+    },
+    "GMD": {
+        "name": "ဂန်ဘီယာ ဒါလာစီ",
+        "symbol": "GMD"
+    },
+    "JPY": {
+        "name": "ဂျပန်ယန်း",
+        "symbol": "JP¥"
+    },
+    "JMD": {
+        "name": "ဂျမေကာ ဒေါ်လာ",
+        "symbol": "JMD"
+    },
+    "GIP": {
+        "name": "ဂျီဘရော်လ်တာ ပေါင်",
+        "symbol": "GIP"
+    },
+    "DJF": {
+        "name": "ဂျီဘူတီ ဖရန့်",
+        "symbol": "DJF"
+    },
+    "GEL": {
+        "name": "ဂျော်ဂျီယာလားရီ",
+        "symbol": "GEL"
+    },
+    "JOD": {
+        "name": "ဂျော်ဒန်ဒီနား",
+        "symbol": "JOD"
+    },
+    "GTQ": {
+        "name": "ဂွာတီမာလာ ခက်ဇော်လ်",
+        "symbol": "GTQ"
+    },
+    "WST": {
+        "name": "စမိုအထားလာ",
+        "symbol": "WST"
+    },
+    "SGD": {
+        "name": "စင်္ကာပူ ဒေါ်လာ",
+        "symbol": "SGD"
+    },
+    "STD": {
+        "name": "စိန့်တိုမီနှင့်ပရင်စီပ့် ဒိုဘရာ",
+        "symbol": "STD"
+    },
+    "SHP": {
+        "name": "စိန့်ဟဲလီနာ ပေါင်",
+        "symbol": "SHP"
+    },
+    "SZL": {
+        "name": "စွာဇီလန်လီလန်းဂီနီ",
+        "symbol": "SZL"
+    },
+    "RSD": {
+        "name": "ဆားဘီးယားဒယ်နား",
+        "symbol": "RSD"
+    },
+    "SLL": {
+        "name": "ဆီအဲရာ လီအိုနီယန် လီအိုနီ",
+        "symbol": "SLL"
+    },
+    "SYP": {
+        "name": "ဆီးရီးယား ပေါင်",
+        "symbol": "SYP"
+    },
+    "SDG": {
+        "name": "ဆူဒန် ပေါင်",
+        "symbol": "SDG"
+    },
+    "SRD": {
+        "name": "ဆူရီနိမ်း ဒေါ်လာ",
+        "symbol": "SRD"
+    },
+    "SCR": {
+        "name": "ဆေးရှလ်ရူးပီး",
+        "symbol": "SCR"
+    },
+    "SAR": {
+        "name": "ဆော်ဒီအာရေးဗီးယားရီယော်လ်",
+        "symbol": "SAR"
+    },
+    "SBD": {
+        "name": "ဆော်လမွန်ကျွန်းစု ဒေါ်လာ",
+        "symbol": "SBD"
+    },
+    "SOS": {
+        "name": "ဆိုမာလီသျှီလင်",
+        "symbol": "SOS"
+    },
+    "SEK": {
+        "name": "ဆွီဒင် ခရိုဏာ",
+        "symbol": "SEK"
+    },
+    "CHF": {
+        "name": "ဆွစ် ဖရန့်",
+        "symbol": "CHF"
+    },
+    "ZMW": {
+        "name": "ဇင်ဘာဘွေခွါးချာ",
+        "symbol": "ZMW"
+    },
+    "CNY": {
+        "name": "တရုတ် ယွမ်",
+        "symbol": "CN¥"
+    },
+    "TJS": {
+        "name": "တာဂျီကစ္စတန်ဆိုမိုနီ",
+        "symbol": "TJS"
+    },
+    "TND": {
+        "name": "တူနီရှားဒီနာ",
+        "symbol": "TND"
+    },
+    "TRY": {
+        "name": "တူရကီ လိုင်ရာ",
+        "symbol": "TRY"
+    },
+    "TMT": {
+        "name": "တာခ်မီန့စ်တန်မာနတ်",
+        "symbol": "TMT"
+    },
+    "KRW": {
+        "name": "တောင်ကိုးရီးယား ဝမ်",
+        "symbol": "₩"
+    },
+    "SSP": {
+        "name": "တောင်ဆူဒန်ပေါင်",
+        "symbol": "SSP"
+    },
+    "ZAR": {
+        "name": "တောင်အဖရိက ရန်း",
+        "symbol": "ZAR"
+    },
+    "TZS": {
+        "name": "တန်ဇန်းနီးယားသျှီလင်",
+        "symbol": "TZS"
+    },
+    "TOP": {
+        "name": "တွန်ဂါဗန်ဂါ",
+        "symbol": "TOP"
+    },
+    "TTD": {
+        "name": "ထရိုင်နီဒတ်နှင့်တိုဘာဂိုဒေါ်လာ",
+        "symbol": "TTD"
+    },
+    "TWD": {
+        "name": "ထိုင်ဝမ် ဒေါ်လာအသစ်",
+        "symbol": "NT$"
+    },
+    "THB": {
+        "name": "ထိုင်းဘတ်",
+        "symbol": "฿"
+    },
+    "DOP": {
+        "name": "ဒိုမီနီကန် ပီဆို",
+        "symbol": "DOP"
+    },
+    "DKK": {
+        "name": "ဒိန်းမတ်ခရိုဏာ",
+        "symbol": "DKK"
+    },
+    "NZD": {
+        "name": "နယူးဇီလန် ဒေါ်လာ",
+        "symbol": "NZ$"
+    },
+    "NIO": {
+        "name": "နီကာရာဂွာ ခိုးဒိုဘာ",
+        "symbol": "NIO"
+    },
+    "NPR": {
+        "name": "နီပေါ ရူပီး",
+        "symbol": "NPR"
+    },
+    "NOK": {
+        "name": "နော်ဝေ ခရိုဏာ",
+        "symbol": "NOK"
+    },
+    "NGN": {
+        "name": "နိုင်ဂျီးရီးယားနိုင်းရာ",
+        "symbol": "NGN"
+    },
+    "CUC": {
+        "name": "နိုင်ငံခြားငွေလဲလှယ်နိုင်သော ကျူးဘားပီဆိုငွေ",
+        "symbol": "CUC"
+    },
+    "NAD": {
+        "name": "နမ်မီးဘီးယား ဒေါ်လာ",
+        "symbol": "NAD"
+    },
+    "ANG": {
+        "name": "နယ်သာလန် အန်တီလန် ဂင်းဒါး",
+        "symbol": "ANG"
+    },
+    "PAB": {
+        "name": "ပနားမား ဘလ်ဘိုးအာ",
+        "symbol": "PAB"
+    },
+    "PKR": {
+        "name": "ပါကစ္စတန် ရူပီး",
+        "symbol": "PKR"
+    },
+    "PGK": {
+        "name": "ပါပူရာနယူးဂီနီခီးနာ",
+        "symbol": "PGK"
+    },
+    "PYG": {
+        "name": "ပါရာဂွေးဂွါးအ်နီး",
+        "symbol": "PYG"
+    },
+    "PEN": {
+        "name": "ပီရူး နူအီဗိုဆိုးလ်",
+        "symbol": "PEN"
+    },
+    "PLN": {
+        "name": "ပိုလန် ဇ‌လော့တီ",
+        "symbol": "PLN"
+    },
+    "PHP": {
+        "name": "ဖိလစ်ပိုင် ပီဆို",
+        "symbol": "PHP"
+    },
+    "FJD": {
+        "name": "ဖီဂျီ ဒေါ်လာ",
+        "symbol": "FJD"
+    },
+    "FKP": {
+        "name": "ဖောက်ကလန် ကျွန်းစု ပေါင်",
+        "symbol": "FKP"
+    },
+    "VUV": {
+        "name": "ဗာနုအာတူဗားထူ",
+        "symbol": "VUV"
+    },
+    "VND": {
+        "name": "ဗီယက်နမ် ဒေါင်",
+        "symbol": "₫"
+    },
+    "VEF": {
+        "name": "ဗင်နီဇွဲလား ဘိုလီဗာ",
+        "symbol": "VEF"
+    },
+    "GBP": {
+        "name": "ဗြိတိသျှ ပေါင်",
+        "symbol": "£"
+    },
+    "BRL": {
+        "name": "ဘရာဇီး ရီးယဲ",
+        "symbol": "R$"
+    },
+    "BND": {
+        "name": "ဘရူနိုင်း ဒေါ်လာ",
+        "symbol": "BND"
+    },
+    "BSD": {
+        "name": "ဘဟားမား ဒေါ်လာ",
+        "symbol": "BSD"
+    },
+    "BBD": {
+        "name": "ဘာဘဒီယံဒေါ်လာ",
+        "symbol": "BBD"
+    },
+    "BMD": {
+        "name": "ဘာမူဒါ ဒေါ်လာ",
+        "symbol": "BMD"
+    },
+    "BHD": {
+        "name": "ဘာရိန်းဒီနား",
+        "symbol": "BHD"
+    },
+    "BYR": {
+        "name": "ဘီလာရုစ် ရူဘယ်",
+        "symbol": "BYR"
+    },
+    "BGN": {
+        "name": "ဘူဂေးရီးယားလက်ဖ်",
+        "symbol": "BGN"
+    },
+    "BTN": {
+        "name": "ဘူတန်အံဂါလ်ထရန်",
+        "symbol": "BTN"
+    },
+    "BIF": {
+        "name": "ဘူရွန်ဒီ ဖရန့်",
+        "symbol": "BIF"
+    },
+    "BZD": {
+        "name": "ဘေလီဇ် ဒေါ်လာ",
+        "symbol": "BZD"
+    },
+    "BAM": {
+        "name": "ဘော့စနီးယား နှင့် ဟာဇီဂိုဘီးနားမတ်က်",
+        "symbol": "BAM"
+    },
+    "BWP": {
+        "name": "ဘော့စ်ဝါနာ ပုလ",
+        "symbol": "BWP"
+    },
+    "BOB": {
+        "name": "ဘိုလီဘီယံ ဘိုလီဘီအားနို",
+        "symbol": "BOB"
+    },
+    "BDT": {
+        "name": "ဘင်္ဂလားဒေ့ရှ် တာကာ",
+        "symbol": "BDT"
+    },
+    "MOP": {
+        "name": "မကာအိုပါတားကား",
+        "symbol": "MOP"
+    },
+    "MGA": {
+        "name": "မလာဂစ်စီ အရီရရီ ငွေကြေး",
+        "symbol": "MGA"
+    },
+    "MYR": {
+        "name": "မလေးရှား ရင်းဂစ်",
+        "symbol": "MYR"
+    },
+    "MKD": {
+        "name": "မာစီဒိုးနီးယားဒီနာ",
+        "symbol": "MKD"
+    },
+    "MWK": {
+        "name": "မာလာဝီခွါးချာ",
+        "symbol": "MWK"
+    },
+    "MRO": {
+        "name": "မောရီတာနီအာအူဂီးယာ",
+        "symbol": "MRO"
+    },
+    "MUR": {
+        "name": "မော်ရေရှားစ် ရူပီ",
+        "symbol": "MUR"
+    },
+    "MVR": {
+        "name": "မော်လ်ဒိုက်ရူးဖီရာ",
+        "symbol": "MVR"
+    },
+    "MZN": {
+        "name": "မိုဇန်ဘစ်မက်တီခယ်လ်",
+        "symbol": "MZN"
+    },
+    "MAD": {
+        "name": "မိုရိုကို ဒရမ်",
+        "symbol": "MAD"
+    },
+    "MXN": {
+        "name": "မက္ကဆီကို ပီဆို",
+        "symbol": "MX$"
+    },
+    "MDL": {
+        "name": "မောလ်ဒိုဗာလယ်အို",
+        "symbol": "MDL"
+    },
+    "KPW": {
+        "name": "မြောက်ကိုးရီးယား ဝမ်",
+        "symbol": "KPW"
+    },
+    "MMK": {
+        "name": "မြန်မာကျပ်",
+        "symbol": "K"
+    },
+    "MNT": {
+        "name": "မွန်ဂိုးလီးယားထူးဂရခ်",
+        "symbol": "MNT"
+    },
+    "YER": {
+        "name": "ယီမင်ရီအော်လ်",
+        "symbol": "YER"
+    },
+    "UAH": {
+        "name": "ယူကရိန်း",
+        "symbol": "UAH"
+    },
+    "UGX": {
+        "name": "ယူဂန္ဓာသျှီလင်",
+        "symbol": "UGX"
+    },
+    "EUR": {
+        "name": "ယူရို",
+        "symbol": "€"
+    },
+    "RWF": {
+        "name": "ရဝန်ဒါ ဖရန့်",
+        "symbol": "RWF"
+    },
+    "RUB": {
+        "name": "ရုရှ ရူဘယ်",
+        "symbol": "RUB"
+    },
+    "RON": {
+        "name": "ရိုမေးနီယားလယ်အို",
+        "symbol": "RON"
+    },
+    "LAK": {
+        "name": "လာအိုခိပ်",
+        "symbol": "LAK"
+    },
+    "LYD": {
+        "name": "လီဗျာ ဒီနာ",
+        "symbol": "LYD"
+    },
+    "LBP": {
+        "name": "လက်ဘနွန် ပေါင်",
+        "symbol": "LBP"
+    },
+    "LRD": {
+        "name": "လိုင်ဘေးရီးယား ဒေါ်လာ",
+        "symbol": "LRD"
+    },
+    "LTL": {
+        "name": "လစ်သူယေးနီးယားလီတားစ်",
+        "symbol": "LTL"
+    },
+    "LKR": {
+        "name": "သီရိလင်္ကာ ရူပီး",
+        "symbol": "LKR"
+    },
+    "HTG": {
+        "name": "ဟေတီဂူးအော်ဒ်",
+        "symbol": "HTG"
+    },
+    "HKD": {
+        "name": "ဟောင်ကောင် ဒေါ်လာ",
+        "symbol": "HK$"
+    },
+    "HUF": {
+        "name": "ဟန်ဂေရီယံဖော်ရင့်တ်",
+        "symbol": "HUF"
+    },
+    "HNL": {
+        "name": "ဟွန်ဒူးရပ်စ် လန်းပီးရာ",
+        "symbol": "HNL"
+    },
+    "AZN": {
+        "name": "အဇာဘိုင်ဂျန်မာနတ်",
+        "symbol": "AZN"
+    },
+    "USD": {
+        "name": "အမေရိကန် ဒေါ်လာ",
+        "symbol": "US$"
+    },
+    "AWG": {
+        "name": "အရူဘန် ဂင်းဒါး",
+        "symbol": "AWG"
+    },
+    "XCD": {
+        "name": "အရှေ့ကာရီဘီယံဒေါ်လာ",
+        "symbol": "EC$"
+    },
+    "ARS": {
+        "name": "အာဂျင်တီးနား ပီဆို",
+        "symbol": "ARS"
+    },
+    "AFN": {
+        "name": "အာဖဂန်အာဖဂါနီ",
+        "symbol": "AFN"
+    },
+    "AMD": {
+        "name": "အာမေးနီးယားဒရမ်း",
+        "symbol": "AMD"
+    },
+    "AED": {
+        "name": "အာရပ်ဒူဟမ်း",
+        "symbol": "AED"
+    },
+    "EGP": {
+        "name": "အီဂျစ် ပေါင်",
+        "symbol": "EGP"
+    },
+    "ERN": {
+        "name": "အီရီတရီအာနာ့ခ်ဖာ",
+        "symbol": "ERN"
+    },
+    "IRR": {
+        "name": "အီရန်ရီအော်လ်",
+        "symbol": "IRR"
+    },
+    "IQD": {
+        "name": "အီရပ်ဒီနား",
+        "symbol": "IQD"
+    },
+    "ETB": {
+        "name": "အီသီယိုးပီးယားဘီးယာ",
+        "symbol": "ETB"
+    },
+    "UZS": {
+        "name": "ဥဘက်ကစ္စတန်ဆော်မ်",
+        "symbol": "UZS"
+    },
+    "UYU": {
+        "name": "ဥရုဂွေးပီဆို",
+        "symbol": "UYU"
+    },
+    "DZD": {
+        "name": "အဲလ်ဂျီရီယန် ဒီနာ",
+        "symbol": "DZD"
+    },
+    "AUD": {
+        "name": "ဩစတြေးလျ ဒေါ်လာ",
+        "symbol": "A$"
+    },
+    "OMR": {
+        "name": "အိုမန်ရီအော်လ်",
+        "symbol": "OMR"
+    },
+    "ISK": {
+        "name": "အိုက်စလန် ခရိုဏာ",
+        "symbol": "ISK"
+    },
+    "AOA": {
+        "name": "အင်ဂိုလာ ကန်ဇာ",
+        "symbol": "AOA"
+    },
+    "IDR": {
+        "name": "အင်ဒိုနီးရှား ရူပီးယား",
+        "symbol": "IDR"
+    },
+    "XOF": {
+        "name": "အိုင်ဗရီးကိုးစ်ဖရန့်",
+        "symbol": "CFA"
+    },
+    "ILS": {
+        "name": "အစ္စရေးရှဲကလ်အသစ်",
+        "symbol": "₪"
+    },
+    "INR": {
+        "name": "အိန္ဒိယ ရူပီး",
+        "symbol": "₹"
+    },
+    "ALL": {
+        "name": "အယ်လ်ဘီးနီးယားလီခ်",
+        "symbol": "ALL"
+    }
+}

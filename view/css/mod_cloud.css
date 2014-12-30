@@ -38,5 +38,6 @@
 }
 
 #files-upload {
-    padding: 2px;
+	padding: 4px;
+	width: 100%;
 }

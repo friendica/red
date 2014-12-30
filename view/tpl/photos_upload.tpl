@@ -18,30 +18,40 @@
 			{{$aclselect}}
 
 			{{if $default}}
-			<div class="pull-left">
+			<div class="form-group">
 				<input id="photos-upload-choose" type="file" name="userfile" />
 			</div>
-			<div class="btn-group pull-right">
-				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
-					<i id="jot-perms-icon" class="icon-{{$lockstate}}"></i>
-				</button>
-				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="submit" >{{$submit}}</button>
+			<div class="pull-right btn-group form-group">
+				<div class="btn-group" data-toggle="buttons">
+					<label class="btn btn-default btn-sm" title="{{$nosharetext}}">
+						<input class="checkbox-inline" id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" /><i class="icon-ban-circle"></i>
+					</label>
+				</div>
+				<div class="btn-group">
+					{{if $lockstate}}
+					<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
+						<i id="jot-perms-icon" class="icon-{{$lockstate}}"></i>
+					</button>
+					{{/if}}
+					<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="submit" >{{$submit}}</button>
+				</div>
+
 			</div>
 			{{/if}}
-
 			<div class="clear"></div>
 
-			<div class="checkbox">
-				<label class="checkbox-inline" for="photos-upload-noshare" >
-					<input class="checkbox-inline" id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" />{{$nosharetext}}
-				</label>
-			</div>
-
 			{{if $uploader}}
-			<div id="photos-upload-perms" class="pull-right">
+			<div id="photos-upload-perms" class="btn-group pull-right">
+				<div class="btn-group" data-toggle="buttons">
+					<label class="btn btn-default btn-sm" title="{{$nosharetext}}">
+						<input class="checkbox-inline" id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" /><i class="icon-ban-circle"></i>
+					</label>
+				</div>
+				{{if $lockstate}}
 				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
 					<i id="jot-perms-icon" class="icon-{{$lockstate}}"></i>
 				</button>
+				{{/if}}
 				<div class="pull-right">
 					{{$uploader}}
 				</div>

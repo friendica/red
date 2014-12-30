@@ -358,59 +358,9 @@ footer {
 	margin-top: 10px;
 }
 
-
-#cropimage-wrapper, #cropimage-preview-wrapper {
-	float: left;
-	padding: 30px;
-}
-
-#crop-image-form {
-	margin-top: 30px;
-	clear: both;
-}
-
+// Not used anymore?
 #page-profile .title {
 	font-weight: bold;
-}
-
-#profile-edit-wrapper .field label {
-	margin-top: 20px;
-	width: 175px;
-}
-
-#profile-edit-wrapper .field input[type="text"] {
-	margin-top: 20px;
-	width: 220px;
-}
-
-
-#profile-edit-links {
-	max-width: $converse_width;
-	padding-top: 15px;
-	padding-bottom: 15px;
-}
-
-#profile-edit-links .btn {
-	margin: 0 10px 15px 0;
-}
-
-.profile-import {
-	vertical-align: top;
-	text-align: left;
-}
-
-.profile-import b {
-	color: $link_colour;
-}
-
-.profile-import input {
-	color: $font_colour;
-	border: none;
-}
-
-#profile-edit-drop-link {
-	color: #FFF;
-	font-weight: normal;
 }
 
 .fn {
@@ -1044,15 +994,18 @@ footer {
 	margin: 10px;
 }
 
+/* Not used anymore? */
 #identity-manage-desc {
 	margin-top:15px;
 	margin-bottom: 15px;
 }
 
+/* Not used anymore? */
 #identity-manage-choose {
 	margin-bottom: 15px;
 }
 
+/* Not used anymore? */
 #identity-submit {
 	margin-top: 20px;
 }
@@ -1100,114 +1053,27 @@ footer {
 .side-link {
 	margin-bottom: 15px;
 }
-
-#group-members {
-	margin-top: 20px;
-	padding: 10px;
-	height: 250px;
-	overflow: auto;
-	border: 1px solid #ddd;
-}
-
-#group-members-end {
-	clear: both;
-}
-
-#group-separator {
-	margin-top: 10px;
-	margin-bottom: 10px;
-}
-
-#group-all-contacts {
-	padding: 10px;
-	height: 450px;
-	overflow: auto;
-	border: 1px solid #ddd;
-}
-
-#group-all-contacts-end {
-	clear: both;
-	margin-bottom: 10px;
-}
-
-#group-edit-desc {
-	margin-top: 15px;
-}
-
-
-#prof-members {
-	margin-top: 20px;
-	padding: 10px;
-	height: 250px;
-	overflow: auto;
-	border: 1px solid #ddd;
-}
-
-#prof-members-end {
-	clear: both;
-}
-
-#prof-separator {
-	margin-top: 10px;
-	margin-bottom: 10px;
-}
-
-#prof-all-contacts {
-	padding: 10px;
-	height: 450px;
-	overflow: auto;
-	border: 1px solid #ddd;
-}
-
-#prof-all-contacts-end {
-	clear: both;
-	margin-bottom: 10px;
-}
-
-#prof-edit-desc {
-	margin-top: 15px;
-}
-
-
 .required {
 	color: #FF0000;
 }
 
-#event-start-text, #event-finish-text {
-	margin-top: 10px;
-	margin-bottom: 5px;
-}
-
-#event-nofinish-checkbox, #event-nofinish-text, #event-adjust-checkbox, #event-adjust-text {
-	float: left;
-}
-#event-datetime-break {
-	margin-bottom: 10px;
-}
-
-#event-nofinish-break, #event-adjust-break {
-	clear: both;
-}
-
-#event-desc-text, #event-location-text {
-	margin-top: 10px;
-	margin-bottom: 5px;
-}
-#event-submit {
-	margin-top: 10px;
-}
-
+/* Not used anymore? */
 #item-delete-selected {
 	margin-top: 30px;
 }
 
+/* Not used anymore? */
 #item-delete-selected-end {
 	clear: both;
 }
+
+/* Not used anymore? */
 #item-delete-selected-icon, #item-delete-selected-desc {
 	float: left;
 	margin-right: 5px;
 }
+
+/* Not used anymore? */
 #item-delete-selected-desc:hover {
 	text-decoration: underline;
 }
@@ -2073,6 +1939,20 @@ blockquote {
 
 nav .badge:hover {
 	background-color: #999;
+}
+
+nav .badge.home-update,
+nav .badge.notify-update,
+nav .badge.intro-update,
+nav .badge.mail-update {
+	background-color:#C9302C;
+}
+
+nav .badge.home-update:hover,
+nav .badge.notify-update:hover,
+nav .badge.intro-update:hover,
+nav .badge.mail-update:hover {
+	background-color:#D9534F;
 }
 
 .dropdown-menu {

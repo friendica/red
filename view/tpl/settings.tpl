@@ -113,6 +113,8 @@
 {{include file="field_intcheckbox.tpl" field=$vnotify7}}
 {{include file="field_intcheckbox.tpl" field=$vnotify8}}
 {{include file="field_intcheckbox.tpl" field=$vnotify9}}
+{{include file="field_intcheckbox.tpl" field=$vnotify11}}
+{{include file="field_intcheckbox.tpl" field=$always_show_in_notices}}
 
 {{*include file="field_intcheckbox.tpl" field=$vnotify11*}}
 </div>

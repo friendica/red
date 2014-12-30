@@ -1,0 +1,634 @@
+{
+    "ALL": {
+        "name": "阿尔巴尼亚列克",
+        "symbol": "ALL"
+    },
+    "DZD": {
+        "name": "阿尔及利亚第纳尔",
+        "symbol": "DZD"
+    },
+    "AFN": {
+        "name": "阿富汗尼",
+        "symbol": "AFN"
+    },
+    "ARS": {
+        "name": "阿根廷比索",
+        "symbol": "ARS"
+    },
+    "AED": {
+        "name": "阿联酋迪拉姆",
+        "symbol": "AED"
+    },
+    "AWG": {
+        "name": "阿鲁巴弗罗林",
+        "symbol": "AWG"
+    },
+    "OMR": {
+        "name": "阿曼里亚尔",
+        "symbol": "OMR"
+    },
+    "AZN": {
+        "name": "阿塞拜疆马纳特",
+        "symbol": "AZN"
+    },
+    "EGP": {
+        "name": "埃及镑",
+        "symbol": "EGP"
+    },
+    "ETB": {
+        "name": "埃塞俄比亚比尔",
+        "symbol": "ETB"
+    },
+    "AOA": {
+        "name": "安哥拉宽扎",
+        "symbol": "AOA"
+    },
+    "AUD": {
+        "name": "澳大利亚元",
+        "symbol": "AU$"
+    },
+    "MOP": {
+        "name": "澳门元",
+        "symbol": "MOP"
+    },
+    "BBD": {
+        "name": "巴巴多斯元",
+        "symbol": "BBD"
+    },
+    "PGK": {
+        "name": "巴布亚新几内亚基那",
+        "symbol": "PGK"
+    },
+    "BSD": {
+        "name": "巴哈马元",
+        "symbol": "BSD"
+    },
+    "PKR": {
+        "name": "巴基斯坦卢比",
+        "symbol": "PKR"
+    },
+    "PYG": {
+        "name": "巴拉圭瓜拉尼",
+        "symbol": "PYG"
+    },
+    "BHD": {
+        "name": "巴林第纳尔",
+        "symbol": "BHD"
+    },
+    "PAB": {
+        "name": "巴拿马巴波亚",
+        "symbol": "PAB"
+    },
+    "BRL": {
+        "name": "巴西雷亚尔",
+        "symbol": "R$"
+    },
+    "BYR": {
+        "name": "白俄罗斯卢布",
+        "symbol": "BYR"
+    },
+    "BMD": {
+        "name": "百慕大元",
+        "symbol": "BMD"
+    },
+    "BGN": {
+        "name": "保加利亚新列弗",
+        "symbol": "BGN"
+    },
+    "ISK": {
+        "name": "冰岛克朗",
+        "symbol": "ISK"
+    },
+    "PLN": {
+        "name": "波兰兹罗提",
+        "symbol": "PLN"
+    },
+    "BAM": {
+        "name": "波斯尼亚-黑塞哥维那可兑换马克",
+        "symbol": "BAM"
+    },
+    "BOB": {
+        "name": "玻利维亚诺",
+        "symbol": "BOB"
+    },
+    "BZD": {
+        "name": "伯利兹元",
+        "symbol": "BZD"
+    },
+    "BWP": {
+        "name": "博茨瓦纳普拉",
+        "symbol": "BWP"
+    },
+    "BTN": {
+        "name": "不丹努尔特鲁姆",
+        "symbol": "BTN"
+    },
+    "BIF": {
+        "name": "布隆迪法郎",
+        "symbol": "BIF"
+    },
+    "KPW": {
+        "name": "朝鲜元",
+        "symbol": "KPW"
+    },
+    "DKK": {
+        "name": "丹麦克朗",
+        "symbol": "DKK"
+    },
+    "XCD": {
+        "name": "东加勒比元",
+        "symbol": "EC$"
+    },
+    "DOP": {
+        "name": "多米尼加比索",
+        "symbol": "DOP"
+    },
+    "RUB": {
+        "name": "俄罗斯卢布",
+        "symbol": "RUB"
+    },
+    "ERN": {
+        "name": "厄立特里亚纳克法",
+        "symbol": "ERN"
+    },
+    "XOF": {
+        "name": "非洲金融共同体法郎",
+        "symbol": "CFA"
+    },
+    "PHP": {
+        "name": "菲律宾比索",
+        "symbol": "PHP"
+    },
+    "FJD": {
+        "name": "斐济元",
+        "symbol": "FJD"
+    },
+    "CVE": {
+        "name": "佛得角埃斯库多",
+        "symbol": "CVE"
+    },
+    "FKP": {
+        "name": "福克兰群岛镑",
+        "symbol": "FKP"
+    },
+    "GMD": {
+        "name": "冈比亚达拉西",
+        "symbol": "GMD"
+    },
+    "CDF": {
+        "name": "刚果法郎",
+        "symbol": "CDF"
+    },
+    "HKD": {
+        "name": "港元",
+        "symbol": "HK$"
+    },
+    "COP": {
+        "name": "哥伦比亚比索",
+        "symbol": "COP"
+    },
+    "CRC": {
+        "name": "哥斯达黎加科朗",
+        "symbol": "CRC"
+    },
+    "GEL": {
+        "name": "格鲁吉亚拉里",
+        "symbol": "GEL"
+    },
+    "CUP": {
+        "name": "古巴比索",
+        "symbol": "CUP"
+    },
+    "CUC": {
+        "name": "古巴可兑换比索",
+        "symbol": "CUC"
+    },
+    "GYD": {
+        "name": "圭亚那元",
+        "symbol": "GYD"
+    },
+    "KZT": {
+        "name": "哈萨克斯坦腾格",
+        "symbol": "KZT"
+    },
+    "HTG": {
+        "name": "海地古德",
+        "symbol": "HTG"
+    },
+    "KRW": {
+        "name": "韩元",
+        "symbol": "￦"
+    },
+    "ANG": {
+        "name": "荷属安的列斯盾",
+        "symbol": "ANG"
+    },
+    "HNL": {
+        "name": "洪都拉斯拉伦皮拉",
+        "symbol": "HNL"
+    },
+    "DJF": {
+        "name": "吉布提法郎",
+        "symbol": "DJF"
+    },
+    "KGS": {
+        "name": "吉尔吉斯斯坦索姆",
+        "symbol": "KGS"
+    },
+    "GNF": {
+        "name": "几内亚法郎",
+        "symbol": "GNF"
+    },
+    "CAD": {
+        "name": "加拿大元",
+        "symbol": "CA$"
+    },
+    "GHS": {
+        "name": "加纳塞地",
+        "symbol": "GHS"
+    },
+    "KHR": {
+        "name": "柬埔寨瑞尔",
+        "symbol": "KHR"
+    },
+    "CZK": {
+        "name": "捷克克郎",
+        "symbol": "CZK"
+    },
+    "ZWL": {
+        "name": "津巴布韦元 (2009)",
+        "symbol": "ZWL"
+    },
+    "QAR": {
+        "name": "卡塔尔里亚尔",
+        "symbol": "QAR"
+    },
+    "KYD": {
+        "name": "开曼群岛元",
+        "symbol": "KYD"
+    },
+    "KMF": {
+        "name": "科摩罗法郎",
+        "symbol": "KMF"
+    },
+    "KWD": {
+        "name": "科威特第纳尔",
+        "symbol": "KWD"
+    },
+    "HRK": {
+        "name": "克罗地亚库纳",
+        "symbol": "HRK"
+    },
+    "KES": {
+        "name": "肯尼亚先令",
+        "symbol": "KES"
+    },
+    "LSL": {
+        "name": "莱索托洛蒂",
+        "symbol": "LSL"
+    },
+    "LAK": {
+        "name": "老挝基普",
+        "symbol": "LAK"
+    },
+    "LBP": {
+        "name": "黎巴嫩镑",
+        "symbol": "LBP"
+    },
+    "LTL": {
+        "name": "立陶宛立特",
+        "symbol": "LTL"
+    },
+    "LRD": {
+        "name": "利比里亚元",
+        "symbol": "LRD"
+    },
+    "LYD": {
+        "name": "利比亚第纳尔",
+        "symbol": "LYD"
+    },
+    "RWF": {
+        "name": "卢旺达法郎",
+        "symbol": "RWF"
+    },
+    "RON": {
+        "name": "罗马尼亚列伊",
+        "symbol": "RON"
+    },
+    "MGA": {
+        "name": "马达加斯加阿里亚里",
+        "symbol": "MGA"
+    },
+    "MVR": {
+        "name": "马尔代夫卢菲亚",
+        "symbol": "MVR"
+    },
+    "MWK": {
+        "name": "马拉维克瓦查",
+        "symbol": "MWK"
+    },
+    "MYR": {
+        "name": "马来西亚林吉特",
+        "symbol": "MYR"
+    },
+    "MKD": {
+        "name": "马其顿第纳尔",
+        "symbol": "MKD"
+    },
+    "MUR": {
+        "name": "毛里求斯卢比",
+        "symbol": "MUR"
+    },
+    "MRO": {
+        "name": "毛里塔尼亚乌吉亚",
+        "symbol": "MRO"
+    },
+    "USD": {
+        "name": "美元",
+        "symbol": "US$"
+    },
+    "MNT": {
+        "name": "蒙古图格里克",
+        "symbol": "MNT"
+    },
+    "BDT": {
+        "name": "孟加拉塔卡",
+        "symbol": "BDT"
+    },
+    "PEN": {
+        "name": "秘鲁新索尔",
+        "symbol": "PEN"
+    },
+    "MMK": {
+        "name": "缅甸元",
+        "symbol": "MMK"
+    },
+    "MDL": {
+        "name": "摩尔多瓦列伊",
+        "symbol": "MDL"
+    },
+    "MAD": {
+        "name": "摩洛哥迪拉姆",
+        "symbol": "MAD"
+    },
+    "MZN": {
+        "name": "莫桑比克美提卡",
+        "symbol": "MZN"
+    },
+    "MXN": {
+        "name": "墨西哥比索",
+        "symbol": "MX$"
+    },
+    "NAD": {
+        "name": "纳米比亚元",
+        "symbol": "NAD"
+    },
+    "ZAR": {
+        "name": "南非兰特",
+        "symbol": "ZAR"
+    },
+    "SSP": {
+        "name": "南苏丹镑",
+        "symbol": "SSP"
+    },
+    "NIO": {
+        "name": "尼加拉瓜科多巴",
+        "symbol": "NIO"
+    },
+    "NPR": {
+        "name": "尼泊尔卢比",
+        "symbol": "NPR"
+    },
+    "NGN": {
+        "name": "尼日利亚奈拉",
+        "symbol": "NGN"
+    },
+    "NOK": {
+        "name": "挪威克朗",
+        "symbol": "NOK"
+    },
+    "EUR": {
+        "name": "欧元",
+        "symbol": "€"
+    },
+    "CNY": {
+        "name": "人民币",
+        "symbol": "CN¥"
+    },
+    "JPY": {
+        "name": "日元",
+        "symbol": "JP¥"
+    },
+    "SEK": {
+        "name": "瑞典克朗",
+        "symbol": "SEK"
+    },
+    "CHF": {
+        "name": "瑞士法郎",
+        "symbol": "CHF"
+    },
+    "SVC": {
+        "name": "萨尔瓦多科朗",
+        "symbol": "SVC"
+    },
+    "WST": {
+        "name": "萨摩亚塔拉",
+        "symbol": "WST"
+    },
+    "RSD": {
+        "name": "塞尔维亚第纳尔",
+        "symbol": "RSD"
+    },
+    "SLL": {
+        "name": "塞拉利昂利昂",
+        "symbol": "SLL"
+    },
+    "SCR": {
+        "name": "塞舌尔卢比",
+        "symbol": "SCR"
+    },
+    "SAR": {
+        "name": "沙特里亚尔",
+        "symbol": "SAR"
+    },
+    "STD": {
+        "name": "圣多美和普林西比多布拉",
+        "symbol": "STD"
+    },
+    "SHP": {
+        "name": "圣赫勒拿群岛磅",
+        "symbol": "SHP"
+    },
+    "LKR": {
+        "name": "斯里兰卡卢比",
+        "symbol": "LKR"
+    },
+    "SZL": {
+        "name": "斯威士兰里兰吉尼",
+        "symbol": "SZL"
+    },
+    "SDG": {
+        "name": "苏丹镑",
+        "symbol": "SDG"
+    },
+    "SRD": {
+        "name": "苏里南元",
+        "symbol": "SRD"
+    },
+    "SBD": {
+        "name": "所罗门群岛元",
+        "symbol": "SBD"
+    },
+    "SOS": {
+        "name": "索马里先令",
+        "symbol": "SOS"
+    },
+    "TJS": {
+        "name": "塔吉克斯坦索莫尼",
+        "symbol": "TJS"
+    },
+    "XPF": {
+        "name": "太平洋法郎",
+        "symbol": "CFPF"
+    },
+    "THB": {
+        "name": "泰铢",
+        "symbol": "฿"
+    },
+    "TZS": {
+        "name": "坦桑尼亚先令",
+        "symbol": "TZS"
+    },
+    "TOP": {
+        "name": "汤加潘加",
+        "symbol": "TOP"
+    },
+    "TTD": {
+        "name": "特立尼达和多巴哥元",
+        "symbol": "TTD"
+    },
+    "TND": {
+        "name": "突尼斯第纳尔",
+        "symbol": "TND"
+    },
+    "TRY": {
+        "name": "土耳其里拉",
+        "symbol": "TRY"
+    },
+    "TMT": {
+        "name": "土库曼斯坦马纳特",
+        "symbol": "TMT"
+    },
+    "VUV": {
+        "name": "瓦努阿图瓦图",
+        "symbol": "VUV"
+    },
+    "GTQ": {
+        "name": "危地马拉格查尔",
+        "symbol": "GTQ"
+    },
+    "VEF": {
+        "name": "委内瑞拉玻利瓦尔",
+        "symbol": "VEF"
+    },
+    "BND": {
+        "name": "文莱元",
+        "symbol": "BND"
+    },
+    "UGX": {
+        "name": "乌干达先令",
+        "symbol": "UGX"
+    },
+    "UAH": {
+        "name": "乌克兰赫夫纳",
+        "symbol": "UAH"
+    },
+    "UYU": {
+        "name": "乌拉圭比索",
+        "symbol": "UYU"
+    },
+    "UZS": {
+        "name": "乌兹别克斯坦苏姆",
+        "symbol": "UZS"
+    },
+    "SGD": {
+        "name": "新加坡元",
+        "symbol": "SGD"
+    },
+    "TWD": {
+        "name": "新台币",
+        "symbol": "NT$"
+    },
+    "NZD": {
+        "name": "新西兰元",
+        "symbol": "NZ$"
+    },
+    "HUF": {
+        "name": "匈牙利福林",
+        "symbol": "HUF"
+    },
+    "SYP": {
+        "name": "叙利亚镑",
+        "symbol": "SYP"
+    },
+    "JMD": {
+        "name": "牙买加元",
+        "symbol": "JMD"
+    },
+    "AMD": {
+        "name": "亚美尼亚德拉姆",
+        "symbol": "AMD"
+    },
+    "YER": {
+        "name": "也门里亚尔",
+        "symbol": "YER"
+    },
+    "IQD": {
+        "name": "伊拉克第纳尔",
+        "symbol": "IQD"
+    },
+    "IRR": {
+        "name": "伊朗里亚尔",
+        "symbol": "IRR"
+    },
+    "ILS": {
+        "name": "以色列新谢克尔",
+        "symbol": "₪"
+    },
+    "INR": {
+        "name": "印度卢比",
+        "symbol": "₹"
+    },
+    "IDR": {
+        "name": "印度尼西亚盾",
+        "symbol": "IDR"
+    },
+    "GBP": {
+        "name": "英镑",
+        "symbol": "£"
+    },
+    "JOD": {
+        "name": "约旦第纳尔",
+        "symbol": "JOD"
+    },
+    "VND": {
+        "name": "越南盾",
+        "symbol": "₫"
+    },
+    "ZMW": {
+        "name": "赞比亚克瓦查",
+        "symbol": "ZMW"
+    },
+    "GIP": {
+        "name": "直布罗陀镑",
+        "symbol": "GIP"
+    },
+    "CLP": {
+        "name": "智利比索",
+        "symbol": "CLP"
+    },
+    "XAF": {
+        "name": "中非金融合作法郎",
+        "symbol": "FCFA"
+    }
+}
