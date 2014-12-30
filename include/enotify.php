@@ -357,9 +357,21 @@ function notification($params) {
 
 
 	// create notification entry in DB
+	$seen = 0;
 
-	$r = q("insert into notify (hash,name,url,photo,date,aid,uid,link,parent,type,verb,otype)
-		values('%s','%s','%s','%s','%s',%d,%d,'%s','%s',%d,'%s','%s')",
+	// Mark some notifications as seen right away
+	// Note! The notification have to be created, because they are used to send emails
+	// So easiest solution to hide them from Notices is to mark them as seen right away.
+	// Another option would be to not add them to the DB, and change how emails are handled (probably would be better that way)
+	$always_show_in_notices = get_pconfig($recip['channel_id'],'system','always_show_in_notices');
+	if(!$always_show_in_notices) {
+		if(($params['type'] == NOTIFY_WALL) || ($params['type'] == NOTIFY_MAIL) || ($params['type'] == NOTIFY_INTRO)) {
+			$seen = 1;
+		}
+	}
+
+	$r = q("insert into notify (hash,name,url,photo,date,aid,uid,link,parent,seen,type,verb,otype)
+		values('%s','%s','%s','%s','%s',%d,%d,'%s','%s',%d,%d,'%s','%s')",
 		dbesc($datarray['hash']),
 		dbesc($datarray['name']),
 		dbesc($datarray['url']),
@@ -369,6 +381,7 @@ function notification($params) {
 		intval($datarray['uid']),
 		dbesc($datarray['link']),
 		dbesc($datarray['parent']),
+		intval($seen),
 		intval($datarray['type']),
 		dbesc($datarray['verb']),
 		dbesc($datarray['otype'])
