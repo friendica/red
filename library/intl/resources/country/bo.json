@@ -1,0 +1,761 @@
+{
+    "AX": {
+        "name": "Åland Islands"
+    },
+    "AS": {
+        "name": "American Samoa"
+    },
+    "AC": {
+        "name": "Ascension Island"
+    },
+    "IO": {
+        "name": "British Indian Ocean Territory"
+    },
+    "VG": {
+        "name": "British Virgin Islands"
+    },
+    "IC": {
+        "name": "Canary Islands"
+    },
+    "CV": {
+        "name": "Cape Verde"
+    },
+    "BQ": {
+        "name": "Caribbean Netherlands"
+    },
+    "CF": {
+        "name": "Central African Republic"
+    },
+    "EA": {
+        "name": "Ceuta & Melilla"
+    },
+    "CX": {
+        "name": "Christmas Island"
+    },
+    "CC": {
+        "name": "Cocos (Keeling) Islands"
+    },
+    "KM": {
+        "name": "Comoros"
+    },
+    "CG": {
+        "name": "Congo - Brazzaville"
+    },
+    "CD": {
+        "name": "Congo - Kinshasa"
+    },
+    "CW": {
+        "name": "Curaçao"
+    },
+    "DG": {
+        "name": "Diego Garcia"
+    },
+    "GQ": {
+        "name": "Equatorial Guinea"
+    },
+    "FO": {
+        "name": "Faroe Islands"
+    },
+    "GF": {
+        "name": "French Guiana"
+    },
+    "PF": {
+        "name": "French Polynesia"
+    },
+    "TF": {
+        "name": "French Southern Territories"
+    },
+    "GL": {
+        "name": "Greenland"
+    },
+    "GP": {
+        "name": "Guadeloupe"
+    },
+    "GU": {
+        "name": "Guam"
+    },
+    "GG": {
+        "name": "Guernsey"
+    },
+    "HK": {
+        "name": "Hong Kong SAR China"
+    },
+    "IM": {
+        "name": "Isle of Man"
+    },
+    "JE": {
+        "name": "Jersey"
+    },
+    "XK": {
+        "name": "Kosovo"
+    },
+    "MO": {
+        "name": "Macau SAR China"
+    },
+    "MK": {
+        "name": "Macedonia"
+    },
+    "MQ": {
+        "name": "Martinique"
+    },
+    "YT": {
+        "name": "Mayotte"
+    },
+    "FM": {
+        "name": "Micronesia"
+    },
+    "MD": {
+        "name": "Moldova"
+    },
+    "ME": {
+        "name": "Montenegro"
+    },
+    "MS": {
+        "name": "Montserrat"
+    },
+    "NC": {
+        "name": "New Caledonia"
+    },
+    "NF": {
+        "name": "Norfolk Island"
+    },
+    "KP": {
+        "name": "North Korea"
+    },
+    "MP": {
+        "name": "Northern Mariana Islands"
+    },
+    "PS": {
+        "name": "Palestinian Territories"
+    },
+    "PN": {
+        "name": "Pitcairn Islands"
+    },
+    "PR": {
+        "name": "Puerto Rico"
+    },
+    "RE": {
+        "name": "Réunion"
+    },
+    "SX": {
+        "name": "Sint Maarten"
+    },
+    "GS": {
+        "name": "South Georgia & South Sandwich Islands"
+    },
+    "SS": {
+        "name": "South Sudan"
+    },
+    "BL": {
+        "name": "St. Barthélemy"
+    },
+    "MF": {
+        "name": "St. Martin"
+    },
+    "PM": {
+        "name": "St. Pierre & Miquelon"
+    },
+    "SJ": {
+        "name": "Svalbard & Jan Mayen"
+    },
+    "SZ": {
+        "name": "Swaziland"
+    },
+    "SY": {
+        "name": "Syria"
+    },
+    "TW": {
+        "name": "Taiwan"
+    },
+    "TJ": {
+        "name": "Tajikistan"
+    },
+    "TZ": {
+        "name": "Tanzania"
+    },
+    "TH": {
+        "name": "Thailand"
+    },
+    "TL": {
+        "name": "Timor-Leste"
+    },
+    "TG": {
+        "name": "Togo"
+    },
+    "TK": {
+        "name": "Tokelau"
+    },
+    "TO": {
+        "name": "Tonga"
+    },
+    "TT": {
+        "name": "Trinidad & Tobago"
+    },
+    "TA": {
+        "name": "Tristan da Cunha"
+    },
+    "TN": {
+        "name": "Tunisia"
+    },
+    "TM": {
+        "name": "Turkmenistan"
+    },
+    "TC": {
+        "name": "Turks & Caicos Islands"
+    },
+    "UM": {
+        "name": "U.S. Outlying Islands"
+    },
+    "VI": {
+        "name": "U.S. Virgin Islands"
+    },
+    "WF": {
+        "name": "Wallis & Futuna"
+    },
+    "EH": {
+        "name": "Western Sahara"
+    },
+    "QA": {
+        "name": "ཀ་ཏཱར།"
+    },
+    "CM": {
+        "name": "ཀ་མེ་རུན།"
+    },
+    "KH": {
+        "name": "ཀམ་བོ་ཌི་ཡ།"
+    },
+    "KI": {
+        "name": "ཀི་རི་བཱ་ཏི།"
+    },
+    "KW": {
+        "name": "ཀུ་ཝེད་རྒྱལ་ཁབ།"
+    },
+    "HR": {
+        "name": "ཀུརོ་ཤི་ཡ།"
+    },
+    "CK": {
+        "name": "ཀཱུག གླིང་ཕྲེན་རྒྱལ་ཁབ།"
+    },
+    "CI": {
+        "name": "ཀོ་ཊེ་ཌི། ཨི་ཝོ་རེ།"
+    },
+    "KR": {
+        "name": "ཀོ་རི་ཡ། ལྷོ་མ།"
+    },
+    "CO": {
+        "name": "ཀོ་ལོམ་བི་ཡ།"
+    },
+    "CR": {
+        "name": "ཀོ་ས྄ཊ་རི་ཀ།"
+    },
+    "KZ": {
+        "name": "ཁ་ཛཱག་སྟཱན།"
+    },
+    "CU": {
+        "name": "ཁྱུའུ་བ།"
+    },
+    "KG": {
+        "name": "ཁིར་གིཛ་སྟཱན།"
+    },
+    "CA": {
+        "name": "ཁེ་ན་ཌ།"
+    },
+    "KY": {
+        "name": "ཁེ་མེན་གླིང་ཕྲན།"
+    },
+    "KE": {
+        "name": "ཁེན་ཉི་ཡ།"
+    },
+    "GH": {
+        "name": "གྷ་ན།"
+    },
+    "GD": {
+        "name": "གྷ་རི་ན་ཌ།"
+    },
+    "GM": {
+        "name": "གྷམ་བི་ཡ།"
+    },
+    "GW": {
+        "name": "གྷི་ནི་ཡ་བིས྄་སོ།"
+    },
+    "GN": {
+        "name": "གྷི་ནི་ཡ།"
+    },
+    "GR": {
+        "name": "གྷི་རཱི་སི།"
+    },
+    "GY": {
+        "name": "གྷུ་ཡཱ་ན།"
+    },
+    "GT": {
+        "name": "གྷོ་ཊེ་མ་ལ།"
+    },
+    "GA": {
+        "name": "གེ་བཽན།"
+    },
+    "CL": {
+        "name": "ཅི་ལི།"
+    },
+    "CZ": {
+        "name": "ཅཻག་སྤྱི་མཐུན་རྒྱལ་ཁབ།"
+    },
+    "TD": {
+        "name": "ཅཻཌ།"
+    },
+    "GI": {
+        "name": "ཇིབ་རཱལ་ཊར།"
+    },
+    "GE": {
+        "name": "ཇོར་ཇི་ཡ།"
+    },
+    "JO": {
+        "name": "ཇོར་ཌན།"
+    },
+    "DK": {
+        "name": "ཌེན་མཱརྐ།"
+    },
+    "DM": {
+        "name": "ཌོ་མིན་ནི་ཀ།"
+    },
+    "DO": {
+        "name": "ཌོ་མིནནི་ཀན་སྤྱི་མཐུན་རྒྱལ་ཁབ།"
+    },
+    "TR": {
+        "name": "ཏུརཀི།"
+    },
+    "TV": {
+        "name": "ཐུ་ཝ་ལུ།"
+    },
+    "GB": {
+        "name": "དབྱིན་ཇི་"
+    },
+    "NA": {
+        "name": "ན་མི་བི་ཡ།"
+    },
+    "NE": {
+        "name": "ནའི་ཇར།"
+    },
+    "NG": {
+        "name": "ནཱའི་ཇི་རི་ཡ།"
+    },
+    "NI": {
+        "name": "ནི་ཀ་ར་གུ་ཨ།"
+    },
+    "NZ": {
+        "name": "ནིའུ་ཛི་ལན྄ཌ།"
+    },
+    "NU": {
+        "name": "ནིའུ་ཝ།"
+    },
+    "WS": {
+        "name": "ནུ་བ་ས་མོ་འ།"
+    },
+    "NO": {
+        "name": "ནོར་ཝེ།"
+    },
+    "NR": {
+        "name": "ནཽ་རུ།"
+    },
+    "PA": {
+        "name": "པ་ནཱ་མ།"
+    },
+    "PG": {
+        "name": "པ་པུ་ཨ། ནིའུ། གྷི་ནི།"
+    },
+    "PW": {
+        "name": "པ་ལཽ།"
+    },
+    "PK": {
+        "name": "པཀི་སྟཱན།"
+    },
+    "PY": {
+        "name": "པཱ་ར་གེ།"
+    },
+    "PE": {
+        "name": "པེ་རུ།"
+    },
+    "PL": {
+        "name": "པོ་ལནྜ།"
+    },
+    "PT": {
+        "name": "པོར་ཏུ་གྷལ།"
+    },
+    "FR": {
+        "name": "ཕ་རཱན་སི།"
+    },
+    "FK": {
+        "name": "ཕལྐ་ལནྜ་གླིང་ཕྲན།"
+    },
+    "FJ": {
+        "name": "ཕི་ཇི།"
+    },
+    "PH": {
+        "name": "ཕི་ལི་པིནས྄།"
+    },
+    "FI": {
+        "name": "ཕིན་ལན྄ཌ།"
+    },
+    "BR": {
+        "name": "བ་རཱ་ཛིལ།"
+    },
+    "BD": {
+        "name": "བངྒ་ལ་དེཤ།"
+    },
+    "BM": {
+        "name": "བར་མུ་ཌ།"
+    },
+    "NP": {
+        "name": "བར་ཡུལ་"
+    },
+    "BF": {
+        "name": "བརཀི་ན། ཕསོ།"
+    },
+    "BS": {
+        "name": "བྷཱ་མས྄།"
+    },
+    "BH": {
+        "name": "བྷཱ་རེན།"
+    },
+    "BB": {
+        "name": "བཱརྦ་ཌོས྄།"
+    },
+    "BJ": {
+        "name": "བཱེ་ནིན།"
+    },
+    "VN": {
+        "name": "བི་དི་ནམ།"
+    },
+    "BN": {
+        "name": "བུ་རུ་ནེ།"
+    },
+    "BI": {
+        "name": "བུ་རུན་ཌི།"
+    },
+    "BG": {
+        "name": "བུལ་ག་རི་ཡ།"
+    },
+    "BZ": {
+        "name": "བེ་ལིཛ།"
+    },
+    "BY": {
+        "name": "བེ་ལུ་རུ་སུ།"
+    },
+    "BE": {
+        "name": "བེལ་ཇི་ཡམ།"
+    },
+    "BO": {
+        "name": "བོ་ལི་ཝིཡ།"
+    },
+    "BW": {
+        "name": "བོཙ་ཝ་ན།"
+    },
+    "BA": {
+        "name": "བོསྣི་ཡ་དང་ཧརྫོ་གོ་ཝི་ན།"
+    },
+    "MG": {
+        "name": "མ་དཱ་གྷསྐཱར།"
+    },
+    "ML": {
+        "name": "མ་ལི།"
+    },
+    "MY": {
+        "name": "མ་ལེ་ཤི་ཡ།"
+    },
+    "MT": {
+        "name": "མལ་ཊ།"
+    },
+    "MV": {
+        "name": "མལ་དྭིབ།"
+    },
+    "MW": {
+        "name": "མཱ་ལཱ་ཝི།"
+    },
+    "MH": {
+        "name": "མཱར་ཤལ་གླིང་ཕྲེན།"
+    },
+    "MX": {
+        "name": "མེཀ་སི་ཀོ།"
+    },
+    "MC": {
+        "name": "མོ་ན་ཀོ།"
+    },
+    "MZ": {
+        "name": "མོ་ཛམ་བིག།"
+    },
+    "MA": {
+        "name": "མོ་རོ་ཀྐོ།"
+    },
+    "MR": {
+        "name": "མཽ་རི་ཏ་ནི་ཡ།"
+    },
+    "MU": {
+        "name": "མཽ་རིཤས྄།"
+    },
+    "JM": {
+        "name": "ཛ་མེ་ཀ།"
+    },
+    "ZM": {
+        "name": "ཛམ་བི་ཡ།"
+    },
+    "DJ": {
+        "name": "ཛི་བུ་ཏི།"
+    },
+    "ZW": {
+        "name": "ཛིམ་བྷཱ་བེ།"
+    },
+    "VU": {
+        "name": "ཝ་ནུ་ཨ་ཐུ།"
+    },
+    "VA": {
+        "name": "ཝེ་ཊི་ཀན།"
+    },
+    "VE": {
+        "name": "ཝེ་ནི་ཛུའེ་ལ།"
+    },
+    "DE": {
+        "name": "འཇར་མན་"
+    },
+    "MM": {
+        "name": "འབར་མ།"
+    },
+    "BT": {
+        "name": "འབྲུག་ཡུལ།"
+    },
+    "UA": {
+        "name": "ཡུ་ཀྲན།"
+    },
+    "UG": {
+        "name": "ཡུ་གན་ཌ།"
+    },
+    "YE": {
+        "name": "ཡེ་མེན།"
+    },
+    "IN": {
+        "name": "རྒྱ་གར་"
+    },
+    "CN": {
+        "name": "རྒྱ་ནག"
+    },
+    "JP": {
+        "name": "རི་པིན་"
+    },
+    "RW": {
+        "name": "རུ་ཝན་ཌ།"
+    },
+    "RO": {
+        "name": "རོ་མཱ་ནིཡ།"
+    },
+    "LU": {
+        "name": "ལཀ་ཛམ་བོརྒ།"
+    },
+    "LV": {
+        "name": "ལཏ་བི་ཡ།"
+    },
+    "ZA": {
+        "name": "ལྷོ་ ཨཕྲི་ཀ།"
+    },
+    "AQ": {
+        "name": "ལྷོ་རྩེའི་མཐའ་གླིང་།"
+    },
+    "LA": {
+        "name": "ལཱ་འོས།"
+    },
+    "LT": {
+        "name": "ལི་ཐུ་ཨེ་ནི་ཡ།"
+    },
+    "LY": {
+        "name": "ལི་བི་ཡ།"
+    },
+    "LR": {
+        "name": "ལི་བེ་རི་ཡ།"
+    },
+    "LS": {
+        "name": "ལེ་སོ་ཐོ།"
+    },
+    "LI": {
+        "name": "ལེག་ཏེན་ཚིན།"
+    },
+    "LB": {
+        "name": "ལེབ་ནོན།"
+    },
+    "LK": {
+        "name": "ཤྲཱི་ལངྐ་།"
+    },
+    "ST": {
+        "name": "ས་འོ་ཏོད་མད། དང༌། པ྄རིན་སི་པེ།"
+    },
+    "SK": {
+        "name": "ས་ལཽ་ཝཀྱ།"
+    },
+    "SI": {
+        "name": "ས་ལཽ་ཝེ་ནི་ཡ།"
+    },
+    "SM": {
+        "name": "སན་མེ་རི་ནོ།"
+    },
+    "SC": {
+        "name": "སཱ་ཤཻལ།"
+    },
+    "CY": {
+        "name": "སཱཡེ་པ་རས྄།"
+    },
+    "ES": {
+        "name": "སི་པན།"
+    },
+    "SG": {
+        "name": "སིངྒ་པུར།"
+    },
+    "SD": {
+        "name": "སུ་དཱན།"
+    },
+    "SR": {
+        "name": "སུ་རི་ནཱམ།"
+    },
+    "SN": {
+        "name": "སེ་ནི་གྷལ།"
+    },
+    "SL": {
+        "name": "སེ་ཡར་ར། ལིའོན།"
+    },
+    "KN": {
+        "name": "སེནྚ། ཀིཊྚས྄། དང༌། ནེ་བིས྄།"
+    },
+    "VC": {
+        "name": "སེནྚ། ཝིན་སན། དང༌། གྷིརིན་ཌིན།"
+    },
+    "LC": {
+        "name": "སེནྚ། ལུ་ཤི་ཡ།"
+    },
+    "SH": {
+        "name": "སེནྚ། ཧེ་ལི་ན།"
+    },
+    "RS": {
+        "name": "སེར་བི་ཡ།"
+    },
+    "SO": {
+        "name": "སོ་མཱལི་ཡ།"
+    },
+    "SB": {
+        "name": "སོ་ལོ་མོན། གླིང་ཕྲན་ཚོ་ཁག།"
+    },
+    "MN": {
+        "name": "སོག་ཡུལ།"
+    },
+    "SA": {
+        "name": "སཽ་དྷི་ཨ་རཱ་བི་ཡ།"
+    },
+    "HU": {
+        "name": "ཧངྒ་རི།"
+    },
+    "NL": {
+        "name": "ཧའོ་ལན།"
+    },
+    "CH": {
+        "name": "ཧྲུད་ཧྲི།"
+    },
+    "SE": {
+        "name": "ཧྲུའི་ཏན།"
+    },
+    "HT": {
+        "name": "ཧེ་ཏི།"
+    },
+    "HN": {
+        "name": "ཧོན་དུ་རས྄།"
+    },
+    "US": {
+        "name": "ཨ་མེ་རི་ཀ།"
+    },
+    "IE": {
+        "name": "ཨ་ཡར་ལནཌ།"
+    },
+    "AE": {
+        "name": "ཨ་རབ། ཨི་མི་རཊ྄། ཆིག་སྒྲིལ་རྒྱལ་ཁབ།"
+    },
+    "AW": {
+        "name": "ཨ་རུ་བ།"
+    },
+    "IS": {
+        "name": "ཨ་ཨི་སི་ལནད།"
+    },
+    "AI": {
+        "name": "ཨང་གུའི་ལ།"
+    },
+    "AO": {
+        "name": "ཨང་གཽ་ལ།"
+    },
+    "AF": {
+        "name": "ཨཕ་ག་ནི་སྟཱན།"
+    },
+    "AZ": {
+        "name": "ཨཛར་བཡེ་ཇན།"
+    },
+    "AR": {
+        "name": "ཨར་ཇེན་ཊི་ན།"
+    },
+    "AM": {
+        "name": "ཨར་མེ་ནི་ཡ།"
+    },
+    "DZ": {
+        "name": "ཨལ་ཇི་རི་ཡ།"
+    },
+    "AL": {
+        "name": "ཨལ་བཱ་ནི་ཡ།"
+    },
+    "AT": {
+        "name": "ཨསྟྲི་ཡ།"
+    },
+    "AU": {
+        "name": "ཨསྟྲེ་ལི་ཡ།"
+    },
+    "IT": {
+        "name": "ཨི་ཀྲར་ལི་"
+    },
+    "EC": {
+        "name": "ཨི་ཁྭ་ཌོར།"
+    },
+    "EG": {
+        "name": "ཨི་ཇིབྚ།"
+    },
+    "ET": {
+        "name": "ཨི་ཐིའོ་པི་ཡ།"
+    },
+    "IL": {
+        "name": "ཨི་ཛ྄་རེལ།"
+    },
+    "IQ": {
+        "name": "ཨི་རག།"
+    },
+    "IR": {
+        "name": "ཨི་རཱན།"
+    },
+    "ID": {
+        "name": "ཨིན་ཌོ་ནེ་ཤི་ཡ།"
+    },
+    "EE": {
+        "name": "ཨིསྟོ་ནི་ཡ།"
+    },
+    "UY": {
+        "name": "ཨུ་རུ་གྷེ།"
+    },
+    "RU": {
+        "name": "ཨུ་རུ་སུ་"
+    },
+    "UZ": {
+        "name": "ཨུཛ་བེ་ཀིསྟཱན།"
+    },
+    "ER": {
+        "name": "ཨེ་རི་ཏྲེ་ཨ།"
+    },
+    "AG": {
+        "name": "ཨེན་ཊི་གུ་དང་། བྷར་བུ་ཌ།"
+    },
+    "AD": {
+        "name": "ཨེན་ཌོ་ར།"
+    },
+    "SV": {
+        "name": "ཨེལ། སཱལ་ཝ་ཌོར།"
+    },
+    "OM": {
+        "name": "ཨོ་མན།"
+    }
+}

@@ -1,0 +1,634 @@
+{
+    "SVC": {
+        "name": "SVC",
+        "symbol": "SVC"
+    },
+    "MGA": {
+        "name": "آریاری مالاگاسی",
+        "symbol": "MGA"
+    },
+    "CVE": {
+        "name": "اسکودوی کیپ‌ورد",
+        "symbol": "CVE"
+    },
+    "AFN": {
+        "name": "افغانی افغانستان",
+        "symbol": "؋"
+    },
+    "BTN": {
+        "name": "انگولتروم بوتان",
+        "symbol": "BTN"
+    },
+    "MRO": {
+        "name": "اوگوئیای موریتانی",
+        "symbol": "MRO"
+    },
+    "THB": {
+        "name": "بات تایلند",
+        "symbol": "฿"
+    },
+    "PAB": {
+        "name": "بالبوای پاناما",
+        "symbol": "PAB"
+    },
+    "VEF": {
+        "name": "بولیوار ونزوئلا",
+        "symbol": "VEF"
+    },
+    "BOB": {
+        "name": "بولیویانوی بولیوی",
+        "symbol": "BOB"
+    },
+    "ETB": {
+        "name": "بیر اتیوپی",
+        "symbol": "ETB"
+    },
+    "TOP": {
+        "name": "پاآنگای تونگا",
+        "symbol": "TOP"
+    },
+    "MOP": {
+        "name": "پاتاکای ماکائو",
+        "symbol": "MOP"
+    },
+    "ARS": {
+        "name": "پزوی آرژانتین",
+        "symbol": "ARS"
+    },
+    "UYU": {
+        "name": "پزوی اوروگوئه",
+        "symbol": "UYU"
+    },
+    "CUC": {
+        "name": "پزوی تبدیل‌پذیر کوبا",
+        "symbol": "CUC"
+    },
+    "DOP": {
+        "name": "پزوی جمهوری دومینیکن",
+        "symbol": "DOP"
+    },
+    "CLP": {
+        "name": "پزوی شیلی",
+        "symbol": "CLP"
+    },
+    "PHP": {
+        "name": "پزوی فیلیپین",
+        "symbol": "PHP"
+    },
+    "COP": {
+        "name": "پزوی کلمبیا",
+        "symbol": "COP"
+    },
+    "CUP": {
+        "name": "پزوی کوبا",
+        "symbol": "CUP"
+    },
+    "MXN": {
+        "name": "پزوی مکسیکو",
+        "symbol": "$MX"
+    },
+    "BWP": {
+        "name": "پولای بوتسوانا",
+        "symbol": "BWP"
+    },
+    "GBP": {
+        "name": "پوند بریتانیا",
+        "symbol": "£"
+    },
+    "GIP": {
+        "name": "پوند جبل‌الطارق",
+        "symbol": "GIP"
+    },
+    "FKP": {
+        "name": "پوند جزایر فالکلند",
+        "symbol": "FKP"
+    },
+    "SHP": {
+        "name": "پوند سنت هلن",
+        "symbol": "SHP"
+    },
+    "SSP": {
+        "name": "پوند سودان جنوبی",
+        "symbol": "SSP"
+    },
+    "BDT": {
+        "name": "تاکای بنگلادش",
+        "symbol": "BDT"
+    },
+    "WST": {
+        "name": "تالای ساموا",
+        "symbol": "WST"
+    },
+    "KZT": {
+        "name": "تنگهٔ قزاقستان",
+        "symbol": "KZT"
+    },
+    "MNT": {
+        "name": "توگریک مغولستان",
+        "symbol": "MNT"
+    },
+    "GMD": {
+        "name": "دالاسی گامبیا",
+        "symbol": "GMD"
+    },
+    "AUD": {
+        "name": "دالر آسترالیا",
+        "symbol": "A$"
+    },
+    "USD": {
+        "name": "دالر امریکا",
+        "symbol": "$"
+    },
+    "BND": {
+        "name": "دالر برونی",
+        "symbol": "BND"
+    },
+    "SGD": {
+        "name": "دالر سینگاپور",
+        "symbol": "SGD"
+    },
+    "CAD": {
+        "name": "دالر کانادا",
+        "symbol": "$CA"
+    },
+    "VND": {
+        "name": "دانگ ویتنام",
+        "symbol": "₫"
+    },
+    "AMD": {
+        "name": "درم ارمنستان",
+        "symbol": "AMD"
+    },
+    "AED": {
+        "name": "درهم امارات متحدهٔ عربی",
+        "symbol": "AED"
+    },
+    "MAD": {
+        "name": "درهم مراکش",
+        "symbol": "MAD"
+    },
+    "BBD": {
+        "name": "دلار باربادوس",
+        "symbol": "BBD"
+    },
+    "BSD": {
+        "name": "دلار باهاما",
+        "symbol": "BSD"
+    },
+    "BMD": {
+        "name": "دلار برمودا",
+        "symbol": "BMD"
+    },
+    "BZD": {
+        "name": "دلار بلیز",
+        "symbol": "BZD"
+    },
+    "TTD": {
+        "name": "دلار ترینیداد و توباگو",
+        "symbol": "TTD"
+    },
+    "JMD": {
+        "name": "دلار جامائیکا",
+        "symbol": "JMD"
+    },
+    "TWD": {
+        "name": "دلار جدید تایوان",
+        "symbol": "NT$"
+    },
+    "SBD": {
+        "name": "دلار جزایر سلیمان",
+        "symbol": "SBD"
+    },
+    "KYD": {
+        "name": "دلار جزایر کِیمن",
+        "symbol": "KYD"
+    },
+    "NZD": {
+        "name": "دلار زلاند نو",
+        "symbol": "$NZ"
+    },
+    "ZWL": {
+        "name": "دلار زیمبابوه (۲۰۰۹)",
+        "symbol": "ZWL"
+    },
+    "SRD": {
+        "name": "دلار سورینام",
+        "symbol": "SRD"
+    },
+    "XCD": {
+        "name": "دلار شرق کارائیب",
+        "symbol": "$EC"
+    },
+    "FJD": {
+        "name": "دلار فیجی",
+        "symbol": "FJD"
+    },
+    "GYD": {
+        "name": "دلار گویان",
+        "symbol": "GYD"
+    },
+    "LRD": {
+        "name": "دلار لیبریا",
+        "symbol": "LRD"
+    },
+    "NAD": {
+        "name": "دلار نامیبیا",
+        "symbol": "NAD"
+    },
+    "HKD": {
+        "name": "دلار هنگ‌کنگ",
+        "symbol": "$HK"
+    },
+    "STD": {
+        "name": "دوبرای سائوتومه و پرنسیپ",
+        "symbol": "STD"
+    },
+    "JOD": {
+        "name": "دینار اردن",
+        "symbol": "JOD"
+    },
+    "DZD": {
+        "name": "دینار الجزایر",
+        "symbol": "DZD"
+    },
+    "BHD": {
+        "name": "دینار بحرین",
+        "symbol": "BHD"
+    },
+    "TND": {
+        "name": "دینار تونس",
+        "symbol": "TND"
+    },
+    "RSD": {
+        "name": "دینار صربستان",
+        "symbol": "RSD"
+    },
+    "IQD": {
+        "name": "دینار عراق",
+        "symbol": "IQD"
+    },
+    "KWD": {
+        "name": "دینار کویت",
+        "symbol": "KWD"
+    },
+    "LYD": {
+        "name": "دینار لیبی",
+        "symbol": "LYD"
+    },
+    "MKD": {
+        "name": "دینار مقدونیه",
+        "symbol": "MKD"
+    },
+    "ZAR": {
+        "name": "راند افریقای جنوبی",
+        "symbol": "ZAR"
+    },
+    "RUB": {
+        "name": "روبل روسیه",
+        "symbol": "RUB"
+    },
+    "BYR": {
+        "name": "روبل روسیهٔ سفید",
+        "symbol": "BYR"
+    },
+    "IDR": {
+        "name": "روپیهٔ اندونزی",
+        "symbol": "IDR"
+    },
+    "PKR": {
+        "name": "روپیهٔ پاکستان",
+        "symbol": "PKR"
+    },
+    "LKR": {
+        "name": "روپیهٔ سری‌لانکا",
+        "symbol": "LKR"
+    },
+    "SCR": {
+        "name": "روپیهٔ سیشل",
+        "symbol": "SCR"
+    },
+    "MVR": {
+        "name": "روپیهٔ مالدیو",
+        "symbol": "MVR"
+    },
+    "MUR": {
+        "name": "روپیهٔ موریس",
+        "symbol": "MUR"
+    },
+    "NPR": {
+        "name": "روپیهٔ نپال",
+        "symbol": "NPR"
+    },
+    "INR": {
+        "name": "روپیهٔ هند",
+        "symbol": "₹"
+    },
+    "KHR": {
+        "name": "ری‌یل کامبوج",
+        "symbol": "KHR"
+    },
+    "IRR": {
+        "name": "ریال ایران",
+        "symbol": "ریال"
+    },
+    "BRL": {
+        "name": "رئال برزیل",
+        "symbol": "R$"
+    },
+    "SAR": {
+        "name": "ریال سعودی",
+        "symbol": "SAR"
+    },
+    "OMR": {
+        "name": "ریال عمان",
+        "symbol": "OMR"
+    },
+    "QAR": {
+        "name": "ریال قطر",
+        "symbol": "QAR"
+    },
+    "YER": {
+        "name": "ریال یمن",
+        "symbol": "YER"
+    },
+    "MYR": {
+        "name": "رینگیت مالزی",
+        "symbol": "MYR"
+    },
+    "PLN": {
+        "name": "زواتی لهستان",
+        "symbol": "PLN"
+    },
+    "TJS": {
+        "name": "سامانی تاجکستان",
+        "symbol": "TJS"
+    },
+    "GHS": {
+        "name": "سدی غنا",
+        "symbol": "GHS"
+    },
+    "UZS": {
+        "name": "سوم ازبکستان",
+        "symbol": "UZS"
+    },
+    "KGS": {
+        "name": "سوم قرقیزستان",
+        "symbol": "KGS"
+    },
+    "ILS": {
+        "name": "شقل جدید اسرائیل",
+        "symbol": "₪"
+    },
+    "UGX": {
+        "name": "شیلینگ اوگاندا",
+        "symbol": "UGX"
+    },
+    "TZS": {
+        "name": "شیلینگ تانزانیا",
+        "symbol": "TZS"
+    },
+    "SOS": {
+        "name": "شیلینگ سومالی",
+        "symbol": "SOS"
+    },
+    "KES": {
+        "name": "شیلینگ کنیا",
+        "symbol": "KES"
+    },
+    "XOF": {
+        "name": "فرانک CFA غرب آفریقا",
+        "symbol": "CFA"
+    },
+    "XAF": {
+        "name": "فرانک CFA مرکز آفریقا",
+        "symbol": "FCFA"
+    },
+    "XPF": {
+        "name": "فرانک CFP",
+        "symbol": "CFPF"
+    },
+    "BIF": {
+        "name": "فرانک بوروندی",
+        "symbol": "BIF"
+    },
+    "DJF": {
+        "name": "فرانک جیبوتی",
+        "symbol": "DJF"
+    },
+    "RWF": {
+        "name": "فرانک رواندا",
+        "symbol": "RWF"
+    },
+    "CHF": {
+        "name": "فرانک سویس",
+        "symbol": "CHF"
+    },
+    "CDF": {
+        "name": "فرانک کنگو",
+        "symbol": "CDF"
+    },
+    "KMF": {
+        "name": "فرانک کومورو",
+        "symbol": "KMF"
+    },
+    "GNF": {
+        "name": "فرانک گینه",
+        "symbol": "GNF"
+    },
+    "AWG": {
+        "name": "فلورین آروبا",
+        "symbol": "AWG"
+    },
+    "HUF": {
+        "name": "فورینت مجارستان",
+        "symbol": "HUF"
+    },
+    "GTQ": {
+        "name": "کتزال گواتمالا",
+        "symbol": "GTQ"
+    },
+    "DKK": {
+        "name": "کرون دنمارک",
+        "symbol": "DKK"
+    },
+    "SEK": {
+        "name": "کرون سویدن",
+        "symbol": "SEK"
+    },
+    "NOK": {
+        "name": "کرون ناروی",
+        "symbol": "NOK"
+    },
+    "ISK": {
+        "name": "کرونای ایسلند",
+        "symbol": "ISK"
+    },
+    "ZMW": {
+        "name": "کواچای زامبیا",
+        "symbol": "ZMW"
+    },
+    "MWK": {
+        "name": "کواچای مالاوی",
+        "symbol": "MWK"
+    },
+    "AOA": {
+        "name": "کوانزای آنگولا",
+        "symbol": "AOA"
+    },
+    "NIO": {
+        "name": "کوردوبای نیکاراگوئه",
+        "symbol": "NIO"
+    },
+    "CZK": {
+        "name": "کورونای جمهوری چک",
+        "symbol": "CZK"
+    },
+    "CRC": {
+        "name": "کولون کاستاریکا",
+        "symbol": "CRC"
+    },
+    "HRK": {
+        "name": "کونای کرواسی",
+        "symbol": "HRK"
+    },
+    "MMK": {
+        "name": "کیات میانمار",
+        "symbol": "MMK"
+    },
+    "LAK": {
+        "name": "کیپ لائوس",
+        "symbol": "LAK"
+    },
+    "PGK": {
+        "name": "کینای پاپوا گینهٔ نو",
+        "symbol": "PGK"
+    },
+    "PYG": {
+        "name": "گوارانی پاراگوئه",
+        "symbol": "PYG"
+    },
+    "HTG": {
+        "name": "گورد هائیتی",
+        "symbol": "HTG"
+    },
+    "ANG": {
+        "name": "گیلدر آنتیل هلند",
+        "symbol": "ANG"
+    },
+    "GEL": {
+        "name": "لاری گرجستان",
+        "symbol": "GEL"
+    },
+    "BGN": {
+        "name": "لف بلغارستان",
+        "symbol": "BGN"
+    },
+    "ALL": {
+        "name": "لک آلبانی",
+        "symbol": "ALL"
+    },
+    "HNL": {
+        "name": "لمپیرای هندوراس",
+        "symbol": "HNL"
+    },
+    "LSL": {
+        "name": "لوتی لسوتو",
+        "symbol": "LSL"
+    },
+    "LTL": {
+        "name": "لیتاس لیتوانی",
+        "symbol": "LTL"
+    },
+    "TRY": {
+        "name": "لیرهٔ ترکیه",
+        "symbol": "TRY"
+    },
+    "SDG": {
+        "name": "لیرهٔ سودان",
+        "symbol": "SDG"
+    },
+    "SYP": {
+        "name": "لیرهٔ سوریه",
+        "symbol": "SYP"
+    },
+    "LBP": {
+        "name": "لیرهٔ لبنان",
+        "symbol": "LBP"
+    },
+    "EGP": {
+        "name": "لیرهٔ مصر",
+        "symbol": "EGP"
+    },
+    "SZL": {
+        "name": "لیلانگنی سوازیلند",
+        "symbol": "SZL"
+    },
+    "SLL": {
+        "name": "لئون سیرالئون",
+        "symbol": "SLL"
+    },
+    "RON": {
+        "name": "لئوی رومانی",
+        "symbol": "RON"
+    },
+    "MDL": {
+        "name": "لئوی مولداوی",
+        "symbol": "MDL"
+    },
+    "BAM": {
+        "name": "مارک تبدیل‌پذیر بوسنی و هرزگوین",
+        "symbol": "BAM"
+    },
+    "MZN": {
+        "name": "متیکال موزامبیک",
+        "symbol": "MZN"
+    },
+    "TMT": {
+        "name": "منات ترکمنستان",
+        "symbol": "TMT"
+    },
+    "AZN": {
+        "name": "منات جمهوری آذربایجان",
+        "symbol": "AZN"
+    },
+    "ERN": {
+        "name": "ناکفای اریتره",
+        "symbol": "ERN"
+    },
+    "NGN": {
+        "name": "نایرای نیجریه",
+        "symbol": "NGN"
+    },
+    "PEN": {
+        "name": "نوئووسول پرو",
+        "symbol": "PEN"
+    },
+    "UAH": {
+        "name": "هریونیای اوکراین",
+        "symbol": "UAH"
+    },
+    "VUV": {
+        "name": "واتوی وانوواتو",
+        "symbol": "VUV"
+    },
+    "KRW": {
+        "name": "وون کرهٔ جنوبی",
+        "symbol": "₩"
+    },
+    "KPW": {
+        "name": "وون کرهٔ شمالی",
+        "symbol": "KPW"
+    },
+    "JPY": {
+        "name": "ین جاپان",
+        "symbol": "¥"
+    },
+    "CNY": {
+        "name": "یوآن چین",
+        "symbol": "¥CN"
+    },
+    "EUR": {
+        "name": "یورو",
+        "symbol": "€"
+    }
+}

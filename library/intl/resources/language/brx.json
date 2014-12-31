@@ -1,0 +1,738 @@
+{
+    "agq": {
+        "code": "agq",
+        "name": "Aghem"
+    },
+    "ar-001": {
+        "code": "ar-001",
+        "name": "ar_001"
+    },
+    "ast": {
+        "code": "ast",
+        "name": "Asturian"
+    },
+    "asa": {
+        "code": "asa",
+        "name": "Asu"
+    },
+    "ksf": {
+        "code": "ksf",
+        "name": "Bafia"
+    },
+    "bez": {
+        "code": "bez",
+        "name": "Bena"
+    },
+    "tzm": {
+        "code": "tzm",
+        "name": "Central Atlas Tamazight"
+    },
+    "cgg": {
+        "code": "cgg",
+        "name": "Chiga"
+    },
+    "ksh": {
+        "code": "ksh",
+        "name": "Colognian"
+    },
+    "swc": {
+        "code": "swc",
+        "name": "Congo Swahili"
+    },
+    "ebu": {
+        "code": "ebu",
+        "name": "Embu"
+    },
+    "es-MX": {
+        "code": "es-MX",
+        "name": "es_MX"
+    },
+    "guz": {
+        "code": "guz",
+        "name": "Gusii"
+    },
+    "dyo": {
+        "code": "dyo",
+        "name": "Jola-Fonyi"
+    },
+    "kea": {
+        "code": "kea",
+        "name": "Kabuverdianu"
+    },
+    "kln": {
+        "code": "kln",
+        "name": "Kalenjin"
+    },
+    "khq": {
+        "code": "khq",
+        "name": "Koyra Chiini"
+    },
+    "ses": {
+        "code": "ses",
+        "name": "Koyraboro Senni"
+    },
+    "nmg": {
+        "code": "nmg",
+        "name": "Kwasio"
+    },
+    "lag": {
+        "code": "lag",
+        "name": "Langi"
+    },
+    "luy": {
+        "code": "luy",
+        "name": "Luyia"
+    },
+    "jmc": {
+        "code": "jmc",
+        "name": "Machame"
+    },
+    "mgh": {
+        "code": "mgh",
+        "name": "Makhuwa-Meetto"
+    },
+    "kde": {
+        "code": "kde",
+        "name": "Makonde"
+    },
+    "mer": {
+        "code": "mer",
+        "name": "Meru"
+    },
+    "mfe": {
+        "code": "mfe",
+        "name": "Morisyen"
+    },
+    "mua": {
+        "code": "mua",
+        "name": "Mundang"
+    },
+    "naq": {
+        "code": "naq",
+        "name": "Nama"
+    },
+    "jgo": {
+        "code": "jgo",
+        "name": "Ngomba"
+    },
+    "nus": {
+        "code": "nus",
+        "name": "Nuer"
+    },
+    "pt-BR": {
+        "code": "pt-BR",
+        "name": "pt_BR"
+    },
+    "pt-PT": {
+        "code": "pt-PT",
+        "name": "pt_PT"
+    },
+    "rof": {
+        "code": "rof",
+        "name": "Rombo"
+    },
+    "rwk": {
+        "code": "rwk",
+        "name": "Rwa"
+    },
+    "saq": {
+        "code": "saq",
+        "name": "Samburu"
+    },
+    "sbp": {
+        "code": "sbp",
+        "name": "Sangu"
+    },
+    "seh": {
+        "code": "seh",
+        "name": "Sena"
+    },
+    "ksb": {
+        "code": "ksb",
+        "name": "Shambala"
+    },
+    "xog": {
+        "code": "xog",
+        "name": "Soga"
+    },
+    "zgh": {
+        "code": "zgh",
+        "name": "Standard Moroccan Tamazight"
+    },
+    "shi": {
+        "code": "shi",
+        "name": "Tachelhit"
+    },
+    "dav": {
+        "code": "dav",
+        "name": "Taita"
+    },
+    "twq": {
+        "code": "twq",
+        "name": "Tasawaq"
+    },
+    "teo": {
+        "code": "teo",
+        "name": "Teso"
+    },
+    "vun": {
+        "code": "vun",
+        "name": "Vunjo"
+    },
+    "wae": {
+        "code": "wae",
+        "name": "Walser"
+    },
+    "yav": {
+        "code": "yav",
+        "name": "Yangben"
+    },
+    "dje": {
+        "code": "dje",
+        "name": "Zarma"
+    },
+    "ak": {
+        "code": "ak",
+        "name": "अकन"
+    },
+    "en": {
+        "code": "en",
+        "name": "अंग्रेज़ी"
+    },
+    "en-US": {
+        "code": "en-US",
+        "name": "अंग्रेज़ी (अमरिकी)"
+    },
+    "en-AU": {
+        "code": "en-AU",
+        "name": "अंग्रेज़ी (ऑस्ट्रेलिया का)"
+    },
+    "en-CA": {
+        "code": "en-CA",
+        "name": "अंग्रेज़ी (कनाडाई)"
+    },
+    "en-GB": {
+        "code": "en-GB",
+        "name": "अंग्रेजी (ब्रिटिश)"
+    },
+    "az": {
+        "code": "az",
+        "name": "अज़रबैजानी"
+    },
+    "af": {
+        "code": "af",
+        "name": "अफ्रीकी"
+    },
+    "am": {
+        "code": "am",
+        "name": "अम्हारिक्"
+    },
+    "ar": {
+        "code": "ar",
+        "name": "अरबी"
+    },
+    "hy": {
+        "code": "hy",
+        "name": "अरमेनियन्"
+    },
+    "ga": {
+        "code": "ga",
+        "name": "आईरिश"
+    },
+    "is": {
+        "code": "is",
+        "name": "आईस्लैंडिक्"
+    },
+    "sq": {
+        "code": "sq",
+        "name": "आल्बेनियन्"
+    },
+    "id": {
+        "code": "id",
+        "name": "इन्डोनेशियन्"
+    },
+    "it": {
+        "code": "it",
+        "name": "ईटालियन्"
+    },
+    "es-ES": {
+        "code": "es-ES",
+        "name": "ईवेरियाई स्पैनिश"
+    },
+    "ug": {
+        "code": "ug",
+        "name": "उईग़ुर"
+    },
+    "de-CH": {
+        "code": "de-CH",
+        "name": "उच्च स्तरिय स्वीस जर्मन"
+    },
+    "uz": {
+        "code": "uz",
+        "name": "उज़बेक्"
+    },
+    "or": {
+        "code": "or",
+        "name": "उड़िया"
+    },
+    "nd": {
+        "code": "nd",
+        "name": "उत्तर न्दबेले"
+    },
+    "se": {
+        "code": "se",
+        "name": "उत्तरी सामी"
+    },
+    "hsb": {
+        "code": "hsb",
+        "name": "ऊपरी सौर्बियन"
+    },
+    "ur": {
+        "code": "ur",
+        "name": "ऊर्दु"
+    },
+    "ee": {
+        "code": "ee",
+        "name": "एवे"
+    },
+    "ewo": {
+        "code": "ewo",
+        "name": "एवौंडो"
+    },
+    "eo": {
+        "code": "eo",
+        "name": "एस्पेरान्तो"
+    },
+    "et": {
+        "code": "et",
+        "name": "ऐस्टोनियन्"
+    },
+    "kk": {
+        "code": "kk",
+        "name": "क़ज़ाख़्"
+    },
+    "kn": {
+        "code": "kn",
+        "name": "कन्नड्"
+    },
+    "kam": {
+        "code": "kam",
+        "name": "कंबा"
+    },
+    "kl": {
+        "code": "kl",
+        "name": "कलालीसुत"
+    },
+    "ks": {
+        "code": "ks",
+        "name": "कश्मिरी"
+    },
+    "ca": {
+        "code": "ca",
+        "name": "कातालान्"
+    },
+    "kab": {
+        "code": "kab",
+        "name": "काबील्"
+    },
+    "ki": {
+        "code": "ki",
+        "name": "किकुयु"
+    },
+    "ky": {
+        "code": "ky",
+        "name": "किरग़ीज़्"
+    },
+    "rn": {
+        "code": "rn",
+        "name": "किरून्दी"
+    },
+    "ko": {
+        "code": "ko",
+        "name": "कोरीयन्"
+    },
+    "hr": {
+        "code": "hr",
+        "name": "क्रोएशन्"
+    },
+    "km": {
+        "code": "km",
+        "name": "ख्मेर"
+    },
+    "lg": {
+        "code": "lg",
+        "name": "गांडा"
+    },
+    "gu": {
+        "code": "gu",
+        "name": "गुजराती"
+    },
+    "gl": {
+        "code": "gl",
+        "name": "गैलिशियन्"
+    },
+    "el": {
+        "code": "el",
+        "name": "ग्रीक"
+    },
+    "zh": {
+        "code": "zh",
+        "name": "चीनी"
+    },
+    "zh-Hant": {
+        "code": "zh-Hant",
+        "name": "चीनी (पारम्परिक)"
+    },
+    "zh-Hans": {
+        "code": "zh-Hans",
+        "name": "चीनी (सरलीकृत)"
+    },
+    "chr": {
+        "code": "chr",
+        "name": "चीरोकी"
+    },
+    "cs": {
+        "code": "cs",
+        "name": "चेक्"
+    },
+    "de": {
+        "code": "de",
+        "name": "ज़र्मन"
+    },
+    "de-AT": {
+        "code": "de-AT",
+        "name": "जर्मन (ऑस्ट्रिया)"
+    },
+    "ja": {
+        "code": "ja",
+        "name": "जापानी"
+    },
+    "zu": {
+        "code": "zu",
+        "name": "ज़ुलू"
+    },
+    "ka": {
+        "code": "ka",
+        "name": "जॉर्जियन्"
+    },
+    "to": {
+        "code": "to",
+        "name": "टॉंगा"
+    },
+    "nl": {
+        "code": "nl",
+        "name": "डच्"
+    },
+    "da": {
+        "code": "da",
+        "name": "डैनीश्"
+    },
+    "ta": {
+        "code": "ta",
+        "name": "तमिळ"
+    },
+    "ti": {
+        "code": "ti",
+        "name": "तिग्रीन्या"
+    },
+    "bo": {
+        "code": "bo",
+        "name": "तिब्बती"
+    },
+    "tr": {
+        "code": "tr",
+        "name": "तुर्की"
+    },
+    "te": {
+        "code": "te",
+        "name": "तेलुगु"
+    },
+    "th": {
+        "code": "th",
+        "name": "थाई"
+    },
+    "ne": {
+        "code": "ne",
+        "name": "नेपाली"
+    },
+    "nn": {
+        "code": "nn",
+        "name": "नॉर्वेजियन् नीनॉर्स्क्"
+    },
+    "nb": {
+        "code": "nb",
+        "name": "नोर्वेगी बोकमाल"
+    },
+    "nyn": {
+        "code": "nyn",
+        "name": "न्यानकोले"
+    },
+    "ps": {
+        "code": "ps",
+        "name": "पख़्तु"
+    },
+    "pa": {
+        "code": "pa",
+        "name": "पंजाबी"
+    },
+    "fy": {
+        "code": "fy",
+        "name": "पश्चीमी फ्रीज़ियन्"
+    },
+    "pt": {
+        "code": "pt",
+        "name": "पुर्तगाली"
+    },
+    "pl": {
+        "code": "pl",
+        "name": "पोलिश"
+    },
+    "fa": {
+        "code": "fa",
+        "name": "फार्सी"
+    },
+    "fi": {
+        "code": "fi",
+        "name": "फिनिश्"
+    },
+    "fo": {
+        "code": "fo",
+        "name": "फिरोज़ी"
+    },
+    "fil": {
+        "code": "fil",
+        "name": "फिलिपिनो"
+    },
+    "ff": {
+        "code": "ff",
+        "name": "फुलाह्"
+    },
+    "fr": {
+        "code": "fr",
+        "name": "फ्रांसीसी"
+    },
+    "fr-CA": {
+        "code": "fr-CA",
+        "name": "फ्रांसीसी (कनाडाई)"
+    },
+    "fr-CH": {
+        "code": "fr-CH",
+        "name": "फ्रांसीसी (स्वीस)"
+    },
+    "fur": {
+        "code": "fur",
+        "name": "फ्रीउलीअन्"
+    },
+    "nl-BE": {
+        "code": "nl-BE",
+        "name": "फ्लेमी"
+    },
+    "bn": {
+        "code": "bn",
+        "name": "बंगला"
+    },
+    "brx": {
+        "code": "brx",
+        "name": "बड़ो"
+    },
+    "my": {
+        "code": "my",
+        "name": "बर्मी"
+    },
+    "bg": {
+        "code": "bg",
+        "name": "बल्गैरियन्"
+    },
+    "bm": {
+        "code": "bm",
+        "name": "बांबारा"
+    },
+    "eu": {
+        "code": "eu",
+        "name": "बास्क्"
+    },
+    "bas": {
+        "code": "bas",
+        "name": "बास्क़्"
+    },
+    "be": {
+        "code": "be",
+        "name": "बैलोरूसियन्"
+    },
+    "bs": {
+        "code": "bs",
+        "name": "बोस्नियाई"
+    },
+    "br": {
+        "code": "br",
+        "name": "ब्रटों"
+    },
+    "dz": {
+        "code": "dz",
+        "name": "भुटानी"
+    },
+    "mr": {
+        "code": "mr",
+        "name": "मराठी"
+    },
+    "ml": {
+        "code": "ml",
+        "name": "मलयालम"
+    },
+    "ms": {
+        "code": "ms",
+        "name": "मलाय"
+    },
+    "mas": {
+        "code": "mas",
+        "name": "मसाई"
+    },
+    "mt": {
+        "code": "mt",
+        "name": "मालटीज़्"
+    },
+    "mg": {
+        "code": "mg",
+        "name": "मालागासी"
+    },
+    "mk": {
+        "code": "mk",
+        "name": "मैसेडोनियन्"
+    },
+    "mn": {
+        "code": "mn",
+        "name": "मोंगोलियन"
+    },
+    "ro-MD": {
+        "code": "ro-MD",
+        "name": "मोल्डेवियन्"
+    },
+    "uk": {
+        "code": "uk",
+        "name": "यूक्रेनियन्"
+    },
+    "yo": {
+        "code": "yo",
+        "name": "योरूबा"
+    },
+    "ru": {
+        "code": "ru",
+        "name": "रुसी"
+    },
+    "ro": {
+        "code": "ro",
+        "name": "रूमानीयन्"
+    },
+    "rm": {
+        "code": "rm",
+        "name": "रेह्टो-रोमान्स"
+    },
+    "lo": {
+        "code": "lo",
+        "name": "लाओसीयन्"
+    },
+    "lv": {
+        "code": "lv",
+        "name": "लाटवियन् (लैट्टीश)"
+    },
+    "ln": {
+        "code": "ln",
+        "name": "लिंगाला"
+    },
+    "lt": {
+        "code": "lt",
+        "name": "लिथुआनियन्"
+    },
+    "luo": {
+        "code": "luo",
+        "name": "लुओ"
+    },
+    "lb": {
+        "code": "lb",
+        "name": "लुक्समबुर्गी"
+    },
+    "lu": {
+        "code": "lu",
+        "name": "लुबा कटांगा"
+    },
+    "vai": {
+        "code": "vai",
+        "name": "वाई"
+    },
+    "vi": {
+        "code": "vi",
+        "name": "वियेतनामी"
+    },
+    "cy": {
+        "code": "cy",
+        "name": "वैल्श्"
+    },
+    "sn": {
+        "code": "sn",
+        "name": "शोना"
+    },
+    "sr": {
+        "code": "sr",
+        "name": "सर्बियन्"
+    },
+    "sg": {
+        "code": "sg",
+        "name": "सांग्रो"
+    },
+    "si": {
+        "code": "si",
+        "name": "सींहाला"
+    },
+    "so": {
+        "code": "so",
+        "name": "सोमाली"
+    },
+    "dsb": {
+        "code": "dsb",
+        "name": "सोर्बियन्"
+    },
+    "gd": {
+        "code": "gd",
+        "name": "स्कॉट्स् गैलिक्"
+    },
+    "es": {
+        "code": "es",
+        "name": "स्पैनिश"
+    },
+    "sk": {
+        "code": "sk",
+        "name": "स्लोवाक्"
+    },
+    "sl": {
+        "code": "sl",
+        "name": "स्लोवेनियन्"
+    },
+    "sw": {
+        "code": "sw",
+        "name": "स्वाहिली"
+    },
+    "sv": {
+        "code": "sv",
+        "name": "स्वीडिश"
+    },
+    "gsw": {
+        "code": "gsw",
+        "name": "स्वीस जर्मन"
+    },
+    "ha": {
+        "code": "ha",
+        "name": "हउसा"
+    },
+    "hu": {
+        "code": "hu",
+        "name": "हंगैरीयन्"
+    },
+    "hi": {
+        "code": "hi",
+        "name": "हिंदी"
+    },
+    "he": {
+        "code": "he",
+        "name": "हिब्रु"
+    }
+}
