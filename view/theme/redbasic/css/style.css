@@ -2216,3 +2216,44 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 .jothidden .bootstrap-tagsinput:hover, .jothidden .bootstrap-tagsinput:focus {
 	border: 1px solid #cccccc;
 }
+
+/* Should really go in mod_profiles.css, but since it includes variables it's here instead. A solution would be to handle variables in mod_profiles.css and other CSS files as well.
+#profile-edit-wrapper .field label {
+	margin-top: 20px;
+	width: 175px;
+}
+
+#profile-edit-wrapper .field input[type="text"] {
+	margin-top: 20px;
+	width: 220px;
+}
+
+
+#profile-edit-links {
+	max-width: $converse_width;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+#profile-edit-links .btn {
+	margin: 0 10px 15px 0;
+}
+
+.profile-import {
+	vertical-align: top;
+	text-align: left;
+}
+
+.profile-import b {
+	color: $link_colour;
+}
+
+.profile-import input {
+	color: $font_colour;
+	border: none;
+}
+
+#profile-edit-drop-link {
+	color: #FFF;
+	font-weight: normal;
+}
