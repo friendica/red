@@ -6,6 +6,7 @@
 	margin-top: 25px;
 }
 
-#sellpage-edit label{
+/* first-of-type needed to style switches */
+#sellpage-edit label:first-of-type {
 	width: 300px;
 }

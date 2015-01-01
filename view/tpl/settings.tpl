@@ -62,7 +62,7 @@
 
 {{$suggestme}}
 
-{{include file="field_yesno.tpl" field=$blocktags}}
+{{include file="field_checkbox.tpl" field=$blocktags}}
 
 
 {{include file="field_input.tpl" field=$expire}}
