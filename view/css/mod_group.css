@@ -4,6 +4,7 @@
 }
 
 /* first-of-type needed to style switches */
+#group-edit-form label.mainlabel,
 #group-edit-form label:first-of-type {
 	float: left;
 	width: 300px;

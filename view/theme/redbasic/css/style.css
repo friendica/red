@@ -307,6 +307,7 @@ footer {
 }
 
 /* first-of-type needed to style switches */
+#main-login .field.checkbox label.mainlabel,
 #main-login .field.checkbox label:first-of-type {
 	margin-bottom: 0;
 	float: left;
@@ -376,6 +377,7 @@ footer {
 	margin-top: 20px;
 }
 /* first-of-type needed to style switches */
+#profile-edit-wrapper .field label.mainlabel,
 #profile-edit-wrapper .field label:first-of-type {
 	width: 175px;
 }
@@ -1244,6 +1246,7 @@ footer {
 }
 
 /* first-of-type needed to style switches */
+.field label.mainlabel,
 .field label:first-of-type {
 	float: left;
 	width: 350px;
@@ -2358,6 +2361,7 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 /* Hide the placeholder label which is used for styling switches */
 /* Many places give a width to all labels, so need to specifically set these to 0 width */
 /* This should probably be moved to core */
+.field.checkbox label.switchlabel,
 .field.checkbox label:nth-of-type(2) {
 	width: 0px; 
 	margin: 0px;
@@ -2371,6 +2375,7 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
   margin-left: -9999px;
   visibility: hidden;
 }
+.field.checkbox input + label.switchlabel,
 .field.checkbox input + label:nth-of-type(2) {
   display: block;
   position: relative;

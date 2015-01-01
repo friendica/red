@@ -1,6 +1,6 @@
 <tr>
 	<td>
-		<label for='id_{{$field.0}}'>{{$field.1}}</label>
+		<label class="mainlabel" for='id_{{$field.0}}'>{{$field.1}}</label>
 	</td>
 	<td class="abook-them">
 		<input type="checkbox" name='them_{{$field.0}}' id='them_id_{{$field.0}}' value="1" disabled="disabled" {{if $field.2}}checked="checked"{{/if}} />

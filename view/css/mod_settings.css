@@ -29,6 +29,7 @@ ul#settings-privacy-macros {
 }
 
 /* first-of-type needed to be able to style switches */
+#settings-permissions-wrapper .field label.mainlabel,
 #settings-permissions-wrapper .field label:first-of-type {
 	width: 350px;
 }
@@ -43,6 +44,7 @@ ul#settings-privacy-macros {
 }
 
 /* first-of-type needed to be able to style switches */
+#settings-notifications .field label.mainlabel,
 #settings-notifications .field label:first-of-type {
 	margin-left: 20px;
 	width: 330px;

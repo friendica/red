@@ -7,6 +7,7 @@
 }
 
 /* first-of-type needed to style switches */
+#sellpage-edit label.mainlabel,
 #sellpage-edit label:first-of-type {
 	width: 300px;
 }
