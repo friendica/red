@@ -1,0 +1,738 @@
+{
+    "de-AT": {
+        "code": "de-AT",
+        "name": "de_AT"
+    },
+    "en-AU": {
+        "code": "en-AU",
+        "name": "en_AU"
+    },
+    "en-CA": {
+        "code": "en-CA",
+        "name": "en_CA"
+    },
+    "es-ES": {
+        "code": "es-ES",
+        "name": "es_ES"
+    },
+    "es-MX": {
+        "code": "es-MX",
+        "name": "es_MX"
+    },
+    "fr-CA": {
+        "code": "fr-CA",
+        "name": "fr_CA"
+    },
+    "fr-CH": {
+        "code": "fr-CH",
+        "name": "fr_CH"
+    },
+    "pt-PT": {
+        "code": "pt-PT",
+        "name": "pt_PT"
+    },
+    "ar": {
+        "code": "ar",
+        "name": "Tiếng Ả Rập"
+    },
+    "ar-001": {
+        "code": "ar-001",
+        "name": "Tiếng Ả Rập Hiện đại"
+    },
+    "agq": {
+        "code": "agq",
+        "name": "Tiếng Aghem"
+    },
+    "ga": {
+        "code": "ga",
+        "name": "Tiếng Ai-len"
+    },
+    "ak": {
+        "code": "ak",
+        "name": "Tiếng Akan"
+    },
+    "am": {
+        "code": "am",
+        "name": "Tiếng Amharic"
+    },
+    "sq": {
+        "code": "sq",
+        "name": "Tiếng An-ba-ni"
+    },
+    "en": {
+        "code": "en",
+        "name": "Tiếng Anh"
+    },
+    "en-GB": {
+        "code": "en-GB",
+        "name": "Tiếng Anh (Anh)"
+    },
+    "en-US": {
+        "code": "en-US",
+        "name": "Tiếng Anh (Mỹ)"
+    },
+    "hy": {
+        "code": "hy",
+        "name": "Tiếng Armenia"
+    },
+    "ast": {
+        "code": "ast",
+        "name": "Tiếng Asturias"
+    },
+    "asa": {
+        "code": "asa",
+        "name": "Tiếng Asu"
+    },
+    "az": {
+        "code": "az",
+        "name": "Tiếng Azerbaijan"
+    },
+    "pl": {
+        "code": "pl",
+        "name": "Tiếng Ba Lan"
+    },
+    "fa": {
+        "code": "fa",
+        "name": "Tiếng Ba Tư"
+    },
+    "ksf": {
+        "code": "ksf",
+        "name": "Tiếng Bafia"
+    },
+    "bm": {
+        "code": "bm",
+        "name": "Tiếng Bambara"
+    },
+    "bas": {
+        "code": "bas",
+        "name": "Tiếng Basaa"
+    },
+    "eu": {
+        "code": "eu",
+        "name": "Tiếng Basque"
+    },
+    "be": {
+        "code": "be",
+        "name": "Tiếng Belarus"
+    },
+    "bez": {
+        "code": "bez",
+        "name": "Tiếng Bena"
+    },
+    "bn": {
+        "code": "bn",
+        "name": "Tiếng Bengali"
+    },
+    "brx": {
+        "code": "brx",
+        "name": "Tiếng Bodo"
+    },
+    "pt": {
+        "code": "pt",
+        "name": "Tiếng Bồ Đào Nha"
+    },
+    "pt-BR": {
+        "code": "pt-BR",
+        "name": "Tiếng Bồ Đào Nha (Braxin)"
+    },
+    "br": {
+        "code": "br",
+        "name": "Tiếng Breton"
+    },
+    "bg": {
+        "code": "bg",
+        "name": "Tiếng Bulgaria"
+    },
+    "ca": {
+        "code": "ca",
+        "name": "Tiếng Catalan"
+    },
+    "chr": {
+        "code": "chr",
+        "name": "Tiếng Cherokee"
+    },
+    "cgg": {
+        "code": "cgg",
+        "name": "Tiếng Chiga"
+    },
+    "ksh": {
+        "code": "ksh",
+        "name": "Tiếng Cologne"
+    },
+    "hr": {
+        "code": "hr",
+        "name": "Tiếng Croatia"
+    },
+    "he": {
+        "code": "he",
+        "name": "Tiếng Do Thái"
+    },
+    "dz": {
+        "code": "dz",
+        "name": "Tiếng Dzongkha"
+    },
+    "da": {
+        "code": "da",
+        "name": "Tiếng Đan Mạch"
+    },
+    "de": {
+        "code": "de",
+        "name": "Tiếng Đức"
+    },
+    "gsw": {
+        "code": "gsw",
+        "name": "Tiếng Đức (Thụy Sĩ)"
+    },
+    "ebu": {
+        "code": "ebu",
+        "name": "Tiếng Embu"
+    },
+    "et": {
+        "code": "et",
+        "name": "Tiếng Estonia"
+    },
+    "ee": {
+        "code": "ee",
+        "name": "Tiếng Ewe"
+    },
+    "ewo": {
+        "code": "ewo",
+        "name": "Tiếng Ewondo"
+    },
+    "fo": {
+        "code": "fo",
+        "name": "Tiếng Faore"
+    },
+    "nl-BE": {
+        "code": "nl-BE",
+        "name": "Tiếng Flemish"
+    },
+    "fy": {
+        "code": "fy",
+        "name": "Tiếng Frisia"
+    },
+    "fur": {
+        "code": "fur",
+        "name": "Tiếng Friulian"
+    },
+    "ff": {
+        "code": "ff",
+        "name": "Tiếng Fulah"
+    },
+    "gl": {
+        "code": "gl",
+        "name": "Tiếng Galician"
+    },
+    "lg": {
+        "code": "lg",
+        "name": "Tiếng Ganda"
+    },
+    "ka": {
+        "code": "ka",
+        "name": "Tiếng Gruzia"
+    },
+    "gu": {
+        "code": "gu",
+        "name": "Tiếng Gujarati"
+    },
+    "guz": {
+        "code": "guz",
+        "name": "Tiếng Gusii"
+    },
+    "nl": {
+        "code": "nl",
+        "name": "Tiếng Hà Lan"
+    },
+    "dsb": {
+        "code": "dsb",
+        "name": "Tiếng Hạ Sorbia"
+    },
+    "ko": {
+        "code": "ko",
+        "name": "Tiếng Hàn"
+    },
+    "ha": {
+        "code": "ha",
+        "name": "Tiếng Hausa"
+    },
+    "hi": {
+        "code": "hi",
+        "name": "Tiếng Hindi"
+    },
+    "hu": {
+        "code": "hu",
+        "name": "Tiếng Hungary"
+    },
+    "el": {
+        "code": "el",
+        "name": "Tiếng Hy Lạp"
+    },
+    "is": {
+        "code": "is",
+        "name": "Tiếng Iceland"
+    },
+    "id": {
+        "code": "id",
+        "name": "Tiếng Indonesia"
+    },
+    "dyo": {
+        "code": "dyo",
+        "name": "Tiếng Jola-Fonyi"
+    },
+    "kea": {
+        "code": "kea",
+        "name": "Tiếng Kabuverdianu"
+    },
+    "kab": {
+        "code": "kab",
+        "name": "Tiếng Kabyle"
+    },
+    "kl": {
+        "code": "kl",
+        "name": "Tiếng Kalaallisut"
+    },
+    "kln": {
+        "code": "kln",
+        "name": "Tiếng Kalenjin"
+    },
+    "kam": {
+        "code": "kam",
+        "name": "Tiếng Kamba"
+    },
+    "kn": {
+        "code": "kn",
+        "name": "Tiếng Kannada"
+    },
+    "ks": {
+        "code": "ks",
+        "name": "Tiếng Kashmiri"
+    },
+    "kk": {
+        "code": "kk",
+        "name": "Tiếng Kazakh"
+    },
+    "km": {
+        "code": "km",
+        "name": "Tiếng Khơ-me"
+    },
+    "ki": {
+        "code": "ki",
+        "name": "Tiếng Kikuyu"
+    },
+    "khq": {
+        "code": "khq",
+        "name": "Tiếng Koyra Chiini"
+    },
+    "ses": {
+        "code": "ses",
+        "name": "Tiếng Koyraboro Senni"
+    },
+    "nmg": {
+        "code": "nmg",
+        "name": "Tiếng Kwasio"
+    },
+    "ky": {
+        "code": "ky",
+        "name": "Tiếng Kyrgyz"
+    },
+    "lag": {
+        "code": "lag",
+        "name": "Tiếng Langi"
+    },
+    "lo": {
+        "code": "lo",
+        "name": "Tiếng Lào"
+    },
+    "lv": {
+        "code": "lv",
+        "name": "Tiếng Latvia"
+    },
+    "ln": {
+        "code": "ln",
+        "name": "Tiếng Lingala"
+    },
+    "lt": {
+        "code": "lt",
+        "name": "Tiếng Lít-va"
+    },
+    "lu": {
+        "code": "lu",
+        "name": "Tiếng Luba-Katanga"
+    },
+    "luo": {
+        "code": "luo",
+        "name": "Tiếng Luo"
+    },
+    "lb": {
+        "code": "lb",
+        "name": "Tiếng Luxembourg"
+    },
+    "luy": {
+        "code": "luy",
+        "name": "Tiếng Luyia"
+    },
+    "mk": {
+        "code": "mk",
+        "name": "Tiếng Macedonia"
+    },
+    "jmc": {
+        "code": "jmc",
+        "name": "Tiếng Machame"
+    },
+    "mgh": {
+        "code": "mgh",
+        "name": "Tiếng Makhuwa-Meetto"
+    },
+    "kde": {
+        "code": "kde",
+        "name": "Tiếng Makonde"
+    },
+    "mg": {
+        "code": "mg",
+        "name": "Tiếng Malagasy"
+    },
+    "ml": {
+        "code": "ml",
+        "name": "Tiếng Malayalam"
+    },
+    "ms": {
+        "code": "ms",
+        "name": "Tiếng Malaysia"
+    },
+    "mt": {
+        "code": "mt",
+        "name": "Tiếng Malt"
+    },
+    "mr": {
+        "code": "mr",
+        "name": "Tiếng Marathi"
+    },
+    "mas": {
+        "code": "mas",
+        "name": "Tiếng Masai"
+    },
+    "mer": {
+        "code": "mer",
+        "name": "Tiếng Meru"
+    },
+    "my": {
+        "code": "my",
+        "name": "Tiếng Miến Điện"
+    },
+    "ro-MD": {
+        "code": "ro-MD",
+        "name": "Tiếng Moldova"
+    },
+    "mfe": {
+        "code": "mfe",
+        "name": "Tiếng Morisyen"
+    },
+    "mn": {
+        "code": "mn",
+        "name": "Tiếng Mông Cổ"
+    },
+    "mua": {
+        "code": "mua",
+        "name": "Tiếng Mundang"
+    },
+    "nb": {
+        "code": "nb",
+        "name": "Tiếng Na Uy (Bokmål)"
+    },
+    "nn": {
+        "code": "nn",
+        "name": "Tiếng Na Uy (Nynorsk)"
+    },
+    "af": {
+        "code": "af",
+        "name": "Tiếng Nam Phi"
+    },
+    "bs": {
+        "code": "bs",
+        "name": "Tiếng Nam Tư"
+    },
+    "naq": {
+        "code": "naq",
+        "name": "Tiếng Nama"
+    },
+    "nd": {
+        "code": "nd",
+        "name": "Tiếng Ndebele Miền Bắc"
+    },
+    "ne": {
+        "code": "ne",
+        "name": "Tiếng Nepal"
+    },
+    "ru": {
+        "code": "ru",
+        "name": "Tiếng Nga"
+    },
+    "jgo": {
+        "code": "jgo",
+        "name": "Tiếng Ngomba"
+    },
+    "ja": {
+        "code": "ja",
+        "name": "Tiếng Nhật"
+    },
+    "nus": {
+        "code": "nus",
+        "name": "Tiếng Nuer"
+    },
+    "nyn": {
+        "code": "nyn",
+        "name": "Tiếng Nyankole"
+    },
+    "or": {
+        "code": "or",
+        "name": "Tiếng Oriya"
+    },
+    "ps": {
+        "code": "ps",
+        "name": "Tiếng Pashto"
+    },
+    "fr": {
+        "code": "fr",
+        "name": "Tiếng Pháp"
+    },
+    "fi": {
+        "code": "fi",
+        "name": "Tiếng Phần Lan"
+    },
+    "fil": {
+        "code": "fil",
+        "name": "Tiếng Philipin"
+    },
+    "pa": {
+        "code": "pa",
+        "name": "Tiếng Punjab"
+    },
+    "eo": {
+        "code": "eo",
+        "name": "Tiếng Quốc Tế Ngữ"
+    },
+    "rm": {
+        "code": "rm",
+        "name": "Tiếng Romansh"
+    },
+    "rof": {
+        "code": "rof",
+        "name": "Tiếng Rombo"
+    },
+    "ro": {
+        "code": "ro",
+        "name": "Tiếng Rumani"
+    },
+    "rn": {
+        "code": "rn",
+        "name": "Tiếng Rundi"
+    },
+    "rwk": {
+        "code": "rwk",
+        "name": "Tiếng Rwa"
+    },
+    "saq": {
+        "code": "saq",
+        "name": "Tiếng Samburu"
+    },
+    "se": {
+        "code": "se",
+        "name": "Tiếng Sami Miền Bắc"
+    },
+    "sg": {
+        "code": "sg",
+        "name": "Tiếng Sango"
+    },
+    "sbp": {
+        "code": "sbp",
+        "name": "Tiếng Sangu"
+    },
+    "cs": {
+        "code": "cs",
+        "name": "Tiếng Séc"
+    },
+    "seh": {
+        "code": "seh",
+        "name": "Tiếng Sena"
+    },
+    "sr": {
+        "code": "sr",
+        "name": "Tiếng Serbia"
+    },
+    "ksb": {
+        "code": "ksb",
+        "name": "Tiếng Shambala"
+    },
+    "sn": {
+        "code": "sn",
+        "name": "Tiếng Shona"
+    },
+    "si": {
+        "code": "si",
+        "name": "Tiếng Sinhala"
+    },
+    "sk": {
+        "code": "sk",
+        "name": "Tiếng Slovak"
+    },
+    "sl": {
+        "code": "sl",
+        "name": "Tiếng Slovenia"
+    },
+    "xog": {
+        "code": "xog",
+        "name": "Tiếng Soga"
+    },
+    "so": {
+        "code": "so",
+        "name": "Tiếng Somali"
+    },
+    "sw": {
+        "code": "sw",
+        "name": "Tiếng Swahili"
+    },
+    "swc": {
+        "code": "swc",
+        "name": "Tiếng Swahili Congo"
+    },
+    "shi": {
+        "code": "shi",
+        "name": "Tiếng Tachelhit"
+    },
+    "dav": {
+        "code": "dav",
+        "name": "Tiếng Taita"
+    },
+    "zgh": {
+        "code": "zgh",
+        "name": "Tiếng Tamazight Chuẩn của Ma-rốc"
+    },
+    "tzm": {
+        "code": "tzm",
+        "name": "Tiếng Tamazight Miền Trung Ma-rốc"
+    },
+    "ta": {
+        "code": "ta",
+        "name": "Tiếng Tamil"
+    },
+    "twq": {
+        "code": "twq",
+        "name": "Tiếng Tasawaq"
+    },
+    "es": {
+        "code": "es",
+        "name": "Tiếng Tây Ban Nha"
+    },
+    "bo": {
+        "code": "bo",
+        "name": "Tiếng Tây Tạng"
+    },
+    "te": {
+        "code": "te",
+        "name": "Tiếng Telugu"
+    },
+    "teo": {
+        "code": "teo",
+        "name": "Tiếng Teso"
+    },
+    "th": {
+        "code": "th",
+        "name": "Tiếng Thái"
+    },
+    "tr": {
+        "code": "tr",
+        "name": "Tiếng Thổ Nhĩ Kỳ"
+    },
+    "sv": {
+        "code": "sv",
+        "name": "Tiếng Thụy Điển"
+    },
+    "de-CH": {
+        "code": "de-CH",
+        "name": "Tiếng Thượng Giéc-man (Thụy Sĩ)"
+    },
+    "hsb": {
+        "code": "hsb",
+        "name": "Tiếng Thượng Sorbia"
+    },
+    "ti": {
+        "code": "ti",
+        "name": "Tiếng Tigrigya"
+    },
+    "to": {
+        "code": "to",
+        "name": "Tiếng Tonga"
+    },
+    "zh": {
+        "code": "zh",
+        "name": "Tiếng Trung"
+    },
+    "uk": {
+        "code": "uk",
+        "name": "Tiếng Ucraina"
+    },
+    "ur": {
+        "code": "ur",
+        "name": "Tiếng Uđu"
+    },
+    "ug": {
+        "code": "ug",
+        "name": "Tiếng Uyghur"
+    },
+    "uz": {
+        "code": "uz",
+        "name": "Tiếng Uzbek"
+    },
+    "vai": {
+        "code": "vai",
+        "name": "Tiếng Vai"
+    },
+    "vi": {
+        "code": "vi",
+        "name": "Tiếng Việt"
+    },
+    "vun": {
+        "code": "vun",
+        "name": "Tiếng Vunjo"
+    },
+    "cy": {
+        "code": "cy",
+        "name": "Tiếng Wales"
+    },
+    "wae": {
+        "code": "wae",
+        "name": "Tiếng Walser"
+    },
+    "gd": {
+        "code": "gd",
+        "name": "Tiếng Xentơ (Xcốt len)"
+    },
+    "it": {
+        "code": "it",
+        "name": "Tiếng Ý"
+    },
+    "yav": {
+        "code": "yav",
+        "name": "Tiếng Yangben"
+    },
+    "yo": {
+        "code": "yo",
+        "name": "Tiếng Yoruba"
+    },
+    "dje": {
+        "code": "dje",
+        "name": "Tiếng Zarma"
+    },
+    "zu": {
+        "code": "zu",
+        "name": "Tiếng Zulu"
+    },
+    "zh-Hans": {
+        "code": "zh-Hans",
+        "name": "zh_Hans"
+    },
+    "zh-Hant": {
+        "code": "zh-Hant",
+        "name": "zh_Hant"
+    }
+}

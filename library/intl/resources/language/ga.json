@@ -1,0 +1,738 @@
+{
+    "ak": {
+        "code": "ak",
+        "name": "Acáinis"
+    },
+    "af": {
+        "code": "af",
+        "name": "Afracáinis"
+    },
+    "agq": {
+        "code": "agq",
+        "name": "Aghem"
+    },
+    "hy": {
+        "code": "hy",
+        "name": "Airméinis"
+    },
+    "sq": {
+        "code": "sq",
+        "name": "Albáinis"
+    },
+    "am": {
+        "code": "am",
+        "name": "Amáiris"
+    },
+    "ar": {
+        "code": "ar",
+        "name": "Araibis"
+    },
+    "ar-001": {
+        "code": "ar-001",
+        "name": "Araibis Chaighdeánach"
+    },
+    "de-CH": {
+        "code": "de-CH",
+        "name": "Ard-Ghearmáinis Eilvéiseach"
+    },
+    "az": {
+        "code": "az",
+        "name": "Asarbaiseáinis"
+    },
+    "ast": {
+        "code": "ast",
+        "name": "Astúiris"
+    },
+    "asa": {
+        "code": "asa",
+        "name": "Asu"
+    },
+    "ksf": {
+        "code": "ksf",
+        "name": "Bafia"
+    },
+    "bm": {
+        "code": "bm",
+        "name": "Bambara"
+    },
+    "bas": {
+        "code": "bas",
+        "name": "Basaa"
+    },
+    "eu": {
+        "code": "eu",
+        "name": "Bascais"
+    },
+    "be": {
+        "code": "be",
+        "name": "Bealarúisis"
+    },
+    "bn": {
+        "code": "bn",
+        "name": "Beangáilis"
+    },
+    "en": {
+        "code": "en",
+        "name": "Béarla"
+    },
+    "en-AU": {
+        "code": "en-AU",
+        "name": "Béarla Astrálach"
+    },
+    "en-GB": {
+        "code": "en-GB",
+        "name": "Béarla Briotanach"
+    },
+    "en-CA": {
+        "code": "en-CA",
+        "name": "Béarla Ceanadach"
+    },
+    "en-US": {
+        "code": "en-US",
+        "name": "Béarla Meiriceánach"
+    },
+    "bez": {
+        "code": "bez",
+        "name": "Bena"
+    },
+    "brx": {
+        "code": "brx",
+        "name": "Bodo"
+    },
+    "bs": {
+        "code": "bs",
+        "name": "Boisnis"
+    },
+    "cy": {
+        "code": "cy",
+        "name": "Breatnais"
+    },
+    "br": {
+        "code": "br",
+        "name": "Briotáinis"
+    },
+    "bg": {
+        "code": "bg",
+        "name": "Bulgáiris"
+    },
+    "my": {
+        "code": "my",
+        "name": "Burmais"
+    },
+    "ks": {
+        "code": "ks",
+        "name": "Caismíris"
+    },
+    "kn": {
+        "code": "kn",
+        "name": "Cannadais"
+    },
+    "kk": {
+        "code": "kk",
+        "name": "Casaicis"
+    },
+    "ca": {
+        "code": "ca",
+        "name": "Catalóinis"
+    },
+    "tzm": {
+        "code": "tzm",
+        "name": "Central Atlas Tamazight"
+    },
+    "cgg": {
+        "code": "cgg",
+        "name": "Chiga"
+    },
+    "km": {
+        "code": "km",
+        "name": "Ciméiris"
+    },
+    "ki": {
+        "code": "ki",
+        "name": "Ciocúis"
+    },
+    "ky": {
+        "code": "ky",
+        "name": "Cirgisis"
+    },
+    "ko": {
+        "code": "ko",
+        "name": "Cóiréis"
+    },
+    "ksh": {
+        "code": "ksh",
+        "name": "Colognian"
+    },
+    "hr": {
+        "code": "hr",
+        "name": "Cróitis"
+    },
+    "da": {
+        "code": "da",
+        "name": "Danmhairgis"
+    },
+    "he": {
+        "code": "he",
+        "name": "Eabhrais"
+    },
+    "et": {
+        "code": "et",
+        "name": "Eastóinis"
+    },
+    "ebu": {
+        "code": "ebu",
+        "name": "Embu"
+    },
+    "eo": {
+        "code": "eo",
+        "name": "Esperanto"
+    },
+    "ee": {
+        "code": "ee",
+        "name": "Ewe"
+    },
+    "ewo": {
+        "code": "ewo",
+        "name": "Ewondo"
+    },
+    "fo": {
+        "code": "fo",
+        "name": "Faróis"
+    },
+    "fil": {
+        "code": "fil",
+        "name": "Filipínis"
+    },
+    "fi": {
+        "code": "fi",
+        "name": "Fionlainnis"
+    },
+    "fr": {
+        "code": "fr",
+        "name": "Fraincis"
+    },
+    "fr-CA": {
+        "code": "fr-CA",
+        "name": "Fraincis Cheanadach"
+    },
+    "fr-CH": {
+        "code": "fr-CH",
+        "name": "Fraincis Eilvéiseach"
+    },
+    "fy": {
+        "code": "fy",
+        "name": "Freaslainnis Iartharach"
+    },
+    "fur": {
+        "code": "fur",
+        "name": "Friúilis"
+    },
+    "ff": {
+        "code": "ff",
+        "name": "Fuláinis"
+    },
+    "ga": {
+        "code": "ga",
+        "name": "Gaeilge"
+    },
+    "gd": {
+        "code": "gd",
+        "name": "Gaeilge na hAlban"
+    },
+    "gl": {
+        "code": "gl",
+        "name": "Gailísis"
+    },
+    "de": {
+        "code": "de",
+        "name": "Gearmáinis"
+    },
+    "gsw": {
+        "code": "gsw",
+        "name": "Gearmáinis Eilvéiseach"
+    },
+    "de-AT": {
+        "code": "de-AT",
+        "name": "Gearmáinis Ostarach"
+    },
+    "el": {
+        "code": "el",
+        "name": "Gréigis"
+    },
+    "gu": {
+        "code": "gu",
+        "name": "Gúisearáitis"
+    },
+    "guz": {
+        "code": "guz",
+        "name": "Gusii"
+    },
+    "ha": {
+        "code": "ha",
+        "name": "Hásais"
+    },
+    "hi": {
+        "code": "hi",
+        "name": "Hiondúis"
+    },
+    "yo": {
+        "code": "yo",
+        "name": "Iarúibis"
+    },
+    "id": {
+        "code": "id",
+        "name": "Indinéisis"
+    },
+    "it": {
+        "code": "it",
+        "name": "Iodáilis"
+    },
+    "nb": {
+        "code": "nb",
+        "name": "Ioruais Bokmål"
+    },
+    "is": {
+        "code": "is",
+        "name": "Íoslainnis"
+    },
+    "dyo": {
+        "code": "dyo",
+        "name": "Jola-Fonyi"
+    },
+    "kea": {
+        "code": "kea",
+        "name": "Kabuverdianu"
+    },
+    "kab": {
+        "code": "kab",
+        "name": "Kabyle"
+    },
+    "kl": {
+        "code": "kl",
+        "name": "Kalaallisut"
+    },
+    "kln": {
+        "code": "kln",
+        "name": "Kalenjin"
+    },
+    "kam": {
+        "code": "kam",
+        "name": "Kamba"
+    },
+    "khq": {
+        "code": "khq",
+        "name": "Koyra Chiini"
+    },
+    "ses": {
+        "code": "ses",
+        "name": "Koyraboro Senni"
+    },
+    "nmg": {
+        "code": "nmg",
+        "name": "Kwasio"
+    },
+    "lv": {
+        "code": "lv",
+        "name": "Laitvis"
+    },
+    "lag": {
+        "code": "lag",
+        "name": "Langi"
+    },
+    "lo": {
+        "code": "lo",
+        "name": "Laoisis"
+    },
+    "ln": {
+        "code": "ln",
+        "name": "Liongáilis"
+    },
+    "lt": {
+        "code": "lt",
+        "name": "Liotuáinis"
+    },
+    "lu": {
+        "code": "lu",
+        "name": "Lúba-Cataingis"
+    },
+    "lb": {
+        "code": "lb",
+        "name": "Lucsambuirgis"
+    },
+    "lg": {
+        "code": "lg",
+        "name": "Lugandais"
+    },
+    "luo": {
+        "code": "luo",
+        "name": "Luo"
+    },
+    "luy": {
+        "code": "luy",
+        "name": "Luyia"
+    },
+    "mk": {
+        "code": "mk",
+        "name": "Macadóinis"
+    },
+    "jmc": {
+        "code": "jmc",
+        "name": "Machame"
+    },
+    "ml": {
+        "code": "ml",
+        "name": "Mailéalaimis"
+    },
+    "mgh": {
+        "code": "mgh",
+        "name": "Makhuwa-Meetto"
+    },
+    "kde": {
+        "code": "kde",
+        "name": "Makonde"
+    },
+    "ms": {
+        "code": "ms",
+        "name": "Malaeis"
+    },
+    "mg": {
+        "code": "mg",
+        "name": "Malagáisis"
+    },
+    "mt": {
+        "code": "mt",
+        "name": "Máltais"
+    },
+    "mr": {
+        "code": "mr",
+        "name": "Maraitis"
+    },
+    "mas": {
+        "code": "mas",
+        "name": "Masai"
+    },
+    "mer": {
+        "code": "mer",
+        "name": "Meru"
+    },
+    "ro-MD": {
+        "code": "ro-MD",
+        "name": "Moldáivis"
+    },
+    "mn": {
+        "code": "mn",
+        "name": "Mongóilis"
+    },
+    "mfe": {
+        "code": "mfe",
+        "name": "Morisyen"
+    },
+    "mua": {
+        "code": "mua",
+        "name": "Mundang"
+    },
+    "naq": {
+        "code": "naq",
+        "name": "Nama"
+    },
+    "nd": {
+        "code": "nd",
+        "name": "Ndeibéilis an Tuaiscirt"
+    },
+    "ne": {
+        "code": "ne",
+        "name": "Neipeailis"
+    },
+    "jgo": {
+        "code": "jgo",
+        "name": "Ngomba"
+    },
+    "nn": {
+        "code": "nn",
+        "name": "Nua-Ioruais"
+    },
+    "nus": {
+        "code": "nus",
+        "name": "Nuer"
+    },
+    "nyn": {
+        "code": "nyn",
+        "name": "Nyankole"
+    },
+    "or": {
+        "code": "or",
+        "name": "Oirísis"
+    },
+    "nl": {
+        "code": "nl",
+        "name": "Ollainnis"
+    },
+    "ps": {
+        "code": "ps",
+        "name": "Paistis"
+    },
+    "fa": {
+        "code": "fa",
+        "name": "Peirsis"
+    },
+    "nl-BE": {
+        "code": "nl-BE",
+        "name": "Pléimeannais"
+    },
+    "pl": {
+        "code": "pl",
+        "name": "Polainnis"
+    },
+    "pt": {
+        "code": "pt",
+        "name": "Portaingéilis"
+    },
+    "pt-PT": {
+        "code": "pt-PT",
+        "name": "Portaingéilis Ibéarach"
+    },
+    "pt-BR": {
+        "code": "pt-BR",
+        "name": "Portaingéilis na Brasaíle"
+    },
+    "pa": {
+        "code": "pa",
+        "name": "Puinseáibis"
+    },
+    "rm": {
+        "code": "rm",
+        "name": "Rómainis"
+    },
+    "ro": {
+        "code": "ro",
+        "name": "Rómáinis"
+    },
+    "rof": {
+        "code": "rof",
+        "name": "Rombo"
+    },
+    "rn": {
+        "code": "rn",
+        "name": "Rúindis"
+    },
+    "ru": {
+        "code": "ru",
+        "name": "Rúisis"
+    },
+    "rwk": {
+        "code": "rwk",
+        "name": "Rwa"
+    },
+    "se": {
+        "code": "se",
+        "name": "Sáimis Thuaidh"
+    },
+    "saq": {
+        "code": "saq",
+        "name": "Samburu"
+    },
+    "sg": {
+        "code": "sg",
+        "name": "Sangóis"
+    },
+    "sbp": {
+        "code": "sbp",
+        "name": "Sangu"
+    },
+    "ja": {
+        "code": "ja",
+        "name": "Seapáinis"
+    },
+    "cs": {
+        "code": "cs",
+        "name": "Seicis"
+    },
+    "sr": {
+        "code": "sr",
+        "name": "Seirbis"
+    },
+    "chr": {
+        "code": "chr",
+        "name": "Seiricis"
+    },
+    "seh": {
+        "code": "seh",
+        "name": "Sena"
+    },
+    "dz": {
+        "code": "dz",
+        "name": "Seoinicis"
+    },
+    "sn": {
+        "code": "sn",
+        "name": "Seoinis"
+    },
+    "ka": {
+        "code": "ka",
+        "name": "Seoirsis"
+    },
+    "ksb": {
+        "code": "ksb",
+        "name": "Shambala"
+    },
+    "zh": {
+        "code": "zh",
+        "name": "Sínis"
+    },
+    "zh-Hans": {
+        "code": "zh-Hans",
+        "name": "Sínis Shimplithe"
+    },
+    "zh-Hant": {
+        "code": "zh-Hant",
+        "name": "Sínis Thraidisiúnta"
+    },
+    "si": {
+        "code": "si",
+        "name": "Siolóinis"
+    },
+    "sl": {
+        "code": "sl",
+        "name": "Slóivéinis"
+    },
+    "sk": {
+        "code": "sk",
+        "name": "Slóvaicis"
+    },
+    "xog": {
+        "code": "xog",
+        "name": "Soga"
+    },
+    "so": {
+        "code": "so",
+        "name": "Somáilis"
+    },
+    "dsb": {
+        "code": "dsb",
+        "name": "Sorbais Íochtarach"
+    },
+    "hsb": {
+        "code": "hsb",
+        "name": "Sorbais Uachtarach"
+    },
+    "es": {
+        "code": "es",
+        "name": "Spáinnis"
+    },
+    "es-ES": {
+        "code": "es-ES",
+        "name": "Spáinnis Eorpach"
+    },
+    "es-MX": {
+        "code": "es-MX",
+        "name": "Spáinnis Mheicsiceach"
+    },
+    "zgh": {
+        "code": "zgh",
+        "name": "Standard Moroccan Tamazight"
+    },
+    "sv": {
+        "code": "sv",
+        "name": "Sualainnis"
+    },
+    "zu": {
+        "code": "zu",
+        "name": "Súlúis"
+    },
+    "sw": {
+        "code": "sw",
+        "name": "Svahaílis"
+    },
+    "swc": {
+        "code": "swc",
+        "name": "Svahaílis an Chongó"
+    },
+    "shi": {
+        "code": "shi",
+        "name": "Tachelhit"
+    },
+    "dav": {
+        "code": "dav",
+        "name": "Taita"
+    },
+    "ta": {
+        "code": "ta",
+        "name": "Tamailis"
+    },
+    "twq": {
+        "code": "twq",
+        "name": "Tasawaq"
+    },
+    "th": {
+        "code": "th",
+        "name": "Téalainnis"
+    },
+    "te": {
+        "code": "te",
+        "name": "Teileagúis"
+    },
+    "teo": {
+        "code": "teo",
+        "name": "Teso"
+    },
+    "bo": {
+        "code": "bo",
+        "name": "Tibéidis"
+    },
+    "ti": {
+        "code": "ti",
+        "name": "Tigrinis"
+    },
+    "to": {
+        "code": "to",
+        "name": "Tongais"
+    },
+    "tr": {
+        "code": "tr",
+        "name": "Tuircis"
+    },
+    "uk": {
+        "code": "uk",
+        "name": "Úcráinis"
+    },
+    "ug": {
+        "code": "ug",
+        "name": "Uigiúiris"
+    },
+    "uz": {
+        "code": "uz",
+        "name": "Úisbéiceastáinis"
+    },
+    "hu": {
+        "code": "hu",
+        "name": "Ungáiris"
+    },
+    "ur": {
+        "code": "ur",
+        "name": "Urdúis"
+    },
+    "vai": {
+        "code": "vai",
+        "name": "Vai"
+    },
+    "vi": {
+        "code": "vi",
+        "name": "Vítneaimis"
+    },
+    "vun": {
+        "code": "vun",
+        "name": "Vunjo"
+    },
+    "wae": {
+        "code": "wae",
+        "name": "Walser"
+    },
+    "yav": {
+        "code": "yav",
+        "name": "Yangben"
+    },
+    "dje": {
+        "code": "dje",
+        "name": "Zarmais"
+    }
+}

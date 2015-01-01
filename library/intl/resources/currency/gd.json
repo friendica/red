@@ -1,0 +1,634 @@
+{
+    "AFN": {
+        "name": "Afghani Afghanach",
+        "symbol": "AFN"
+    },
+    "MGA": {
+        "name": "Ariary Madagasgarach",
+        "symbol": "MGA"
+    },
+    "THB": {
+        "name": "Baht Tàidheach",
+        "symbol": "฿"
+    },
+    "PAB": {
+        "name": "Balboa Panamach",
+        "symbol": "PAB"
+    },
+    "ETB": {
+        "name": "Birr Itiopach",
+        "symbol": "ETB"
+    },
+    "VEF": {
+        "name": "Bolívar Bheinisealach",
+        "symbol": "VEF"
+    },
+    "BOB": {
+        "name": "Boliviano Boilibhiach",
+        "symbol": "BOB"
+    },
+    "GHS": {
+        "name": "Cedi Gànach",
+        "symbol": "GHS"
+    },
+    "CRC": {
+        "name": "Colón Costa Rìceach",
+        "symbol": "CRC"
+    },
+    "SVC": {
+        "name": "Colón Salbhadorach",
+        "symbol": "SVC"
+    },
+    "NIO": {
+        "name": "Córdoba Niocaragach",
+        "symbol": "NIO"
+    },
+    "GMD": {
+        "name": "Dalasi Gaimbitheach",
+        "symbol": "GMD"
+    },
+    "MKD": {
+        "name": "Denar Masadonach",
+        "symbol": "MKD"
+    },
+    "DZD": {
+        "name": "Dinar Aildireach",
+        "symbol": "DZD"
+    },
+    "BHD": {
+        "name": "Dinar Bachraineach",
+        "symbol": "BHD"
+    },
+    "KWD": {
+        "name": "Dinar Cuibhèiteach",
+        "symbol": "KWD"
+    },
+    "IQD": {
+        "name": "Dinar Ioràcach",
+        "symbol": "IQD"
+    },
+    "JOD": {
+        "name": "Dinar Iòrdanach",
+        "symbol": "JOD"
+    },
+    "LYD": {
+        "name": "Dinar Libitheach",
+        "symbol": "LYD"
+    },
+    "RSD": {
+        "name": "Dinar Sèirbeach",
+        "symbol": "RSD"
+    },
+    "TND": {
+        "name": "Dinar Tuiniseach",
+        "symbol": "TND"
+    },
+    "MAD": {
+        "name": "Dirham Morocach",
+        "symbol": "MAD"
+    },
+    "AED": {
+        "name": "Dirham nan Iomaratan Arabach Aonaichte",
+        "symbol": "AED"
+    },
+    "STD": {
+        "name": "Dobra São Tomé agus Príncipe",
+        "symbol": "STD"
+    },
+    "AUD": {
+        "name": "Dolar Astràilianach",
+        "symbol": "A$"
+    },
+    "BBD": {
+        "name": "Dolar Barbadach",
+        "symbol": "BBD"
+    },
+    "BSD": {
+        "name": "Dolar Bathamach",
+        "symbol": "BSD"
+    },
+    "BMD": {
+        "name": "Dolar Bearmùdach",
+        "symbol": "BMD"
+    },
+    "BZD": {
+        "name": "Dolar Beilìseach",
+        "symbol": "BZD"
+    },
+    "BND": {
+        "name": "Dolar Brùnaigheach",
+        "symbol": "BND"
+    },
+    "KYD": {
+        "name": "Dolar Caimeanach",
+        "symbol": "KYD"
+    },
+    "CAD": {
+        "name": "Dolar Canadach",
+        "symbol": "CA$"
+    },
+    "XCD": {
+        "name": "Dolar Caraibeach earach",
+        "symbol": "EC$"
+    },
+    "JMD": {
+        "name": "Dolar Diameugach",
+        "symbol": "JMD"
+    },
+    "SBD": {
+        "name": "Dolar Eileanan Sholaimh",
+        "symbol": "SBD"
+    },
+    "FJD": {
+        "name": "Dolar Fìditheach",
+        "symbol": "FJD"
+    },
+    "GYD": {
+        "name": "Dolar Guidheànach",
+        "symbol": "GYD"
+    },
+    "HKD": {
+        "name": "Dolar Hong Kong",
+        "symbol": "HK$"
+    },
+    "LRD": {
+        "name": "Dolar Libèireach",
+        "symbol": "LRD"
+    },
+    "NAD": {
+        "name": "Dolar Naimibitheach",
+        "symbol": "NAD"
+    },
+    "USD": {
+        "name": "Dolar nan Stàitean Aonaichte",
+        "symbol": "$"
+    },
+    "NZD": {
+        "name": "Dolar Shealainn Nuaidh",
+        "symbol": "NZ$"
+    },
+    "SGD": {
+        "name": "Dolar Singeapòrach",
+        "symbol": "SGD"
+    },
+    "ZWL": {
+        "name": "Dolar Sìombabuthach (2009)",
+        "symbol": "ZWL"
+    },
+    "SRD": {
+        "name": "Dolar Suranamach",
+        "symbol": "SRD"
+    },
+    "TTD": {
+        "name": "Dolar Thrianaid agus Thobago",
+        "symbol": "TTD"
+    },
+    "TWD": {
+        "name": "Dolar ùr Taidh-Bhànach",
+        "symbol": "NT$"
+    },
+    "VND": {
+        "name": "Dong Bhiet-Namach",
+        "symbol": "₫"
+    },
+    "AMD": {
+        "name": "Dram Airmeineach",
+        "symbol": "AMD"
+    },
+    "EUR": {
+        "name": "Eòro",
+        "symbol": "€"
+    },
+    "CVE": {
+        "name": "Escudo a’ Chip Uaine",
+        "symbol": "CVE"
+    },
+    "AWG": {
+        "name": "Florin Arùbach",
+        "symbol": "AWG"
+    },
+    "HUF": {
+        "name": "Forint Ungaireach",
+        "symbol": "HUF"
+    },
+    "BIF": {
+        "name": "Franc Burundaidheach",
+        "symbol": "BIF"
+    },
+    "XOF": {
+        "name": "Franc CFA Afraga an Iar",
+        "symbol": "CFA"
+    },
+    "XAF": {
+        "name": "Franc CFA Meadhan-Afragach",
+        "symbol": "FCFA"
+    },
+    "XPF": {
+        "name": "Franc CFP",
+        "symbol": "CFPF"
+    },
+    "KMF": {
+        "name": "Franc Comorosach",
+        "symbol": "KMF"
+    },
+    "CDF": {
+        "name": "Franc Congothach",
+        "symbol": "CDF"
+    },
+    "DJF": {
+        "name": "Franc Diobùtaidheach",
+        "symbol": "DJF"
+    },
+    "CHF": {
+        "name": "Franc Eilbheiseach",
+        "symbol": "CHF"
+    },
+    "GNF": {
+        "name": "Franc Ginitheach",
+        "symbol": "GNF"
+    },
+    "RWF": {
+        "name": "Franc Rubhandach",
+        "symbol": "RWF"
+    },
+    "HTG": {
+        "name": "Gourde Haidhteach",
+        "symbol": "HTG"
+    },
+    "PYG": {
+        "name": "Guaraní Paraguaidheach",
+        "symbol": "PYG"
+    },
+    "ANG": {
+        "name": "Gulden Eileanan Aintilia nan Tìrean Ìsle",
+        "symbol": "ANG"
+    },
+    "UAH": {
+        "name": "Hryvnia Ucràineach",
+        "symbol": "UAH"
+    },
+    "PGK": {
+        "name": "Kina Ghini Nuaidh Paputhaiche",
+        "symbol": "PGK"
+    },
+    "LAK": {
+        "name": "Kip Làthosach",
+        "symbol": "LAK"
+    },
+    "CZK": {
+        "name": "Koruna Seiceach",
+        "symbol": "CZK"
+    },
+    "ISK": {
+        "name": "Króna Innis Tìleach",
+        "symbol": "ISK"
+    },
+    "SEK": {
+        "name": "Krona Suaineach",
+        "symbol": "SEK"
+    },
+    "DKK": {
+        "name": "Krone Danmhairgeach",
+        "symbol": "DKK"
+    },
+    "NOK": {
+        "name": "Krone Nirribheach",
+        "symbol": "NOK"
+    },
+    "HRK": {
+        "name": "Kuna Cròthaiseach",
+        "symbol": "HRK"
+    },
+    "MWK": {
+        "name": "Kwacha Malabhaidheach",
+        "symbol": "MWK"
+    },
+    "ZMW": {
+        "name": "Kwacha Sàimbitheach",
+        "symbol": "ZMW"
+    },
+    "AOA": {
+        "name": "Kwanza Angòlach",
+        "symbol": "AOA"
+    },
+    "MMK": {
+        "name": "Kyat Miànmarach",
+        "symbol": "MMK"
+    },
+    "GEL": {
+        "name": "Lari Cairtbheileach",
+        "symbol": "GEL"
+    },
+    "ALL": {
+        "name": "Lek Albàineach",
+        "symbol": "ALL"
+    },
+    "HNL": {
+        "name": "Lempira Hondùrach",
+        "symbol": "HNL"
+    },
+    "SLL": {
+        "name": "Leone Siarra Leòmhannach",
+        "symbol": "SLL"
+    },
+    "MDL": {
+        "name": "Leu Moldobhach",
+        "symbol": "MDL"
+    },
+    "RON": {
+        "name": "Leu Romàineach",
+        "symbol": "RON"
+    },
+    "BGN": {
+        "name": "Lev Bulgarach",
+        "symbol": "BGN"
+    },
+    "SZL": {
+        "name": "Lilangeni Suasaidheach",
+        "symbol": "SZL"
+    },
+    "TRY": {
+        "name": "Lira Turcach",
+        "symbol": "TRY"
+    },
+    "LTL": {
+        "name": "Litas Liotuaineach",
+        "symbol": "LTL"
+    },
+    "LSL": {
+        "name": "Loti Leasotach",
+        "symbol": "LSL"
+    },
+    "AZN": {
+        "name": "Manat Asarbaideànach",
+        "symbol": "AZN"
+    },
+    "TMT": {
+        "name": "Manat Turcmanach",
+        "symbol": "TMT"
+    },
+    "BAM": {
+        "name": "Mark iompachail Bhosna agus Hearsagobhana",
+        "symbol": "BAM"
+    },
+    "MZN": {
+        "name": "Metical Mòsaimbiceach",
+        "symbol": "MZN"
+    },
+    "NGN": {
+        "name": "Naira Nigèiriach",
+        "symbol": "NGN"
+    },
+    "ERN": {
+        "name": "Nakfa Eartrach",
+        "symbol": "ERN"
+    },
+    "BTN": {
+        "name": "Ngultrum Butànach",
+        "symbol": "BTN"
+    },
+    "MRO": {
+        "name": "Ouguiya Moratàineach",
+        "symbol": "MRO"
+    },
+    "TOP": {
+        "name": "Paʻanga Tongach",
+        "symbol": "TOP"
+    },
+    "MOP": {
+        "name": "Pataca Macàthuach",
+        "symbol": "MOP"
+    },
+    "ARS": {
+        "name": "Peso Argantaineach",
+        "symbol": "ARS"
+    },
+    "COP": {
+        "name": "Peso Coloimbeach",
+        "symbol": "COP"
+    },
+    "CUP": {
+        "name": "Peso Cùbach",
+        "symbol": "CUP"
+    },
+    "DOP": {
+        "name": "Peso Doiminiceach",
+        "symbol": "DOP"
+    },
+    "PHP": {
+        "name": "Peso Filipineach",
+        "symbol": "PHP"
+    },
+    "CUC": {
+        "name": "Peso iompachail Cùbach",
+        "symbol": "CUC"
+    },
+    "MXN": {
+        "name": "Peso Meagsagach",
+        "symbol": "MX$"
+    },
+    "CLP": {
+        "name": "Peso Sileach",
+        "symbol": "CLP"
+    },
+    "UYU": {
+        "name": "Peso Uruguaidheach",
+        "symbol": "UYU"
+    },
+    "BWP": {
+        "name": "Pula Botsuanach",
+        "symbol": "BWP"
+    },
+    "GIP": {
+        "name": "Punnd Diobraltarach",
+        "symbol": "GIP"
+    },
+    "SHP": {
+        "name": "Punnd Eilean Naomh Eilidh",
+        "symbol": "SHP"
+    },
+    "EGP": {
+        "name": "Punnd Èipheiteach",
+        "symbol": "EGP"
+    },
+    "FKP": {
+        "name": "Punnd Fàclannach",
+        "symbol": "FKP"
+    },
+    "LBP": {
+        "name": "Punnd Leabanach",
+        "symbol": "LBP"
+    },
+    "GBP": {
+        "name": "Punnd Sasannach",
+        "symbol": "£"
+    },
+    "SYP": {
+        "name": "Punnd Siridheach",
+        "symbol": "SYP"
+    },
+    "SSP": {
+        "name": "Punnd Sudàin a Deas",
+        "symbol": "SSP"
+    },
+    "SDG": {
+        "name": "Punnd Sudànach",
+        "symbol": "SDG"
+    },
+    "GTQ": {
+        "name": "Quetzal Guatamalach",
+        "symbol": "GTQ"
+    },
+    "ZAR": {
+        "name": "Rand Afraga a Deas",
+        "symbol": "ZAR"
+    },
+    "BRL": {
+        "name": "Real Braisileach",
+        "symbol": "R$"
+    },
+    "QAR": {
+        "name": "Rial Catarach",
+        "symbol": "QAR"
+    },
+    "YER": {
+        "name": "Rial Eamanach",
+        "symbol": "YER"
+    },
+    "IRR": {
+        "name": "Rial Iorànach",
+        "symbol": "IRR"
+    },
+    "OMR": {
+        "name": "Rial Omànach",
+        "symbol": "OMR"
+    },
+    "KHR": {
+        "name": "Riel Cambuideach",
+        "symbol": "KHR"
+    },
+    "MYR": {
+        "name": "Ringgit Malaidheach",
+        "symbol": "MYR"
+    },
+    "SAR": {
+        "name": "Riyal Sabhdach",
+        "symbol": "SAR"
+    },
+    "BYR": {
+        "name": "Rùbal Bealaruiseach",
+        "symbol": "BYR"
+    },
+    "RUB": {
+        "name": "Rùbal Ruiseach",
+        "symbol": "RUB"
+    },
+    "MVR": {
+        "name": "Rufiyaa Maladaibheach",
+        "symbol": "MVR"
+    },
+    "INR": {
+        "name": "Rupee Innseanach",
+        "symbol": "₹"
+    },
+    "MUR": {
+        "name": "Rupee Moiriseasach",
+        "symbol": "MUR"
+    },
+    "NPR": {
+        "name": "Rupee Neapàlach",
+        "symbol": "NPR"
+    },
+    "PKR": {
+        "name": "Rupee Pagastànach",
+        "symbol": "PKR"
+    },
+    "SCR": {
+        "name": "Rupee Seiseallach",
+        "symbol": "SCR"
+    },
+    "LKR": {
+        "name": "Rupee Sri Lancach",
+        "symbol": "LKR"
+    },
+    "IDR": {
+        "name": "Rupiah Innd-Innseach",
+        "symbol": "IDR"
+    },
+    "ILS": {
+        "name": "Sheqel ùr Iosraeleach",
+        "symbol": "₪"
+    },
+    "KES": {
+        "name": "Shilling Ceineach",
+        "symbol": "KES"
+    },
+    "SOS": {
+        "name": "Shilling Somàilitheach",
+        "symbol": "SOS"
+    },
+    "TZS": {
+        "name": "Shilling Tansanaidheach",
+        "symbol": "TZS"
+    },
+    "UGX": {
+        "name": "Shilling Ugandach",
+        "symbol": "UGX"
+    },
+    "PEN": {
+        "name": "Sol ùr Pearùthach",
+        "symbol": "PEN"
+    },
+    "KGS": {
+        "name": "Som Cìorgasach",
+        "symbol": "KGS"
+    },
+    "UZS": {
+        "name": "Som Usbagach",
+        "symbol": "UZS"
+    },
+    "TJS": {
+        "name": "Somoni Taidigeach",
+        "symbol": "TJS"
+    },
+    "BDT": {
+        "name": "Taka Bangladaiseach",
+        "symbol": "BDT"
+    },
+    "WST": {
+        "name": "Tala Samothach",
+        "symbol": "WST"
+    },
+    "KZT": {
+        "name": "Tenge Casachach",
+        "symbol": "KZT"
+    },
+    "MNT": {
+        "name": "Tugrik Mongolach",
+        "symbol": "MNT"
+    },
+    "VUV": {
+        "name": "Vatu Vanuatuthach",
+        "symbol": "VUV"
+    },
+    "KRW": {
+        "name": "Won Choirèa a Deas",
+        "symbol": "₩"
+    },
+    "KPW": {
+        "name": "Won Choirèa a Tuath",
+        "symbol": "KPW"
+    },
+    "JPY": {
+        "name": "Yen Seapanach",
+        "symbol": "JP¥"
+    },
+    "CNY": {
+        "name": "Yuan Sìneach",
+        "symbol": "CN¥"
+    },
+    "PLN": {
+        "name": "Złoty Pòlainneach",
+        "symbol": "PLN"
+    }
+}

@@ -1,0 +1,634 @@
+{
+    "LSL": {
+        "name": "LSL",
+        "symbol": "LSL"
+    },
+    "SVC": {
+        "name": "SVC",
+        "symbol": "SVC"
+    },
+    "ZWL": {
+        "name": "ZWL",
+        "symbol": "ZWL"
+    },
+    "CZK": {
+        "name": "កូរុណា​សាធារណៈ​ឆេក",
+        "symbol": "CZK"
+    },
+    "CRC": {
+        "name": "កូឡុង​កូស្តារីកា",
+        "symbol": "CRC"
+    },
+    "SEK": {
+        "name": "ក្រូណា​ស៊ុយអែត",
+        "symbol": "SEK"
+    },
+    "ISK": {
+        "name": "ក្រូណា​អ៊ីស្លង់",
+        "symbol": "ISK"
+    },
+    "DKK": {
+        "name": "ក្រូណេ​ដាណាម៉ាក់",
+        "symbol": "DKK"
+    },
+    "NOK": {
+        "name": "ក្រូណេ​ន័រវ៉េ",
+        "symbol": "NOK"
+    },
+    "MWK": {
+        "name": "ក្វាចា​ម៉ាឡាវី",
+        "symbol": "MWK"
+    },
+    "ZMW": {
+        "name": "ក្វាចា​សំប៊ី",
+        "symbol": "ZMW"
+    },
+    "AOA": {
+        "name": "ក្វាន់ហ្សា​អង់ហ្គោឡា",
+        "symbol": "AOA"
+    },
+    "NIO": {
+        "name": "ខឌូបា​នីការ៉ាហ្គា",
+        "symbol": "NIO"
+    },
+    "PGK": {
+        "name": "គីណា​ប៉ាពូនូហ្គីណេ",
+        "symbol": "PGK"
+    },
+    "LAK": {
+        "name": "គីប​ឡាវ",
+        "symbol": "LAK"
+    },
+    "MMK": {
+        "name": "គីយ៉ាត​ភូមា",
+        "symbol": "MMK"
+    },
+    "HRK": {
+        "name": "គូណា​ក្រូអាត",
+        "symbol": "HRK"
+    },
+    "HTG": {
+        "name": "គោឌី​ហៃទី",
+        "symbol": "HTG"
+    },
+    "BTN": {
+        "name": "ញូលត្រឹម​ប៊ូតង់",
+        "symbol": "BTN"
+    },
+    "PEN": {
+        "name": "ញូវ៉ូសូល​ប៉េរូ",
+        "symbol": "PEN"
+    },
+    "GMD": {
+        "name": "ដាឡាស៊ី​ហ្គំប៊ី",
+        "symbol": "GMD"
+    },
+    "VND": {
+        "name": "ដុង​វៀតណាម",
+        "symbol": "₫"
+    },
+    "CAD": {
+        "name": "ដុល្លារ​កាណាដា",
+        "symbol": "CA$"
+    },
+    "XCD": {
+        "name": "ដុល្លារ​ការ៉ាប៊ីន​ខាង​កើត",
+        "symbol": "EC$"
+    },
+    "KYD": {
+        "name": "ដុល្លារ​កោះ​កៃម៉ែន",
+        "symbol": "KYD"
+    },
+    "SBD": {
+        "name": "ដុល្លារ​កោះ​សូឡូម៉ុង",
+        "symbol": "SBD"
+    },
+    "NAD": {
+        "name": "ដុល្លារ​ណាមីប៊ី",
+        "symbol": "NAD"
+    },
+    "TWD": {
+        "name": "ដុល្លារ​តៃវ៉ាន់",
+        "symbol": "NT$"
+    },
+    "TTD": {
+        "name": "ដុល្លារ​ទ្រីនីដាដ និងតូបាហ្គោ",
+        "symbol": "TTD"
+    },
+    "NZD": {
+        "name": "ដុល្លារ​នូវែលសេឡង់",
+        "symbol": "NZ$"
+    },
+    "BBD": {
+        "name": "ដុល្លារ​បាបាដុស",
+        "symbol": "BBD"
+    },
+    "BSD": {
+        "name": "ដុល្លារ​បាហាម៉ា",
+        "symbol": "BSD"
+    },
+    "BMD": {
+        "name": "ដុល្លារ​ប៊ឺមុយដា",
+        "symbol": "BMD"
+    },
+    "BZD": {
+        "name": "ដុល្លារ​បេលី",
+        "symbol": "BZD"
+    },
+    "BND": {
+        "name": "ដុល្លារ​ប្រុយណេ",
+        "symbol": "BND"
+    },
+    "LRD": {
+        "name": "ដុល្លារ​លីប៊ី",
+        "symbol": "LRD"
+    },
+    "SGD": {
+        "name": "ដុល្លារ​​សិង្ហបូរី",
+        "symbol": "SGD"
+    },
+    "SRD": {
+        "name": "ដុល្លារ​សូរីណាម",
+        "symbol": "SRD"
+    },
+    "HKD": {
+        "name": "ដុល្លារ​ហុងកុង",
+        "symbol": "HK$"
+    },
+    "GYD": {
+        "name": "ដុល្លារ​ហ្គីយ៉ាន",
+        "symbol": "GYD"
+    },
+    "FJD": {
+        "name": "ដុល្លារ​ហ្វីជី",
+        "symbol": "FJD"
+    },
+    "JMD": {
+        "name": "ដុល្លារ​ហ្សាម៉ាអ៊ីក",
+        "symbol": "JMD"
+    },
+    "USD": {
+        "name": "ដុល្លារ​អាមេរិក",
+        "symbol": "$"
+    },
+    "AUD": {
+        "name": "ដុល្លារ​អូស្ត្រាលី",
+        "symbol": "A$"
+    },
+    "AMD": {
+        "name": "ដ្រាំ​អាមេនី",
+        "symbol": "AMD"
+    },
+    "KWD": {
+        "name": "ឌីណា​គុយវ៉ែត",
+        "symbol": "KWD"
+    },
+    "TND": {
+        "name": "ឌីណា​ទុយនីស៊ី",
+        "symbol": "TND"
+    },
+    "BHD": {
+        "name": "ឌីណា​បារ៉ែន",
+        "symbol": "BHD"
+    },
+    "MKD": {
+        "name": "ឌីណា​ម៉ាសេដ្វាន",
+        "symbol": "MKD"
+    },
+    "LYD": {
+        "name": "ឌីណា​លីប៊ី",
+        "symbol": "LYD"
+    },
+    "RSD": {
+        "name": "ឌីណា​សើប",
+        "symbol": "RSD"
+    },
+    "JOD": {
+        "name": "ឌីណា​ហ្ស៊កដានី",
+        "symbol": "JOD"
+    },
+    "DZD": {
+        "name": "ឌីណា​អាល់ស៊េរី",
+        "symbol": "DZD"
+    },
+    "IQD": {
+        "name": "ឌីណា​អ៊ីរ៉ាក់",
+        "symbol": "IQD"
+    },
+    "STD": {
+        "name": "ឌូប្រា​សៅតូម៉េ និងប្រាំងស៊ីប",
+        "symbol": "STD"
+    },
+    "MAD": {
+        "name": "ឌៀរហាំ​ម៉ារ៉ុក",
+        "symbol": "MAD"
+    },
+    "AED": {
+        "name": "ឌៀរហាំ​អេមីរ៉ាតអារ៉ាប់រួម",
+        "symbol": "AED"
+    },
+    "ERN": {
+        "name": "ណាក់ហ្វា​អេរីត្រេ",
+        "symbol": "ERN"
+    },
+    "NGN": {
+        "name": "ណៃរ៉ា​នីហ្សេរីយ៉ា",
+        "symbol": "NGN"
+    },
+    "KZT": {
+        "name": "តង់ហ្គី​កាហ្សាក់ស្ថាន",
+        "symbol": "KZT"
+    },
+    "BDT": {
+        "name": "តាកា​បង់ក្លាដែស",
+        "symbol": "BDT"
+    },
+    "WST": {
+        "name": "តាឡា​សាម័រ",
+        "symbol": "WST"
+    },
+    "MNT": {
+        "name": "ទូរីក​ម៉ុងហ្គោលី",
+        "symbol": "MNT"
+    },
+    "ETB": {
+        "name": "ប៊័រ​អេត្យូពី",
+        "symbol": "ETB"
+    },
+    "THB": {
+        "name": "បាត​ថៃ",
+        "symbol": "฿"
+    },
+    "MOP": {
+        "name": "ប៉ាតាកា​ម៉ាកាវ",
+        "symbol": "MOP"
+    },
+    "PAB": {
+        "name": "បាល់ប៉ៅ​ប៉ាណាម៉ា",
+        "symbol": "PAB"
+    },
+    "TOP": {
+        "name": "ប៉ាអង់កា​តុងហ្គា",
+        "symbol": "TOP"
+    },
+    "MXN": {
+        "name": "ប៉ីហ្សូ​ម៉ិកស៉ិក",
+        "symbol": "MX$"
+    },
+    "COP": {
+        "name": "ប៉ឺហ្សូ​កូឡុំប៊ី",
+        "symbol": "COP"
+    },
+    "CUP": {
+        "name": "ប៉ឺហ្សូ​គុយបា",
+        "symbol": "CUP"
+    },
+    "DOP": {
+        "name": "ប៉ឺហ្សូ​ដូមីនីក",
+        "symbol": "DOP"
+    },
+    "CLP": {
+        "name": "ប៉ឺហ្សូ​ស៊ីលី",
+        "symbol": "CLP"
+    },
+    "PHP": {
+        "name": "ប៉ឺហ្សូ​ហ្វីលីពីន",
+        "symbol": "PHP"
+    },
+    "CUC": {
+        "name": "ប៉ឺហ្សូ​អាច​បម្លែង​បាន​គុយបា",
+        "symbol": "CUC"
+    },
+    "ARS": {
+        "name": "ប៉ឺហ្សូ​អាហ្សង់ទីន",
+        "symbol": "ARS"
+    },
+    "UYU": {
+        "name": "ប៉ឺហ្សូអ៊ុយរូហ្គាយ",
+        "symbol": "UYU"
+    },
+    "VEF": {
+        "name": "ប៊ូលីវ៉ា​វ៉េណេស៊ុយអេឡា",
+        "symbol": "VEF"
+    },
+    "BOB": {
+        "name": "បូលីវីណូ​បូលីវី",
+        "symbol": "BOB"
+    },
+    "FKP": {
+        "name": "ផោន​កោះ​ហ្វក់ឡែន",
+        "symbol": "FKP"
+    },
+    "LBP": {
+        "name": "ផោន​លីបង់",
+        "symbol": "LBP"
+    },
+    "SYP": {
+        "name": "ផោន​ស៊ីរី",
+        "symbol": "SYP"
+    },
+    "SDG": {
+        "name": "ផោន​ស៊ូដង់",
+        "symbol": "SDG"
+    },
+    "SSP": {
+        "name": "ផោន​ស៊ូដង់​ខាង​ត្បូង",
+        "symbol": "SSP"
+    },
+    "SHP": {
+        "name": "ផោន​សាំងហេឡេណា",
+        "symbol": "SHP"
+    },
+    "GBP": {
+        "name": "ផោនស្ទែរលិញ​ចក្រភព​អង់គ្លេស",
+        "symbol": "£"
+    },
+    "GIP": {
+        "name": "ផោន​ហ្ស៊ីប្រាល់តា",
+        "symbol": "GIP"
+    },
+    "EGP": {
+        "name": "ផោន​​អេហ្សីប",
+        "symbol": "EGP"
+    },
+    "BWP": {
+        "name": "ពូឡា​បុតស្វាណា",
+        "symbol": "BWP"
+    },
+    "BAM": {
+        "name": "ម៉ាក​អាច​បម្លែង​បាន​បូស្នី",
+        "symbol": "BAM"
+    },
+    "TMT": {
+        "name": "ម៉ាណាត​តួកម៉េនីស្ថាន",
+        "symbol": "TMT"
+    },
+    "AZN": {
+        "name": "ម៉ាណាត​អាស៊ែបៃហ្សង់",
+        "symbol": "AZN"
+    },
+    "MZN": {
+        "name": "មីទីខល​ម៉ូសំប៊ិក",
+        "symbol": "MZN"
+    },
+    "CNY": {
+        "name": "យ៉ន់​ចិន",
+        "symbol": "CN¥"
+    },
+    "JPY": {
+        "name": "យេន​ជប៉ុន",
+        "symbol": "JP¥"
+    },
+    "ZAR": {
+        "name": "រ៉ង់​អាព្រិក​ខាង​ត្បូង",
+        "symbol": "ZAR"
+    },
+    "MYR": {
+        "name": "រីងហ្គីត​ម៉ាឡេស៊ី",
+        "symbol": "MYR"
+    },
+    "SAR": {
+        "name": "រីយ៉ាល​អារ៉ាប៊ីសាអូឌីត",
+        "symbol": "SAR"
+    },
+    "BYR": {
+        "name": "រ៉ូបល​បេឡារុស",
+        "symbol": "BYR"
+    },
+    "RUB": {
+        "name": "រ៉ូបល​រុស្ស៊ី",
+        "symbol": "RUB"
+    },
+    "NPR": {
+        "name": "រ៉ូពី​នេប៉ាល់",
+        "symbol": "NPR"
+    },
+    "PKR": {
+        "name": "រ៉ូពី​ប៉ាគីស្ថាន",
+        "symbol": "PKR"
+    },
+    "MUR": {
+        "name": "រ៉ូពី​ម៉ូរីតានី",
+        "symbol": "MUR"
+    },
+    "SCR": {
+        "name": "រ៉ូពី​សីស្ហែល",
+        "symbol": "SCR"
+    },
+    "LKR": {
+        "name": "រ៉ូពី​ស្រីលង្ការ",
+        "symbol": "LKR"
+    },
+    "INR": {
+        "name": "រ៉ូពី​ឥណ្ឌា",
+        "symbol": "₹"
+    },
+    "IDR": {
+        "name": "រ៉ូពីឥណ្ឌូណេស៊ី",
+        "symbol": "IDR"
+    },
+    "MVR": {
+        "name": "រ៉ូហ្វីយ៉ា​ម៉ាល់ឌីវ",
+        "symbol": "MVR"
+    },
+    "KHR": {
+        "name": "រៀល​កម្ពុជា",
+        "symbol": "៛"
+    },
+    "QAR": {
+        "name": "រៀល​កាតា",
+        "symbol": "QAR"
+    },
+    "BRL": {
+        "name": "រៀល​ប្រេស៊ីល",
+        "symbol": "R$"
+    },
+    "YER": {
+        "name": "រៀល​យេម៉ែន",
+        "symbol": "YER"
+    },
+    "OMR": {
+        "name": "រៀល​រូម៉ានី",
+        "symbol": "OMR"
+    },
+    "IRR": {
+        "name": "រៀល​អ៊ីរ៉ង់",
+        "symbol": "IRR"
+    },
+    "ALL": {
+        "name": "លិក​អាល់បានី",
+        "symbol": "ALL"
+    },
+    "HNL": {
+        "name": "លិមពីរ៉ា​ហុងឌូរ៉ាស",
+        "symbol": "HNL"
+    },
+    "LTL": {
+        "name": "លីតា​លីទុយអានី",
+        "symbol": "LTL"
+    },
+    "TRY": {
+        "name": "លីរ៉ា​ទួគី",
+        "symbol": "TRY"
+    },
+    "BGN": {
+        "name": "លីវ​ប៊ុលហ្គារី",
+        "symbol": "BGN"
+    },
+    "SZL": {
+        "name": "លីឡាងហ្គីនី​ស្វាស៊ីឡង់",
+        "symbol": "SZL"
+    },
+    "SLL": {
+        "name": "លីអ៊ុន​សៀរ៉ាឡេអូន",
+        "symbol": "SLL"
+    },
+    "MDL": {
+        "name": "លូ​ម៉ុលដាវី",
+        "symbol": "MDL"
+    },
+    "RON": {
+        "name": "លូ​រូម៉ានី",
+        "symbol": "RON"
+    },
+    "VUV": {
+        "name": "វ៉ាទូ​វ៉ានូទូ",
+        "symbol": "VUV"
+    },
+    "KPW": {
+        "name": "វូន​កូរ៉េ​ខាង​ជើង",
+        "symbol": "KPW"
+    },
+    "KRW": {
+        "name": "វូន​កូរ៉េ​ខាង​ត្បូង",
+        "symbol": "₩"
+    },
+    "GHS": {
+        "name": "ស៊ីឌី​ហ្គាណា",
+        "symbol": "GHS"
+    },
+    "KES": {
+        "name": "ស៊ីលិញ​កេនយ៉ា",
+        "symbol": "KES"
+    },
+    "TZS": {
+        "name": "ស៊ីលិញ​តង់សានី",
+        "symbol": "TZS"
+    },
+    "SOS": {
+        "name": "ស៊ីលិញ​សូម៉ាលី",
+        "symbol": "SOS"
+    },
+    "UGX": {
+        "name": "ស៊ីលិញ​អ៊ូហ្គង់ដា",
+        "symbol": "UGX"
+    },
+    "KGS": {
+        "name": "សុម​កៀហ្ស៊ីស៊ីស្ថាន",
+        "symbol": "KGS"
+    },
+    "UZS": {
+        "name": "សុម​អ៊ូសបេគីស្ថាន",
+        "symbol": "UZS"
+    },
+    "TJS": {
+        "name": "សូមុនី​តាហ្ស៊ីគីស្ថាន",
+        "symbol": "TJS"
+    },
+    "ILS": {
+        "name": "ស្ស៊ីហ្គែល​អ៊ីស្រាអែល",
+        "symbol": "₪"
+    },
+    "UAH": {
+        "name": "ហ៊ូនីយ៉ា​អ៊ុយក្រែន",
+        "symbol": "UAH"
+    },
+    "ANG": {
+        "name": "ហ្គីឌិន​ហុល្លង់​អង់ទីលៀន",
+        "symbol": "ANG"
+    },
+    "GTQ": {
+        "name": "ហ្គីស្សាល​ក្វាតេម៉ាឡា",
+        "symbol": "GTQ"
+    },
+    "PYG": {
+        "name": "ហ្គូរីនី​ប៉ារ៉ាហ្គាយ",
+        "symbol": "PYG"
+    },
+    "HUF": {
+        "name": "ហ្វូរីន​ហុងគ្រី",
+        "symbol": "HUF"
+    },
+    "XOF": {
+        "name": "ហ្វ្រង់ BCEAO CFA",
+        "symbol": "CFA"
+    },
+    "XAF": {
+        "name": "ហ្វ្រង់ BEAC CFA",
+        "symbol": "FCFA"
+    },
+    "XPF": {
+        "name": "ហ្វ្រង់ CFP",
+        "symbol": "CFPF"
+    },
+    "CHF": {
+        "name": "ហ្វ្រង់ ស្វីស",
+        "symbol": "CHF"
+    },
+    "CDF": {
+        "name": "ហ្វ្រង់​កុងហ្គោ",
+        "symbol": "CDF"
+    },
+    "KMF": {
+        "name": "ហ្វ្រង់​កូម័រ",
+        "symbol": "KMF"
+    },
+    "DJF": {
+        "name": "ហ្វ្រង់​ជីប៊ូទី",
+        "symbol": "DJF"
+    },
+    "BIF": {
+        "name": "ហ្វ្រង់​ប៊ូរុនឌី",
+        "symbol": "BIF"
+    },
+    "RWF": {
+        "name": "ហ្វ្រង់​រវ៉ាន់ដា",
+        "symbol": "RWF"
+    },
+    "GNF": {
+        "name": "ហ្វ្រង់​ហ្គីណេ",
+        "symbol": "GNF"
+    },
+    "AWG": {
+        "name": "ហ្វ្រ័ររិញ​អារ៉ូបា",
+        "symbol": "AWG"
+    },
+    "PLN": {
+        "name": "ហ្សូទី​ប៉ូឡូញ",
+        "symbol": "PLN"
+    },
+    "GEL": {
+        "name": "ឡារី​​ហ្សកហ្ស៊ី",
+        "symbol": "GEL"
+    },
+    "MGA": {
+        "name": "អារៀរី​ម៉ាឡាហ្គាស៊ី",
+        "symbol": "MGA"
+    },
+    "AFN": {
+        "name": "អាហ្វហ្គានី​អាហ្វហ្គានីស្ថាន",
+        "symbol": "AFN"
+    },
+    "CVE": {
+        "name": "អ៊ីស្កូឌូ​កាប់វែរ",
+        "symbol": "CVE"
+    },
+    "EUR": {
+        "name": "អឺរ៉ូ",
+        "symbol": "€"
+    },
+    "MRO": {
+        "name": "អ៊ូហ្គីយ៉ា​ម៉ូរីតានី",
+        "symbol": "MRO"
+    }
+}
