@@ -14,25 +14,17 @@ function timezone_cmp($a, $b) {
 	return ( t($a) < t($b)) ? -1 : 1;
 }
 
-// emit a timezone selector grouped (primarily) by continent
-
-function select_timezone($current = 'America/Los_Angeles') {
-
+// Return timezones grouped (primarily) by continent
+function get_timezones( ){
 	$timezone_identifiers = DateTimeZone::listIdentifiers();
-	
-	$o ='<select id="timezone_select" name="timezone">';
 
 	usort($timezone_identifiers, 'timezone_cmp');
 	$continent = '';
+	$continents = array();
 	foreach($timezone_identifiers as $value) {
 		$ex = explode("/", $value);
 		if(count($ex) > 1) {
-			if($ex[0] != $continent) {
-				if($continent != '')
-					$o .= '</optgroup>';
-				$continent = $ex[0];
-				$o .= '<optgroup label="' . t($continent) . '">';
-			}
+			$continent = t($ex[0]);
 			if(count($ex) > 2)
 				$city = substr($value,strpos($value,'/')+1);
 			else
@@ -40,35 +32,14 @@ function select_timezone($current = 'America/Los_Angeles') {
 		}
 		else {
 			$city = $ex[0];
-			if($continent != t('Miscellaneous')) {
-				$o .= '</optgroup>';
-				$continent = t('Miscellaneous');
-				$o .= '<optgroup label="' . t($continent) . '">';	
-			}
+			$continent = t('Miscellaneous');
 		}
 		$city = str_replace('_', ' ',  t($city));
-		$selected = (($value == $current) ? " selected=\"selected\" " : "");
-		$o .= "<option value=\"$value\" $selected >$city</option>";
-	}    
-	$o .= '</optgroup></select>';
-	return $o;
-}
 
-// return a select using 'field_select_raw' template, with timezones 
-// groupped (primarily) by continent
-// arguments follow convetion as other field_* template array:
-// 'name', 'label', $value, 'help'
-
-function field_timezone($name='timezone', $label='', $current = 'America/Los_Angeles', $help){
-	$options = select_timezone($current);
-	$options = str_replace('<select id="timezone_select" name="timezone">','', $options);
-	$options = str_replace('</select>','', $options);
-	
-	$tpl = get_markup_template('field_select_raw.tpl');
-	return replace_macros($tpl, array(
-		'$field' => array($name, $label, $current, $help, $options),
-	));
-	
+		if(!x($continents,$ex[0])) $continents[$ex[0]] = array();
+		$continents[$continent][$value] = $city;
+	}
+	return $continents;
 }
 
 // General purpose date parse/convert function.
