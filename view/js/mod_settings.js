@@ -2,6 +2,7 @@
 var ispublic = aStr['everybody'] ;
 
 $(document).ready(function() {
+	$('form').areYouSure(); // Warn user about unsaved settings
 
 	$("a#settings-default-perms-menu").colorbox({ 
 		'inline' : true, 
