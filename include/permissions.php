@@ -800,38 +800,18 @@ function get_role_perms($role) {
 }
 
 /**
- * @brief Creates a HTML select field with all available roles.
+ * @brief Returns a list or roles, grouped by type
  *
  * @param string $current The current role
- * @return string Returns the complete HTML code for this privacy-role-select field.
+ * @return string Returns an array of roles, grouped by type
  */
-function role_selector($current) {
-
-	if(! $current)
-		$current = 'custom';
-
+function get_roles() {
 	$roles = array(
-		'social' => array( t('Social Networking'), 
-			array('social' => t('Mostly Public'), 'social_restricted' => t('Restricted'), 'social_private' => t('Private'))),
-		'forum' => array( t('Community Forum'), 
-			array('forum' => t('Mostly Public'), 'forum_restricted' => t('Restricted'), 'forum_private' => t('Private'))),
-		'feed' => array( t('Feed Republish'), 
-			array('feed' => t('Mostly Public'), 'feed_restricted' => t('Restricted'))),
-		'special' => array( t('Special Purpose'),
-			array('soapbox' => t('Celebrity/Soapbox'), 'repository' => t('Group Repository'))),
-		'other' => array( t('Other'),
-			array('custom' => t('Custom/Expert Mode'))));
+		t('Social Networking') => array('social' => t('Mostly Public'), 'social_restricted' => t('Restricted'), 'social_private' => t('Private')),
+		t('Community Forum') => array('forum' => t('Mostly Public'), 'forum_restricted' => t('Restricted'), 'forum_private' => t('Private')),
+		t('Feed Republish') => array('feed' => t('Mostly Public'), 'feed_restricted' => t('Restricted')),
+		t('Special Purpose') => array('soapbox' => t('Celebrity/Soapbox'), 'repository' => t('Group Repository')),
+		t('Other') => array('custom' => t('Custom/Expert Mode')));
 
-	$o = '<select name="permissions_role" id="privacy-role-select">';
-	foreach($roles as $k => $v) {
-		$o .= '<optgroup label="'. htmlspecialchars($v[0]) . '">';
-		foreach($v[1] as $kk => $vv) {
-			$selected = (($kk === $current) ? ' selected="selected"' : '');
-			$o .= '<option value="' . $kk . '"' . $selected . '>' . htmlspecialchars($vv) . '</option>';
-		}
-		$o .= '</optgroup>';
-	}
-	$o .= '</select>';
-
-	return $o;
+	return $roles;
 }

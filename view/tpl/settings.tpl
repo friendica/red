@@ -22,10 +22,7 @@
 
 <h3 class="settings-heading">{{$h_prv}}</h3>
 
-<div class="field custom">
-<label for="privacy-role-select">{{$role_lbl}}</label>
-{{$role_select}}
-</div>
+{{include file="field_select_grouped.tpl" field=$role}}
 
 <div id="advanced-perm" style="display:{{if $permissions_set}}none{{else}}block{{/if}};">
 {{include file="field_checkbox.tpl" field=$hide_presence}}

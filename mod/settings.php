@@ -1042,9 +1042,7 @@ function settings_content(&$a) {
 			'$aclselect' => populate_acl($perm_defaults,false),
 			'$suggestme' => $suggestme,
 			'$group_select' => $group_select,
-			'$role_lbl' => t('Channel permissions category:'),
-
-			'$role_select' => role_selector($permissions_role),
+			'$role' => array('permissions_role' , t('Channel permissions category:'), $permissions_role, '', get_roles()),
 
 			'$profile_in_dir' => $profile_in_dir,
 			'$hide_friends' => $hide_friends,
