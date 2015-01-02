@@ -11,7 +11,7 @@ function profiles_init(&$a) {
 
 	if((argc() > 2) && (argv(1) === "drop") && intval(argv(2))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is_default` = 0 LIMIT 1",
-			intval($a->argv[2]),
+			intval(argv(2)),
 			intval(local_user())
 		);
 		if(! count($r)) {
@@ -159,9 +159,13 @@ function profiles_init(&$a) {
 	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_user(),'multi_profiles')) {
 		if(feature_enabled(local_user(),'multi_profiles'))
 			$id = $a->argv[1];
-		else
-			$id = q("select id from profile where uid = %d and is_default = 1",local_user())[0]['id'];
-
+		else {
+			$x = q("select id from profile where uid = %d and is_default = 1",
+				intval(local_user())
+			);
+			if($x)
+				$id = $x[0]['id'];
+		}
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($id),
 			intval(local_user())
@@ -564,9 +568,13 @@ function profiles_content(&$a) {
 	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_user(),'multi_profiles')) {
 		if(feature_enabled(local_user(),'multi_profiles'))
 			$id = $a->argv[1];
-		else
-			$id = q("select id from profile where uid = %d and is_default = 1",local_user())[0]['id'];
-		
+		else {
+			$x = q("select id from profile where uid = %d and is_default = 1",
+				intval(local_user())
+			);
+			if($x)
+				$id = $x[0]['id'];
+		}		
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($id),
 			intval(local_user())
