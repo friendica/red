@@ -1018,12 +1018,10 @@ function settings_content(&$a) {
 			'$uid' => local_user(),
 			'$form_security_token' => get_form_security_token("settings"),
 			'$nickname_block' => $prof_addr,
-		
-		
 			'$h_basic' 	=> t('Basic Settings'),
 			'$username' => array('username',  t('Full Name:'), $username,''),
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
-			'$timezone' => array('timezone_select' , t('Your Timezone:'), select_timezone($timezone), ''),
+			'$timezone' => array('timezone_select' , t('Your Timezone:'), $timezone, '', get_timezones()),
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, t('Geographical location to display on your posts')),
 			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_user(),'system','use_browser_location')) ? 1 : ''), ''),
 		
@@ -1052,9 +1050,7 @@ function settings_content(&$a) {
 			'$aclselect' => populate_acl($perm_defaults,false),
 			'$suggestme' => $suggestme,
 			'$group_select' => $group_select,
-			'$role_lbl' => t('Channel permissions category:'),
-
-			'$role_select' => role_selector($permissions_role),
+			'$role' => array('permissions_role' , t('Channel permissions category:'), $permissions_role, '', get_roles()),
 
 			'$profile_in_dir' => $profile_in_dir,
 			'$hide_friends' => $hide_friends,

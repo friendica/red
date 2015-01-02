@@ -349,7 +349,7 @@ function setup_content(&$a) {
 				'$siteurl' => array('siteurl', t('Website URL'), z_root(), t('Please use SSL (https) URL if available.')),
 
 				
-				'$timezone' => field_timezone('timezone', t('Please select a default timezone for your website'), $timezone, ''),
+				'$timezone' => array('timezone', t('Please select a default timezone for your website'), $timezone, '', get_timezones()),
 				
 				'$baseurl' => $a->get_baseurl(),
 				

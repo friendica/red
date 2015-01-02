@@ -9,8 +9,8 @@ $(document).ready(function() {
 		'transition' : 'elastic' 
 	});
 
-	$("#privacy-role-select").change(function() {
-		var role = $("#privacy-role-select").val();
+	$("#id_permissions_role").change(function() {
+		var role = $("#id_permissions_role").val();
 		if(role == 'custom')
 			$('#advanced-perm').show();
 		else
