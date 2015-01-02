@@ -250,8 +250,7 @@ function detect_language($s) {
  * By default we use the localized language name. You can switch the result
  * to any language with the optional 2nd parameter $l.
  *
- * $s and $l can be in any format that PHP's Locale understands. We will mostly
- * use the 2-letter ISO 639-1 (en, de, fr) format.
+ * $s and $l should be in 2-letter ISO 639-1 format
  *
  * If nothing could be looked up it returns $s.
  *
@@ -259,11 +258,30 @@ function detect_language($s) {
  * @param $l (optional) In which language to return the name
  * @return string with the language name, or $s if unrecognized
  */
+require_once(__DIR__ . '/../library/intl/vendor/autoload.php');
+use CommerceGuys\Intl\Language\LanguageRepository;
 function get_language_name($s, $l = null) {
-	if($l === null)
-		$l = $s;
+	// get() expects the second part to be in upper case
+	if(strpos($s,'-') !== false) $s = substr($s,0,2) . strtoupper(substr($s,2));
+	if($l !== null && strpos($l,'-') !== false) $l = substr($l,0,2) . strtoupper(substr($l,2));
 
-	logger('get_language_name: for ' . $s . ' in ' . $l . ' returns: ' . Locale::getDisplayLanguage($s, $l), LOGGER_DEBUG);
-	return Locale::getDisplayLanguage($s, $l);
+	$languageRepository = new LanguageRepository;
+
+	// Sometimes intl doesn't like the second part at all ...
+	try {
+		$language = $languageRepository->get($s, $l);
+	}
+	catch(CommerceGuys\Intl\Exception\UnknownLanguageException $e) {
+		$s = substr($s,0,2);
+		if($l !== null) $l = substr($s,0,2);
+		try {
+			$language = $languageRepository->get($s, $l);
+		}
+		catch(CommerceGuys\Intl\Exception\UnknownLanguageException $e) {
+			return $s; // Give up
+		}
+	} 
+
+	return $language->getName();
 }
 

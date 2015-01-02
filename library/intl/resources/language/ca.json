@@ -1,0 +1,738 @@
+{
+    "af": {
+        "code": "af",
+        "name": "afrikaans"
+    },
+    "agq": {
+        "code": "agq",
+        "name": "aghem"
+    },
+    "ak": {
+        "code": "ak",
+        "name": "àkan"
+    },
+    "sq": {
+        "code": "sq",
+        "name": "albanès"
+    },
+    "de": {
+        "code": "de",
+        "name": "alemany"
+    },
+    "de-AT": {
+        "code": "de-AT",
+        "name": "alemany austríac"
+    },
+    "gsw": {
+        "code": "gsw",
+        "name": "alemany suís"
+    },
+    "de-CH": {
+        "code": "de-CH",
+        "name": "alt alemany suís"
+    },
+    "hsb": {
+        "code": "hsb",
+        "name": "alt sòrab"
+    },
+    "tzm": {
+        "code": "tzm",
+        "name": "amazic del Marroc central"
+    },
+    "zgh": {
+        "code": "zgh",
+        "name": "amazic estàndard marroquí"
+    },
+    "am": {
+        "code": "am",
+        "name": "amhàric"
+    },
+    "en": {
+        "code": "en",
+        "name": "anglès"
+    },
+    "en-US": {
+        "code": "en-US",
+        "name": "anglès americà"
+    },
+    "en-AU": {
+        "code": "en-AU",
+        "name": "anglès australià"
+    },
+    "en-GB": {
+        "code": "en-GB",
+        "name": "anglès britànic"
+    },
+    "en-CA": {
+        "code": "en-CA",
+        "name": "anglès canadenc"
+    },
+    "ar": {
+        "code": "ar",
+        "name": "àrab"
+    },
+    "ar-001": {
+        "code": "ar-001",
+        "name": "àrab estàndard modern"
+    },
+    "hy": {
+        "code": "hy",
+        "name": "armeni"
+    },
+    "ast": {
+        "code": "ast",
+        "name": "asturià"
+    },
+    "az": {
+        "code": "az",
+        "name": "azerbaidjanès"
+    },
+    "ksf": {
+        "code": "ksf",
+        "name": "bafia"
+    },
+    "dsb": {
+        "code": "dsb",
+        "name": "baix sòrab"
+    },
+    "bm": {
+        "code": "bm",
+        "name": "bambara"
+    },
+    "bas": {
+        "code": "bas",
+        "name": "basa"
+    },
+    "eu": {
+        "code": "eu",
+        "name": "basc"
+    },
+    "bez": {
+        "code": "bez",
+        "name": "bena"
+    },
+    "bn": {
+        "code": "bn",
+        "name": "bengalí"
+    },
+    "be": {
+        "code": "be",
+        "name": "bielorús"
+    },
+    "my": {
+        "code": "my",
+        "name": "birmà"
+    },
+    "nmg": {
+        "code": "nmg",
+        "name": "bissio"
+    },
+    "brx": {
+        "code": "brx",
+        "name": "bodo"
+    },
+    "bs": {
+        "code": "bs",
+        "name": "bosnià"
+    },
+    "br": {
+        "code": "br",
+        "name": "bretó"
+    },
+    "bg": {
+        "code": "bg",
+        "name": "búlgar"
+    },
+    "kab": {
+        "code": "kab",
+        "name": "cabilenc"
+    },
+    "ks": {
+        "code": "ks",
+        "name": "caixmiri"
+    },
+    "ca": {
+        "code": "ca",
+        "name": "català"
+    },
+    "chr": {
+        "code": "chr",
+        "name": "cherokee"
+    },
+    "cgg": {
+        "code": "cgg",
+        "name": "chiga"
+    },
+    "ksh": {
+        "code": "ksh",
+        "name": "colognian"
+    },
+    "ko": {
+        "code": "ko",
+        "name": "coreà"
+    },
+    "kea": {
+        "code": "kea",
+        "name": "crioll capverdià"
+    },
+    "hr": {
+        "code": "hr",
+        "name": "croat"
+    },
+    "da": {
+        "code": "da",
+        "name": "danès"
+    },
+    "dyo": {
+        "code": "dyo",
+        "name": "diola"
+    },
+    "dz": {
+        "code": "dz",
+        "name": "dzongka"
+    },
+    "ebu": {
+        "code": "ebu",
+        "name": "embu"
+    },
+    "sk": {
+        "code": "sk",
+        "name": "eslovac"
+    },
+    "sl": {
+        "code": "sl",
+        "name": "eslovè"
+    },
+    "es": {
+        "code": "es",
+        "name": "espanyol"
+    },
+    "es-MX": {
+        "code": "es-MX",
+        "name": "espanyol de Mèxic"
+    },
+    "es-ES": {
+        "code": "es-ES",
+        "name": "espanyol europeu"
+    },
+    "eo": {
+        "code": "eo",
+        "name": "esperanto"
+    },
+    "et": {
+        "code": "et",
+        "name": "estonià"
+    },
+    "ee": {
+        "code": "ee",
+        "name": "ewe"
+    },
+    "ewo": {
+        "code": "ewo",
+        "name": "ewondo"
+    },
+    "fo": {
+        "code": "fo",
+        "name": "feroès"
+    },
+    "fil": {
+        "code": "fil",
+        "name": "filipí"
+    },
+    "fi": {
+        "code": "fi",
+        "name": "finès"
+    },
+    "nl-BE": {
+        "code": "nl-BE",
+        "name": "flamenc"
+    },
+    "fr": {
+        "code": "fr",
+        "name": "francès"
+    },
+    "fr-CA": {
+        "code": "fr-CA",
+        "name": "francès canadenc"
+    },
+    "fr-CH": {
+        "code": "fr-CH",
+        "name": "francès suís"
+    },
+    "fy": {
+        "code": "fy",
+        "name": "frisó oriental"
+    },
+    "fur": {
+        "code": "fur",
+        "name": "friülà"
+    },
+    "ff": {
+        "code": "ff",
+        "name": "ful"
+    },
+    "gd": {
+        "code": "gd",
+        "name": "gaèlic escocès"
+    },
+    "gl": {
+        "code": "gl",
+        "name": "gallec"
+    },
+    "cy": {
+        "code": "cy",
+        "name": "gal·lès"
+    },
+    "lg": {
+        "code": "lg",
+        "name": "ganda"
+    },
+    "ka": {
+        "code": "ka",
+        "name": "georgià"
+    },
+    "el": {
+        "code": "el",
+        "name": "grec"
+    },
+    "kl": {
+        "code": "kl",
+        "name": "grenlandès"
+    },
+    "gu": {
+        "code": "gu",
+        "name": "gujarati"
+    },
+    "guz": {
+        "code": "guz",
+        "name": "gusí"
+    },
+    "ha": {
+        "code": "ha",
+        "name": "haussa"
+    },
+    "he": {
+        "code": "he",
+        "name": "hebreu"
+    },
+    "hi": {
+        "code": "hi",
+        "name": "hindi"
+    },
+    "hu": {
+        "code": "hu",
+        "name": "hongarès"
+    },
+    "id": {
+        "code": "id",
+        "name": "indonesi"
+    },
+    "yo": {
+        "code": "yo",
+        "name": "ioruba"
+    },
+    "ga": {
+        "code": "ga",
+        "name": "irlandès"
+    },
+    "is": {
+        "code": "is",
+        "name": "islandès"
+    },
+    "it": {
+        "code": "it",
+        "name": "italià"
+    },
+    "ja": {
+        "code": "ja",
+        "name": "japonès"
+    },
+    "kln": {
+        "code": "kln",
+        "name": "kalenjin"
+    },
+    "kam": {
+        "code": "kam",
+        "name": "kamba"
+    },
+    "kn": {
+        "code": "kn",
+        "name": "kannada"
+    },
+    "kk": {
+        "code": "kk",
+        "name": "kazakh"
+    },
+    "km": {
+        "code": "km",
+        "name": "khmer"
+    },
+    "ki": {
+        "code": "ki",
+        "name": "kikuiu"
+    },
+    "ky": {
+        "code": "ky",
+        "name": "kirguís"
+    },
+    "khq": {
+        "code": "khq",
+        "name": "koyra chiini"
+    },
+    "lag": {
+        "code": "lag",
+        "name": "langi"
+    },
+    "lo": {
+        "code": "lo",
+        "name": "laosià"
+    },
+    "lv": {
+        "code": "lv",
+        "name": "letó"
+    },
+    "ln": {
+        "code": "ln",
+        "name": "lingala"
+    },
+    "lt": {
+        "code": "lt",
+        "name": "lituà"
+    },
+    "lu": {
+        "code": "lu",
+        "name": "luba katanga"
+    },
+    "luo": {
+        "code": "luo",
+        "name": "Luo"
+    },
+    "lb": {
+        "code": "lb",
+        "name": "luxemburguès"
+    },
+    "luy": {
+        "code": "luy",
+        "name": "luyia"
+    },
+    "mk": {
+        "code": "mk",
+        "name": "macedoni"
+    },
+    "jmc": {
+        "code": "jmc",
+        "name": "machame"
+    },
+    "mgh": {
+        "code": "mgh",
+        "name": "makhuwa-metto"
+    },
+    "kde": {
+        "code": "kde",
+        "name": "makonde"
+    },
+    "ms": {
+        "code": "ms",
+        "name": "malai"
+    },
+    "ml": {
+        "code": "ml",
+        "name": "malaiàlam"
+    },
+    "mg": {
+        "code": "mg",
+        "name": "malgaix"
+    },
+    "mt": {
+        "code": "mt",
+        "name": "maltès"
+    },
+    "mr": {
+        "code": "mr",
+        "name": "marathi"
+    },
+    "mas": {
+        "code": "mas",
+        "name": "massai"
+    },
+    "mfe": {
+        "code": "mfe",
+        "name": "mauricià"
+    },
+    "mer": {
+        "code": "mer",
+        "name": "meru"
+    },
+    "ro-MD": {
+        "code": "ro-MD",
+        "name": "moldau"
+    },
+    "mn": {
+        "code": "mn",
+        "name": "mongol"
+    },
+    "mua": {
+        "code": "mua",
+        "name": "mundang"
+    },
+    "naq": {
+        "code": "naq",
+        "name": "nama"
+    },
+    "nd": {
+        "code": "nd",
+        "name": "ndebele septentrional"
+    },
+    "nl": {
+        "code": "nl",
+        "name": "neerlandès"
+    },
+    "ne": {
+        "code": "ne",
+        "name": "nepalès"
+    },
+    "jgo": {
+        "code": "jgo",
+        "name": "ngomba"
+    },
+    "nb": {
+        "code": "nb",
+        "name": "noruec bokmål"
+    },
+    "nn": {
+        "code": "nn",
+        "name": "noruec nynorsk"
+    },
+    "nus": {
+        "code": "nus",
+        "name": "nuer"
+    },
+    "nyn": {
+        "code": "nyn",
+        "name": "nyankole"
+    },
+    "or": {
+        "code": "or",
+        "name": "oriya"
+    },
+    "ps": {
+        "code": "ps",
+        "name": "paixtu"
+    },
+    "pa": {
+        "code": "pa",
+        "name": "panjabi"
+    },
+    "asa": {
+        "code": "asa",
+        "name": "pare"
+    },
+    "fa": {
+        "code": "fa",
+        "name": "persa"
+    },
+    "pl": {
+        "code": "pl",
+        "name": "polonès"
+    },
+    "pt": {
+        "code": "pt",
+        "name": "portuguès"
+    },
+    "pt-PT": {
+        "code": "pt-PT",
+        "name": "portuguès de Portugal"
+    },
+    "pt-BR": {
+        "code": "pt-BR",
+        "name": "portuguès del Brasil"
+    },
+    "rm": {
+        "code": "rm",
+        "name": "retoromànic"
+    },
+    "ro": {
+        "code": "ro",
+        "name": "romanès"
+    },
+    "rof": {
+        "code": "rof",
+        "name": "rombo"
+    },
+    "rn": {
+        "code": "rn",
+        "name": "rundi"
+    },
+    "ru": {
+        "code": "ru",
+        "name": "rus"
+    },
+    "rwk": {
+        "code": "rwk",
+        "name": "rwo"
+    },
+    "saq": {
+        "code": "saq",
+        "name": "samburu"
+    },
+    "se": {
+        "code": "se",
+        "name": "sami septentrional"
+    },
+    "sg": {
+        "code": "sg",
+        "name": "sango"
+    },
+    "sbp": {
+        "code": "sbp",
+        "name": "sangu"
+    },
+    "seh": {
+        "code": "seh",
+        "name": "sena"
+    },
+    "sr": {
+        "code": "sr",
+        "name": "serbi"
+    },
+    "ksb": {
+        "code": "ksb",
+        "name": "shambala"
+    },
+    "sn": {
+        "code": "sn",
+        "name": "shona"
+    },
+    "si": {
+        "code": "si",
+        "name": "singalès"
+    },
+    "xog": {
+        "code": "xog",
+        "name": "soga"
+    },
+    "so": {
+        "code": "so",
+        "name": "somali"
+    },
+    "ses": {
+        "code": "ses",
+        "name": "songhai oriental"
+    },
+    "sw": {
+        "code": "sw",
+        "name": "suahili"
+    },
+    "swc": {
+        "code": "swc",
+        "name": "suahili del Congo"
+    },
+    "sv": {
+        "code": "sv",
+        "name": "suec"
+    },
+    "th": {
+        "code": "th",
+        "name": "tailandès"
+    },
+    "dav": {
+        "code": "dav",
+        "name": "taita"
+    },
+    "shi": {
+        "code": "shi",
+        "name": "taixelhit"
+    },
+    "ta": {
+        "code": "ta",
+        "name": "tàmil"
+    },
+    "twq": {
+        "code": "twq",
+        "name": "tasawaq"
+    },
+    "te": {
+        "code": "te",
+        "name": "telugu"
+    },
+    "teo": {
+        "code": "teo",
+        "name": "teso"
+    },
+    "bo": {
+        "code": "bo",
+        "name": "tibetà"
+    },
+    "ti": {
+        "code": "ti",
+        "name": "tigrinya"
+    },
+    "to": {
+        "code": "to",
+        "name": "tongalès"
+    },
+    "tr": {
+        "code": "tr",
+        "name": "turc"
+    },
+    "cs": {
+        "code": "cs",
+        "name": "txec"
+    },
+    "uk": {
+        "code": "uk",
+        "name": "ucraïnès"
+    },
+    "ug": {
+        "code": "ug",
+        "name": "uigur"
+    },
+    "ur": {
+        "code": "ur",
+        "name": "urdú"
+    },
+    "uz": {
+        "code": "uz",
+        "name": "uzbek"
+    },
+    "vai": {
+        "code": "vai",
+        "name": "Vai"
+    },
+    "vi": {
+        "code": "vi",
+        "name": "vietnamita"
+    },
+    "vun": {
+        "code": "vun",
+        "name": "vunjo"
+    },
+    "wae": {
+        "code": "wae",
+        "name": "walser"
+    },
+    "zh": {
+        "code": "zh",
+        "name": "xinès"
+    },
+    "zh-Hans": {
+        "code": "zh-Hans",
+        "name": "xinès simplificat"
+    },
+    "zh-Hant": {
+        "code": "zh-Hant",
+        "name": "xinès tradicional"
+    },
+    "yav": {
+        "code": "yav",
+        "name": "yangben"
+    },
+    "dje": {
+        "code": "dje",
+        "name": "zarma"
+    },
+    "zu": {
+        "code": "zu",
+        "name": "zulu"
+    }
+}
