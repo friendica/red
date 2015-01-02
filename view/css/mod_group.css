@@ -3,9 +3,7 @@
 	margin-top: 30px;
 }
 
-/* first-of-type needed to style switches */
-#group-edit-form label.mainlabel,
-#group-edit-form label:first-of-type {
+#group-edit-form > label {
 	float: left;
 	width: 300px;
 }
