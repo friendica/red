@@ -1,3 +1,6 @@
+{{include file="field_checkbox.tpl"}}
+
+{{*
 <p id="hide-friends-text">
 {{$desc}}
 </p>
@@ -14,4 +17,4 @@
 	
 	<div id="hide-friends-end"></div>
 	</div>
-
+*}}

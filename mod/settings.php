@@ -122,10 +122,19 @@ function settings_post(&$a) {
 
 	if((argc() > 1) && (argv(1) === 'features')) {
 		check_form_security_token_redirectOnErr('/settings/features', 'settings_features');
-		foreach($_POST as $k => $v) {
-			if(strpos($k,'feature_') === 0) {
-				set_pconfig(local_user(),'feature',substr($k,8),((intval($v)) ? 1 : 0));
-			}
+
+		// Build list of features and check which are set
+		$features = get_features();
+		$all_features = array();
+		foreach($features as $k => $v) {
+			foreach($v as $f) 
+				$all_features[] = $f[0];
+		}
+		foreach($all_features as $k) {
+			if(x($_POST,"feature_$k"))
+				set_pconfig(local_user(),'feature',$k, 1);
+			else
+				set_pconfig(local_user(),'feature',$k, 0);
 		}
 		build_sync_packet();
 		return;
@@ -707,7 +716,6 @@ function settings_content(&$a) {
 			'$title'	=> t('Additional Features'),
 			'$features' => $arr,
 			'$submit'   => t('Submit'),
-			'$field_yesno'  => 'field_yesno.tpl',
 		));
 
 		return $o;
@@ -938,7 +946,7 @@ function settings_content(&$a) {
 	
 		$timezone = date_default_timezone_get();
 
-		$opt_tpl = get_markup_template("field_yesno.tpl");
+		$opt_tpl = get_markup_template("field_checkbox.tpl");
 		if(get_config('system','publish_all')) {
 			$profile_in_dir = '<input type="hidden" name="profile_in_directory" value="1" />';
 		}
@@ -1010,12 +1018,10 @@ function settings_content(&$a) {
 			'$uid' => local_user(),
 			'$form_security_token' => get_form_security_token("settings"),
 			'$nickname_block' => $prof_addr,
-		
-		
 			'$h_basic' 	=> t('Basic Settings'),
 			'$username' => array('username',  t('Full Name:'), $username,''),
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
-			'$timezone' => array('timezone_select' , t('Your Timezone:'), select_timezone($timezone), ''),
+			'$timezone' => array('timezone_select' , t('Your Timezone:'), $timezone, '', get_timezones()),
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, t('Geographical location to display on your posts')),
 			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_user(),'system','use_browser_location')) ? 1 : ''), ''),
 		
@@ -1044,9 +1050,7 @@ function settings_content(&$a) {
 			'$aclselect' => populate_acl($perm_defaults,false),
 			'$suggestme' => $suggestme,
 			'$group_select' => $group_select,
-			'$role_lbl' => t('Channel permissions category:'),
-
-			'$role_select' => role_selector($permissions_role),
+			'$role' => array('permissions_role' , t('Channel permissions category:'), $permissions_role, '', get_roles()),
 
 			'$profile_in_dir' => $profile_in_dir,
 			'$hide_friends' => $hide_friends,

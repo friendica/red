@@ -301,14 +301,14 @@ footer {
 #main-login #id_remember {
 	float: left;
 	padding: 0;
-	margin-top: 15px;
 	margin-bottom: 0;
 	margin-left: 0;
 	width: 20px;
 }
 
-#main-login .field.checkbox label {
-	margin-top: 15px;
+/* first-of-type needed to style switches */
+#main-login .field.checkbox label.mainlabel,
+#main-login .field.checkbox label:first-of-type {
 	margin-bottom: 0;
 	float: left;
 	width: 100px;
@@ -373,13 +373,16 @@ footer {
 	font-weight: bold;
 }
 
-#profile-edit-wrapper .field label {
+#profile-edit-wrapper .field {
 	margin-top: 20px;
+}
+/* first-of-type needed to style switches */
+#profile-edit-wrapper .field label.mainlabel,
+#profile-edit-wrapper .field label:first-of-type {
 	width: 175px;
 }
 
 #profile-edit-wrapper .field input[type="text"] {
-	margin-top: 20px;
 	width: 220px;
 }
 
@@ -1242,7 +1245,9 @@ footer {
 	width: 100%
 }
 
-.field label {
+/* first-of-type needed to style switches */
+.field label.mainlabel,
+.field label:first-of-type {
 	float: left;
 	width: 350px;
 }
@@ -1296,6 +1301,8 @@ footer {
 .hidden { display: none!important; }
 
 .field.radio .field_help { margin-left: 0px; }
+.field.checkbox .field_help { display: inline; margin-left: 10px; }
+
 
 /**
  * OAuth
@@ -2349,4 +2356,71 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 .jothidden .bootstrap-tagsinput:hover, .jothidden .bootstrap-tagsinput:focus {
 	border: 1px solid #cccccc;
+}
+
+/* Hide the placeholder label which is used for styling switches */
+/* Many places give a width to all labels, so need to specifically set these to 0 width */
+/* This should probably be moved to core */
+.field.checkbox label.switchlabel,
+.field.checkbox label:nth-of-type(2) {
+	width: 0px; 
+	margin: 0px;
+	float: none;
+}
+
+/* Turn checkboxes into switches */
+/* Doesn't work with IE<9. */
+.field.checkbox input {
+  position: absolute;
+  margin-left: -9999px;
+  visibility: hidden;
+}
+.field.checkbox input + label.switchlabel,
+.field.checkbox input + label:nth-of-type(2) {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+
+  padding: 2px;
+  width: 60px;
+  height: 24px;
+  background-color: #dddddd;
+  border-radius: 60px;
+  transition: background 0.4s;
+
+  float:left;
+}
+
+.field.checkbox input + label:before,
+.field.checkbox input + label:after {
+  display: block;
+  position: absolute;
+  content: "";
+}
+.field.checkbox input + label:before {
+  top: 2px;
+  left: 2px;
+  bottom: 2px;
+  right: 2px;
+  background-color: #fff;
+  border-radius: 30px;
+  transition: background 0.4s;
+}
+.field.checkbox input + label:after {
+  top: 4px;
+  left: 4px;
+  bottom: 4px;
+  width: 30px;
+  background-color: #dddddd;
+  border-radius: 30px;
+  transition: margin 0.4s, background 0.4s;
+}
+.field.checkbox input:checked + label {
+  background-color: #8ce196;
+}
+.field.checkbox input:checked + label:after {
+  margin-left: 22px;
+  background-color: #8ce196;
 }
