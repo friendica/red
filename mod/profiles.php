@@ -596,13 +596,12 @@ function profiles_content(&$a) {
 
 
 		$opt_tpl = get_markup_template("profile_hide_friends.tpl");
-		$hide_friends = replace_macros($opt_tpl,array(
-			'$desc'         => t('Hide your contact/friend list from viewers of this profile?'),
-			'$yes_str'      => t('Yes'),
-			'$no_str'       => t('No'),
-			'$yes_selected' => (($r[0]['hide_friends']) ? " checked=\"checked\" " : ""),
-			'$no_selected'  => (($r[0]['hide_friends'] == 0) ? " checked=\"checked\" " : "")
-		));
+		$hide_friends = replace_macros($opt_tpl,array('$field' => array(
+                       'hide-friends',
+                       t('Hide your contact/friend list from viewers of this profile?'),
+                       $r[0]['hide_friends'],
+                       '',
+               )));
 
 		$q = q("select * from profdef where true");
 		if($q) {
