@@ -70,6 +70,7 @@ var searchData=
   ['photo_5fdriver',['photo_driver',['../classphoto__driver.html',1,'']]],
   ['photo_5fdriver_2ephp',['photo_driver.php',['../photo__driver_8php.html',1,'']]],
   ['photo_5ffactory',['photo_factory',['../photo__driver_8php.html#a32e2817faa25d7f11f60a8abff565035',1,'photo_driver.php']]],
+  ['photo_5fflag_5fos',['PHOTO_FLAG_OS',['../boot_8php.html#ab49a5d43ce1150c5af8c750ccb14e15f',1,'boot.php']]],
   ['photo_5fgd',['photo_gd',['../classphoto__gd.html',1,'']]],
   ['photo_5fgd_2ephp',['photo_gd.php',['../photo__gd_8php.html',1,'']]],
   ['photo_5fimagick',['photo_imagick',['../classphoto__imagick.html',1,'']]],
