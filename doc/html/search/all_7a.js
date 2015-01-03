@@ -2,6 +2,8 @@ var searchData=
 [
   ['z_5fbirthday',['z_birthday',['../datetime_8php.html#ab55e545b72ec8c097e052ea7d373491f',1,'datetime.php']]],
   ['z_5ffetch_5furl',['z_fetch_url',['../include_2network_8php.html#aafd06c0a75402aefb06cfb9f9740fa37',1,'network.php']]],
+  ['z_5fget_5ftemp_5fdir',['z_get_temp_dir',['../boot_8php.html#a59717d02602a4babf2a54da8b33d93a5',1,'boot.php']]],
+  ['z_5fget_5fupload_5fdir',['z_get_upload_dir',['../boot_8php.html#a476c499e15caf75972fed134a8f23b2e',1,'boot.php']]],
   ['z_5finput_5ffilter',['z_input_filter',['../text_8php.html#a324c58f37f6acdf9cd1922aa76077d9f',1,'text.php']]],
   ['z_5fmime_5fcontent_5ftype',['z_mime_content_type',['../include_2attach_8php.html#a6fdd92775f31c07d2863e16e0026018a',1,'attach.php']]],
   ['z_5fpath',['z_path',['../boot_8php.html#aba208673515cbb8a55e5fa4a1da99fda',1,'boot.php']]],

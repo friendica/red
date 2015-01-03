@@ -30,6 +30,7 @@ var searchData=
   ['toggle_5ftheme',['toggle_theme',['../admin_8php.html#af81f081851791cd15e49e8ff6722dc27',1,'admin.php']]],
   ['translate_5fscope',['translate_scope',['../items_8php.html#aabfaa193b83154c2a81e91284e5d5e59',1,'items.php']]],
   ['translate_5fsystem_5fapps',['translate_system_apps',['../include_2apps_8php.html#a48289d5cc44b7638191738106ac5d030',1,'apps.php']]],
+  ['trim_5fmessage',['trim_message',['../po2php_8php.html#a4f3dc9b019d0cd1dc171c54c991ef334',1,'po2php.php']]],
   ['tryoembed',['tryoembed',['../bbcode_8php.html#a55b0cb6973f1ec731de0e726bcc0efa7',1,'bbcode.php']]],
   ['tryzrlaudio',['tryzrlaudio',['../bbcode_8php.html#a39de4de32a9456d1ca914d0dc52bd322',1,'bbcode.php']]],
   ['tryzrlvideo',['tryzrlvideo',['../bbcode_8php.html#aa92f119341f4c69dcef2768a013079b8',1,'bbcode.php']]],

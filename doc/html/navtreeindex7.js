@@ -1,5 +1,8 @@
 var NAVTREEINDEX7 =
 {
+"mitem_8php.html#a9627cd857cafdf04e4fc0ae48c8e8518":[6,0,1,60,1],
+"mod_2api_8php.html":[6,0,1,4],
+"mod_2api_8php.html#a02ae0f60e240dc806b860edb7d582117":[6,0,1,4,2],
 "mod_2api_8php.html#a33315b5bbf5418f6850b2038107b526d":[6,0,1,4,0],
 "mod_2api_8php.html#a6fe77f05c07cb51048df0d557b4b9bd2":[6,0,1,4,1],
 "mod_2apps_8php.html":[6,0,1,6],
@@ -52,8 +55,8 @@ var NAVTREEINDEX7 =
 "mytheme_2php_2style_8php.html":[6,0,3,1,2,0,1],
 "mytheme_2php_2theme_8php.html":[6,0,3,1,2,0,2],
 "mytheme_2php_2theme_8php.html#a6ce5df8ece6acc09c1fddaccbeb244e8":[6,0,3,1,2,0,2,0],
-"namespaceFriendica.html":[4,0,1],
 "namespaceFriendica.html":[5,0,1],
+"namespaceFriendica.html":[4,0,1],
 "namespaceRedMatrix.html":[4,0,3],
 "namespaceRedMatrix.html":[5,0,3],
 "namespaceRedMatrix_1_1Import.html":[5,0,3,0],
@@ -129,8 +132,8 @@ var NAVTREEINDEX7 =
 "permissions_8php.html":[6,0,0,62],
 "permissions_8php.html#a040fd3d3b8517658b1668ae0cd093972":[6,0,0,62,2],
 "permissions_8php.html#a0f5bd9f7f4c8fb7ba4b2c1ed048b4dc7":[6,0,0,62,0],
-"permissions_8php.html#a50e8099ea8a4d7ed68b2a0a7ea9aa724":[6,0,0,62,5],
-"permissions_8php.html#a67ada9ed51e77885b6b0f6a28cee1835":[6,0,0,62,4],
+"permissions_8php.html#a67ada9ed51e77885b6b0f6a28cee1835":[6,0,0,62,5],
+"permissions_8php.html#a6b239a0d494b92a89ce7bf9c7e588991":[6,0,0,62,4],
 "permissions_8php.html#a9b5f5120566a3699a98efc5ccb0c59fe":[6,0,0,62,3],
 "permissions_8php.html#aa8b7b102c653649d7a71b5a1c044d90d":[6,0,0,62,6],
 "permissions_8php.html#aeca9b280f3dc3358c89976d81d690008":[6,0,0,62,1],
@@ -191,6 +194,7 @@ var NAVTREEINDEX7 =
 "plugin_8php.html#aff0178bd8d0b34a94d5efddc883edd35":[6,0,0,64,5],
 "po2php_8php.html":[6,0,2,6],
 "po2php_8php.html#a3b75e36f913198299e99559b175cd8b4":[6,0,2,6,0],
+"po2php_8php.html#a4f3dc9b019d0cd1dc171c54c991ef334":[6,0,2,6,1],
 "poco_8php.html":[6,0,1,82],
 "poco_8php.html#a53def16f75e3d41f1d2bb7cfa4905498":[6,0,1,82,0],
 "poke_8php.html":[6,0,1,83],
@@ -245,9 +249,5 @@ var NAVTREEINDEX7 =
 "redable_8php.html":[6,0,3,0,6],
 "redable_8php.html#a3987f5547ceb7e36a210a66a06241a5a":[6,0,3,0,6,0],
 "redbasic_2php_2style_8php.html":[6,0,3,1,3,0,1],
-"redbasic_2php_2style_8php.html#a01c151bf47f7da2b979aaa4cb868da4c":[6,0,3,1,3,0,1,0],
-"redbasic_2php_2style_8php.html#ab3afb90d611eca90819f597a2c0bb459":[6,0,3,1,3,0,1,1],
-"redbasic_2php_2theme_8php.html":[6,0,3,1,3,0,2],
-"redbasic_2php_2theme_8php.html#af6eb813e9fc7e2d76ac1b82bc5c0ed9b":[6,0,3,1,3,0,2,0],
-"redbasic_8php.html":[6,0,3,1,0,2,9]
+"redbasic_2php_2style_8php.html#a01c151bf47f7da2b979aaa4cb868da4c":[6,0,3,1,3,0,1,0]
 };

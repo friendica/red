@@ -114,10 +114,8 @@ $(document).ready(function(){initNavTree('datetime_8php.html','');});
 Functions</h2></td></tr>
 <tr class="memitem:aa51b5a7ea4f931b23acbdfcea46e9865"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="datetime_8php.html#aa51b5a7ea4f931b23acbdfcea46e9865">timezone_cmp</a> ($a, $b)</td></tr>
 <tr class="separator:aa51b5a7ea4f931b23acbdfcea46e9865"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a633dadba426fa2f60b25fabdb19ebc1f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="datetime_8php.html#a633dadba426fa2f60b25fabdb19ebc1f">select_timezone</a> ($current= 'America/Los_Angeles')</td></tr>
-<tr class="separator:a633dadba426fa2f60b25fabdb19ebc1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03900dcf0f9e3c58793a031673a70326"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="datetime_8php.html#a03900dcf0f9e3c58793a031673a70326">field_timezone</a> ($name='timezone', $label='', $current= 'America/Los_Angeles', $help)</td></tr>
-<tr class="separator:a03900dcf0f9e3c58793a031673a70326"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbb34604d0f6e7d2103da4f42e2487b1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="datetime_8php.html#afbb34604d0f6e7d2103da4f42e2487b1">get_timezones</a> ()</td></tr>
+<tr class="separator:afbb34604d0f6e7d2103da4f42e2487b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6301e74b0f9267d52f8d432b5beb226"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="datetime_8php.html#ad6301e74b0f9267d52f8d432b5beb226">datetime_convert</a> ($from= 'UTC', $to= 'UTC', $s= 'now', $fmt=&quot;Y-m-d H:i:s&quot;)</td></tr>
 <tr class="separator:ad6301e74b0f9267d52f8d432b5beb226"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f2897db32e745fe2f3e70a6b46578f8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="datetime_8php.html#a3f2897db32e745fe2f3e70a6b46578f8">dob</a> ($dob)</td></tr>
@@ -416,46 +414,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a03900dcf0f9e3c58793a031673a70326"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">field_timezone </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$name</em> = <code>'timezone'</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$label</em> = <code>''</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$current</em> = <code>'America/Los_Angeles'</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$help</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Referenced by <a class="el" href="setup_8php.html#a88247384a96e14516f474d7af6a465c1">setup_content()</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="a7df24d72ea05922d3127363e2295174c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -512,6 +470,23 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="afbb34604d0f6e7d2103da4f42e2487b1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">get_timezones </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="setup_8php.html#a88247384a96e14516f474d7af6a465c1">setup_content()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a8ae8dc95ace7ac27fa5a1ecf42b78c82"></a>
 <div class="memitem">
 <div class="memproto">
@@ -537,24 +512,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="identity_8php.html#aa870d2c1f558cfd52bef05bc124e8fa4">advanced_profile()</a>, <a class="el" href="connedit_8php.html#a795acb3d9d841f55c255d7611681ab67">connedit_content()</a>, <a class="el" href="conversation_8php.html#affea1afb3f32ca41e966c8ddb4204d81">conversation()</a>, <a class="el" href="include_2notify_8php.html#a0e61728e487df50c72e6434f911a57d3">format_notification()</a>, <a class="el" href="boot_8php.html#aa561f801e962b67a5c4d0548ea95fd17">get_poller_runtime()</a>, <a class="el" href="classItem.html#ad5dcbe0b94cb2d5719bc5b6bd8ad60c8">Item\get_template_data()</a>, <a class="el" href="notifications_8php.html#aadd0b5525bd8c283a5d8a37982bbfe62">notifications_content()</a>, <a class="el" href="mod_2notify_8php.html#acdf3851688ebd6d6a575eb84ef9febe3">notify_content()</a>, and <a class="el" href="ping_8php.html#a77217b1b190b4c5d8770867b45f0c0a1">ping_init()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a633dadba426fa2f60b25fabdb19ebc1f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">select_timezone </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$current</em> = <code>'America/Los_Angeles'</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Referenced by <a class="el" href="datetime_8php.html#a03900dcf0f9e3c58793a031673a70326">field_timezone()</a>.</p>
 
 </div>
 </div>

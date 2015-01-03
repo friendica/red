@@ -37,15 +37,15 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BS-Default_8php.html",
-"boot_8php.html#a52b599cd13e152ebc80d7e4413683195",
-"classApp.html#a3d84af5e42082098672531cd1a618853",
-"classTemplate.html#a4b933954086d9e01a1804b0b1c6ee93e",
-"datetime_8php.html#aea356409ba69f9de412298c998595dd2",
-"globals_0x5f.html",
-"include_2chat_8php.html#acea6b176eb7aff44d9ba3ae24ce511d3",
-"mod_2api_8php.html#a33315b5bbf5418f6850b2038107b526d",
-"reddav_8php.html",
-"text_8php.html#ac2ff88e800f74b22e9cc091c10809c54"
+"boot_8php.html#a525ca93ff35d3535d1a2b8ba57876afa",
+"classApp.html#a33a8e90b60ec4438f6fbf299d0f6839c",
+"classTemplate.html#a285b5b2007dbbf733476273df3fed4ef",
+"datetime_8php.html#abc1652f96799cec6fce8797ba2ebc2df",
+"functions_vars.html",
+"include_2chat_8php.html#a2ba3af6884ecdce95de69262fe599639",
+"mitem_8php.html#a9627cd857cafdf04e4fc0ae48c8e8518",
+"redbasic_2php_2style_8php.html#ab3afb90d611eca90819f597a2c0bb459",
+"text_8php.html#aaed4413ed8918838b517e3b2fafaea0d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -64,7 +64,6 @@ var searchData=
   ['rmagic_5fcontent',['rmagic_content',['../rmagic_8php.html#a3e28db1e5cfa7e5c2617f90222c1caef',1,'rmagic.php']]],
   ['rmagic_5finit',['rmagic_init',['../rmagic_8php.html#a95455edd43f1bff39446a57388cdde16',1,'rmagic.php']]],
   ['rmagic_5fpost',['rmagic_post',['../rmagic_8php.html#a869de069d081b3c4e98b957d06bbf08f',1,'rmagic.php']]],
-  ['role_5fselector',['role_selector',['../permissions_8php.html#a50e8099ea8a4d7ed68b2a0a7ea9aa724',1,'permissions.php']]],
   ['rotate',['rotate',['../classphoto__driver.html#a2f2b6337cf9aa0688d10b422123f0eec',1,'photo_driver\rotate()'],['../classphoto__gd.html#a77f87730b11093b76980c541159df37d',1,'photo_gd\rotate()'],['../classphoto__imagick.html#a9df5738a4a18e76dd304c440e96f045f',1,'photo_imagick\rotate()']]],
   ['rpost_5fcallback',['rpost_callback',['../bbcode_8php.html#a5165a5221a52cf1bc1d7812ebd2069c7',1,'bbcode.php']]],
   ['rpost_5fcontent',['rpost_content',['../rpost_8php.html#a8190354d789000806d9879aea276728f',1,'rpost.php']]],

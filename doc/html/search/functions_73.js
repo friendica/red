@@ -16,7 +16,6 @@ var searchData=
   ['search_5fcontent',['search_content',['../search_8php.html#ab2568591359edde5b483a6cd9a24b2cc',1,'search.php']]],
   ['search_5finit',['search_init',['../search_8php.html#acf19fd30f07f495781ca0d7a0a08b435',1,'search.php']]],
   ['searchbox',['searchbox',['../text_8php.html#aae91e4d2a2c6f7a9daccd2c186ae3447',1,'text.php']]],
-  ['select_5ftimezone',['select_timezone',['../datetime_8php.html#a633dadba426fa2f60b25fabdb19ebc1f',1,'datetime.php']]],
   ['send',['send',['../classenotify.html#afbc088860f534c6c05788b48cfc262c6',1,'enotify']]],
   ['send_5fmessage',['send_message',['../include_2message_8php.html#a751ffd6635022b2190f56154ee745752',1,'message.php']]],
   ['send_5freg_5fapproval_5femail',['send_reg_approval_email',['../account_8php.html#a014de2d5d5c9785de5bf547a485822fa',1,'account.php']]],
