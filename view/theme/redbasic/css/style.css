@@ -306,9 +306,7 @@ footer {
 	width: 20px;
 }
 
-/* first-of-type needed to style switches */
-#main-login .field.checkbox label.mainlabel,
-#main-login .field.checkbox label:first-of-type {
+#main-login .field.checkbox > label {
 	margin-bottom: 0;
 	float: left;
 	width: 100px;
@@ -376,9 +374,7 @@ footer {
 #profile-edit-wrapper .field {
 	margin-top: 20px;
 }
-/* first-of-type needed to style switches */
-#profile-edit-wrapper .field label.mainlabel,
-#profile-edit-wrapper .field label:first-of-type {
+#profile-edit-wrapper .field > label {
 	width: 175px;
 }
 
@@ -1245,9 +1241,7 @@ footer {
 	width: 100%
 }
 
-/* first-of-type needed to style switches */
-.field label.mainlabel,
-.field label:first-of-type {
+.field > label {
 	float: left;
 	width: 350px;
 }
@@ -2358,69 +2352,65 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 	border: 1px solid #cccccc;
 }
 
-/* Hide the placeholder label which is used for styling switches */
-/* Many places give a width to all labels, so need to specifically set these to 0 width */
-/* This should probably be moved to core */
-.field.checkbox label.switchlabel,
-.field.checkbox label:nth-of-type(2) {
-	width: 0px; 
-	margin: 0px;
-	float: none;
-}
+
 
 /* Turn checkboxes into switches */
-/* Doesn't work with IE<9. */
+.field.checkbox .fieldhelp { vertical-align:top; }
+.field.checkbox > div {
+    position: relative; width: 70px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    display:inline-block;
+}
+
 .field.checkbox input {
-  position: absolute;
-  margin-left: -9999px;
-  visibility: hidden;
-}
-.field.checkbox input + label.switchlabel,
-.field.checkbox input + label:nth-of-type(2) {
-  display: block;
-  position: relative;
-  cursor: pointer;
-  outline: none;
-  user-select: none;
-
-  padding: 2px;
-  width: 60px;
-  height: 24px;
-  background-color: #dddddd;
-  border-radius: 60px;
-  transition: background 0.4s;
-
-  float:left;
+    display: none;
 }
 
-.field.checkbox input + label:before,
-.field.checkbox input + label:after {
-  display: block;
-  position: absolute;
-  content: "";
+.field.checkbox > div label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #999999;
+    border-radius: 20px;
+    margin:0px;
 }
-.field.checkbox input + label:before {
-  top: 2px;
-  left: 2px;
-  bottom: 2px;
-  right: 2px;
-  background-color: #fff;
-  border-radius: 30px;
-  transition: background 0.4s;
+
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+    -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
 }
-.field.checkbox input + label:after {
-  top: 4px;
-  left: 4px;
-  bottom: 4px;
-  width: 30px;
-  background-color: #dddddd;
-  border-radius: 30px;
-  transition: margin 0.4s, background 0.4s;
+
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 20px; padding: 0; line-height:20px;
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 }
-.field.checkbox input:checked + label {
-  background-color: #8ce196;
+
+.onoffswitch-inner:before {
+    content: attr(data-on);
+    padding-left: 10px;
+    background-color: #EEEEEE;
 }
-.field.checkbox input:checked + label:after {
-  margin-left: 22px;
-  background-color: #8ce196;
+
+.onoffswitch-inner:after {
+    content: attr(data-off);
+    padding-right: 10px;
+    background-color: #EEEEEE; color: #999999;
+    text-align: right;
+}
+
+.onoffswitch-switch {
+    display: block; width: 25px; margin-left: 6px; margin-right: 6px; margin-top:5%; margin-bottom:5%;
+    background: #A1A1A1;
+    border: 2px solid #999999; border-radius: 20px;
+    position: absolute; top: 0; bottom: 0; right: 36px;
+    -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s;
+}
+
+.field.checkbox > div > input:checked + label .onoffswitch-inner {
+    margin-left: 0;
+}
+
+.field.checkbox > div > input:checked + label .onoffswitch-switch {
+    right: -2px;
+    background-color: #27A1CA;
 }

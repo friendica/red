@@ -4,9 +4,7 @@
 	margin-left: 0;
 }
 
-/* first-of-type needed to style switches */
-.field label.mainlabel,
-.thing-label, .field label:first-of-type, .thing-verb-label, .thing-profile-label{
+.thing-label, .field > label, .thing-verb-label, .thing-profile-label{
 	float: left;
 	width: 350px;
 }
