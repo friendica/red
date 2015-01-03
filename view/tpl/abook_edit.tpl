@@ -7,11 +7,27 @@
 <div id="connection-flag-tabs">
 {{$tabs}}
 </div>
+<div id="connection-edit-buttons">
+{{foreach $buttons as $b }}
+<button class="btn btn-sm btn-default" title="{{$b.title}}" onclick="window.location.href='{{$b.url}}'; return false;">{{$b.label}}</button>
+{{/foreach}}
 {{/if}}
 
 
-
 <div id="contact-edit-wrapper">
+<form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
+
+<div class="abook-permschange" style="display: none;">
+<div class="abook-perms-steps"><i class="icon-check"></i><br />{{$perms_step1}}</div>
+<div class="abook-perms-steps"><i class="icon-check-empty"></i><br />{{$perms_step2}}</div>
+<div class="abook-perms-steps"><i class="icon-check-empty"></i><br />{{$perms_step3}}</div>
+</div>
+
+<div class="abook-permssave" style="display: none;">
+<input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
+</div>
+
+
 
 {{if $last_update}}
 {{$lastupdtext}} {{$last_update}}
@@ -27,7 +43,6 @@
 {{/if}}
 
 
-<form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
 
 {{if $self}}
 <div class="abook-autotext">
@@ -40,10 +55,6 @@
 <input type="hidden" name="contact_id" value="{{$contact_id}}">
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
 
-<div class="abook-permschange" style="display: none;"></div>
-<div class="abook-permssave" style="display: none;">
-<input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
-</div>
 
 
 {{if $is_pending}}
@@ -63,15 +74,6 @@
 
 <h3>{{$permlbl}}</h3>
 <div id="perm-desc" class="descriptive-text">{{$permnote}}</div>
-
-<br />
-
-<input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
-
-<div id="abook-advanced" class="fakelink" onclick="openClose('abook-advanced-panel');">{{$advanced}}</div>
-
-<div id="abook-advanced-panel" style="display: block;">
-
 <table>
 <tr><td></td><td class="abook-them">{{$them}}</td><td colspan="2" class="abook-me">{{$me}}</td><td></td></tr>
 <tr><td colspan="5"><hr /></td></tr>
