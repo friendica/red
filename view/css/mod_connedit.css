@@ -14,15 +14,31 @@
 	margin-bottom: 5px !important;
 }
 
-.abook-pending-contact, .abook-permschange, .abook-autotext {
+.abook-pending-contact, .abook-autotext {
 	background: orange;
 	font-weight: bold;
 	margin: 10px;
 	padding: 20px 5px 10px;
 }
 
+.abook-permschange {
+	width: 100%;
+}
+
+.abook-perms-steps {
+	float: left;
+	width: 200px;
+	height: 210px;
+	background: orange;
+	font-weight: bold;
+	margin: 10px;
+	padding: 20px 5px 10px;
+
+}
+
 .abook-permssave {
 	margin-left: 10px;
+	clear: both;
 }
 
 #contact-slider {
