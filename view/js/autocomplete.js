@@ -43,7 +43,8 @@ function replace(item) {
  * jQuery plugin 'contact_autocomplete'
  */
 (function( $ ){
-	$.fn.contact_autocomplete = function(backend_url, extra_channels = null) {
+	$.fn.contact_autocomplete = function(backend_url, extra_channels) {
+	if (typeof extra_channels === 'undefined') extra_channels = false;
 
 	// Autocomplete contacts
 	contacts = {
