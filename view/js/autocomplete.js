@@ -3,13 +3,16 @@
  *
  * require jQuery, jquery.textcomplete
  */
-function mysearch(term, callback, backend_url) {
+function mysearch(term, callback, backend_url, extra_channels) {
 	var postdata = {
 		start:0,
 		count:100,
 		search:term,
 		type:'c',
 	}
+
+	if(extra_channels)
+		postdata['extra_channels[]'] = extra_channels;
 	
 	$.ajax({
 		type:'POST',
@@ -28,20 +31,25 @@ function format(item) {
 
 function replace(item) {
 	// $2 ensures that prefix (@,@!) is preserved
-	return '$1$2'+item.nick.replace(' ','') + '+' + item.id;
+	var id = item.id;
+	 // 16 chars of hash should be enough. Full hash could be used if it can be done in a visually appealing way.
+	// 16 chars is also the minimum length in the backend (otherwise it's interpreted as a local id).
+	if(id.length > 16) 
+		id = item.id.substring(0,16);
+	return '$1$2'+item.nick.replace(' ','') + '+' + id;
 }
 
 /**
  * jQuery plugin 'contact_autocomplete'
  */
 (function( $ ){
-	$.fn.contact_autocomplete = function(backend_url) {
+	$.fn.contact_autocomplete = function(backend_url, extra_channels = null) {
 
 	// Autocomplete contacts
 	contacts = {
 		match: /(^|\s)(@\!*)([^ \n]+)$/,
 		index: 3,
-		search: function(term, callback) { mysearch(term, callback, backend_url); },
+		search: function(term, callback) { mysearch(term, callback, backend_url, extra_channels); },
 		replace: replace,
 		template: format,
 	}

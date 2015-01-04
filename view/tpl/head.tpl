@@ -26,6 +26,8 @@
 	var localUser = {{if $local_user}}{{$local_user}}{{else}}false{{/if}};
 	var zid = {{if $zid}}'{{$zid}}'{{else}}null{{/if}};
 	var justifiedGalleryActive = false;
+	{{if $channel_hash}}var channelHash = '{{$channel_hash}}';{{/if}}
+	{{if $channel_id}}var channelId = '{{$channel_id}}';{{/if}}{{* Used in e.g. autocomplete *}}
 
 </script>
 
