@@ -30,7 +30,7 @@ function acl_init(&$a){
 
 	if ($search != "") {
 		$sql_extra = " AND `name` LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";
-		$sql_extra2 = "AND ( xchan_name LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " OR xchan_addr LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . ") ";
+		$sql_extra2 = "AND ( xchan_name LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " OR xchan_addr LIKE " . protect_sprintf( "'%" . dbesc($search) . "%@%'" ) . ") ";
 
 		// This horrible mess is needed because position also returns 0 if nothing is found. W/ould be MUCH easier if it instead returned a very large value
 		// Otherwise we could just order by LEAST(POSTION($search IN xchan_name),POSITION($search IN xchan_addr)).
