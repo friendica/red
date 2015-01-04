@@ -147,7 +147,9 @@ function filestorage_content(&$a) {
 			'$isadir' => $is_a_dir,
 			'$cpdesc' => t('Copy/paste this code to attach file to a post'),
 			'$cpldesc' => t('Copy/paste this URL to link file from a web page'),
-			'$submit' => t('Submit')
+			'$submit' => t('Submit'),
+			'$attach_btn_title' => t('Attach this file to a new post'),
+			'$link_btn_title' => t('Show URL to this file'),
 		));
 
 		echo $o;
