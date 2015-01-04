@@ -1024,6 +1024,7 @@ class App {
 			'$head_js' => head_get_js(),
 			'$js_strings' => js_strings(),
 			'$zid' => get_my_address(),
+			'$channel_id' => $this->profile['uid'],
 		)) . $this->page['htmlhead'];
 
 		// always put main.js at the end
