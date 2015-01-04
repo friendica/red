@@ -2184,3 +2184,19 @@ function get_poller_runtime() {
 	$t = get_config('system','lastpoll');
 	return relative_date($t);
 }
+
+function z_get_upload_dir() {
+	$upload_dir = get_config('system','uploaddir');
+	if(! $upload_dir)
+		$upload_dir = ini_get('upload_tmp_dir');
+	if(! $upload_dir)
+		$upload_dir = sys_get_temp_dir();
+	return $upload_dir;
+}
+
+function z_get_temp_dir() {
+	$temp_dir = get_config('system','tempdir');
+	if(! $temp_dir)
+		$temp_dir = sys_get_temp_dir();
+	return $upload_dir;
+}

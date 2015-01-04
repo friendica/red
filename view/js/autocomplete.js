@@ -11,7 +11,7 @@ function mysearch(term, callback, backend_url, extra_channels) {
 		type:'c',
 	}
 
-	if(extra_channels) {
+	if(extra_channels)
 		postdata['extra_channels[]'] = extra_channels;
 	
 	$.ajax({

@@ -32,6 +32,9 @@ function acl_init(&$a){
 		$sql_extra = " AND `name` LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";
 		$sql_extra2 = "AND ( xchan_name LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " OR xchan_addr LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . ") ";
 
+		// This horrible mess is needed because position also returns 0 if nothing is found. W/ould be MUCH easier if it instead returned a very large value
+		// Otherwise we could just order by LEAST(POSTION($search IN xchan_name),POSITION($search IN xchan_addr)).
+		$order_extra2 = "CASE WHEN xchan_name LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) ." then POSITION('".dbesc($search)."' IN xchan_name) else position('".dbesc($search)."' IN xchan_addr) end, ";
 		$col = ((strpos($search,'@') !== false) ? 'xchan_addr' : 'xchan_name' );
 		$sql_extra3 = "AND $col like " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";
 
@@ -91,7 +94,7 @@ function acl_init(&$a){
 
 			$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, abook_flags 
 				FROM abook left join xchan on abook_xchan = xchan_hash 
-				WHERE (abook_channel = %d $extra_channels_sql) AND not ( abook_flags & %d )>0 and not (xchan_flags & %d )>0 $sql_extra2 order by xchan_name asc" ,
+				WHERE (abook_channel = %d $extra_channels_sql) AND not ( abook_flags & %d )>0 and not (xchan_flags & %d )>0 $sql_extra2 order by $order_extra xchan_name asc" ,
 				intval(local_user()),
 				intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED),
 				intval(XCHAN_FLAGS_DELETED)
@@ -100,7 +103,7 @@ function acl_init(&$a){
 		else { // Visitors
 			$r = q("SELECT xchan_hash as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, 0 as abook_their_perms, 0 as abook_flags
 				FROM xchan left join xlink on xlink_link = xchan_hash
-				WHERE xlink_xchan  = '%s' AND NOT (xchan_flags & %d) > 0 $sql_extra2 order by xchan_name asc" ,
+				WHERE xlink_xchan  = '%s' AND NOT (xchan_flags & %d) > 0 $sql_extra2 order by $order_extra xchan_name asc" ,
 				dbesc(get_observer_hash()),
 				intval(XCHAN_FLAGS_DELETED));
 
@@ -116,19 +119,39 @@ function acl_init(&$a){
 
 				$r2 = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, abook_flags 
 					FROM abook left join xchan on abook_xchan = xchan_hash 
-					WHERE abook_channel IN ($extra_channels_sql) $known_hashes_sql AND not ( abook_flags & %d )>0 and not (xchan_flags & %d )>0 $sql_extra2 order by xchan_name asc" ,
+					WHERE abook_channel IN ($extra_channels_sql) $known_hashes_sql AND not ( abook_flags & %d )>0 and not (xchan_flags & %d )>0 $sql_extra2 order by  $order_extra xchan_name asc" ,
 					intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED|ABOOK_FLAG_HIDDEN),
 					intval(XCHAN_FLAGS_DELETED)
 				);
 				if($r2)
 					$r = array_merge($r,$r2);
+
+				// Sort accoring to match position, then alphabetically. This could be avoided if the above two SQL queries could be combined into one, and the sorting could be done on the SQl server (like in the case of a local user)
+				$matchpos = function($x) use($search) {
+					$namepos = strpos($x['name'],$search);
+					$nickpos = strpos($x['nick'],$search);
+					// Use a large position if not found
+					return min($namepos === false ? 9999 : $namepos, $nickpos === false ? 9999 : $nickpos);
+				};
+				// This could be made simpler if PHP supported stable sorting
+				usort($r,function($a,$b) use($matchpos) {
+					$pos1 = $matchpos($a);
+					$pos2 = $matchpos($b);
+					if($pos1 == $pos2) { // Order alphabetically if match position is the same
+						if($a['name'] == $b['name'])
+							return 0;
+						else
+							return ($a['name'] < $b['name']) ? -1 : 1;
+					}
+					return ($pos1 < $pos2) ? -1 : 1;
+				});
 			}
 		}
 		if(intval(get_config('system','taganyone')) || intval(get_pconfig(local_user(),'system','taganyone'))) {
 			if((! $r) && $type == 'c') {
 				$r = q("SELECT substr(xchan_hash,1,18) as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, 0 as abook_their_perms, 0 as abook_flags 
 					FROM xchan 
-					WHERE not (xchan_flags & %d )>0 $sql_extra2 order by xchan_name asc" ,
+					WHERE not (xchan_flags & %d )>0 $sql_extra2 order by $order_extra2 xchan_name asc" ,
 					intval(XCHAN_FLAGS_DELETED)
 				);
 			}
