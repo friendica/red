@@ -421,7 +421,7 @@ function widget_affinity($arr) {
 	if(feature_enabled(local_user(),'affinity')) {
 		$tpl = get_markup_template('main_slider.tpl');
 		$x = replace_macros($tpl,array(
-			'$val' => $cmin . ';' . $cmax,
+			'$val' => $cmin . ',' . $cmax,
 			'$refresh' => t('Refresh'),
 			'$me' => t('Me'),
 			'$intimate' => t('Best Friends'),
