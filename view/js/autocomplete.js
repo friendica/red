@@ -26,7 +26,7 @@ function mysearch(term, callback, backend_url, extra_channels) {
 }
 
 function format(item) {
-	return "<div class='{0}'><img src='{1}'>{2} ({3})</div>".format(item.taggable, item.photo, item.name, ((item.label) ? item.nick + ' ' + item.label : item.nick) )
+	return "<div class='{0}' title='{4}'><img src='{1}'>{2} ({3})</div>".format(item.taggable, item.photo, item.name, ((item.label) ? item.nick + ' ' + item.label : item.nick), item.link )
 }
 
 function replace(item) {
