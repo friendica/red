@@ -269,9 +269,9 @@
 		}
 
 		// fancyboxes
-		$("a.popupbox").fancybox({
-			'transitionIn' : 'elastic',
-			'transitionOut' : 'elastic'
+		// Is this actually used anywhere?
+		$("a.popupbox").colorbox({
+			'transition' : 'elastic'
 		});
 		
 

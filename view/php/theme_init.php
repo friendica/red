@@ -2,7 +2,6 @@
 
 require_once('include/plugin.php');
 
-head_add_css('library/fancybox/jquery.fancybox-1.3.4.css');
 head_add_css('library/tiptip/tipTip.css');
 head_add_css('library/jgrowl/jquery.jgrowl.css');
 head_add_css('library/jRange/jquery.range.css');
@@ -23,7 +22,7 @@ head_add_js('jquery.spin.js');
 head_add_js('jquery.textinputs.js');
 head_add_js('autocomplete.js');
 head_add_js('library/jquery-textcomplete/jquery.textcomplete.js');
-head_add_js('library/fancybox/jquery.fancybox-1.3.4.js');
+head_add_js('library/colorbox/jquery.colorbox.js');
 head_add_js('library/jquery.timeago.js');
 head_add_js('library/readmore.js/readmore.js');
 head_add_js('library/jquery_ac/friendica.complete.js');

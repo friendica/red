@@ -1028,7 +1028,7 @@ footer {
     background: none repeat scroll 0% 0% $cal_bgcolour !important;
 }
 
-#fancybox-content {
+#colorbox {
 	border: 0px solid $fancybox_bgcolour;
 	background-color: $fancybox_bgcolour;
 }
