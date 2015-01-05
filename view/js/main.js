@@ -596,12 +596,10 @@ function updateConvItems(mode,data) {
 
 	function collapseHeight() {
 		$(".wall-item-body, .contact-info").each(function() {
-			if($(this).height() > divmore_height + 10) {
-				if(! $(this).hasClass('divmore')) {
-					$(this).divgrow({ initialHeight: divmore_height, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
-					$(this).addClass('divmore');
-				}
-			}					
+			if(! $(this).hasClass('divmore')) {
+				$(this).readmore({collapsedHeight: divmore_height, moreLink: '<a href="#">'+aStr['divgrowmore']+'</a>', lessLink: '<a href="#">'+aStr['divgrowless']+'</a>'});
+				$(this).addClass('divmore');
+			}
 		});
 	}
 
