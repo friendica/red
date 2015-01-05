@@ -1,5 +1,5 @@
 /*
-	jQuery ColorBox language configuration
+	jQuery Colorbox language configuration
 	language: Italian (it)
 	translated by: maur8ino
 */
@@ -9,5 +9,7 @@ jQuery.extend(jQuery.colorbox.settings, {
 	next: "Successiva",
 	close: "Chiudi",
 	xhrError: "Errore nel caricamento del contenuto.",
-	imgError: "Errore nel caricamento dell'immagine."
+	imgError: "Errore nel caricamento dell'immagine.",
+	slideshowStart: "Inizia la presentazione",
+	slideshowStop: "Termina la presentazione"
 });
