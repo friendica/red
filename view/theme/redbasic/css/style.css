@@ -1028,7 +1028,7 @@ footer {
     background: none repeat scroll 0% 0% $cal_bgcolour !important;
 }
 
-#fancybox-content {
+#colorbox {
 	border: 0px solid $fancybox_bgcolour;
 	background-color: $fancybox_bgcolour;
 }
@@ -2352,6 +2352,8 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 	border: 1px solid #cccccc;
 }
 
+/* Abusing theme-green is less work than makeing a new new one */
+.theme-green .back-bar .selected-bar { background-color: #000000; background-image: none; !important }
 
 
 /* Turn checkboxes into switches */

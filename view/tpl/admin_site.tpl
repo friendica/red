@@ -1,15 +1,15 @@
 <script>
 	$(function(){
 		
-		$("#cnftheme").fancybox({
+		$("#cnftheme").colorbox({
 			width: 800,
-			autoDimensions: false,
-			onStart: function(){
+			onLoad: function(){
 				var theme = $("#id_theme :selected").val();
 				$("#cnftheme").attr('href',"{{$baseurl}}/admin/themes/"+theme);
 			}, 
 			onComplete: function(){
-				$("div#fancybox-content form").submit(function(e){
+				$(this).colorbox.resize(); 
+				$("#colorbox form").submit(function(e){
 					var url = $(this).attr('action');
 					// can't get .serialize() to work...
 					var data={};

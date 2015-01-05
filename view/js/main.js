@@ -269,9 +269,9 @@
 		}
 
 		// fancyboxes
-		$("a.popupbox").fancybox({
-			'transitionIn' : 'elastic',
-			'transitionOut' : 'elastic'
+		// Is this actually used anywhere?
+		$("a.popupbox").colorbox({
+			'transition' : 'elastic'
 		});
 		
 
@@ -598,14 +598,15 @@ function updateConvItems(mode,data) {
 		$(".wall-item-body, .contact-info").each(function() {
 			if($(this).height() > divmore_height + 10) {
 				if(! $(this).hasClass('divmore')) {
-					$(this).divgrow({ initialHeight: divmore_height, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
+					$(this).readmore({collapsedHeight: divmore_height, moreLink: '<a href="#">'+aStr['divgrowmore']+'</a>', lessLink: '<a href="#">'+aStr['divgrowless']+'</a>'});
 					$(this).addClass('divmore');
 				}
-			}					
+			}
 		});
 	}
 
 	function liveUpdate() {
+		if(typeof profile_uid === 'undefined') profile_uid = false; /* Should probably be unified with channelId defined in head.tpl */
 		if((src == null) || (stopped) || (! profile_uid)) { $('.like-rotator').spin(false); return; }
 		if(($('.comment-edit-text-full').length) || (in_progress)) {
 			if(livetime) {
