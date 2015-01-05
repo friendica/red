@@ -604,6 +604,7 @@ function updateConvItems(mode,data) {
 	}
 
 	function liveUpdate() {
+		if(typeof profile_uid === 'undefined') profile_uid = false; /* Should probably be unified with channelId defined in head.tpl */
 		if((src == null) || (stopped) || (! profile_uid)) { $('.like-rotator').spin(false); return; }
 		if(($('.comment-edit-text-full').length) || (in_progress)) {
 			if(livetime) {
