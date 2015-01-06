@@ -19,7 +19,7 @@ This manual was tested for
 
 In this manual you will
 [list=1]
-[*] Install a Virtual Machine (optional)
+[*] Install a Virtual Machine (KVM)
 [*] Install Apache Web Server
 [*] Install PHP, MySQL, phpMyAdmin
 [*] Fork the project on github to be able contribute
@@ -28,38 +28,30 @@ In this manual you will
 [*] Contribute your changes via github
 [/list]
 
-[h2]Install a Virtual Machine (optional)[/h2]
+[h2]Install a Virtual Machine (KVM)[/h2]
 
-[h3]Install KVM - Kernel-based Virtual Machine[/h3]
-
-[url=https://wiki.debian.org/KVM]Hier[/url] die Anleitung für Linux Debian.
-Zusammenfassung der Anleitung (Schritt-für-Schritt für Linux):
+[url=https://wiki.debian.org/KVM]Here[/url] the installation guide for Linux Debian.
+The summary:
 [list=1]
-[*] KVM installieren
-[code]# sudo apt-get install qemu-kvm libvirt-bin[/code]
-[*] Sich selbst zur Gruppe libvirt hinzufügen [code]# sudo adduser <youruser> libvirt[/code]
-[*] Grafische Oberfläche zur Verwaltung (Installation, Konfiguration,...) von virtuellen Maschinen installieren [code]# sudo apt-get install virt-manager[/code]
-[*] Betriebssystem der Wahl herunterladen, das man halt später in der virtuelle Machine laufen lassen will zum Beispiel Linux Mint Debian oder debian ([url=http://ftp.nl.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/mini.iso]mini.iso[/url])
-[*] Den Virt-Manager starten
-- Neue virtuelle Maschine anlegen (Klick auf Icon)
-- Als Installations-Medium das ISO-Image wählen, dass im Schritt vorher herunter geladen wurde, in unserem Fall Linux Mint Debian oder Lubuntu für ältere Rechner
-- Optional: Virtuelle Maschine konfigurieren, genauer: Wieviel Hauptspeicher darf sie benutzen, wieviele CPUs,...
-- Virtuelle Maschine starten. Ergebnis: Linux Mint startet in einem eignen Fenster. Dort kann jetzt im Internet gesurft werden, ohne das der "eigene" Computer verseucht wird.
-[*] (optional) Netzwerkfehler nach Neustart des Wirts vermeiden
+[*] install KVM
+[code]# apt-get install qemu-kvm libvirt-bin[/code]
+[*] add yourself to the group libvirt [code]# adduser <youruser> libvirt[/code]
+[*] install gui to manage virtual machines [code]# apt-get install virt-manager[/code]
+[*] download an operating system to run inside the vm ([url=http://ftp.nl.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/mini.iso]mini.iso[/url])
+[*] start the virt manager
+- create new virtual machine (click on icon)
+- choose your iso image (just downloaded) as installation source
+- optional: configure the new vm: ram, cpu's,...
+- start virtual machine > result: linux debian starts in a new window.
+[*] (optional) avoid network errors after restart of host os
 [code]# virsh net-start default
 # virsh net-autostart default[/code]
 [/list]
 
-[h3]Install Debian Linux in the VM[/h3]
-
-Download an ISO image to install the current Debian [url=https://www.debian.org/CD/netinst/]here[/url]. Choose "amd64" for a consumer computer / notebook.
-
-Open the Virtual Machine Manager, create a new VM and install Debian from the ISO image you download just befor.
-
 
 [h2]Install Apache Webserver[/h2]
 
-Make yourself root
+Open a terminal and make yourself root
 [code]su -l[/code]
 
 Create the standard group for the Apache webserver
@@ -69,7 +61,8 @@ might exist already
 [code]usermod -a -G www-data www-data[/code]
 
 Check if the system is really up to date
-[code]apt-get update[/code]
+[code]apt-get update
+apt-get upgrade[/code]
 
 Optional restart services after installation
 [code]reboot[/code]
@@ -86,7 +79,7 @@ Should show you a page like "It works"
 (Source [url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
 
 
-[h2]Install PHP, MaySQL, phpMyAdmin[/h2]
+[h2]Install PHP, MySQL, phpMyAdmin[/h2]
 
 [code]su -l
 apt-get install libapache2-mod-php5 php5 php-pear php5-xcache php5-curl php5-mcrypt php5-xdebug
@@ -113,22 +106,22 @@ Configuring phpmyadmin
 The default installation of Apache2 comes with mod_rewrite installed. To check whether this is the case, verify the existence of /etc/apache2/mods-available/rewrite.load
 
 [code]
-pi@pi /var/www $ nano /etc/apache2/mods-available/rewrite.load
+root@debian /var/www $ nano /etc/apache2/mods-available/rewrite.load
 [/code]
 
- (You should find the contendt: LoadModule rewrite_module /usr/lib/apache2/modules/mod_rewrite.so)
+ (You should find the content: LoadModule rewrite_module /usr/lib/apache2/modules/mod_rewrite.so)
 To enable and load mod_rewrite, do the rest of steps.
 Create a symbolic link in /etc/apache2/mods-enabled
 
 [code]
 cd /var/www
-pi@pi /var/www $ a2enmod rewrite
+root@debian /var/www $ a2enmod rewrite
 [/code]
 
 Then open up the following file, and replace every occurrence of "AllowOverride None" with "AllowOverride all".
 
 [code]
-pi@pi /var/www $nano /etc/apache2/apache2.conf
+root@debian /var/www $nano /etc/apache2/apache2.conf
 [/code]
 or
 [code]
@@ -138,14 +131,14 @@ root@debian:/var# gedit /etc/apache2/sites-enabled/000-default
 Finally, restart Apache2.
 
 [code]
-pi@pi /var/www $service apache2 restart
+root@debian /var/www $service apache2 restart
 [/code]
 
 [b]Test installation[/b]
 
 [code]cd /var/www[/code]
 
-create a php file to test the php installation[code]sudo nano phpinfo.php[/code]
+create a php file to test the php installation[code]nano phpinfo.php[/code]
 
 Insert into the file:
 [code]
@@ -168,9 +161,6 @@ apt-get update
 apt-get upgrade
 reboot[/code]
 
-(Source #^[url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
-
-
 [b]phpMyAdmin[/b]
 
 open webbrowser on PC and try #^[url=http://localhost/phpmyadmin]http://localhost/phpmyadmin[/url]
@@ -184,7 +174,7 @@ open webbrowser on PC and try #^[url=http://localhost/phpmyadmin]http://localhos
 
 Create an empty database, for example named "red".
 Create a database user, for example "red".
-Grand all rights for the user "red" to the database "red".
+Grant all rights for the user "red" to the database "red".
 
 Note the access details (hostname, username, password, database name).
 
@@ -207,7 +197,7 @@ You should
 You should have created an account on github and forked the projects befor you procced.
 
 Delete the directory www
-[code]pi@pi /var/www/html $ cd ..
+[code]root@debian /var/www/html $ cd ..
 rm -R www/
 [/code]
 
@@ -253,21 +243,21 @@ cat /etc/group
 
 Open http://localhost and init the matrix
 
-Befor you register a first user switch of the registration mails.
+Befor you register a first user switch off the registration mails.
 Open /var/www/.htconfig.php
 and make sure "0" is set in this line
 [code]
 $a->config['system']['verify_email'] = 0;
 [/code]
-This should be able to change the file as "yourself" (instead of using root or www-data).
+You should be able to change the file as "yourself" (instead of using root or www-data).
 
-
+Important!
 Run the poller  to pick up the recent "public" postings of your friends
 Set up a cron job or scheduled task to run the poller once every 5-10
 minutes to pick up the recent "public" postings of your friends
 
 [code]
-sudo crontab -e
+crontab -e
 [/code]
 
 Add
@@ -277,7 +267,7 @@ Add
 
 If you don't know the path to PHP type
 [code]
-sudo whereis php
+whereis php
 [/code]
 
 
@@ -285,9 +275,9 @@ sudo whereis php
 
 [h3]Check the configuration of xdebug[/h3]
 
-You shoud have installed xdebug befor
+You shoud already have installed xdebug in the steps befor
 [code]
-sudo apt-get install php5-xdebug
+apt-get install php5-xdebug
 [/code]
 
 Configuring Xdebug
@@ -313,7 +303,7 @@ xdebug.remote_port=9000
 Save changes and close the editor.
 In you terminal type to restart the web server.
 [code]
-sudo service apache2 restart
+service apache2 restart
 [/code]
 
 
@@ -326,13 +316,16 @@ Install the PHP plugin
 Menu > Help > Install new software...
 Install "PHP Developnent Tools ..."
 
+Configure the PHP plugin
 Menu > Window > Preferences...
 > General > Webbrowser > Change to "Use external web browser"
 > PHP > Debug > Debug Settings > PHP Debugger > Change to "XDebug"
 
+Create a new PHP project
 Menu > File > New Project > Choose PHP > "PHP Project"
 > Choose Create project at existing location and "/var/www"
 
+Start debugging
 Open index.php and "Debug as..."
 Choose as Launch URL: "http://localhost/"
 
@@ -354,11 +347,25 @@ surfer@debian:/var/www$ git config --global user.name "Your Name"
 surfer@debian:/var/www$ git config --global user.email "your@mail.com"
 [/code]
 
+Make sure your local repository is up-to-date with the main project.
+Add the original repository as a remote named “upstream” if not done yet
+[code]
+surfer@debian:/var/www$ git remote add upstream https://github.com/friendica/red
+[/code]
 
+Fetch the newest work from that remote
+[code]
+surfer@debian:/var/www$ git fetch upstream
+[/code]
 
 Create a descriptive topic branch
 [code]
-surfer@debian:/var/www$ git checkout -b doc_dev_beginning
+surfer@debian:/var/www$ git checkout -b dev_beginning
+[/code]
+
+Hint: You can list the branches
+[code]
+surfer@debian:/var/www$ git branch -v
 [/code]
 
 Make your changes. In this example it is a new doc file.
@@ -370,23 +377,27 @@ surfer@debian:/var/www$ git status
 
 Add (stage) the new file
 [code]
-surfer@debian:/var/www$ git add doc/nb-no/dev_beginner.bb
+surfer@debian:/var/www$ git add doc/dev_beginner.bb
 [/code]
 
-Commit the changes to your local branch
+Commit the changes to your local branch. This will open an editor to provide a message.
 [code]
 surfer@debian:/var/www$ git commit
 [/code]
 
-Make sure your local repository is up-to-date with the main project.
-Add the original repository as a remote named “upstream” if not done yet
+Push back up to the same topic branch online
 [code]
-surfer@debian:/var/www$ git remote add upstream https://github.com/einervonvielen/red
+surfer@debian:/var/www$ git push origin dev_beginning
 [/code]
 
-Fetch the newest work from that remote
+Now you get to your (online) account at github and create the pull request.
+
+In case the main devolpers want you to change something.
+Make the changes, check them, commit (to local repository), push (to online repository)
 [code]
-surfer@debian:/var/www$ git fetch upstream
+surfer@debian:/var/www$ git status
+surfer@debian:/var/www$ git commit -a -m "added modification of branch"
+surfer@debian:/var/www$ git push origin dev_beginning
 [/code]
 
 
