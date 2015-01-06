@@ -51,3 +51,7 @@
 .selected-channel img {
 	border: 2px solid #ff0000;
 }
+
+.channels-end {
+	clear: both;
+}
