@@ -6,7 +6,7 @@ You want to lean how to:
 [list]
 [*] debug the Red Matrix,
 [*] contribute code to the project,
-[*] optionally - do it all from inside a virtual machine?
+[*] optionally - do it all from inside a virtual machine
 [/list]
 
 This manual was tested for
@@ -390,7 +390,7 @@ Push back up to the same topic branch online
 surfer@debian:/var/www$ git push origin dev_beginning
 [/code]
 
-Now you get to your (online) account at github and create the pull request.
+Now you can go to your (online) account at github and create the pull request.
 
 In case the main devolpers want you to change something.
 Make the changes, check them, commit (to local repository), push (to online repository)
