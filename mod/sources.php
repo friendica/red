@@ -47,7 +47,7 @@ function sources_post(&$a) {
 		goaway(z_root() . '/sources');
 	}
 	else {
-		$r = q("update source set src_xchan = '%s', src_patt = '%s' where src_channel_id = %d and src_id = %d limit 1",
+		$r = q("update source set src_xchan = '%s', src_patt = '%s' where src_channel_id = %d and src_id = %d",
 			dbesc($xchan),
 			dbesc($words),
 			intval(local_user()),
@@ -150,7 +150,7 @@ function sources_content(&$a) {
 			notice( t('Source not found.') . EOL);
 			return '';
 		}
-		$r = q("delete from source where src_id = %d and src_channel_id = %d limit 1",
+		$r = q("delete from source where src_id = %d and src_channel_id = %d",
 			intval(argv(1)),
 			intval(local_user())
 		);

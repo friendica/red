@@ -1,13 +1,21 @@
-
-/* Easiest way to indent the widget body - indent the entire widget and then shift the header label back to the left */
-
 .widget {
-	margin-left: 10px;
-	padding: 0 8px 8px 8px;
+	margin-bottom: 10px;
+	padding: 10px;
 }
 
 .widget h3 {
-	margin-left: -10px;
+	margin-top: 0px;
+}
+
+
+.widget .nav-pills > li > a {
+	padding: 6px 10px;
+}
+
+.widget-input {
+	width: 100%;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
 }
 
 /* suggest */
@@ -29,63 +37,16 @@
 /* notes */ 
 
 #note-text {
+	padding: 5px;
 	width: 100%;
 	resize: vertical;
 	height: 150px;
 }
 
-#note-save {
-	margin-top: 10px;
-}
-
 /* saved searches */
 
-
-#netsearch-box #search-submit {
-	margin: 10px 0 7px 0;
-}
-
-#netsearch-box #search-save {
-	margin: 9px 0 7px 6px;
-}
-.search-save {
-	margin: 7px 0 7px 7px;
-}
-
-.saved-search-li {
-	margin-top: 3px;
-}
-
-.saved-search-li i {
-	opacity: 0;
-}
-
-.saved-search-li:hover i {
-	opacity: 1;
-}
-
-.saved-search-icon {
-	float: right;
-}
-
-.savedsearchterm {
-	display: block;
-	width: 150px;
-	overflow: hidden;
-}
-
-/* peoplefind */
-
-#peoplefind-sidebar .btn {
-	margin: 10px 0 10px 0;
-}
-
-#side-peoplefind-url {
-	margin-top: 5px;
-}
-
-#side-peoplefind-url {
-	font-size: 1em;
+#saved-search-list {
+	margin-top: 2px;
 }
 
 
@@ -95,13 +56,15 @@
 /* posted date */
 
 .posted-date-selector-months {
-	margin-left: 10px;
+	margin: 2px 0px 0px 10px;
 }
 
-#datebrowse-sidebar select {
-	width: 190px;
-	max-width: 190px;
-	max-height: 150px;
+#posted-date-selector li:not(:first-child) {
+	margin-top: 2px;
+}
+
+#posted-date-selector-drop li:not(:first-child) {
+	margin-top: 2px;
 }
 
 /* categories */
@@ -109,40 +72,8 @@
 
 /* group */
 
-#group-sidebar {
-	margin-bottom: 10px;
-}
-
-#sidebar-new-group {
-	margin-bottom: 10px;
-}
-
-#sidebar-group-list .icon, #sidebar-group-list .iconspacer {
-	display: inline-block;
-	height: 12px;
-	width: 12px;
-}
-
-.sidebar-group-name {
-	display: block;
-	width: 170px;
-	overflow: hidden;
-}
-
-#sidebar-group-ul {
-	margin-bottom: 10px;
-}
-
-#sidebar-group-list li {
-	margin-top: 3px;
-}
-
-.sidebar-group-li input {
-	float: right;
-}
-
-.groupsideedit {
-	float: right;
+a.group-edit-tool {
+	z-index: 1;
 }
 
 .group-edit-icon {
@@ -167,9 +98,6 @@ li:hover .group-edit-icon {
 
 /* photo albums */
 
-#photo-albums-upload-link {
-	margin-top: 10px;
-}
 
 /* Chatrooms */
 

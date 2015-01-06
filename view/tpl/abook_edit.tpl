@@ -1,4 +1,4 @@
-<div class="generic-content-wrapper">
+<div class="generic-content-wrapper-styled">
 <h2>{{$header}}</h2>
 
 <h3>{{$addr}}</h3>
@@ -7,14 +7,27 @@
 <div id="connection-flag-tabs">
 {{$tabs}}
 </div>
-{{/if}}
-
-{{if $self}}
-<div id="autoperm-desc" class="descriptive-paragraph">{{$autolbl}}</div>
+<div id="connection-edit-buttons">
+{{foreach $buttons as $b }}
+<button class="btn btn-sm btn-default" title="{{$b.title}}" onclick="window.location.href='{{$b.url}}'; return false;">{{$b.label}}</button>
+{{/foreach}}
 {{/if}}
 
 
 <div id="contact-edit-wrapper">
+<form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
+
+<div class="abook-permschange" style="display: none;">
+<div class="abook-perms-steps"><i class="icon-check"></i><br />{{$perms_step1}}</div>
+<div class="abook-perms-steps"><i class="icon-check-empty"></i><br />{{$perms_step2}}</div>
+<div class="abook-perms-steps"><i class="icon-check-empty"></i><br />{{$perms_step3}}</div>
+</div>
+
+<div class="abook-permssave" style="display: none;">
+<input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
+</div>
+
+
 
 {{if $last_update}}
 {{$lastupdtext}} {{$last_update}}
@@ -30,11 +43,19 @@
 {{/if}}
 
 
-<form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
+
+{{if $self}}
+<div class="abook-autotext">
+<div id="autoperm-desc" class="descriptive-paragraph">{{$autolbl}}</div>
+{{include file="field_checkbox.tpl" field=$autoperms}}
+</div>
+{{/if}}
+
+
 <input type="hidden" name="contact_id" value="{{$contact_id}}">
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
 
-<div class="abook-permschange" style="display: none;"></div>
+
 
 {{if $is_pending}}
 <div class="abook-pending-contact">
@@ -53,36 +74,6 @@
 
 <h3>{{$permlbl}}</h3>
 <div id="perm-desc" class="descriptive-text">{{$permnote}}</div>
-
-
-{{* {{if $noperms}}
-<div id="noperm-msg" class="warning-text">{{$noperms}}</div>
-<div id="noperm-text" class="descriptive-text">{{$noperm_desc}}</div>
-{{/if}}
-*}}
-
-
-
-<br />
-<h3>{{$quick}}</h3>
-<ul>
-{{if $self}}
-<li><span class="fakelink" onclick="connectClear();">{{$clear}}</span></li>
-<li><span class="fakelink" onclick="connectForum();">{{$forum}}</span></li>
-<li><span class="fakelink" onclick="connectSoapBox();">{{$soapbox}}</span></li>
-{{/if}}
-<li><span class="fakelink" onclick="connectFullShare();">{{$full}}</span></li>
-<li><span class="fakelink" onclick="connectCautiousShare();">{{$cautious}}</span></li>
-<li><span class="fakelink" onclick="connectFollowOnly();">{{$follow}}</span></li>
-</ul>
-
-<input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
-
-
-<div id="abook-advanced" class="fakelink" onclick="openClose('abook-advanced-panel');">{{$advanced}}</div>
-
-<div id="abook-advanced-panel" style="display: block;">
-
 <table>
 <tr><td></td><td class="abook-them">{{$them}}</td><td colspan="2" class="abook-me">{{$me}}</td><td></td></tr>
 <tr><td colspan="5"><hr /></td></tr>

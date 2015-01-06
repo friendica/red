@@ -1,6 +1,8 @@
 var searchData=
 [
   ['db_5fupdate_5fversion',['DB_UPDATE_VERSION',['../boot_8php.html#ac59a18a4838710d6c2de37aed6b21f03',1,'boot.php']]],
+  ['dbtype_5fmysql',['DBTYPE_MYSQL',['../boot_8php.html#a8c9a11c47394244cbe18cd75b9726d5f',1,'boot.php']]],
+  ['dbtype_5fpostgres',['DBTYPE_POSTGRES',['../boot_8php.html#a37ddabc112db443b4c67fbc0f708817e',1,'boot.php']]],
   ['default_5fdb_5fengine',['DEFAULT_DB_ENGINE',['../boot_8php.html#aa8a2b61e70900139d1ca28e46f1da49d',1,'boot.php']]],
   ['directory_5ffallback_5fmaster',['DIRECTORY_FALLBACK_MASTER',['../boot_8php.html#abedd940e664017c61b48c6efa31d0cb8',1,'boot.php']]],
   ['directory_5fmode_5fnormal',['DIRECTORY_MODE_NORMAL',['../boot_8php.html#ab7d65a7e7417825a4db62906bb600729',1,'boot.php']]],

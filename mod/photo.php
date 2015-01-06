@@ -66,12 +66,12 @@ function photo_init(&$a) {
 			intval($uid)
 		);
 		if(count($r)) {
-			$data = $r[0]['data'];
+			$data = dbunescbin($r[0]['data']);
 			$mimetype = $r[0]['type'];
 		}
 		if(! isset($data)) {
 			$data = file_get_contents($default);
-			$mimetype = 'image/jpeg';
+			$mimetype = 'image/png';
 		}
 	}
 	else {
@@ -140,7 +140,7 @@ function photo_init(&$a) {
 			);
 
 			if($r && $allowed) {
-				$data = $r[0]['data'];
+				$data = dbunescbin($r[0]['data']);
 				$mimetype = $r[0]['type'];
 			}
 			else {
@@ -176,15 +176,15 @@ function photo_init(&$a) {
 
 				case 4:
 					$data = file_get_contents(get_default_profile_photo());
-					$mimetype = 'image/jpeg';
+					$mimetype = 'image/png';
 					break;
 				case 5:
 					$data = file_get_contents(get_default_profile_photo(80));
-					$mimetype = 'image/jpeg';
+					$mimetype = 'image/png';
 					break;
 				case 6:
 					$data = file_get_contents(get_default_profile_photo(48));
-					$mimetype = 'image/jpeg';
+					$mimetype = 'image/png';
 					break;
 				default:
 					killme();
@@ -224,9 +224,21 @@ function photo_init(&$a) {
 
 	}
 	else {
+		// The photo cache default is 1 day to provide a privacy trade-off,
+		// as somebody reducing photo permissions on a photo that is already 
+		// "in the wild" won't be able to stop the photo from being viewed
+		// for this amount amount of time once it is in the browser cache.
+		// The privacy expectations of your site members and their perception 
+		// of privacy where it affects the entire project may be affected.
+		// This has performance considerations but we highly recommend you 
+		// leave it alone. 
 
-	 	header("Expires: " . gmdate("D, d M Y H:i:s", time() + (3600*24)) . " GMT");
-		header("Cache-Control: max-age=" . (3600*24));
+		$cache = get_config('system','photo_cache_time');
+		if(! $cache)
+			$cache = (3600 * 24); // 1 day
+
+	 	header("Expires: " . gmdate("D, d M Y H:i:s", time() + $cache) . " GMT");
+		header("Cache-Control: max-age=" . $cache);
 
 	}
 	echo $data;

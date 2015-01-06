@@ -10,7 +10,10 @@ function initEditor(cb){
 		if(plaintext == 'none') {
 			$("#profile-jot-text-loading").spin(false).hide();
 			$("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
-			$("#profile-jot-text").contact_autocomplete(baseurl+"/acl");
+			if(typeof channelId === 'undefined')
+				$("#profile-jot-text").contact_autocomplete(baseurl+"/acl");
+			else
+				$("#profile-jot-text").contact_autocomplete(baseurl+"/acl",[channelId]); // Also gives suggestions from current channel's connections
 			editor = true;
 			  $("a#jot-perms-icon").colorbox({ 
 				  'inline' : true, 
@@ -309,7 +312,7 @@ function enableOnUser(){
 
 	function jotClearLocation() {
 		$('#jot-coord').val('');
-		$('#profile-nolocation-wrapper').hide();
+		$('#profile-nolocation-wrapper').attr('disabled', true);
 	}
 
 

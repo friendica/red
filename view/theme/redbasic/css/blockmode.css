@@ -1,0 +1,15 @@
+
+.wall-item-content.conv-list-mode {
+	max-width: 280px;
+	height:200px;
+	min-height: 200px;
+	overflow: hidden;
+}
+
+.thread-wrapper.toplevel_item.conv-list-mode {
+	width: 300px;
+	height: 300px; 
+	float: left;
+	margin-left: 5px;
+	margin-bottom: 35px;
+}

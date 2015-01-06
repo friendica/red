@@ -148,6 +148,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Get permissions SQL - if $remote_contact is true, our remote user has been pre-verified and we already have fetched his/her groups</p>
+<p>in "list mode", only mark the parent item and any like activities as "seen". We won't distinguish between comment likes and post likes. The important thing is that the number of unseen comments will be accurate. The SQL to separate the comment likes could also get somewhat hairy.</p>
 
 <p>Referenced by <a class="el" href="update__channel_8php.html#aca52a9da500f0db2f0a8666af5bc06ba">update_channel_content()</a>.</p>
 

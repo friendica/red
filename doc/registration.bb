@@ -4,7 +4,7 @@ Not all Red Matrix sites allow open registration. If registration is allowed, yo
 
 [b]Your Email Address[/b]
 
-Please provide a valid email address. Your email address is never published. This address will be used to activate your account, to (optionally) send email notifications for incoming messages or items, [/i]and to recover lost passwords[/i].
+Please provide a valid email address. Your email address is never published. This address will be used to activate your account, to (optionally) send email notifications for incoming messages or items, [i]and to recover lost passwords[/i].
 
 [b]Password[/b]
 
@@ -12,7 +12,7 @@ Enter a password of your choice, and repeat it in the second box to ensure it wa
 
 [b]Terms Of Service[/b]
 
-Click the link to read the site's terms of service. Once you've read them, tick the box in the register form to confirm.
+Click the link to read the site's [zrl=[baseurl]/help/TermsOfService]Terms of Service[/zrl]. Once you've read them, tick the box in the register form to confirm.
 
 [b]Register[/b]
 
@@ -31,4 +31,5 @@ See Also
 [zrl=[baseurl]/help/permissions]Permissions[/zrl]
 [zrl=[baseurl]/help/remove_account]Remove Account[/zrl]
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;
+

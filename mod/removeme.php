@@ -23,11 +23,19 @@ function removeme_post(&$a) {
 	if(! account_verify_password($account['account_email'],$_POST['qxz_password']))
 		return;
 
+	if($account['account_password_changed'] != NULL_DATE) {
+		$d1 = datetime_convert('UTC','UTC','now - 48 hours');
+		if($account['account_password_changed'] > d1) {
+			notice( t('Channel removals are not allowed within 48 hours of changing the account password.') . EOL);
+			return;
+		}
+	}
+
 	require_once('include/Contact.php');
 
 	$global_remove = intval($_POST['global']);
 
-	channel_remove(local_user(),1 - $global_remove);
+	channel_remove(local_user(),1 - $global_remove,true);
 
 }
 

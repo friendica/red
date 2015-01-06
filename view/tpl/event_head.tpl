@@ -24,10 +24,16 @@
 			eventClick: function(calEvent, jsEvent, view) {
 				showEvent(calEvent.id);
 			},
-			
+			loading: function(isLoading, view) {
+				if(!isLoading) {
+					$('td.fc-day').dblclick(function() { window.location.href='/events/new?start='+$(this).data('date'); });
+				}
+			},
+
 			eventRender: function(event, element, view) {
 				//console.log(view.name);
 				if (event.item['author']['xchan_name']==null) return;
+
 				switch(view.name){
 					case "month":
 					element.find(".fc-event-title").html(
@@ -115,10 +121,10 @@
 		$('#event-share-checkbox').change(function() {
 
 			if ($('#event-share-checkbox').is(':checked')) { 
-				$('#acl-wrapper').show();
+				$('#event-permissions-button').show();
 			}
 			else {
-				$('#acl-wrapper').hide();
+				$('#event-permissions-button').hide();
 			}
 		}).trigger('change');
 

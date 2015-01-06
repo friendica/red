@@ -209,13 +209,17 @@ function like_content(&$a) {
 	}
 	else {
 
+		// this is used to like an item or comment
+
 		$item_id = ((argc() == 2) ? notags(trim(argv(1))) : 0);
 
 		logger('like: verb ' . $verb . ' item ' . $item_id, LOGGER_DEBUG);
 
+		// get the item. Allow linked photos (which are normally hidden) to be liked
 
-		$r = q("SELECT * FROM item WHERE id = %d and item_restrict = 0 LIMIT 1",
-			dbesc($item_id)
+		$r = q("SELECT * FROM item WHERE id = %d and (item_restrict = 0 or item_restrict = %d) LIMIT 1",
+			intval($item_id),
+			intval(ITEM_HIDDEN)
 		);
 
 		if(! $item_id || (! $r)) {
@@ -259,26 +263,18 @@ function like_content(&$a) {
 		else
 			killme();
 
-
-		$r = q("SELECT * FROM item WHERE verb = '%s' AND item_restrict = 0 
+		$r = q("SELECT id FROM item WHERE verb = '%s' AND item_restrict = 0 
 			AND author_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') LIMIT 1",
 			dbesc($activity),
 			dbesc($observer['xchan_hash']),
 			intval($item_id),
 			dbesc($item['mid'])
 		);
+
 		if($r) {
-			$like_item = $r[0];
-
-			// Already liked/disliked it, delete it
-
-			$r = q("UPDATE item SET item_restrict = ( item_restrict ^ %d ), changed = '%s' WHERE id = %d LIMIT 1",
-				intval(ITEM_DELETED),
-				dbesc(datetime_convert()),
-				intval($like_item['id'])
-			);
-
-			proc_run('php',"include/notifier.php","like",$like_item['id']);
+			// already liked it. Drop that item.
+			require_once('include/items.php');
+			drop_item($r[0]['id'],false,DROPITEM_PHASE1);
 			return;
 		}
 
@@ -324,6 +320,15 @@ function like_content(&$a) {
 		$item_flags = ITEM_ORIGIN | ITEM_NOTSHOWN;
 		if($item['item_flags'] & ITEM_WALL)
 			$item_flags |= ITEM_WALL;
+
+		// if this was a linked photo and was hidden, unhide it.
+
+		if($item['item_restrict'] & ITEM_HIDDEN) {
+			$r = q("update item set item_restrict = (item_restrict ^ %d) where id = %d",
+				intval(ITEM_HIDDEN),
+				intval($item['id'])
+			);
+		}	
 
 	}
 

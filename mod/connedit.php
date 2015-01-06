@@ -68,6 +68,14 @@ function connedit_post(&$a) {
 
 	call_hooks('contact_edit_post', $_POST);
 
+	if($orig_record[0]['abook_flags'] & ABOOK_FLAG_SELF) {
+		$autoperms = intval($_POST['autoperms']);
+	}
+	else {
+		$autoperms = null;
+	}
+
+
 	$profile_id = $_POST['profile_assign'];
 	if($profile_id) {
 		$r = q("SELECT profile_guid FROM profile WHERE profile_guid = '%s' AND `uid` = %d LIMIT 1",
@@ -109,7 +117,7 @@ function connedit_post(&$a) {
 	}
 
 	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_flags = %d
-		where abook_id = %d AND abook_channel = %d LIMIT 1",
+		where abook_id = %d AND abook_channel = %d",
 		dbesc($profile_id),
 		intval($abook_my_perms),
 		intval($closeness),
@@ -118,13 +126,14 @@ function connedit_post(&$a) {
 		intval(local_user())
 	);
 
-	if($orig_record[0]['abook_profile'] != $profile_id) { //Update profile photo permissions
+	if($orig_record[0]['abook_profile'] != $profile_id) { 
+		//Update profile photo permissions
 
-                logger('As a new profile was assigned updateing profile photos');
-                require_once('mod/profile_photo.php');
-                profile_photo_set_profile_perms($profile_id);
+		logger('A new profile was assigned - updating profile photos');
+		require_once('mod/profile_photo.php');
+		profile_photo_set_profile_perms($profile_id);
 
-        }
+	}
 
 
 	if($r)
@@ -147,12 +156,44 @@ function connedit_post(&$a) {
 				group_add_member(local_user(),'',$a->poi['abook_xchan'],$g['id']);
 		}
 
-
-
 		// Check if settings permit ("post new friend activity" is allowed, and 
 		// friends in general or this friend in particular aren't hidden) 
 		// and send out a new friend activity
-		// TODO
+
+		$pr = q("select * from profile where uid = %d and is_default = 1 and hide_friends = 0",
+			intval($channel['channel_id'])
+		);
+		if(($pr) && (! ($abook_flags & ABOOK_FLAG_HIDDEN)) 
+			&& (intval(get_pconfig($channel['channel_id'],'system','post_newfriend')))) {
+			$xarr = array();
+			$xarr['verb'] = ACTIVITY_FRIEND;
+			$xarr['item_flags'] = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
+			$xarr['owner_xchan'] = $xarr['author_xchan'] = $channel['channel_hash'];
+			$xarr['allow_cid'] = $channel['channel_allow_cid'];
+			$xarr['allow_gid'] = $channel['channel_allow_gid'];
+			$xarr['deny_cid'] = $channel['channel_deny_cid'];
+			$xarr['deny_gid'] = $channel['channel_deny_gid'];
+			$xarr['item_private'] = (($xarr['allow_cid']||$xarr['allow_gid']||$xarr['deny_cid']||$xarr['deny_gid']) ? 1 : 0);
+			$obj = array(
+				'type' => ACTIVITY_OBJ_PERSON,
+				'title' => $a->poi['xchan_name'],
+				'id' => $a->poi['xchan_hash'],
+				'link' => array(
+					array('rel' => 'alternate', 'type' => 'text/html', 'href' => $a->poi['xchan_url']),
+					array('rel' => 'photo', 'type' => $a->poi['xchan_photo_mimetype'], 'href' => $a->poi['xchan_photo_l'])
+       			),
+   			);
+			$xarr['object'] = json_encode($obj);
+			$xarr['obj_type'] = ACTIVITY_OBJ_PERSON;
+
+			$xarr['body'] = '[zrl=' . $channel['xchan_url'] . ']' . $channel['xchan_name'] . '[/zrl]' . ' ' . t('is now connected to') . ' ' . '[zrl=' . $a->poi['xchan_url'] . ']' . $a->poi['xchan_name'] . '[/zrl]';
+
+			$xarr['body'] .= "\n\n\n" . '[zrl=' . $a->poi['xchan_url'] . '][zmg=80x80]' . $a->poi['xchan_photo_m'] . '[/zmg][/zrl]';
+
+			post_activity_item($xarr);
+
+		}
+
 
 		// pull in a bit of content if there is any to pull in
 		proc_run('php','include/onepoll.php',$contact_id);
@@ -175,6 +216,10 @@ function connedit_post(&$a) {
 		$arr = array('channel_id' => local_user(), 'abook' => $a->poi);
 		call_hooks('accept_follow', $arr);
 	}
+dbg(1);
+	if(! is_null($autoperms)) 
+		set_pconfig(local_user(),'system','autoperms',(($autoperms) ? $abook_my_perms : 0));
+dbg(0);
 
 	connedit_clone($a);
 
@@ -222,6 +267,30 @@ function connedit_content(&$a) {
 		return login();
 	}
 
+	$my_perms = 0;
+	$role = get_pconfig(local_user(),'system','permissions_role');
+	if($role) {
+		$x = get_role_perms($role);
+		if($x['perms_accept'])
+			$my_perms = $x['perms_accept'];
+		else
+			$my_perms = get_channel_default_perms(local_user());
+	}
+	if($my_perms) {
+		$o .= "<script>function connectDefaultShare() {
+		\$('.abook-edit-me').each(function() {
+			if(! $(this).is(':disabled'))
+				$(this).removeAttr('checked');
+		});\n\n";
+		$perms = get_perms();
+		foreach($perms as $p => $v) {
+			if($my_perms & $v[1]) {
+				$o .= "\$('#me_id_perms_" . $p . "').attr('checked','checked'); \n";
+			}
+		}
+		$o .= "abook_perms_msg(); }\n</script>\n";
+	}
+
 	if(argc() == 3) {
 
 		$contact_id = intval(argv(1));
@@ -231,12 +300,10 @@ function connedit_content(&$a) {
 		$cmd = argv(2);
 
 		$orig_record = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook_xchan = xchan_hash
-			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d ) and not ( abook_flags & %d ) LIMIT 1",
+			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d )>0 LIMIT 1",
 			intval($contact_id),
 			intval(local_user()),
-			intval(ABOOK_FLAG_SELF),
-			// allow drop even if pending, just duplicate the self query
-			intval(($cmd === 'drop') ? ABOOK_FLAG_SELF : ABOOK_FLAG_PENDING)
+			intval(ABOOK_FLAG_SELF)
 		);
 
 		if(! count($orig_record)) {
@@ -306,7 +373,8 @@ function connedit_content(&$a) {
 			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
 		}
 
-		// We'll prevent somebody from unapproving a contact.
+		// We'll prevent somebody from unapproving an already approved contact.
+		// Though maybe somebody will want this eventually (??)
 
 		if($cmd === 'approve') {
 			if($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
@@ -326,11 +394,21 @@ function connedit_content(&$a) {
 		if($cmd === 'drop') {
 
 			require_once('include/Contact.php');
+
 // FIXME
-//			terminate_friendship($a->get_channel(),$orig_record[0]);
+// We need to send either a purge or a refresh packet to the other side (the channel being unfriended). 
+// The issue is that the abook DB record _may_ get destroyed when we call contact_remove. As the notifier runs
+// in the background there could be a race condition preventing this packet from being sent in all cases.
+// PLACEHOLDER
 
 			contact_remove(local_user(), $orig_record[0]['abook_id']);
-// FIXME - send to clones
+			build_sync_packet(0 /* use the current local_user */, 
+				array('abook' => array(
+					'abook_xchan' => $orig_record[0]['abook_xchan'],
+					'entry_deleted' => true)
+				)
+			);
+
 			info( t('Connection has been removed.') . EOL );
 			if(x($_SESSION,'return_url'))
 				goaway($a->get_baseurl(true) . '/' . $_SESSION['return_url']);
@@ -366,32 +444,34 @@ function connedit_content(&$a) {
 				'url'   => $a->get_baseurl(true) . '/network/?f=&cid=' . $contact['abook_id'], 
 				'sel'   => '',
 				'title' => t('View recent posts and comments'),
-			),
+			)
+		);
 
+		$buttons = array(
 			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? t('Unblock') : t('Block')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/block', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? 'active' : ''),
-				'title' => t('Block or Unblock this connection'),
+				'title' => t('Block (or Unblock) all communications with this connection'),
 			),
 
 			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? t('Unignore') : t('Ignore')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/ignore', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? 'active' : ''),
-				'title' => t('Ignore or Unignore this connection'),
+				'title' => t('Ignore (or Unignore) all inbound communications from this connection'),
 			),
 			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? t('Unarchive') : t('Archive')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/archive', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? 'active' : ''),
-				'title' => t('Archive or Unarchive this connection'),
+				'title' => t('Archive (or Unarchive) this connection - mark channel dead but keep content'),
 			),
 			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? t('Unhide') : t('Hide')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/hide', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? 'active' : ''),
-				'title' => t('Hide or Unhide this connection'),
+				'title' => t('Hide or Unhide this connection from your other connections'),
 			),
 
 			array(
@@ -426,6 +506,7 @@ function connedit_content(&$a) {
 			$slider_tpl = get_markup_template('contact_slider.tpl');
 			$slide = replace_macros($slider_tpl,array(
 				'$me' => t('Me'),
+				'$min' => 1,
 				'$val' => (($contact['abook_closeness']) ? $contact['abook_closeness'] : 99),
 				'$intimate' => t('Best Friends'),
 				'$friends' => t('Friends'),
@@ -452,21 +533,26 @@ function connedit_content(&$a) {
 			if((! $self) && ($existing[$k]))
 				$thisperm = "1";
 
-			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),$thisperm, $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4]);
+			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),$thisperm, $v[1], (($channel[$v[0]] == PERMS_SPECIFIC || $self) ? '' : '1'), $v[4]);
 		}
 
 		$o .= replace_macros($tpl,array(
 
-			'$header'         => (($self) ? t('Automatic Permissions Settings') : sprintf( t('Connections: settings for %s'),$contact['xchan_name'])),
+			'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connections: settings for %s'),$contact['xchan_name'])),
+			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_user(),'system','autoperms')) ? 1 : 0), ''),
 			'$addr'           => $contact['xchan_addr'],
 			'$notself'        => (($self) ? '' : '1'),
 			'$self'           => (($self) ? '1' : ''),
-			'$autolbl'        => t('When receiving a channel introduction, any permissions provided here will be applied to the new connection automatically and the introduction approved. Leave this page if you do not wish to use this feature.'),
+			'$autolbl'        => t('Apply the permissions indicated on this page to all new connections.'),
+			'$buttons'        => (($self) ? '' : $buttons),
 			'$viewprof'       => t('View Profile'),
 			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
 			'$slide'          => $slide,
 			'$tabs'           => $t,
 			'$tab_str'        => $tab_str,
+			'$perms_step1'    => t('<p>Step #1. (Completed).</p><p>Create connection with minimal or no permissions.</p>'),
+			'$perms_step2'    => t('<p>Step #2. (Incomplete).</p><p>Review and/or edit the default individual permissions on this page, if desired.</p>'),
+			'$perms_step3'    => t('<p>Step #3. (Incomplete).</p><p>Submit this page to apply the selected permissions.</p><p>Until this is complete, this connection may have insufficient permission to communicate with you.</p>'),
 			'$is_pending'     => (($contact['abook_flags'] & ABOOK_FLAG_PENDING) ? 1 : ''),
 			'$unapproved'     => $unapproved,
 			'$inherited'      => t('inherited'),
@@ -518,12 +604,8 @@ function connedit_content(&$a) {
 			'$ignored'        => (($contact['readonly']) ? t('Currently ignored') : ''),
 			'$archived'       => (($contact['archive']) ? t('Currently archived') : ''),
 			'$pending'        => (($contact['archive']) ? t('Currently pending') : ''),
-			'$hidden'         => array('hidden', t('Hide this contact from others'), ($contact['hidden'] == 1), t('Replies/likes to your public posts <strong>may</strong> still be visible')),
-			'$photo'          => $contact['photo'],
 			'$name'           => $contact['name'],
-			'$dir_icon'       => $dir_icon,
 			'$alt_text'       => $alt_text,
-			'$sparkle'        => $sparkle,
 			'$url'            => $url
 
 		));

@@ -1,11 +1,17 @@
 <h2>{{$title}}</h2>
 
-<form action="new_channel" method="post" id="newchannel-form">
+<form action="new_channel" method="post" id="newchannel-form" class="stylish-select">
 
 	<div id="newchannel-desc" class="descriptive-paragraph">{{$desc}}</div>
 
+	<div id="newchannel-role-help" class="descriptive-paragraph">{{$help_role}}</div>
+	{{include file="field_select_grouped.tpl" field=$role}}
+	<div id="newchannel-role-end"  class="newchannel-field-end"></div>
+
+
 	<label for="newchannel-name" id="label-newchannel-name" class="newchannel-label" >{{$label_name}}</label>
 	<input type="text" name="name" id="newchannel-name" class="newchannel-input" value="{{$name}}" />
+	<div id="name-spinner"></div>
 	<div id="newchannel-name-feedback" class="newchannel-feedback"></div>
 	<div id="newchannel-name-end"  class="newchannel-field-end"></div>
 
@@ -13,6 +19,7 @@
 
 	<label for="newchannel-nickname" id="label-newchannel-nickname" class="newchannel-label" >{{$label_nick}}</label>
 	<input type="text" name="nickname" id="newchannel-nickname" class="newchannel-input" value="{{$nickname}}" />
+	<div id="nick-spinner"></div>
 	<div id="newchannel-nickname-feedback" class="newchannel-feedback"></div>
 	<div id="newchannel-nickname-end"  class="newchannel-field-end"></div>
 

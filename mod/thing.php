@@ -67,8 +67,6 @@ function thing_init(&$a) {
 
 
 
-
-
 	if($term_hash) {
 		$t = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_type = %d and term_hash = '%s' limit 1",
 			intval(TERM_OBJ_THING),
@@ -87,7 +85,7 @@ function thing_init(&$a) {
 		else
 			$local_photo = $orig_record['imgurl'];
 
-		$r = q("update term  set term = '%s', url = '%s', imgurl = '%s' where term_hash = '%s' and uid = %d limit 1",
+		$r = q("update term  set term = '%s', url = '%s', imgurl = '%s' where term_hash = '%s' and uid = %d",
 			dbesc($name),
 			dbesc(($url) ? $url : z_root() . '/thing/' . $term_hash),
 			dbesc($local_photo),
@@ -303,12 +301,12 @@ function thing_content(&$a) {
 		}
 
 
-		$x = q("delete from obj where obj_obj = '%s' and obj_type = %d and obj_channel = %d limit 1",
+		$x = q("delete from obj where obj_obj = '%s' and obj_type = %d and obj_channel = %d",
 			dbesc($thing_hash),
 			intval(TERM_OBJ_THING),
 			intval(local_user())
 		);
-		$x = q("delete from term where term_hash = '%s' and uid = %d limit 1",
+		$x = q("delete from term where term_hash = '%s' and uid = %d",
 			dbesc($thing_hash),
 			intval(local_user())
 		);
@@ -321,7 +319,7 @@ function thing_content(&$a) {
 		'$profile_lbl' => t('Select a profile'),
 		'$profile_select' => contact_profile_assign(''),
 		'$verb_lbl' => $channel['channel_name'],
-		'$activity' => array('activity',t('Post an activity'),true,t('Only sends to viewers of the applicable profile')),
+		'$activity' => array('activity',t('Post an activity'),((array_key_exists('activity',$_REQUEST)) ? $_REQUEST['activity'] : true),t('Only sends to viewers of the applicable profile')),
 		'$verb_select' => obj_verb_selector(),
 		'$thing_lbl' => t('Name of thing e.g. something'),
 		'$url_lbl' => t('URL of thing (optional)'),

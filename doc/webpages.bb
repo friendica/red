@@ -10,6 +10,5 @@ The &quot;page link title&quot; box allows a user to specify the &quot;pagelinkt
 
 Beneath the page creation box, a list of existing pages will appear with an &quot;edit&quot; link.  Clicking this will take you to an editor, similar to that of the post editor, where you can make changes to your webpages.
 
-If you are the admin of a site, you can specify a channel whose webpages we will use at key points around the site.  Presently, the only place this is implemented is the home page.  If you specify the channel &quot;admin&quot; and then the channel called &quot;admin&quot; creates a webpage called &quot;home&quot;, we will display it's content on your websites home page.  We expect this functionality to be extended to other areas in future.
+#include doc/macros/main_footer.bb;
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]

@@ -39,7 +39,9 @@ function settings_post(&$a) {
 	if(! local_user())
 		return;
 
-	// logger('mod_settings: ' . print_r($_REQUEST,true));
+	$channel = $a->get_channel();
+
+	 logger('mod_settings: ' . print_r($_REQUEST,true));
 
 	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
 		return;
@@ -120,10 +122,19 @@ function settings_post(&$a) {
 
 	if((argc() > 1) && (argv(1) === 'features')) {
 		check_form_security_token_redirectOnErr('/settings/features', 'settings_features');
-		foreach($_POST as $k => $v) {
-			if(strpos($k,'feature_') === 0) {
-				set_pconfig(local_user(),'feature',substr($k,8),((intval($v)) ? 1 : 0));
-			}
+
+		// Build list of features and check which are set
+		$features = get_features();
+		$all_features = array();
+		foreach($features as $k => $v) {
+			foreach($v as $f) 
+				$all_features[] = $f[0];
+		}
+		foreach($all_features as $k) {
+			if(x($_POST,"feature_$k"))
+				set_pconfig(local_user(),'feature',$k, 1);
+			else
+				set_pconfig(local_user(),'feature',$k, 0);
 		}
 		build_sync_packet();
 		return;
@@ -135,7 +146,19 @@ function settings_post(&$a) {
 
 		$theme = ((x($_POST,'theme')) ? notags(trim($_POST['theme']))  : $a->channel['channel_theme']);
 		$mobile_theme = ((x($_POST,'mobile_theme')) ? notags(trim($_POST['mobile_theme']))  : '');
-		$nosmile = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0);  
+		$user_scalable = ((x($_POST,'user_scalable')) ? intval($_POST['user_scalable'])  : 0);
+		$nosmile = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0); 
+		$title_tosource = ((x($_POST,'title_tosource')) ? intval($_POST['title_tosource'])  : 0);		 
+		$channel_list_mode = ((x($_POST,'channel_list_mode')) ? intval($_POST['channel_list_mode']) : 0);
+		$network_list_mode = ((x($_POST,'network_list_mode')) ? intval($_POST['network_list_mode']) : 0);
+
+		$channel_divmore_height = ((x($_POST,'channel_divmore_height')) ? intval($_POST['channel_divmore_height']) : 400);
+		if($channel_divmore_height < 50)
+			$channel_divmore_height = 50;
+		$network_divmore_height = ((x($_POST,'network_divmore_height')) ? intval($_POST['network_divmore_height']) : 400);
+		if($network_divmore_height < 50)
+			$network_divmore_height = 50;
+
 		$browser_update   = ((x($_POST,'browser_update')) ? intval($_POST['browser_update']) : 0);
 		$browser_update   = $browser_update * 1000;
 		if($browser_update < 10000)
@@ -146,17 +169,21 @@ function settings_post(&$a) {
 			$itemspage = 100;
 
 
-		if($mobile_theme !== '') {
+		if ($mobile_theme == "---") 
+			del_pconfig(local_user(),'system','mobile_theme');
+		else {
 			set_pconfig(local_user(),'system','mobile_theme',$mobile_theme);
 		}
 
-//		$chanview_full = ((x($_POST,'chanview_full')) ? intval($_POST['chanview_full']) : 0);
-
+		set_pconfig(local_user(),'system','user_scalable',$user_scalable);
 		set_pconfig(local_user(),'system','update_interval', $browser_update);
 		set_pconfig(local_user(),'system','itemspage', $itemspage);
 		set_pconfig(local_user(),'system','no_smilies',$nosmile);
-//		set_pconfig(local_user(),'system','chanview_full',$chanview_full);
-
+		set_pconfig(local_user(),'system','title_tosource',$title_tosource);
+		set_pconfig(local_user(),'system','channel_list_mode', $channel_list_mode);
+		set_pconfig(local_user(),'system','network_list_mode', $network_list_mode);
+		set_pconfig(local_user(),'system','channel_divmore_height', $channel_divmore_height);
+		set_pconfig(local_user(),'system','network_divmore_height', $network_divmore_height);
 
 		if ($theme == $a->channel['channel_theme']){
 			// call theme_post only if theme has not been changed
@@ -166,7 +193,7 @@ function settings_post(&$a) {
 			}
 		}
 
-		$r = q("UPDATE channel SET channel_theme = '%s' WHERE channel_id = %d LIMIT 1",
+		$r = q("UPDATE channel SET channel_theme = '%s' WHERE channel_id = %d",
 				dbesc($theme),
 				intval(local_user())
 		);
@@ -202,10 +229,11 @@ function settings_post(&$a) {
 			if(! $errs) {
 				$salt = random_string(32);
 				$password_encoded = hash('whirlpool', $salt . $newpass);
-				$r = q("update account set account_salt = '%s', account_password = '%s' 
-					where account_id = %d limit 1",
+				$r = q("update account set account_salt = '%s', account_password = '%s', account_password_changed = '%s' 
+					where account_id = %d",
 					dbesc($salt),
 					dbesc($password_encoded),
+					dbesc(datetime_convert()),
 					intval(get_account_id())
 				);
 				if($r)
@@ -232,7 +260,7 @@ function settings_post(&$a) {
 				$email = $a->user['email'];
 			}
 			if(! $errs) {
-				$r = q("update account set account_email = '%s' where account_id = %d limit 1",
+				$r = q("update account set account_email = '%s' where account_id = %d",
 					dbesc($email),
 					intval($account['account_id'])
 				);
@@ -253,14 +281,111 @@ function settings_post(&$a) {
 	
 	call_hooks('settings_post', $_POST);
 
-	
+	$set_perms = '';
+
+	$role = ((x($_POST,'permissions_role')) ? notags(trim($_POST['permissions_role'])) : '');
+	$oldrole = get_pconfig(local_user(),'system','permissions_role');
+
+	if(($role != $oldrole) || ($role === 'custom')) {
+
+		if($role === 'custom') {
+			$hide_presence    = (((x($_POST,'hide_presence')) && (intval($_POST['hide_presence']) == 1)) ? 1: 0);
+			$publish          = (((x($_POST,'profile_in_directory')) && (intval($_POST['profile_in_directory']) == 1)) ? 1: 0);
+			$def_group        = ((x($_POST,'group-selection')) ? notags(trim($_POST['group-selection'])) : '');
+			$r = q("update channel set channel_default_group = '%s' where channel_id = %d",
+				dbesc($def_group),
+				intval(local_user())
+			);	
+
+			$global_perms = get_perms();
+
+			foreach($global_perms as $k => $v) {
+				$set_perms .= ', ' . $v[0] . ' = ' . intval($_POST[$k]) . ' ';
+			}
+
+			$str_group_allow   = perms2str($_POST['group_allow']);
+			$str_contact_allow = perms2str($_POST['contact_allow']);
+			$str_group_deny    = perms2str($_POST['group_deny']);
+			$str_contact_deny  = perms2str($_POST['contact_deny']);
+			$r = q("update channel set channel_allow_cid = '%s', channel_allow_gid = '%s', channel_deny_cid = '%s', channel_deny_gid = '%s'
+				where channel_id = %d",
+				dbesc($str_contact_allow),
+				dbesc($str_group_allow),
+				dbesc($str_contact_deny),
+				dbesc($str_group_deny),
+				intval(local_user())
+			);
+		}
+	    else {
+		   	$role_permissions = get_role_perms($_POST['permissions_role']);
+			if(! $role_permissions) {
+				notice('Permissions category could not be found.');
+				return;
+			}
+			$hide_presence    = 1 - (intval($role_permissions['online']));
+			if($role_permissions['default_collection']) {
+				$r = q("select hash from groups where uid = %d and name = '%s' limit 1",
+					intval(local_user()),
+					dbesc( t('Friends') )
+				);
+				if(! $r) {
+					require_once('include/group.php');
+					group_add(local_user(), t('Friends'));
+					group_add_member(local_user(),t('Friends'),$channel['channel_hash']);
+					$r = q("select hash from groups where uid = %d and name = '%s' limit 1",
+						intval(local_user()),
+						dbesc( t('Friends') )
+					);
+				}
+				if($r) {
+					q("update channel set channel_default_group = '%s', channel_allow_gid = '%s', channel_allow_cid = '', channel_deny_gid = '', channel_deny_cid = '' where channel_id = %d",
+						dbesc($r[0]['hash']),
+						dbesc('<' . $r[0]['hash'] . '>'),
+						intval(local_user())
+					);
+				}
+				else {
+					notice( sprintf('Default privacy collection \'%s\' not found. Please create and re-submit permission change.', t('Friends')) . EOL);
+					return;
+				}
+			}
+			// no default collection
+			else {
+				q("update channel set channel_default_group = '', channel_allow_gid = '', channel_allow_cid = '', channel_deny_gid = '', 
+					channel_deny_cid = '' where channel_id = %d",
+						intval(local_user())
+				);
+			}
+
+			$r = q("update abook set abook_my_perms  = %d where abook_channel = %d and (abook_flags & %d)>0",
+				intval(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0),
+				intval(local_user()),
+				intval(ABOOK_FLAG_SELF)
+			);
+			set_pconfig(local_user(),'system','autoperms',(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0));
+
+			foreach($role_permissions as $p => $v) {
+				if(strpos($p,'channel_') !== false) {
+					$set_perms .= ', ' . $p . ' = ' . intval($v) . ' ';
+				}
+				if($p === 'directory_publish') {
+					$publish = intval($v);
+				}
+			}
+		}
+
+		set_pconfig(local_user(),'system','hide_online_status',$hide_presence);
+		set_pconfig(local_user(),'system','permissions_role',$role);
+	}
+
 	$username         = ((x($_POST,'username'))   ? notags(trim($_POST['username']))     : '');
 	$timezone         = ((x($_POST,'timezone'))   ? notags(trim($_POST['timezone']))     : '');
 	$defloc           = ((x($_POST,'defloc'))     ? notags(trim($_POST['defloc']))       : '');
 	$openid           = ((x($_POST,'openid_url')) ? notags(trim($_POST['openid_url']))   : '');
 	$maxreq           = ((x($_POST,'maxreq'))     ? intval($_POST['maxreq'])             : 0);
 	$expire           = ((x($_POST,'expire'))     ? intval($_POST['expire'])             : 0);
-	$def_group          = ((x($_POST,'group-selection')) ? notags(trim($_POST['group-selection'])) : '');
+	$evdays           = ((x($_POST,'evdays'))     ? intval($_POST['evdays'])             : 3);
+
 	$channel_menu     = ((x($_POST['channel_menu'])) ? htmlspecialchars_decode(trim($_POST['channel_menu']),ENT_QUOTES) : '');
 
 	$expire_items     = ((x($_POST,'expire_items')) ? intval($_POST['expire_items'])	 : 0);
@@ -269,17 +394,13 @@ function settings_post(&$a) {
 	$expire_network_only    = ((x($_POST,'expire_network_only'))? intval($_POST['expire_network_only'])	 : 0);
 
 	$allow_location   = (((x($_POST,'allow_location')) && (intval($_POST['allow_location']) == 1)) ? 1: 0);
-	$hide_presence    = (((x($_POST,'hide_presence')) && (intval($_POST['hide_presence']) == 1)) ? 1: 0);
 
-	$publish          = (((x($_POST,'profile_in_directory')) && (intval($_POST['profile_in_directory']) == 1)) ? 1: 0);
-	$page_flags       = (((x($_POST,'page-flags')) && (intval($_POST['page-flags']))) ? intval($_POST['page-flags']) : 0);
-	$blockwall        = (((x($_POST,'blockwall')) && (intval($_POST['blockwall']) == 1)) ? 0: 1); // this setting is inverted!
+
 	$blocktags        = (((x($_POST,'blocktags')) && (intval($_POST['blocktags']) == 1)) ? 0: 1); // this setting is inverted!
 	$unkmail          = (((x($_POST,'unkmail')) && (intval($_POST['unkmail']) == 1)) ? 1: 0);
 	$cntunkmail       = ((x($_POST,'cntunkmail')) ? intval($_POST['cntunkmail']) : 0);
 	$suggestme        = ((x($_POST,'suggestme')) ? intval($_POST['suggestme'])  : 0);  
-	$hide_friends     = (($_POST['hide_friends'] == 1) ? 1: 0);
-	$hidewall         = (($_POST['hidewall'] == 1) ? 1: 0);
+
 	$post_newfriend   = (($_POST['post_newfriend'] == 1) ? 1: 0);
 	$post_joingroup   = (($_POST['post_joingroup'] == 1) ? 1: 0);
 	$post_profilechange   = (($_POST['post_profilechange'] == 1) ? 1: 0);
@@ -291,63 +412,6 @@ function settings_post(&$a) {
 	if($adult != $existing_adult)
 		$pageflags = ($pageflags ^ PAGE_ADULT);
 
-	$arr = array();
-	$arr['channel_r_stream']    = (($_POST['view_stream'])   ? $_POST['view_stream']    : 0);
-	$arr['channel_r_profile']   = (($_POST['view_profile'])  ? $_POST['view_profile']   : 0);
-	$arr['channel_r_photos']    = (($_POST['view_photos'])   ? $_POST['view_photos']    : 0);
-	$arr['channel_r_abook']     = (($_POST['view_contacts']) ? $_POST['view_contacts']  : 0);
-	$arr['channel_w_stream']    = (($_POST['send_stream'])   ? $_POST['send_stream']    : 0);
-	$arr['channel_w_wall']      = (($_POST['post_wall'])     ? $_POST['post_wall']      : 0);
-	$arr['channel_w_tagwall']   = (($_POST['tag_deliver'])   ? $_POST['tag_deliver']    : 0);
-	$arr['channel_w_comment']   = (($_POST['post_comments']) ? $_POST['post_comments']  : 0);
-	$arr['channel_w_mail']      = (($_POST['post_mail'])     ? $_POST['post_mail']      : 0);
-	$arr['channel_w_photos']    = (($_POST['post_photos'])   ? $_POST['post_photos']    : 0);
-	$arr['channel_w_chat']      = (($_POST['chat'])          ? $_POST['chat']           : 0);
-	$arr['channel_a_delegate']  = (($_POST['delegate'])      ? $_POST['delegate']       : 0);
-	$arr['channel_r_storage']   = (($_POST['view_storage'])  ? $_POST['view_storage']   : 0);
-	$arr['channel_w_storage']   = (($_POST['write_storage']) ? $_POST['write_storage']  : 0);
-	$arr['channel_r_pages']     = (($_POST['view_pages'])    ? $_POST['view_pages']     : 0);
-	$arr['channel_w_pages']     = (($_POST['write_pages'])   ? $_POST['write_pages']    : 0);
-	$arr['channel_a_republish'] = (($_POST['republish'])     ? $_POST['republish']      : 0);
-	$arr['channel_w_like']      = (($_POST['post_like'])     ? $_POST['post_like']      : 0);
-	
-	$defperms = 0;
-	if(x($_POST['def_view_stream']))
-		$defperms += $_POST['def_view_stream'];
-	if(x($_POST['def_view_profile']))
-		$defperms += $_POST['def_view_profile'];
-	if(x($_POST['def_view_photos']))
-		$defperms += $_POST['def_view_photos'];
-	if(x($_POST['def_view_contacts']))
-		$defperms += $_POST['def_view_contacts'];
-	if(x($_POST['def_send_stream']))
-		$defperms += $_POST['def_send_stream'];
-	if(x($_POST['def_post_wall']))
-		$defperms += $_POST['def_post_wall'];
-	if(x($_POST['def_tag_deliver']))
-		$defperms += $_POST['def_tag_deliver'];
-	if(x($_POST['def_post_comments']))
-		$defperms += $_POST['def_post_comments'];
-	if(x($_POST['def_post_mail']))
-		$defperms += $_POST['def_post_mail'];
-	if(x($_POST['def_post_photos']))
-		$defperms += $_POST['def_post_photos'];
-	if(x($_POST['def_chat']))
-		$defperms += $_POST['def_chat'];
-	if(x($_POST['def_delegate']))
-		$defperms += $_POST['def_delegate'];
-	if(x($_POST['def_view_storage']))
-		$defperms += $_POST['def_view_storage'];
-	if(x($_POST['def_write_storage']))
-		$defperms += $_POST['def_write_storage'];
-	if(x($_POST['def_view_pages']))
-		$defperms += $_POST['def_view_pages'];
-	if(x($_POST['def_write_pages']))
-		$defperms += $_POST['def_write_pages'];
-	if(x($_POST['def_republish']))
-		$defperms += $_POST['def_republish'];
-	if(x($_POST['def_post_like']))
-		$defperms += $_POST['def_post_like'];
 
 	$notify = 0;
 
@@ -369,6 +433,33 @@ function settings_post(&$a) {
 		$notify += intval($_POST['notify8']);
 
 
+	$vnotify = 0;
+
+	if(x($_POST,'vnotify1'))
+		$vnotify += intval($_POST['vnotify1']);
+	if(x($_POST,'vnotify2'))
+		$vnotify += intval($_POST['vnotify2']);
+	if(x($_POST,'vnotify3'))
+		$vnotify += intval($_POST['vnotify3']);
+	if(x($_POST,'vnotify4'))
+		$vnotify += intval($_POST['vnotify4']);
+	if(x($_POST,'vnotify5'))
+		$vnotify += intval($_POST['vnotify5']);
+	if(x($_POST,'vnotify6'))
+		$vnotify += intval($_POST['vnotify6']);
+	if(x($_POST,'vnotify7'))
+		$vnotify += intval($_POST['vnotify7']);
+	if(x($_POST,'vnotify8'))
+		$vnotify += intval($_POST['vnotify8']);
+	if(x($_POST,'vnotify9'))
+		$vnotify += intval($_POST['vnotify9']);
+	if(x($_POST,'vnotify10'))
+		$vnotify += intval($_POST['vnotify10']);
+	if(x($_POST,'vnotify11'))
+		$vnotify += intval($_POST['vnotify11']);
+
+	$always_show_in_notices = x($_POST,'always_show_in_notices') ? 1 : 0;
+
 	$channel = $a->get_channel();
 
 	$err = '';
@@ -385,16 +476,10 @@ function settings_post(&$a) {
 		}
 	}
 
-
 	if($timezone != $channel['channel_timezone']) {
 		if(strlen($timezone))
 			date_default_timezone_set($timezone);
 	}
-
-	$str_group_allow   = perms2str($_POST['group_allow']);
-	$str_contact_allow = perms2str($_POST['contact_allow']);
-	$str_group_deny    = perms2str($_POST['group_deny']);
-	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
 	set_pconfig(local_user(),'system','use_browser_location',$allow_location);
 	set_pconfig(local_user(),'system','suggestme', $suggestme);
@@ -402,10 +487,12 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','post_joingroup', $post_joingroup);
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 	set_pconfig(local_user(),'system','blocktags',$blocktags);
-	set_pconfig(local_user(),'system','hide_online_status',$hide_presence);
 	set_pconfig(local_user(),'system','channel_menu',$channel_menu);
+	set_pconfig(local_user(),'system','vnotify',$vnotify);
+	set_pconfig(local_user(),'system','always_show_in_notices',$always_show_in_notices);
+	set_pconfig(local_user(),'system','evdays',$evdays);
 
-	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_default_group = '%s', channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d, channel_w_like = %d, channel_allow_cid = '%s', channel_allow_gid = '%s', channel_deny_cid = '%s', channel_deny_gid = '%s'  where channel_id = %d limit 1",
+	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d $set_perms where channel_id = %d",
 		dbesc($username),
 		intval($pageflags),
 		dbesc($timezone),
@@ -414,45 +501,20 @@ function settings_post(&$a) {
 		intval($unkmail),
 		intval($maxreq),
 		intval($expire),
-		dbesc($def_group),
-		intval($arr['channel_r_stream']),
-		intval($arr['channel_r_profile']),
-		intval($arr['channel_r_photos']),
-		intval($arr['channel_r_abook']), 
-		intval($arr['channel_w_stream']),
-		intval($arr['channel_w_wall']),  
-		intval($arr['channel_w_tagwall']),
-		intval($arr['channel_w_comment']),
-		intval($arr['channel_w_mail']),   
-		intval($arr['channel_w_photos']), 
-		intval($arr['channel_w_chat']),
-		intval($arr['channel_a_delegate']),
-		intval($arr['channel_r_storage']),
-		intval($arr['channel_w_storage']),
-		intval($arr['channel_r_pages']),
-		intval($arr['channel_w_pages']),
-		intval($arr['channel_a_republish']),
-		intval($arr['channel_w_like']),
-		dbesc($str_contact_allow),
-		dbesc($str_group_allow),
-		dbesc($str_contact_deny),
-		dbesc($str_group_deny),
 		intval(local_user())
 	);   
 	if($r)
 		info( t('Settings updated.') . EOL);
 
-	$r = q("UPDATE `profile` 
-		SET `publish` = %d, 
-		`hide_friends` = %d
-		WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
-		intval($publish),
-		intval($hide_friends),
-		intval(local_user())
-	);
+	if(! is_null($publish)) {
+		$r = q("UPDATE profile SET publish = %d WHERE is_default = 1 AND uid = %d",
+			intval($publish),
+			intval(local_user())
+		);
+	}
 
 	if($name_change) {
-		$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s' where xchan_hash = '%s' limit 1",
+		$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s' where xchan_hash = '%s'",
 			dbesc($username),
 			dbesc(datetime_convert()),
 			dbesc($channel['channel_hash'])
@@ -587,7 +649,7 @@ function settings_content(&$a) {
 	if((argc() > 1) && (argv(1) === 'featured')) {
 		$settings_addons = "";
 		
-		$r = q("SELECT * FROM `hook` WHERE `hook` = 'plugin_settings' ");
+		$r = q("SELECT * FROM `hook` WHERE `hook` = 'feature_settings' ");
 		if(! count($r))
 			$settings_addons = t('No feature settings configured');
 
@@ -627,6 +689,7 @@ function settings_content(&$a) {
 			'$submit' 	=> t('Submit'),
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
 			'$removeme' => t('Remove Account'),
+			'$removeaccount' => t('Remove this account from this server including all its channels'),
 			'$permanent' => t('Warning: This action is permanent and cannot be reversed.'),
 			'$account_settings' => $account_settings
 		));
@@ -653,7 +716,6 @@ function settings_content(&$a) {
 			'$title'	=> t('Additional Features'),
 			'$features' => $arr,
 			'$submit'   => t('Submit'),
-			'$field_yesno'  => 'field_yesno.tpl',
 		));
 
 		return $o;
@@ -687,6 +749,7 @@ function settings_content(&$a) {
 	/*
 	 * DISPLAY SETTINGS
 	 */
+
 	if((argc() > 1) && (argv(1) === 'display')) {
 		$default_theme = get_config('system','theme');
 		if(! $default_theme)
@@ -705,7 +768,6 @@ function settings_content(&$a) {
 
 		
 		$themes = array();
-		$mobile_themes = array("---" => t('No special theme for mobile devices'));
 		$files = glob('view/theme/*');
 		if($allowed_themes) {
 			foreach($allowed_themes as $th) {
@@ -713,28 +775,40 @@ function settings_content(&$a) {
 				$is_experimental = file_exists('view/theme/' . $th . '/experimental');
 				$unsupported = file_exists('view/theme/' . $th . '/unsupported');
 				$is_mobile = file_exists('view/theme/' . $th . '/mobile');
+				$is_library = file_exists('view/theme/'. $th . '/library');
+				$mobile_themes["---"] = t("No special theme for mobile devices");
+
 				if (!$is_experimental or ($is_experimental && (get_config('experimentals','exp_themes')==1 or get_config('experimentals','exp_themes')===false))){ 
 					$theme_name = (($is_experimental) ?  sprintf(t('%s - (Experimental)'), $f) : $f);
-					if($is_mobile) {
-						$mobile_themes[$f]=$theme_name;
-					}
-					else {
-						$themes[$f]=$theme_name;
+					if (! $is_library) {
+						if($is_mobile) {
+							$mobile_themes[$f] = $themes[$f] = $theme_name . ' (' . t('mobile') . ')';
+						}
+						else {
+							$mobile_themes[$f] = $themes[$f] = $theme_name;
+						}
 					}
 				}
+
 			}
 		}
 		$theme_selected = (!x($_SESSION,'theme')? $default_theme : $_SESSION['theme']);
 		$mobile_theme_selected = (!x($_SESSION,'mobile_theme')? $default_mobile_theme : $_SESSION['mobile_theme']);
+
+		$user_scalable = get_pconfig(local_user(),'system','user_scalable');
+		$user_scalable = (($user_scalable===false)? '1': $user_scalable); // default if not set: 1
 		
 		$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
-		$browser_update = (($browser_update == 0) ? 40 : $browser_update / 1000); // default if not set: 40 seconds
+		$browser_update = (($browser_update == 0) ? 80 : $browser_update / 1000); // default if not set: 40 seconds
 
 		$itemspage = intval(get_pconfig(local_user(), 'system','itemspage'));
 		$itemspage = (($itemspage > 0 && $itemspage < 101) ? $itemspage : 20); // default if not set: 20 items
 		
 		$nosmile = get_pconfig(local_user(),'system','no_smilies');
 		$nosmile = (($nosmile===false)? '0': $nosmile); // default if not set: 0
+
+		$title_tosource = get_pconfig(local_user(),'system','title_tosource');
+		$title_tosource = (($title_tosource===false)? '0': $title_tosource); // default if not set: 0
 
 		$theme_config = "";
 		if( ($themeconfigfile = get_theme_config_file($theme_selected)) != null){
@@ -752,11 +826,20 @@ function settings_content(&$a) {
 		
 			'$theme'	=> array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview'),
 			'$mobile_theme'	=> array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, ''),
+			'$user_scalable' => array('user_scalable', t("Enable user zoom on mobile devices"), $user_scalable, ''),
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
 			'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, ''),
+			'$title_tosource'	=> array('title_tosource', t("Link post titles to source"), $title_tosource, ''),		
 			'$layout_editor' => t('System Page Layout Editor - (advanced)'),
 			'$theme_config' => $theme_config,
+			'$expert' => feature_enabled(local_user(),'expert'),
+			'$channel_list_mode' => array('channel_list_mode', t('Use blog/list mode on channel page'), get_pconfig(local_user(),'system','channel_list_mode'), t('(comments displayed separately)')),
+			'$network_list_mode' => array('network_list_mode', t('Use blog/list mode on matrix page'), get_pconfig(local_user(),'system','network_list_mode'), t('(comments displayed separately)')),
+			'$channel_divmore_height' => array('channel_divmore_height', t('Channel page max height of content (in pixels)'), ((get_pconfig(local_user(),'system','channel_divmore_height')) ? get_pconfig(local_user(),'system','channel_divmore_height') : 400), t('click to expand content exceeding this height')),
+			'$network_divmore_height' => array('network_divmore_height', t('Matrix page max height of content (in pixels)'), ((get_pconfig(local_user(),'system','network_divmore_height')) ? get_pconfig(local_user(),'system','network_divmore_height') : 400) , t('click to expand content exceeding this height')),
+
+
 		));
 		
 		return $o;
@@ -770,8 +853,6 @@ function settings_content(&$a) {
 
 		require_once('include/acl_selectors.php');
 		require_once('include/permissions.php');
-
-
 
 
 		$p = q("SELECT * FROM `profile` WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
@@ -826,9 +907,8 @@ function settings_content(&$a) {
 		$expire     = $channel['channel_expire_days'];
 		$adult_flag = intval($channel['channel_pageflags'] & PAGE_ADULT);
 
-		$blockwall  = $a->user['blockwall'];
-		$unkmail    = $a->user['unkmail'];
-		$cntunkmail = $a->user['cntunkmail'];
+//		$unkmail    = $a->user['unkmail'];
+//		$cntunkmail = $a->user['cntunkmail'];
 
 		$hide_presence = intval(get_pconfig(local_user(), 'system','hide_online_status'));
 
@@ -866,9 +946,7 @@ function settings_content(&$a) {
 	
 		$timezone = date_default_timezone_get();
 
-
-
-		$opt_tpl = get_markup_template("field_yesno.tpl");
+		$opt_tpl = get_markup_template("field_checkbox.tpl");
 		if(get_config('system','publish_all')) {
 			$profile_in_dir = '<input type="hidden" name="profile_in_directory" value="1" />';
 		}
@@ -921,6 +999,17 @@ function settings_content(&$a) {
 			}
 		}
 
+		$evdays = get_pconfig(local_user(),'system','evdays');
+		if(! $evdays)
+			$evdays = 3;
+
+		$permissions_role = get_pconfig(local_user(),'system','permissions_role');
+		$permissions_set = (($permissions_role && $permissions_role != 'custom') ? true : false);
+		$vnotify = get_pconfig(local_user(),'system','vnotify');
+		$always_show_in_notices = get_pconfig(local_user(),'system','always_show_in_notices');
+		if($vnotify === false)
+			$vnotify = (-1);
+
 		$o .= replace_macros($stpl,array(
 			'$ptitle' 	=> t('Channel Settings'),
 
@@ -929,18 +1018,18 @@ function settings_content(&$a) {
 			'$uid' => local_user(),
 			'$form_security_token' => get_form_security_token("settings"),
 			'$nickname_block' => $prof_addr,
-		
-		
 			'$h_basic' 	=> t('Basic Settings'),
 			'$username' => array('username',  t('Full Name:'), $username,''),
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
-			'$timezone' => array('timezone_select' , t('Your Timezone:'), select_timezone($timezone), ''),
+			'$timezone' => array('timezone_select' , t('Your Timezone:'), $timezone, '', get_timezones()),
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, t('Geographical location to display on your posts')),
 			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_user(),'system','use_browser_location')) ? 1 : ''), ''),
 		
 			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel frequently or regularly publishes adult content. (Please tag any adult material and/or nudity with #NSFW)')),
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
+			'$permissions_set' => $permissions_set,
+			'$perms_set_msg' => t('Your permissions are already configured. Click to view/adjust'),
 
 			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online')),
 
@@ -960,9 +1049,8 @@ function settings_content(&$a) {
 			'$permdesc' => t("\x28click to open/close\x29"),
 			'$aclselect' => populate_acl($perm_defaults,false),
 			'$suggestme' => $suggestme,
-
 			'$group_select' => $group_select,
-
+			'$role' => array('permissions_role' , t('Channel permissions category:'), $permissions_role, '', get_roles()),
 
 			'$profile_in_dir' => $profile_in_dir,
 			'$hide_friends' => $hide_friends,
@@ -986,7 +1074,24 @@ function settings_content(&$a) {
 			'$notify7'  => array('notify7', t('You are tagged in a post'), ($notify & NOTIFY_TAGSELF), NOTIFY_TAGSELF, ''),		
 			'$notify8'  => array('notify8', t('You are poked/prodded/etc. in a post'), ($notify & NOTIFY_POKE), NOTIFY_POKE, ''),		
 		
-		
+
+			'$lbl_vnot' 	=> t('Show visual notifications including:'),
+
+			'$vnotify1'	=> array('vnotify1', t('Unseen matrix activity'), ($vnotify & VNOTIFY_NETWORK), VNOTIFY_NETWORK, ''),
+			'$vnotify2'	=> array('vnotify2', t('Unseen channel activity'), ($vnotify & VNOTIFY_CHANNEL), VNOTIFY_CHANNEL, ''),
+			'$vnotify3'	=> array('vnotify3', t('Unseen private messages'), ($vnotify & VNOTIFY_MAIL), VNOTIFY_MAIL, t('Recommended')),
+			'$vnotify4'	=> array('vnotify4', t('Upcoming events'), ($vnotify & VNOTIFY_EVENT), VNOTIFY_EVENT, ''),
+			'$vnotify5'	=> array('vnotify5', t('Events today'), ($vnotify & VNOTIFY_EVENTTODAY), VNOTIFY_EVENTTODAY, ''),
+			'$vnotify6'  => array('vnotify6', t('Upcoming birthdays'), ($vnotify & VNOTIFY_BIRTHDAY), VNOTIFY_BIRTHDAY, t('Not available in all themes')),
+			'$vnotify7'  => array('vnotify7', t('System (personal) notifications'), ($vnotify & VNOTIFY_SYSTEM), VNOTIFY_SYSTEM, ''),		
+			'$vnotify8'  => array('vnotify8', t('System info messages'), ($vnotify & VNOTIFY_INFO), VNOTIFY_INFO, t('Recommended')),		
+			'$vnotify9'  => array('vnotify9', t('System critical alerts'), ($vnotify & VNOTIFY_ALERT), VNOTIFY_ALERT, t('Recommended')),		
+			'$vnotify10'  => array('vnotify10', t('New connections'), ($vnotify & VNOTIFY_INTRO), VNOTIFY_INTRO, t('Recommended')),		
+			'$vnotify11'  => array('vnotify11', t('System Registrations'), ($vnotify & VNOTIFY_REGISTER), VNOTIFY_REGISTER, ''),		
+			'$always_show_in_notices'  => array('always_show_in_notices', t('Also show new wall posts, private messages and connections under Notices'), $always_show_in_notices, 1, ''),		
+
+			'$evdays' => array('evdays', t('Notify me of events this many days in advance'), $evdays, t('Must be greater than 0')),			
+
 			'$h_advn' => t('Advanced Account/Page Type Settings'),
 			'$h_descadvn' => t('Change the behaviour of this account for special situations'),
 			'$pagetype' => $pagetype,

@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper-styled">
 <h1>{{$title}}</h1>
 
 <form action="settings/connectors" method="post" autocomplete="off">
@@ -6,4 +7,4 @@
 {{$settings_connectors}}
 
 </form>
-
+</div>

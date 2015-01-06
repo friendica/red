@@ -6,6 +6,6 @@
 	margin-top: 25px;
 }
 
-#sellpage-edit label{
+#sellpage-edit > label {
 	width: 300px;
 }

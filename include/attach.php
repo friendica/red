@@ -26,76 +26,73 @@ function z_mime_content_type($filename) {
 
 	$mime_types = array(
 
-		'txt' => 'text/plain',
-		'htm' => 'text/html',
-		'html' => 'text/html',
-		'php' => 'text/html',
-		'css' => 'text/css',
-		'js' => 'application/javascript',
-		'json' => 'application/json',
-		'xml' => 'application/xml',
-		'swf' => 'application/x-shockwave-flash',
-		'flv' => 'video/x-flv',
-		'epub' => 'application/epub+zip',
+	'txt' => 'text/plain',
+	'htm' => 'text/html',
+	'html' => 'text/html',
+	'php' => 'text/html',
+	'css' => 'text/css',
+	'js' => 'application/javascript',
+	'json' => 'application/json',
+	'xml' => 'application/xml',
+	'swf' => 'application/x-shockwave-flash',
+	'flv' => 'video/x-flv',
+	'epub' => 'application/epub+zip',
 
-		// images
-		'png' => 'image/png',
-		'jpe' => 'image/jpeg',
-		'jpeg' => 'image/jpeg',
-		'jpg' => 'image/jpeg',
-		'gif' => 'image/gif',
-		'bmp' => 'image/bmp',
-		'ico' => 'image/vnd.microsoft.icon',
-		'tiff' => 'image/tiff',
-		'tif' => 'image/tiff',
-		'svg' => 'image/svg+xml',
-		'svgz' => 'image/svg+xml',
+	// images
+	'png' => 'image/png',
+	'jpe' => 'image/jpeg',
+	'jpeg' => 'image/jpeg',
+	'jpg' => 'image/jpeg',
+	'gif' => 'image/gif',
+	'bmp' => 'image/bmp',
+	'ico' => 'image/vnd.microsoft.icon',
+	'tiff' => 'image/tiff',
+	'tif' => 'image/tiff',
+	'svg' => 'image/svg+xml',
+	'svgz' => 'image/svg+xml',
 
-		// archives
-		'zip' => 'application/zip',
-		'rar' => 'application/x-rar-compressed',
-		'exe' => 'application/x-msdownload',
-		'msi' => 'application/x-msdownload',
-		'cab' => 'application/vnd.ms-cab-compressed',
+	// archives
+	'zip' => 'application/zip',
+	'rar' => 'application/x-rar-compressed',
+	'exe' => 'application/x-msdownload',
+	'msi' => 'application/x-msdownload',
+	'cab' => 'application/vnd.ms-cab-compressed',
 
-		// audio/video
-		'mp3' => 'audio/mpeg',
-		'wav' => 'audio/wav',
-		'qt' => 'video/quicktime',
-		'mov' => 'video/quicktime',
-		'ogg' => 'application/ogg',
+	// audio/video
+	'mp3' => 'audio/mpeg',
+	'wav' => 'audio/wav',
+	'qt' => 'video/quicktime',
+	'mov' => 'video/quicktime',
+	'ogg' => 'application/ogg',
 
-		// adobe
-		'pdf' => 'application/pdf',
-		'psd' => 'image/vnd.adobe.photoshop',
-		'ai' => 'application/postscript',
-		'eps' => 'application/postscript',
-		'ps' => 'application/postscript',
+	// adobe
+	'pdf' => 'application/pdf',
+	'psd' => 'image/vnd.adobe.photoshop',
+	'ai' => 'application/postscript',
+	'eps' => 'application/postscript',
+	'ps' => 'application/postscript',
 
-		// ms office
-		'doc' => 'application/msword',
-		'rtf' => 'application/rtf',
-		'xls' => 'application/vnd.ms-excel',
-		'ppt' => 'application/vnd.ms-powerpoint',
+	// ms office
+	'doc' => 'application/msword',
+	'rtf' => 'application/rtf',
+	'xls' => 'application/vnd.ms-excel',
+	'ppt' => 'application/vnd.ms-powerpoint',
 
-
-		// open office
-		'odt' => 'application/vnd.oasis.opendocument.text',
-		'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+	// open office
+	'odt' => 'application/vnd.oasis.opendocument.text',
+	'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
 	);
 
-	$dot = strpos($filename,'.');
-	if($dot !== false) {
-		$ext = strtolower(substr($filename,$dot+1));
+	$dot = strpos($filename, '.');
+	if ($dot !== false) {
+		$ext = strtolower(substr($filename, $dot + 1));
 		if (array_key_exists($ext, $mime_types)) {
 			return $mime_types[$ext];
 		}
 	}
 
 	return 'application/octet-stream';
-
 }
-
 
 /**
  * @brief Count files/attachments.
@@ -138,8 +135,8 @@ function attach_count_files($channel_id, $observer, $hash = '', $filename = '', 
 
 	$ret['success'] = ((is_array($r)) ? true : false);
 	$ret['results'] = ((is_array($r)) ? count($r) : false);
-	return $ret; 
 
+	return $ret;
 }
 
 /**
@@ -190,8 +187,8 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
 
 	$ret['success'] = ((is_array($r)) ? true : false);
 	$ret['results'] = ((is_array($r)) ? $r : false);
-	return $ret; 
 
+	return $ret;
 }
 
 /**
@@ -246,8 +243,8 @@ function attach_by_hash($hash, $rev = 0) {
 
 	$ret['success'] = true;
 	$ret['data'] = $r[0];
-	return $ret;
 
+	return $ret;
 }
 
 /**
@@ -301,7 +298,6 @@ function attach_by_hash_nodata($hash, $rev = 0) {
 	$ret['success'] = true;
 	$ret['data'] = $r[0];
 	return $ret;
-
 }
 
 /**
@@ -400,14 +396,15 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	if(! isset($hash))
 		$hash = random_string();
+
 	$created = datetime_convert();
 
 	if($options === 'replace') {
-		$r = q("update attach set filename = '%s', filetype = '%s', filesize = %d, data = '%s', edited = '%s' where id = %d and uid = %d limit 1",
+		$r = q("update attach set filename = '%s', filetype = '%s', filesize = %d, data = '%s', edited = '%s' where id = %d and uid = %d",
 			dbesc($filename),
 			dbesc($mimetype),
 			intval($filesize),
-			dbesc(@file_get_contents($src)),
+			dbescbin(@file_get_contents($src)),
 			dbesc($created),
 			intval($existing_id),
 			intval($channel_id)
@@ -424,7 +421,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc($mimetype),
 			intval($filesize),
 			intval($x[0]['revision'] + 1),
-			dbesc(@file_get_contents($src)),
+			dbescbin(@file_get_contents($src)),
 			dbesc($created),
 			dbesc($created),
 			dbesc($x[0]['allow_cid']),
@@ -432,10 +429,10 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc($x[0]['deny_cid']),
 			dbesc($x[0]['deny_gid'])
 		);
-	}		
+	}
 	elseif($options === 'update') {
 		$r = q("update attach set filename = '%s', filetype = '%s', edited = '%s', 
-			allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid  = '%s' where id = %d and uid = %d limit 1",
+			allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid  = '%s' where id = %d and uid = %d",
 			dbesc((array_key_exists('filename',$arr))  ? $arr['filename']  : $x[0]['filename']),
 			dbesc((array_key_exists('filetype',$arr))  ? $arr['filetype']  : $x[0]['filetype']),
 			dbesc($created),
@@ -446,7 +443,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			intval($x[0]['id']),
 			intval($x[0]['uid'])
 		);
-	}		
+	}
 	else {
 		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
@@ -458,7 +455,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc($mimetype),
 			intval($filesize),
 			intval(0),
-			dbesc(@file_get_contents($src)),
+			dbescbin(@file_get_contents($src)),
 			dbesc($created),
 			dbesc($created),
 			dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : '<' . $channel['channel_hash'] . '>'),
@@ -466,7 +463,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc(($arr && array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : ''),
 			dbesc(($arr && array_key_exists('deny_gid',$arr))  ? $arr['deny_gid']  : '')
 		);
-	}		
+	}
 
 	if($options !== 'update')
 		@unlink($src);
@@ -490,6 +487,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	$ret['success'] = true;
 	$ret['data'] = $r[0];
+
 	return $ret;
 }
 
@@ -507,8 +505,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
  * $ret['data'] = array of attach DB entries without data component
  */
 function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
-
 	$ret = array('success' => false);
+
 	if(! perm_is_allowed($r[0]['uid'], get_observer_hash(), 'view_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
@@ -519,7 +517,7 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 		if(count($paths) > 1) {
 			$curpath = array_shift($paths);
 
-			$r = q("select hash, id from attach where uid = %d and filename = '%s' and (flags & %d ) " . permissions_sql($channel_id) . " limit 1",
+			$r = q("select hash, id from attach where uid = %d and filename = '%s' and (flags & %d )>0 " . permissions_sql($channel_id) . " limit 1",
 				intval($channel_id),
 				dbesc($curpath),
 				intval(ATTACH_FLAG_DIR)
@@ -535,7 +533,7 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 	else
 		$paths = array($pathname);
 	
-	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and (flags & %d ) " . permissions_sql($channel_id),
+	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and (flags & %d )>0 " . permissions_sql($channel_id),
 		intval($channel_id),
 		dbesc($parent_hash),
 		dbesc($paths[0]),
@@ -547,6 +545,7 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 	}
 	$ret['success'] = true;
 	$ret['data'] = $r;
+
 	return $ret;
 }
 
@@ -568,6 +567,7 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
  *    $arr['deny_cid']
  *    $arr['deny_gid']
  */
+
 function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 	$ret = array('success' => false);
@@ -618,7 +618,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 		$sql_options = permissions_sql($channel['channel_id']);
 
 		do {
-			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d ) 
+			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d )>0 
 				$sql_options limit 1",
 				intval($channel['channel_id']),
 				dbesc($lfile),
@@ -670,7 +670,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 			$ret['data'] = $arr;
 
 			// update the parent folder's lastmodified timestamp
-			$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+			$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d",
 				dbesc($created),
 				dbesc($arr['folder']),
 				intval($channel_id)
@@ -686,7 +686,6 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 	}
 
 	return $ret;
-
 }
 
 /**
@@ -718,13 +717,13 @@ function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gi
 			);
 			if($r) {
 				foreach($r as $rr) {
-					attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse);
+					attach_change_permissions($channel_id, $rr['hash'], $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse);
 				}
 			}
 		}
 	}
 
-	$x = q("update attach set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s' where hash = '%s' and uid = %d limit 1",
+	$x = q("update attach set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s' where hash = '%s' and uid = %d",
 		dbesc($allow_cid),
 		dbesc($allow_gid),
 		dbesc($deny_cid),
@@ -732,15 +731,19 @@ function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gi
 		dbesc($resource),
 		intval($channel_id)
 	);
-
-	return;
 }
 
 /**
- * @brief Delete a file/directory.
- * 
+ * @brief Delete a file/directory from a channel.
+ *
+ * If the provided resource hash is from a directory it will delete everything
+ * recursively under this directory.
+ *
  * @param int $channel_id
- * @param string $resource a hash to delete
+ *  The id of the channel
+ * @param string $resource
+ *  The hash to delete
+ * @return void
  */
 function attach_delete($channel_id, $resource) {
 
@@ -760,7 +763,7 @@ function attach_delete($channel_id, $resource) {
 
 	// If resource is a directory delete everything in the directory recursive
 	if($r[0]['flags'] & ATTACH_FLAG_DIR) {
-		$x = q("select hash, flags from attach where folder = '%s' and uid = %d",
+		$x = q("SELECT hash, flags FROM attach WHERE folder = '%s' AND uid = %d",
 			dbesc($resource),
 			intval($channel_id)
 		);
@@ -788,30 +791,32 @@ function attach_delete($channel_id, $resource) {
 	}
 
 	// delete from database
-	$z = q("DELETE FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
+	$z = q("DELETE FROM attach WHERE hash = '%s' AND uid = %d",
 		dbesc($resource),
 		intval($channel_id)
 	);
 
 	// update the parent folder's lastmodified timestamp
-	$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+	$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d",
 		dbesc(datetime_convert()),
 		dbesc($r[0]['folder']),
 		intval($channel_id)
 	);
-
-	return;
 }
 
 /**
  * @brief Returns path to file in cloud/.
  * 
- * @param $arr
- * @return string with the path the file to cloud/
+ * @param array
+ *  $arr[uid] int the channels uid
+ *  $arr[folder] string
+ *  $arr[filename]] string
+ * @return string
+ *  path to the file in cloud/
  */
 function get_cloudpath($arr) {
-
 	$basepath = 'cloud/';
+
 	if($arr['uid']) {
 		$r = q("select channel_address from channel where channel_id = %d limit 1",
 			intval($arr['uid'])
@@ -823,12 +828,11 @@ function get_cloudpath($arr) {
 	$path = $basepath;
 
 	if($arr['folder']) {
-
 		$lpath = '';
 		$lfile = $arr['folder'];
 
 		do {
-			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d ) 
+			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d )>0 
 				limit 1",
 				intval($arr['uid']),
 				dbesc($lfile),
@@ -842,59 +846,82 @@ function get_cloudpath($arr) {
 				$lpath = $r[0]['filename'] . '/' . $lpath;
 			$lfile = $r[0]['folder'];
 
-		} while ( ($r[0]['folder']) && ($r[0]['flags'] & ATTACH_FLAG_DIR)) ;
+		} while ( ($r[0]['folder']) && ($r[0]['flags'] & ATTACH_FLAG_DIR));
 
-		$path .= $lpath;			
+		$path .= $lpath;
 	}
-
 	$path .= $arr['filename'];
+
 	return $path;
 }
 
 /**
  * @brief Returns path to parent folder in cloud/.
- * 
- * @param $arr
- * @return string with the folder path
+ *
+ * @param int $channel_id
+ *  The id of the channel
+ * @param string $channel_name
+ *  The name of the channel
+ * @param string $attachHash
+ * @return string with the full folder path
  */
 function get_parent_cloudpath($channel_id, $channel_name, $attachHash) {
-	//Build directory tree and redirect
+	// build directory tree
 	$parentHash = $attachHash;
 	do {
 		$parentHash = find_folder_hash_by_attach_hash($channel_id, $parentHash);
 		if ($parentHash) {
 			$parentName = find_filename_by_hash($channel_id, $parentHash);
-			$parentFullPath = $parentName."/".$parentFullPath;
+			$parentFullPath = $parentName . '/' . $parentFullPath;
 		}
 	} while ($parentHash);
-	$parentFullPath = z_root() . "/cloud/" . $channel_name . "/" . $parentFullPath;
+	$parentFullPath = z_root() . '/cloud/' . $channel_name . '/' . $parentFullPath;
+
 	return $parentFullPath;
 }
+
+/**
+ * @brief Return the hash of an attachment's folder.
+ *
+ * @param int $channel_id
+ *  The id of the channel
+ * @param string $attachHash
+ *  The hash of the attachment
+ * @return string
+ */
 function find_folder_hash_by_attach_hash($channel_id, $attachHash) {
-	$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
-		intval($channel_id), dbesc($attachHash)
+	$r = q("SELECT folder FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
+		intval($channel_id),
+		dbesc($attachHash)
 	);
-	$hash = "";
-	if($r) {
-		foreach($r as $rr) {
-			$hash = $rr['folder'];
-		}
+	$hash = '';
+	if ($r) {
+		$hash = $r[0]['folder'];
 	}
-        return $hash;
-}
-function find_filename_by_hash($channel_id, $attachHash) {
-	$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
-		intval($channel_id), dbesc($attachHash)
-	);
-	$filename = "";
-	if($r) {
-		foreach($r as $rr) {
-			$filename = $rr['filename'];
-		}
-	}
-        return $filename;
+	return $hash;
 }
 
+/**
+ * @brief Returns the filename of an attachment in a given channel.
+ *
+ * @param mixed $channel_id
+ *  The id of the channel
+ * @param mixed $attachHash
+ *  The hash of the attachment
+ * @return string
+ *  The filename of the attachment
+ */
+function find_filename_by_hash($channel_id, $attachHash) {
+	$r = q("SELECT filename FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
+		intval($channel_id),
+		dbesc($attachHash)
+	);
+	$filename = '';
+	if ($r) {
+		$filename = $r[0]['filename'];
+	}
+	return $filename;
+}
 
 /**
  * 
@@ -904,6 +931,6 @@ function find_filename_by_hash($channel_id, $attachHash) {
 function pipe_streams($in, $out) {
 	$size = 0;
 	while (!feof($in))
-		$size += fwrite($out, fread($in,8192));
+		$size += fwrite($out, fread($in, 8192));
 	return $size;
 }

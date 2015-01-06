@@ -1,25 +1,24 @@
 
-A new user registration request was received at {{$sitename}} which requires 
-your approval. 
+Une demande d'enregistrement pour un nouvel utilisateur a été reçue par {{$sitename}} qui requiert 
+votre accord. 
 
 
-The login details are as follows:
+Voici les détails de connexion:
 
-Site Location:	{{$siteurl}}
-Login Name:	{{$email}}
-IP Address: {{$details}}
+Emplacement du site:⇥{{$siteurl}}
+Utilisateur:⇥{{$email}}
+Adresse IP: {{$details}}
 
-To approve this request please visit the following link:
+Pour confirmer votre accord, veuillez suivre le lien suivant:
 
 
 {{$siteurl}}/regmod/allow/{{$hash}} 
 
 
-To deny the request and remove the account, please visit:
+Pour supprimer ce compte, veuillez visiter:
 
 
 {{$siteurl}}/regmod/deny/{{$hash}}
 
 
-Thank you.
-
+Merci.

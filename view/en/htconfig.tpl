@@ -1,6 +1,6 @@
 <?php
 
-// Set the following for your MySQL installation
+// Set the following for your database installation
 // Copy or rename this file to .htconfig.php
 
 $db_host = '{{$dbhost}}';
@@ -8,6 +8,7 @@ $db_port = '{{$dbport}}';
 $db_user = '{{$dbuser}}';
 $db_pass = '{{$dbpass}}';
 $db_data = '{{$dbdata}}';
+$db_type = '{{$dbtype}}'; // an integer. 0 or unset for mysql, 1 for postgres
 
 /*
  * Notice: Many of the following settings will be available in the admin panel 
@@ -44,6 +45,11 @@ $a->config['system']['location_hash'] = '{{$site_id}}';
 $a->config['system']['register_policy'] = REGISTER_OPEN;
 $a->config['system']['register_text'] = '';
 $a->config['system']['admin_email'] = '{{$adminmail}}';
+
+// Recommend you leave this set to 1. Set to 0 to let people register without 
+// proving they own the email address they register with.
+
+$a->config['system']['verify_email'] = 1;
 
 
 // Site access restrictions. By default we will create private sites.

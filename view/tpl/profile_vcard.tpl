@@ -15,7 +15,7 @@
 	</div>
 	{{/if}}
 
-	<div class="fn label">{{$profile.name}}{{if $profile.online}} <i class="icon-asterisk online-now" title="{{$profile.online}}"></i>{{/if}}</div>
+	<div class="fn">{{$profile.name}}{{if $profile.online}} <i class="icon-asterisk online-now" title="{{$profile.online}}"></i>{{/if}}</div>
 		
 	{{if $pdesc}}<div class="title">{{$profile.pdesc}}</div>{{/if}}
 	<div id="profile-photo-wrapper"><img class="photo" width="175" height="175" src="{{$profile.photo}}?rev={{$profile.picdate}}" alt="{{$profile.name}}"></div>
@@ -41,8 +41,11 @@
 
 	{{if $marital}}<dl class="marital"><dt class="marital-label"><span class="heart">&hearts;</span>{{$marital}}</dt><dd class="marital-text">{{$profile.marital}}</dd></dl>{{/if}}
 
-	{{if $homepage}}<dl class="homepage"><dt class="homepage-label">{{$homepage}}</dt><dd class="homepage-url"><a href="{{$profile.homepage}}" >{{$profile.homepage}}</a></dd></dl>{{/if}}
+	{{if $homepage}}<dl class="homepage"><dt class="homepage-label">{{$homepage}}</dt><dd class="homepage-url">{{$profile.homepage}}</dd></dl>{{/if}}
 
+	{{if $diaspora}}
+	{{include file="diaspora_vcard.tpl"}}
+	{{/if}}
 
 {{if $connect}}
 <a href="{{$connect_url}}" class="rconnect"><i class="icon-plus connect-icon"></i> {{$connect}}</a>

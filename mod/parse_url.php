@@ -307,7 +307,14 @@ function parse_url_content(&$a) {
 			$max_images = intval($max_images);
 
 		foreach ($siteinfo["images"] as $imagedata) {
-			$image .= '[img='.$imagedata["width"].'x'.$imagedata["height"].']'.$imagedata["src"].'[/img]' . "\n";
+                        if ($url) {
+                            $image .= sprintf('[url=%s]', $url);
+                        }
+			$image .= '[img='.$imagedata["width"].'x'.$imagedata["height"].']'.$imagedata["src"].'[/img]';
+                        if ($url) {
+                            $image .= '[/url]';
+                        }
+                        $image .= "\n";
 			$total_images ++;
 			if($max_images && $max_images >= $total_images)
 				break;

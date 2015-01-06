@@ -77,7 +77,7 @@ function chatroom_destroy($channel,$arr) {
 		return $ret;
 	}
 
-	q("delete from chatroom where cr_id = %d limit 1",
+	q("delete from chatroom where cr_id = %d",
 		intval($r[0]['cr_id'])
 	);
 	if($r[0]['cr_id']) {
@@ -119,24 +119,29 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 
 	$limit = service_class_fetch($r[0]['cr_uid'],'chatters_inroom');
 	if($limit !== false) {
-		$x = q("select count(*) as total from chatpresence where cp_room = %d",
+		$y = q("select count(*) as total from chatpresence where cp_room = %d",
 				intval($room_id)
 		);
-		if($x && $x[0]['total'] > $limit) {
+		if($y && $y[0]['total'] > $limit) {
 			notice( t('Room is full') . EOL);
 			return false;
 		}
 	}
 
-	if(intval($x[0]['cr_expire']))
-		$r = q("delete from chat where created < UTC_TIMESTAMP() - INTERVAL " . intval($x[0]['cr_expire']) . " MINUTE and chat_room = " . intval($x[0]['cr_id']));
+	if(intval($x[0]['cr_expire'])) {
+		$r = q("delete from chat where created < %s - INTERVAL %s and chat_room = %d", 
+			db_utcnow(), 
+			db_quoteinterval( intval($x[0]['cr_expire']) . ' MINUTE' ),
+			intval($x[0]['cr_id'])
+		);
+	}
 
 	$r = q("select * from chatpresence where cp_xchan = '%s' and cp_room = %d limit 1",
 		dbesc($observer_xchan),
 		intval($room_id)
 	);
 	if($r) {
-		q("update chatpresence set cp_last = '%s' where cp_id = %d and cp_client = '%s' limit 1",
+		q("update chatpresence set cp_last = '%s' where cp_id = %d and cp_client = '%s'",
 			dbesc(datetime_convert()),
 			intval($r[0]['cp_id']),
 			dbesc($client)
@@ -152,6 +157,7 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 		dbesc($status),
 		dbesc($client)
 	);
+	
 	return $r;
 }
 
@@ -166,7 +172,7 @@ function chatroom_leave($observer_xchan,$room_id,$client) {
 		dbesc($client)
 	);
 	if($r) {
-		q("delete from chatpresence where cp_id = %d limit 1",
+		q("delete from chatpresence where cp_id = %d",
 			intval($r[0]['cp_id'])
 		);
 	}
@@ -184,6 +190,17 @@ function chatroom_list($uid) {
 	);
 
 	return $r;
+}
+
+function chatroom_list_count($uid) {
+	require_once('include/security.php');
+	$sql_extra = permissions_sql($uid);
+
+	$r = q("select count(*) as total from chatroom where cr_uid = %d $sql_extra",
+		intval($uid)
+	);
+
+	return $r[0]['total'];
 }
 
 /**

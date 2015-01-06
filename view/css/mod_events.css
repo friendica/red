@@ -1,3 +1,17 @@
 #event-desc-textarea, #event-location-textarea {
 	width: 400px;
 }
+
+#event-summary {
+	width: 400px;
+}
+
+.event-cats {
+	margin-top: 15px;
+	width: 400px;
+}
+
+.required {
+	color: #ff0000;
+	font-size: 1.2rem;
+}

@@ -1,8 +1,5 @@
-<div class="generic-content-wrapper">
+<div class="generic-content-wrapper-styled">
 <h1>{{$title}}</h1>
-
-
-
 
 
 <form action="settings/account" id="settings-account-form" method="post" autocomplete="off" >
@@ -23,4 +20,9 @@
 
 {{$account_settings}}
 
+<div id="settings-remove-account-link">
+<h3 class="settings-heading">{{$removeme}}</h3>
+<div id="settings-remove-account-desc">{{$removeaccount}}</div>
+<button title="{{$permanent}}" class="btn btn-danger" type="submit" formaction="removeaccount">{{$removeme}}</button>
+</div>
 </div>

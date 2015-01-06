@@ -8,4 +8,4 @@ RedDav using Windows 7 graphical user interface wizard:
 5. Type your Red account's user name. IMPORTANT - NO at-sign or domain name.
 6. Type your Red password
 
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/cloud_footer.bb;

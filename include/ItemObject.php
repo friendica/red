@@ -28,6 +28,7 @@ class Item extends BaseObject {
 	private $threaded = false;
 	private $visiting = false;
 	private $channel = null;
+	private $display_mode = 'normal';
 
 
 	public function __construct($data) {
@@ -64,8 +65,6 @@ class Item extends BaseObject {
 
 	public function get_template_data($alike, $dlike, $thread_level=1) {
 	
-		$t1 = dba_timer();
-
 		$result = array();
 
 		$a        = $this->get_app();
@@ -80,6 +79,7 @@ class Item extends BaseObject {
 		$indent = '';
 		$osparkle = '';
 		$total_children = $this->count_descendants();
+		$unseen_comments = (($item['real_uid']) ? 0 : $this->count_unseen_descendants());
 
 		$conv = $this->get_conversation();
 		$observer = $conv->get_observer();
@@ -88,7 +88,11 @@ class Item extends BaseObject {
 			|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
 			? t('Private Message')
 			: false);
-		$shareable = ((($conv->get_profile_owner() == local_user()) && ($item['item_private'] != 1)) ? true : false);
+		$shareable = ((($conv->get_profile_owner() == local_user() && local_user()) && ($item['item_private'] != 1)) ? true : false);
+
+		// allow an exemption for sharing stuff from your private feeds
+		if($item['author']['xchan_network'] === 'rss')
+			$shareable = true;
 
 		$mode = $conv->get_mode();
 
@@ -97,10 +101,18 @@ class Item extends BaseObject {
 		else
 			$edpost = false;
 
+
 		if($observer['xchan_hash'] == $this->get_data_value('author_xchan') 
 			|| $observer['xchan_hash'] == $this->get_data_value('owner_xchan') 
 			|| $this->get_data_value('uid') == local_user())
 			$dropping = true;
+
+
+		if(array_key_exists('real_uid',$item)) {
+			$edpost = false;
+			$dropping = false;
+		}
+
 
 		if($dropping) {
 			$drop = array(
@@ -115,7 +127,7 @@ class Item extends BaseObject {
 			);
 		}
 
-		$filer = (($conv->get_profile_owner() == local_user()) ? t("Save to Folder") : false);
+		$filer = ((($conv->get_profile_owner() == local_user()) && (! array_key_exists('real_uid',$item))) ? t("Save to Folder") : false);
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
 		$profile_link   = chanlink_url($item['author']['xchan_url']);
@@ -159,7 +171,7 @@ class Item extends BaseObject {
 		
 		if($this->is_toplevel()) {
 			// FIXME check this permission
-			if($conv->get_profile_owner() == local_user()) {
+			if(($conv->get_profile_owner() == local_user()) && (! array_key_exists('real_uid',$item))) {
 
 // FIXME we don't need all this stuff, some can be done in the template
 
@@ -179,7 +191,8 @@ class Item extends BaseObject {
 		}
 
 
-		$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message is verified') : '');
+		$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message signature validated') : '');
+		$forged = ((($item['sig']) && (! ($item['item_flags'] & ITEM_VERIFIED))) ? t('Message signature incorrect') : '');
 		$unverified = '' ; // (($this->is_wall_to_wall() && (! ($item['item_flags'] & ITEM_VERIFIED))) ? t('Message cannot be verified') : '');
 
 
@@ -207,22 +220,30 @@ class Item extends BaseObject {
 		if($this->is_commentable()) {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
 			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
-			if ($shareable)
-				$share = array( t('Share This'), t('share'));
 		}
+
+		if ($shareable)
+			$share = array( t('Share This'), t('share'));
 
 		if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
 			$indent .= ' shiny';
 
-		$t2 = dba_timer();
 
 		localize_item($item);
-
-		$t3 = dba_timer();
-
 		$body = prepare_body($item,true);
 
-		$t4 = dba_timer();
+		// $viewthread (below) is only valid in list mode. If this is a channel page, build the thread viewing link
+		// since we can't depend on llink or plink pointing to the right local location.
+ 
+		$owner_address = substr($item['owner']['xchan_addr'],0,strpos($item['owner']['xchan_addr'],'@'));
+		$viewthread = $item['llink'];
+		if($conv->get_mode() === 'channel')
+			$viewthread = z_root() . '/channel/' . $owner_address . '?f=&mid=' . $item['mid'];
+
+		$comment_count_txt = sprintf( tt('%d comment','%d comments',$total_children),$total_children );
+		$list_unseen_txt = (($unseen_comments) ? sprintf('%d unseen',$unseen_comments) : '');
+		
+		$children = $this->get_children();
 
 		$tmp_item = array(
 			'template' => $this->get_template(),
@@ -234,6 +255,8 @@ class Item extends BaseObject {
 			'id' => $this->get_id(),
 			'linktitle' => sprintf( t('View %s\'s profile - %s'), $profile_name, $item['author']['xchan_addr']),
 			'olinktitle' => sprintf( t('View %s\'s profile - %s'), $this->get_owner_name(), $item['owner']['xchan_addr']),
+			'llink' => $item['llink'],
+			'viewthread' => $viewthread,
 			'to' => t('to'),
 			'via' => t('via'),
 			'wall' => t('Wall-to-Wall'),
@@ -245,16 +268,18 @@ class Item extends BaseObject {
 			'osparkle' => $osparkle,
 			'sparkle' => $sparkle,
 			'title' => $item['title'],
+			'title_tosource' => get_pconfig($conv->get_profile_owner(),'system','title_tosource'),
 			'ago' => relative_date($item['created']),
 			'app' => $item['app'],
 			'str_app' => sprintf( t(' from %s'), $item['app']),
 			'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 			'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 			'editedtime' => (($item['edited'] != $item['created']) ? sprintf( t('last edited: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['edited'], 'r')) : ''),
-			'expiretime' => (($item['expires'] !== '0000-00-00 00:00:00') ? sprintf( t('Expires: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['expires'], 'r')):''),
+			'expiretime' => (($item['expires'] !== NULL_DATE) ? sprintf( t('Expires: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['expires'], 'r')):''),
 			'lock' => $lock,
 			'verified' => $verified,
 			'unverified' => $unverified,
+			'forged' => $forged,
 			'location' => $location,
 			'indent' => $indent,
 			'owner_url' => $this->get_owner_url(),
@@ -267,15 +292,21 @@ class Item extends BaseObject {
 			'share'     => $share,
 			'rawmid'	=> $item['mid'],
 			'plink'     => get_plink($item),
-			'edpost'    => ((feature_enabled($conv->get_profile_owner(),'edit_posts')) ? $edpost : ''),
+			'edpost'    => $edpost, // ((feature_enabled($conv->get_profile_owner(),'edit_posts')) ? $edpost : ''),
 			'star'      => ((feature_enabled($conv->get_profile_owner(),'star_posts')) ? $star : ''),
 			'tagger'    => ((feature_enabled($conv->get_profile_owner(),'commtag')) ? $tagger : ''),
 			'filer'     => ((feature_enabled($conv->get_profile_owner(),'filing')) ? $filer : ''),
-			'bookmark'  => (($conv->get_profile_owner() == local_user() && $has_bookmarks) ? t('Save Bookmarks') : ''),
+			'bookmark'  => (($conv->get_profile_owner() == local_user() && local_user() && $has_bookmarks) ? t('Save Bookmarks') : ''),
 			'addtocal'  => (($has_event) ? t('Add to Calendar') : ''),
 			'drop'      => $drop,
 			'multidrop' => ((feature_enabled($conv->get_profile_owner(),'multi_delete')) ? $multidrop : ''),
 // end toolbar buttons
+
+			'unseen_comments' => $unseen_comments,
+			'comment_count' => $total_children,
+			'comment_count_txt' => $comment_count_txt,
+			'list_unseen_txt' => $list_unseen_txt,
+			'markseen' => t('Mark all seen'),
 			'like_count' => $like_count,
 			'like_list' => $like_list,
 			'like_list_part' => $like_list_part,
@@ -295,24 +326,22 @@ class Item extends BaseObject {
 			'thread_level' => $thread_level
 		);
 
-		$t5 = dba_timer();
-
 		$arr = array('item' => $item, 'output' => $tmp_item);
 		call_hooks('display_item', $arr);
 
 		$result = $arr['output'];
 
 		$result['children'] = array();
-		$children = $this->get_children();
 		$nb_children = count($children);
-		if($nb_children > 0) {
+
+		if(($this->get_display_mode() === 'normal') && ($nb_children > 0)) {
 			foreach($children as $child) {
 				$result['children'][] = $child->get_template_data($alike, $dlike, $thread_level + 1);
 			}
 			// Collapse
 			if(($nb_children > 2) || ($thread_level > 1)) {
 				$result['children'][0]['comment_firstcollapsed'] = true;
-				$result['children'][0]['num_comments'] = sprintf( tt('%d comment','%d comments',$total_children),$total_children );
+				$result['children'][0]['num_comments'] = $comment_count_txt;
 				$result['children'][0]['hide_text'] = t('[+] show all');
 				if($thread_level > 1) {
 					$result['children'][$nb_children - 1]['comment_lastcollapsed'] = true;
@@ -334,20 +363,20 @@ class Item extends BaseObject {
 			$result['flatten'] = true;
 			$result['threaded'] = false;
 		}
-		$t6 = dba_timer();
-
-//		profiler($t1,$t2,'t2');
-//		profiler($t2,$t3,'t3');
-//		profiler($t3,$t4,'t4');
-//		profiler($t4,$t5,'t5');
-//		profiler($t5,$t6,'t6');
-//		profiler($t1,$t6,'item total');
 
 		return $result;
 	}
 	
 	public function get_id() {
 		return $this->get_data_value('id');
+	}
+
+	public function get_display_mode() {
+		return $this->display_mode;
+	}
+
+	public function set_display_mode($mode) {
+		$this->display_mode = $mode;
 	}
 
 	public function is_threaded() {
@@ -501,12 +530,12 @@ class Item extends BaseObject {
 	/**
 	 * Get template
 	 */
-	private function get_template() {
+	public function get_template() {
 		return $this->template;
 	}
 
 
-	private function set_template($t) {
+	public function set_template($t) {
 		$this->template = $t;
 	}
 
@@ -530,6 +559,23 @@ class Item extends BaseObject {
 		}
 		return $total;
 	}
+
+	private function count_unseen_descendants() {
+		$children = $this->get_children();
+		$total = count($children);
+		if($total > 0) {
+			$total = 0;
+			foreach($children as $child) {
+				if((! visible_activity($child->data)) || array_key_exists('author_blocked',$child->data)) {
+					continue;
+				}
+				if($child->data['item_flags'] & ITEM_UNSEEN)
+					$total ++;
+			}
+		}
+		return $total;
+	}
+
 
 	/**
 	 * Get the template for the comment box
@@ -589,7 +635,7 @@ class Item extends BaseObject {
 			'$edimg' => t('Image'),
 			'$edurl' => t('Link'),
 			'$edvideo' => t('Video'),
-			'$preview' => ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
+			'$preview' => t('Preview'), // ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
 			'$indent' => $indent,
 			'$feature_encrypt' => ((feature_enabled($conv->get_profile_owner(),'content_encrypt')) ? true : false),
 			'$encrypt' => t('Encrypt text'),

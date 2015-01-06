@@ -15,6 +15,7 @@ function js_strings() {
 		'$passhint'    => t('Passphrase hint'),
 		'$permschange' => t('Notice: Permissions have changed but have not yet been submitted.'),
 		'$closeAll'    => t('close all'),
+		'$nothingnew'  => t('Nothing new here'),
 
 		'$t01' => ((t('timeago.prefixAgo') != 'timeago.prefixAgo') ? t('timeago.prefixAgo') : ''),
 		'$t02' => ((t('timeago.prefixFromNow') != 'timeago.prefixFromNow') ? t('timeago.prefixFromNow') : ''),

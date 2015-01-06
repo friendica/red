@@ -127,6 +127,8 @@ function openid_content(&$a) {
 			elseif($photo_other)
 				$pphoto = $photo_other;
 
+			$mimetype = guess_image_type($pphoto);
+
 	        $x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
                 xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, 
 				xchan_name_date, xchan_flags)
@@ -135,7 +137,7 @@ function openid_content(&$a) {
     	        dbesc(''),
         	    dbesc(''),
             	dbesc(''),
-	            dbesc('image/jpeg'),
+	            dbesc($mimetype),
     	        dbesc($pphoto),
         	    dbesc($addr),
             	dbesc($url),
@@ -157,7 +159,7 @@ function openid_content(&$a) {
 					$photos = import_profile_photo($pphoto,$url);
 					if($photos) {
 						$z = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', 
-							xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s' limit 1",
+							xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s'",
 							dbesc(datetime_convert()),
 							dbesc($photos[0]),
 							dbesc($photos[1]),

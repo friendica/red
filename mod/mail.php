@@ -17,7 +17,7 @@ function mail_post(&$a) {
 	$body      = ((x($_REQUEST,'body'))         ? escape_tags(trim($_REQUEST['body']))    : '');
 	$recipient = ((x($_REQUEST,'messageto'))    ? notags(trim($_REQUEST['messageto']))    : '');
 	$rstr      = ((x($_REQUEST,'messagerecip')) ? notags(trim($_REQUEST['messagerecip'])) : '');
-	$expires   = ((x($_REQUEST,'expires')) ? datetime_convert(date_default_timezone_get(),'UTC', $_REQUEST['expires']) : '0000-00-00 00:00:00');
+	$expires   = ((x($_REQUEST,'expires')) ? datetime_convert(date_default_timezone_get(),'UTC', $_REQUEST['expires']) : NULL_DATE);
 
 	// If we have a raw string for a recipient which hasn't been auto-filled,
 	// it means they probably aren't in our address book, hence we don't know
@@ -72,7 +72,10 @@ function mail_post(&$a) {
 
 		if(! ($their_perms & PERMS_W_MAIL)) {
  			notice( t('Selected channel has private message restrictions. Send failed.'));
-			return;
+			// reported issue: let's still save the message and continue. We'll just tell them
+			// that nothing useful is likely to happen. They might have spent hours on it.  
+			//			return;
+
 		}
 	}
 
@@ -110,6 +113,7 @@ function mail_content(&$a) {
 	}
 
 	$channel = $a->get_channel();
+
 	head_set_icon($channel['xchan_photo_s']);
 
 	$cipher = get_pconfig(local_user(),'system','default_cipher');
@@ -138,7 +142,7 @@ function mail_content(&$a) {
 		if(! intval(argv(2)))
 			return;
 		$cmd = argv(1);
-		$r = q("update mail set mail_flags = mail_flags | %d where id = %d and channel_id = %d limit 1",
+		$r = q("update mail set mail_flags = mail_flags | %d where id = %d and channel_id = %d",
 			intval(MAIL_RECALLED),
 			intval(argv(2)),
 			intval(local_user())
@@ -160,13 +164,16 @@ function mail_content(&$a) {
 
 		$tpl = get_markup_template('msg-header.tpl');
 
-		$a->page['htmlhead'] .= replace_macros($tpl, array(
+		$header = replace_macros($tpl, array(
 			'$baseurl' => $a->get_baseurl(true),
 			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 			'$nickname' => $channel['channel_address'],
 			'$linkurl' => t('Please enter a link URL:'),
 			'$expireswhen' => t('Expires YYYY-MM-DD HH:MM')
 		));
+
+		$a->page['htmlhead'] .= $header;
+
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
 		$prename = $preurl = $preid = '';
@@ -229,7 +236,7 @@ function mail_content(&$a) {
 			'$attach' => t('Attach file'),
 			'$insert' => t('Insert web link'),
 			'$wait' => t('Please wait'),
-			'$submit' => t('Submit'),
+			'$submit' => t('Send'),
 			'$defexpire' => '',
 			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? true : false),
 			'$expires' => t('Set expiration date'),
@@ -273,7 +280,7 @@ function mail_content(&$a) {
 		$tpl = get_markup_template('msg-header.tpl');
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
-			'$nickname' => $channel['channel_addr'],
+			'$nickname' => $channel['channel_address'],
 			'$baseurl' => $a->get_baseurl(true),
 			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 			'$linkurl' => t('Please enter a link URL:'),

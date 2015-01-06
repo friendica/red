@@ -1,4 +1,3 @@
-
 Red Matrix Installation
 
 We've tried very hard to ensure that the Red Matrix will run on commodity
@@ -46,47 +45,48 @@ allow you to use a non browser-valid certificate.
 This restriction is incorporated because public posts from you may for example
 contain references to images on your own hub. If your certificate is not known
 by the internet browser of users they get a warning message complaining about
-some security issues. Although these complains are not the real truth - there
-are no security issues with your encryption! - the users may be confused,
-nerved or even worse may become scared about Red Matrix having security issues.
+the invalid certificate. 
+
 Free "browser-valid" certificates are available from providers such as StartSSL. 
- 
+
 If you do NOT use SSL, there may be a delay of up to a minute for the initial
 install script - while we check the SSL port to see if anything responds there.
 When communicating with new sites, Red Matrix always attempts connection on the
-SSL port first, before falling back to a less secure connection.  
+SSL port first, before falling back to a less secure connection.  If you do not
+use SSL, your webserver must not listen on port 443 at all.
 
 1. Requirements
-	- Apache with mod-rewrite enabled and "AllowOverride All" so you can use a 
-local .htaccess file
+    - Apache with mod-rewrite enabled and "AllowOverride All" so you can use a 
+    local .htaccess file
 
-	- PHP 5.3+. The later the better. 
+    - PHP 5.3+. The later the better. 
 
-	- PHP *command line* access with register_argc_argv set to true in the 
-php.ini file - and with no hosting provider restrictions on the use of exec()
-and proc_open().
+    - PHP *command line* access with register_argc_argv set to true in the 
+    php.ini file - and with no hosting provider restrictions on the use of 
+    exec() and proc_open().
 
-	- curl, gd (with at least jpeg support), mysqli, mbstring, mcrypt, and openssl extensions. The imagick extension is not required but desirable. 
+    - curl, gd (with at least jpeg and png support), mysqli, mbstring, mcrypt, 
+    and openssl extensions. The imagick extension is not required but desirable. 
 
-	- some form of email server or email gateway such that PHP mail() works
+    - some form of email server or email gateway such that PHP mail() works
 
-	- Mysql 5.x or MariaDB
+    - Mysql 5.x or MariaDB
+    
+    - ability to schedule jobs with cron.
 
-	- ability to schedule jobs with cron.
+    - Installation into a top-level domain or sub-domain (without a 
+    directory/path component in the URL) is REQUIRED.
 
-	- Installation into a top-level domain or sub-domain (without a 
-directory/path component in the URL) is REQUIRED.
+2. Unpack the RedMatrix files into the root of your web server document area.
+    
+     If you copy the directory tree to your webserver, make sure that you 
+    also copy .htaccess - as "dot" files are often hidden and aren't normally 
+    copied.
 
-2. Unpack the Red Matrix files into the root of your web server document area.
-
-	- If you copy the directory tree to your webserver, make sure
-	that you also copy .htaccess - as "dot" files are often hidden 
-	and aren't normally copied.
-
-    - If you are able to do so, we recommend using git to clone the 
-	source repository rather than to use a packaged tar or zip file.
-	This makes the software much easier to update. The Linux command
-	to clone the repository into a directory "mywebsite" would be
+    - If you are able to do so, we recommend using git to clone the source 
+    repository rather than to use a packaged tar or zip file.  This makes the 
+    software much easier to update. The Linux command to clone the repository 
+    into a directory "mywebsite" would be
 
         git clone https://github.com/friendica/red.git mywebsite
 
@@ -94,18 +94,20 @@ directory/path component in the URL) is REQUIRED.
 
         git pull
 
-    - make sure folders *store/[data]/smarty3* and *store* exist and are writable by webserver
+    - make sure folders *store/[data]/smarty3* and *store* exist and are 
+    writable by the webserver
 
-		mkdir -p "store/\[data\]/smarty3"
+        mkdir -p "store/[data]/smarty3"
 
         chmod -R 777 store
 
-		[This permission (777) is very dangerous and if you have sufficient
-		privilege and knowledge you should make this directory writeable only
-		by the webserver. In many shared hosting environments this may be
-		difficult without opening a trouble ticket with your provider. The
-		above permissions will allow the software to work, but are not
-		optimal.]
+        [This permission (777) is very dangerous and if you have sufficient
+        privilege and knowledge you should make these directories writeable
+        only by the webserver and, if different, the user that will run the
+        cron job (see below). In many shared hosting environments this may be
+        difficult without opening a trouble ticket with your provider. The
+        above permissions will allow the software to work, but are not
+        optimal.]
  
     - For installing addons
 
@@ -113,20 +115,19 @@ directory/path component in the URL) is REQUIRED.
 
             cd mywebsite
 
-        - Then you should clone the addon repository (separately)
+    - Then you should clone the addon repository (separately)
 
-            git clone https://github.com/friendica/red-addons.git addon
+        git clone https://github.com/friendica/red-addons.git addon
 
-        - For keeping the addon tree updated, you should be on you addon tree and issue a git pull
+    - For keeping the addon tree updated, you should be on you addon tree and 
+    issue a git pull
 
             cd mywebsite/addon
-
-			git pull
+            git pull
 
 
 3. Create an empty database and note the access details (hostname, username, 
 password, database name).
-
 
 4. If you know in advance that it will be impossible for the web server to 
 write or create files in your web directory, create an empty file called 
@@ -139,12 +140,12 @@ website.
 
 6. *If* the automated installation fails for any reason, check the following:
 
-	- ".htconfig.php" exists 
-		If not, edit htconfig.php and change system settings. Rename 
-to .htconfig.php
+    - ".htconfig.php" exists 
+        If not, edit htconfig.php and change system settings. Rename 
+    to .htconfig.php
 	-  Database is populated.
-		If not, import the contents of "database.sql" with phpmyadmin 
-or mysql command line
+        If not, import the contents of "database.sql" with phpmyadmin 
+        or mysql command line
 
 7. At this point visit your website again, and register your personal account. 
 Registration errors should all be recoverable automatically. 
@@ -173,10 +174,10 @@ one shown, substituting for your unique paths and settings:
 
 You can generally find the location of PHP by executing "which php". If you 
 have troubles with this section please contact your hosting provider for 
-assistance. Friendica will not work correctly if you cannot perform this step.
+assistance. RedMatrix will not work correctly if you cannot perform this step.
 
-You should also be sure that $a->config['system']['php_path'] is set correctly, it should
-look like (changing it to the correct PHP location)
+You should also be sure that $a->config['system']['php_path'] is set correctly, 
+it should look like (changing it to the correct PHP location)
 
 $a->config['system']['php_path'] = '/usr/local/php53/bin/php';
   
@@ -193,20 +194,20 @@ $a->config['system']['php_path'] = '/usr/local/php53/bin/php';
 	"System is currently unavailable. Please try again later"
 #####################################################################
 	
-	Check your database settings. It usually means your database could not 
-be opened or accessed. If the database resides on the same machine, check that
+Check your database settings. It usually means your database could not be 
+opened or accessed. If the database resides on the same machine, check that
 the database server name is the word "localhost". 
 
 #####################################################################
 - 500 Internal Error
 #####################################################################
 
-	This could be the result of one of our Apache directives not being 
+This could be the result of one of our Apache directives not being 
 supported by your version of Apache. Examine your apache server logs.
 Also check your file permissions. Your website and all contents must generally 
 be world-readable.
 
-	It is likely that your web server reported the source of the problem in
+It is likely that your web server reported the source of the problem in
 its error log files. Please review these system error logs to determine what 
 caused the problem. Often this will need to be resolved with your hosting
 provider or (if self-hosted) your web server configuration. 
@@ -215,23 +216,23 @@ provider or (if self-hosted) your web server configuration.
 - 400 and 4xx "File not found" errors
 #####################################################################
 
-	First check your file permissions. Your website and all contents must 
+First check your file permissions. Your website and all contents must 
 generally be world-readable.
 
-	Ensure that mod-rewite is installed and working, and that your
+Ensure that mod-rewite is installed and working, and that your
 .htaccess file is being used. To verify the latter, create a file test.out
-containing the word "test" in the top directory of Friendica, make it world 
+containing the word "test" in the top directory of the RedMatrix, make it world 
 readable and point your web browser to
 
 http://yoursitenamehere.com/test.out
 
-	This file should be blocked. You should get a permission denied message.
+This file should be blocked. You should get a permission denied message.
 
-	If you see the word "test" your Apache configuration is not allowing
-your .htaccess file to be used (there are rules in this file to block access
+If you see the word "test" your Apache configuration is not allowing your 
+.htaccess file to be used (there are rules in this file to block access
 to any file with .out at the end, as these are typically used for system logs).
 
-	Make certain the .htaccess file exists and is readable by everybody, then 
+Make certain the .htaccess file exists and is readable by everybody, then 
 look for the existence of "AllowOverride None" in the Apache server 
 configuration for your site. This will need to be changed to 
 "AllowOverride All".  
@@ -244,7 +245,7 @@ likely that mod-rewrite is not installed in your web server or is not working.
 % a2enmod rewrite
 % /etc/init.d/apache2 restart
 
-	Consult your hosting provider, experts on your particular Linux 
+Consult your hosting provider, experts on your particular Linux 
 distribution or (if Windows) the provider of your Apache server software if 
 you need to change either of these and can not figure out how. There is 
 a lot of help available on the web. Google "mod-rewrite" along with the 
@@ -256,7 +257,7 @@ name of your operating system distribution or Apache package.
 due to permissions issues:
 #####################################################################
 
-	create an empty file with that name and give it world-write permission.
+create an empty file with that name and give it world-write permission.
 For Linux:
 
 % touch .htconfig.php

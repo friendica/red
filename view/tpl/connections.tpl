@@ -1,3 +1,5 @@
+<div class="generic-content-wrapper-styled">
+
 <h1>{{$header}}{{if $total}} ({{$total}}){{/if}}</h1>
 
 {{if $finding}}<h4>{{$finding}}</h4>{{/if}}
@@ -13,14 +15,13 @@
 
 {{$tabs}}
 
-
+<div id="connections-wrapper">
 {{foreach $contacts as $contact}}
 	{{include file="connection_template.tpl"}}
 {{/foreach}}
+<div id="page-end"></div>
+</div>
 <div id="contact-edit-end"></div>
-
-{{$paginate}}
-
-
-
-
+</div>
+<script>$(document).ready(function() { loadingPage = false;});</script>
+<div id="page-spinner"></div>

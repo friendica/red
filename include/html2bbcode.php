@@ -16,7 +16,7 @@ function node2bbcode(&$doc, $oldnode, $attributes, $startbb, $endbb)
 
 function node2bbcodesub(&$doc, $oldnode, $attributes, $startbb, $endbb)
 {
-	$savestart = str_replace('$', '%', $startbb);
+	$savestart = str_replace('$', '\x01', $startbb);
 	$replace = false;
 
 	$xpath = new DomXPath($doc);
@@ -37,7 +37,7 @@ function node2bbcodesub(&$doc, $oldnode, $attributes, $startbb, $endbb)
 
 		foreach ($attributes as $attribute => $value) {
 
-			$startbb = str_replace('%'.++$i, '$1', $startbb);
+			$startbb = str_replace('\x01'.++$i, '$1', $startbb);
 
 			if (strpos('*'.$startbb, '$1') > 0) {
 
@@ -283,8 +283,9 @@ function html2bbcode($message)
 		array('[b]', '[/b]', '[i]', '[/i]'), $message);
 
 	// Handling Yahoo style of mails
-	$message = str_replace('[hr][b]From:[/b]', '[quote][b]From:[/b]', $message);
+	//	$message = str_replace('[hr][b]From:[/b]', '[quote][b]From:[/b]', $message);
 
+	$message = htmlspecialchars($message,ENT_COMPAT,'UTF-8',false);
 	return(trim($message));
 }
 

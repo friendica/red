@@ -113,7 +113,7 @@
 	}
 
 	function viewsrc(id) {
-		$.colorbox({href: 'viewsrc/' + id });
+		$.colorbox({href: 'viewsrc/' + id, maxWidth: '80%', maxHeight: '80%' });
 	}
 
 	function qCommentInsert(obj,id) {
@@ -156,6 +156,15 @@
     } 
   }
 
+  function closeOpen(theID) {
+    if(document.getElementById(theID).style.display == "none") { 
+      document.getElementById(theID).style.display = "block" 
+    }
+    else { 
+      document.getElementById(theID).style.display = "none" 
+    } 
+  }
+
   function openMenu(theID) {
       document.getElementById(theID).style.display = "block" 
   }
@@ -170,6 +179,13 @@
 	$('#' + notifType + '-update').html('');
 	timer = setTimeout(NavUpdate,2000);
   }
+
+  function markItemRead(itemId) {
+	$.get('ping?f=&markItemRead='+itemId);
+	$('.unseen-wall-indicator-'+itemId).hide();
+  }
+
+
 
 	var src = null;
 	var prev = null;
@@ -191,6 +207,8 @@
 	var loadingPage = true;
 	var pageHasMoreContent = true;
 	var updateCountsOnly = false;
+	var divmore_height = 400;
+	var last_filestorage_id = null;
 
 	$(function() {
 		$.ajaxSetup({cache: false});
@@ -251,9 +269,9 @@
 		}
 
 		// fancyboxes
-		$("a.popupbox").fancybox({
-			'transitionIn' : 'elastic',
-			'transitionOut' : 'elastic'
+		// Is this actually used anywhere?
+		$("a.popupbox").colorbox({
+			'transition' : 'elastic'
 		});
 		
 
@@ -267,6 +285,23 @@
 					return false;
 				}
 			}
+			if(event.keyCode == '34') {
+				if((pageHasMoreContent) && (! loadingPage)) {
+					$('#more').hide();
+					$('#no-more').hide();
+
+					next_page++;
+					scroll_next = true;
+					loadingPage = true;
+
+					if(($('.directory-end').length == 0) && ($('.photos-end').length == 0))
+						liveUpdate();
+					else
+						pageUpdate();
+					return true;
+				}
+			}
+
 			if(event.keyCode == '19' || (event.ctrlKey && event.which == '32')) {
 				event.preventDefault();
 				if(stopped == false) {
@@ -309,7 +344,7 @@
 
 					if($('#live-network').length)   { src = 'network'; liveUpdate(); }
 					if($('#live-channel').length)   { src = 'channel'; liveUpdate(); }
-					if($('#live-community').length) { src = 'community'; liveUpdate(); }
+					if($('#live-home').length)      { src = 'home'; liveUpdate(); }
 					if($('#live-display').length)   { src = 'display'; liveUpdate(); }
 					if($('#live-search').length)    { src = 'search'; liveUpdate(); }
 
@@ -384,6 +419,30 @@
 	}
 
 
+
+function updatePageItems(mode,data) {
+
+
+	if(mode === 'append') {
+		$(data).each(function() {
+			$('#page-end').before($(this));
+		});
+
+		if(loadingPage) {
+			loadingPage = false;
+		}
+	}
+
+	var e = document.getElementById('content-complete');
+	if(e) {
+		pageHasMoreContent = false;		
+	}
+
+	collapseHeight();
+
+}
+
+
 function updateConvItems(mode,data) {
 
 	if(mode === 'update') {
@@ -409,26 +468,18 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
-				// divgrow doesn't prevent itself from attaching a second (or 500th)
-				// "show more" div to a content region - it also has a few other
-				// issues related to how we're trying to use it. 
-				// disable for now.
-				//				$("div.wall-item-body").divgrow({ initialHeight: 400 });
+				$(".autotime",this).timeago();
 			}
 			else {
 				$('img',this).each(function() {
 					$(this).attr('src',$(this).attr('dst'));
 				});
-				// more FIXME related to expanded comments
 				if($('#collapsed-comments-'+itmId).is(':visible'))
 					isVisible = true;
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
-				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
-
+				$(".autotime",this).timeago();
 			}
 			prev = ident;
 		});
@@ -459,9 +510,7 @@ function updateConvItems(mode,data) {
 				$('#threads-end').before($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
-				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
-
+				$(".autotime",this).timeago();
 			}
 			else {
 				$('img',this).each(function() {
@@ -472,8 +521,7 @@ function updateConvItems(mode,data) {
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
-				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
+				$(".autotime",this).timeago();
 			}
 		});
 
@@ -507,9 +555,8 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$(".autotime",this).timeago();
 
-				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 			}
 			prev = ident;
 		});
@@ -527,7 +574,7 @@ function updateConvItems(mode,data) {
 	}
 
 	/* autocomplete @nicknames */
-	$(".comment-edit-form  textarea").contact_autocomplete(baseurl+"/acl");
+	$(".comment-edit-form  textarea").contact_autocomplete(baseurl+"/acl?f=&n=1");
 	
 	var bimgs = $(".wall-item-body img").not(function() { return this.complete; });
 	var bimgcount = bimgs.length;
@@ -548,21 +595,18 @@ function updateConvItems(mode,data) {
 
 
 	function collapseHeight() {
-		$(".wall-item-body").each(function() {
-				if($(this).height() > 410) {
+		$(".wall-item-body, .contact-info").each(function() {
+			if($(this).height() > divmore_height + 10) {
 				if(! $(this).hasClass('divmore')) {
-					$(this).divgrow({ initialHeight: 400, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
+					$(this).readmore({collapsedHeight: divmore_height, moreLink: '<a href="#">'+aStr['divgrowmore']+'</a>', lessLink: '<a href="#">'+aStr['divgrowless']+'</a>'});
 					$(this).addClass('divmore');
 				}
-			}					
+			}
 		});
 	}
 
-
-
-
-
 	function liveUpdate() {
+		if(typeof profile_uid === 'undefined') profile_uid = false; /* Should probably be unified with channelId defined in head.tpl */
 		if((src == null) || (stopped) || (! profile_uid)) { $('.like-rotator').spin(false); return; }
 		if(($('.comment-edit-text-full').length) || (in_progress)) {
 			if(livetime) {
@@ -628,6 +672,56 @@ function updateConvItems(mode,data) {
 
 	}
 
+	function pageUpdate() {
+
+		in_progress = true;
+
+		var update_url;
+		var update_mode;
+
+		if(scroll_next) {
+			bParam_page = next_page;
+			page_load = true;
+		}
+		else {
+			bParam_page = 1;
+		}
+
+		update_url = baseurl + '/' + page_query + '/?f=&aj=1&page=' + bParam_page + extra_args ;
+
+		$("#page-spinner").spin('small');
+		update_mode = 'append';
+
+		$.get(update_url,function(data) {
+			page_load = false;
+			scroll_next = false;
+			updatePageItems(update_mode,data);
+			$("#page-spinner").spin(false);
+			in_progress = false;
+		});
+
+	}
+
+	function justifyPhotos() {
+		justifiedGalleryActive = true;
+		$('#photo-album-contents').justifiedGallery({
+			margins: 3,
+			sizeRangeSuffixes: {
+				'lt100': '-2',
+				'lt240': '-2',
+				'lt320': '-2',
+				'lt500': '',
+				'lt640': '-1',
+				'lt1024': '-0'
+			}
+		}).on('jg.complete', function(e){ justifiedGalleryActive = false; });
+	}
+
+	function justifyPhotosAjax() {
+		justifiedGalleryActive = true;
+		$('#photo-album-contents').justifiedGallery('norewind').on('jg.complete', function(e){ justifiedGalleryActive = false; });
+	}
+
 	function notify_popup_loader(notifyType) {
 
 		/* notifications template */
@@ -647,13 +741,13 @@ function updateConvItems(mode,data) {
 
 
 			if(data.notify.length==0){
-				$("#nav-" + notifyType + "-menu").html(notifications_empty);
+				$("#nav-" + notifyType + "-menu").html(aStr[nothingnew]);
 
 			} else {
 				$("#nav-" + notifyType + "-menu").html(notifications_all + notifications_mark);
 
 				$(data.notify).each(function() {
-					html = notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.class);
+					html = notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.hclass);
 					$("#nav-" + notifyType + "-menu").append(html);
 				});
 				$(".dropdown-menu img[data-src]").each(function(i, el){
@@ -750,6 +844,19 @@ function updateConvItems(mode,data) {
 		});
 	}
 
+	function filestorage(event,nick,id) {
+		$('#cloud-index-' + last_filestorage_id).removeClass('cloud-index-active');
+		$('#perms-panel-' + last_filestorage_id).hide().html('');
+		$('#file-edit-' + id).spin('tiny');
+		delete acl;
+		$.get('filestorage/' + nick + '/' + id + '/edit', function(data) {
+			$('#cloud-index-' + id).addClass('cloud-index-active');
+			$('#perms-panel-' + id).html(data).show();
+			$('#file-edit-' + id).spin(false);
+			last_filestorage_id = id;
+		});
+	}
+
 	function post_comment(id) {
 		unpause();
 		commentBusy = true;
@@ -797,12 +904,23 @@ function updateConvItems(mode,data) {
          return true;  
 	}
 
+	function importElement(elem) {
+		$.post(  
+             "impel",  
+            { "element" : elem },
+			function(data) {
+				if(timer) clearTimeout(timer);
+				timer = setTimeout(NavUpdate,10);
+			}
+		);
 
+		return false;  
+	}
 
 	function preview_post() {
 		$("#jot-preview").val("1");
 		$("#jot-preview-content").show();
-		tinyMCE.triggerSave();
+//		tinyMCE.triggerSave();
 		$.post(  
 			"item",  
 			$("#profile-jot-form").serialize(),
@@ -879,6 +997,7 @@ function updateConvItems(mode,data) {
 		$('body').css('cursor', 'wait');
 		$.get('contactgroup/' + gid + '/' + cid, function(data) {
 				$('body').css('cursor', 'auto');
+				$('#group-' + gid).toggleClass('icon-check icon-check-empty');
 		});
 	}
 
@@ -918,6 +1037,8 @@ function fcFileBrowser (field_name, url, type, win) {
   }
 
 function setupFieldRichtext(){
+	return;
+/*
 	tinyMCE.init({
 		theme : "advanced",
 		mode : "specific_textareas",
@@ -941,6 +1062,7 @@ function setupFieldRichtext(){
 		theme_advanced_path : false,
 		file_browser_callback : "fcFileBrowser",
 	});
+*/
 }
 
 
@@ -1012,8 +1134,9 @@ $(document).ready(function() {
 
 
 
-$(window).scroll(function () {                 
+$(window).scroll(function () {
 	if(typeof buildCmd == 'function') {
+		// This is a content page with items and/or conversations
 		$('#more').hide();                 
 		$('#no-more').hide();                 
 	
@@ -1021,12 +1144,12 @@ $(window).scroll(function () {
 			$('#more').css("top","400");
 			$('#more').show();
 		}
-	
+
 		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
 			if((pageHasMoreContent) && (! loadingPage)) {
 				$('#more').hide();
 				$('#no-more').hide();
-				//			alert('scroll');
+
 				next_page++;
 				scroll_next = true;
 				loadingPage = true;
@@ -1034,6 +1157,27 @@ $(window).scroll(function () {
 			}
 		}
 	}
+	else {
+		// This is some other kind of page - perhaps a directory
+
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+			$('#more').css("top","400");
+			$('#more').show();
+		}
+
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+			if((pageHasMoreContent) && (! loadingPage) && (! justifiedGalleryActive)) {
+				$('#more').hide();
+				$('#no-more').hide();
+
+				next_page++;
+				scroll_next = true;
+				loadingPage = true;
+				pageUpdate();
+			}
+		}
+	}
+
 });
 
 var chanviewFullSize = false;

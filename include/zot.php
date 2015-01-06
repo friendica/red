@@ -2,9 +2,10 @@
 
 require_once('include/crypto.php');
 require_once('include/items.php');
+require_once('include/hubloc.php');
 
 /**
- * Red implementation of zot protocol. 
+ * Red implementation of zot protocol.
  *
  * https://github.com/friendica/red/wiki/zot
  * https://github.com/friendica/red/wiki/Zot---A-High-Level-Overview
@@ -19,8 +20,8 @@ require_once('include/items.php');
  *    Generates a unique string for use as a zot guid using our DNS-based url, the channel nickname and some entropy.
  *    The entropy ensures uniqueness against re-installs where the same URL and nickname are chosen.
  *    NOTE: zot doesn't require this to be unique. Internally we use a whirlpool hash of this guid and the signature
- *    of this guid signed with the channel private key. This can be verified and should make the probability of 
- *    collision of the verified result negligible within the constraints of our immediate universe.  
+ *    of this guid signed with the channel private key. This can be verified and should make the probability of
+ *    collision of the verified result negligible within the constraints of our immediate universe.
  *
  * @param string channel_nickname = unique nickname of controlling entity
  *
@@ -50,7 +51,7 @@ function make_xchan_hash($guid,$guid_sig) {
 
 /**
  * @function zot_get_hublocs($hash)
- *     Given a zot hash, return all distinct hubs. 
+ *     Given a zot hash, return all distinct hubs.
  *     This function is used in building the zot discovery packet
  *     and therefore should only be used by channels which are defined
  *     on this hub
@@ -70,7 +71,7 @@ function make_xchan_hash($guid,$guid_sig) {
  *    hubloc_connect     char(255)
  *    hubloc_sitekey     text
  *    hubloc_updated     datetime
- *    hubloc_connected   datetime 	
+ *    hubloc_connected   datetime
  *
  */
 
@@ -78,32 +79,32 @@ function zot_get_hublocs($hash) {
 
 	/** Only search for active hublocs - e.g. those that haven't been marked deleted */
 
-	$ret = q("select * from hubloc where hubloc_hash = '%s' and not ( hubloc_flags & %d ) group by hubloc_url ",
+	$ret = q("select * from hubloc where hubloc_hash = '%s' and not ( hubloc_flags & %d )>0 order by hubloc_url ",
 		dbesc($hash),
 		intval(HUBLOC_FLAGS_DELETED)
 	);
 	return $ret;
 }
-	 
+
 /**
  *
  * @function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null, $secret = null)
  *    builds a zot notification packet that you can either
- *    store in the queue with a message array or call zot_zot to immediately 
+ *    store in the queue with a message array or call zot_zot to immediately
  *    zot it to the other side
  *
  * @param array $channel     => sender channel structure
  * @param string $type       => packet type: one of 'ping', 'pickup', 'purge', 'refresh', 'force_refresh', 'notify', 'auth_check'
  * @param array $recipients  => envelope information, array ( 'guid' => string, 'guid_sig' => string ); empty for public posts
  * @param string $remote_key => optional public site key of target hub used to encrypt entire packet
- *    NOTE: remote_key and encrypted packets are required for 'auth_check' packets, optional for all others 
+ *    NOTE: remote_key and encrypted packets are required for 'auth_check' packets, optional for all others
  * @param string $secret     => random string, required for packets which require verification/callback
- *    e.g. 'pickup', 'purge', 'notify', 'auth_check'. Packet types 'ping', 'force_refresh', and 'refresh' do not require verification 
+ *    e.g. 'pickup', 'purge', 'notify', 'auth_check'. Packet types 'ping', 'force_refresh', and 'refresh' do not require verification
  *
  * @returns string json encoded zot packet
  */
 
-function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null, $secret = null) {
+function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null, $secret = null, $extra = null) {
 
 	$data = array(
 		'type' => $type,
@@ -117,13 +118,22 @@ function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_
 		'version' => ZOT_REVISION
 	);
 
-	if($recipients)
+	if($recipients) {
+		for($x = 0; $x < count($recipients); $x ++)
+			unset($recipients[$x]['hash']);
 		$data['recipients'] = $recipients;
+	}
 
 	if($secret) {
 		$data['secret'] = $secret; 
 		$data['secret_sig'] = base64url_encode(rsa_sign($secret,$channel['channel_prvkey']));
 	}
+
+	if($extra) {
+		foreach($extra as $k => $v)
+			$data[$k] = $v;
+	}
+
 
 	logger('zot_build_packet: ' . print_r($data,true), LOGGER_DATA);
 
@@ -184,25 +194,33 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 		logger('zot_finger: no address :' . $webbie);
 		return array('success' => false);
 	}		
-
+	logger('using xchan_addr: ' . $xchan_addr, LOGGER_DATA);
+	
 	// potential issue here; the xchan_addr points to the primary hub.
 	// The webbie we were called with may not, so it might not be found
 	// unless we query for hubloc_addr instead of xchan_addr
 
 	$r = q("select xchan.*, hubloc.* from xchan 
 			left join hubloc on xchan_hash = hubloc_hash
-			where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
+			where xchan_addr = '%s' and (hubloc_flags & %d) > 0 limit 1",
 		dbesc($xchan_addr),
 		intval(HUBLOC_FLAGS_PRIMARY)
 	);
 
 	if($r) {
 		$url = $r[0]['hubloc_url'];
+
+		if($r[0]['hubloc_network'] && $r[0]['hubloc_network'] !== 'zot') {
+			logger('zot_finger: alternate network: ' . $webbie);
+			logger('url: '.$url.', net: '.var_export($r[0]['hubloc_network'],true), LOGGER_DATA);
+			return array('success' => false);
+		}		
 	}
 	else {
 		$url = 'https://' . $host;
 	}
-	
+
+			
 	$rhs = '/.well-known/zot-info';
 	$https = ((strpos($url,'https://') === 0) ? true : false);
 
@@ -271,6 +289,11 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 
 function zot_refresh($them,$channel = null, $force = false) {
 
+	if(array_key_exists('xchan_network',$them) && ($them['xchan_network'] !== 'zot')) {
+		logger('zot_refresh: not got zot. ' . $them['xchan_name']);
+		return true;
+	}
+
 	logger('zot_refresh: them: ' . print_r($them,true), LOGGER_DATA);
 	if($channel)
 		logger('zot_refresh: channel: ' . print_r($channel,true), LOGGER_DATA);
@@ -278,7 +301,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 	if($them['hubloc_url'])
 		$url = $them['hubloc_url'];
 	else {
-		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d ) limit 1",
+		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d ) > 0 limit 1",
 			dbesc($them['xchan_hash']),
 			intval(HUBLOC_FLAGS_PRIMARY)
 		);
@@ -360,7 +383,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 				}
 			}
 
-			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) limit 1",
+			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 limit 1",
 				dbesc($x['hash']),
 				intval($channel['channel_id']),
 				intval(ABOOK_FLAG_SELF)
@@ -370,7 +393,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 				$next_birthday = datetime_convert('UTC','UTC',$j['profile']['next_birthday']);
 			}
 			else {
-				$next_birthday = '0000-00-00 00:00:00';
+				$next_birthday = NULL_DATE;
 			}
 
 			if($r) {
@@ -386,7 +409,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 		
 				$y = q("update abook set abook_their_perms = %d, abook_dob = '%s'
 					where abook_xchan = '%s' and abook_channel = %d 
-					and not (abook_flags & %d) limit 1",
+					and not (abook_flags & %d) > 0 ",
 					intval($their_perms),
 					dbesc($next_birthday),
 					dbesc($x['hash']),
@@ -398,7 +421,8 @@ function zot_refresh($them,$channel = null, $force = false) {
 
 					// if they are in your address book but you aren't in theirs, and/or this does not
 					// match your current connected state setting, toggle it. 
-
+					// FIXME: uncoverted to postgres
+					// FIXME: when this was enabled, all contacts became unconnected. Currently disabled intentionally
 //					$y1 = q("update abook set abook_flags = (abook_flags ^ %d)
 //						where abook_xchan = '%s' and abook_channel = %d 
 //						and not (abook_flags & %d) limit 1",
@@ -418,15 +442,15 @@ function zot_refresh($them,$channel = null, $force = false) {
 				}
 			}
 			else {
-				$default_perms = 0;
-				// look for default permissions to apply in return - e.g. auto-friend
-				$z = q("select * from abook where abook_channel = %d and (abook_flags & %d) limit 1",
-					intval($channel['channel_id']),
-					intval(ABOOK_FLAG_SELF)
-				);
-
-				if($z)
-					$default_perms = intval($z[0]['abook_my_perms']);		
+				$role = get_pconfig($channel['channel_id'],'system','permissions_role');
+				if($role) {
+					$xx = get_role_perms($role);
+					if($xx['perms_auto'])
+						$default_perms = $xx['perms_accept'];
+				}
+				if(! $default_perms)
+					$default_perms = intval(get_pconfig($channel['channel_id'],'system','autoperms'));
+				
 
 				// Keep original perms to check if we need to notify them
 				$previous_perms = get_all_perms($channel['channel_id'],$x['hash']);
@@ -448,7 +472,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 					$new_perms = get_all_perms($channel['channel_id'],$x['hash']);
 					if($new_perms != $previous_perms) {
 						// Send back a permissions update if permissions have changed
-						$z = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) limit 1",
+						$z = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 limit 1",
 							dbesc($x['hash']),
 							intval($channel['channel_id']),
 							intval(ABOOK_FLAG_SELF)
@@ -507,6 +531,22 @@ function zot_refresh($them,$channel = null, $force = false) {
 function zot_gethub($arr) {
 
 	if($arr['guid'] && $arr['guid_sig'] && $arr['url'] && $arr['url_sig']) {
+
+		$blacklisted = false;
+		$bl1 = get_config('system','blacklisted_sites');
+		if(is_array($bl1) && $bl1) {
+			foreach($bl1 as $bl) {
+				if($bl && strpos($arr['url'],$bl) !== false) {
+					$blacklisted = true;
+					break;
+				}
+			}
+		}
+		if($blacklisted) {
+			logger('zot_gethub: blacklisted site: ' . $arr['url']);
+			return null;
+		}
+
 		$r = q("select * from hubloc 
 				where hubloc_guid = '%s' and hubloc_guid_sig = '%s' 
 				and hubloc_url = '%s' and hubloc_url_sig = '%s'
@@ -625,8 +665,14 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 		return $ret;
 	}
 
+	if(! ($arr['guid'] && $arr['guid_sig'])) {
+		logger('import_xchan: no identity information provided. ' . print_r($arr,true));
+		return $ret;
+	}
 
 	$xchan_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
+	$arr['hash'] = $xchan_hash;
+
 	$import_photos = false;
 
 	if(! rsa_verify($arr['guid'],base64url_decode($arr['guid_sig']),$arr['key'])) {
@@ -656,9 +702,9 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 
 		$dirmode = get_config('system','directory_mode'); 
 
-		if((($arr['site']['directory_mode'] === 'standalone') || ($dirmode & DIRECTORY_MODE_STANDALONE))
-&& ($arr['site']['url'] != z_root()))
+		if((($arr['site']['directory_mode'] === 'standalone') || ($dirmode & DIRECTORY_MODE_STANDALONE)) && ($arr['site']['url'] != z_root()))
 			$arr['searchable'] = false;
+
 
 		$hidden = (1 - intval($arr['searchable']));
 
@@ -678,6 +724,11 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 		if($deleted_changed)
 			$new_flags = $new_flags ^ XCHAN_FLAGS_DELETED;
 
+		$public_forum = (($r[0]['xchan_flags'] & XCHAN_FLAGS_PUBFORUM) ? true : false);
+		$pubforum_changed = ((intval($public_forum) != intval($arr['public_forum'])) ? true : false);
+		if($pubforum_changed)
+			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_PUBFORUM;
+
 		if(($r[0]['xchan_name_date'] != $arr['name_updated']) 
 			|| ($r[0]['xchan_connurl'] != $arr['connections_url']) 
 			|| ($r[0]['xchan_flags'] != $new_flags)
@@ -687,8 +738,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			|| ($r[0]['xchan_url'] != $arr['url'])) {
 			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_follow = '%s', 
 				xchan_connpage = '%s', xchan_flags = %d,
-				xchan_addr = '%s', xchan_url = '%s' where xchan_hash = '%s' limit 1",
-				dbesc($arr['name']),
+				xchan_addr = '%s', xchan_url = '%s' where xchan_hash = '%s'",
+				dbesc(($arr['name']) ? $arr['name'] : '-'),
 				dbesc($arr['name_updated']),
 				dbesc($arr['connections_url']),
 				dbesc($arr['follow_url']),
@@ -738,10 +789,10 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			dbesc($arr['connections_url']),
 			dbesc($arr['follow_url']),
 			dbesc($arr['connect_url']),
-			dbesc($arr['name']),
+			dbesc(($arr['name']) ? $arr['name'] : '-'),
 			dbesc('zot'),
-			dbesc($arr['photo_updated']),
-			dbesc($arr['name_updated']),
+			dbescdate($arr['photo_updated']),
+			dbescdate($arr['name_updated']),
 			intval($new_flags)
 		);
 
@@ -782,7 +833,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 				// importing the photo failed somehow. Leave the photo_date alone so we can try again at a later date.
 				// This often happens when somebody joins the matrix with a bad cert. 
 				$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
-					where xchan_hash = '%s' limit 1",
+					where xchan_hash = '%s'",
 					dbesc($photos[0]),
 					dbesc($photos[1]),
 					dbesc($photos[2]),
@@ -792,8 +843,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			}
 			else {
 				$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
-					where xchan_hash = '%s' limit 1",
-					dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
+					where xchan_hash = '%s'",
+					dbescdate(datetime_convert('UTC','UTC',$arr['photo_updated'])),
 					dbesc($photos[0]),
 					dbesc($photos[1]),
 					dbesc($photos[2]),
@@ -809,173 +860,16 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 	// what we are missing for true hub independence is for any changes in the primary hub to 
 	// get reflected not only in the hublocs, but also to update the URLs and addr in the appropriate xchan
 
-	if($arr['locations']) {
 
-		$xisting = q("select hubloc_id, hubloc_url, hubloc_sitekey from hubloc where hubloc_hash = '%s'",
-			dbesc($xchan_hash)
-		);
+	$s = sync_locations($arr,$arr);
 
-		// See if a primary is specified
-
-		$has_primary = false;
-		foreach($arr['locations'] as $location) {
-			if($location['primary']) {
-				$has_primary = true;
-				break;
-			}
-		}
-
-		foreach($arr['locations'] as $location) {
-			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$arr['key'])) {
-				logger('import_xchan: Unable to verify site signature for ' . $location['url']);
-				$ret['message'] .= sprintf( t('Unable to verify site signature for %s'), $location['url']) . EOL;
-				continue;
-			}
-
-			// Ensure that they have one primary hub
-
-			if(! $has_primary)
-				$location['primary'] = true;
-
-
-			for($x = 0; $x < count($xisting); $x ++) {
-				if(($xisting[$x]['hubloc_url'] === $location['url']) && ($xisting[$x]['hubloc_sitekey'] === $location['sitekey'])) {
-					$xisting[$x]['updated'] = true;
-				}
-			}
-
-			if(! $location['sitekey']) {
-				logger('import_xchan: empty hubloc sitekey. ' . print_r($location,true));
-				continue;
-			}
-
-			// Catch some malformed entries from the past which still exist
-
-			if(strpos($location['address'],'/') !== false)
-				$location['address'] = substr($location['address'],0,strpos($location['address'],'/'));
-
-			// match as many fields as possible in case anything at all changed. 
-
-			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' ",
-				dbesc($xchan_hash),
-				dbesc($arr['guid']),
-				dbesc($arr['guid_sig']),
-				dbesc($location['url']),
-				dbesc($location['url_sig']),
-				dbesc($location['host']),
-				dbesc($location['address']),
-				dbesc($location['callback']),
-				dbesc($location['sitekey'])
-			);
-			if($r) {
-				logger('import_xchan: hub exists: ' . $location['url']);
-				// update connection timestamp if this is the site we're talking to
-				if($location['url'] == $arr['site']['url']) {
-					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d limit 1",
-						dbesc(datetime_convert()),
-						dbesc(datetime_convert()),
-						intval($r[0]['hubloc_id'])
-					);
-				}
-				if($r[0]['hubloc_status'] & HUBLOC_OFFLINE) {
-					q("update hubloc set hubloc_status = (hubloc_status ^ %d) where hubloc_id = %d limit 1",
-						intval(HUBLOC_OFFLINE),
-						intval($r[0]['hubloc_id'])
-					);
-					if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
-						q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
-							intval(HUBLOC_FLAGS_ORPHANCHECK),
-							intval($r[0]['hubloc_id'])
-						);
-					}
-					q("update xchan set xchan_flags = (xchan_flags ^ %d) where (xchan_flags & %d) and xchan_hash = '%s' limit 1",
-						intval(XCHAN_FLAGS_ORPHAN),
-						intval(XCHAN_FLAGS_ORPHAN),
-						dbesc($xchan_hash)
-					);
-
-				} 
-
-				// Remove pure duplicates
-				if(count($r) > 1) {
-					for($h = 1; $h < count($r); $h ++) {
-						q("delete from hubloc where hubloc_id = %d limit 1",
-							intval($r[$h]['hubloc_id'])
-						);
-					}
-				}
-
-				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
-					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
-					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
-						intval(HUBLOC_FLAGS_PRIMARY),
-						dbesc(datetime_convert()),
-						intval($r[0]['hubloc_id'])
-					);
-					$what = 'primary_hub ';
-					$changed = true;
-				}
-				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted']))
-					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && ($location['deleted']))) {
-					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
-						intval(HUBLOC_FLAGS_DELETED),
-						dbesc(datetime_convert()),
-						intval($r[0]['hubloc_id'])
-					);
-					$what = 'delete_hub ';
-					$changed = true;
-				}
-				continue;
-			}
-
-			// new hub claiming to be primary. Make it so.
-
-			if(intval($location['primary'])) {
-				$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_hash = '%s' and (hubloc_flags & %d )",
-					intval(HUBLOC_FLAGS_PRIMARY),
-					dbesc(datetime_convert()),
-					dbesc($xchan_hash),
-					intval(HUBLOC_FLAGS_PRIMARY)
-				);
-			}
-			logger('import_xchan: new hub: ' . $location['url']);
-			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_updated, hubloc_connected)
-					values ( '%s','%s','%s','%s', %d ,'%s','%s','%s','%s','%s','%s','%s')",
-				dbesc($arr['guid']),
-				dbesc($arr['guid_sig']),
-				dbesc($xchan_hash),
-				dbesc($location['address']),
-				intval((intval($location['primary'])) ? HUBLOC_FLAGS_PRIMARY : 0),
-				dbesc($location['url']),
-				dbesc($location['url_sig']),
-				dbesc($location['host']),
-				dbesc($location['callback']),
-				dbesc($location['sitekey']),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert())
-			);
-			$what .= 'newhub ';
-			$changed = true;
-
-		}
-
-		// get rid of any hubs we have for this channel which weren't reported.
-		// This was needed at one time to resolve complicated cross-site inconsistencies, but can cause sync conflict.
-		// currently disabled.
-
-//		if($xisting) {
-//			foreach($xisting as $x) {
-//				if(! array_key_exists('updated',$x)) {
-//					logger('import_xchan: removing unreferenced hub location ' . $x['hubloc_url']);
-//					$r = q("delete from hubloc where hubloc_id = %d limit 1",
-//						intval($x['hubloc_id'])
-//					);
-//					$what .= 'removed_hub';
-//					$changed = true;
-//				}
-//			}
-//		}
-
+	if($s) {
+		if($s['change_message'])
+			$what .= $s['change_message'];
+		if($s['changed'])
+			$changed = $s['changed'];
+		if($s['message'])
+			$ret['message'] .= $s['message'];
 	}
 
 	// Which entries in the update table are we interested in updating?
@@ -985,8 +879,22 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 
 	// Are we a directory server of some kind?
 
+	$other_realm = false;
+	$realm = get_directory_realm();
+	if(array_key_exists('site',$arr) 
+		&& array_key_exists('realm',$arr['site']) 
+		&& (strpos($arr['site']['realm'],$realm) === false))
+		$other_realm = true;
+
 	if($dirmode != DIRECTORY_MODE_NORMAL) {
-		if(array_key_exists('profile',$arr) && is_array($arr['profile'])) {
+
+		// We're some kind of directory server. However we can only add directory information
+		// if the entry is in the same realm (or is a sub-realm). Sub-realms are denoted by 
+		// including the parent realm in the name. e.g. 'RED_GLOBAL:foo' would allow an entry to 
+		// be in directories for the local realm (foo) and also the RED_GLOBAL realm.
+
+
+		if(array_key_exists('profile',$arr) && is_array($arr['profile']) && (! $other_realm)) {
 			$profile_changed = import_directory_profile($xchan_hash,$arr['profile'],$address,$ud_flags, 1);
 			if($profile_changed) {
 				$what .= 'profile ';
@@ -996,10 +904,10 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 		else {
 			logger('import_xchan: profile not available - hiding');
 			// they may have made it private
-			$r = q("delete from xprof where xprof_hash = '%s' limit 1",
+			$r = q("delete from xprof where xprof_hash = '%s'",
 				dbesc($xchan_hash)
 			);
-			$r = q("delete from xtag where xtag_hash = '%s' limit 1",
+			$r = q("delete from xtag where xtag_hash = '%s'",
 				dbesc($xchan_hash)
 			);
 		}
@@ -1021,7 +929,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 	}
 	elseif(! $ud_flags) {
 		// nothing changed but we still need to update the updates record
-		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
+		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d)>0 ",
 			intval(UPDATE_FLAGS_UPDATED),
 			dbesc($address),
 			intval(UPDATE_FLAGS_UPDATED)
@@ -1071,14 +979,14 @@ function zot_process_response($hub,$arr,$outq) {
 	// async messages remain in the queue until processed.
 
 	if(intval($outq['outq_async'])) {
-		$r = q("update outq set outq_delivered = 1, outq_updated = '%s' where outq_hash = '%s' and outq_channel = %d limit 1",
+		$r = q("update outq set outq_delivered = 1, outq_updated = '%s' where outq_hash = '%s' and outq_channel = %d",
 			dbesc(datetime_convert()),
 			dbesc($outq['outq_hash']),
 			intval($outq['outq_channel'])
 		);
 	}
 	else {
-		$r = q("delete from outq where outq_hash = '%s' and outq_channel = %d limit 1",
+		$r = q("delete from outq where outq_hash = '%s' and outq_channel = %d",
 			dbesc($outq['outq_hash']),
 			intval($outq['outq_channel'])
 		);
@@ -1140,7 +1048,8 @@ function zot_fetch($arr) {
  *       we will verify the sender and url in each returned message structure and also verify
  *       that all the messages returned match the site url that we are currently processing.
  * 
- * The message types handled here are 'activity' (e.g. posts), 'mail' , 'profile', and 'channel_sync'
+ * The message types handled here are 'activity' (e.g. posts), 'mail' , 'profile', 'location', 
+ * and 'channel_sync'
  * 
  * @returns array => array ( [0] => string $channel_hash, [1] => string $delivery_status, [2] => string $address )
  *    suitable for logging remotely, enumerating the processing results of each message/recipient combination.
@@ -1170,7 +1079,7 @@ function zot_import($arr, $sender_url) {
 
 			if(array_key_exists('iv',$i['notify'])) {
 				$i['notify'] = json_decode(crypto_unencapsulate($i['notify'],get_config('system','prvkey')),true);
-	  		}
+			}
 
 			logger('zot_import: notify: ' . print_r($i['notify'],true), LOGGER_DATA);
 
@@ -1180,6 +1089,9 @@ function zot_import($arr, $sender_url) {
 				continue;
 			}
 
+			$message_request = ((array_key_exists('message_id',$i['notify'])) ? true : false);
+			if($message_request)
+				logger('processing message request');
 
 			$i['notify']['sender']['hash'] = make_xchan_hash($i['notify']['sender']['guid'],$i['notify']['sender']['guid_sig']);
 			$deliveries = null;
@@ -1192,13 +1104,19 @@ function zot_import($arr, $sender_url) {
 				}
 				stringify_array_elms($recip_arr);
 				$recips = implode(',',$recip_arr);
-				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and not ( channel_pageflags & %d ) ",
+				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and not ( channel_pageflags & %d )>0 ",
 					intval(PAGE_REMOVED)
 				);
 				if(! $r) {
 					logger('recips: no recipients on this site');
 					continue;
 				}
+
+				// It's a specifically targetted post. If we were sent a public_scope hint (likely), 
+				// get rid of it so that it doesn't get stored and cause trouble. 
+
+				if(($i) && is_array($i) && array_key_exists('message',$i) && is_array($i['message']) && array_key_exists('public_scope',$i['message']))
+					unset($i['message']['public_scope']);
 
 				$deliveries = $r;
 
@@ -1207,18 +1125,37 @@ function zot_import($arr, $sender_url) {
 			}
 			else {
 				if(($i['message']) && (array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags']))) {
-					// This should not happen but until we can stop it...
-					logger('private message was delivered with no recipients.');
-					continue;
+					if(array_key_exists('public_scope',$i['message']) && $i['message']['public_scope'] === 'public') {
+						// This should not happen but until we can stop it...
+						logger('private message was delivered with no recipients.');
+						continue;
+					}
 				}
 
-				logger('public post');
+				logger('public post');				
 
 				// Public post. look for any site members who are or may be accepting posts from this sender
 				// and who are allowed to see them based on the sender's permissions
 
 				$deliveries = allowed_public_recips($i);
 
+				if($i['message'] && array_key_exists('type',$i['message']) && $i['message']['type'] === 'location') {
+					$sys = get_sys_channel();
+					$deliveries = array(array('hash' => $sys['xchan_hash']));
+				}
+
+				// if the scope is anything but 'public' we're going to store it as private regardless
+				// of the private flag on the post. 
+
+				if($i['message'] && array_key_exists('public_scope',$i['message']) 
+					&& $i['message']['public_scope'] !== 'public') {
+
+					if(! array_key_exists('flags',$i['message'])) 
+						$i['message']['flags'] = array();
+					if(! in_array('private',$i['message']['flags']))
+						$i['message']['flags'][] = 'private';
+
+				}
 			}
 
 			// Go through the hash array and remove duplicates. array_unique() won't do this because the array is more than one level.
@@ -1256,7 +1193,7 @@ function zot_import($arr, $sender_url) {
 					logger('Activity recipients: ' . print_r($deliveries,true), LOGGER_DATA);
 
 					$relay = ((array_key_exists('flags',$i['message']) && in_array('relay',$i['message']['flags'])) ? true : false);
-					$result = process_delivery($i['notify']['sender'],$arr,$deliveries,$relay);
+					$result = process_delivery($i['notify']['sender'],$arr,$deliveries,$relay,false,$message_request);
 
 				}
 				elseif($i['message']['type'] === 'mail') {
@@ -1279,7 +1216,7 @@ function zot_import($arr, $sender_url) {
 
 				}
 				elseif($i['message']['type'] === 'channel_sync') {
-//					$arr = get_channelsync_elements($i['message']);
+					// $arr = get_channelsync_elements($i['message']);
 
 					$arr = $i['message'];
 
@@ -1288,6 +1225,15 @@ function zot_import($arr, $sender_url) {
 					
 					$result = process_channel_sync_delivery($i['notify']['sender'],$arr,$deliveries);
 				}
+				elseif($i['message']['type'] === 'location') {
+					$arr = $i['message'];
+
+					logger('Location message received: ' . print_r($arr,true), LOGGER_DATA);
+					logger('Location message recipients: ' . print_r($deliveries,true), LOGGER_DATA);
+					
+					$result = process_location_delivery($i['notify']['sender'],$arr,$deliveries);
+				}
+
 			}
 			if($result){
 				$return = array_merge($return,$result);
@@ -1310,8 +1256,14 @@ function zot_import($arr, $sender_url) {
 
 function public_recips($msg) {
 
+
+	require_once('include/identity.php');
+
 	$check_mentions = false;
+	$include_sys = false;
+
 	if($msg['message']['type'] === 'activity') {
+		$include_sys = true;
 		$col = 'channel_w_stream';
 		$field = PERMS_W_STREAM;
 		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {
@@ -1340,9 +1292,9 @@ function public_recips($msg) {
 
 	
 	if($msg['notify']['sender']['url'] === z_root())
-		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )  or ( " . $col . " & " . PERMS_SITE . " ) or ( " . $col . " & " . PERMS_PUBLIC . ")) ";				
+		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )>0  or ( " . $col . " & " . PERMS_SITE . " )>0 or ( " . $col . " & " . PERMS_PUBLIC . ")>0) ";				
 	else
-		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )  or ( "  . $col . " & " . PERMS_PUBLIC . ")) ";
+		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )>0  or ( "  . $col . " & " . PERMS_PUBLIC . ")>0) ";
 
 
 	$r = q("select channel_hash as hash from channel $sql or channel_hash = '%s' ",
@@ -1352,7 +1304,7 @@ function public_recips($msg) {
 	if(! $r)
 		$r = array();
 
-	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & " . PAGE_REMOVED . " ) and (( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " )) OR ( " . $col . " & " . PERMS_PENDING . " ) OR (( " . $col . " & " . PERMS_CONTACTS . " ) and not ( abook_flags & " . ABOOK_FLAG_PENDING . " )) ",
+	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & " . PAGE_REMOVED . " )>0 and (( " . $col . " & " . PERMS_SPECIFIC . " )>0  and ( abook_my_perms & " . $field . " )>0) OR ( " . $col . " & " . PERMS_PENDING . " )>0 OR (( " . $col . " & " . PERMS_CONTACTS . " )>0 and not ( abook_flags & " . ABOOK_FLAG_PENDING . " )>0) ",
 		dbesc($msg['notify']['sender']['hash'])
 	); 
 
@@ -1360,6 +1312,14 @@ function public_recips($msg) {
 		$x = array();
 
 	$r = array_merge($r,$x);
+
+	//logger('message: ' . print_r($msg['message'],true));
+
+	if($include_sys && array_key_exists('public_scope',$msg['message']) && $msg['message']['public_scope'] === 'public') {
+		$sys = get_sys_channel();
+		if($sys)
+			$r[] = array('hash' => $sys['channel_hash']);
+	}
 
 	// look for any public mentions on this site
 	// They will get filtered by tgroup_check() so we don't need to check permissions now
@@ -1391,7 +1351,7 @@ function public_recips($msg) {
 function allowed_public_recips($msg) {
 
 
-	logger('allowed_public_recips: ' . print_r($msg,true));
+	logger('allowed_public_recips: ' . print_r($msg,true),LOGGER_DATA);
 
 	$recips = public_recips($msg);
 
@@ -1406,7 +1366,7 @@ function allowed_public_recips($msg) {
 
 	$hash = make_xchan_hash($msg['notify']['sender']['guid'],$msg['notify']['sender']['guid_sig']);
 
-	if($scope === 'public' || $scope === 'network: red')
+	if($scope === 'public' || $scope === 'network: red' || $scope === 'authenticated')
 		return $recips;
 
 	if(strpos($scope,'site:') === 0) {
@@ -1428,7 +1388,7 @@ function allowed_public_recips($msg) {
 			$condensed_recips[] = $rr['hash'];
 
 		$results = array();
-		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & %d ) ",
+		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & %d )>0 ",
 			dbesc($hash),
 			intval(PAGE_REMOVED)
 		);
@@ -1444,7 +1404,7 @@ function allowed_public_recips($msg) {
 }
 
 
-function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
+function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$request = false) {
 
 	$result = array();
 
@@ -1457,8 +1417,9 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			return;
 		}
 	}
-	
+
 	foreach($deliveries as $d) {
+		$local_public = $public;
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
 			dbesc($d['hash'])
 		);
@@ -1468,11 +1429,27 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			continue;
 		}
 
+
 		$channel = $r[0];
+
+		// allow public postings to the sys channel regardless of permissions
+		if(($channel['channel_pageflags'] & PAGE_SYSTEM) && (! $arr['item_private'])) {
+			$local_public = true;
+
+			$r = q("select xchan_flags from xchan where xchan_hash = '%s' limit 1",
+				dbesc($sender['hash'])
+			);
+			// don't import sys channel posts from selfcensored authors
+			if($r && ($r[0]['xchan_flags'] & XCHAN_FLAGS_SELFCENSORED)) {
+				$local_public = false;
+				continue;
+			}
+		}
 
 		$tag_delivery = tgroup_check($channel['channel_id'],$arr);
 
 		$perm = (($arr['mid'] == $arr['parent_mid']) ? 'send_stream' : 'post_comments');
+
 
 		// This is our own post, possibly coming from a channel clone
 
@@ -1486,12 +1463,68 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			}
 		}
 
-		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery) && (! $public)) {
+		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery) && (! $local_public)) {
 			logger("permission denied for delivery to channel {$channel['channel_id']} {$channel['channel_address']}");
 			$result[] = array($d['hash'],'permission denied',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 			continue;
 		}
-	
+
+		if($arr['mid'] != $arr['parent_mid']) {
+
+			// check source route.
+			// We are only going to accept comments from this sender if the comment has the same route as the top-level-post,
+			// this is so that permissions mismatches between senders apply to the entire conversation
+			// As a side effect we will also do a preliminary check that we have the top-level-post, otherwise
+			// processing it is pointless. 
+
+			$r = q("select route from item where mid = '%s' and uid = %d limit 1",
+				dbesc($arr['parent_mid']),
+				intval($channel['channel_id'])
+			);
+			if(! $r) {
+				$result[] = array($d['hash'],'comment parent not found',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+
+				// We don't seem to have a copy of this conversation or at least the parent 
+				// - so request a copy of the entire conversation to date.
+				// Don't do this if it's a relay post as we're the ones who are supposed to 
+				// have the copy and we don't want the request to loop.
+				// Also don't do this if this comment came from a conversation request packet.
+				// It's possible that comments are allowed but posting isn't and that could
+				// cause a conversation fetch loop. We can detect these packets since they are 
+				// delivered via a 'notify' packet type that has a message_id element in the 
+				// initial zot packet (just like the corresponding 'request' packet type which 
+				// makes the request).
+				// We'll also check the send_stream permission - because if it isn't allowed,
+				// the top level post is unlikely to be imported and
+				// this is just an exercise in futility.   
+
+				if((! $relay) && (! $request) && (! $local_public) 
+					&& perm_is_allowed($channel['channel_id'],$sender['hash'],'send_stream')) {
+					proc_run('php', 'include/notifier.php', 'request', $channel['channel_id'], $sender['hash'], $arr['parent_mid']);
+				}
+				continue;
+			}
+			if($relay) {
+				// reset the route in case it travelled a great distance upstream
+				// use our parent's route so when we go back downstream we'll match
+				// with whatever route our parent has.
+				$arr['route'] = $r[0]['route'];
+			}
+			else {
+
+				// going downstream check that we have the same upstream provider that
+				// sent it to us originally. Ignore it if it came from another source
+				// (with potentially different permissions)
+
+				$current_route = (($arr['route']) ? $arr['route'] . ',' : '') . $sender['hash'];
+
+				if($r[0]['route'] != $current_route) {
+					$result[] = array($d['hash'],'comment route mismatch',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+					continue;
+				}
+			}
+		}
+
 		if($arr['item_restrict'] & ITEM_DELETED) {
 
 			// remove_community_tag is a no-op if this isn't a community tag activity
@@ -1509,29 +1542,43 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			continue;
 		}
 
-		$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
+		$r = q("select id, edited, item_flags, mid, parent_mid from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['mid']),
 			intval($channel['channel_id'])
 		);
 		if($r) {
+			// We already have this post.
+			// Maybe it has been edited? 
+			$item_id = $r[0]['id'];
 			if($arr['edited'] > $r[0]['edited']) {
 				$arr['id'] = $r[0]['id'];
 				$arr['uid'] = $channel['channel_id'];
 				update_imported_item($sender,$arr,$channel['channel_id']);
-			}	
-			$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
-			$item_id = $r[0]['id'];
+				$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				if(! $relay)
+					add_source_route($item_id,$sender['hash']);
+			}
+			else {
+				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				// We need this line to ensure wall-to-wall comments are relayed (by falling through to the relay bit), 
+				// and at the same time not relay any other relayable posts more than once, because to do so is very wasteful. 
+				if(! ($r[0]['item_flags'] & ITEM_ORIGIN))
+					continue;
+			}
 		}
 		else {
 			$arr['aid'] = $channel['channel_account_id'];
 			$arr['uid'] = $channel['channel_id'];
 			$item_result = item_store($arr);
-			$item_id = $item_result['item_id'];
-			$parr = array('item_id' => $item_id,'item' => $arr,'sender' => $sender,'channel' => $channel);
-			call_hooks('activity_received',$parr);
-
-			add_source_route($item_id,$sender['hash']);
-
+			$item_id = 0;
+			if($item_result['success']) {
+				$item_id = $item_result['item_id'];
+				$parr = array('item_id' => $item_id,'item' => $arr,'sender' => $sender,'channel' => $channel);
+				call_hooks('activity_received',$parr);
+				// don't add a source route if it's a relay or later recipients will get a route mismatch
+				if(! $relay)
+					add_source_route($item_id,$sender['hash']);
+			}
 			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 		}
 
@@ -1601,7 +1648,7 @@ function remove_community_tag($sender,$arr,$uid) {
 		return;
 	}
 	
-	$x = q("delete from term where uid = %d and oid = %d and otype = %d and type = %d and term = '%s' and url = '%s' limit 1",
+	$x = q("delete from term where uid = %d and oid = %d and otype = %d and type = %d and term = '%s' and url = '%s'",
 		intval($uid),
 		intval($r[0]['id']),
 		intval(TERM_OBJ_POST),
@@ -1647,11 +1694,6 @@ function delete_imported_item($sender,$item,$uid) {
 	} 
 		
 	require_once('include/items.php');
-
-	// FIXME issue #230 is related
-	// Chicken/egg problem because we have to drop_item, but this removes information that tag_deliver may need to do its stuff.
-	// We can't reverse the order because drop_item refuses to run if the item already has the deleted flag set and we need to
-	// set that flag prior to calling tag_deliver.
 
 	// Use phased deletion to set the deleted flag, call both tag_deliver and the notifier to notify downstream channels
 	// and then clean up after ourselves with a cron job after several days to do the delete_item_lowlevel() (DROPITEM_PHASE2).
@@ -1700,7 +1742,7 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 		);
 		if($r) {
 			if($arr['mail_flags'] & MAIL_RECALLED) {
-				$x = q("delete from mail where id = %d and channel_id = %d limit 1",
+				$x = q("delete from mail where id = %d and channel_id = %d",
 					intval($r[0]['id']),
 					intval($channel['channel_id'])
 				);
@@ -1726,8 +1768,6 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 
 function process_profile_delivery($sender,$arr,$deliveries) {
 
-	// deliveries is irrelevant, what to do about birthday notification....?
-
 	logger('process_profile_delivery', LOGGER_DEBUG);
 
 	$r = q("select xchan_addr from xchan where xchan_hash = '%s' limit 1",
@@ -1736,6 +1776,264 @@ function process_profile_delivery($sender,$arr,$deliveries) {
 	if($r)
 		import_directory_profile($sender['hash'],$arr,$r[0]['xchan_addr'], UPDATE_FLAGS_UPDATED, 0);
 }
+
+function process_location_delivery($sender,$arr,$deliveries) {
+
+	// deliveries is irrelevant
+	logger('process_location_delivery', LOGGER_DEBUG);
+
+	$r = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
+			dbesc($sender['hash'])
+	);
+	if($r)
+		$sender['key'] = $r[0]['xchan_pubkey'];
+	if(array_key_exists('locations',$arr) && $arr['locations']) {
+		$x = sync_locations($sender,$arr,true);
+		logger('process_location_delivery: results: ' . print_r($x,true), LOGGER_DEBUG);
+		if($x['changed']) {
+			$guid = random_string() . '@' . get_app()->get_hostname();		
+			update_modtime($sender['hash'],$sender['guid'],$arr['locations'][0]['address'],UPDATE_FLAGS_UPDATED);
+		}
+	}
+}
+
+
+function sync_locations($sender,$arr,$absolute = false) {
+
+	$ret = array();
+
+	if($arr['locations']) {
+
+		$xisting = q("select hubloc_id, hubloc_url, hubloc_sitekey from hubloc where hubloc_hash = '%s'",
+			dbesc($sender['hash'])
+		);
+
+		// See if a primary is specified
+
+		$has_primary = false;
+		foreach($arr['locations'] as $location) {
+			if($location['primary']) {
+				$has_primary = true;
+				break;
+			}
+		}
+
+		// Ensure that they have one primary hub
+
+		if(! $has_primary)
+			$arr['locations'][0]['primary'] = true;
+
+		foreach($arr['locations'] as $location) {
+			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$sender['key'])) {
+				logger('sync_locations: Unable to verify site signature for ' . $location['url']);
+				$ret['message'] .= sprintf( t('Unable to verify site signature for %s'), $location['url']) . EOL;
+				continue;
+			}
+
+
+			for($x = 0; $x < count($xisting); $x ++) {
+				if(($xisting[$x]['hubloc_url'] === $location['url']) 
+					&& ($xisting[$x]['hubloc_sitekey'] === $location['sitekey'])) {
+					$xisting[$x]['updated'] = true;
+				}
+			}
+
+			if(! $location['sitekey']) {
+				logger('sync_locations: empty hubloc sitekey. ' . print_r($location,true));
+				continue;
+			}
+
+			// Catch some malformed entries from the past which still exist
+
+			if(strpos($location['address'],'/') !== false)
+				$location['address'] = substr($location['address'],0,strpos($location['address'],'/'));
+
+			// match as many fields as possible in case anything at all changed. 
+
+			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' ",
+				dbesc($sender['hash']),
+				dbesc($sender['guid']),
+				dbesc($sender['guid_sig']),
+				dbesc($location['url']),
+				dbesc($location['url_sig']),
+				dbesc($location['host']),
+				dbesc($location['address']),
+				dbesc($location['callback']),
+				dbesc($location['sitekey'])
+			);
+			if($r) {
+				logger('sync_locations: hub exists: ' . $location['url'], LOGGER_DEBUG);
+
+				// update connection timestamp if this is the site we're talking to
+				// This only happens when called from import_xchan
+
+				if(array_key_exists('site',$arr) && $location['url'] == $arr['site']['url']) {
+					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d",
+						dbesc(datetime_convert()),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+				}
+				
+				// if it's marked offline/dead, bring it back
+				// Should we do this? It's basically saying that the channel knows better than
+				// the directory server if the site is alive.
+
+				if($r[0]['hubloc_status'] & HUBLOC_OFFLINE) {
+					q("update hubloc set hubloc_status = (hubloc_status & ~%d) where hubloc_id = %d",
+						intval(HUBLOC_OFFLINE),
+						intval($r[0]['hubloc_id'])
+					);
+					if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
+						q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where hubloc_id = %d",
+							intval(HUBLOC_FLAGS_ORPHANCHECK),
+							intval($r[0]['hubloc_id'])
+						);
+					}
+					q("update xchan set xchan_flags = (xchan_flags & ~%d) where (xchan_flags & %d)>0 and xchan_hash = '%s'",
+						intval(XCHAN_FLAGS_ORPHAN),
+						intval(XCHAN_FLAGS_ORPHAN),
+						dbesc($sender['hash'])
+					);
+				} 
+
+				// Remove pure duplicates
+				if(count($r) > 1) {
+					for($h = 1; $h < count($r); $h ++) {
+						q("delete from hubloc where hubloc_id = %d",
+							intval($r[$h]['hubloc_id'])
+						);
+						$what .= 'duplicate_hubloc_removed ';
+						$changed = true;
+					}
+				}
+
+				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
+					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
+					$m = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
+						intval(HUBLOC_FLAGS_PRIMARY),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+					// make sure hubloc_change_primary() has current data
+					$r[0]['hubloc_flags'] = $r[0]['hubloc_flags'] ^ HUBLOC_FLAGS_PRIMARY;
+					hubloc_change_primary($r[0]);
+					$what .= 'primary_hub ';
+					$changed = true;
+				}
+				elseif($absolute) {
+					// Absolute sync - make sure the current primary is correctly reflected in the xchan
+					$pr = hubloc_change_primary($r[0]);
+					if($pr) {
+						$what .= 'xchan_primary';
+						$changed = true;
+					}
+				}
+				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted']))
+					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && ($location['deleted']))) {
+					$n = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
+						intval(HUBLOC_FLAGS_DELETED),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+					$what .= 'delete_hub ';
+					$changed = true;
+				}
+				continue;
+			}
+
+			// Existing hubs are dealt with. Now let's process any new ones. 
+			// New hub claiming to be primary. Make it so by removing any existing primaries.
+
+			if(intval($location['primary'])) {
+				$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_hash = '%s' and (hubloc_flags & %d )>0",
+					intval(HUBLOC_FLAGS_PRIMARY),
+					dbesc(datetime_convert()),
+					dbesc($sender['hash']),
+					intval(HUBLOC_FLAGS_PRIMARY)
+				);
+			}
+			logger('sync_locations: new hub: ' . $location['url']);
+			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_updated, hubloc_connected)
+					values ( '%s','%s','%s','%s', '%s', %d ,'%s','%s','%s','%s','%s','%s','%s')",
+				dbesc($sender['guid']),
+				dbesc($sender['guid_sig']),
+				dbesc($sender['hash']),
+				dbesc($location['address']),
+				dbesc('zot'),
+				intval((intval($location['primary'])) ? HUBLOC_FLAGS_PRIMARY : 0),
+				dbesc($location['url']),
+				dbesc($location['url_sig']),
+				dbesc($location['host']),
+				dbesc($location['callback']),
+				dbesc($location['sitekey']),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert())
+			);
+			$what .= 'newhub ';
+			$changed = true;
+
+			if($location['primary']) {
+				$r = q("select * from hubloc where hubloc_addr = '%s' and hubloc_sitekey = '%s' limit 1",
+					dbesc($location['address']),
+					dbesc($location['sitekey'])
+				);
+				if($r)
+					hubloc_change_primary($r[0]);
+			}		
+		}
+
+		// get rid of any hubs we have for this channel which weren't reported.
+
+		if($absolute && $xisting) {
+			foreach($xisting as $x) {
+				if(! array_key_exists('updated',$x)) {
+					logger('sync_locations: deleting unreferenced hub location ' . $x['hubloc_url']);
+					$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
+						intval(HUBLOC_FLAGS_DELETED),
+						dbesc(datetime_convert()),
+						intval($x['hubloc_id'])
+					);
+					$what .= 'removed_hub ';
+					$changed = true;
+				}
+			}
+		}
+	}
+
+	$ret['change_message'] = $what;
+	$ret['changed'] = $changed;
+
+	return $ret;
+
+}
+
+
+function zot_encode_locations($channel) {
+	$ret = array();
+
+	$x = zot_get_hublocs($channel['channel_hash']);
+	if($x && count($x)) {
+		foreach($x as $hub) {
+			if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {
+				$ret[] = array(
+					'host'     => $hub['hubloc_host'],
+					'address'  => $hub['hubloc_addr'],
+					'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
+					'url'      => $hub['hubloc_url'],
+					'url_sig'  => $hub['hubloc_url_sig'],
+					'callback' => $hub['hubloc_callback'],
+					'sitekey'  => $hub['hubloc_sitekey'],
+					'deleted'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED) ? true : false)
+				);
+			}
+		}
+	}
+	return $ret;
+}
+
+
+
 
 
 /*
@@ -1785,7 +2083,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 
 
 	if(in_arrayi('nsfw',$clean) || in_arrayi('adult',$clean)) {
-		q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s' limit 1",
+		q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
 			intval(XCHAN_FLAGS_SELFCENSORED),
 			dbesc($hash)
 		);
@@ -1799,7 +2097,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 		$update = false;
 		foreach($r[0] as $k => $v) {
 			if((array_key_exists($k,$arr)) && ($arr[$k] != $v)) {
-				logger('import_directory_profile: update' . $k . ' => ' . $arr[$k]);
+				logger('import_directory_profile: update ' . $k . ' => ' . $arr[$k]);
 				$update = true;
 				break;
 			}
@@ -1820,7 +2118,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 				xprof_homepage = '%s',
 				xprof_hometown = '%s',
 				xprof_keywords = '%s'
-				where xprof_hash = '%s' limit 1",
+				where xprof_hash = '%s'",
 				dbesc($arr['xprof_desc']),
 				dbesc($arr['xprof_dob']),
 				intval($arr['xprof_age']),
@@ -1841,7 +2139,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 	}
 	else {
 		$update = true;
-		logger('import_directory_profile: new profile');
+		logger('import_directory_profile: new profile ');
 		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_age, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country, xprof_about, xprof_homepage, xprof_hometown, xprof_keywords) values ('%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 			dbesc($arr['xprof_hash']),
 			dbesc($arr['xprof_desc']),
@@ -1890,7 +2188,7 @@ function import_directory_keywords($hash,$keywords) {
 
 	foreach($existing as $x) {
 		if(! in_array($x,$clean))
-			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s' limit 1",
+			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s'",
 				dbesc($hash),
 				dbesc($x)
 			);
@@ -1922,7 +2220,7 @@ function update_modtime($hash,$guid,$addr,$flags = 0) {
 		);
 	}
 	else {
-		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
+		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d)>0 ",
 			intval(UPDATE_FLAGS_UPDATED),
 			dbesc($addr),
 			intval(UPDATE_FLAGS_UPDATED)
@@ -1997,6 +2295,7 @@ function import_site($arr,$pubkey) {
 	$url = htmlspecialchars($arr['url'],ENT_COMPAT,'UTF-8',false);
 	$sellpage = htmlspecialchars($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
 	$site_location = htmlspecialchars($arr['location'],ENT_COMPAT,'UTF-8',false);
+	$site_realm = htmlspecialchars($arr['realm'],ENT_COMPAT,'UTF-8',false);
 
 	if($exists) {
 		if(($siterecord['site_flags'] != $site_directory)
@@ -2004,14 +2303,15 @@ function import_site($arr,$pubkey) {
 			|| ($siterecord['site_directory'] != $directory_url)
 			|| ($siterecord['site_sellpage'] != $sellpage)
 			|| ($siterecord['site_location'] != $site_location)
-			|| ($siterecord['site_register'] != $register_policy)) {
+			|| ($siterecord['site_register'] != $register_policy)
+			|| ($siterecord['site_realm'] != $site_realm)) {
 			$update = true;
 
 //			logger('import_site: input: ' . print_r($arr,true));
 //			logger('import_site: stored: ' . print_r($siterecord,true));
 
-			$r = q("update site set site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s'
-				where site_url = '%s' limit 1",
+			$r = q("update site set site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s'
+				where site_url = '%s'",
 				dbesc($site_location),
 				intval($site_directory),
 				intval($access_policy),
@@ -2019,6 +2319,7 @@ function import_site($arr,$pubkey) {
 				intval($register_policy),
 				dbesc(datetime_convert()),
 				dbesc($sellpage),
+				dbesc($site_realm),
 				dbesc($url)
 			);
 			if(! $r) {
@@ -2028,8 +2329,8 @@ function import_site($arr,$pubkey) {
 	}
 	else {
 		$update = true;
-		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage )
-			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s' )",
+		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm )
+			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s' )",
 			dbesc($site_location),
 			dbesc($url),
 			intval($access_policy),
@@ -2037,7 +2338,8 @@ function import_site($arr,$pubkey) {
 			dbesc(datetime_convert()),
 			dbesc($directory_url),
 			intval($register_policy),
-			dbesc($sellpage)
+			dbesc($sellpage),
+			dbesc($site_realm)
 		);
 		if(! $r) {
 			logger('import_site: record create failed. ' . print_r($arr,true));
@@ -2104,6 +2406,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	$info = (($packet) ? $packet : array());
 	$info['type'] = 'channel_sync';
+	$info['encoding'] = 'red'; // note: not zot, this packet is very red specific
 
 	if(array_key_exists($uid,$a->config) && array_key_exists('transient',$a->config[$uid])) {
 		$settings = $a->config[$uid]['transient'];
@@ -2179,7 +2482,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 // FIXME - this will sync red structures (channel, pconfig and abook). Eventually we need to make this application agnostic.
-// TODO: missing group membership changes
+
 
 	$result = array();
 	
@@ -2194,6 +2497,10 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 		}
 
 		$channel = $r[0];
+
+		$max_friends = service_class_fetch($channel['channel_id'],'total_channels');
+		$max_feeds = account_service_class_fetch($channel['channel_account_id'],'total_feeds');
+
 
 		if($channel['channel_hash'] != $sender['hash']) {
 			logger('process_channel_sync_delivery: possible forgery. Sender ' . $sender['hash'] . ' is not ' . $channel['channel_hash']);
@@ -2220,7 +2527,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 			if(count($clean)) {
 				foreach($clean as $k => $v) {
 					$r = dbq("UPDATE channel set " . dbesc($k) . " = '" . dbesc($v) 
-						. "' where channel_id = " . intval($channel['channel_id']) . " limit 1");
+						. "' where channel_id = " . intval($channel['channel_id']) );
 				}
 			}
 		}
@@ -2228,11 +2535,43 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 
 		if(array_key_exists('abook',$arr) && is_array($arr['abook']) && count($arr['abook'])) {
+			$total_friends = 0;
+			$total_feeds = 0;
+
+			$r = q("select abook_id, abook_flags from abook where abook_channel = %d",
+				intval($channel['channel_id'])
+			);
+			if($r) {
+				// don't count yourself
+				$total_friends = ((count($r) > 0) ? count($r) - 1 : 0);
+				foreach($r as $rr)
+					if($rr['abook_flags'] & ABOOK_FLAG_FEED)
+						$total_feeds ++;
+			}
 
 			$disallowed = array('abook_id','abook_account','abook_channel');
 
-			$clean = array();
 			foreach($arr['abook'] as $abook) {
+
+				$clean = array();
+				if($abook['abook_xchan'] && $abook['entry_deleted']) {
+					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);
+					require_once('include/Contact.php');
+					
+					$r = q("select abook_id, abook_flags from abook where abook_xchan = '%s' and abook_channel = %d and not ( abook_flags & %d )>0 limit 1",
+						dbesc($abook['abook_xchan']),
+						intval($channel['channel_id']),
+						intval(ABOOK_FLAG_SELF)
+					);
+					if($r) {
+						contact_remove($channel['channel_id'],$r[0]['abook_id']);
+						if($total_friends)
+							$total_friends --;
+						if($r[0]['abook_flags'] & ABOOK_FLAG_FEED)
+							$total_feeds --;
+					}
+					continue;
+				}
 
 				// Perform discovery if the referenced xchan hasn't ever been seen on this hub.
 				// This relies on the undocumented behaviour that red sites send xchan info with the abook
@@ -2246,7 +2585,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 							continue;
 						}
 						$j = json_decode($f['body'],true);
-				        if(! ($j['success'] && $j['guid'])) {
+						if(! ($j['success'] && $j['guid'])) {
 							logger('process_channel_sync_delivery: probe failed.');
 							continue;
 						}
@@ -2277,17 +2616,27 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 				// make sure we have an abook entry for this xchan on this system
 
 				if(! $r) {
+					if($max_friends !== false && $total_friends > $max_friends) {
+						logger('process_channel_sync_delivery: total_channels service class limit exceeded');
+						continue;
+					}
+					if($max_feeds !== false && ($clean['abook_flags'] & ABOOK_FLAG_FEED) && $total_feeds > $max_feeds) {
+						logger('process_channel_sync_delivery: total_feeds service class limit exceeded');
+						continue; 
+					}
 					q("insert into abook ( abook_xchan, abook_channel ) values ('%s', %d ) ",
 						dbesc($clean['abook_xchan']),
 						intval($channel['channel_id'])
 					);
+					$total_friends ++;
+					if($clean['abook_flags'] & ABOOK_FLAG_FEED)
+						$total_feeds ++;
 				} 
 
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
 						$r = dbq("UPDATE abook set " . dbesc($k) . " = '" . dbesc($v) 
-						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']) 
-						. " limit 1");
+						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']));
 					}
 				}
 			}
@@ -2312,7 +2661,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 						if(($y['name'] != $cl['name']) 
 							|| ($y['visible'] != $cl['visible']) 
 							|| ($y['deleted'] != $cl['deleted'])) {
-							q("update groups set name = '%s', visible = %d, deleted = %d where hash = '%s' and uid = %d limit 1",
+							q("update groups set name = '%s', visible = %d, deleted = %d where hash = '%s' and uid = %d",
 								dbesc($cl['name']),
 								intval($cl['visible']),
 								intval($cl['deleted']),
@@ -2334,8 +2683,8 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 						intval($channel['channel_id']),
 						intval($cl['visible']),
 						intval($cl['deleted']),
-           				dbesc($cl['name'])
-       				);
+						dbesc($cl['name'])
+					);
 				}
 
 				// now look for any collections locally which weren't in the list we just received.
@@ -2355,7 +2704,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 							q("delete from group_member where gid = %d",
 								intval($y['id'])
 							);  
-							q("update groups set deleted = 1 where id = %d and uid = %d limit 1",
+							q("update groups set deleted = 1 where id = %d and uid = %d",
 								intval($y['id']),
 								intval($channel['channel_id'])
 							);
@@ -2418,7 +2767,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 							foreach($m as $mm) {
 								// if the local existing member isn't in the list we just received - remove them
 								if(! in_array($mm['xchan'],$members[$y['hash']])) {
-									q("delete from group_member where xchan = '%s' and gid = %d and uid = %d limit 1",
+									q("delete from group_member where xchan = '%s' and gid = %d and uid = %d",
 										dbesc($mm['xchan']),
 										intval($y['id']),
 										intval($channel['channel_id'])
@@ -2464,8 +2813,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
 						$r = dbq("UPDATE profile set " . dbesc($k) . " = '" . dbesc($v) 
-						. "' where profile_guid = '" . dbesc($profile['profile_guid']) . "' and uid = " . intval($channel['channel_id']) 
-						. " limit 1");
+						. "' where profile_guid = '" . dbesc($profile['profile_guid']) . "' and uid = " . intval($channel['channel_id']));
 					}
 				}
 			}
@@ -2490,7 +2838,7 @@ function get_rpost_path($observer) {
 
 function import_author_zot($x) {
 	$hash = make_xchan_hash($x['guid'],$x['guid_sig']);
-	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d) limit 1",
+	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d)>0 limit 1",
 		dbesc($x['guid']),
 		dbesc($x['guid_sig']),
 		intval(HUBLOC_FLAGS_PRIMARY)
@@ -2509,3 +2857,110 @@ function import_author_zot($x) {
 	return false;
 }
 
+
+/**
+ * @function zot_process_message_request($data)
+ *    If a site receives a comment to a post but finds they have no parent to attach it with, they
+ * may send a 'request' packet containing the message_id of the missing parent. This is the handler
+ * for that packet. We will create a message_list array of the entire conversation starting with
+ * the missing parent and invoke delivery to the sender of the packet.
+ *
+ * include/deliver.php (for local delivery) and mod/post.php (for web delivery) detect the existence of 
+ * this 'message_list' at the destination and split it into individual messages which are 
+ * processed/delivered in order.  
+ *  
+ * Called from mod/post.php
+ */  
+
+
+function zot_process_message_request($data) {
+	$ret = array('success' => false);
+
+	if(! $data['message_id']) {
+		$ret['message'] = 'no message_id';
+		logger('no message_id');
+		return $ret;
+	}
+
+	$sender = $data['sender'];
+	$sender_hash = make_xchan_hash($sender['guid'],$sender['guid_sig']);
+
+	/*
+	 * Find the local channel in charge of this post (the first and only recipient of the request packet)
+	 */
+
+	$arr = $data['recipients'][0];
+	$recip_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
+	$c = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_hash = '%s' limit 1",
+		dbesc($recip_hash)
+	);
+	if(! $c) {
+		logger('recipient channel not found.');
+		$ret['message'] .= 'recipient not found.' . EOL;
+		return $ret;
+	}
+
+	/*
+	 * fetch the requested conversation
+	 */
+
+	$messages = zot_feed($c[0]['channel_id'],$sender_hash,array('message_id' => $data['message_id']));
+
+	if($messages) {
+		$env_recips = null;
+
+		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host 
+			from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d)>0
+			and not (hubloc_status & %d)>0 group by hubloc_sitekey",
+			dbesc($sender_hash),
+			intval(HUBLOC_FLAGS_DELETED),
+			intval(HUBLOC_OFFLINE)
+		);
+		if(! $r) {
+			logger('no hubs');
+			return $ret;
+		}
+		$hubs = $r;
+		$hublist = array();
+		$keys = array();
+
+		$private = ((array_key_exists('flags',$messages[0]) && in_array('private',$messages[0]['flags'])) ? true : false);
+		if($private)
+			$env_recips = array('guid' => $sender['guid'],'guid_sig' => $sender['guid_sig'],'hash' => $sender_hash);
+
+		$data_packet = json_encode(array('message_list' => $messages));
+		
+		foreach($hubs as $hub) {
+			$hash = random_string();
+
+			/*
+			 * create a notify packet and drop the actual message packet in the queue for pickup
+			 */
+
+			$n = zot_build_packet($c[0],'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null),$hash,array('message_id' => $data['message_id']));
+			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, 
+				outq_created, outq_updated, outq_notify, outq_msg ) 
+				values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
+				dbesc($hash),
+				intval($c[0]['channel_account_id']),
+				intval($c[0]['channel_id']),
+				dbesc('zot'),
+				dbesc($hub['hubloc_callback']),
+				intval(1),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc($n),
+				dbesc($data_packet)
+			);
+
+			/*
+			 * invoke delivery to send out the notify packet
+			 */
+
+			proc_run('php','include/deliver.php',$hash);
+		}
+
+	}
+	$ret['success'] = true;
+	return $ret;
+}

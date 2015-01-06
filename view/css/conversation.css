@@ -1,8 +1,14 @@
+/* common */
+
+code {
+	font-family: Courier, monospace;
+	display: block;
+	overflow: auto;
+}
+
 /* jot */
 
-#jot-title,
-#jot-category,
-#jot-pagetitle {
+.jothidden input {
 	border: 0px;
 	margin: 0px;
 	padding: 8px;
@@ -93,6 +99,10 @@
 	float: left;
 }
 
+a.wall-item-name-link {
+	font-weight: bold !important;
+}
+
 .wall-item-author {
 	white-space: nowrap;
 	overflow: hidden;
@@ -107,8 +117,16 @@
 	overflow: auto;
 }
 
+.wall-item-content h1,  .wall-item-content h2 {
+   font-size: 1.319em;
+}
+
+.wall-item-title h3, .wall-item-content h3,  .wall-item-content h4 {
+   font-size: 1.112em;
+}
+
 .wall-item-content img {
-    max-width: 95%;
+	max-width: 100%;
 }
 
 .wall-item-title h3 {
@@ -182,10 +200,11 @@
 .comment-edit-text-empty, .comment-edit-text-full {
 	float: left;
 	width: 100%;
-	padding: 8px;
 }
 
 .comment-edit-text-empty {
+	padding: 0px 8px;
+	line-height: 28px;
 	height: 30px;
 	overflow: hidden;
 	resize: none;
@@ -193,6 +212,7 @@
 }
 
 .comment-edit-text-full {
+	padding: 8px;
 	height: 150px;
 	overflow: auto;
 }
@@ -229,4 +249,15 @@
 .comment-edit-preview {
 	display: none;
 	margin-top: 7px;
+}
+
+/* disable link handling for unknown entries */
+.dropdown-menu > li > a.disabled {
+	pointer-events: none;
+	cursor: default;
+}
+
+.item-forged {
+	color: #FF0000;
+	font-size: 1.5em !important;
 }

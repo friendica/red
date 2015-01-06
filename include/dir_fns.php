@@ -30,13 +30,53 @@ function find_upstream_directory($dirmode) {
 	return array('url' => $preferred);
 }
 
+function check_upstream_directory() {
+	/**
+	* Directories may come and go over time.  We will need to check that our 
+	* directory server is still valid occasionally, and reset to something that
+	* is if our directory has gone offline for any reason
+	*/
+	$directory = get_config('system','directory_server');
+	if ($directory) {
+		$r = q("select * from site where site_url = '%s' and (site_flags & %d) > 0 ",
+			dbesc($directory),
+			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY|DIRECTORY_MODE_STANDALONE)
+		);
+	}
+	// If we've got something, it's still a directory.  If we haven't, we need to reset and let find_upstream_directory() fix it
+		if (! $r) {
+			set_config('system','directory_server','');
+		}
+	return;
+}
+	
 function dir_sort_links() {
+	// Build urls without order and pubforums so it's easy to tack on the changed value
+	// Probably there's an easier way to do this
+
+	$current_order = (($_REQUEST['order']) ? $_REQUEST['order'] : 'normal');
+	$url = 'directory?';
+	$tmp = $_REQUEST;
+	unset($tmp['order']);
+	$sorturl = $url . http_build_query($tmp);
+	$tmp = $_REQUEST;
+
+	unset($tmp['pubforums']);
+	$forumsurl = $url . http_build_query($tmp);
 
 	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(
-		'$header' => t('Sort Options'),
+		'$header' => t('Directory Options'),
 		'$normal' => t('Alphabetic'),
 		'$reverse' => t('Reverse Alphabetic'),
-		'$date' => t('Newest to Oldest')
+		'$date' => t('Newest to Oldest'),
+		'$reversedate' => t('Oldest to Newest'),
+		'$pubforums' => t('Public Forums Only'),
+		'$pubforumsonly' => x($_REQUEST,'pubforums') ? $_REQUEST['pubforums'] : '',
+		'$sort' => t('Sort'),
+		'$selected_sort' => $current_order,
+		'$sorturl' => $sorturl,
+		'$forumsurl' => $forumsurl,
+
 	));
 	return $o;
 }
@@ -64,29 +104,43 @@ function sync_directories($dirmode) {
 	if($dirmode == DIRECTORY_MODE_STANDALONE || $dirmode == DIRECTORY_MODE_NORMAL)
 		return;
 
-	$r = q("select * from site where (site_flags & %d) and site_url != '%s'",
-		intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
-		dbesc(z_root())
-	);
+	$realm = get_directory_realm();
+	if($realm == DIRECTORY_REALM) {
+		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s' and ( site_realm = '%s' or site_realm = '') ",
+			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
+			dbesc(z_root()),
+			dbesc($realm)
+		);
+	}
+	else {
+		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s' and site_realm like '%s' ",
+			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
+			dbesc(z_root()),
+			dbesc(protect_sprintf('%' . $realm . '%'))
+		);
+	}
 
 	// If there are no directory servers, setup the fallback master
+	// FIXME - what to do if we're in a different realm?
 
 	if((! $r) && (z_root() != DIRECTORY_FALLBACK_MASTER)) {
 		$r = array(
 			'site_url' => DIRECTORY_FALLBACK_MASTER,
 			'site_flags' => DIRECTORY_MODE_PRIMARY,
-			'site_update' => '0000-00-00 00:00:00', 
-			'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch'
+			'site_update' => NULL_DATE, 
+			'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch',
+			'site_realm' => DIRECTORY_REALM
 		);
-		$x = q("insert into site ( site_url, site_flags, site_update, site_directory )
-			values ( '%s', %d', '%s', '%s' ) ",
+		$x = q("insert into site ( site_url, site_flags, site_update, site_directory, site_realm )
+			values ( '%s', %d', '%s', '%s', '%s' ) ",
 			dbesc($r[0]['site_url']),
 			intval($r[0]['site_flags']),
 			dbesc($r[0]['site_update']),
-			dbesc($r[0]['site_directory'])
+			dbesc($r[0]['site_directory']),
+			dbesc($r[0]['site_realm'])
 		);
 
-		$r = q("select * from site where (site_flags & %d) and site_url != '%s'",
+		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s'",
 			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
 			dbesc(z_root())
 		);
@@ -103,7 +157,7 @@ function sync_directories($dirmode) {
 
 		// for brand new directory servers, only load the last couple of days. Everything before that will be repeats.
 
-		$syncdate = (($rr['site_sync'] === '0000-00-00 00:00:00') ? datetime_convert('UTC','UTC','now - 2 days') : $rr['site_sync']);
+		$syncdate = (($rr['site_sync'] === NULL_DATE) ? datetime_convert('UTC','UTC','now - 2 days') : $rr['site_sync']);
 		$x = z_fetch_url($rr['site_directory'] . '?f=&sync=' . urlencode($syncdate));
 
 		if(! $x['success'])
@@ -112,7 +166,7 @@ function sync_directories($dirmode) {
 		if((! $j['transactions']) || (! is_array($j['transactions'])))
 			continue;
 
-		q("update site set site_sync = '%s' where site_url = '%s' limit 1",
+		q("update site set site_sync = '%s' where site_url = '%s'",
 			dbesc(datetime_convert()),
 			dbesc($rr['site_url'])
 		);
@@ -178,13 +232,14 @@ function update_directory_entry($ud) {
 
 function local_dir_update($uid,$force) {
 
-	logger('local_dir_update', LOGGER_DEBUG);
+	logger('local_dir_update: uid: ' . $uid, LOGGER_DEBUG);
 
 	$p = q("select channel.channel_hash, channel_address, channel_timezone, profile.* from profile left join channel on channel_id = uid where uid = %d and is_default = 1",
 		intval($uid)
 	);
 
 	$profile = array();
+	$profile['encoding'] = 'zot';
 
 	if($p) {
 		$hash = $p[0]['channel_hash'];
@@ -232,7 +287,7 @@ function local_dir_update($uid,$force) {
 		
 		if($new_flags != $r[0]['xchan_flags']) {			
 
-			$r = q("update xchan set xchan_flags = %d  where xchan_hash = '%s' limit 1",
+			$r = q("update xchan set xchan_flags = %d  where xchan_hash = '%s'",
 				intval($new_flags),
 				dbesc($p[0]['channel_hash'])
 			);
@@ -246,10 +301,10 @@ function local_dir_update($uid,$force) {
 		}
 		else {
 			// they may have made it private
-			$r = q("delete from xprof where xprof_hash = '%s' limit 1",
+			$r = q("delete from xprof where xprof_hash = '%s'",
 				dbesc($hash)
 			);
-			$r = q("delete from xtag where xtag_hash = '%s' limit 1",
+			$r = q("delete from xtag where xtag_hash = '%s'",
 				dbesc($hash)
 			);
 		}

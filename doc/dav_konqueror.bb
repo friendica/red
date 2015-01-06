@@ -8,4 +8,5 @@ Additionally, if one has authenticated at a different hub during their normal br
 
 This functionality is normally restricted to the web interface, and is not available to any desktop software other than KDE.
 
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/cloud_footer.bb;
+

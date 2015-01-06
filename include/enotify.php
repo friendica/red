@@ -18,7 +18,7 @@ function notification($params) {
 	}
 	if($params['to_xchan']) {
 		$y = q("select channel.*, account.* from channel left join account on channel_account_id = account_id
-			where channel_hash = '%s' and not (channel_pageflags & %d) limit 1",
+			where channel_hash = '%s' and not (channel_pageflags & %d)>0 limit 1",
 			dbesc($params['to_xchan']),
 			intval(PAGE_REMOVED)
 		);
@@ -65,7 +65,7 @@ function notification($params) {
 			localize_item($i);
 			$title = $i['title'];
 			$body = $i['body'];
-			$private = $i['item_private'];
+			$private = (($i['item_private']) || ($i['item_flags'] & ITEM_OBSCURED));
 		}
 		else {
 			$title = $params['item']['title'];
@@ -135,7 +135,7 @@ function notification($params) {
 
 
 		$item_post_type = item_post_type($p[0]);
-		$private = $p[0]['item_private'];
+//		$private = $p[0]['item_private'];
 		$parent_id = $p[0]['id'];
 
 		//$possess_desc = str_replace('<!item_type!>',$possess_desc);
@@ -357,9 +357,21 @@ function notification($params) {
 
 
 	// create notification entry in DB
+	$seen = 0;
 
-	$r = q("insert into notify (hash,name,url,photo,date,aid,uid,link,parent,type,verb,otype)
-		values('%s','%s','%s','%s','%s',%d,%d,'%s','%s',%d,'%s','%s')",
+	// Mark some notifications as seen right away
+	// Note! The notification have to be created, because they are used to send emails
+	// So easiest solution to hide them from Notices is to mark them as seen right away.
+	// Another option would be to not add them to the DB, and change how emails are handled (probably would be better that way)
+	$always_show_in_notices = get_pconfig($recip['channel_id'],'system','always_show_in_notices');
+	if(!$always_show_in_notices) {
+		if(($params['type'] == NOTIFY_WALL) || ($params['type'] == NOTIFY_MAIL) || ($params['type'] == NOTIFY_INTRO)) {
+			$seen = 1;
+		}
+	}
+
+	$r = q("insert into notify (hash,name,url,photo,date,aid,uid,link,parent,seen,type,verb,otype)
+		values('%s','%s','%s','%s','%s',%d,%d,'%s','%s',%d,%d,'%s','%s')",
 		dbesc($datarray['hash']),
 		dbesc($datarray['name']),
 		dbesc($datarray['url']),
@@ -369,6 +381,7 @@ function notification($params) {
 		intval($datarray['uid']),
 		dbesc($datarray['link']),
 		dbesc($datarray['parent']),
+		intval($seen),
 		intval($datarray['type']),
 		dbesc($datarray['verb']),
 		dbesc($datarray['otype'])
@@ -394,7 +407,7 @@ function notification($params) {
 	if(($a->language === 'en' || (! $a->language)) && strpos($msg,', '))
 		$msg = substr($msg,strpos($msg,', ')+1);	
 
-	$r = q("update notify set msg = '%s' where id = %d and uid = %d limit 1",
+	$r = q("update notify set msg = '%s' where id = %d and uid = %d",
 		dbesc($msg),
 		intval($notify_id),
 		intval($datarray['uid'])
@@ -411,7 +424,7 @@ function notification($params) {
 
 		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r", "\\n"), array( "", "\n"), $body))),ENT_QUOTES,'UTF-8'));
 
-		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r","\\n"), array("","<br />\n"),$body))), ENT_QUOTES,'UTF-8');
+		$htmlversion = bbcode(stripslashes(str_replace(array("\\r","\\n"), array("","<br />\n"),$body)));
 
 
 		// use $_SESSION['zid_override'] to force zid() to use 
@@ -461,6 +474,8 @@ function notification($params) {
 		// Might be interesting to use GPG,PGP,S/MIME encryption instead
 		// but we'll save that for a clever plugin developer to implement
 
+		$private_activity = false;
+
 		if(! $datarray['email_secure']) {
 			switch($params['type']) {
 				case NOTIFY_WALL:
@@ -469,13 +484,21 @@ function notification($params) {
 				case NOTIFY_COMMENT:
 					if(! $private)
 						break;
+					$private_activity = true;
 				case NOTIFY_MAIL:
 					$datarray['textversion'] = $datarray['htmlversion'] = $datarray['title'] = '';
+					$datarray['subject'] = preg_replace('/' . preg_quote(t('[Red:Notify]')) . '/','$0*',$datarray['subject']);
 					break;
 				default:
 					break;
 			}
 		}
+
+		if($private_activity 
+			&& intval(get_pconfig($datarray['uid'],'system','ignore_private_notifications'))) {
+			pop_lang();
+			return;
+		}		
 
 		// load the template for private message notifications
 		$tpl = get_markup_template('email_notify_html.tpl');

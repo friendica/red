@@ -397,4 +397,4 @@ auth_check messages MUST be encrypted with AES256CBC. This message is sent to th
 
 'confirm' in this case is the base64url encoded RSA signature of the concatenation of 'secret' with the base64url encoded whirlpool hash of the source guid and guid_sig; signed with the source channel private key. This prevents a man-in-the-middle from inserting a rogue success packet. Upon receipt and successful verification of this packet, the destination site will redirect to the original destination URL and indicate a successful remote login. 
    
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

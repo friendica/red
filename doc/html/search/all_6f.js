@@ -18,6 +18,7 @@ var searchData=
   ['oexchange_2ephp',['oexchange.php',['../oexchange_8php.html',1,'']]],
   ['oexchange_5fcontent',['oexchange_content',['../oexchange_8php.html#a2d8b785cd7d041a4e6274f5af370cf26',1,'oexchange.php']]],
   ['oexchange_5finit',['oexchange_init',['../oexchange_8php.html#ac8e2e469ddc3db984b0c1b44558aca59',1,'oexchange.php']]],
+  ['old_5fwebfinger',['old_webfinger',['../include_2network_8php.html#a872bbe72d23826c64c9e0f822180a3ec',1,'network.php']]],
   ['olddefault_2ephp',['olddefault.php',['../olddefault_8php.html',1,'']]],
   ['onedirsync_2ephp',['onedirsync.php',['../onedirsync_8php.html',1,'']]],
   ['onedirsync_5frun',['onedirsync_run',['../onedirsync_8php.html#a411aedd47c57476099647961e6a86691',1,'onedirsync.php']]],
@@ -29,7 +30,9 @@ var searchData=
   ['openid_5fcontent',['openid_content',['../openid_8php.html#a9a13827dbcf61ae4e45f0b6b33a88f43',1,'openid.php']]],
   ['opensearch_2ephp',['opensearch.php',['../opensearch_8php.html',1,'']]],
   ['opensearch_5finit',['opensearch_init',['../opensearch_8php.html#ad13034877a496565ac7d99e9fc6f55e9',1,'opensearch.php']]],
+  ['optimize_5ftable',['optimize_table',['../classdba__driver.html#a77e59dcbeab30ca6000131d2e9ad4092',1,'dba_driver\optimize_table()'],['../classdba__postgres.html#a3de1ac375e98886dfc38fd0066e88f90',1,'dba_postgres\optimize_table()']]],
   ['orient',['orient',['../classphoto__driver.html#a4de5bac8daea8f291a33c80788019d0d',1,'photo_driver']]],
+  ['os_5fmkdir',['os_mkdir',['../boot_8php.html#a5fbebdf7a1c0ea8f904dbd9d78c2c06c',1,'boot.php']]],
   ['outf',['outf',['../namespacefriendica-to-smarty-tpl.html#a87182a9bab47640428bd0b2b9946bef9',1,'friendica-to-smarty-tpl']]],
   ['outpath',['outpath',['../namespacefriendica-to-smarty-tpl.html#a005c1b7a69cac31fad72a941974ba7bb',1,'friendica-to-smarty-tpl']]]
 ];

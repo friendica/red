@@ -20,13 +20,13 @@ Returns the global app structure ($a).
 
 (App:: is usually assigned to the global $a), so $a-&gt;get_observer() or get_app()-&gt;get_observer() - returns an xchan structure representing the current viewer if authenticated (locally or remotely).
 
-[b]get_config($family,$key), get_pconfig($uid,$family,$key)[/b]
+[b]get_config($family,$key), get_pconfig($uid,$family,$key), get_xconfig($xchan_hash,$family,$key)[/b]
 
 Returns the config setting for $family and $key or false if unset.
 
 [b]    set_config($family,$key,$value), set_pconfig($uid,$family,$key,$value)[/b]
 
-Sets the value of config setting for $family and $key to $value. Returns $value. The config versions operate on system-wide settings. The pconfig versions get/set the values for a specific integer uid (channel_id).
+Sets the value of config setting for $family and $key to $value. Returns $value. The config versions operate on system-wide settings. The pconfig versions get/set the values for a specific integer uid (channel_id).  The xconfig version get/sets the value for a specific xchan hash - generally used for remote users.
 
 [b]dbesc()[/b]
 
@@ -44,4 +44,4 @@ Returns the translated variant of $string for the current language or $string (d
 
 Shorthand test to see if variable $var is set and is not empty. Tests vary by type. Returns false if $var or $key is not set. If variable is set, returns 1 if has 'non-zero' value, otherwise returns 0. -- e.g. x('') or x(0) returns 0;
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

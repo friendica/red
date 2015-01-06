@@ -6,5 +6,6 @@ var dir_817f6d302394b98e59575acdb59998bc =
     [ "minimal.php", "minimal_8php.html", null ],
     [ "mod_import.php", "mod__import_8php.html", "mod__import_8php" ],
     [ "none.php", "none_8php.html", null ],
+    [ "redable.php", "redable_8php.html", "redable_8php" ],
     [ "theme_init.php", "php_2theme__init_8php.html", "php_2theme__init_8php" ]
 ];

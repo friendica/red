@@ -74,12 +74,12 @@ function zfinger_init(&$a) {
 			 */
 
 			$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
-				where ( channel_pageflags & %d ) order by channel_id limit 1",
+				where ( channel_pageflags & %d )>0 order by channel_id limit 1",
 				intval(PAGE_SYSTEM)
 			);
 			if(! $r) {
 				$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
-					where not ( channel_pageflags & %d ) order by channel_id limit 1",
+					where not ( channel_pageflags & %d )>0 order by channel_id limit 1",
 					intval(PAGE_REMOVED)
 				);
 			}
@@ -108,6 +108,21 @@ function zfinger_init(&$a) {
 	if($deleted || $censored)
 		$searchable = false;
 	 
+	$public_forum = false;
+
+	$role = get_pconfig($e['channel_id'],'system','permissions_role');
+	if($role === 'forum') {
+		$public_forum = true;
+	}
+	else {
+		// check if it has characteristics of a public forum based on custom permissions.
+		$t = q("select abook_my_perms from abook where abook_channel = %d and (abook_flags & %d)>0 limit 1",
+			intval($e['channel_id']),
+			intval(ABOOK_FLAG_SELF)
+		);
+		if($t && ($t[0]['abook_my_perms'] & PERMS_W_TAGWALL))
+			$public_forum = true;
+	}
 
 
 	//  This is for birthdays and keywords, but must check access permissions
@@ -174,6 +189,7 @@ function zfinger_init(&$a) {
 	$ret['target_sig']     = $zsig;
 	$ret['searchable']     = $searchable;
 	$ret['adult_content']  = $adult_channel;
+	$ret['public_forum']   = $public_forum;
 	if($deleted)
 		$ret['deleted']        = $deleted;	
 
@@ -203,33 +219,16 @@ function zfinger_init(&$a) {
 			$permissions['connected'] = true;
 	}
 
-	$ret['permissions'] = (($ztarget && $zkey) ? aes_encapsulate(json_encode($permissions),$zkey) : $permissions);
+	$ret['permissions'] = (($ztarget && $zkey) ? crypto_encapsulate(json_encode($permissions),$zkey) : $permissions);
 
 	if($permissions['view_profile'])
 		$ret['profile']  = $profile;
 
-
 	// array of (verified) hubs this channel uses
 
-	$ret['locations'] = array();
-
-	$x = zot_get_hublocs($e['channel_hash']);
-	if($x && count($x)) {
-		foreach($x as $hub) {
-			if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {
-				$ret['locations'][] = array(
-					'host'     => $hub['hubloc_host'],
-					'address'  => $hub['hubloc_addr'],
-					'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
-					'url'      => $hub['hubloc_url'],
-					'url_sig'  => $hub['hubloc_url_sig'],
-					'callback' => $hub['hubloc_callback'],
-					'sitekey'  => $hub['hubloc_sitekey'],
-					'deleted'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED) ? true : false)
-				);
-			}
-		}
-	}
+	$x = zot_encode_locations($e);
+	if($x)
+		$ret['locations'] = $x;
 
 	$ret['site'] = array();
 	$ret['site']['url'] = z_root();
@@ -273,7 +272,6 @@ function zfinger_init(&$a) {
 		if($access_policy == ACCESS_TIERED)
 			$ret['site']['access_policy'] = 'tiered';
 
-		require_once('include/account.php');
 		$ret['site']['accounts'] = account_total();
 	
 		require_once('include/identity.php');
@@ -297,6 +295,7 @@ function zfinger_init(&$a) {
 		$ret['site']['sitename'] = get_config('system','sitename');
 		$ret['site']['sellpage'] = get_config('system','sellpage');
 		$ret['site']['location'] = get_config('system','site_location');
+		$ret['site']['realm'] = get_directory_realm();
 
 	}
 	call_hooks('zot_finger',$ret);

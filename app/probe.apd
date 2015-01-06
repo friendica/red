@@ -1,4 +1,4 @@
 url: $baseurl/probe
 requires: local_user
-name: Probe
+name: Remote diagnostics
 photo: $baseurl/app/probe.png

@@ -65,6 +65,11 @@ function admin_post(&$a){
 			case 'dbsync':
 				admin_page_dbsync_post($a);
 				break;
+
+			case 'profs':
+				admin_page_profs_post($a);
+				break;
+
 		}
 	}
 
@@ -95,6 +100,7 @@ function admin_content(&$a) {
 		'plugins'    =>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
 		'themes'     =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
 		'hubloc'     =>	Array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
+		'profs'      => array(z_root() . '/admin/profs', t('Profile Config'), 'profs'),
 		'dbsync'     => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
 	);
 	
@@ -154,6 +160,9 @@ function admin_content(&$a) {
 				break;
 			case 'dbsync':
 				$o = admin_page_dbsync($a);
+				break;
+			case 'profs':
+				$o = admin_page_profs($a);
 				break;
 			default:
 				notice( t("Item not found.") );
@@ -229,8 +238,7 @@ function admin_page_site_post(&$a){
 	$language			=	((x($_POST,'language'))			? notags(trim($_POST['language']))			: '');
 	$theme				=	((x($_POST,'theme'))			? notags(trim($_POST['theme']))				: '');
 	$theme_mobile			=	((x($_POST,'theme_mobile'))		? notags(trim($_POST['theme_mobile']))			: '');
-	$theme_accessibility		=	((x($_POST,'theme_accessibility'))	? notags(trim($_POST['theme_accessibility']))		: '');
-	$site_channel			=	((x($_POST,'site_channel'))	? notags(trim($_POST['site_channel']))				: '');
+//	$site_channel			=	((x($_POST,'site_channel'))	? notags(trim($_POST['site_channel']))				: '');
 	$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))				:  0);
 	
 	
@@ -256,55 +264,18 @@ function admin_page_site_post(&$a){
 	$delivery_interval	=	((x($_POST,'delivery_interval'))? intval(trim($_POST['delivery_interval']))		: 0);
 	$poll_interval	=	((x($_POST,'poll_interval'))? intval(trim($_POST['poll_interval']))		: 0);
 	$maxloadavg	=	((x($_POST,'maxloadavg'))? intval(trim($_POST['maxloadavg']))		: 50);
-//	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
-/*
-	if($ssl_policy != intval(get_config('system','ssl_policy'))) {
-		if($ssl_policy == SSL_POLICY_FULL) {
-			q("update `contact` set 
-				`url`     = replace(`url`    , 'http:' , 'https:'),
-				`photo`   = replace(`photo`  , 'http:' , 'https:'),
-				`thumb`   = replace(`thumb`  , 'http:' , 'https:'),
-				`micro`   = replace(`micro`  , 'http:' , 'https:'),
-				`request` = replace(`request`, 'http:' , 'https:'),
-				`notify`  = replace(`notify` , 'http:' , 'https:'),
-				`poll`    = replace(`poll`   , 'http:' , 'https:'),
-				`confirm` = replace(`confirm`, 'http:' , 'https:'),
-				`poco`    = replace(`poco`   , 'http:' , 'https:')
-				where `self` = 1"
-			);
-			q("update `profile` set 
-				`photo`   = replace(`photo`  , 'http:' , 'https:'),
-				`thumb`   = replace(`thumb`  , 'http:' , 'https:')
-				where 1 "
-			);
-		}
-		elseif($ssl_policy == SSL_POLICY_SELFSIGN) {
-			q("update `contact` set 
-				`url`     = replace(`url`    , 'https:' , 'http:'),
-				`photo`   = replace(`photo`  , 'https:' , 'http:'),
-				`thumb`   = replace(`thumb`  , 'https:' , 'http:'),
-				`micro`   = replace(`micro`  , 'https:' , 'http:'),
-				`request` = replace(`request`, 'https:' , 'http:'),
-				`notify`  = replace(`notify` , 'https:' , 'http:'),
-				`poll`    = replace(`poll`   , 'https:' , 'http:'),
-				`confirm` = replace(`confirm`, 'https:' , 'http:'),
-				`poco`    = replace(`poco`   , 'https:' , 'http:')
-				where `self` = 1"
-			);
-			q("update `profile` set 
-				`photo`   = replace(`photo`  , 'https:' , 'http:'),
-				`thumb`   = replace(`thumb`  , 'https:' , 'http:')
-				where 1 "
-			);
-		}
-	}
-*/
-//	set_config('system','ssl_policy',$ssl_policy);
+	$feed_contacts = ((x($_POST,'feed_contacts')) ? intval($_POST['feed_contacts']) : 0);
+	$diaspora_enabled = ((x($_POST,'diaspora_enabled')) ? intval($_POST['diaspora_enabled']) : 0);
+	$verify_email      =    ((x($_POST,'verify_email'))     ? 1 : 0);
+
+	set_config('system','feed_contacts',$feed_contacts);
+	set_config('system','diaspora_enabled',$diaspora_enabled);
 	set_config('system','delivery_interval',$delivery_interval);
 	set_config('system','poll_interval',$poll_interval);
 	set_config('system','maxloadavg',$maxloadavg);
 	set_config('system','sitename',$sitename);
 	set_config('system','no_login_on_homepage',$no_login_on_homepage);
+	set_config('system','verify_email',$verify_email);
 
 	if ($banner=="") {
 		del_config('system','banner');
@@ -326,13 +297,7 @@ function admin_page_site_post(&$a){
 	} else {
 		set_config('system','mobile_theme', $theme_mobile);
         }
-        if ( $theme_accessibility === '---' ) {
-		del_config('system','accessibility_theme');
-	} else {
-		set_config('system','accessibility_theme', $theme_accessibility);
-        }
-      
-	set_config('system','site_channel', $site_channel);
+//	set_config('system','site_channel', $site_channel);
 	set_config('system','maximagesize', $maximagesize);
 	
 	set_config('system','register_policy', $register_policy);
@@ -385,27 +350,32 @@ function admin_page_site(&$a) {
 	}
 
 	/* Installed themes */
-	$theme_choices = array();
-	$theme_choices_mobile = array();
-	$theme_choices_mobile["---"] = t("No special theme for mobile devices");
-	$theme_choices_accessibility = array();
-	$theme_choices_accessibility["---"] =t("No special theme for accessibility");
-	$files = glob('view/theme/*');
-	if($files) {
-		foreach($files as $file) {
-			$f = basename($file);
-			$theme_name = ((file_exists($file . '/experimental')) ?  sprintf("%s - Experimental", $f) : $f);
-		if (file_exists($file . '/mobile')) {
-			$theme_choices_mobile[$f] = $theme_name;
+    $theme_choices_mobile["---"] = t("Default");
+    $theme_choices = array();
+    $files = glob('view/theme/*');
+    if($files) {
+        foreach($files as $file) {
+		    $vars = '';
+            $f = basename($file);
+            if (file_exists($file . '/library'))
+			    continue;
+            if (file_exists($file . '/mobile'))
+			    $vars = t('mobile');
+			if (file_exists($file . '/experimental'))
+				$vars .= t('experimental');
+			if (file_exists($file . '/unsupported'))
+				$vars .= t('unsupported');
+			if ($vars) {
+				$theme_choices[$f] = $f . ' (' . $vars . ')';
+				$theme_choices_mobile[$f] = $f . ' (' . $vars . ')';
             }
-		if (file_exists($file . '/accessibility')) {
-                $theme_choices_accessibility[$f] = $theme_name;
-            }
-			$theme_choices[$f] = $theme_name;
-		}
-	}
-	
-	
+			else {
+                $theme_choices[$f] = $f;
+                $theme_choices_mobile[$f] = $f;
+                }
+        }
+    }
+
 	/* Banner */
 	$banner = get_config('system','banner');
 	if($banner == false) 
@@ -453,9 +423,9 @@ function admin_page_site(&$a) {
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 		'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),
-		'$theme_accessibility' 	=> array('theme_accessibility', t("Accessibility system theme"), get_config('system','accessibility_theme'), t("Accessibility theme"), $theme_choices_accessibility),
-		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
-//		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
+//		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
+		'$diaspora_enabled'  => array('diaspora_enabled',t('Enable Diaspora Protocol'), get_config('system','diaspora_enabled'), t('Communicate with Diaspora and Friendica - experimental')),
+		'$feed_contacts'    => array('feed_contacts', t('Allow Feeds as Connections'),get_config('system','feed_contacts'),t('(Heavy system resource usage)')), 
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), intval(get_config('system','maximagesize')), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Does this site allow new member registration?"), get_config('system','register_policy'), "", $register_choices),
 		'$access_policy'	=> array('access_policy', t("Which best describes the types of account offered by this hub?"), get_config('system','access_policy'), "This is displayed on the public server site list.", $access_choices),
@@ -464,6 +434,7 @@ function admin_page_site(&$a) {
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
 		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
+		'$verify_email'		=> array('verify_email', t("Verify Email Addresses"), get_config('system','verify_email'), t("Check to verify email addresses used in account registration (recommended).")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
 		'$disable_discover_tab'	=> array('disable_discover_tab', t("Disable discovery tab"), get_config('system','disable_discover_tab'), t("Remove the tab in the network view with public content pulled from sources chosen for this site.")),
 		'$no_login_on_homepage'	=> array('no_login_on_homepage', t("No login on Homepage"), get_config('system','no_login_on_homepage'), t("Check to hide the login form from your sites homepage when visitors arrive who are not logged in (e.g. when you put the content of the homepage in via the site channel).")),
@@ -620,7 +591,7 @@ function admin_page_users_post(&$a){
 
 	if (x($_POST,'page_users_block')){
 		foreach($users as $uid){
-			q("UPDATE account SET account_flags = (account_flags & %d) where account_id = %d limit 1",
+			q("UPDATE account SET account_flags = (account_flags & %d) where account_id = %d",
 				intval(ACCOUNT_BLOCKED),
 				intval( $uid )
 			);
@@ -630,19 +601,17 @@ function admin_page_users_post(&$a){
 	if (x($_POST,'page_users_delete')){
 		require_once("include/Contact.php");
 		foreach($users as $uid){
-			account_remove($uid,true);
+			account_remove($uid,true,false);
 		}
 		notice( sprintf( tt("%s user deleted", "%s users deleted", count($users)), count($users)) );
 	}
 	
 	if (x($_POST,'page_users_approve')){
-		require_once('include/account.php');
 		foreach($pending as $hash){
 			user_allow($hash);
 		}
 	}
 	if (x($_POST,'page_users_deny')){
-		require_once('include/account.php');
 		foreach($pending as $hash){
 			user_deny($hash);
 		}
@@ -672,13 +641,13 @@ function admin_page_users(&$a){
                 check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
 				// delete user
 				require_once("include/Contact.php");
-				account_remove($uid,true);
+				account_remove($uid,true,false);
 				
 				notice( sprintf(t("User '%s' deleted"), $account[0]['account_email']) . EOL);
 			}; break;
 			case "block":{
                 check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
-				q("UPDATE account SET account_flags = ( account_flags ^ %d ) where account_id = %d",
+				q("UPDATE account SET account_flags = ( account_flags & ~%d ) where account_id = %d",
 					intval(ACCOUNT_BLOCKED),
 					intval( $uid )
 				);
@@ -692,13 +661,13 @@ function admin_page_users(&$a){
 	}
 	
 	/* get pending */
-	$pending = q("SELECT account.*, register.hash from account left join register on account_id = register.uid where (account_flags & %d ) ",
+	$pending = q("SELECT account.*, register.hash from account left join register on account_id = register.uid where (account_flags & %d )>0 ",
 		intval(ACCOUNT_PENDING)
 	);	
 	
 	/* get users */
 
-	$total = q("SELECT count(*) as total FROM account where 1");
+	$total = q("SELECT count(*) as total FROM account");
 	if(count($total)) {
 		$a->set_pager_total($total[0]['total']);
 		$a->set_pager_itemspage(100);
@@ -715,15 +684,18 @@ function admin_page_users(&$a){
 	$order = " order by account_email asc ";
 	if($_REQUEST['order'] === 'expires')
 		$order = " order by account_expires desc ";
-
-	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d ) > 0 as `blocked`, " .
-			"(SELECT GROUP_CONCAT( ch.channel_address SEPARATOR ' ') FROM channel as ch " .
-			"WHERE ch.channel_account_id = ac.account_id and not (ch.channel_pageflags & %d )) as `channels` " .
-		"FROM account as ac where true $serviceclass $order limit %d , %d ",
+    if($_REQUEST['order'] === 'created')
+		$order = " order by account_created desc ";
+		
+	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d )>0 as `blocked`, " .
+			"(SELECT %s FROM channel as ch " .
+			"WHERE ch.channel_account_id = ac.account_id and not (ch.channel_pageflags & %d )>0) as `channels` " .
+		"FROM account as ac where true $serviceclass $order limit %d offset %d ",
 		intval(ACCOUNT_BLOCKED),
+		db_concat('ch.channel_address', ' '),
 		intval(PAGE_REMOVED),		
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
+		intval($a->pager['itemspage']),
+		intval($a->pager['start'])
 	);
 					
 //	function _setup_users($e){
@@ -790,13 +762,13 @@ function admin_page_channels_post(&$a){
 
 	if (x($_POST,'page_channels_block')){
 		foreach($channels as $uid){
-			q("UPDATE channel SET channel_pageflags = ( channel_pageflags ^ %d ) where channel_id = %d",
+			q("UPDATE channel SET channel_pageflags = ( channel_pageflags & ~%d ) where channel_id = %d",
 				intval(PAGE_CENSORED),
 				intval( $uid )
 				);
 			proc_run('php','include/directory.php',$uid,'nopush');
 		}
-		notice( sprintf( tt("%s channel censored/uncensored", "%s channelss censored/uncensored", count($channels)), count($channels)) );
+		notice( sprintf( tt("%s channel censored/uncensored", "%s channels censored/uncensored", count($channels)), count($channels)) );
 	}
 	if (x($_POST,'page_channels_delete')){
 		require_once("include/Contact.php");
@@ -838,10 +810,11 @@ function admin_page_channels(&$a){
 
 			case "block":{
 				check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels', 't');
-				q("UPDATE channel SET channel_pageflags = ( channel_pageflags ^ %d ) where channel_id = %d",
+				q("UPDATE channel SET channel_pageflags = ( channel_pageflags & ~%d ) where channel_id = %d",
 					intval(PAGE_CENSORED),
 					intval( $uid )
 				);
+				proc_run('php','include/directory.php',$uid,'nopush');
 
 				notice( sprintf( (($channel[0]['channel_pageflags'] & PAGE_CENSORED) ? t("Channel '%s' uncensored"): t("Channel '%s' censored")) , $channel[0]['channel_name'] . ' (' . $channel[0]['channel_address'] . ')' ) . EOL);
 			}; break;
@@ -853,7 +826,7 @@ function admin_page_channels(&$a){
 	
 	/* get channels */
 
-	$total = q("SELECT count(*) as total FROM channel where not (channel_pageflags & %d)",
+	$total = q("SELECT count(*) as total FROM channel where not (channel_pageflags & %d)>0",
 		intval(PAGE_REMOVED)
 	);
 	if($total) {
@@ -863,10 +836,10 @@ function admin_page_channels(&$a){
 	
 	$order = " order by channel_name asc ";
 
-	$channels = q("SELECT * from channel where not ( channel_pageflags & %d ) $order limit %d , %d ",
+	$channels = q("SELECT * from channel where not ( channel_pageflags & %d )>0 $order limit %d offset %d ",
 		intval(PAGE_REMOVED),
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
+		intval($a->pager['itemspage']),
+		intval($a->pager['start'])
 	);
 					
 	if($channels) {
@@ -1316,4 +1289,81 @@ readable.");
         '$form_security_token' => get_form_security_token("admin_logs"),
 	));
 }
+
+function admin_page_profs_post(&$a) {
+
+	if($_REQUEST['id']) {
+		$r = q("update profdef set field_name = '%s', field_type = '%s', field_desc = '%s' field_help = '%s', field_inputs = '%s' where id = %d",
+			dbesc($_REQUEST['field_name']),
+			dbesc($_REQUEST['field_type']),
+			dbesc($_REQUEST['field_desc']),
+			dbesc($_REQUEST['field_help']),
+			dbesc($_REQUEST['field_inputs']),
+			intval($_REQUEST['id'])
+		);
+	}
+	else {
+		$r = q("insert into profdef ( field_name, field_type, field_desc, field_help, field_inputs ) values ( '%s' , '%s', '%s', '%s', '%s' )",
+			dbesc($_REQUEST['field_name']),
+			dbesc($_REQUEST['field_type']),
+			dbesc($_REQUEST['field_desc']),
+			dbesc($_REQUEST['field_help']),
+			dbesc($_REQUEST['field_inputs'])
+		);
+	}
+
+	// add to chosen array basic or advanced
+
+	goaway(z_root() . '/admin/profs');
+
+}
+
+function admin_page_profs(&$a) {
+
+	if((argc() > 3) && argv(2) == 'drop' && intval(argv(3))) {
+		$r = q("delete from profdef where id = %d",
+			intval(argv(3))
+		);
+		// remove from allowed fields
+
+		goaway(z_root() . '/admin/profs');	
+	}
+
+	if((argc() > 2) && argv(2) === 'new') {
+		return replace_macros(get_markup_template('profdef_edit.tpl'),array(
+			'$header' => t('New Profile Field'),
+			'$field_name' => array('field_name',t('Field nickname'),$_REQUEST['field_name'],t('System name of field')),
+			'$field_type' => array('field_type',t('Input type'),(($_REQUEST['field_type']) ? $_REQUEST['field_type'] : 'text'),''),
+			'$field_desc' => array('field_desc',t('Field Name'),$_REQUEST['field_desc'],t('Label on profile pages')),
+			'$field_help' => array('field_help',t('Help text'),$_REQUEST['field_help'],t('Additional info (optional)')),
+			'$submit' => t('Save')
+		));
+
+	}
+
+	if((argc() > 2) && intval(argv(2))) {
+		$r = q("select * from profdef where id = %d limit 1",
+			intval(argv(2))
+		);
+		if(! $r) {
+			notice( t('Field definition not found') . EOL);
+			goaway(z_root() . '/admin/profs');
+		}
+
+		return replace_macros(get_markup_template('profdef_edit.tpl'),array(
+			'$id' => intval($r[0]['id']),
+			'$header' => t('Edit Profile Field'),
+			'$field_name' => array('field_name',t('Field nickname'),$r[0]['field_name'],t('System name of field')),
+			'$field_type' => array('field_type',t('Input type'),$r[0]['field_type'],''),
+			'$field_desc' => array('field_desc',t('Field Name'),$r[0]['field_desc'],t('Label on profile pages')),
+			'$field_help' => array('field_help',t('Help text'),$r[0]['field_help'],t('Additional info (optional)')),
+			'$submit' => t('Save')
+		));
+	}
+
+}
+
+
+
+
 

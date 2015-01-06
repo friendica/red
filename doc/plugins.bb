@@ -240,6 +240,11 @@ we will create an argc/argv list for use by your module functions
 	3 whatever
 [/code]
 
+If you want to keep your plugin hidden from the siteinfo page, simply create a file called '.hidden' in your addon directory
+[code]
+	touch addon/<addon name>/.hidden
+[/code]
+
 ***Porting Friendica Plugins***
 
 The Red Matrix uses a similar plugin architecture to the Friendica project. The authentication, identity, and permissions systems are completely different. Many Friendica can be ported reasonably easily by renaming a few functions - and then ensuring that the permissions model is adhered to. The functions which need to be renamed are:
@@ -256,4 +261,4 @@ The Red Matrix has _install and _uninstall functions but these are used differen
 
 Changing these will often allow your plugin to function, but please double check all your permission and identity code because the concepts behind it are completely different in the Red Matrix. Many structured data names (especially DB schema columns) are also quite different.
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

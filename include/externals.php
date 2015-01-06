@@ -14,6 +14,8 @@ function externals_run($argv, $argc){
 	$total = 0;
 	$attempts = 0;
 
+	logger('externals: startup', LOGGER_DEBUG);
+
 	// pull in some public posts
 
 
@@ -25,7 +27,8 @@ function externals_run($argv, $argc){
 			$url = $arr['url'];
 		} 
 		else {
-			$r = q("select site_url, site_pull from site where site_url != '%s' and site_flags != %d order by rand() limit 1",
+			$randfunc = db_getfunc('RAND');
+			$r = q("select site_url, site_pull from site where site_url != '%s' and site_flags != %d order by $randfunc limit 1",
 				dbesc(z_root()),
 				intval(DIRECTORY_MODE_STANDALONE)
 			);
@@ -33,11 +36,35 @@ function externals_run($argv, $argc){
 				$url = $r[0]['site_url'];
 		}
 
+		// Note: blacklisted sites must be stored in the config as an array. 
+		// No simple way to turn this into a personal config because we have no identity here.
+		// For that we probably need a variant of superblock.
+
+		$blacklisted = false;
+		$bl1 = get_config('system','blacklisted_sites');
+		if(is_array($bl1) && $bl1) {
+			foreach($bl1 as $bl) {
+				if($bl && strpos($url,$bl) !== false) {
+					$blacklisted = true;
+					break;
+				}
+			}
+		}
+
 		$attempts ++;
 
+		// make sure we can eventually break out if somebody blacklists all known sites
+
+		if($blacklisted) {
+			if($attempts > 20)
+				break;
+			$attempts --;
+			continue;
+		}
+
 		if($url) {
-			if($r[0]['site_pull'] !== '0000-00-00 00:00:00')
-				$mindate = urlencode($r[0]['site_pull']);
+			if($r[0]['site_pull'] !== NULL_DATE)
+				$mindate = urlencode(datetime_convert('','',$r[0]['site_pull'] . ' - 1 day'));
 			else {
 				$days = get_config('externals','since_days');
 				if($days === false)
@@ -52,7 +79,7 @@ function externals_run($argv, $argc){
 			$x = z_fetch_url($feedurl);
 			if(($x) && ($x['success'])) {
 
-				q("update site set site_pull = '%s' where site_url = '%s' limit 1",
+				q("update site set site_pull = '%s' where site_url = '%s'",
 					dbesc(datetime_convert()),
 					dbesc($url)
 				);
@@ -61,6 +88,8 @@ function externals_run($argv, $argc){
 				if($j['success'] && $j['messages']) {
 					$sys = get_sys_channel();
 					foreach($j['messages'] as $message) {
+						// on these posts, clear any route info. 
+						$message['route'] = '';
 						$results = process_delivery(array('hash' => 'undefined'), get_item_elements($message),
 							array(array('hash' => $sys['xchan_hash'])), false, true);
 						$total ++;
@@ -73,12 +102,12 @@ $z = null;
 							$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
 							// preserve the source
 
-							$r = q("update item set source_xchan = owner_xchan where id = %d limit 1",
+							$r = q("update item set source_xchan = owner_xchan where id = %d",
 								intval($z[0]['id'])
 							);
 
     						$r = q("update item set item_flags = ( item_flags | %d ), owner_xchan = '%s' 
-								where id = %d limit 1",
+								where id = %d",
 								intval($flag_bits),
 								dbesc($sys['xchan_hash']),
 								intval($z[0]['id'])

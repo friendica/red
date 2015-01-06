@@ -2,11 +2,20 @@
 var ispublic = aStr['everybody'] ;
 
 $(document).ready(function() {
+	$('form').areYouSure(); // Warn user about unsaved settings
 
-			  $("a#settings-default-perms-menu").colorbox({ 
-				  'inline' : true, 
-				  'transition' : 'elastic' 
-			});
+	$("a#settings-default-perms-menu").colorbox({ 
+		'inline' : true, 
+		'transition' : 'elastic' 
+	});
+
+	$("#id_permissions_role").change(function() {
+		var role = $("#id_permissions_role").val();
+		if(role == 'custom')
+			$('#advanced-perm').show();
+		else
+			$('#advanced-perm').hide();
+	});
 
 	$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
 		var selstr;

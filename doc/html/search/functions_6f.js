@@ -14,10 +14,13 @@ var searchData=
   ['oembed_5freplacecb',['oembed_replacecb',['../include_2oembed_8php.html#a00c4c80deffd9daf8dc97b58d4c64ed0',1,'oembed.php']]],
   ['oexchange_5fcontent',['oexchange_content',['../oexchange_8php.html#a2d8b785cd7d041a4e6274f5af370cf26',1,'oexchange.php']]],
   ['oexchange_5finit',['oexchange_init',['../oexchange_8php.html#ac8e2e469ddc3db984b0c1b44558aca59',1,'oexchange.php']]],
+  ['old_5fwebfinger',['old_webfinger',['../include_2network_8php.html#a872bbe72d23826c64c9e0f822180a3ec',1,'network.php']]],
   ['onedirsync_5frun',['onedirsync_run',['../onedirsync_8php.html#a411aedd47c57476099647961e6a86691',1,'onedirsync.php']]],
   ['onepoll_5frun',['onepoll_run',['../onepoll_8php.html#a72753b2fdec79b37c7f432035c91fb6d',1,'onepoll.php']]],
   ['online_5finit',['online_init',['../online_8php.html#a80e107c84eb722b0ca11d0413b96f9f7',1,'online.php']]],
   ['openid_5fcontent',['openid_content',['../openid_8php.html#a9a13827dbcf61ae4e45f0b6b33a88f43',1,'openid.php']]],
   ['opensearch_5finit',['opensearch_init',['../opensearch_8php.html#ad13034877a496565ac7d99e9fc6f55e9',1,'opensearch.php']]],
-  ['orient',['orient',['../classphoto__driver.html#a4de5bac8daea8f291a33c80788019d0d',1,'photo_driver']]]
+  ['optimize_5ftable',['optimize_table',['../classdba__driver.html#a77e59dcbeab30ca6000131d2e9ad4092',1,'dba_driver\optimize_table()'],['../classdba__postgres.html#a3de1ac375e98886dfc38fd0066e88f90',1,'dba_postgres\optimize_table()']]],
+  ['orient',['orient',['../classphoto__driver.html#a4de5bac8daea8f291a33c80788019d0d',1,'photo_driver']]],
+  ['os_5fmkdir',['os_mkdir',['../boot_8php.html#a5fbebdf7a1c0ea8f904dbd9d78c2c06c',1,'boot.php']]]
 ];

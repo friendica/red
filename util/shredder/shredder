@@ -203,18 +203,18 @@ main () {
         
 		return $FO_rval
 		;;
-#	statuses_update)
-#		[[ "$fcli_status" == "" ]] && show_statuses_update 1
-#		FO_statuses_update 'json' "$fcli_status" "$fcli_in_reply_to_status_id"
-#        JS_Parsed=$(echo "$FO_ret" | tokenize | parse)
-#        echo "$JS_Parsed" | js "user" "name" ,
-#	    echo -n " - "
-#	    echo "$JS_Parsed" | js "created_at"
-#        echo "$JS_Parsed" | js "text"
-#	    echo ""
-#	    echo "------------------------------------------------------------------------------"
-#		return $FO_rval
-#		;;
+	statuses_update)
+		[[ "$fcli_status" == "" ]] && show_statuses_update 1
+		FO_statuses_update 'json' "$fcli_status" "$fcli_in_reply_to_status_id"
+        JS_Parsed=$(echo "$FO_ret" | tokenize | parse)
+        echo "$JS_Parsed" | js "user" "name" ,
+	    echo -n " - "
+	    echo "$JS_Parsed" | js "created_at"
+        echo "$JS_Parsed" | js "text"
+	    echo ""
+	    echo "------------------------------------------------------------------------------"
+		return $FO_rval
+		;;
 
 	*)
 

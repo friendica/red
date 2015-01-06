@@ -20,5 +20,5 @@ Along the way, Red offers a number of unique goodies:
 
 [b]Privacy:[/b]  Red identities (Zot IDs) can be deleted, backed up/downloaded, and cloned.  The user is in full control of their data. Should you decide to delete all your content and erase your Zot ID, all you have to do is click on a link and it's immediately deleted from the hub.  No questions, no fuss. 
 
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/main_footer.bb;
 

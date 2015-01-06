@@ -66,7 +66,7 @@ This permission determines who can write to your wall when clicking through to y
 
 [i]Can comment on my posts.[/i]
 
-This permission determines who can comment on posts you create. Normally, you would want this to match your &quot;can view my public pages&quot; permission
+This permission determines who can comment on posts you create. Normally, you would want this to match your &quot;can view my public stream and posts&quot; permission
 
 [i]Can send me private mail messages.[/i]
 
@@ -107,4 +107,4 @@ The connection edit screen offers a slider to select a degree of friendship with
 
 The slider on the matrix page has both a minimum and maximum value. Posts will only be shown from people who fall between this range. Affinity has no relation to permissions, and is only useful in conjunction with the affinity tool feature.
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

@@ -1,4 +1,4 @@
-<div class="generic-content-wrapper">
+<div class="generic-content-wrapper-styled">
 <h1>{{$title}}</h1>
 
 
@@ -9,7 +9,7 @@
 <h3 class="settings-heading">{{$f.0}}</h3>
 
 {{foreach $f.1 as $fcat}}
-    {{include file="{{$field_yesno}}" field=$fcat}}
+    {{include file="field_checkbox.tpl" field=$fcat}}
 {{/foreach}}
 {{/foreach}}
 

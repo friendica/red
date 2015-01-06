@@ -4,8 +4,7 @@
 	margin-left: 0;
 }
 
-
-.thing-label, .field label, .thing-verb-label, .thing-profile-label{
+.thing-label, .field > label, .thing-verb-label, .thing-profile-label{
 	float: left;
 	width: 350px;
 }

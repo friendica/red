@@ -1,32 +1,32 @@
 
-Dear {{$username}},
-	A request was recently received at {{$sitename}} to reset your account 
-password. In order to confirm this request, please select the verification link
-below or paste it into your web browser address bar. 
+Ciao {{$username}},
+	Su {{$sitename}} è arrivata la richiesta di azzerare la password del tuo account. 
+Per dare conferma, devi cliccare sul link di verifica che trovi qua sotto,
+oppure puoi copiarlo e incollarlo sul tuo browser. 
 
-If you did NOT request this change, please DO NOT follow the link
-provided and ignore and/or delete this email. 
+Se NON hai richiesto tu il cambio password, NON cliccare assolutamente il link
+e ignora (o cancella) questo messaggio. 
 
-Your password will not be changed unless we can verify that you
-issued this request. 
+Così la tua password non cambierà finché non sarà certo
+che la richiesta venga realmente da te! 
 
-Follow this link to verify your identity:
+Questo è il link per confermare e verificare la tua identità:
 
 {{$reset_link}}
 
-You will then receive a follow-up message containing the new password.
+Dopo riceverai un messaggio che conterrà la nuova password.
 
-You may change that password from your account settings page after logging in.
+Naturalmente potrai cambiarla dalla pagina delle 'Impostazioni' dopo aver effettuato l'accesso.
 
-The login details are as follows:
+I dettagli del tuo account:
 
-Site Location:	{{$siteurl}}
-Login Name:	{{$email}}
-
-
+Sito:	{{$siteurl}}
+Nome utente:	{{$email}}
 
 
-Sincerely,
-	{{$sitename}} Administrator
+
+
+Con affetto,
+	L'amministratore di {{$sitename}}
 
  

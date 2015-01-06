@@ -17,20 +17,24 @@ function ACL(backend_url, preset){
 	that.item_tpl = unescape($(".acl-list-item[rel=acl-template]").html());
 	that.showall = $("#acl-showall");
 
+	// set the initial ACL lists in case the enclosing form gets submitted before the ajax loader completes. 
+	that.on_submit();
+
 	if (preset.length==0) that.showall.removeClass("btn-default").addClass("btn-warning");
 	
 	/*events*/
 
 	$(document).ready(function() {
-		that.showall.click(that.on_showall);
-		$(document).on('click','.acl-button-show',that.on_button_show);
-		$(document).on('click','.acl-button-hide',that.on_button_hide);
-		$("#acl-search").keypress(that.on_search);
-//		$("#acl-wrapper").parents("form").submit(that.on_submit);
+//		setTimeout( function() {
+			that.showall.click(that.on_showall);
+			$(document).on('click','.acl-button-show',that.on_button_show);
+			$(document).on('click','.acl-button-hide',that.on_button_hide);
+			$("#acl-search").keypress(that.on_search);
 
-		/* startup! */
-		that.get(0,100);
-		that.on_submit();
+			/* startup! */
+			that.get(0,100);
+			that.on_submit();
+//		}, 5000 );
 	});
 
 }
@@ -254,7 +258,7 @@ ACL.prototype.get = function(start,count, search){
 }
 
 ACL.prototype.populate = function(data){
-	var height = Math.ceil(data.tot / that.nw) * 42;
+	var height = Math.ceil(data.items.length / that.nw) * 42;
 	that.list_content.height(height);
 	$(data.items).each(function(){
 		html = "<div class='acl-list-item {4} {7} {5}' title='{6}' id='{2}{3}'>"+that.item_tpl+"</div>";

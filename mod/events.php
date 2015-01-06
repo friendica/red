@@ -12,22 +12,20 @@ function events_post(&$a) {
 		return;
 
 	$event_id = ((x($_POST,'event_id')) ? intval($_POST['event_id']) : 0);
+	$event_hash = ((x($_POST,'event_hash')) ? $_POST['event_hash'] : '');
+
 	$xchan = ((x($_POST,'xchan')) ? dbesc($_POST['xchan']) : '');
 	$uid      = local_user();
-	$startyear = intval($_POST['startyear']);
-	$startmonth = intval($_POST['startmonth']);
-	$startday = intval($_POST['startday']);
-	$starthour = intval($_POST['starthour']);
-	$startminute = intval($_POST['startminute']);
 
-	$finishyear = intval($_POST['finishyear']);
-	$finishmonth = intval($_POST['finishmonth']);
-	$finishday = intval($_POST['finishday']);
-	$finishhour = intval($_POST['finishhour']);
-	$finishminute = intval($_POST['finishminute']);
+	$start_text = escape_tags($_REQUEST['start_text']);
+	$finish_text = escape_tags($_REQUEST['finish_text']);
 
 	$adjust   = intval($_POST['adjust']);
 	$nofinish = intval($_POST['nofinish']);
+
+	$categories = escape_tags(trim($_POST['category']));
+
+
 
 	// only allow editing your own events. 
 
@@ -37,12 +35,23 @@ function events_post(&$a) {
 	// The default setting for the `private` field in event_store() is false, so mirror that	
 	$private_event = false;
 
+	if($start_text) {
+		$start = $start_text;
+	}
+	else {
+		$start = sprintf('%d-%d-%d %d:%d:0',$startyear,$startmonth,$startday,$starthour,$startminute);
+	}
 
-	$start    = sprintf('%d-%d-%d %d:%d:0',$startyear,$startmonth,$startday,$starthour,$startminute);
-	if($nofinish)
-		$finish = '0000-00-00 00:00:00';
-	else
-		$finish    = sprintf('%d-%d-%d %d:%d:0',$finishyear,$finishmonth,$finishday,$finishhour,$finishminute);
+	if($nofinish) {
+		$finish = NULL_DATE;
+	}
+
+	if($finish_text) {
+		$finish = $finish_text;
+	}
+	else {
+		$finish = sprintf('%d-%d-%d %d:%d:0',$finishyear,$finishmonth,$finishday,$finishhour,$finishminute);
+	}
 
 	if($adjust) {
 		$start = datetime_convert(date_default_timezone_get(),'UTC',$start);
@@ -60,17 +69,22 @@ function events_post(&$a) {
 	// and we'll waste a bunch of time responding to it. Time that 
 	// could've been spent doing something else. 
 
-	if(strcmp($finish,$start) < 0)
-		$finish = $start;
 
 	$summary  = escape_tags(trim($_POST['summary']));
 	$desc     = escape_tags(trim($_POST['desc']));
 	$location = escape_tags(trim($_POST['location']));
 	$type     = 'event';
 
+	$action = ($event_hash == '') ? 'new' : "event/" . $event_hash;
+	$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish";
+	if(strcmp($finish,$start) < 0 && !$nofinish) {
+		notice( t('Event can not end before it has started.') . EOL);
+		goaway($onerror_url);
+	}
+
 	if((! $summary) || (! $start)) {
 		notice( t('Event title and start time are required.') . EOL);
-		goaway($a->get_baseurl() . '/events/new');
+		goaway($onerror_url);
 	}
 
 	$share = ((intval($_POST['share'])) ? intval($_POST['share']) : 0);
@@ -123,6 +137,22 @@ function events_post(&$a) {
 		}
 	}
 
+	$post_tags = array();
+	$channel = $a->get_channel();
+
+	if(strlen($categories)) {
+		$cats = explode(',',$categories);
+		foreach($cats as $cat) {
+			$post_tags[] = array(
+				'uid'   => $profile_uid, 
+				'type'  => TERM_CATEGORY,
+				'otype' => TERM_OBJ_POST,
+				'term'  => trim($cat),
+				'url'   => $channel['xchan_url'] . '?f=&cat=' . urlencode(trim($cat))
+			); 				
+		}
+	}
+
 	$datarray = array();
 	$datarray['start'] = $start;
 	$datarray['finish'] = $finish;
@@ -145,6 +175,11 @@ function events_post(&$a) {
 	$datarray['edited'] = $edited;
 
 	$event = event_store_event($datarray);
+
+
+	if($post_tags)	
+		$datarray['term'] = $post_tags;
+
 	$item_id = event_store_item($datarray,$event);
 
 	if($share)
@@ -164,14 +199,14 @@ function events_content(&$a) {
 	nav_set_selected('all_events');
 
 	if((argc() > 2) && (argv(1) === 'ignore') && intval(argv(2))) {
-		$r = q("update event set ignore = 1 where id = %d and uid = %d limit 1",
+		$r = q("update event set ignore = 1 where id = %d and uid = %d",
 			intval(argv(2)),
 			intval(local_user())
 		);
 	}
 
 	if((argc() > 2) && (argv(1) === 'unignore') && intval(argv(2))) {
-		$r = q("update event set ignore = 0 where id = %d and uid = %d limit 1",
+		$r = q("update event set ignore = 0 where id = %d and uid = %d",
 			intval(argv(2)),
 			intval(local_user())
 		);
@@ -233,12 +268,17 @@ function events_content(&$a) {
 	if($mode == 'view') {
 		
 		
-	    $thisyear = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
-    	$thismonth = datetime_convert('UTC',date_default_timezone_get(),'now','m');
+		$thisyear = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
+		$thismonth = datetime_convert('UTC',date_default_timezone_get(),'now','m');
 		if(! $y)
 			$y = intval($thisyear);
 		if(! $m)
 			$m = intval($thismonth);
+
+		$export = false;
+		if(argc() === 4 && argv(3) === 'export')
+			$export = true;
+
 
 		// Put some limits on dates. The PHP date functions don't seem to do so well before 1900.
 		// An upper limit was chosen to keep search engines from exploring links millions of years in the future. 
@@ -295,8 +335,8 @@ function events_content(&$a) {
 			$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
                               from event left join item on event_hash = resource_id 
 				where resource_type = 'event' and event.uid = %d and event.ignore = %d 
-				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' ) 
-				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' )) ",
+				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' ) 
+				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' )) ",
 				intval(local_user()),
 				intval($ignored),
 				dbesc($start),
@@ -378,6 +418,12 @@ function events_content(&$a) {
 			}
 		}
 		 
+		if($export) {
+			header('Content-type: text/calendar');
+			echo ical_wrapper($r);
+			killme();
+		}
+
 		if ($a->argv[1] === 'json'){
 			echo json_encode($events); killme();
 		}
@@ -397,6 +443,7 @@ function events_content(&$a) {
 			'$new_event'=> array($a->get_baseurl().'/events/new',t('Create New Event'),'',''),
 			'$previus'	=> array($a->get_baseurl()."/events/$prevyear/$prevmonth",t('Previous'),'',''),
 			'$next'		=> array($a->get_baseurl()."/events/$nextyear/$nextmonth",t('Next'),'',''),
+			'$export'   => array($a->get_baseurl()."/events/$y/$m/export",t('Export'),'',''),
 			'$calendar' => cal($y,$m,$links, ' eventcal'),			
 			'$events'	=> $events,
 			
@@ -419,6 +466,19 @@ function events_content(&$a) {
 	}
 
 	$channel = $a->get_channel();
+
+	// Passed parameters overrides anything found in the DB
+	if($mode === 'edit' || $mode === 'new') {
+		if(!x($orig_event)) $orig_event = array();
+		// In case of an error the browser is redirected back here, with these parameters filled in with the previous values
+		if(x($_REQUEST,'nofinish')) $orig_event['nofinish'] = $_REQUEST['nofinish'];
+		if(x($_REQUEST,'adjust')) $orig_event['adjust'] = $_REQUEST['adjust'];
+		if(x($_REQUEST,'summary')) $orig_event['summary'] = $_REQUEST['summary'];
+		if(x($_REQUEST,'description')) $orig_event['description'] = $_REQUEST['description'];
+		if(x($_REQUEST,'location')) $orig_event['location'] = $_REQUEST['location'];
+		if(x($_REQUEST,'start')) $orig_event['start'] = $_REQUEST['start'];
+		if(x($_REQUEST,'finish')) $orig_event['finish'] = $_REQUEST['finish'];
+	}
 
 	if($mode === 'edit' || $mode === 'new') {
 
@@ -451,8 +511,11 @@ function events_content(&$a) {
 		$smonth = datetime_convert('UTC', $tz, $sdt, 'm');
 		$sday = datetime_convert('UTC', $tz, $sdt, 'd');
 
+
 		$shour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'H') : 0);
 		$sminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'i') : 0);
+		$stext = datetime_convert('UTC',$tz,$sdt);
+		$stext = substr($stext,0,14) . "00:00";
 
 		$fyear = datetime_convert('UTC', $tz, $fdt, 'Y');
 		$fmonth = datetime_convert('UTC', $tz, $fdt, 'm');
@@ -460,13 +523,32 @@ function events_content(&$a) {
 
 		$fhour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'H') : 0);
 		$fminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'i') : 0);
+		$ftext = datetime_convert('UTC',$tz,$fdt);
+		$ftext = substr($ftext,0,14) . "00:00";
 
 		$f = get_config('system','event_input_format');
 		if(! $f)
 			$f = 'ymd';
 
-		$dateformat = datesel_format($f);
-		$timeformat = t('hour:minute');
+		$catsenabled = feature_enabled(local_user(),'categories');
+
+		$category = '';
+
+		if($catsenabled && x($orig_event)){
+			$itm = q("select * from item where resource_type = 'event' and resource_id = '%s' and uid = %d limit 1",
+				dbesc($orig_event['event_hash']),
+				intval(local_user())
+			);
+			$itm = fetch_post_tags($itm);
+			if($itm) {
+				$cats = get_terms_oftype($itm[0]['term'], TERM_CATEGORY);
+				foreach ($cats as $cat) {
+					if(strlen($category))
+						$category .= ', ';
+					$category .= $cat['term'];
+            	}
+			}
+		}
 
 		require_once('include/acl_selectors.php');
 
@@ -479,24 +561,28 @@ function events_content(&$a) {
 
 		$tpl = get_markup_template('event_form.tpl');
 
-
 		$o .= replace_macros($tpl,array(
 			'$post' => $a->get_baseurl() . '/events',
 			'$eid' => $eid, 
 			'$xchan' => $event_xchan,
 			'$mid' => $mid,
+			'$event_hash' => $event_id,
 	
 			'$title' => t('Event details'),
-			'$desc' => sprintf( t('Format is %s %s. Starting date and Title are required.'),$dateformat,$timeformat),
-			
+			'$desc' => t('Starting date and Title are required.'),
+			'$catsenabled' => $catsenabled,
+			'$placeholdercategory' => t('Categories (comma-separated list)'),
+			'$category' => $category,
 			'$s_text' => t('Event Starts:') . ' <span class="required" title="' . t('Required') . '">*</span>',
-			'$s_dsel' => datesel($f,'start',$syear+5,$syear,false,$syear,$smonth,$sday),
-			'$s_tsel' => timesel('start',$shour,$sminute),
+			'$stext' => $stext,
+			'$ftext' => $ftext,
+			'$ModalCANCEL' => t('Cancel'),
+			'$ModalOK' => t('OK'),
+			'$s_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$syear+5),DateTime::createFromFormat('Y-m-d H:i',"$syear-$smonth-$sday $shour:$sminute"),'start_text'),
 			'$n_text' => t('Finish date/time is not known or not relevant'),
 			'$n_checked' => $n_checked,
 			'$f_text' => t('Event Finishes:'),
-			'$f_dsel' => datesel($f,'finish',$fyear+5,$fyear,false,$fyear,$fmonth,$fday),
-			'$f_tsel' => timesel('finish',$fhour,$fminute),
+			'$f_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$fyear+5),DateTime::createFromFormat('Y-m-d H:i',"$fyear-$fmonth-$fday $fhour:$fminute"),'finish_text',true,true,'start_text'),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$a_checked' => $a_checked,
 			'$d_text' => t('Description:'), 
@@ -507,6 +593,7 @@ function events_content(&$a) {
 			'$t_orig' => $t_orig,
 			'$sh_text' => t('Share this event'),
 			'$sh_checked' => $sh_checked,
+			'$permissions' => t('Permissions'),
 			'$acl' => (($orig_event['event_xchan']) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $perm_defaults),false)),
 			'$submit' => t('Submit')
 

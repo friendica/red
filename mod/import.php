@@ -9,13 +9,28 @@ require_once('include/identity.php');
 
 function import_post(&$a) {
 
-	if(! get_account_id()) {
+	$account_id = get_account_id();
+	if(! $account_id)
 		return;
+
+	$max_identities = account_service_class_fetch($account_id,'total_identities');
+	$max_friends = account_service_class_fetch($account_id,'total_channels');
+	$max_feeds = account_service_class_fetch($account_id,'total_feeds');
+
+	if($max_identities !== false) {
+		$r = q("select channel_id from channel where channel_account_id = %d",
+			intval($account_id)
+		);
+		if($r && count($r) > $max_identities) {
+			notice( sprintf( t('Your service plan only allows %d channels.'), $max_identities) . EOL);
+			return;
+		}
 	}
+
 
 	$data     = null;
 	$seize    = ((x($_REQUEST,'make_primary')) ? intval($_REQUEST['make_primary']) : 0);
-
+	$import_posts = ((x($_REQUEST,'import_posts')) ? intval($_REQUEST['import_posts']) : 0);
 	$src      = $_FILES['filename']['tmp_name'];
 	$filename = basename($_FILES['filename']['name']);
 	$filesize = intval($_FILES['filename']['size']);
@@ -45,6 +60,8 @@ function import_post(&$a) {
 
 		$scheme = 'https://';
 		$api_path = '/api/red/channel/export/basic?f=&channel=' . $channelname;
+		if($import_posts)
+			$api_path .= '&posts=1';
 		$binary = false;
 		$redirects = 0;
 		$opts = array('http_auth' => $email . ':' . $password);
@@ -84,9 +101,33 @@ function import_post(&$a) {
 	// We should probably also verify the hash 
 
 	if($r) {
-		logger('mod_import: duplicate channel. ', print_r($channel,true));
-		notice( t('Cannot create a duplicate channel identifier on this system. Import failed.') . EOL);
-		return;
+		if($r[0]['channel_guid'] === $channel['channel_guid'] || $r[0]['channel_hash'] === $channel['channel_hash']) {
+			logger('mod_import: duplicate channel. ', print_r($channel,true));
+			notice( t('Cannot create a duplicate channel identifier on this system. Import failed.') . EOL);
+			return;
+		}
+		else {
+			// try at most ten times to generate a unique address.
+			$x = 0;
+			$found_unique = false;
+			do {
+				$tmp = $channel['channel_address'] . mt_rand(1000,9999);
+				$r = q("select * from channel where channel_address = '%s' limit 1",
+					dbesc($tmp)
+				);
+				if(! $r) {
+					$channel['channel_address'] = $tmp;
+					$found_unique = true;
+					break;
+				}
+				$x ++;
+			} while ($x < 10);
+			if(! $found_unique) {
+				logger('mod_import: duplicate channel. randomisation failed.', print_r($channel,true));
+				notice( t('Unable to create a unique channel address. Import failed.') . EOL);
+				return;
+			}
+		}		
 	}
 
 	unset($channel['channel_id']);
@@ -179,13 +220,14 @@ function import_post(&$a) {
 
 	// create new hubloc for the new channel at this site
 
-	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, 
+	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_flags, 
 		hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey )
-		values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s' )",
+		values ( '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s' )",
 		dbesc($channel['channel_guid']),
 		dbesc($channel['channel_guid_sig']),
 		dbesc($channel['channel_hash']),
 		dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
+		dbesc('zot'),
 		intval(($seize) ? HUBLOC_FLAGS_PRIMARY : 0),
 		dbesc(z_root()),
 		dbesc(base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))),
@@ -197,7 +239,7 @@ function import_post(&$a) {
 	// reset the original primary hubloc if it is being seized
 
 	if($seize)
-		$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where (hubloc_flags & %d) and hubloc_hash = '%s' and hubloc_url != '%s' ",
+		$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where (hubloc_flags & %d)>0 and hubloc_hash = '%s' and hubloc_url != '%s' ",
 			intval(HUBLOC_FLAGS_PRIMARY),
 			intval(HUBLOC_FLAGS_PRIMARY),
 			dbesc($channel['channel_hash']),
@@ -210,7 +252,7 @@ function import_post(&$a) {
 
 		// replace our existing xchan if we're seizing control
 
-		$r = q("delete from xchan where xchan_hash = '%s' limit 1",
+		$r = q("delete from xchan where xchan_hash = '%s'",
 			dbesc($channel['channel_hash'])
 		);
 
@@ -255,12 +297,12 @@ function import_post(&$a) {
 			require_once('include/photo/photo_driver.php');
 			$photos = import_profile_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
 			if($photos[4])
-				$photodate = '0000-00-00 00:00:00';
+				$photodate = NULL_DATE;
 			else
 				$photodate = $xchan['xchan_photo_date'];
 
 			$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s', xchan_photo_date = '%s'
-				where xchan_hash = '%s' limit 1",
+				where xchan_hash = '%s'",
 				dbesc($photos[0]),
 				dbesc($photos[1]),
 				dbesc($photos[2]),
@@ -275,10 +317,18 @@ function import_post(&$a) {
 // FIXME - ensure we have an xchan if somebody is trying to pull a fast one
 
 	
+	$friends = 0;
+	$feeds = 0;
+
 	// import contacts
 	$abooks = $data['abook'];
 	if($abooks) {
 		foreach($abooks as $abook) {
+			if($max_friends !== false && $friends > $max_friends)
+				continue;
+			if($max_feeds !== false && ($abook['abook_flags'] & ABOOK_FLAG_FEED) && $feeds > $max_feeds)
+				continue;
+
 			unset($abook['abook_id']);
 			$abook['abook_account'] = get_account_id();
 			$abook['abook_channel'] = $channel['channel_id'];
@@ -288,6 +338,10 @@ function import_post(&$a) {
 				. "`) VALUES ('" 
 				. implode("', '", array_values($abook)) 
 				. "')" );
+
+			$friends ++;
+			if($abook['abook_flags'] & ABOOK_FLAG_FEED)
+				$feeds ++;
 		}
 	}
 
@@ -314,7 +368,7 @@ function import_post(&$a) {
 			unset($group['id']);
 			$group['uid'] = $channel['channel_id'];
 			dbesc_array($group);
-			$r = dbq("INSERT INTO group (`" 
+			$r = dbq("INSERT INTO groups (`" 
 				. implode("`, `", array_keys($group)) 
 				. "`) VALUES ('" 
 				. implode("', '", array_values($group)) 
@@ -348,25 +402,81 @@ function import_post(&$a) {
 		}
 	}
 
+	$saved_notification_flags = notifications_off($channel['channel_id']);
+
+	if($import_posts && array_key_exists('item',$data) && $data['item']) {
+
+		foreach($data['item'] as $i) {
+			$item = get_item_elements($i);
+
+			$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
+				dbesc($item['mid']),
+				intval($channel['channel_id'])
+			);
+			if($r) {
+				if($item['edited'] > $r[0]['edited']) {
+					$item['id'] = $r[0]['id'];
+					$item['uid'] = $channel['channel_id'];
+					item_store_update($item);
+					continue;
+				}	
+			}
+			else {
+				$item['aid'] = $channel['channel_account_id'];
+				$item['uid'] = $channel['channel_id'];
+				$item_result = item_store($item);
+			}
+
+		}
+
+	}
+
+	notifications_on($channel['channel_id'],$saved_notification_flags);
+
+	if(array_key_exists('item_id',$data) && $data['item_id']) {
+		foreach($data['item_id'] as $i) {
+			$r = q("select id from item where mid = '%s' and uid = %d limit 1",
+				dbesc($i['mid']),
+				intval($channel['channel_id'])
+			);
+			if(! $r)
+				continue;
+			$z = q("select * from item_id where service = '%s' and sid = '%s' and iid = %d and uid = %d limit 1",
+				dbesc($i['service']),
+				dbesc($i['sid']),
+				intval($r[0]['id']),
+				intval($channel['channel_id'])
+			);
+			if(! $z) {
+				q("insert into item_id (iid,uid,sid,service) values(%d,%d,'%s','%s')",
+					intval($r[0]['id']),
+					intval($channel['channel_id']),
+					dbesc($i['sid']),
+					dbesc($i['service'])
+				);
+			}
+		}
+	}
+
+
+
 // FIXME - ensure we have a self entry if somebody is trying to pull a fast one
 
-	if($seize) {
-		// notify old server that it is no longer primary.
-		
-	}
+	// send out refresh requests
+	// notify old server that it may no longer be primary.
+
+	proc_run('php','include/notifier.php','location',$channel['channel_id']);
 
 	// This will indirectly perform a refresh_all *and* update the directory
 
 	proc_run('php', 'include/directory.php', $channel['channel_id']);
 
-	// send out refresh requests
 
 	notice( t('Import completed.') . EOL);
 
 	change_channel($channel['channel_id']);
 
 	goaway(z_root() . '/network' );
-
 
 }
 
@@ -388,6 +498,7 @@ function import_content(&$a) {
 		'$label_old_pass' => t('Your old login password'),
 		'$common' => t('For either option, please choose whether to make this hub your new primary address, or whether your old location should continue this role. You will be able to post from either location, but only one can be marked as the primary location for files, photos, and media.'),
 		'$label_import_primary' => t('Make this hub my primary location'),
+		'$label_import_posts' => t('Import existing posts if possible'),
 		'$email' => '',
 		'$pass' => '',
 		'$submit' => t('Submit')

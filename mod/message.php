@@ -61,18 +61,18 @@ function message_content(&$a) {
 		foreach($r as $rr) {
 			
 			$o .= replace_macros($tpl, array(
-				'$id' => $rr['id'],
-				'$from_name' => $rr['from']['xchan_name'],
-				'$from_url' =>  chanlink_hash($rr['from_xchan']),
+				'$id'         => $rr['id'],
+				'$from_name'  => $rr['from']['xchan_name'],
+				'$from_url'   => chanlink_hash($rr['from_xchan']),
 				'$from_photo' => $rr['from']['xchan_photo_s'],
-				'$to_name' => $rr['to']['xchan_name'],
-				'$to_url' =>  chanlink_hash($rr['to_xchan']),
-				'$to_photo' => $rr['to']['xchan_photo_s'],
-				'$subject' => (($rr['seen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>'),
-				'$delete' => t('Delete message'),
-				'$body' => smilies(bbcode($rr['body'])),
-				'$date' => datetime_convert('UTC',date_default_timezone_get(),$rr['created'], t('D, d M Y - g:i A')),
-				'$seen' => $rr['seen']
+				'$to_name'    => $rr['to']['xchan_name'],
+				'$to_url'     => chanlink_hash($rr['to_xchan']),
+				'$to_photo'   => $rr['to']['xchan_photo_s'],
+				'$subject'    => (($rr['seen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>'),
+				'$delete'     => t('Delete conversation'),
+				'$body'       => smilies(bbcode($rr['body'])),
+				'$date'       => datetime_convert('UTC',date_default_timezone_get(),$rr['created'], t('D, d M Y - g:i A')),
+				'$seen'       => $rr['seen']
 			));
 		}
 		$o .= alt_pager($a,count($r));	

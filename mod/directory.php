@@ -1,12 +1,19 @@
 <?php
 
+require_once('include/socgraph.php');
 require_once('include/dir_fns.php');
 require_once('include/widgets.php');
-
+require_once('include/bbcode.php');
 
 function directory_init(&$a) {
-	$a->set_pager_itemspage(80);
+	$a->set_pager_itemspage(60);
 
+	if(x($_GET,'ignore')) {
+		q("insert into xign ( uid, xchan ) values ( %d, '%s' ) ",
+			intval(local_user()),
+			dbesc($_GET['ignore'])
+		);
+	}
 }
 
 function directory_content(&$a) {
@@ -31,8 +38,9 @@ function directory_content(&$a) {
 	if(x($_REQUEST,'safe'))
 		$safe_mode = (intval($_REQUEST['safe']));
 
-
-
+	$pubforums = null;
+	if(array_key_exists('pubforums',$_REQUEST))
+		$pubforums = intval($_REQUEST['pubforums']);
 
 	$o = '';
 	nav_set_selected('directory');
@@ -42,13 +50,38 @@ function directory_content(&$a) {
 	else
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
-	$advanced = ((x($_REQUEST,'query')) ? notags(trim($_REQUEST['query'])) : '');
+
+	if(strpos($search,'=') && local_user() && get_pconfig(local_user(),'feature','expert'))
+		$advanced = $search;
+
 
 	$keywords = (($_GET['keywords']) ? $_GET['keywords'] : '');
 
+	// Suggest channels if no search terms or keywords are given
+	$suggest = (local_user() && x($_REQUEST,'suggest')) ? $_REQUEST['suggest'] : '';
+
+	if($suggest) {
+		$r = suggestion_query(local_user(),get_observer_hash());
+
+		// Remember in which order the suggestions were
+		$addresses = array();
+		$index = 0;
+		foreach($r as $rr) {
+			$addresses[$rr['xchan_addr']] = $index++;
+		}
+
+		// Build query to get info about suggested people
+		$advanced = '';
+		foreach(array_keys($addresses) as $address) {
+			$advanced .= "address=\"$address\" ";
+		}
+		// Remove last space in the advanced query
+		$advanced = rtrim($advanced);
+
+	}
+
 	$tpl = get_markup_template('directory_header.tpl');
 
-		
 	$dirmode = intval(get_config('system','directory_mode'));
 
 	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
@@ -91,11 +124,19 @@ function directory_content(&$a) {
 			$query .= '&keywords=' . urlencode($keywords);
 		if($advanced)
 			$query .= '&query=' . urlencode($advanced);
+		if(! is_null($pubforums))
+			$query .= '&pubforums=' . intval($pubforums);
 
-		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
+		if(! is_null($pubforums))
+			$query .= '&pubforums=' . intval($pubforums);
+
+		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : 'normal');
+
 		if($sort_order)
 			$query .= '&order=' . urlencode($sort_order);
 
+
+			
 		if($a->pager['page'] != 1)
 			$query .= '&p=' . $a->pager['page'];
 
@@ -122,6 +163,10 @@ function directory_content(&$a) {
 						$pdesc = (($rr['description']) ? $rr['description'] . '<br />' : '');
 						$connect_link = ((local_user()) ? z_root() . '/follow?f=&url=' . urlencode($rr['address']) : ''); 		
 
+						// Checking status is disabled ATM until someone checks the performance impact more carefully
+						//$online = remote_online_status($rr['address']);
+						$online = '';
+
 						if(in_array($rr['hash'],$contacts))
 							$connect_link = '';
 
@@ -142,8 +187,6 @@ function directory_content(&$a) {
 							if(($years = age($rr['birthday'],'UTC','')) != 0)
 								$details .= '<br />' . t('Age: ') . $years ; 
 						}
-						if(strlen($rr['gender']))
-							$details .= '<br />' . t('Gender: ') . $rr['gender'];
 
 						$page_type = '';
 
@@ -155,18 +198,53 @@ function directory_content(&$a) {
 							|| (x($profile,'country') == 1))
 						$location = t('Location:');
 
-						$gender = ((x($profile,'gender') == 1) ? t('Gender:') : False);
+						$gender = ((x($profile,'gender') == 1) ? t('Gender: ') . $profile['gender']: False);
 	
-						$marital = ((x($profile,'marital') == 1) ?  t('Status:') : False);
+						$marital = ((x($profile,'marital') == 1) ?  t('Status: ') . $profile['marital']: False);
 		
-						$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage:') : False);
+						$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage: ') : False);
+						$homepageurl = ((x($profile,'homepage') == 1) ?  $profile['homepage'] : ''); 
 
-						$about = ((x($profile,'about') == 1) ?  t('About:') : False);
+						$hometown = ((x($profile,'hometown') == 1) ?  t('Hometown: ') . $profile['hometown']  : False);
+
+						$about = ((x($profile,'about') == 1) ?  t('About: ') . bbcode($profile['about']) : False);
+
+						$keywords = ((x($profile,'keywords')) ? $profile['keywords'] : '');
+
+						$out = '';
+
+						if($keywords) {
+							$keywords = str_replace(',',' ', $keywords);
+							$keywords = str_replace('  ',' ', $keywords);
+							$karr = explode(' ', $keywords);
+
+							if($karr) {
+								if(local_user()) {
+									$r = q("select keywords from profile where uid = %d and is_default = 1 limit 1",
+										intval(local_user())
+									);
+									if($r) {
+										$keywords = str_replace(',',' ', $r[0]['keywords']);
+										$keywords = str_replace('  ',' ', $keywords);
+										$marr = explode(' ', $keywords);
+									}
+								}
+								foreach($karr as $k) {
+									if(strlen($out))
+										$out .= ', ';
+									if($marr && in_arrayi($k,$marr))
+										$out .= '<strong>' . $k . '</strong>';
+									else
+										$out .= $k;
+								}
+							}
 			
+						}
 
 						$entry = array(
 							'id' => ++$t,
 							'profile_link' => $profile_link,
+							'public_forum' => $rr['public_forum'],
 							'photo' => $rr['photo'],
 							'hash' => $rr['hash'],
 							'alttext' => $rr['name'] . ' ' . $rr['address'],
@@ -174,48 +252,88 @@ function directory_content(&$a) {
 							'details' => $pdesc . $details,
 							'profile' => $profile,
 							'address' =>  $rr['address'],
+							'nickname' => substr($rr['address'],0,strpos($rr['address'],'@')),
 							'location' => $location,
 							'gender'   => $gender,
 							'pdesc'	=> $pdesc,
 							'marital'  => $marital,
 							'homepage' => $homepage,
+							'homepageurl' => linkify($homepageurl),
+							'hometown' => $hometown,
 							'about' => $about,
 							'conn_label' => t('Connect'),
+							'forum_label' => t('Public Forum:'), 
 							'connect' => $connect_link,
+							'online' => $online,
+							'kw' => (($out) ? t('Keywords: ') : ''),
+							'keywords' => $out,
+							'ignlink' => $suggest ? $a->get_baseurl() . '/directory?ignore=' . $rr['hash'] : '',
+							'ignore_label' => "Don't suggest",
 						);
 
 						$arr = array('contact' => $rr, 'entry' => $entry);
 
 						call_hooks('directory_item', $arr);
 			
-						$entries[] = $arr['entry'];
+						if($sort_order == '' && $suggest) {
+							$entries[$addresses[$rr['address']]] = $arr['entry']; // Use the same indexes as originally to get the best suggestion first
+						}
+						else {
+							$entries[] = $arr['entry'];
+						}
 						unset($profile);
 						unset($location);
 
 
 					}
 
+					ksort($entries); // Sort array by key so that foreach-constructs work as expected
+
 					if($j['keywords']) {
 						$a->data['directory_keywords'] = $j['keywords'];
 					}
 
-//					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
-
-					$o .= replace_macros($tpl, array(
-						'$search' => $search,
-						'$desc' => t('Find'),
-						'$finddsc' => t('Finding:'),
-						'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
-						'$entries' => $entries,
-						'$dirlbl' => t('Directory'),
-						'$submit' => t('Find')
-					));
+					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
 
 
-					$o .= alt_pager($a,$j['records'], t('next page'), t('previous page'));
+					if($_REQUEST['aj']) {
+						if($entries) {
+							$o = replace_macros(get_markup_template('directajax.tpl'),array(
+								'$entries' => $entries
+							));
+						}
+						else {
+							$o = '<div id="content-complete"></div>';
+						}
+						echo $o;
+						killme();
+					}
+					else {
+						$maxheight = 175;
+
+						$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; divmore_height = " . intval($maxheight) . ";  </script>";
+						$o .= replace_macros($tpl, array(
+							'$search' => $search,
+							'$desc' => t('Find'),
+							'$finddsc' => t('Finding:'),
+							'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
+							'$entries' => $entries,
+							'$dirlbl' => $suggest ? t('Channel Suggestions') : t('Directory'),
+							'$submit' => t('Find'),
+							'$next' => alt_pager($a,$j['records'], t('next page'), t('previous page'))
+
+						));
+
+
+					}
 
 				}
 				else {
+					if($_REQUEST['aj']) {
+						$o = '<div id="content-complete"></div>';
+						echo $o;
+						killme();
+					}
 					if($a->pager['page'] == 1 && $j['records'] == 0 && strpos($search,'@')) {
 						goaway(z_root() . '/chanview/?f=&address=' . $search);
 					}

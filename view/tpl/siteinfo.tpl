@@ -4,6 +4,12 @@
 {{if $version}}
 <p>{{$version}}{{if $commit}}+{{$commit}}{{/if}}</p>
 {{/if}}
+{{if $tag}}
+<p>{{$tag_txt}} {{$tag}}</p>
+{{/if}}
+{{if $polled}}
+<p>{{$polled}} {{$lastpoll}}</p>
+{{/if}}
 <p>{{$web_location}}</p>
 <p>{{$visit}}</p>
 <p>{{$bug_text}} <a href="{{$bug_link_url}}">{{$bug_link_text}}</a></p>

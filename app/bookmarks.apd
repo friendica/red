@@ -1,4 +1,4 @@
 url: $baseurl/bookmarks
 requires: local_user
-name: Bookmarks
+name: View bookmarks
 photo: $baseurl/app/bookmarks.png

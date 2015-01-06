@@ -108,7 +108,7 @@ function create_account($arr) {
 	$parent      = ((x($arr,'parent'))        ? intval($arr['parent'])             : 0 );
 	$flags       = ((x($arr,'account_flags')) ? intval($arr['account_flags'])      : ACCOUNT_OK);
 	$roles       = ((x($arr,'account_roles')) ? intval($arr['account_roles'])      : 0 );
-	$expires     = ((x($arr,'expires'))       ? intval($arr['expires'])            : '0000-00-00 00:00:00');
+	$expires     = ((x($arr,'expires'))       ? intval($arr['expires'])            : NULL_DATE);
 	
 	$default_service_class = get_config('system','default_service_class');
 
@@ -202,7 +202,7 @@ function create_account($arr) {
 	// Set the parent record to the current record_id if no parent was provided
 
 	if(! $parent) {
-		$r = q("update account set account_parent = %d where account_id = %d limit 1",
+		$r = q("update account set account_parent = %d where account_id = %d",
 			intval($result['account']['account_id']),
 			intval($result['account']['account_id'])
 		);
@@ -367,16 +367,16 @@ function user_allow($hash) {
 	if(! $account)
 		return $ret;
 
-	$r = q("DELETE FROM register WHERE hash = '%s' LIMIT 1",
+	$r = q("DELETE FROM register WHERE hash = '%s'",
 		dbesc($register[0]['hash'])
 	);
 
-	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+	$r = q("update account set account_flags = (account_flags & ~%d) where (account_flags & %d)>0 and account_id = %d",
 		intval(ACCOUNT_BLOCKED),
 		intval(ACCOUNT_BLOCKED),
 		intval($register[0]['uid'])
 	);
-	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+	$r = q("update account set account_flags = (account_flags & ~%d) where (account_flags & %d)>0 and account_id = %d",
 		intval(ACCOUNT_PENDING),
 		intval(ACCOUNT_PENDING),
 		intval($register[0]['uid'])
@@ -423,18 +423,18 @@ function user_deny($hash) {
 	if(! count($register))
 		return false;
 
-	$account = q("SELECT account_id FROM account WHERE account_id = %d LIMIT 1",
+	$account = q("SELECT account_id, account_email FROM account WHERE account_id = %d LIMIT 1",
 		intval($register[0]['uid'])
 	);
 	
 	if(! $account)
 		return false;
 
-	$r = q("DELETE FROM account WHERE account_id = %d LIMIT 1",
+	$r = q("DELETE FROM account WHERE account_id = %d",
 		intval($register[0]['uid'])
 	);
 
-	$r = q("DELETE FROM `register` WHERE id = %d LIMIT 1",
+	$r = q("DELETE FROM `register` WHERE id = %d",
 		dbesc($register[0]['id'])
 	);
 	notice( sprintf(t('Registration revoked for %s'), $account[0]['account_email']) . EOL);
@@ -463,21 +463,21 @@ function user_approve($hash) {
 	if(! $account)
 		return $ret;
 
-	$r = q("DELETE FROM register WHERE hash = '%s' and password = 'verify' LIMIT 1",
+	$r = q("DELETE FROM register WHERE hash = '%s' and password = 'verify'",
 		dbesc($register[0]['hash'])
 	);
 
-	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+	$r = q("update account set account_flags = (account_flags & ~%d) where (account_flags & %d)>0 and account_id = %d",
 		intval(ACCOUNT_BLOCKED),
 		intval(ACCOUNT_BLOCKED),
 		intval($register[0]['uid'])
 	);
-	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+	$r = q("update account set account_flags = (account_flags & ~%d) where (account_flags & %d)>0 and account_id = %d",
 		intval(ACCOUNT_PENDING),
 		intval(ACCOUNT_PENDING),
 		intval($register[0]['uid'])
 	);
-	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+	$r = q("update account set account_flags = (account_flags & ~%d) where (account_flags & %d)>0 and account_id = %d",
 		intval(ACCOUNT_UNVERIFIED),
 		intval(ACCOUNT_UNVERIFIED),
 		intval($register[0]['uid'])
@@ -510,10 +510,12 @@ function user_approve($hash) {
 
 function downgrade_accounts() {
 
-	$r = q("select * from account where not ( account_flags & %d ) 
-		and account_expires != '0000-00-00 00:00:00' 
-		and account_expires < UTC_TIMESTAMP() ",
-		intval(ACCOUNT_EXPIRED)
+	$r = q("select * from account where not ( account_flags & %d )>0 
+		and account_expires != '%s' 
+		and account_expires < %s ",
+		intval(ACCOUNT_EXPIRED),
+		dbesc(NULL_DATE),
+		db_getfunc('UTC_TIMESTAMP')
 	);
 
 	if(! $r)
@@ -526,9 +528,9 @@ function downgrade_accounts() {
 
 		if(($basic) && ($rr['account_service_class']) && ($rr['account_service_class'] != $basic)) {
 			$x = q("UPDATE account set account_service_class = '%s', account_expires = '%s'
-				where account_id = %d limit 1",
+				where account_id = %d",
 				dbesc($basic),
-				dbesc('0000-00-00 00:00:00'),
+				dbesc(NULL_DATE),
 				intval($rr['account_id'])
 			);
 			$ret = array('account' => $rr);
@@ -536,7 +538,7 @@ function downgrade_accounts() {
 			logger('downgrade_accounts: Account id ' . $rr['account_id'] . ' downgraded.');
 		}
 		else {
-			$x = q("UPDATE account SET account_flags = (account_flags | %d) where account_id = %d limit 1",
+			$x = q("UPDATE account SET account_flags = (account_flags | %d) where account_id = %d",
 				intval(ACCOUNT_EXPIRED),
 				intval($rr['account_id'])
 			);
@@ -547,3 +549,114 @@ function downgrade_accounts() {
 	}
 }
 
+
+
+// check service_class restrictions. If there are no service_classes defined, everything is allowed.
+// if $usage is supplied, we check against a maximum count and return true if the current usage is 
+// less than the subscriber plan allows. Otherwise we return boolean true or false if the property
+// is allowed (or not) in this subscriber plan. An unset property for this service plan means 
+// the property is allowed, so it is only necessary to provide negative properties for each plan, 
+// or what the subscriber is not allowed to do. 
+
+
+function service_class_allows($uid,$property,$usage = false) {
+	$a = get_app();
+	if($uid == local_user()) {
+		$service_class = $a->account['account_service_class'];
+	}
+	else {
+		$r = q("select account_service_class as service_class 
+				from channel c, account a 
+				where c.channel_account_id=a.account_id and c.channel_id= %d limit 1",
+			intval($uid)
+		);
+		if($r !== false and count($r)) {
+			$service_class = $r[0]['service_class'];
+		}
+	}
+	if(! x($service_class))
+		return true; // everything is allowed
+
+	$arr = get_config('service_class',$service_class);
+	if(! is_array($arr) || (! count($arr)))
+		return true;
+
+	if($usage === false)
+		return ((x($arr[$property])) ? (bool) $arr[$property] : true);
+	else {
+		if(! array_key_exists($property,$arr))
+			return true;
+		return (((intval($usage)) < intval($arr[$property])) ? true : false);
+	}
+}
+
+
+function service_class_fetch($uid,$property) {
+	$a = get_app();
+	if($uid == local_user()) {
+		$service_class = $a->account['account_service_class'];
+	}
+	else {
+		$r = q("select account_service_class as service_class 
+				from channel c, account a 
+				where c.channel_account_id=a.account_id and c.channel_id= %d limit 1",
+				intval($uid)
+		);
+		if($r !== false and count($r)) {
+			$service_class = $r[0]['service_class'];
+		}
+	}
+	if(! x($service_class))
+		return false; // everything is allowed
+
+	$arr = get_config('service_class',$service_class);
+
+	if(! is_array($arr) || (! count($arr)))
+		return false;
+
+	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
+}
+
+// like service_class_fetch but queries by account rather than channel
+
+function account_service_class_fetch($aid,$property) {
+
+	$r = q("select account_service_class as service_class from account where account_id = %d limit 1",
+		intval($aid)
+	);
+	if($r !== false && count($r)) {
+		$service_class = $r[0]['service_class'];
+	}
+
+	if(! x($service_class))
+		return false; // everything is allowed
+
+	$arr = get_config('service_class',$service_class);
+
+	if(! is_array($arr) || (! count($arr)))
+		return false;
+
+	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
+}
+
+
+function upgrade_link($bbcode = false) {
+	$l = get_config('service_class','upgrade_link');
+	if(! $l)
+		return '';
+	if($bbcode)
+		$t = sprintf('[zrl=%s]' . t('Click here to upgrade.') . '[/zrl]', $l);
+	else
+		$t = sprintf('<a href="%s">' . t('Click here to upgrade.') . '</div>', $l);
+	return $t;
+}
+
+function upgrade_message($bbcode = false) {
+	$x = upgrade_link($bbcode);
+	return t('This action exceeds the limits set by your subscription plan.') . (($x) ? ' ' . $x : '') ;
+}
+
+function upgrade_bool_message($bbcode = false) {
+	$x = upgrade_link($bbcode);
+	return t('This action is not available under your subscription plan.') . (($x) ? ' ' . $x : '') ;
+}

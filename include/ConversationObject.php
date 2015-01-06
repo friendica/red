@@ -52,14 +52,14 @@ class Conversation extends BaseObject {
 
 		switch($mode) {
 			case 'network':
-				if(array_key_exists('firehose',$a->data) && intval($a->data['firehose'])) {
-					$this->profile_owner = intval($a->data['firehose']);
-					$this->writable = false;
-				}
-				else {
+//				if(array_key_exists('firehose',$a->data) && intval($a->data['firehose'])) {
+//					$this->profile_owner = intval($a->data['firehose']);
+//					$this->writable = false;
+//				}
+//				else {
 					$this->profile_owner = local_user();
 					$this->writable = true;
-				}
+//				}
 				break;
 			case 'channel':
 				$this->profile_owner = $a->profile['profile_uid'];
@@ -159,34 +159,29 @@ class Conversation extends BaseObject {
 			return false;
 		}
 
-//		if(local_user() && $item->get_data_value('uid') == local_user()) 
-//			$this->commentable = true;
-
-//		if($this->writable)
-//			$this->commentable = true;
-
 		$item->set_commentable(false);
 		$ob_hash = (($this->observer) ? $this->observer['xchan_hash'] : '');
 		
-		if(($item->get_data_value('author_xchan') === $ob_hash) || ($item->get_data_value('owner_xchan') === $ob_hash))
-			$item->set_commentable(true);
+		if(! comments_are_now_closed($item->get_data())) {
+			if(($item->get_data_value('author_xchan') === $ob_hash) || ($item->get_data_value('owner_xchan') === $ob_hash))
+				$item->set_commentable(true);
 
-		if($item->get_data_value('item_flags') & ITEM_NOCOMMENT) {
-			$item->set_commentable(false);
+			if($item->get_data_value('item_flags') & ITEM_NOCOMMENT) {
+				$item->set_commentable(false);
+			}
+			elseif(($this->observer) && (! $item->is_commentable())) {
+				if((array_key_exists('owner',$item->data)) && ($item->data['owner']['abook_flags'] & ABOOK_FLAG_SELF))
+					$item->set_commentable(perm_is_allowed($this->profile_owner,$this->observer['xchan_hash'],'post_comments'));
+				else
+					$item->set_commentable(can_comment_on_post($this->observer['xchan_hash'],$item->data));
+			}
 		}
-		elseif(($this->observer) && (! $item->is_commentable())) {
-			if((array_key_exists('owner',$item->data)) && ($item->data['owner']['abook_flags'] & ABOOK_FLAG_SELF))
-				$item->set_commentable(perm_is_allowed($this->profile_owner,$this->observer['xchan_hash'],'post_comments'));
-			else
-				$item->set_commentable(can_comment_on_post($this->observer['xchan_hash'],$item->data));
-		}
-
 		require_once('include/identity.php');
-		$sys = get_sys_channel();
+//		$sys = get_sys_channel();
 
-		if($sys && $item->get_data_value('uid') == $sys['channel_id']) {
-			$item->set_commentable(false);
-		}
+//		if($sys && $item->get_data_value('uid') == $sys['channel_id']) {
+//			$item->set_commentable(false);
+//		}
 
 		$item->set_conversation($this);
 		$this->threads[] = $item;

@@ -171,7 +171,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" $tabindex >\r\n";
 
 	$r = q("SELECT abook_id, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash
-		where abook_flags = 0 or not ( abook_flags & %d ) and abook_channel = %d
+		where abook_flags = 0 or not ( abook_flags & %d )>0 and abook_channel = %d
 		$sql_extra
 		ORDER BY xchan_name ASC ",
 		intval(ABOOK_FLAG_SELF),
@@ -237,7 +237,7 @@ function populate_acl($defaults = null,$show_jotnets = true) {
 
 	$tpl = get_markup_template("acl_selector.tpl");
 	$o = replace_macros($tpl, array(
-		'$showall'=> t("Visible to everybody"),
+		'$showall'=> t("Visible to your default audience"),
 		'$show'		 => t("Show"),
 		'$hide'		 => t("Don't show"),
 		'$allowcid' => json_encode($allow_cid),
@@ -248,8 +248,7 @@ function populate_acl($defaults = null,$show_jotnets = true) {
 		'$aclModalTitle' => t('Permissions'),
 		'$aclModalDismiss' => t('Close')
 	));
-	
-	
+
 	return $o;
 
 }

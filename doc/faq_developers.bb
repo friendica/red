@@ -1,6 +1,5 @@
 [size=large][b]Frequently Asked Questions For Developers[/b][/size]
 
-(...) still needs to be written (...)
 
 [ul]
 [*][b]What does $a mean?[/b]
@@ -26,3 +25,7 @@ function foo() {
 }
 [/code]
 [/ul]
+
+
+#include doc/macros/main_footer.bb;
+

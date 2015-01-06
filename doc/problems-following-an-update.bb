@@ -34,4 +34,5 @@ Redbasic uses a few javascript libraries that are done differently, or entirely 
 
 Should you report an issue with the theme developers then?  No.  Theme developers use their themes.  Chances are, they know.  Give them two or three days to catch up and [i]then[/i] report the issue if it's still not fixed.  There are two workarounds for this situation.  Firstly, you can temporarily use Redbasic.  Secondly, most themes are open source too - open a pull request and make yourself a friend.
 
-Return to the [url=[baseurl]/help/troubleshooting]Troubleshooting documentation page[/url]
+#include doc/macros/troubleshooting_footer.bb;
+

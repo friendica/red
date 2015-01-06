@@ -9,10 +9,11 @@
 /* generals */
 html {
 	height: 100%;
+	font-size: 100%;
 }
 
 body {
-	font-family: arial,freesans,sans-serif;
+	font-family: sans-serif, arial, freesans;
 	font-size: $body_font_size;
 	background-color: $bgcolour;
 	background-image: url('$background_image');
@@ -22,8 +23,21 @@ body {
 	margin: 0px;
 	height: 100%;
 }
+
+h1, .h1, h2, .h2 {
+	font-size: 1.667em;
+}
+
+h3, .h3, h4, .h4 {
+	font-size: 1.334em;
+}
+
+h5, .h5, h6, .h6 {
+	font-size: 0.75rem;
+}
+
 .jslider {
-	font-family: arial,freesans,sans-serif;
+	font-family: sans-serif, arial, freesans;
 }
 
 abbr {
@@ -31,6 +45,10 @@ abbr {
 }
 
 /* icons */
+.tool-icons {
+	color: $toolicon_colour;
+}
+
 .icon {
   background-color: transparent ;
   background-repeat: no-repeat;
@@ -48,7 +66,7 @@ abbr {
 }
 
 a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
-	font-weight: bold;
+	font-weight: $link_font_weight;
 	color: $link_colour; 
 	text-decoration: none; 
 }
@@ -59,21 +77,30 @@ a:hover, .fakelink:hover { color: $link_colour; text-decoration: underline; }
 	cursor: pointer;
 }
 
+a.btn-default {
+	color: #333;
+}
+
+a.btn-success {
+	color: #fff;
+}
 
 input[type="text"],
 input[type="password"],
 input[type="submit"],
+input[type="file"],
 select,
 textarea {
-	font-family: arial,freesans,sans-serif;
+	font-family: sans-serif, arial, freesans;
 	font-size: $body_font_size;
 }
 
 input {
+	padding: 5px;
+	line-height: 1.5;
 	border: 1px solid $input_border;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
-	padding: 3px;
 }
 
 input[type="submit"] {
@@ -81,27 +108,23 @@ input[type="submit"] {
 	font-weight: bold;
 	color: $input_linksubmit;
 	text-decoration: none;
+	padding: 6px 12px;
 }
 
 button, input, optgroup, select, textarea {
 	color: #000;
 }
 
-
 pre code {
 	border: none;
 }
 
 code {
-	font-family: Courier, monospace;
-	display: block;
-	overflow: auto;
+	font-size: 1em;
+	padding: 5px;
 	border: 1px solid $code_borderc;
 	background: $code_bgcolour;
 	color: $code_txtcolour;
-	padding: 10px;
-	margin-top: 20px; 
-	max-width: 80%;
 }
 
 pre {
@@ -110,13 +133,7 @@ pre {
 	border:1px solid $pre_borderc;
 }
 
-blockquote {
-	background-color: $blockquote_bgcolour;
-	border-left: 4px solid $blockquote_bordercolour;
-	padding: 0.4em;
-	color: $blockquote_colour;
-	margin-left: 20px;
-}
+
 
 .ccollapse-wrapper {
 	border: 1px solid #CCC;
@@ -143,6 +160,19 @@ nav,
 header {
 	opacity: $nav_float_min_opacity;
 	filter:alpha(opacity=$nav_percent_min_opacity);
+}
+
+#powered-by {
+	font-size: 0.5rem;
+	position: absolute;
+	top: 50px;
+	left: 16px;
+}
+
+#powered-by img {
+	margin-top: -2px;
+	height: 10px;
+	width: 10px;
 }
 
 .error-message {
@@ -172,6 +202,8 @@ nav #banner #logo-text a {
 
 }
 nav #banner #logo-text a:hover { text-decoration: none; }
+
+.nav-channel-select { margin-left: 8px; }
 
 header #banner {
 /*  overflow: hidden; */
@@ -238,21 +270,6 @@ footer {
 	margin-bottom: 15px;
 }
 
-aside ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	/* border-left: 1px solid #eee; This and a 5px left border on the li is "interesting" 
-	   to delineate the list from the surrounding bits 
-	*/
-}
-
-aside li {
-	margin-top: 5px;
-	/* in order to achieve consistent indentation cross-browser, set margin-left on the li element e.g. */
-	/* margin-left: 10px; */
-}
-
 /*TODO: we should use one class for all this. */
 .group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
 	color: $selected_active_colour !important;
@@ -284,16 +301,16 @@ aside li {
 #main-login #id_remember {
 	float: left;
 	padding: 0;
-	margin-top: 15px;
 	margin-bottom: 0;
+	margin-left: 0;
 	width: 20px;
 }
 
-#main-login .field.checkbox label {
-	margin-top: 15px;
+#main-login .field.checkbox > label {
 	margin-bottom: 0;
 	float: left;
 	width: 100px;
+	padding-left: 0;
 }
 
 #main-login .field_end {
@@ -350,68 +367,70 @@ aside li {
 	clear: both;
 }
 
-
-.aprofile dt {
-	font-weight: bold;
-}
 #page-profile .title {
 	font-weight: bold;
 }
 
+#profile-edit-wrapper .field {
+	margin-top: 20px;
+}
+#profile-edit-wrapper .field > label {
+	width: 175px;
+}
 
-#profile-vcard-break {
-	clear: both;
+#profile-edit-wrapper .field input[type="text"] {
+	width: 220px;
 }
 
 
-#profile-edit-links ul {
-	list-style-type: none;
+#profile-edit-links {
+	max-width: $converse_width;
+	padding-top: 15px;
+	padding-bottom: 15px;
 }
 
-#profile-edit-links li {
-	margin-top: 10px;
+#profile-edit-links .btn {
+	margin: 0 10px 15px 0;
 }
 
-#profile-like {
-	margin-left: 15px;
+.profile-import {
+	vertical-align: top;
+	text-align: left;
 }
 
-#profile-like-wrapper {
-	margin-bottom: 15px;
+.profile-import b {
+	color: $link_colour;
 }
 
+.profile-import input {
+	color: $font_colour;
+	border: none;
+}
+
+#profile-edit-drop-link {
+	color: #FFF;
+	font-weight: normal;
+}
 
 .fn {
-	padding: 0px 0px 5px 0px;
-	font-size: 120%;
 	font-weight: bold;
+	font-size: 16px;
 	color: #444444;
 }
 
 .vcard {
-	padding: 8px;
+	margin-bottom: 10px;
+	padding: 10px;
+	background-color: $comment_item_colour;
+	border-bottom: 1px solid $widget_brdrcolour;
+	-moz-border-radius: $radiuspx;
+	-webkit-border-radius: $radiuspx;
+	border-radius: $radiuspx;
 }
 
-.vcard .title {
-	margin-bottom: 5px;
-}
-
-.vcard dl {
-	clear: both;
-	word-wrap:break-word;
-}
-
-.vcard-profile-edit-icon {
-	font-size: 1.2em;
-}
-.vcard-profile-edit-icon:hover {
-	text-decoration: none;
-}
-
-.vcard .dropdown-menu {
-	position: absolute;
-	left: 200px;
-	top: 18px;
+.vcard dl  {
+	margin-top: 10px;
+	margin-bottom: 0px;
 }
 
 #profile-extra-links {
@@ -426,19 +445,22 @@ aside li {
 
 
 #profile-extra-links li {
-	margin-top: 5px;
+	margin-top: 10px;
 }
 
 
 .profile-edit-side-link {
-	opacity: 0.3;
+	padding: 3px 0px;
+	opacity: 0;
 	filter:alpha(opacity=30);
 	float: right;
 }
-.profile-edit-side-link:hover {
-	opacity: 1.0;
+
+.vcard:hover .profile-edit-side-link {
+	opacity: 1;
 	filter:alpha(opacity=100);
 }
+
 
 .view-contact-wrapper {
 	margin-top: 20px;
@@ -465,10 +487,15 @@ aside li {
 
 
 #profile-photo-wrapper img {
-	padding: 12px;
-	width: 201px;
-	height: 201px;
+	padding: 10px;
+	width: 197px;
+	height: 197px;
 }
+
+#profile-photo-wrapper {
+	margin-top: 10px;
+}
+
 
 #profile-in-dir-yes-label,
 #profile-in-dir-no-label,
@@ -555,8 +582,15 @@ aside li {
 }
 
 .app-name {
-	width: 125px;
 	overflow: none;
+}
+
+.app-container img {
+	margin-left: auto;
+	margin-right: auto;
+	width: 80px;
+	height: 80px;
+	display: block;
 }
 
 
@@ -610,7 +644,7 @@ aside li {
 	list-style: none;
 }
 
-.profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
+.profile-match-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
     border-radius: $radiuspx;
     -moz-border-radius: $radiuspx;
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
@@ -630,42 +664,33 @@ aside li {
 }
 
 .photo-top-photo, .photo-album-photo {
-    padding: 10px;
+ /*   padding: 10px;
     max-width: 300px;
     border: 1px solid #888888;
+*/
+  position: absolute;
+  display: block;
+/*  max-width: 100%;
+  max-height: 100%; */
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }
 
-
-.photo-album-image-wrapper .caption {
- 	background-color: rgba(245, 245, 255, 0.8);
- 	border-bottom: 2px solid #CCC;
+.photo-top-photo-link, .photo-album-photo-link {
+  display: block;
+  width: 100%;
+  position: relative;
+  height: 0;
+  padding: 75% 0 0 0;
+  overflow: hidden;
 }
 
-.photo-top-album-name {
- 	background-color: rgb(255, 255, 255);
+#photo-view-wrapper {
+	background-color: $item_colour;
 }
-
-#photos-upload-perms-menu, #photos-upload-perms-menu:visited, #photos-upload-perms-menu:link {
-	color: #8888FF;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-#photos-upload-perms-menu:hover {
-	color: #0000FF;
-	text-decoration: underline;
-	cursor: pointer;
-}
-
-#photo-caption {
-	font-size: 110%;
-	font-weight: bold;
-}
-
-#in-this-photo-text {
-	color: #0080FF;
-}
-
 
 #side-follow-wrapper {
 	margin-top: 20px;
@@ -748,19 +773,26 @@ aside li {
 }
 
 #contact-block {
-	margin-top: 25px;
-	padding: 8px;
+	width: 100%;
+	float: left;
+	background-color: $comment_item_colour;
+	border-bottom: 1px solid $widget_brdrcolour;
+	-moz-border-radius: $radiuspx;
+	-webkit-border-radius: $radiuspx;
+	border-radius: $radiuspx;
+	padding: 10px;
+	margin-bottom:10px;
 }
 
 #contact-block-numcontacts {
 	font-weight: bold;
-	margin-bottom:8px;
+	margin-bottom:10px;
 }
 
 .contact-block-div {
 	float: left;
-	width: 50px;
-	height: 50px;
+	width: 49px;
+	height: 49px;
 }
 .contact-block-textdiv {
 	float: left;
@@ -775,8 +807,8 @@ aside li {
 	float: left;
 }
 .contact-block-img {
-	width:48px;
-	height:48px;
+	width:47px;
+	height:47px;
 }
 
 #tag-remove {
@@ -800,12 +832,9 @@ aside li {
 	margin-bottom: 25px;
 }
 
-#search-submit {
-	margin-left: 15px;
-}
 
-#search-box {
-	margin-bottom: 25px;
+#conversation-end {
+	clear: both;
 }
 
 #nav-searchbar {
@@ -827,6 +856,7 @@ aside li {
 }
 
 #nav-search-text {
+	font-size: 12px;
 	height: 20px;
 	margin: 15px;
 	padding: 0px 5px 0px 5px;
@@ -842,32 +872,6 @@ aside li {
 
 #nav-search-text::-moz-placeholder {
 	font-family: FontAwesome;
-}
-
-#search-text {
-	border: 1px solid #ccc;
-	font-size: 1em;
-}
-
-#search-text::-webkit-input-placeholder {
-	font-family: FontAwesome;
-}
-
-#search-text::-moz-placeholder {
-	font-family: FontAwesome;
-}
-
-.location-label, .gender-label, .marital-label, .homepage-label {
-	float: left;
-	display: block;
-	width: 70px;
-
-}
-
-.adr, .x-gender, .marital-text, .homepage-url {
-	float: left;
-	display: block;
-	width: 130px;
 }
 
 .profile-clear {
@@ -1024,7 +1028,7 @@ aside li {
     background: none repeat scroll 0% 0% $cal_bgcolour !important;
 }
 
-#fancybox-content {
+#colorbox {
 	border: 0px solid $fancybox_bgcolour;
 	background-color: $fancybox_bgcolour;
 }
@@ -1207,21 +1211,6 @@ aside li {
 	text-decoration: underline;
 }
 
-#lang-select-icon {
-	cursor: pointer;
-	position: absolute;
-	left: 4px;
-/*because of the shape, if this is lined up properly it looks like it's lined up wrong...
-lining it up too high is the only way to make it look correctly aligned.  The human
-brain is weird like that */
-	top: 2px;
-}
-
-#lang-select-icon:hover {
-	opacity: 1;
-	filter:alpha(opacity=100);
-}
-
 .notif-image {
 	height: 80px;
 	width: 80px;
@@ -1231,11 +1220,6 @@ brain is weird like that */
 	clear: both;
 	margin-bottom: 15px;
 }
-
-#cloud-index td {
-	padding:5px;
-}
-
 
 /**
  * Plugins settings
@@ -1257,7 +1241,7 @@ brain is weird like that */
 	width: 100%
 }
 
-.field label {
+.field > label {
 	float: left;
 	width: 350px;
 }
@@ -1311,38 +1295,8 @@ brain is weird like that */
 .hidden { display: none!important; }
 
 .field.radio .field_help { margin-left: 0px; }
+.field.checkbox .field_help { display: inline; margin-left: 10px; }
 
-
-
-/*
- * UPDATE
- */
-.popup { 	
-	width: 100%; height: 100%;
-	top:0px; left:0px;
-	position: absolute;
-	display: none;
-}
-
-.popup .background {
-	background-color: rgba(0,0,0,128);
-	opacity: 0.5;
-	width: 100%; height: 100%;
-	position: absolute;
-	top:0px; left:0px;
-}
-.popup .panel {
-	top:25%;left:25%;width:50%;height:50%;
-	padding: 1em;
-	position: absolute;
-	border: 4px solid #000000;
-	background-color: #FFFFFF;
-}
-.popup .panel .panel_text { display: block; overflow: auto; height: 80%; } 
-.popup .panel .panel_in { width: 100%; height: 100%;	position: relative; }
-.popup .panel .panel_actions {  width: 100%; bottom: 4px; left: 0px; position: absolute; }
-.panel_text .progress { width: 50%; overflow: hidden; height: auto; border: 1px solid #cccccc; margin-bottom: 5px}
-.panel_text .progress span {float: right; display: block; width: 25%; background-color: #eeeeee; text-align: right;}
 
 /**
  * OAuth
@@ -1371,97 +1325,13 @@ brain is weird like that */
 	float: left;
 }
 
-/**
- * ICONS
- */
-.iconspacer {
-	display: block; width: 16px; height: 16px;
-/*	visibility: hidden; */
-}
-
-.iconspacer:hover {
-/*	visibility: visible; */
-}
-
-.icon {
-	display: block; width: 16px; height: 16px;
-	background-image: url('../../../../images/icons.png');
-}
-.article { background-position: 0px 0px;}
-.audio { background-position: -16px 0px;}
-.block { background-position: -32px 0px;}
-.drop { background-position: -48px 0px;}
-.drophide { background-position: -64px 0px;}
-.delete { background-position: -64px 0px;}
-.edit { background-position: -80px 0px;}
-.camera { background-position: -96px 0px;}
-.dislike { background-position: -112px 0px;}
-.like { background-position: -128px 0px;}
-.link { background-position: -144px 0px;}
-
-.globe { background-position: 0px -16px;}
-.noglobe { background-position: -16px -16px;}
-.no { background-position: -32px -16px;}
-.pause { background-position: -48px -16px;}
-.play { background-position: -64px -16px;}
-.pencil { background-position: -80px -16px;}
-.small-pencil { background-position: -96px -16px;}
-.recycle { background-position: -112px -16px;}
-.remote-link { background-position: -128px -16px;}
-.share { background-position: -144px -16px;}
-
-.tools { background-position: 0px -32px;}
-.lock { background-position: -16px -32px;}
-.unlock { background-position: -32px -32px; }
-.video { background-position: -48px -32px;}
-.youtube { background-position: -64px -32px;}
-.attach { background-position: -80px -32px; }
-.language { background-position: -96px -32px; }
-.prev { background-position: -112px -32px; }
-.next { background-position: -128px -32px; }
-.on { background-position: -144px -32px; }
-
-.off { background-position: 0px -48px; }
-.tagged { background-position: -48px -48px; }
-.yellow { background-position: -64px -48px; }
-
-.icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
-
-
 
 .body-attach {
 	margin-top: 10px;
 }
 
-
-
-/* autocomplete popup */
-.acpopup {
-	max-height:150px;
-	background-color:$acpopup_bgcolour;
-	overflow:auto;
-	border:1px solid $acpopup_bordercolour;
-}
-.acpopupitem {
-	background-color:$acpopup_bgcolour;
-	clear:left;
-}
-.acpopupitem.taggable {
-	background-color: $acpopup_tgbl_bgcolour;
-}
-.acpopupitem img {
-	float: left;
-	margin-right: 4px;
-}
-
-.acpopupitem:hover {
-	text-decoration: underline;
-	color: $acpopup_hovercolour;
-	cursor:pointer;
-}
-
-.acpopupitem.selected {
-	color: #FFFFFF; background: #3465A4;
+.acpopup li div.taggable {
+	color:#cc0000;
 }
 
 /* popup notifications */
@@ -1493,7 +1363,7 @@ div.jGrowl div.jGrowl-notification {
 
 #nav-search-text-ac .autocomplete {
 	position: fixed;
-	top: 51px;
+	top: 50px;
 	border: 1px solid $nav_bd;
 	border-top: none;
 }
@@ -1503,6 +1373,7 @@ div.jGrowl div.jGrowl-notification {
 	margin-left: $radiuspx;
 	border: 1px solid #ccc;
 	border-top: none;
+	width: calc(197px - $radiuspx * 2) !important;
 }
 
 #recip-ac .autocomplete,
@@ -1560,14 +1431,6 @@ a.rconnect {
 
 a.rconnect:hover {
 	color: #0080FF;
-}
-
-#profiles-menu li a {
-	color: #ffffff;
-}
-
-#profiles-menu li a:hover {
-	color: #000000;
 }
 
 
@@ -1694,7 +1557,7 @@ header {
 }
 
 .contact-block-content {
-	margin-top: 8px;
+	margin-top: 10px;
 }
 .contact-block-img.archived {
 	opacity: 0.3;
@@ -1753,17 +1616,6 @@ header {
     font-size : 2.8em !important;
   }
 
-.profile-thing-list {
-	list-style-type: none;
-}
-
-.profile-thing-list img {
-	margin-bottom: 5px;
-}
-
-.profile-thing-list li {
-	margin-bottom: 15px;
-}
 
 div.page-list-item {
 margin: 20px;
@@ -1859,44 +1711,23 @@ img.mail-list-sender-photo {
 	max-width: $converse_width;
 }
 
-#jot-title,
-#jot-category,
-#jot-pagetitle {
+.jothidden {
 	font-weight: bold;
-	border: solid 1px #ffffff;
 	border-radius: $radiuspx;
 }
 
-#jot-category::-webkit-input-placeholder {
+.jothidden input::-webkit-input-placeholder {
 	font-weight: bold;
 }
 
-#jot-category:-moz-placeholder {
+.jothidden input::-moz-placeholder {
 	font-weight: bold;
 }
 
-#jot-title::-webkit-input-placeholder {
-	font-weight: bold;
+.jothidden >input, .jothidden >input {
+	border: 1px solid #fff;
 }
-
-#jot-title:-moz-placeholder {
-	font-weight: bold;
-}
-
-#jot-pagetitle::-webkit-input-placeholder {
-	font-weight: bold;
-}
-
-#jot-pagetitle:-moz-placeholder {
-	font-weight: bold;
-}
-
-#jot-title:hover,
-#jot-title:focus,
-#jot-pagetitle:hover,
-#jot-pagetitle:focus,
-#jot-category:hover,
-#jot-category:focus {
+.jothidden >input:hover, .jothidden >input:focus {
 	border: 1px solid #cccccc;
 }
 
@@ -1908,11 +1739,11 @@ img.mail-list-sender-photo {
 }
 
 #profile-jot-text::-webkit-input-placeholder {
-	font-size:18px;
+	font-size:16px;
 }
 
 #profile-jot-text::-moz-placeholder {
-	font-size:18px;
+	font-size:16px;
 }
 
 #profile-jot-text:focus::-webkit-input-placeholder {
@@ -1932,12 +1763,15 @@ img.mail-list-sender-photo {
 	color: #777;
 }
 
-#jot-perms-icon,
 .jot-icons {
 	color: $toolicon_colour;
 }
 
 /* conversation */
+
+.wall-item-title {
+   font-size: $font_size;
+}
 
 .hide-comments-outer,
 .thread-wrapper .wall-item-comment-wrapper,
@@ -1952,11 +1786,14 @@ img.mail-list-sender-photo {
 .wall-item-content-wrapper {
 	background-color: $item_colour;
 	padding: 10px;
-}
-
-.wall-item-content-wrapper {
 	border-top-right-radius: $radiuspx;
 	border-top-left-radius: $radiuspx;
+}
+
+.generic-content-wrapper-styled {
+	background-color: $genericcontent_bgcolour;
+	padding: 10px;
+	border-radius: $radiuspx;
 }
 
 .comment .wall-item-body {
@@ -2028,11 +1865,11 @@ img.mail-list-sender-photo {
 
 .wall-item-ago {
 	color: #777;
-	font-size: 0.8em;
+	font-size: 0.833em;
 }
 
 .wall-item-ago i {
-	font-size: 0.8em;
+	font-size: 0.833em;
 }
 
 .wall-item-content {
@@ -2050,7 +1887,7 @@ img.mail-list-sender-photo {
 }
 
 .comment-icon {
-	font-size: 0.8em;
+	font-size: 0.833em;
 	color: $toolicon_colour;
 }
 
@@ -2062,7 +1899,7 @@ img.mail-list-sender-photo {
 
 .comment-edit-text-empty {
 	color: gray;
-	font-size: 11px;
+	font-size: 12px;
 }
 
 .comment-edit-text-full {
@@ -2076,7 +1913,7 @@ img.mail-list-sender-photo {
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
 	text-align: center;
-	font-weight: bold;
+	font-size: $body_font_size;
 	color: $link_colour;
 	cursor: pointer;	
 }
@@ -2090,6 +1927,7 @@ img.mail-list-sender-photo {
 /* widgets */
 
 .widget {
+	background-color: $comment_item_colour;
 	border-bottom: 1px solid $widget_brdrcolour;
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
@@ -2106,10 +1944,6 @@ img.mail-list-sender-photo {
 	-moz-border-radius: $radiuspx;
 }
 
-#saved-search-ul {
-	list-style-type: none;
-}
-
 .fileas-ul {
 	list-style-type: none;
 }
@@ -2119,15 +1953,6 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 	-moz-border-radius: $radiuspx;
 }
-/*
-.categories-ul {
-	list-style-type: none;
-}
-
-#sidebar-group-list ul, #posted-date-selector {
-	list-style-type: none;
-}
-*/
 
 .profile-thing-list img, .thing-show img, .thing-edit-links a {
 	margin-top: 8px;
@@ -2136,6 +1961,10 @@ img.mail-list-sender-photo {
 
 .abook-self {
 	background-color: $abookself_bgcolour;
+}
+
+.abook-pending-contact, .abook-permschange {
+	background: $abook_changebg;
 }
 
 .online-now {
@@ -2149,27 +1978,13 @@ img.mail-list-sender-photo {
 
 .chat-item-text {
 	border-radius: $radiuspx;
-	background-color: #eee;
+	background-color: $chat_txtbgcol;
 }
 
 /* nav bootstrap */
 
-nav i {
-	font-size: 14px;
-}
 
 nav img {
-	height: 47px;
-	width: 47px;
-	margin-top: 2px;
-	border-radius: $radiuspx;
-}
-
-nav ul li {
-	max-height: 50px
-}
-
-nav .badge {
 	border-radius: $radiuspx;
 }
 
@@ -2204,18 +2019,75 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	color: $nav_active_icon_colour;
 }
 
-/* Files */
+.section-title-wrapper {
+	padding: 7px 10px;
+	background-color: $item_colour;
+	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radiuspx;
+	margin-bottom: 3px;
+}
 
-#attach-edit-perms {
-	margin-top: 25px;
-	margin-bottom: 20px;
-	font-weight: bold;
-	font-size: 17px;
+.section-title-wrapper h2 {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.section-content-tools-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	margin-bottom: 3px;
+}
+
+.section-content-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
+}
+
+.section-content-wrapper-np {
+	background-color: $comment_item_colour;
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
+}
+
+[id^="cloud-index-"]:hover,
+.cloud-index-active {
+	background-color: $item_colour;
 }
 
 /* bootstrap overrides */
+
 blockquote {
-	font-size: $body_font_size;
+	font-size: $font_size;
+	font-style: italic;
+	background-color: $blockquote_bgcolour;
+	border-left: 3px solid $blockquote_bordercolour;
+	padding: 0.4em;
+	color: $blockquote_colour;
+	margin: 0px 0px 0px 20px;
+}
+
+.badge {
+	border-radius: $radiuspx;
+}
+
+nav .badge:hover {
+	background-color: #999;
+}
+
+nav .badge.home-update,
+nav .badge.notify-update,
+nav .badge.intro-update,
+nav .badge.mail-update {
+	background-color:#C9302C;
+}
+
+nav .badge.home-update:hover,
+nav .badge.notify-update:hover,
+nav .badge.intro-update:hover,
+nav .badge.mail-update:hover {
+	background-color:#D9534F;
 }
 
 .dropdown-menu {
@@ -2233,6 +2105,11 @@ blockquote {
     	color: $dropdown_txtcolhover; 
     	background-color: $dropdown_bgcolhover; 
 	$dropdown_bgimghover
+}
+
+aside .nav > li > a:hover, aside .nav > li > a:focus {
+	text-decoration: $navtabs_decohover;
+	background-color: $navaside_bghover;
 }
 
 .dropdown-menu img {
@@ -2265,6 +2142,7 @@ blockquote {
 
 
 .navbar-inverse .navbar-nav > li > a {
+	font-size: 12px;
 	color: $nav_icon_colour;
 	text-shadow: 0px 0px 0px;
 }
@@ -2347,6 +2225,14 @@ blockquote {
   }
 }
 
+.btn {
+	font-size: $body_font_size;
+}
+
+.btn-xs {
+	font-size: 0.75rem;
+}
+
 .btn-default {
     	background-color: $editbuttons_bgcolour;
     	border-color: $editbuttons_bordercolour;
@@ -2356,7 +2242,7 @@ blockquote {
 }
 
 .btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
-    	background-color: $editbuttons_bghover;
+	background-color: $editbuttons_bghover;
 	border-color: $editbuttons_bordercolourhover;
 	color: $input_colourhover;
 	text-decoration: $input_decohover;
@@ -2366,12 +2252,18 @@ blockquote {
     	text-decoration: none;
 }
 
+.alert-info {
+	color: $alert_txtcolour;
+	background-color:$alert_bgcolour;
+	border-color: $alert_bordercol;
+	background-image: linear-gradient(to bottom, $alert_bgcolour 0px, $alert_gradientcol 100%);
+}
+
 .well {
 	background-color: $advperm_bgcolour;
 	border: 1px solid $advperm_bordercol;
 	background-image: linear-gradient(to bottom, $advperm_gradientcol 0px, $advperm_bgcolour 100%);
 }
-
 
 @media screen and (max-width: 767px) {
 	aside#region_1 {
@@ -2413,4 +2305,114 @@ blockquote {
 		width: calc(100% - 10px);
 	}
 
+}
+
+/* release the navbar in landscape view on small devices */
+@media screen and (max-height: 320px) {
+	.navbar-fixed-top {
+		position: absolute;
+	}
+}
+
+.shareable_element_text {
+	height: 300px;
+	width: 300px;
+}
+
+.bb_observer {
+	color: red;
+}
+
+.bb_observer img {
+	border: 3px solid red !important;
+}
+
+.bootstrap-tagsinput .tag:before {
+	/* Copied from icon-asterisk, is there a better way to do it? */
+	font-family: FontAwesome;
+	font-weight: normal;
+	font-style: normal;
+	text-decoration: inherit;
+	content:"\f069";
+}
+
+/* Modified original CSS to match input in Redbasic */
+.bootstrap-tagsinput {
+	border-color:#fff;
+	background-color: #fff;
+	box-shadow: none;
+	display: inline-block;
+	border-radius: $radiuspx;
+	cursor: text;
+	padding: 0 6px;
+	width: 70% !important;
+}
+
+.jothidden .bootstrap-tagsinput:hover, .jothidden .bootstrap-tagsinput:focus {
+	border: 1px solid #cccccc;
+}
+
+/* Abusing theme-green is less work than makeing a new new one */
+.theme-green .back-bar .selected-bar { background-color: #000000; background-image: none; !important }
+
+
+/* Turn checkboxes into switches */
+.field.checkbox .fieldhelp { vertical-align:top; }
+.field.checkbox > div {
+    position: relative; width: 70px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    display:inline-block;
+}
+
+.field.checkbox input {
+    display: none;
+}
+
+.field.checkbox > div label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #999999;
+    border-radius: 20px;
+    margin:0px;
+}
+
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+    -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
+}
+
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 20px; padding: 0; line-height:20px;
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+
+.onoffswitch-inner:before {
+    content: attr(data-on);
+    padding-left: 10px;
+    background-color: #EEEEEE;
+}
+
+.onoffswitch-inner:after {
+    content: attr(data-off);
+    padding-right: 10px;
+    background-color: #EEEEEE; color: #999999;
+    text-align: right;
+}
+
+.onoffswitch-switch {
+    display: block; width: 25px; margin-left: 6px; margin-right: 6px; margin-top:5%; margin-bottom:5%;
+    background: #A1A1A1;
+    border: 2px solid #999999; border-radius: 20px;
+    position: absolute; top: 0; bottom: 0; right: 36px;
+    -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s;
+}
+
+.field.checkbox > div > input:checked + label .onoffswitch-inner {
+    margin-left: 0;
+}
+
+.field.checkbox > div > input:checked + label .onoffswitch-switch {
+    right: -2px;
+    background-color: #27A1CA;
 }

@@ -1,20 +1,20 @@
 
-Dear {{$username}},
-	Your password has been changed as requested. Please retain this 
-information for your records (or change your password immediately to 
-something that you will remember).
+Beste {{$username}},
+	Jouw wachtwoord is op jouw verzoek opnieuw ingesteld. Bewaar deze 
+informatie goed of verander het wachtwoord meteen nadat je bent ingelogd 
+in iets wat jezelf makkelijker kan onthouden, maar door anderen niet geraden kan worden.
 
 
-Your login details are as follows:
+Jouw inloggegevens zijn als volgt:
 
-Site Location:	{{$siteurl}}
-Login Name:	{{$email}}
-Password:	{{$new_password}}
+Hub-adres:	{{$siteurl}}
+Inlognaam:	{{$email}}
+Wachtwoord:	{{$new_password}}
 
-You may change that password from your account settings page after logging in.
+Wij adviseren om dit wachtwoord te veranderen onder 'instellingen' nadat je bent ingelogd.
 
 
-Sincerely,
-	{{$sitename}} Administrator
+Vriendelijke groet,
+	Beheerder {{$sitename}} ({{$siteurl}})
 
  

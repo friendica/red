@@ -20,6 +20,7 @@ function contact_profile_assign($current) {
 	return $o;
 }
 
+/* unused currently
 
 function contact_reputation($current) {
 
@@ -27,7 +28,7 @@ function contact_reputation($current) {
 	$o .= "<select id=\"contact-reputation-selector\" name=\"reputation\" />\r\n";
 
 	$rep = array(
-		0 => t('Unknown | Not categorised'),
+		0 => t('Unknown | Not categorized'),
 		1 => t('Block immediately'),
 		2 => t('Shady, spammer, self-marketer'),
 		3 => t('Known to me, but no opinion'),
@@ -43,6 +44,7 @@ function contact_reputation($current) {
 	return $o;
 }
 
+*/
 
 function contact_poll_interval($current, $disabled = false) {
 

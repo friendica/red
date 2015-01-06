@@ -39,6 +39,12 @@ Some/many of these widgets have restrictions which may restrict the type of page
 * categories - categories filter (channel page)
 
 * tagcloud_wall - tagcloud for channel page only
+    * args: 'limit' - number of tags to return (default 50)
+<br />&nbsp;<br />
+
+* catcloud_wall - tagcloud for channel page categories
+    * args: 'limit' - number of categories to return (default 50)
+<br />&nbsp;<br />
 
 * affinity - affinity slider for network page - must be logged in
 
@@ -79,3 +85,18 @@ Some/many of these widgets have restrictions which may restrict the type of page
     * style - CSS style string
 <br />&nbsp;<br />
 
+* photo_rand - display a random photo from one of your photo albums. Photo permissions are honoured
+    * args: 
+    * album - album name (very strongly recommended if you have lots of photos)
+    * scale - typically 0 (original size), 1 (640px), or 2 (320px)
+    * style - CSS style string
+	* channel_id - if not your own
+<br />&nbsp;<br />
+
+* random_block - display a random block element from your webpage design tools collection. Permissions are honoured.
+    * args: 
+    * contains - only return blocks which include the contains string in the block name
+    * channel_id - if not your own
+<br />&nbsp;<br />
+
+#include doc/macros/main_footer.bb;

@@ -25,7 +25,7 @@ function profile_activity($changed, $value) {
 	$arr['verb']        = ACTIVITY_UPDATE;
 	$arr['obj_type']    = ACTIVITY_OBJ_PROFILE;
 
-	$arr['$plink'] = z_root() . '/channel/' . $self['channel_address'] . '/?f=&mid=' . $arr['mid'];
+	$arr['plink'] = z_root() . '/channel/' . $self['channel_address'] . '/?f=&mid=' . $arr['mid'];
 				
 	$A = '[url=' . z_root() . '/channel/' . $self['channel_address'] . ']' . $self['channel_name'] . '[/url]';
 
@@ -48,7 +48,11 @@ function profile_activity($changed, $value) {
 
 	if($t == 1 && strlen($value)) {
 		// if it's a url, the HTML quotes will mess it up, so link it and don't try and zidify it because we don't know what it points to.
-		$value = linkify($value); 
+ 		$value = preg_replace_callback("/([^\]\='".'"'."]|^|\#\^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $value);
+		// take out the bookmark indicator
+		if(substr($value,0,2) === '#^')
+			$value = str_replace('#^','',$value);
+
 		$message = sprintf( t('%1$s changed %2$s to &ldquo;%3$s&rdquo;'), $A, $changes, $value);
 		$message .= "\n\n" . sprintf( t('Visit %1$s\'s %2$s'), $A, $prof);
 	}

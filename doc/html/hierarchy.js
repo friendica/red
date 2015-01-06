@@ -1,7 +1,7 @@
 var hierarchy =
 [
     [ "AbstractBasic", null, [
-      [ "RedBasicAuth", "classRedBasicAuth.html", null ]
+      [ "RedMatrix\\RedDAV\\RedBasicAuth", "classRedMatrix_1_1RedDAV_1_1RedBasicAuth.html", null ]
     ] ],
     [ "App", "classApp.html", null ],
     [ "BaseObject", "classBaseObject.html", [
@@ -11,25 +11,27 @@ var hierarchy =
     [ "Cache", "classCache.html", null ],
     [ "dba_driver", "classdba__driver.html", [
       [ "dba_mysql", "classdba__mysql.html", null ],
-      [ "dba_mysqli", "classdba__mysqli.html", null ]
+      [ "dba_mysqli", "classdba__mysqli.html", null ],
+      [ "dba_postgres", "classdba__postgres.html", null ]
     ] ],
     [ "enotify", "classenotify.html", null ],
     [ "ICollection", null, [
-      [ "RedDirectory", "classRedDirectory.html", null ]
+      [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ]
     ] ],
     [ "IFile", null, [
-      [ "RedFile", "classRedFile.html", null ]
+      [ "RedMatrix\\RedDAV\\RedFile", "classRedMatrix_1_1RedDAV_1_1RedFile.html", null ]
     ] ],
+    [ "RedMatrix\\Import\\Import", "classRedMatrix_1_1Import_1_1Import.html", null ],
     [ "IQuota", null, [
-      [ "RedDirectory", "classRedDirectory.html", null ]
+      [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ]
     ] ],
     [ "ITemplateEngine", "interfaceITemplateEngine.html", [
       [ "FriendicaSmartyEngine", "classFriendicaSmartyEngine.html", null ],
       [ "Template", "classTemplate.html", null ]
     ] ],
     [ "Node", null, [
-      [ "RedDirectory", "classRedDirectory.html", null ],
-      [ "RedFile", "classRedFile.html", null ]
+      [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ],
+      [ "RedMatrix\\RedDAV\\RedFile", "classRedMatrix_1_1RedDAV_1_1RedFile.html", null ]
     ] ],
     [ "OAuthDataStore", null, [
       [ "FKOAuthDataStore", "classFKOAuthDataStore.html", null ]
@@ -42,10 +44,19 @@ var hierarchy =
       [ "photo_imagick", "classphoto__imagick.html", null ]
     ] ],
     [ "Plugin", null, [
-      [ "RedBrowser", "classRedBrowser.html", null ]
+      [ "RedMatrix\\RedDAV\\RedBrowser", "classRedMatrix_1_1RedDAV_1_1RedBrowser.html", null ]
     ] ],
     [ "ProtoDriver", "classProtoDriver.html", [
       [ "ZotDriver", "classZotDriver.html", null ]
+    ] ],
+    [ "Sabre", null, [
+      [ "RedMatrix\\RedDAV\\RedBasicAuth", "classRedMatrix_1_1RedDAV_1_1RedBasicAuth.html", null ],
+      [ "RedMatrix\\RedDAV\\RedBrowser", "classRedMatrix_1_1RedDAV_1_1RedBrowser.html", null ],
+      [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ],
+      [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ],
+      [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ],
+      [ "RedMatrix\\RedDAV\\RedFile", "classRedMatrix_1_1RedDAV_1_1RedFile.html", null ],
+      [ "RedMatrix\\RedDAV\\RedFile", "classRedMatrix_1_1RedDAV_1_1RedFile.html", null ]
     ] ],
     [ "Smarty", null, [
       [ "FriendicaSmarty", "classFriendicaSmarty.html", null ]

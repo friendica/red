@@ -118,7 +118,7 @@ Inheritance diagram for dba_mysqli:</div>
  <div class="center">
   <img src="classdba__mysqli.png" usemap="#dba_mysqli_map" alt=""/>
   <map id="dba_mysqli_map" name="dba_mysqli_map">
-<area href="classdba__driver.html" alt="dba_driver" shape="rect" coords="0,0,74,24"/>
+<area href="classdba__driver.html" title="abstract database driver class." alt="dba_driver" shape="rect" coords="0,0,74,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -132,27 +132,59 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a27d6a748af7f80028801306e7ea33f64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb38f2c851187ad632ecfab30fdfab55"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__mysqli.html#acb38f2c851187ad632ecfab30fdfab55">close</a> ()</td></tr>
 <tr class="separator:acb38f2c851187ad632ecfab30fdfab55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6eb6c578c6928908321e5e6da866e1db"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__mysqli.html#a6eb6c578c6928908321e5e6da866e1db">getdriver</a> ()</td></tr>
+<tr class="separator:a6eb6c578c6928908321e5e6da866e1db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classdba__driver"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classdba__driver')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classdba__driver.html">dba_driver</a></td></tr>
 <tr class="memitem:ae533e62a240a793f17aef5ab4ef10edc inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#ae533e62a240a793f17aef5ab4ef10edc">connect</a> ($server, $port, $user, $pass, $db)</td></tr>
+<tr class="memdesc:ae533e62a240a793f17aef5ab4ef10edc inherit pub_methods_classdba__driver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect to the database.  <a href="#ae533e62a240a793f17aef5ab4ef10edc">More...</a><br/></td></tr>
 <tr class="separator:ae533e62a240a793f17aef5ab4ef10edc inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a558e738b88ae893cc5d79ffa3793d555 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#a558e738b88ae893cc5d79ffa3793d555">q</a> ($sql)</td></tr>
+<tr class="memdesc:a558e738b88ae893cc5d79ffa3793d555 inherit pub_methods_classdba__driver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a DB query with the SQL statement $sql.  <a href="#a558e738b88ae893cc5d79ffa3793d555">More...</a><br/></td></tr>
 <tr class="separator:a558e738b88ae893cc5d79ffa3793d555 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc95ffa103a3290581b537670cde5311 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#afc95ffa103a3290581b537670cde5311">escape</a> ($str)</td></tr>
+<tr class="memdesc:afc95ffa103a3290581b537670cde5311 inherit pub_methods_classdba__driver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Escape a string before being passed to a DB query.  <a href="#afc95ffa103a3290581b537670cde5311">More...</a><br/></td></tr>
 <tr class="separator:afc95ffa103a3290581b537670cde5311 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5afa54172f3c837df61643f8f5b2c975 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#a5afa54172f3c837df61643f8f5b2c975">close</a> ()</td></tr>
+<tr class="memdesc:a5afa54172f3c837df61643f8f5b2c975 inherit pub_methods_classdba__driver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the database connection.  <a href="#a5afa54172f3c837df61643f8f5b2c975">More...</a><br/></td></tr>
 <tr class="separator:a5afa54172f3c837df61643f8f5b2c975 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02165fc4bee63d040ebd963a4fa82a14 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#a02165fc4bee63d040ebd963a4fa82a14">getdriver</a> ()</td></tr>
+<tr class="memdesc:a02165fc4bee63d040ebd963a4fa82a14 inherit pub_methods_classdba__driver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return text name for db driver.  <a href="#a02165fc4bee63d040ebd963a4fa82a14">More...</a><br/></td></tr>
+<tr class="separator:a02165fc4bee63d040ebd963a4fa82a14 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3541d13ccb7a3eddfc03e253c746186 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#af3541d13ccb7a3eddfc03e253c746186">__construct</a> ($server, $port, $user, $pass, $db, $<a class="el" href="classdba__driver.html#a4ccb27243e62a8ca30dd8e1b8cc67746">install</a>=false)</td></tr>
 <tr class="separator:af3541d13ccb7a3eddfc03e253c746186 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65a5c7b355ab5529a43049e160006426 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#a65a5c7b355ab5529a43049e160006426">get_null_date</a> ()</td></tr>
+<tr class="separator:a65a5c7b355ab5529a43049e160006426 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d6a79d39d7eaee5aea4e952c4529d48 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#a8d6a79d39d7eaee5aea4e952c4529d48">get_install_script</a> ()</td></tr>
+<tr class="separator:a8d6a79d39d7eaee5aea4e952c4529d48 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad700712879719bee23752b8f424d97d0 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#ad700712879719bee23752b8f424d97d0">utcnow</a> ()</td></tr>
+<tr class="separator:ad700712879719bee23752b8f424d97d0 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ccb27243e62a8ca30dd8e1b8cc67746 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#a4ccb27243e62a8ca30dd8e1b8cc67746">install</a> ($server, $user, $pass, $db)</td></tr>
 <tr class="separator:a4ccb27243e62a8ca30dd8e1b8cc67746 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcc1f8955120fec0708bce39202d0422 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#adcc1f8955120fec0708bce39202d0422">dbg</a> ($dbg)</td></tr>
+<tr class="memdesc:adcc1f8955120fec0708bce39202d0422 inherit pub_methods_classdba__driver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the database driver's debugging state.  <a href="#adcc1f8955120fec0708bce39202d0422">More...</a><br/></td></tr>
 <tr class="separator:adcc1f8955120fec0708bce39202d0422 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a8bc9dc839a6320a0e07d8047a6b721 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#a1a8bc9dc839a6320a0e07d8047a6b721">__destruct</a> ()</td></tr>
 <tr class="separator:a1a8bc9dc839a6320a0e07d8047a6b721 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9127e9c55fcc93bcfbb323b9b99b9d9 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#ac9127e9c55fcc93bcfbb323b9b99b9d9">quote_interval</a> ($txt)</td></tr>
+<tr class="separator:ac9127e9c55fcc93bcfbb323b9b99b9d9 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77e59dcbeab30ca6000131d2e9ad4092 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#a77e59dcbeab30ca6000131d2e9ad4092">optimize_table</a> ($table)</td></tr>
+<tr class="separator:a77e59dcbeab30ca6000131d2e9ad4092 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9982f38a02f008b127a0f3ccc1e99f4 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#ab9982f38a02f008b127a0f3ccc1e99f4">concat</a> ($fld, $sep)</td></tr>
+<tr class="separator:ab9982f38a02f008b127a0f3ccc1e99f4 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dbe8318587ff1694825042bf58f4fbd inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#a7dbe8318587ff1694825042bf58f4fbd">escapebin</a> ($str)</td></tr>
+<tr class="separator:a7dbe8318587ff1694825042bf58f4fbd inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab43184239e1d6eb00a98319f4a3df155 inherit pub_methods_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#ab43184239e1d6eb00a98319f4a3df155">unescapebin</a> ($str)</td></tr>
+<tr class="separator:ab43184239e1d6eb00a98319f4a3df155 inherit pub_methods_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_attribs_classdba__driver"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classdba__driver')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classdba__driver.html">dba_driver</a></td></tr>
+<tr class="memitem:a98d8523dcedda316085b4d4f856b6583 inherit pub_attribs_classdba__driver"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#a98d8523dcedda316085b4d4f856b6583">INSTALL_SCRIPT</a> ='<a class="el" href="classdba__driver.html#a4ccb27243e62a8ca30dd8e1b8cc67746">install</a>/schema_mysql.sql'</td></tr>
+<tr class="separator:a98d8523dcedda316085b4d4f856b6583 inherit pub_attribs_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afce39394c010ea589d99a21579b2c31e inherit pub_attribs_classdba__driver"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#afce39394c010ea589d99a21579b2c31e">NULL_DATE</a> = '0000-00-00 00:00:00'</td></tr>
+<tr class="separator:afce39394c010ea589d99a21579b2c31e inherit pub_attribs_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3325d982d4ee5d1114fd7e02a4356e8 inherit pub_attribs_classdba__driver"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#aa3325d982d4ee5d1114fd7e02a4356e8">UTC_NOW</a> = 'UTC_TIMESTAMP()'</td></tr>
+<tr class="separator:aa3325d982d4ee5d1114fd7e02a4356e8 inherit pub_attribs_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a205f6535e399700b6fca2492f96f2229 inherit pub_attribs_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#a205f6535e399700b6fca2492f96f2229">$connected</a> = false</td></tr>
 <tr class="separator:a205f6535e399700b6fca2492f96f2229 inherit pub_attribs_classdba__driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84675d28c7bd9b7290dd37e66dbd216c inherit pub_attribs_classdba__driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdba__driver.html#a84675d28c7bd9b7290dd37e66dbd216c">$error</a> = false</td></tr>
@@ -232,6 +264,21 @@ Additional Inherited Members</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>$str</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6eb6c578c6928908321e5e6da866e1db"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">dba_mysqli::getdriver </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>

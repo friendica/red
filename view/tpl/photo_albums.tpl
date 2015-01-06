@@ -1,15 +1,13 @@
 <div id="side-bar-photos-albums" class="widget">
-<h3><a href="{{$baseurl}}/photos/{{$nick}}" title="{{$title}}" >{{$title}}</a></h3>
-{{if $albums}}
-<ul>
-{{foreach $albums as $al}}
-{{if $al.text}}
-<li><a href="{{$baseurl}}/photos/{{$nick}}/album/{{$al.bin2hex}}">{{$al.text}}</a> ({{$al.total}})</li>
-{{/if}}
-{{/foreach}}
-</ul>
-{{/if}}
-{{if $upload}}
-<div id="photo-albums-upload-link"><a href="{{$baseurl}}/photos/{{$nick}}/upload" title="{{$upload}}">{{$upload}}</a></div>
-{{/if}}
+	<h3>{{$title}}</h3>
+	<ul class="nav nav-pills nav-stacked">
+		<li><a href="{{$baseurl}}/photos/{{$nick}}" title="{{$title}}" >Recent Photos</a></li>
+		{{if $albums}}
+		{{foreach $albums as $al}}
+		{{if $al.text}}
+		<li><a href="{{$baseurl}}/photos/{{$nick}}/album/{{$al.bin2hex}}"><span class="badge pull-right">{{$al.total}}</span>{{$al.text}}</a></li>
+		{{/if}}
+		{{/foreach}}
+		{{/if}}
+	</ul>
 </div>

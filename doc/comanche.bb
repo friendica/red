@@ -29,6 +29,10 @@ Currently there are three layout templates, unless your site provides additional
 			edgesthree - three column layout with fixed side margins
 			full - three column layout with fixed side margins and adds a "header" region beneath the navigation bar
 
+	redable
+	 
+	A template for reading longer texts. Three columns: aside, content and right_aside. For maximum readability it is advised to only use the middle content column.
+
 [/code]
 
 To choose a layout template, use the 'template' tag.
@@ -43,9 +47,12 @@ To choose the "choklet" template with the "three" flavour:
 [code]
 	[template=three]choklet[/template]
 [/code]
+	
+Or the "redable" (sic) template:
 
-
-
+[code]
+	[template]redable[/template]
+[/code]
 
 
 The default template will be used if no other template is specified. The template can use any names it desires for content regions. You will be using 'region' tags to decide what content to place in the respective regions.
@@ -181,4 +188,4 @@ The 'comment' tag is used to delimit comments. These comments will not appear on
 	[/region]
 [/code]
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+#include doc/macros/main_footer.bb;

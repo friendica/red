@@ -57,6 +57,8 @@ require_once('include/html2plain.php');
  *       purge_all              channel_id
  *       expire                 channel_id
  *       relay					item_id (item was relayed to owner, we will deliver it as owner)
+ *       location               channel_id
+ *       request                channel_id            xchan_hash             message_id
  *
  */
 
@@ -97,34 +99,39 @@ function notifier_run($argv, $argc){
 		// Get the recipient	
 		$r = q("select abook.*, hubloc.* from abook 
 			left join hubloc on hubloc_hash = abook_xchan
-			where abook_id = %d and not ( abook_flags & %d ) limit 1",
+			where abook_id = %d and not ( abook_flags & %d )>0 limit 1",
 			intval($item_id),
 			intval(ABOOK_FLAG_SELF)
 		);
 		if($r) {
 			// Get the sender
-			$s = q("select * from channel where channel_id = %d limit 1",
+			$s = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_id = %d limit 1",
 				intval($r[0]['abook_channel'])
 			);
 			if($s) {
-
-				// send a refresh message to each hub they have registered here	
-				$h = q("select * from hubloc where hubloc_hash = '%s'",
-					dbesc($r[0]['hubloc_hash'])
-				);
-				if($h) {
-					foreach($h as $hh) {
-						$data = zot_build_packet($s[0],'refresh',array(array(
-							'guid' => $hh['hubloc_guid'],
-							'guid_sig' => $hh['hubloc_guid_sig'],
-							'url' => $hh['hubloc_url'])
-						));
-						if($data) {
-							$result = zot_zot($hh['hubloc_callback'],$data);
+				if($r[0]['hubloc_network'] === 'diaspora' || $r[0]['hubloc_network'] === 'friendica-over-diaspora') {
+					require_once('include/diaspora.php');
+					diaspora_share($s[0],$r[0]);
+				}
+				else {
+					// send a refresh message to each hub they have registered here	
+					$h = q("select * from hubloc where hubloc_hash = '%s'",
+						dbesc($r[0]['hubloc_hash'])
+					);
+					if($h) {
+						foreach($h as $hh) {
+							$data = zot_build_packet($s[0],'refresh',array(array(
+								'guid' => $hh['hubloc_guid'],
+								'guid_sig' => $hh['hubloc_guid_sig'],
+								'url' => $hh['hubloc_url'])
+							));
+							if($data) {
+								$result = zot_zot($hh['hubloc_callback'],$data);
 // zot_queue_item is not yet written
 //							if(! $result['success'])
 //								zot_queue_item();
 
+							}
 						}	
 					}
 				}
@@ -136,9 +143,11 @@ function notifier_run($argv, $argc){
 
 
 	$expire = false;
+	$request = false;
 	$mail = false;
 	$fsuggest = false;
 	$top_level = false;
+	$location  = false;
 	$recipients = array();
 	$url_recipients = array();
 	$normal_mode = true;
@@ -151,7 +160,7 @@ function notifier_run($argv, $argc){
 		$message = q("SELECT * FROM `mail` WHERE `id` = %d LIMIT 1",
 				intval($item_id)
 		);
-		if(! count($message)){
+		if(! $message) {
 			return;
 		}
 		xchan_mail_query($message[0]);
@@ -168,6 +177,22 @@ function notifier_run($argv, $argc){
 			$channel = $s[0];
 
 	}
+	elseif($cmd === 'request') {
+		$channel_id = $item_id;
+		$xchan = $argv[3];
+		$request_message_id = $argv[4];
+
+		$s = q("select * from channel where channel_id = %d limit 1",
+			intval($channel_id)
+		);
+		if($s)
+			$channel = $s[0];
+
+		$private = true;
+		$recipients[] = $xchan;
+		$packet_type = 'request';
+		$normal_mode = false;
+	}
 	elseif($cmd === 'expire') {
 
 		// FIXME
@@ -180,11 +205,12 @@ function notifier_run($argv, $argc){
 
 		$normal_mode = false;
 		$expire = true;
-		$items = q("SELECT * FROM item WHERE uid = %d AND ( item_flags & %d )
-			AND ( item_restrict & %d ) AND `changed` > UTC_TIMESTAMP() - INTERVAL 10 MINUTE",
+		$items = q("SELECT * FROM item WHERE uid = %d AND ( item_flags & %d )>0
+			AND ( item_restrict & %d )>0 AND `changed` > %s - INTERVAL %s",
 			intval($item_id),
 			intval(ITEM_WALL),
-			intval(ITEM_DELETED)
+			intval(ITEM_DELETED),
+			db_utcnow(), db_quoteinterval('10 MINUTE')
 		);
 		$uid = $item_id;
 		$item_id = 0;
@@ -224,6 +250,30 @@ function notifier_run($argv, $argc){
 		}
 		$private = false;
 		$packet_type = 'refresh';
+	}
+	elseif($cmd === 'location') {
+		logger('notifier: location: ' . $item_id);
+		$s = q("select * from channel where channel_id = %d limit 1",
+			intval($item_id)
+		);
+		if($s)
+			$channel = $s[0];
+		$uid = $item_id;
+		$recipients = array();
+		$r = q("select abook_xchan from abook where abook_channel = %d",
+			intval($item_id)
+		);
+		if($r) {
+			foreach($r as $rr) {
+				$recipients[] = $rr['abook_xchan'];
+			}
+		}
+
+		$encoded_item = array('locations' => zot_encode_locations($channel),'type' => 'location', 'encoding' => 'zot');
+		$target_item = array('aid' => $channel['channel_account_id'],'uid' => $channel['channel_id']);
+		$private = false;
+		$packet_type = 'location';
+		$location = true;
 	}
 	elseif($cmd === 'purge_all') {
 		logger('notifier: purge_all: ' . $item_id);
@@ -366,6 +416,8 @@ function notifier_run($argv, $argc){
 
 	}
 
+	$walltowall = (($top_level_post && $channel['xchan_hash'] === $target_item['author_xchan']) ? true : false); 
+
 	// Generic delivery section, we have an encoded item and recipients
 	// Now start the delivery process
 
@@ -382,7 +434,7 @@ function notifier_run($argv, $argc){
 
 	$env_recips = (($private) ? array() : null);
 
-	$details = q("select xchan_hash, xchan_instance_url, xchan_addr, xchan_guid, xchan_guid_sig from xchan where xchan_hash in (" . implode(',',$recipients) . ")");
+	$details = q("select xchan_hash, xchan_instance_url, xchan_network, xchan_addr, xchan_guid, xchan_guid_sig from xchan where xchan_hash in (" . implode(',',$recipients) . ")");
 
 	$recip_list = array();
 
@@ -405,7 +457,7 @@ function notifier_run($argv, $argc){
 
 			$recip_list[] = $d['xchan_addr'] . ' (' . $d['xchan_hash'] . ')'; 
 			if($private)
-				$env_recips[] = array('guid' => $d['xchan_guid'],'guid_sig' => $d['xchan_guid_sig']);
+				$env_recips[] = array('guid' => $d['xchan_guid'],'guid_sig' => $d['xchan_guid_sig'],'hash' => $d['xchan_hash']);
 		}
 	}
 
@@ -422,8 +474,10 @@ function notifier_run($argv, $argc){
 
 	
 	// for public posts always include our own hub
+// this shouldn't be needed any more. collect_recipients should take care of it.
+//	$sql_extra = (($private) ? "" : " or hubloc_url = '" . dbesc(z_root()) . "' ");
 
-	$sql_extra = (($private) ? "" : " or hubloc_url = '" . dbesc(z_root()) . "' ");
+	logger('notifier: hub choice: ' . intval($relay_to_owner) . ' ' . intval($private) . ' ' . $cmd, LOGGER_DEBUG);
 
 	if($relay_to_owner && (! $private) && ($cmd !== 'relay')) {
 
@@ -438,29 +492,52 @@ function notifier_run($argv, $argc){
 		// aren't the owner or author.  
 
 
-		$r = q("select hubloc_sitekey, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") group by hubloc_sitekey order by hubloc_connected desc limit 1");
+		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+			where hubloc_hash in (" . implode(',',$recipients) . ") order by hubloc_connected desc limit 1");
 	} 
 	else {
-		$r = q("select hubloc_sitekey, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_sitekey");
-	}
+		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0",
+			intval(HUBLOC_FLAGS_DELETED),
+			intval(HUBLOC_OFFLINE)
+		);		
+	} 
 
 	if(! $r) {
 		logger('notifier: no hubs');
 		return;
 	}
+
 	$hubs = $r;
 
-	$hublist = array();
-	$keys = array();
+
+	/**
+	 * Reduce the hubs to those that are unique. For zot hubs, we need to verify uniqueness by the sitekey, since it may have been 
+	 * a re-install which has not yet been detected and pruned.
+	 * For other networks which don't have or require sitekeys, we'll have to use the URL
+	 */
+
+
+	$hublist = array(); // this provides an easily printable list for the logs
+	$dhubs   = array(); // delivery hubs where we store our resulting unique array
+	$keys    = array(); // array of keys to check uniquness for zot hubs
+	$urls    = array(); // array of urls to check uniqueness of hubs from other networks
+
 
 	foreach($hubs as $hub) {
-		// don't try to deliver to deleted hublocs - and inexplicably SQL "distinct" and "group by"
-		// both return records with duplicate keys in rare circumstances
-		if((! ($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && (! in_array($hub['hubloc_sitekey'],$keys))) {
-			$hublist[] = $hub['hubloc_host'];
-			$keys[] = $hub['hubloc_sitekey'];
+		if($hub['hubloc_network'] == 'zot') {
+			if(! in_array($hub['hubloc_sitekey'],$keys)) {
+				$hublist[] = $hub['hubloc_host'];
+				$dhubs[] = $hub;
+				$keys[] = $hub['hubloc_sitekey'];
+			}
+		}
+		else {
+			if(! in_array($hub['hubloc_url'],$urls)) {
+				$hublist[] = $hub['hubloc_host'];
+				$dhubs[] = $hub;
+				$urls[] = $hub['hubloc_url'];
+			}
 		}
 	}
 
@@ -476,7 +553,7 @@ function notifier_run($argv, $argc){
 
 	$deliver = array();
 
-	foreach($hubs as $hub) {
+	foreach($dhubs as $hub) {
 
 		if(defined('DIASPORA_RELIABILITY_EMULATION')) {
 			$cointoss = mt_rand(0,2);
@@ -485,9 +562,62 @@ function notifier_run($argv, $argc){
 			}
 		}
 
+
+		if($hub['hubloc_network'] === 'diaspora' || $hub['hubloc_network'] === 'friendica-over-diaspora') {
+			if(! get_config('system','diaspora_enabled'))
+				continue;
+
+			require_once('include/diaspora.php');
+
+			diaspora_process_outbound(array(
+				'channel' => $channel,
+				'env_recips' => $env_recips,
+				'recipients' => $recipients,
+				'item' => $item,
+				'target_item' => $target_item,
+				'hub' => $hub,
+				'top_level_post' => $top_level_post,
+				'private' => $private,
+				'followup' => $followup,
+				'relay_to_owner' => $relay_to_owner,
+				'uplink' => $uplink,
+				'cmd' => $cmd,
+				'expire' =>	$expire,
+				'mail' => $mail,
+				'location' => $location,
+				'fsuggest' => $fsuggest,
+				'request' => $request,
+				'normal_mode' => $normal_mode,
+				'packet_type' => $packet_type,
+				'walltowall' => $walltowall
+			));
+
+			continue;
+
+		}
+
+
+		// default: zot protocol
+
+
 		$hash = random_string();
 		if($packet_type === 'refresh' || $packet_type === 'purge') {
 			$n = zot_build_packet($channel,$packet_type);
+			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
+				dbesc($hash),
+				intval($channel['channel_account_id']),
+				intval($channel['channel_id']),
+				dbesc('zot'),
+				dbesc($hub['hubloc_callback']),
+				intval(1),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc($n),
+				dbesc('')
+			);
+		}
+		elseif($packet_type === 'request') {
+			$n = zot_build_packet($channel,'request',$env_recips,$hub['hubloc_sitekey'],$hash,array('message_id' => $request_message_id));
 			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
 				dbesc($hash),
 				intval($channel['channel_account_id']),

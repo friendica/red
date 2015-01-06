@@ -29,8 +29,7 @@ function findpeople_widget() {
 		'$random' => t('Random Profile'),
 		'$inv' => t('Invite Friends'),
 		'$advanced_search' => $advanced_search,
-		'$advanced_hint' => t('Exammple: name=fred and country=iceland'),
-		'$find_advanced' => t('Advanced Find'),
+		'$advanced_hint' => "\r\n" . t('Advanced example: name=fred and country=iceland'),
 		'$loggedin' => local_user()
 	));
 
@@ -79,6 +78,7 @@ function categories_widget($baseurl,$selected = '') {
                 and term.uid = item.uid
                 and term.type = %d
                 and item.author_xchan = '%s'
+				and item.item_restrict = 0
                 order by term.term asc",
 		intval($a->profile['profile_uid']),
 	        intval(TERM_CATEGORY),

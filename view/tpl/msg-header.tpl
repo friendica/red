@@ -49,38 +49,38 @@ else
 <script>
 	$(document).ready(function() {
 		var uploader = new window.AjaxUpload(
-			'prvmail-upload',
+			'prvmail-upload-wrapper',
 			{ action: 'wall_upload/{{$nickname}}',
 				name: 'userfile',
-				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
+				onSubmit: function(file,ext) { $('#prvmail-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
-					addeditortext(response);
-					$('#profile-rotator').spin(false);
+					addmailtext(response);
+					$('#prvmail-rotator').spin(false);
 				}				 
 			}
 		);
 
 		var file_uploader = new window.AjaxUpload(
-			'prvmail-attach',
+			'prvmail-attach-wrapper',
 			{ action: 'wall_attach/{{$nickname}}',
 				name: 'userfile',
-				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
+				onSubmit: function(file,ext) { $('#prvmail-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
-					addeditortext(response);
-					$('#profile-rotator').spin(false);
+					addmailtext(response);
+					$('#prvmail-rotator').spin(false);
 				}				 
 			}
 		);
 
 	});
 
-	function jotGetLink() {
+	function prvmailJotGetLink() {
 		reply = prompt("{{$linkurl}}");
 		if(reply && reply.length) {
-			$('#profile-rotator').spin('tiny');
+			$('#prvmail-rotator').spin('tiny');
 			$.get('parse_url?url=' + reply, function(data) {
-				addeditortext(response);
-				$('#profile-rotator').spin(false);
+				addmailtext(data);
+				$('#prvmail-rotator').spin(false);
 			});
 		}
 	}
@@ -103,15 +103,15 @@ else
 		event.target.textContent = reply;
 		event.preventDefault();
 		if(reply && reply.length) {
-			$('#profile-rotator').spin('tiny');
+			$('#prvmail-rotator').spin('tiny');
 			$.get('parse_url?url=' + reply, function(data) {
-				addeditortext(response);
-				$('#profile-rotator').spin(false);
+				addmailtext(data);
+				$('#prvmail-rotator').spin(false);
 			});
 		}
 	}
 
-	function addeditortext(data) {
+	function addmailtext(data) {
 		if(plaintext == 'none') {
 			var currentText = $("#prvmail-text").val();
 			$("#prvmail-text").val(currentText + data);

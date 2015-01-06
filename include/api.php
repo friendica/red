@@ -119,16 +119,36 @@ require_once('include/items.php');
 		
 		// process normal login request
 		require_once('include/auth.php');
+		$channel_login = 0;
 		$record = account_verify_password($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
 		if(! $record) {
-		   logger('API_login failure: ' . print_r($_SERVER,true), LOGGER_DEBUG);
-		    header('WWW-Authenticate: Basic realm="Red"');
-		    header('HTTP/1.0 401 Unauthorized');
-		    die('This api requires login');
+	        $r = q("select * from channel where channel_address = '%s' limit 1",
+    	        dbesc($_SERVER['PHP_AUTH_USER'])
+        	);
+        	if ($r) {
+            	$x = q("select * from account where account_id = %d limit 1",
+                	intval($r[0]['channel_account_id'])
+            	);
+            	if ($x) {
+					$record = account_verify_password($x[0]['account_email'],$_SERVER['PHP_AUTH_PW']);
+					if($record)
+						$channel_login = $r[0]['channel_id'];
+				}
+			}
+			if(! $record) {	
+				logger('API_login failure: ' . print_r($_SERVER,true), LOGGER_DEBUG);
+				header('WWW-Authenticate: Basic realm="Red"');
+				header('HTTP/1.0 401 Unauthorized');
+				die('This api requires login');
+			}
 		}
 
 		require_once('include/security.php');
 		authenticate_success($record);
+
+		if($channel_login)
+			change_channel($channel_login);
+
 		$_SESSION['allow_api'] = true;
 	}
 	
@@ -177,7 +197,10 @@ require_once('include/items.php');
 					case "json":
 						header ("Content-Type: application/json");
 						foreach($r as $rr)
-						    return json_encode($rr);
+							$json = json_encode($rr);
+						if ($_GET['callback'])
+							$json = $_GET['callback']."(".$json.")";
+						return $json; 
 						break;
 					case "rss":
 						header ("Content-Type: application/rss+xml");
@@ -286,7 +309,7 @@ require_once('include/items.php');
 				return False;
 			} else {
 				$user = local_user();
-				$extra_query = " AND abook_channel = %d AND (abook_flags & " . ABOOK_FLAG_SELF . " ) ";
+				$extra_query = " AND abook_channel = %d AND (abook_flags & " . ABOOK_FLAG_SELF . " )>0 ";
 			}
 			
 		}
@@ -313,7 +336,7 @@ require_once('include/items.php');
 			// count public wall messages
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
 					WHERE `uid` = %d
-					AND ( item_flags & %d ) and item_restrict = 0 
+					AND ( item_flags & %d )>0 and item_restrict = 0 
 					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
 					intval($usr[0]['channel_id']),
 					intval(ITEM_WALL)
@@ -340,7 +363,7 @@ require_once('include/items.php');
 			$countfollowers = $r[0]['count'];
 		}
 
-		$r = q("SELECT count(`id`) as `count` FROM item where ( item_flags & %d ) and uid = %d and item_restrict = 0",
+		$r = q("SELECT count(`id`) as `count` FROM item where ( item_flags & %d )>0 and uid = %d and item_restrict = 0",
 			intval($uinfo[0]['channel_id']),
 			intval(ITEM_STARRED)
 		);
@@ -526,8 +549,8 @@ require_once('include/items.php');
 		}
 
 		require_once('include/identity.php');
-
-		json_return_and_die(identity_basic_export(api_user()));	
+		
+		json_return_and_die(identity_basic_export(api_user(),(($_REQUEST['posts']) ? intval($_REQUEST['posts']) : 0 )));	
 	}
 	api_register_func('api/export/basic','api_export_basic', true);
 	api_register_func('api/red/channel/export/basic','api_export_basic', true);
@@ -562,10 +585,55 @@ require_once('include/items.php');
 	api_register_func('api/red/photos','api_photos', true);
 
 
+	function api_group_members(&$a,$type) {
+		if(api_user() === false)
+			return false;
+
+		if($_REQUEST['group_id']) {
+			$r = q("select * from groups where uid = %d and id = %d limit 1",
+				intval(api_user()),
+				intval($_REQUEST['group_id'])
+			);
+			if($r) {
+				$x = q("select * from group_member left join xchan on group_member.xchan = xchan.xchan_hash 
+					left join abook on abook_xchan = xchan_hash where gid = %d",
+					intval($_REQUEST['group_id'])
+				);
+				json_return_and_die($x);
+			}
+		}
+	}
+
+	api_register_func('api/red/group_members','api_group_members', true);
 
 
 
 
+	function api_group(&$a,$type) {
+		if(api_user() === false)
+			return false;
+
+		$r = q("select * from groups where uid = %d",
+			intval(api_user())
+		);
+		json_return_and_die($r);
+	}
+	api_register_func('api/red/group','api_group', true);
+
+
+	function api_red_xchan(&$a,$type) {
+		if(api_user() === false)
+			return false;
+		require_once('include/hubloc.php');
+		if($_SERVER['request_method'] === 'POST') {
+			$r = xchan_store($_REQUEST);
+		}
+		$r = xchan_fetch($_REQUEST);
+		json_return_and_die($r);
+	};
+
+	api_register_func('api/red/xchan','api_red_xchan',true);
+	
 
     function api_statuses_mediap(&$a, $type) {
 		if (api_user() === false) {
@@ -936,8 +1004,8 @@ require_once('include/items.php');
 		// at the network timeline just mark everything seen. 
 	
 		if (api_user() == $user_info['uid']) {
-			$r = q("UPDATE `item` SET item_flags = ( item_flags ^ %d )
-				WHERE item_flags & %d and uid = %d",
+			$r = q("UPDATE `item` SET item_flags = ( item_flags & ~%d )
+				WHERE (item_flags & %d)>0 and uid = %d",
 				intval(ITEM_UNSEEN),
 				intval(ITEM_UNSEEN),
 				intval($user_info['uid'])
@@ -994,10 +1062,10 @@ require_once('include/items.php');
 			and uid in ( " . stream_perms_api_uids() . " )
 			$sql_extra
 			AND id > %d group by mid
-            order by received desc LIMIT %d, %d ",
+            order by received desc LIMIT %d OFFSET %d ",
 			intval($since_id),
-			intval($start),
-			intval($count)
+			intval($count),
+			intval($start)
 		);
 
 		xchan_query($r,true);
@@ -1498,6 +1566,9 @@ require_once('include/items.php');
 		$a = get_app();
 		$ret = array();
 
+		if(! $r)
+			return $ret;
+
 		foreach($r as $item) {
 			localize_item($item);
 
@@ -1635,9 +1706,9 @@ require_once('include/items.php');
 		// For Red, the closest thing we can do to figure out if you're friends is if both of you are sending each other your streams.
 		// This won't work if either of you send your stream to everybody on the network
 		if($qtype == 'friends')
-			$sql_extra = sprintf(" AND ( abook_their_perms & %d ) and ( abook_my_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+			$sql_extra = sprintf(" AND ( abook_their_perms & %d )>0 and ( abook_my_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
 		if($qtype == 'followers')
-			$sql_extra = sprintf(" AND ( abook_my_perms & %d ) and not ( abook_their_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+			$sql_extra = sprintf(" AND ( abook_my_perms & %d )>0 and not ( abook_their_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
  
 		$r = q("SELECT abook_id FROM abook where abook_flags = 0 and abook_channel = %d $sql_extra",
 			intval(api_user())
@@ -1751,9 +1822,9 @@ require_once('include/items.php');
 		// This won't work if either of you send your stream to everybody on the network
 
 		if($qtype == 'friends')
-			$sql_extra = sprintf(" AND ( abook_their_perms & %d ) and ( abook_my_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+			$sql_extra = sprintf(" AND ( abook_their_perms & %d )>0 and ( abook_my_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
 		if($qtype == 'followers')
-			$sql_extra = sprintf(" AND ( abook_my_perms & %d ) and not ( abook_their_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+			$sql_extra = sprintf(" AND ( abook_my_perms & %d )>0 and not ( abook_their_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
  
 		$r = q("SELECT abook_id FROM abook where abook_flags = 0 and abook_channel = %d $sql_extra",
 			intval(api_user())
@@ -1797,11 +1868,14 @@ require_once('include/items.php');
 		
 		require_once("include/message.php");
 
-		$r = q("SELECT `id` FROM `contact` WHERE `uid`=%d AND `nick`='%s'",
-				intval(api_user()),
-				dbesc($_POST['screen_name']));
+		// in a decentralised world the screen name is ambiguous
 
-		$recipient = api_get_user($a, $r[0]['id']);			
+		$r = q("SELECT `abook_id` FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel`=%d and xchan_addr like '%s'",
+				intval(api_user()),
+				dbesc($_POST['screen_name'] . '@%')
+		);
+
+		$recipient = api_get_user($a, $r[0]['abook_id']);			
 		$replyto = '';
 		$sub     = '';
 		if (x($_REQUEST,'replyto')) {
@@ -1854,10 +1928,11 @@ require_once('include/items.php');
 		if ($page<0) $page=0;
 		
 		$start = $page*$count;
-		
-		$profile_url = $a->get_baseurl() . '/channel/' . $a->user['nickname'];
+		$channel = $a->get_channel();		
+
+		$profile_url = $a->get_baseurl() . '/channel/' . $channel['channel_address'];
 		if ($box=="sentbox") {
-			$sql_extra = "`from-url`='".dbesc( $profile_url )."'";
+			$sql_extra = "`from_xchan`='".dbesc( $channel['channel_hash'] )."'";
 		}
 		elseif ($box=="conversation") {
 			$sql_extra = "`parent_mid`='".dbesc( $_GET["uri"] )  ."'";
@@ -1866,26 +1941,30 @@ require_once('include/items.php');
 			$sql_extra = "true";
 		}
 		elseif ($box=="inbox") {
-			$sql_extra = "`from-url`!='".dbesc( $profile_url )."'";
+			$sql_extra = "`from_xchan`!='".dbesc( $channel['channel_hash'] )."'";
 		}
 		
-		$r = q("SELECT * FROM `mail` WHERE uid=%d AND $sql_extra ORDER BY created DESC LIMIT %d,%d",
+		$r = q("SELECT * FROM `mail` WHERE channel_id = %d AND $sql_extra ORDER BY created DESC LIMIT %d OFFSET %d",
 				intval(api_user()),
-				intval($start),	intval($count)
+				intval($count), intval($start)
 		);
 		
 		$ret = Array();
-		foreach($r as $item) {
-			if ($box == "inbox" || $item['from-url'] != $profile_url){
-				$recipient = $user_info;
-				$sender = api_get_user($a,$item['contact-id']);
+		if($r) {
+			foreach($r as $item) {
+				if ($box == "inbox" || $item['from-url'] != $profile_url){
+					$recipient = $user_info;
+					// fixme to lookup recipient
+					$sender = api_get_user($a);
+				}
+				elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
+					// fixme to lookup recipient
+					$recipient = api_get_user($a);
+					$sender = $user_info;
+				}
+	
+				$ret[]=api_format_messages($item, $recipient, $sender);
 			}
-			elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
-				$recipient = api_get_user($a,$item['contact-id']);
-				$sender = $user_info;
-			}
-
-			$ret[]=api_format_messages($item, $recipient, $sender);
 		}
 		
 

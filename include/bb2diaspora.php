@@ -77,6 +77,36 @@ function share_unshield($m) {
 }
 
 
+function diaspora_mention_callback($matches) {
+
+	$webbie = $matches[2] . '@' . $matches[3];
+	$link = '';
+	if($webbie) {
+		$r = q("select * from hubloc left join xchan on hubloc_hash = xchan_hash where hubloc_addr = '%s' limit 1",
+			dbesc($webbie)
+		);
+		if(! $r) {
+			$x = discover_by_webbie($webbie);
+			if($x) {
+				$r = q("select * from hubloc left join xchan on hubloc_hash = xchan_hash where hubloc_addr = '%s' limit 1",
+					dbesc($webbie)
+				);
+			}
+		}
+		if($r)
+			$link = $r[0]['xchan_url'];
+	}
+	if(! $link)
+		$link = 'https://' . $matches[3] . '/u/' . $matches[2];
+
+	if($r && $r[0]['hubloc_network'] === 'zot')
+		return '@[zrl=' . $link . ']' . trim($matches[1]) . ((substr($matches[0],-1,1) === '+') ? '+' : '') . '[/zrl]' ;
+	else
+		return '@[url=' . $link . ']' . trim($matches[1]) . ((substr($matches[0],-1,1) === '+') ? '+' : '') . '[/url]' ;
+
+}
+
+
 
 // we don't want to support a bbcode specific markdown interpreter
 // and the markdown library we have is pretty good, but provides HTML output.
@@ -86,34 +116,29 @@ function share_unshield($m) {
 function diaspora2bb($s,$use_zrl = false) {
 
 
+	$s = str_replace("&#xD;","\r",$s);
+	$s = str_replace("&#xD;\n&gt;","",$s);
+
 	$s = html_entity_decode($s,ENT_COMPAT,'UTF-8');
 
-	// Too many new lines. So deactivated the following line
-	// $s = str_replace("\r","\n",$s);
-	// Simply remove cr.
-	$s = str_replace("\r","",$s);
+	// first try plustags
 
-	// <br/> is invalid. Replace it with the valid expression
-	$s = str_replace("<br/>","<br />",$s);
-	$s = str_replace("\n","<br />",$s);
+	$s = preg_replace_callback('/\@\{(.+?)\; (.+?)\@(.+?)\}\+/','diaspora_mention_callback',$s);
 
-	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
+	$s = preg_replace_callback('/\@\{(.+?)\; (.+?)\@(.+?)\}/','diaspora_mention_callback',$s);
 
 	// Escaping the hash tags - doesn't always seem to work
 	// $s = preg_replace('/\#([^\s\#])/','\\#$1',$s);
 	// This seems to work
 	$s = preg_replace('/\#([^\s\#])/','&#35;$1',$s);
 
-	$s = preg_replace_callback('/\[share(.*?)\]/ism','share_shield',$s);
-
 	$s = Markdown($s);
 
+	$s = str_replace("\r","",$s);
+
 	$s = str_replace('&#35;','#',$s);
-// we seem to have double linebreaks
-//	$s = str_replace("\n",'<br />',$s);
 
 	$s = html2bbcode($s);
-//	$s = str_replace('&#42;','*',$s);
 
 	// protect the recycle symbol from turning into a tag, but without unescaping angles and naked ampersands
 	$s = str_replace('&#x2672;',html_entity_decode('&#x2672;',ENT_QUOTES,'UTF-8'),$s);
@@ -135,10 +160,6 @@ function diaspora2bb($s,$use_zrl = false) {
 	$s = bb_tag_preg_replace("/\[url\=https?:\/\/vimeo.com\/([0-9]+)\](.*?)\[\/url\]/ism",'[vimeo]$1[/vimeo]','url',$s);
 	// remove duplicate adjacent code tags
 	$s = preg_replace("/(\[code\])+(.*?)(\[\/code\])+/ism","[code]$2[/code]", $s);
-
-
-	$s = preg_replace_callback('/\[share(.*?)\]/ism','share_unshield',$s);
-
 
 	// Don't show link to full picture (until it is fixed)
 	$s = scale_external_images($s, false);
@@ -211,6 +232,149 @@ function diaspora_ol($s) {
 	return preg_replace("/\[\\\\\*\]( *)/", "1. ", $s[1]);
 }
 
+function bb2dmention_callback($match) {
+
+	$r = q("select xchan_addr from xchan where xchan_url = '%s'",
+		dbesc($match[2])
+	); 
+
+	if($r)
+		return '@{' . $match[3] . ' ; ' . $r[0]['xchan_addr'] . '}';
+	return '@' . $match[3];
+
+}
+
+
+function bb2diaspora_itemwallwall(&$item) {
+
+	$author_exists = true;
+	if(! array_key_exists('author',$item)) {
+		$author_exists = false;
+		logger('bb2diaspora_itemwallwall: no author');
+		$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+			dbesc($item['author_xchan'])
+		);
+		if($r)
+			$item['author'] = $r[0];
+	}
+
+	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author']))) {
+		logger('bb2diaspora_itemwallwall: author: ' . print_r($item['author'],true), LOGGER_DATA);
+	}
+
+	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_m']) {
+		logger('bb2diaspora_itemwallwall: wall to wall post',LOGGER_DEBUG);
+		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
+		$item['body'] = "\n\n" 
+			. '[img]' . $item['author']['xchan_photo_m'] . '[/img]' 
+			. '[url=' . $item['author']['xchan_url'] . ']' . $item['author']['xchan_name'] . '[/url]' . "\n\n" 
+			. $item['body'];
+	}
+
+	// We have to do something similar for wall-to-wall comments. ITEM_WALL|ITEM_ORIGIN indicates that it was posted on this site. 
+	// Regular matrix comments may have one of these bits set, but not both.
+
+	// Update: this is getting triggered way too often and unnecessarily. Commenting out until we find a better solution.
+	// It's not an easy problem. For now we'll live with the mis-attributions, as wall to wall comments are much less frequent
+	// than wall-to-wall posts. 
+
+//	if(($item['mid'] != $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (($item['item_flags'] & (ITEM_WALL|ITEM_ORIGIN)) == (ITEM_WALL|ITEM_ORIGIN)) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_m']) {
+//		logger('bb2diaspora_itemwallwall: wall to wall comment',LOGGER_DEBUG);
+		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
+//		$item['body'] = "\n\n" 
+//			. '[img]' . $item['author']['xchan_photo_m'] . '[/img]' 
+//			. '[url=' . $item['author']['xchan_url'] . ']' . $item['author']['xchan_name'] . '[/url]' . "\n\n" 
+//			. $item['body'];
+//	}
+
+	// $item['author'] might cause a surprise further down the line if it wasn't expected to be here.
+ 
+	if(! $author_exists)
+		$unset($item['author']);
+
+}
+
+
+function bb2diaspora_itembody($item,$force_update = false) {
+
+	if(($item['diaspora_meta']) && (! $force_update)) {
+		$diaspora_meta = json_decode($item['diaspora_meta'],true);
+		if($diaspora_meta) {
+			if(array_key_exists('iv',$diaspora_meta)) {
+				$key = get_config('system','prvkey');
+				$meta = json_decode(crypto_unencapsulate($diaspora_meta,$key),true);
+			}
+			else {
+				$meta = $diaspora_meta;
+			}
+			if($meta) {
+				logger('bb2diaspora_itembody: cached ');
+				$newitem = $item;
+				$newitem['body'] = $meta['body'];
+// this won't work - the post is now in markdown
+//				bb2diaspora_itemwallwall($newitem);
+				return $newitem['body'];
+			}
+		}
+	}
+
+	$newitem = $item;
+
+	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
+		$key = get_config('system','prvkey');
+		$b = json_decode($item['body'],true);
+		// if called from diaspora_process_outbound, this decoding has already been done.
+		// Everything else that calls us will not yet be decoded.
+		if($b && is_array($b) && array_key_exists('iv',$b)) {
+			$newitem['title'] = (($item['title']) ? crypto_unencapsulate(json_decode($item['title'],true),$key) : '');
+			$newitem['body']  = (($item['body'])  ? crypto_unencapsulate(json_decode($item['body'],true),$key) : '');
+		}
+	}
+
+	bb2diaspora_itemwallwall($newitem);
+
+	$body = preg_replace('/\#\^http/i', 'http', $newitem['body']);
+
+	// protect tags and mentions from hijacking
+
+	if(intval(get_pconfig($item['uid'],'system','prevent_tag_hijacking'))) {
+		$new_tag	 = html_entity_decode('&#x22d5;',ENT_COMPAT,'UTF-8');
+		$new_mention = html_entity_decode('&#xff20;',ENT_COMPAT,'UTF-8');
+
+		// #-tags
+		$body = preg_replace('/\#\[url/i', $new_tag . '[url', $body);
+		$body = preg_replace('/\#\[zrl/i', $new_tag . '[zrl', $body);
+		// @-mentions
+		$body = preg_replace('/\@\!?\[url/i', $new_mention . '[url', $body);
+		$body = preg_replace('/\@\!?\[zrl/i', $new_mention . '[zrl', $body);
+	}
+
+	// remove multiple newlines
+	do {
+		$oldbody = $body;
+		$body = str_replace("\n\n\n", "\n\n", $body);
+	} while ($oldbody != $body);
+
+	$body = bb2diaspora($body);
+
+	if(strlen($title))
+		$body = "## " . $title . "\n\n" . $body;
+
+	if($item['attach']) {
+		$cnt = preg_match_all('/href=\"(.*?)\"(.*?)title=\"(.*?)\"/ism',$item['attach'],$matches,PREG_SET_ORDER);
+		if(cnt) {
+			$body .= "\n" . t('Attachments:') . "\n";
+			foreach($matches as $mtch) {
+				$body .= '[' . $mtch[3] . '](' . $mtch[1] . ')' . "\n";
+			}
+		}
+	}
+
+//	logger('bb2diaspora_itembody : ' . $body, LOGGER_DATA);
+
+	return html_entity_decode($body);
+
+}
 
 function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 
@@ -221,9 +385,13 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 	/**
 	 * Transform #tags, strip off the [url] and replace spaces with underscore
 	 */
-	$Text = preg_replace_callback('/#\[url\=(\w+.*?)\](\w+.*?)\[\/url\]/i', create_function('$match',
-		'return \'#\'. str_replace(\' \', \'_\', $match[2]);'
+	$Text = preg_replace_callback('/#\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/[(zu)]rl\]/i', create_function('$match',
+		'return \'#\'. str_replace(\' \', \'_\', $match[3]);'
 	), $Text);
+
+	$Text = preg_replace('/#\^\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/([zu])rl\]/i', '[$1rl=$2]$3[/$4rl]', $Text);
+
+	$Text = preg_replace_callback('/\@\!?\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/([zu])rl\]/i', 'bb2dmention_callback', $Text);
 
 
 	// Converting images with size parameters to simple images. Markdown doesn't know it.
@@ -252,195 +420,9 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 	// Remove all unconverted tags
 	$Text = strip_tags($Text);
 
-
-/* Old routine
-
-	$ev = bbtoevent($Text);
-
-	// Replace any html brackets with HTML Entities to prevent executing HTML or script
-	// Don't use strip_tags here because it breaks [url] search by replacing & with amp
-
-	$Text = str_replace("<", "&lt;", $Text);
-	$Text = str_replace(">", "&gt;", $Text);
-
-	// If we find any event code, turn it into an event.
-	// After we're finished processing the bbcode we'll
-	// replace all of the event code with a reformatted version.
-
-	if($preserve_nl)
-		$Text = str_replace(array("\n","\r"), array('',''),$Text);
-	else
-		// Remove the "return" character, as Diaspora uses only the "newline"
-		// character, so having the "return" character can cause signature
-		// failures
-		$Text = str_replace("\r", "", $Text);
-
-
-	// Set up the parameters for a URL search string
-	$URLSearchString = "^\[\]";
-	// Set up the parameters for a MAIL search string
-	$MAILSearchString = $URLSearchString;
-
-	// Perform URL Search
-
-	// [img]pathtoimage[/img]
-
-	// the following was added on 10-January-2012 due to an inability of Diaspora's
-	// new javascript markdown processor to handle links with images as the link "text"
-	// It is not optimal and may be removed if this ability is restored in the future
-
-	$Text = preg_replace("/\[url\=([$URLSearchString]*)\]\[img\](.*?)\[\/img\]\[\/url\]/ism",
-		'![' . t('image/photo') . '](' . '$2' . ')' . "\n" . '[' . t('link') . '](' . '$1' . ')', $Text);
-
-	$Text = preg_replace("/\[bookmark\]([$URLSearchString]*)\[\/bookmark\]/ism", '[$1]($1)', $Text);
-	$Text = preg_replace("/\[bookmark\=([$URLSearchString]*)\](.*?)\[\/bookmark\]/ism", '[$2]($1)', $Text);
-
-	$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/ism", '[$1]($1)', $Text);
-	$Text = preg_replace("/\#\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '[#$2]($1)', $Text);
-	$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '[$2]($1)', $Text);
-
-
-	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", '![' . t('image/photo') . '](' . '$1' . ')', $Text);
-	$Text = preg_replace("/\[img\=(.*?)\](.*?)\[\/img\]/", '![' . t('image/photo') . '](' . '$2' . ')', $Text);
-
-	$Text = preg_replace("/\[zrl\]([$URLSearchString]*)\[\/zrl\]/ism", '[$1]($1)', $Text);
-	$Text = preg_replace("/\#\[zrl\=([$URLSearchString]*)\](.*?)\[\/zrl\]/ism", '[#$2]($1)', $Text);
-	$Text = preg_replace("/\[zrl\=([$URLSearchString]*)\](.*?)\[\/zrl\]/ism", '[$2]($1)', $Text);
-
-
-	$Text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/", '![' . t('image/photo') . '](' . '$1' . ')', $Text);
-	$Text = preg_replace("/\[zmg\=(.*?)\](.*?)\[\/zmg\]/", '![' . t('image/photo') . '](' . '$2' . ')', $Text);
-
-	// Perform MAIL Search
-	$Text = preg_replace("(\[mail\]([$MAILSearchString]*)\[/mail\])", '[$1](mailto:$1)', $Text);
-	$Text = preg_replace("/\[mail\=([$MAILSearchString]*)\](.*?)\[\/mail\]/", '[$2](mailto:$1)', $Text);
-
-	$Text = str_replace('*', '\\*', $Text);
-	$Text = str_replace('_', '\\_', $Text);
-
-	$Text = str_replace('`','\\`', $Text);
-
-	// Check for bold text
-	$Text = preg_replace("(\[b\](.*?)\[\/b\])is",'**$1**',$Text);
-
-	// Check for italics text
-	$Text = preg_replace("(\[i\](.*?)\[\/i\])is",'_$1_',$Text);
-
-	// Check for underline text
-	// Replace with italics since Diaspora doesn't have underline
-	$Text = preg_replace("(\[u\](.*?)\[\/u\])is",'_$1_',$Text);
-
-	// Check for strike-through text
-	$Text = preg_replace("(\[s\](.*?)\[\/s\])is",'**[strike]**$1**[/strike]**',$Text);
-
-	// Check for over-line text
-//	$Text = preg_replace("(\[o\](.*?)\[\/o\])is",'<span class="overline">$1</span>',$Text);
-
-	// Check for colored text
-	// Remove color since Diaspora doesn't support it
-	$Text = preg_replace("(\[color=(.*?)\](.*?)\[\/color\])is","$2",$Text);
-
-	// Check for sized text
-	// Remove it since Diaspora doesn't support sizes very well
-	$Text = preg_replace("(\[size=(.*?)\](.*?)\[\/size\])is","$2",$Text);
-
-	// Check for list text
-	$endlessloop = 0;
-	while ((((strpos($Text, "[/list]") !== false) && (strpos($Text, "[list") !== false)) ||
-	       ((strpos($Text, "[/ol]") !== false) && (strpos($Text, "[ol]") !== false)) || 
-	       ((strpos($Text, "[/ul]") !== false) && (strpos($Text, "[ul]") !== false)) || 
-	       ((strpos($Text, "[/li]") !== false) && (strpos($Text, "[li]") !== false))) && (++$endlessloop < 20)) {
-		$Text = preg_replace_callback("/\[list\](.*?)\[\/list\]/is", 'diaspora_ul', $Text);
-		$Text = preg_replace_callback("/\[list=1\](.*?)\[\/list\]/is", 'diaspora_ol', $Text);
-		$Text = preg_replace_callback("/\[list=i\](.*?)\[\/list\]/s",'diaspora_ol', $Text);
-		$Text = preg_replace_callback("/\[list=I\](.*?)\[\/list\]/s", 'diaspora_ol', $Text);
-		$Text = preg_replace_callback("/\[list=a\](.*?)\[\/list\]/s", 'diaspora_ol', $Text);
-		$Text = preg_replace_callback("/\[list=A\](.*?)\[\/list\]/s", 'diaspora_ol', $Text);
-		$Text = preg_replace_callback("/\[ul\](.*?)\[\/ul\]/is", 'diaspora_ul', $Text);
-		$Text = preg_replace_callback("/\[ol\](.*?)\[\/ol\]/is", 'diaspora_ol', $Text);
-		$Text = preg_replace("/\[li\]( *)(.*?)\[\/li\]/s", '* $2' ,$Text);
-	}
-
-	// Just get rid of table tags since Diaspora doesn't support tables
-	$Text = preg_replace("/\[th\](.*?)\[\/th\]/s", '$1' ,$Text);
-	$Text = preg_replace("/\[td\](.*?)\[\/td\]/s", '$1' ,$Text);
-	$Text = preg_replace("/\[tr\](.*?)\[\/tr\]/s", '$1' ,$Text);
-	$Text = preg_replace("/\[table\](.*?)\[\/table\]/s", '$1' ,$Text);
-
-	$Text = preg_replace("/\[table border=(.*?)\](.*?)\[\/table\]/s", '$2' ,$Text);
-//	$Text = preg_replace("/\[table border=0\](.*?)\[\/table\]/s", '<table border="0" >$1</table>' ,$Text);
-
-
-//	$Text = str_replace("[*]", "<li>", $Text);
-
-	// Check for font change text
-//	$Text = preg_replace("(\[font=(.*?)\](.*?)\[\/font\])","<span style=\"font-family: $1;\">$2</span>",$Text);
-
-
-	$Text = preg_replace_callback("/\[code\](.*?)\[\/code\]/is",'stripdcode_br_cb',$Text);
-
-	// Check for [code] text
-	$Text = preg_replace("/(\[code\])+(.*?)(\[\/code\])+/is","\t$2\n", $Text);
-
-
-
-
-	// Declare the format for [quote] layout
-	//	$QuoteLayout = '<blockquote>$1</blockquote>';
-	// Check for [quote] text
-	$Text = preg_replace("/\[quote\](.*?)\[\/quote\]/is",">$1\n\n", $Text);
-	$Text = preg_replace("/\[quote=(.*?)\](.*?)\[\/quote\]/is",">$2\n\n", $Text);
-
-	// Images
-
-	// html5 video and audio
-
-	$Text = preg_replace("/\[video\](.*?)\[\/video\]/", '$1', $Text);
-
-	$Text = preg_replace("/\[audio\](.*?)\[\/audio\]/", '$1', $Text);
-
-//	$Text = preg_replace("/\[iframe\](.*?)\[\/iframe\]/", '<iframe src="$1" width="425" height="350"><a href="$1">$1</a></iframe>', $Text);
-
-	// [img=widthxheight]image source[/img]
-//	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/", '<img src="$3" style="height:{$2}px; width:{$1}px;" >', $Text);
-
-	$Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/watch\?v\=(.*?)\[\/youtube\]/ism",'http://www.youtube.com/watch?v=$1',$Text); 
-	$Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/embed\/(.*?)\[\/youtube\]/ism",'http://www.youtube.com/watch?v=$1',$Text); 
-	$Text = preg_replace("/\[youtube\]https?:\/\/youtu.be\/(.*?)\[\/youtube\]/ism",'http://www.youtube.com/watch?v=$1',$Text); 
-	$Text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", 'http://www.youtube.com/watch?v=$1', $Text);
-
-	$Text = preg_replace("/\[vimeo\]https?:\/\/player.vimeo.com\/video\/([0-9]+)(.*?)\[\/vimeo\]/ism",'http://vimeo.com/$1',$Text); 
-	$Text = preg_replace("/\[vimeo\]https?:\/\/vimeo.com\/([0-9]+)(.*?)\[\/vimeo\]/ism",'http://vimeo.com/$1',$Text); 
-	$Text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", 'http://vimeo.com/$1',$Text);
-
-
-	$Text = str_replace('[nosmile]','',$Text);
-
-	// oembed tag
-	//	$Text = oembed_bbcode2html($Text);
-
-	// If we found an event earlier, strip out all the event code and replace with a reformatted version.
-
-	if(x($ev,'start')) {
-
-		$sub = format_event_diaspora($ev);
-
-		$Text = preg_replace("/\[event\-summary\](.*?)\[\/event\-summary\]/is",'',$Text);
-		$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/is",'',$Text);
-		$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/is",$sub,$Text);
-		$Text = preg_replace("/\[event\-finish\](.*?)\[\/event\-finish\]/is",'',$Text);
-		$Text = preg_replace("/\[event\-location\](.*?)\[\/event\-location\]/is",'',$Text);
-		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",'',$Text);
-	}
-
-	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
-
-	$Text = preg_replace_callback('/\[(.*?)\]\((.*?)\)/ism','unescape_underscores_in_links',$Text);
-
-*/
-
 	// Remove any leading or trailing whitespace, as this will mess up
 	// the Diaspora signature verification and cause the item to disappear
+
 	$Text = trim($Text);
 
 	call_hooks('bb2diaspora',$Text);
@@ -462,7 +444,7 @@ function format_event_diaspora($ev) {
 
 	$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8 AM
 
-	$o = 'Friendica event notification:' . "\n";
+	$o = t('Redmatrix event notification:') . "\n";
 
 	$o .= '**' . (($ev['summary']) ? bb2diaspora($ev['summary']) : bb2diaspora($ev['desc'])) .  '**' . "\n";
 

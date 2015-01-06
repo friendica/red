@@ -1,14 +1,14 @@
 
 Hej {{$username}},
-    En begäran mottogs nyligen på {{$sitename}} om att återställa ditt
+	En begäran mottogs nyligen på {{$sitename}} om att återställa ditt 
 kontolösenord. För att bekräfta begäran, följ länken nedan eller klistra
-in den i din webbläsares adressfält.
+in den i din webbläsares adressfält. 
 
 Om du INTE begärde den här ändringen, följ INTE länken och ignorera och/eller
-radera det här mailet.
+radera det här mailet. 
 
 Ditt lösenord kommer inte att ändras om vi inte kan verifiera att det
-var du som gjorde begäran.
+var du som gjorde begäran. 
 
 Följ den här länken för att bekräfta din identitet:
 

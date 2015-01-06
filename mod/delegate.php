@@ -42,7 +42,7 @@ function delegate_content(&$a) {
 		if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
 			goaway($a->get_baseurl() . '/delegate');
 
-		q("delete from manage where uid = %d and mid = %d limit 1",
+		q("delete from manage where uid = %d and mid = %d",
 			intval($a->argv[2]),
 			intval(local_user())
 		);

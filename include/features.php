@@ -24,11 +24,16 @@ function get_features() {
 // This is per post, and different from fixed expiration 'expire' which isn't working yet
 			array('content_expire',         t('Content Expiration'),		t('Remove posts/comments and/or private messages at a future time')),
 			array('multi_profiles', t('Multiple Profiles'),			t('Ability to create multiple profiles')),
+			array('advanced_profiles', t('Advanced Profiles'),		t('Additional profile sections and selections')),
+			array('profile_export', t('Profile Import/Export'),     t('Save and load profile details across sites/channels')),
 			array('webpages',       t('Web Pages'),                 t('Provide managed web pages on your channel')),
 			array('private_notes',  t('Private Notes'),             t('Enables a tool to store notes and reminders')),
 // prettyphoto has licensing issues and will no longer be provided in core - 
 // in any event this setting should probably be a theme option or plugin 
 //			array('prettyphoto',       t('Enhanced Photo Albums'),                 t('Enable photo album with enhanced features')),
+			array('nav_channel_select',  t('Navigation Channel Select'),                 t('Change channels directly from within the navigation dropdown menu')),
+
+
 			//FIXME - needs a description, but how the hell do we explain this to normals?
 			array('sendzid',		t('Extended Identity Sharing'),	t('Share your identity with all websites on the internet. When disabled, identity is only shared with sites in the matrix.')),
 			array('expert',       t('Expert Mode'),                 t('Enable Expert Mode to provide advanced configuration options')),
@@ -40,9 +45,10 @@ function get_features() {
 			t('Post Composition Features'),
 //			array('richtext',       t('Richtext Editor'),			t('Enable richtext editor')),
 			array('markdown',       t('Use Markdown'),              t('Allow use of "Markdown" to format posts')),
-			array('preview',        t('Post Preview'),				t('Allow previewing posts and comments before publishing them')),
+//			array('preview',        t('Post Preview'),				t('Allow previewing posts and comments before publishing them')),
 			array('channel_sources', t('Channel Sources'),          t('Automatically import channel content from other channels or feeds')),
 			array('content_encrypt', t('Even More Encryption'),          t('Allow optional encryption of content end-to-end with a shared secret key')),
+			array('adult_photo_flagging', t('Flag Adult Photos'),   t('Provide photo edit option to hide adult photos from default album view')), 
 		),
 
 		// Network Tools
@@ -61,7 +67,7 @@ function get_features() {
 		'tools' => array(
 			t('Post/Comment Tools'),
 //			array('multi_delete',   t('Multiple Deletion'),			t('Select and delete multiple posts/comments at once')),
-			array('edit_posts',     t('Edit Sent Posts'),			t('Edit and correct posts and comments after sending')),
+//			array('edit_posts',     t('Edit Sent Posts'),			t('Edit and correct posts and comments after sending')),
 			array('commtag',        t('Tagging'),					t('Ability to tag existing posts')),
 			array('categories',     t('Post Categories'),			t('Add categories to your posts')),
 			array('filing',         t('Saved Folders'),				t('Ability to file posts under folders')),

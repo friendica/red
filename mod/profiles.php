@@ -11,7 +11,7 @@ function profiles_init(&$a) {
 
 	if((argc() > 2) && (argv(1) === "drop") && intval(argv(2))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is_default` = 0 LIMIT 1",
-			intval($a->argv[2]),
+			intval(argv(2)),
 			intval(local_user())
 		);
 		if(! count($r)) {
@@ -30,7 +30,7 @@ function profiles_init(&$a) {
 			dbesc($profile_guid),
 			intval(local_user())
 		);
-		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d",
 			intval(argv(2)),
 			intval(local_user())
 		);
@@ -126,12 +126,48 @@ function profiles_init(&$a) {
 		return; // NOTREACHED
 	}
 
+	if((argc() > 2) && (argv(1) === 'export')) {
+		
+		$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			intval(local_user()),
+			intval(argv(2))
+		);
+		if(! $r1) {
+			notice( t('Profile unavailable to export.') . EOL);
+			$a->error = 404;
+			return;
+		}
+		header('content-type: application/octet_stream');
+		header('content-disposition: attachment; filename="' . $r1[0]['profile_name'] . '.json"' );
+
+		unset($r1[0]['id']);
+		unset($r1[0]['aid']);
+		unset($r1[0]['uid']);
+		unset($r1[0]['is_default']);
+		unset($r1[0]['publish']);
+		unset($r1[0]['profile_name']);
+		unset($r1[0]['profile_guid']);
+		echo json_encode($r1[0]);
+		killme();
+	}
+
+
+
 
 	// Run profile_load() here to make sure the theme is set before
 	// we start loading content
-	if((argc() > 1) && (intval(argv(1)))) {
+	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_user(),'multi_profiles')) {
+		if(feature_enabled(local_user(),'multi_profiles'))
+			$id = $a->argv[1];
+		else {
+			$x = q("select id from profile where uid = %d and is_default = 1",
+				intval(local_user())
+			);
+			if($x)
+				$id = $x[0]['id'];
+		}
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($a->argv[1]),
+			intval($id),
 			intval(local_user())
 		);
 		if(! count($r)) {
@@ -159,6 +195,33 @@ function profiles_post(&$a) {
 
 	call_hooks('profile_post', $_POST);
 
+	// import from json export file.
+ 	// Only import fields that are allowed on this hub
+
+	if(x($_FILES,'userfile')) {
+		$src      = $_FILES['userfile']['tmp_name'];
+		$filesize = intval($_FILES['userfile']['size']);
+		if($filesize) {
+			$j = @json_decode(@file_get_contents($src),true);
+			@unlink($src);
+			if($j) {
+				$fields = get_profile_fields_advanced();
+				if($fields) {
+					foreach($j as $jj => $v) {
+						foreach($fields as $f => $n) {
+							if($jj == $f) {
+								$_POST[$f] = $v;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+
+
 	if((argc() > 1) && (argv(1) !== "new") && intval(argv(1))) {
 		$orig = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
@@ -178,31 +241,29 @@ function profiles_post(&$a) {
 			notify( t('Profile Name is required.') . EOL);
 			return;
 		}
-	
-		$year = intval($_POST['year']);
-		if($year < 1900 || $year > 2100 || $year < 0)
-			$year = 0;
-		$month = intval($_POST['month']);
-			if(($month > 12) || ($month < 0))
-				$month = 0;
-		$mtab = array(0,31,29,31,30,31,30,31,31,30,31,30,31);
-		$day = intval($_POST['day']);
-			if(($day > $mtab[$month]) || ($day < 0))
-				$day = 0;
 
-//		if($year && (! ($month && $day))) {
-//			$month = 1; $day = 1;
-//		}
+		$dob = $_POST['dob'] ? escape_tags(trim($_POST['dob'])) : '0000-00-00'; // FIXME: Needs to be validated?
 
-		$dob = '0000-00-00';
-		$dob = sprintf('%04d-%02d-%02d',$year,$month,$day);
+		$y = substr($dob,0,4);
+		if((! ctype_digit($y)) || ($y < 1900))
+			$ignore_year = true;
+		else
+			$ignore_year = false;
 
+		if($dob != '0000-00-00') {
+			if(strpos($dob,'0000-') === 0) {
+				$ignore_year = true;
+				$dob = substr($dob,5);
+			}
+			$dob = datetime_convert('UTC','UTC',(($ignore_year) ? '1900-' . $dob : $dob),(($ignore_year) ? 'm-d' : 'Y-m-d'));
+			if($ignore_year)
+				$dob = '0000-' . $dob;
+		}
 			
 		$name = escape_tags(trim($_POST['name']));
 
 		if($orig[0]['name'] != $name)
 			$namechanged = true;
-
 
 		$pdesc        = escape_tags(trim($_POST['pdesc']));
 		$gender       = escape_tags(trim($_POST['gender']));
@@ -240,7 +301,7 @@ function profiles_post(&$a) {
 		$with         = ((x($_POST,'with')) ? escape_tags(trim($_POST['with'])) : '');
 
 		if(! strlen($howlong))
-			$howlong = '0000-00-00 00:00:00';
+			$howlong = NULL_DATE;
 		else
 			$howlong = datetime_convert(date_default_timezone_get(),'UTC',$howlong);
  
@@ -284,9 +345,41 @@ function profiles_post(&$a) {
 				$with = $orig[0]['with'];
 		}
 
+		$profile_fields_basic    = get_profile_fields_basic();
+		$profile_fields_advanced = get_profile_fields_advanced();
+		$advanced = ((feature_enabled(local_user(),'advanced_profiles')) ? true : false);
+		if($advanced)
+			$fields = $profile_fields_advanced;
+		else
+			$fields = $profile_fields_basic;
 
-
-
+		$z = q("select * from profdef where true");
+		if($z) {
+			foreach($z as $zz) {
+				if(array_key_exists($zz['field_name'],$fields)) {
+					$w = q("select * from profext where channel_id = %d and hash = '%s' and k = '%s' limit 1",
+						intval(local_user()),
+						dbesc($orig[0]['profile_guid']),
+						dbesc($zz['field_name'])
+					);
+					if($w) {
+						q("update profext set v = '%s' where id = %d",
+							dbesc(escape_tags(trim($_POST[$zz['field_name']]))),
+							intval($w[0]['id'])
+						);
+					}
+					else {
+						q("insert into profext ( channel_id, hash, k, v ) values ( %d, '%s', '%s', '%s') ",
+							intval(local_user()),
+							dbesc($orig[0]['profile_guid']),
+							dbesc($zz['field_name']),
+							dbesc(escape_tags(trim($_POST[$zz['field_name']])))
+						);
+					}
+				}
+			}
+		}
+													
 		$changes = array();
 		$value = '';
 		if($is_default) {
@@ -385,7 +478,7 @@ function profiles_post(&$a) {
 			`work` = '%s',
 			`education` = '%s',
 			`hide_friends` = %d
-			WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			WHERE `id` = %d AND `uid` = %d",
 			dbesc($profile_name),
 			dbesc($name),
 			dbesc($pdesc),
@@ -438,7 +531,7 @@ function profiles_post(&$a) {
 		$channel = $a->get_channel();
 
 		if($namechanged && $is_default) {
-			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date = '%s' WHERE xchan_hash = '%s' limit 1",
+			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date = '%s' WHERE xchan_hash = '%s'",
 				dbesc($name),
 				dbesc(datetime_convert()),
 				dbesc($channel['xchan_hash'])
@@ -446,6 +539,8 @@ function profiles_post(&$a) {
 		}
 
 		if($is_default) {
+			// reload the info for the sidebar widget - why does this not work?
+			profile_load($a,$channel['channel_address']);
 			proc_run('php','include/directory.php',local_user());
 		}
 	}
@@ -458,14 +553,30 @@ function profiles_content(&$a) {
 
 	$o = '';
 
+	$channel = $a->get_channel();
+
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
-	if((argc() > 1) && (intval(argv(1)))) {
+	require_once('include/identity.php');
+
+	$profile_fields_basic    = get_profile_fields_basic();
+	$profile_fields_advanced = get_profile_fields_advanced();
+
+	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_user(),'multi_profiles')) {
+		if(feature_enabled(local_user(),'multi_profiles'))
+			$id = $a->argv[1];
+		else {
+			$x = q("select id from profile where uid = %d and is_default = 1",
+				intval(local_user())
+			);
+			if($x)
+				$id = $x[0]['id'];
+		}		
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($a->argv[1]),
+			intval($id),
 			intval(local_user())
 		);
 		if(! count($r)) {
@@ -485,16 +596,39 @@ function profiles_content(&$a) {
 			'$editselect' => $editselect,
 		));
 
+		$advanced = ((feature_enabled(local_user(),'advanced_profiles')) ? true : false);
+		if($advanced)
+			$fields = $profile_fields_advanced;
+		else
+			$fields = $profile_fields_basic;
 
-		$opt_tpl = get_markup_template("profile-hide_friends.tpl");
-		$hide_friends = replace_macros($opt_tpl,array(
-			'$desc'         => t('Hide your contact/friend list from viewers of this profile?'),
-			'$yes_str'      => t('Yes'),
-			'$no_str'       => t('No'),
-			'$yes_selected' => (($r[0]['hide_friends']) ? " checked=\"checked\" " : ""),
-			'$no_selected'  => (($r[0]['hide_friends'] == 0) ? " checked=\"checked\" " : "")
-		));
 
+		$opt_tpl = get_markup_template("profile_hide_friends.tpl");
+		$hide_friends = replace_macros($opt_tpl,array('$field' => array(
+                       'hide-friends',
+                       t('Hide your contact/friend list from viewers of this profile?'),
+                       $r[0]['hide_friends'],
+                       '',
+               )));
+
+		$q = q("select * from profdef where true");
+		if($q) {
+			$extra_fields = array();
+
+			foreach($q as $qq) {
+				$mine = q("select v from profext where k = '%s' and hash = '%s' and channel_id = %d limit 1",
+					dbesc($qq['field_name']),					
+					dbesc($r[0]['profile_guid']),
+					intval(local_user())
+				);
+
+				if(array_key_exists($qq['field_name'],$fields)) {
+					$extra_fields[] = array($qq['field_name'],$qq['field_desc'],(($mine) ? $mine[0]['v'] : ''), $qq['field_help']);
+				}
+			}
+		}
+
+//logger('extra_fields: ' . print_r($extra_fields,true));
 
 		$f = get_config('system','birthday_input_format');
 		if(! $f)
@@ -505,24 +639,29 @@ function profiles_content(&$a) {
 		$o .= replace_macros($tpl,array(
 
 			'$form_security_token' => get_form_security_token("profile_edit"),
-			'$profile_clone_link'  => 'profiles/clone/' . $r[0]['id'] . '?t=' 
-				. get_form_security_token("profile_clone"),
+			'$profile_clone_link'  => ((feature_enabled(local_user(),'multi_profiles')) ? 'profiles/clone/' . $r[0]['id'] . '?t=' 
+				. get_form_security_token("profile_clone") : ''),
 			'$profile_drop_link'   => 'profiles/drop/' . $r[0]['id'] . '?t=' 
 				. get_form_security_token("profile_drop"),
 
+			'$fields'       => $fields,
 			'$guid'         => $r[0]['profile_guid'],
 			'$banner'       => t('Edit Profile Details'),
 			'$submit'       => t('Submit'),
 			'$viewprof'     => t('View this profile'),
+			'$editvis' 	    => t('Edit visibility'),
 			'$profpic'      => t('Change Profile Photo'),
 			'$cr_prof'      => t('Create a new profile using these settings'),
 			'$cl_prof'      => t('Clone this profile'),
 			'$del_prof'     => t('Delete this profile'),
+			'$exportable'   => feature_enabled(local_user(),'profile_export'),
+			'$lbl_import'   => t('Import profile from file'),
+			'$lbl_export'   => t('Export profile to file'),
 			'$lbl_profname' => t('Profile Name:'),
 			'$lbl_fullname' => t('Your Full Name:'),
 			'$lbl_title'    => t('Title/Description:'),
 			'$lbl_gender'   => t('Your Gender:'),
-			'$lbl_bd'       => sprintf( t("Birthday \x28%s\x29:"),datesel_format($f)),
+			'$lbl_bd'       => t("Birthday :"),
 			'$lbl_address'  => t('Street Address:'),
 			'$lbl_city'     => t('Locality/City:'),
 			'$lbl_zip'      => t('Postal/Zip Code:'),
@@ -557,7 +696,9 @@ function profiles_content(&$a) {
 			'$baseurl'      => $a->get_baseurl(true),
 			'$profile_id'   => $r[0]['id'],
 			'$profile_name' => $r[0]['profile_name'],
-			'$default'      => (($is_default) ? '<p id="profile-edit-default-desc">' . t('This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.') . '</p>' : ""),
+			'$is_default'   => $is_default,
+			'$default'      => t('This is your default profile.') . EOL . translate_scope(map_scope($channel['channel_r_profile'])),
+			'$advanced'     => $advanced,
 			'$name'         => $r[0]['name'],
 			'$pdesc'        => $r[0]['pdesc'],
 			'$dob'          => dob($r[0]['dob']),
@@ -569,10 +710,13 @@ function profiles_content(&$a) {
 			'$country_name' => $r[0]['country_name'],
 			'$age'          => ((intval($r[0]['dob'])) ? '(' . t('Age: ') . age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
 			'$gender'       => gender_selector($r[0]['gender']),
+			'$gender_min'       => gender_selector_min($r[0]['gender']),
 			'$marital'      => marital_selector($r[0]['marital']),
+			'$marital_min'      => marital_selector_min($r[0]['marital']),
 			'$with'         => $r[0]['with'],
-			'$howlong'      => ($r[0]['howlong'] === '0000-00-00 00:00:00' ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong'])),
+			'$howlong'      => ($r[0]['howlong'] === NULL_DATE ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong'])),
 			'$sexual'       => sexpref_selector($r[0]['sexual']),
+			'$sexual_min'       => sexpref_selector_min($r[0]['sexual']),
 			'$about'        => $r[0]['about'],
 			'$homepage'     => $r[0]['homepage'],
 			'$hometown'     => $r[0]['hometown'],
@@ -591,6 +735,7 @@ function profiles_content(&$a) {
 			'$education'    => $r[0]['education'],
 			'$contact'      => $r[0]['contact'],
 			'$channels'     => $r[0]['channels'],
+			'$extra_fields' => $extra_fields,
 		));
 
 		$arr = array('profile' => $r[0], 'entry' => $o);
@@ -624,10 +769,11 @@ function profiles_content(&$a) {
 					'$alt' => t('Profile Image'),
 					'$profile_name' => $rr['profile_name'],
 					'$visible' => (($rr['is_default']) 
-						? '<strong>' . t('visible to everybody') . '</strong>' 
+						? '<strong>' . translate_scope(map_scope($channel['channel_r_profile'])) . '</strong>' 
 						: '<a href="' . $a->get_baseurl(true) . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}
+			
 		}
 		return $o;
 	}

@@ -85,6 +85,8 @@ function display_content(&$a, $update = 0, $load = false) {
 		$target_item = $r[0];
 	}
 
+	$r = null;
+
 	if($target_item['item_restrict'] & ITEM_WEBPAGE) {
 		$x = q("select * from channel where channel_id = %d limit 1",
 			intval($target_item['uid'])
@@ -131,6 +133,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'$order' => '',
 			'$file' => '',
 			'$cats' => '',
+			'$tags' => '',
 			'$dend' => '',
 			'$dbegin' => '',
 			'$mid' => $item_hash
@@ -139,19 +142,22 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	}
 
-	$sql_extra = public_permissions_sql(get_observer_hash());
+	$observer_hash = get_observer_hash();
+
+	$sql_extra = public_permissions_sql($observer_hash);
 
 	if(($update && $load) || ($_COOKIE['jsAvailable'] != 1)) {
 
 		$updateable = false;
 
-		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
+		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']),intval($a->pager['start']));
 
 		if($load || ($_COOKIE['jsAvailable'] != 1)) {
 			$r = null;
 
 			require_once('include/identity.php');
 			$sys = get_sys_channel();
+			$sysid = $sys['channel_id'];
 
 			if(local_user()) {
 				$r = q("SELECT * from item
@@ -170,17 +176,24 @@ function display_content(&$a, $update = 0, $load = false) {
 			}
 			if($r === null) {
 
+				// in case somebody turned off public access to sys channel content using permissions
+				// make that content unsearchable by ensuring the owner_xchan can't match
+
+				if(! perm_is_allowed($sysid,$observer_hash,'view_stream'))
+					$sysid = 0;
+
+
 				$r = q("SELECT * from item
 					WHERE item_restrict = 0
 					and mid = '%s'
 					AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
 					AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
-					and owner_xchan in ( " . stream_perms_xchans(($observer) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
-					OR owner_xchan = '%s')
+					and owner_xchan in ( " . stream_perms_xchans(($observer_hash) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
+					OR uid = %d )
 					$sql_extra )
-					group by mid limit 1",
+					limit 1",
 					dbesc($target_item['parent_mid']),
-					dbesc($sys['xchan_hash'])
+					intval($sysid)
 				);
 
 			}
@@ -217,8 +230,8 @@ function display_content(&$a, $update = 0, $load = false) {
 	}
 
 	if($updateable) {
-		$x = q("UPDATE item SET item_flags = ( item_flags ^ %d )
-			WHERE (item_flags & %d) AND uid = %d and parent = %d ",
+		$x = q("UPDATE item SET item_flags = ( item_flags & ~%d )
+			WHERE (item_flags & %d)>0 AND uid = %d and parent = %d ",
 			intval(ITEM_UNSEEN),
 			intval(ITEM_UNSEEN),
 			intval(local_user()),

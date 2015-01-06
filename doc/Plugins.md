@@ -180,7 +180,7 @@ Now let's add our functions to create and store preference settings.
 
 	    /* Add our stylesheet to the page so we can make our settings look nice */
 
-	    head_add_css(/addon/randplace/randplace.css');
+	    head_add_css('/addon/randplace/randplace.css');
 
 	    /* Get the current state of our config variable */
 
@@ -258,3 +258,4 @@ The Red Matrix has _install and _uninstall functions but these are used differen
 
 Changing these will often allow your plugin to function, but please double check all your permission and identity code because the concepts behind it are completely different in the Red Matrix. Many structured data names (especially DB schema columns) are also quite different. 
 
+#include doc/macros/main_footer.bb;

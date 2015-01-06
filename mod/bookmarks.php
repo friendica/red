@@ -55,6 +55,8 @@ function bookmarks_content(&$a) {
 
 	$o = profile_tabs($a,true,$channel['channel_address']);
 
+	$o .= '<div class="generic-content-wrapper-styled">';
+
 	$o .= '<h3>' . t('My Bookmarks') . '</h3>';
 
 	$x = menu_list(local_user(),'',MENU_BOOKMARK);
@@ -78,7 +80,7 @@ function bookmarks_content(&$a) {
 		}
 	}
 
-
+	$o .= '</div>';
 
 	return $o;
 

@@ -33,7 +33,7 @@ function profile_photo_set_profile_perms($profileid = '') {
 
 		if (intval($profile['is_default']) != 1) {
 			$r0 = q("SELECT channel_hash FROM channel WHERE channel_id = %d LIMIT 1", intval(local_user()) );
-			$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = %d ", intval($profile['id'])); //Should not be needed in future. Catches old int-profile-ids.
+			$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%d' ", intval($profile['id'])); //Should not be needed in future. Catches old int-profile-ids.
 			$r2 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%s'", dbesc($profile['profile_guid']));
 			$allowcid = "<" . $r0[0]['channel_hash'] . ">";
 			foreach ($r1 as $entry) {
@@ -173,7 +173,7 @@ function profile_photo_post(&$a) {
 						dbesc($base_image['resource_id']),
 						intval(local_user())
 					);
-					$r = q("UPDATE photo SET photo_flags = ( photo_flags ^ %d ) WHERE ( photo_flags & %d ) 
+					$r = q("UPDATE photo SET photo_flags = ( photo_flags & ~%d ) WHERE ( photo_flags & %d )>0 
 						AND resource_id != '%s' AND `uid` = %d",
 						intval(PHOTO_PROFILE),
 						intval(PHOTO_PROFILE),
@@ -182,7 +182,7 @@ function profile_photo_post(&$a) {
 					);
 				}
 				else {
-					$r = q("update profile set photo = '%s', thumb = '%s' where id = %d and uid = %d limit 1",
+					$r = q("update profile set photo = '%s', thumb = '%s' where id = %d and uid = %d",
 						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource_id'] . '-4'),
 						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource_id'] . '-5'),
 						intval($_REQUEST['profile']),
@@ -196,7 +196,7 @@ function profile_photo_post(&$a) {
 				$channel = $a->get_channel();
 
 				$r = q("UPDATE xchan set xchan_photo_mimetype = '%s', xchan_photo_date = '%s' 
-					where xchan_hash = '%s' limit 1",
+					where xchan_hash = '%s'",
 					dbesc($im->getType()),
 					dbesc(datetime_convert()),
 					dbesc($channel['xchan_hash'])
@@ -302,7 +302,7 @@ function profile_photo_content(&$a) {
 			// unset any existing profile photos
 			$r = q("UPDATE photo SET profile = 0 WHERE profile = 1 AND uid = %d",
 				intval(local_user()));
-			$r = q("UPDATE photo SET photo_flags = (photo_flags ^ %d ) WHERE (photo_flags & %d ) AND uid = %d",
+			$r = q("UPDATE photo SET photo_flags = (photo_flags & ~%d ) WHERE (photo_flags & %d )>0 AND uid = %d",
 				intval(PHOTO_PROFILE),
 				intval(PHOTO_PROFILE),
 				intval(local_user()));
@@ -320,7 +320,7 @@ function profile_photo_content(&$a) {
 				);
 
 			$r = q("UPDATE xchan set xchan_photo_date = '%s' 
-				where xchan_hash = '%s' limit 1",
+				where xchan_hash = '%s'",
 				dbesc(datetime_convert()),
 				dbesc($channel['xchan_hash'])
 			);
@@ -364,7 +364,9 @@ function profile_photo_content(&$a) {
 // FIXME - yuk  
 			'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . $a->get_baseurl() . '">' . t('skip this step') . '</a>' : '<a href="'. $a->get_baseurl() . '/photos/' . $a->channel['channel_address'] . '">' . t('select a photo from your photo albums') . '</a>')
 		));
-
+		
+		call_hooks('profile_photo_content_end', $o);
+		
 		return $o;
 	}
 	else {

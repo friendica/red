@@ -1,13 +1,16 @@
-Hey, 
-I'm the web server at {{$sitename}};
+Bonjour, 
+Je suis le serveur web de {{$sitename}};
    
-The Red Matrix developers released update {{$update}} recently, 
-but when I tried to install it, something went terribly wrong.  
-This needs to be fixed soon and it requires human intervention. 
-Please contact a Red developer if you can not figure out how to 
-fix it on your own. My database might be invalid. 
+Les développeurs de la Matrice Rouge ont lancé une mise à jour {{$update}} récemment, 
+toutefois, lorsque j'ai essayé de l'installer, quelques choses d'inattendu s'est produit. 
 
-The error message is '{{$error}}'.   
+Nous devons corriger la situation et cela requiert votre intervention. 
 
-Apologies for the inconvenience, 
-	your web server at {{$siteurl}}
+Veuillez contacter un développeur de la Matrice Rouge si vous avez des difficultés à déterminer 
+la meilleure approche pour résoudre le problème. Ma base de donnée est peut-être corrompue. 
+
+Le message d'erreur est '{{$error}}'.   
+
+Veuillez accepter mes plus humbles excuses pour les désagréments,
+
+	votre serveur web a {{$siteurl}}

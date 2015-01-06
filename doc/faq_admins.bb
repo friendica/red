@@ -35,14 +35,37 @@ Don't listen on port 443 if you cannot use it.  It is strongly recommended to so
 valid SSL certificate rather than disabling port 443.
 
 [*]
+[b]How do I update a non-Git install?[/b]
+1) Backup .htconfig.php
+2) Backup everything in store/
+3) Backup any custom changes in mod/site/ and view/site
+3) Delete your existing installation
+4) Upload the new version.
+5) Upload the new version of themes and addons.
+6) Restore everything backed up earlier.
+
+[*]
 [b]What do I need to do when moving my hub to a different server[/b]
 
 1) Git clone on the new server.  Repeat the process for any custom themes, and addons.
-2) Copy .htconfig.php
+2) Rsync .htconfig.php
 3) Rsync everything in store/
-4) Rsync everything in custom/ (this will only exist if you have custom modules)
+4) Rsync everything in mod/site/ and view/site (these will only exist if you have custom modules)
 5) Dump and restore DB.
+
+[*]
+[b]How do I reinstall an existing hub on the same server?[/b]
+
+1) [code]git reset --hard HEAD[/code] will reset all files to their upstream defaults.  This will not reset any local files that do not also exist upstream.  Eg, if you have local changes to mod/channel.php, this will reset them - but will not reset any changes in mod/site/channel.php
+2) If you absolutely must reinstall - for example, if you need to upgrade operating system - follow the steps for moving to a different server, but instead of using rsync, backup and restore some other way.
+
+Do not reinstall a hub with a fresh database and fresh .htconfig.php unless as a very last resort.  Creating a temporary account and ask for help via a support channel for non-trivial reinstalls is preferable to reinstalling fresh.
+
+[*]
+[b]How do I set the default homepage for logged out viewers?[/b]
+
+Use the custom_home addon available in the main addons repository.
 
 [/ul]
 
-Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
+#include doc/macros/main_footer.bb;
