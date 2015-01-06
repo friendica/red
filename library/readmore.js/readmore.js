@@ -148,7 +148,6 @@
     this.element = element;
 
     this.options = $.extend({}, defaults, options);
-
     $(this.element).data({
       defaultHeight: this.options.collapsedHeight,
       heightMargin: this.options.heightMargin
@@ -159,9 +158,11 @@
     this._defaults = defaults;
     this._name = readmore;
 
-    window.addEventListener('load', function() {
+    // Waiting for the page to load doesn't work when there is dynamic content
+    // But usually we already have the content, so no need to wait
+    //window.addEventListener('load', function() {
       $this.init();
-    });
+    //});
   }
 
 
