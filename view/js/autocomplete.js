@@ -3,7 +3,18 @@
  *
  * require jQuery, jquery.textcomplete
  */
+
 function mysearch(term, callback, backend_url, extra_channels) {
+	// Check if there is a cached result that contains the tsame information we would get with a full server-side search
+	for(t in mysearch.cache) {
+		if(term.indexOf(t) >= 0) { // A more broad search has been performed already, so use those results
+			// Filter old results locally
+			var matching = mysearch.cache[t].filter(function (x) { return (x.name.indexOf(term) >= 0 || x.nick.indexOf(term) >= 0); });
+			callback(matching);
+			return;
+		}
+	}
+
 	var postdata = {
 		start:0,
 		count:100,
@@ -20,10 +31,16 @@ function mysearch(term, callback, backend_url, extra_channels) {
 		data: postdata,
 		dataType: 'json',
 		success:function(data){
+			// Cache results if we got them all (more information would not improve results)
+			// data.count represents the maximum number of items
+			if(data.items.length < data.count) {
+				mysearch.cache[term] = data.items;
+			}
 			callback(data.items);
 		},
 	}).fail(function () {callback([]); }); // Callback must be invoked even if something went wrong.
 }
+mysearch.cache = {};
 
 function format(item) {
 	return "<div class='{0}' title='{4}'><img src='{1}'>{2} ({3})</div>".format(item.taggable, item.photo, item.name, ((item.label) ? item.nick + ' ' + item.label : item.nick), item.link )
