@@ -472,6 +472,8 @@ function script_path() {
 		$scheme = 'https';
 	elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443))
 		$scheme = 'https';
+	elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on')
+		$scheme = 'https';
 	else
 		$scheme = 'http';
 
