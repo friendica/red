@@ -2207,10 +2207,10 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 		if(strrpos($newname,'+')) {
 			//get the id
 
+			$tagcid = substr($newname,strrpos($newname,'+') + 1);
+
 			if(strrpos($tagcid,' '))
 				$tagcid = substr($tagcid,0,strrpos($tagcid,' '));
-			
-			$tagcid = substr($newname,strrpos($newname,'+') + 1);
 
 			if(strlen($tagcid) < 16)
 				$abook_id = intval($tagcid);
