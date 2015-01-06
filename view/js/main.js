@@ -135,11 +135,13 @@
 
 	function showHideComments(id) {
 		if( $('#collapsed-comments-' + id).is(':visible')) {
+			$('#collapsed-comments-' + id + ' .autotime').timeago('dispose');
 			$('#collapsed-comments-' + id).slideUp();
 			$('#hide-comments-' + id).html(aStr['showmore']);
 			$('#hide-comments-total-' + id).show();
 		}
 		else {
+			$('#collapsed-comments-' + id + ' .autotime').timeago();
 			$('#collapsed-comments-' + id).slideDown();
 			$('#hide-comments-' + id).html(aStr['showfewer']);
 			$('#hide-comments-total-' + id).hide();
@@ -452,6 +454,7 @@ function updateConvItems(mode,data) {
 		$('.thread-wrapper.toplevel_item',data).each(function() {
 
 			var ident = $(this).attr('id');
+			// This should probably use the context argument instead
 			var commentWrap = $('#'+ident+' .collapsed-comments').attr('id');
 			var itmId = 0;
 			var isVisible = false;
@@ -468,7 +471,7 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime",this).timeago();
+				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
 			}
 			else {
 				$('img',this).each(function() {
@@ -479,7 +482,7 @@ function updateConvItems(mode,data) {
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime",this).timeago();
+				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
 			}
 			prev = ident;
 		});
@@ -510,7 +513,7 @@ function updateConvItems(mode,data) {
 				$('#threads-end').before($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime",this).timeago();
+				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
 			}
 			else {
 				$('img',this).each(function() {
@@ -521,7 +524,7 @@ function updateConvItems(mode,data) {
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime",this).timeago();
+				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
 			}
 		});
 
@@ -555,7 +558,7 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime",this).timeago();
+				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
 
 			}
 			prev = ident;
@@ -598,7 +601,11 @@ function updateConvItems(mode,data) {
 		$(".wall-item-body, .contact-info").each(function() {
 			if($(this).height() > divmore_height + 10) {
 				if(! $(this).hasClass('divmore')) {
-					$(this).readmore({collapsedHeight: divmore_height, moreLink: '<a href="#">'+aStr['divgrowmore']+'</a>', lessLink: '<a href="#">'+aStr['divgrowless']+'</a>'});
+					$(this).readmore({
+						collapsedHeight: divmore_height,
+						moreLink: '<a href="#">'+aStr['divgrowmore']+'</a>',
+						lessLink: '<a href="#">'+aStr['divgrowless']+'</a>',
+					});
 					$(this).addClass('divmore');
 				}
 			}
