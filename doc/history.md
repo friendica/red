@@ -44,6 +44,6 @@ The concept of identity-aware content was alien to anything that existed previou
 
 Over time a few federation components re-emerged. The ability to view RSS feeds was important to many people. Diaspora never really managed to re-write their protocol, so that was re-implemented and allowed RedMatrix to connect with Diaspora and Friendica again (Friendica still had their Diaspora protocol intact, so this was the most common language now remaining on the free web - despite its faults). Diaspora communications aren't able to make use of the advanced identity features, but they work for basic communications. 
 
-That brings us up to the present. Where will RedMatrix go from here? I don't know. That's up to you. 
+Mike resigned from the project as an active coordinator in early 2015. 
 
 #include doc/macros/main_footer.bb;
