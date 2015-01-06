@@ -347,6 +347,11 @@ surfer@debian:/var/www$ git config --global user.name "Your Name"
 surfer@debian:/var/www$ git config --global user.email "your@mail.com"
 [/code]
 
+Create a descriptive topic branch
+[code]
+surfer@debian:/var/www$ git checkout -b dev_beginning
+[/code]
+
 Make sure your local repository is up-to-date with the main project.
 Add the original repository as a remote named “upstream” if not done yet
 [code]
@@ -356,11 +361,7 @@ surfer@debian:/var/www$ git remote add upstream https://github.com/friendica/red
 Fetch the newest work from that remote
 [code]
 surfer@debian:/var/www$ git fetch upstream
-[/code]
-
-Create a descriptive topic branch
-[code]
-surfer@debian:/var/www$ git checkout -b dev_beginning
+surfer@debian:/var/www$ git merge upstream/master
 [/code]
 
 Hint: You can list the branches
@@ -382,12 +383,12 @@ surfer@debian:/var/www$ git add doc/dev_beginner.bb
 
 Commit the changes to your local branch. This will open an editor to provide a message.
 [code]
-surfer@debian:/var/www$ git commit
+surfer@debian:/var/www$ git commit -a
 [/code]
 
 Push back up to the same topic branch online
 [code]
-surfer@debian:/var/www$ git push origin dev_beginning
+surfer@debian:/var/www$ git push
 [/code]
 
 Now you can go to your (online) account at github and create the pull request.
