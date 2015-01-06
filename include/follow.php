@@ -131,7 +131,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	}
 	else {
 		if(! ($is_http)) {
-			if(! intval(get_config('system','diaspora_enabled')) || defined('TRINIDAD')) {
+			if(! intval(get_config('system','diaspora_enabled'))) {
 				$result['message'] = t('Protocol disabled.');
 				return $result;
 			}

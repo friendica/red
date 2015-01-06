@@ -564,7 +564,7 @@ function notifier_run($argv, $argc){
 
 
 		if($hub['hubloc_network'] === 'diaspora' || $hub['hubloc_network'] === 'friendica-over-diaspora') {
-			if(! get_config('system','diaspora_enabled') || defined('TRINIDAD'))
+			if(! get_config('system','diaspora_enabled'))
 				continue;
 
 			require_once('include/diaspora.php');
