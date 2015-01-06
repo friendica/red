@@ -1,9 +1,9 @@
 <?php
 /**
- * @file mod/cloud.php
+ * @file mod/dav.php
  * @brief Initialize RedMatrix's cloud (SabreDAV).
  *
- * Module for accessing the DAV storage area from a web client.
+ * Module for accessing the DAV storage area from a DAV client.
  */
 
 use Sabre\DAV;
@@ -12,12 +12,31 @@ use RedMatrix\RedDAV;
 // composer autoloader for SabreDAV
 require_once('vendor/autoload.php');
 
+// workaround for HTTP-auth in CGI mode
+if (x($_SERVER, 'REDIRECT_REMOTE_USER')) {
+ 	$userpass = base64_decode(substr($_SERVER["REDIRECT_REMOTE_USER"], 6)) ;
+	if(strlen($userpass)) {
+	 	list($name, $password) = explode(':', $userpass);
+		$_SERVER['PHP_AUTH_USER'] = $name;
+		$_SERVER['PHP_AUTH_PW'] = $password;
+	}
+}
+
+if (x($_SERVER, 'HTTP_AUTHORIZATION')) {
+	$userpass = base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)) ;
+	if(strlen($userpass)) {
+		list($name, $password) = explode(':', $userpass);
+		$_SERVER['PHP_AUTH_USER'] = $name;
+		$_SERVER['PHP_AUTH_PW'] = $password;
+	}
+}
+
 /**
  * @brief Fires up the SabreDAV server.
  *
  * @param App &$a
  */
-function cloud_init(&$a) {
+function dav_init(&$a) {
 	// call ($currenttheme)_init since we're operating outside of index.php
 	$theme_info_file = "view/theme/" . current_theme() . "/php/theme.php";
 	if (file_exists($theme_info_file)){
@@ -107,8 +126,13 @@ function cloud_init(&$a) {
 	}
 
 	if ((! $auth->observer) && (! $isapublic_file) && (! $davguest)) {
-		logger('mod_cloud: auth exception' . $e->getMessage());
-		http_status_exit($e->getHTTPCode(), $e->getMessage());
+		try {
+			$auth->Authenticate($server, t('RedMatrix channel'));
+		}
+		catch (Exception $e) {
+			logger('mod_cloud: auth exception' . $e->getMessage());
+			http_status_exit($e->getHTTPCode(), $e->getMessage());
+		}
 	}
 
 	require_once('include/RedDAV/RedBrowser.php');
