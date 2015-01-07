@@ -554,7 +554,7 @@ define ( 'ITEM_DELAYED_PUBLISH', 0x0080);
 define ( 'ITEM_BUILDBLOCK',      0x0100);	// Named thusly to make sure nobody confuses this with ITEM_BLOCKED
 define ( 'ITEM_PDL',			 0x0200);	// Page Description Language - e.g. Comanche
 define ( 'ITEM_BUG',			 0x0400);	// Is a bug, can be used by the internal bug tracker
-define ( 'ITEM_PENDING_REMOVE',  0x0800);  // deleted, notification period has lapsed
+define ( 'ITEM_PENDING_REMOVE',  0x0800);   // deleted, notification period has lapsed
 
 /**
  * Item Flags

@@ -827,7 +827,7 @@ function admin_page_channels(&$a){
 	/* get channels */
 
 	$total = q("SELECT count(*) as total FROM channel where not (channel_pageflags & %d)>0",
-		intval(PAGE_REMOVED)
+		intval(PAGE_REMOVED|PAGE_SYSTEM)
 	);
 	if($total) {
 		$a->set_pager_total($total[0]['total']);
@@ -837,7 +837,7 @@ function admin_page_channels(&$a){
 	$order = " order by channel_name asc ";
 
 	$channels = q("SELECT * from channel where not ( channel_pageflags & %d )>0 $order limit %d offset %d ",
-		intval(PAGE_REMOVED),
+		intval(PAGE_REMOVED|PAGE_SYSTEM),
 		intval($a->pager['itemspage']),
 		intval($a->pager['start'])
 	);
