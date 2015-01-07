@@ -40,7 +40,7 @@ function editor_replace(item) {
 }
 
 function basic_replace(item) {
-	return '$1$2'+item.nick;
+	return '$1'+item.name+' ';
 }
 
 /**
@@ -78,8 +78,8 @@ function basic_replace(item) {
 
 	// Autocomplete contacts
 	contacts = {
-		match: /(^)(@)([^\n]+)$/,
-		index: 3,
+		match: /(^@)([^\n]+)$/,
+		index: 2,
 		search: function(term, callback) { contact_search(term, callback, backend_url, 'x',[]); },
 		replace: basic_replace,
 		template: contact_format,
@@ -87,3 +87,23 @@ function basic_replace(item) {
 	this.textcomplete([contacts],{className:'acpopup'});
   };
 })( jQuery );
+
+(function( $ ){
+	$.fn.contact_autocomplete = function(backend_url, onselect) {
+
+	// Autocomplete contacts
+	contacts = {
+		match: /(^)([^\n]+)$/,
+		index: 2,
+		search: function(term, callback) { contact_search(term, callback, backend_url, '',[]); },
+		replace: basic_replace,
+		template: contact_format,
+	}
+
+	var a = this.textcomplete([contacts],{className:'acpopup'});
+
+	if(typeof onselect !== 'undefined')
+		a.on('textComplete:select',function(e,value,strategy) { onselect(value); });
+  };
+})( jQuery );
+
