@@ -66,6 +66,7 @@ function basic_replace(item) {
 		template: function(item) { return item['icon'] + item['text'] },
 		replace: function(item) { return "$1"+item['text'] + ' '; },
 	}
+	this.attr('autocomplete','off');
 	this.textcomplete([contacts,smilies],{className:'acpopup'});
   };
 })( jQuery );
@@ -84,6 +85,7 @@ function basic_replace(item) {
 		replace: basic_replace,
 		template: contact_format,
 	}
+	this.attr('autocomplete','off');
 	this.textcomplete([contacts],{className:'acpopup'});
   };
 })( jQuery );
@@ -100,6 +102,7 @@ function basic_replace(item) {
 		template: contact_format,
 	}
 
+	this.attr('autocomplete','off');
 	var a = this.textcomplete([contacts],{className:'acpopup'});
 
 	if(typeof onselect !== 'undefined')
