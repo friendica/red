@@ -1,5 +1,5 @@
 $(document).ready(function() { 
-	$("#contacts-search").contact_autocomplete(baseurl + '/acl', 'a');
+	$("#contacts-search").contact_autocomplete(baseurl + '/acl', 'a', true);
 }); 
 
 $("#contacts-search").keyup(function(event){

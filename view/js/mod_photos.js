@@ -3,7 +3,7 @@ var ispublic = aStr['everybody'];
 
 $(document).ready(function() {
 	$(document).ready(function() { 
-		$("#photo-edit-newtag").contact_autocomplete(baseurl + '/acl', 'p', function(data) {
+		$("#photo-edit-newtag").contact_autocomplete(baseurl + '/acl', 'p', false, function(data) {
 			$("#photo-edit-newtag").val('@' + data.name.replace(' ','_'); // Is the underscore replacement still needed?
 		});
 	}); 

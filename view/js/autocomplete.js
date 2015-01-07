@@ -43,6 +43,10 @@ function basic_replace(item) {
 	return '$1'+item.name+' ';
 }
 
+function submit_form(e) {
+	$(e).parents('form').submit();
+}
+
 /**
  * jQuery plugin 'editor_autocomplete'
  */
@@ -86,14 +90,18 @@ function basic_replace(item) {
 		template: contact_format,
 	}
 	this.attr('autocomplete','off');
-	this.textcomplete([contacts],{className:'acpopup'});
+	var a = this.textcomplete([contacts],{className:'acpopup'});
+
+	a.on('textComplete:select', function(e,value,strategy) { submit_form(this); });
+	
   };
 })( jQuery );
 
 (function( $ ){
-	$.fn.contact_autocomplete = function(backend_url, typ, onselect) {
+	$.fn.contact_autocomplete = function(backend_url, typ, autosubmit, onselect) {
 
 	if(typeof typ === 'undefined') typ = '';
+	if(typeof autosubmit === 'undefined') autosubmit = false;
 
 	// Autocomplete contacts
 	contacts = {
@@ -106,6 +114,9 @@ function basic_replace(item) {
 
 	this.attr('autocomplete','off');
 	var a = this.textcomplete([contacts],{className:'acpopup'});
+
+	if(autosubmit)
+		a.on('textComplete:select', function(e,value,strategy) { submit_form(this); });
 
 	if(typeof onselect !== 'undefined')
 		a.on('textComplete:select',function(e,value,strategy) { onselect(value); });
