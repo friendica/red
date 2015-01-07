@@ -604,7 +604,7 @@ function updateConvItems(mode,data) {
 					$(this).readmore({
 						collapsedHeight: divmore_height, 
 						moreLink: '<a href="#" class="divgrow-showmore">'+aStr['divgrowmore']+'</a>',
-						lessLink: '<a href="#">'+aStr['divgrowless']+'</a>'
+						lessLink: '<a href="#" class="divgrow-showmore">'+aStr['divgrowless']+'</a>'
 					});
 					$(this).addClass('divmore');
 				}
