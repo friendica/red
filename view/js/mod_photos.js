@@ -2,19 +2,11 @@
 var ispublic = aStr['everybody'];
 
 $(document).ready(function() {
-
-	var a;
-	a = $("#photo-edit-newtag").autocomplete({ 
-		serviceUrl: baseurl + '/acl',
-		minChars: 2,
-		width: 250,
-		id: 'newtag-ac',
-		onSelect: function(value,data) {
-			$("#photo-edit-newtag").val(data);
-		},
-	});
-	a.setOptions({ params: { type: 'p' }});
-
+	$(document).ready(function() { 
+		$("#photo-edit-newtag").contact_autocomplete(baseurl + '/acl', 'p', false, function(data) {
+			$("#photo-edit-newtag").val('@' + data.name.replace(' ','_')); // TODO: Get rid of underscore
+		});
+	}); 
 
 	$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
 		var selstr;
