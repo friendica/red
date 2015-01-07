@@ -11,9 +11,9 @@ function initEditor(cb){
 			$("#profile-jot-text-loading").spin(false).hide();
 			$("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
 			if(typeof channelId === 'undefined')
-				$("#profile-jot-text").contact_autocomplete(baseurl+"/acl");
+				$("#profile-jot-text").editor_autocomplete(baseurl+"/acl");
 			else
-				$("#profile-jot-text").contact_autocomplete(baseurl+"/acl",[channelId]); // Also gives suggestions from current channel's connections
+				$("#profile-jot-text").editor_autocomplete(baseurl+"/acl",[channelId]); // Also gives suggestions from current channel's connections
 			editor = true;
 			  $("a#jot-perms-icon").colorbox({ 
 				  'inline' : true, 
