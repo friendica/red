@@ -179,7 +179,8 @@ function connections_content(&$a) {
 	$unconnected = false;
 	$all         = false;
 
-	$_SESSION['return_url'] = $a->query_string;
+	if(! $_REQUEST['aj'])
+		$_SESSION['return_url'] = $a->query_string;
 
 	$search_flags = 0;
 	$head = '';

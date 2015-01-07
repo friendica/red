@@ -519,6 +519,8 @@ function contact_remove($channel_id, $abook_id) {
 	if((! $channel_id) || (! $abook_id))
 		return false;
 
+	logger('removing contact ' . $abook_id . ' for channel ' . $channel_id,LOGGER_DEBUG);
+
 	$archive = get_pconfig($channel_id, 'system','archive_removed_contacts');
 	if($archive) {
 		q("update abook set abook_flags = ( abook_flags | %d ) where abook_id = %d and abook_channel = %d",
