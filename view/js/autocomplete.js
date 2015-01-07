@@ -4,6 +4,17 @@
  * require jQuery, jquery.textcomplete
  */
 function contact_search(term, callback, backend_url, type, extra_channels) {
+	// Check if there is a cached result that contains the same information we would get with a full server-side search
+	// Assume type hasn't changed
+	for(t in contact_search.cache) {
+		if(term.indexOf(t) >= 0) { // A more broad search has been performed already, so use those results
+			// Filter old results locally
+			var matching = contact_search.cache[t].filter(function (x) { return (x.name.indexOf(term) >= 0 || x.nick.indexOf(term) >= 0); });
+			callback(matching);
+			return;
+		}
+	}
+
 	var postdata = {
 		start:0,
 		count:100,
@@ -20,10 +31,16 @@ function contact_search(term, callback, backend_url, type, extra_channels) {
 		data: postdata,
 		dataType: 'json',
 		success:function(data){
+			// Cache results if we got them all (more information would not improve results)
+			// data.count represents the maximum number of items
+			if(data.items.length < data.count) {
+				contact_search.cache[term] = data.items;
+			}
 			callback(data.items);
 		},
 	}).fail(function () {callback([]); }); // Callback must be invoked even if something went wrong.
 }
+contact_search.cache = {};
 
 function contact_format(item) {
 	return "<div class='{0}' title='{4}'><img src='{1}'>{2} ({3})</div>".format(item.taggable, item.photo, item.name, ((item.label) ? item.nick + ' ' + item.label : item.nick), item.link )
@@ -83,14 +100,14 @@ function submit_form(e) {
 
 	// Autocomplete contacts
 	contacts = {
-		match: /(^@)([^\n]+)$/,
+		match: /(^@)([^\n]{2,})$/,
 		index: 2,
 		search: function(term, callback) { contact_search(term, callback, backend_url, 'x',[]); },
 		replace: basic_replace,
 		template: contact_format,
 	}
 	this.attr('autocomplete','off');
-	var a = this.textcomplete([contacts],{className:'acpopup'});
+	var a = this.textcomplete([contacts],{className:'acpopup',maxCount:100});
 
 	a.on('textComplete:select', function(e,value,strategy) { submit_form(this); });
 	
