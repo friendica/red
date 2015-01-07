@@ -182,48 +182,28 @@ function acl_init(&$a){
 		);
 	}
 	elseif($type == 'x') {
-
 		$r = navbar_complete($a);
-		$x = array();
-		$x['query']       = $search;
-		$x['photos']      = array();
-		$x['links']       = array();
-		$x['suggestions'] = array();
-		$x['data']        = array();
+		$contacts = array();
 		if($r) {
 			foreach($r as $g) {
-				$x['photos'][]      = $g['photo'];
-				$x['links'][]       = $g['url'];
-				$x['suggestions'][] = '@' .  $g['name'];
-				$x['data'][]        = $g['name'];
+				$contacts[] = array(
+					"photo"    => $g['photo'],
+					"name"     => $g['name'],
+					"nick"     => $g['address'],
+				);
 			}
 		}
-		echo json_encode($x);
-		killme();
 
+		$o = array(
+			'start' => $start,
+			'count'	=> $count,
+			'items'	=> $contacts,
+		);
+		echo json_encode($o);
+		killme();
 	}
 	else
 		$r = array();
-
-
-	if($type == 'm' || $type == 'a' || $type == 'p') {
-		$x = array();
-		$x['query']       = $search;
-		$x['photos']      = array();
-		$x['links']       = array();
-		$x['suggestions'] = array();
-		$x['data']        = array();
-		if(count($r)) {
-			foreach($r as $g) {
-				$x['photos'][]      = $g['micro'];
-				$x['links'][]       = $g['url'];
-				$x['suggestions'][] = $g['name'];
-				$x['data'][]        = (($type === 'p') ? '@' . str_replace(' ','_',$g['name']) : $g['id']);
-			}
-		}
-		echo json_encode($x);
-		killme();
-	}
 
 	if(count($r)) {
 		foreach($r as $g){
@@ -284,7 +264,7 @@ function navbar_complete(&$a) {
 	}
 
 	$dirmode = intval(get_config('system','directory_mode'));
-	$search = ((x($_REQUEST,'query')) ? htmlentities($_REQUEST['query'],ENT_COMPAT,'UTF-8',false) : '');
+	$search = ((x($_REQUEST,'search')) ? htmlentities($_REQUEST['search'],ENT_COMPAT,'UTF-8',false) : '');
 	if(! $search || mb_strlen($search) < 2)
 		return array();
 

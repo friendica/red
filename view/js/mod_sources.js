@@ -1,15 +1,7 @@
 $(document).ready(function() { 
-	var a; 
-	a = $("#id_name").autocomplete({ 
-		serviceUrl: baseurl + '/acl',
-		minChars: 2,
-		width: 250,
-		id: 'id-name-ac',
-		onSelect: function(value,data) {
-			$("#id_abook").val(data);
-		}			
-	});
-
-	a.setOptions({ params: { type: 'a' }});
-
+	$(document).ready(function() { 
+		$("#id_name").contact_autocomplete(baseurl + '/acl', 'a', false, function(data) {
+			$("#id_abook").val(data.id);
+		});
+	}); 
 }); 
