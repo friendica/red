@@ -3,7 +3,7 @@
  *
  * require jQuery, jquery.textcomplete
  */
-function mysearch(term, callback, backend_url, extra_channels) {
+function contact_search(term, callback, backend_url, extra_channels) {
 	var postdata = {
 		start:0,
 		count:100,
@@ -25,11 +25,11 @@ function mysearch(term, callback, backend_url, extra_channels) {
 	}).fail(function () {callback([]); }); // Callback must be invoked even if something went wrong.
 }
 
-function format(item) {
+function contact_format(item) {
 	return "<div class='{0}' title='{4}'><img src='{1}'>{2} ({3})</div>".format(item.taggable, item.photo, item.name, ((item.label) ? item.nick + ' ' + item.label : item.nick), item.link )
 }
 
-function replace(item) {
+function editor_replace(item) {
 	// $2 ensures that prefix (@,@!) is preserved
 	var id = item.id;
 	 // 16 chars of hash should be enough. Full hash could be used if it can be done in a visually appealing way.
@@ -40,19 +40,19 @@ function replace(item) {
 }
 
 /**
- * jQuery plugin 'contact_autocomplete'
+ * jQuery plugin 'editor_autocomplete'
  */
 (function( $ ){
-	$.fn.contact_autocomplete = function(backend_url, extra_channels) {
+	$.fn.editor_autocomplete = function(backend_url, extra_channels) {
 	if (typeof extra_channels === 'undefined') extra_channels = false;
 
 	// Autocomplete contacts
 	contacts = {
 		match: /(^|\s)(@\!*)([^ \n]+)$/,
 		index: 3,
-		search: function(term, callback) { mysearch(term, callback, backend_url, extra_channels); },
-		replace: replace,
-		template: format,
+		search: function(term, callback) { contact_search(term, callback, backend_url, extra_channels); },
+		replace: editor_replace,
+		template: contact_format,
 	}
 
 	smilies = {
