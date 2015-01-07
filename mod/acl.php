@@ -205,26 +205,6 @@ function acl_init(&$a){
 	else
 		$r = array();
 
-
-	if($type == 'm' || $type == 'a' || $type == 'p') {
-		$x = array();
-		$x['query']       = $search;
-		$x['photos']      = array();
-		$x['links']       = array();
-		$x['suggestions'] = array();
-		$x['data']        = array();
-		if(count($r)) {
-			foreach($r as $g) {
-				$x['photos'][]      = $g['micro'];
-				$x['links'][]       = $g['url'];
-				$x['suggestions'][] = $g['name'];
-				$x['data'][]        = (($type === 'p') ? '@' . str_replace(' ','_',$g['name']) : $g['id']);
-			}
-		}
-		echo json_encode($x);
-		killme();
-	}
-
 	if(count($r)) {
 		foreach($r as $g){
 
