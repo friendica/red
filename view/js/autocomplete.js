@@ -3,15 +3,15 @@
  *
  * require jQuery, jquery.textcomplete
  */
-function contact_search(term, callback, backend_url, extra_channels) {
+function contact_search(term, callback, backend_url, type, extra_channels) {
 	var postdata = {
 		start:0,
 		count:100,
 		search:term,
-		type:'c',
+		type:type,
 	}
 
-	if(extra_channels)
+	if(typeof extra_channels !== 'undefined' && extra_channels)
 		postdata['extra_channels[]'] = extra_channels;
 	
 	$.ajax({
@@ -39,6 +39,10 @@ function editor_replace(item) {
 	return '$1$2'+item.nick.replace(' ','') + '+' + id;
 }
 
+function basic_replace(item) {
+	return '$1$2'+item.nick;
+}
+
 /**
  * jQuery plugin 'editor_autocomplete'
  */
@@ -50,7 +54,7 @@ function editor_replace(item) {
 	contacts = {
 		match: /(^|\s)(@\!*)([^ \n]+)$/,
 		index: 3,
-		search: function(term, callback) { contact_search(term, callback, backend_url, extra_channels); },
+		search: function(term, callback) { contact_search(term, callback, backend_url, 'c', extra_channels); },
 		replace: editor_replace,
 		template: contact_format,
 	}
@@ -63,5 +67,23 @@ function editor_replace(item) {
 		replace: function(item) { return "$1"+item['text'] + ' '; },
 	}
 	this.textcomplete([contacts,smilies],{className:'acpopup'});
+  };
+})( jQuery );
+
+/**
+ * jQuery plugin 'search_autocomplete'
+ */
+(function( $ ){
+	$.fn.search_autocomplete = function(backend_url) {
+
+	// Autocomplete contacts
+	contacts = {
+		match: /(^)(@)([^\n]+)$/,
+		index: 3,
+		search: function(term, callback) { contact_search(term, callback, backend_url, 'x',[]); },
+		replace: basic_replace,
+		template: contact_format,
+	}
+	this.textcomplete([contacts],{className:'acpopup'});
   };
 })( jQuery );

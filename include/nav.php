@@ -15,15 +15,7 @@ function nav(&$a) {
     $a->page['htmlhead'] .= <<< EOT
 
 <script>$(document).ready(function() {
-    var a;
-    a = $("#nav-search-text").autocomplete({
-        serviceUrl: '$base/acl',
-        minChars: 2,
-        width: 250,
-        id: 'nav-search-text-ac',
-    });
-    a.setOptions({ autoSubmit: true, params: { type: 'x' }});
-
+	$("#nav-search-text").search_autocomplete('$base/acl');
 });
 
 </script>
