@@ -91,13 +91,15 @@ function basic_replace(item) {
 })( jQuery );
 
 (function( $ ){
-	$.fn.contact_autocomplete = function(backend_url, onselect) {
+	$.fn.contact_autocomplete = function(backend_url, typ, onselect) {
+
+	if(typeof typ === 'undefined') typ = '';
 
 	// Autocomplete contacts
 	contacts = {
 		match: /(^)([^\n]+)$/,
 		index: 2,
-		search: function(term, callback) { contact_search(term, callback, backend_url, '',[]); },
+		search: function(term, callback) { contact_search(term, callback, backend_url, typ,[]); },
 		replace: basic_replace,
 		template: contact_format,
 	}
