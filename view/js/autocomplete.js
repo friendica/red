@@ -6,10 +6,12 @@
 function contact_search(term, callback, backend_url, type, extra_channels) {
 	// Check if there is a cached result that contains the same information we would get with a full server-side search
 	// Assume type hasn't changed
+	var lterm = term.toLowerCase(); // Ignore case
 	for(t in contact_search.cache) {
-		if(term.indexOf(t) >= 0) { // A more broad search has been performed already, so use those results
+		if(lterm.indexOf(t) >= 0) { // A more broad search has been performed already, so use those results
 			// Filter old results locally
-			var matching = contact_search.cache[t].filter(function (x) { return (x.name.indexOf(term) >= 0 || x.nick.indexOf(term) >= 0); });
+			var matching = contact_search.cache[t].filter(function (x) { return (x.name.toLowerCase().indexOf(lterm) >= 0 || x.nick.toLowerCase().indexOf(lterm) >= 0); });
+			matching.unshift({taggable:false, text: term, replace: term});
 			callback(matching);
 			return;
 		}
@@ -33,20 +35,30 @@ function contact_search(term, callback, backend_url, type, extra_channels) {
 		success:function(data){
 			// Cache results if we got them all (more information would not improve results)
 			// data.count represents the maximum number of items
-			if(data.items.length < data.count) {
-				contact_search.cache[term] = data.items;
+			if(data.items.length -1 < data.count) {
+				contact_search.cache[lterm] = data.items;
 			}
-			callback(data.items);
+			var items = data.items.slice(0);
+			items.unshift({taggable:false, text: term, replace: term});
+			callback(items);
 		},
 	}).fail(function () {callback([]); }); // Callback must be invoked even if something went wrong.
 }
 contact_search.cache = {};
 
+
 function contact_format(item) {
-	return "<div class='{0}' title='{4}'><img src='{1}'>{2} ({3})</div>".format(item.taggable, item.photo, item.name, ((item.label) ? item.nick + ' ' + item.label : item.nick), item.link )
+	if(typeof item.text === 'undefined')
+		return "<div class='{0}' title='{4}'><img src='{1}'>{2} ({3})</div>".format(item.taggable, item.photo, item.name, ((item.label) ? item.nick + ' ' + item.label : item.nick), item.link)
+	else
+		return "<div>"+item.text+"</div>"
 }
 
 function editor_replace(item) {
+	if(typeof item.replace !== 'undefined') {
+		return '$1$2'+item.replace;
+	}
+
 	// $2 ensures that prefix (@,@!) is preserved
 	var id = item.id;
 	 // 16 chars of hash should be enough. Full hash could be used if it can be done in a visually appealing way.
@@ -57,6 +69,9 @@ function editor_replace(item) {
 }
 
 function basic_replace(item) {
+	if(typeof item.replace !== 'undefined')
+		return '$1'+item.replace;
+
 	return '$1'+item.name+' ';
 }
 
@@ -88,7 +103,7 @@ function submit_form(e) {
 		replace: function(item) { return "$1"+item['text'] + ' '; },
 	}
 	this.attr('autocomplete','off');
-	this.textcomplete([contacts,smilies],{className:'acpopup'});
+	this.textcomplete([contacts,smilies],{className:'acpopup',zIndex:1050});
   };
 })( jQuery );
 
@@ -107,7 +122,7 @@ function submit_form(e) {
 		template: contact_format,
 	}
 	this.attr('autocomplete','off');
-	var a = this.textcomplete([contacts],{className:'acpopup',maxCount:100});
+	var a = this.textcomplete([contacts],{className:'acpopup',maxCount:100,zIndex: 1050});
 
 	a.on('textComplete:select', function(e,value,strategy) { submit_form(this); });
 	
@@ -130,7 +145,7 @@ function submit_form(e) {
 	}
 
 	this.attr('autocomplete','off');
-	var a = this.textcomplete([contacts],{className:'acpopup'});
+	var a = this.textcomplete([contacts],{className:'acpopup',zIndex:1050});
 
 	if(autosubmit)
 		a.on('textComplete:select', function(e,value,strategy) { submit_form(this); });
