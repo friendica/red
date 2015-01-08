@@ -69,7 +69,6 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/git_for_non_developers]Git für Nicht-Entwickler[/zrl]
 [zrl=[baseurl]/help/dev_beginner]Schritt-für-Schritt-Einführung für neue Entwickler[/zrl]
 
-
 [size=large][b]Häufig gestellte Fragen für Entwickler[/b][/size]
 [zrl=[baseurl]/help/faq_developers]FAQ für Entwickler[/zrl]
 
