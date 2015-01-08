@@ -5,12 +5,15 @@
  */
 function contact_search(term, callback, backend_url, type, extra_channels) {
 	// Check if there is a cached result that contains the same information we would get with a full server-side search
-	// Assume type hasn't changed
+
+	var bt = backend_url+type;
+	if(!(bt in contact_search.cache)) contact_search.cache[bt] = {};
+
 	var lterm = term.toLowerCase(); // Ignore case
-	for(t in contact_search.cache) {
+	for(t in contact_search.cache[bt]) {
 		if(lterm.indexOf(t) >= 0) { // A more broad search has been performed already, so use those results
 			// Filter old results locally
-			var matching = contact_search.cache[t].filter(function (x) { return (x.name.toLowerCase().indexOf(lterm) >= 0 || x.nick.toLowerCase().indexOf(lterm) >= 0); });
+			var matching = contact_search.cache[bt][t].filter(function (x) { return (x.name.toLowerCase().indexOf(lterm) >= 0 || x.nick.toLowerCase().indexOf(lterm) >= 0); });
 			matching.unshift({taggable:false, text: term, replace: term});
 			callback(matching);
 			return;
@@ -36,7 +39,7 @@ function contact_search(term, callback, backend_url, type, extra_channels) {
 			// Cache results if we got them all (more information would not improve results)
 			// data.count represents the maximum number of items
 			if(data.items.length -1 < data.count) {
-				contact_search.cache[lterm] = data.items;
+				contact_search.cache[bt][lterm] = data.items;
 			}
 			var items = data.items.slice(0);
 			items.unshift({taggable:false, text: term, replace: term});
@@ -48,8 +51,12 @@ contact_search.cache = {};
 
 
 function contact_format(item) {
-	if(typeof item.text === 'undefined')
-		return "<div class='{0}' title='{4}'><img src='{1}'>{2} ({3})</div>".format(item.taggable, item.photo, item.name, ((item.label) ? item.nick + ' ' + item.label : item.nick), item.link)
+	// Show contact information if not explicitly told to show something else
+	if(typeof item.text === 'undefined') {
+		var desc = ((item.label) ? item.nick + ' ' + item.label : item.nick)
+		if(desc) desc = ' ('+desc+')';
+		return "<div class='{0}' title='{4}'><img src='{1}'>{2}{3}</div>".format(item.taggable, item.photo, item.name, desc, item.link)
+	}
 	else
 		return "<div>"+item.text+"</div>"
 }

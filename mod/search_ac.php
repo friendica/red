@@ -1,8 +1,9 @@
 <?php
 
+// Autocomplete for saved searches. Should probably be put in the same place as the other autocompletes
 function search_ac_init(&$a){
 	if(!local_user())
-		return "";
+		killme();
 
 
 	$start = (x($_REQUEST,'start')?$_REQUEST['start']:0);
@@ -13,17 +14,6 @@ function search_ac_init(&$a){
 		$search = $_REQUEST['query'];
 	}
 
-
-	$sql_extra = '';
-
-	$x = array();
-	$x['query'] = $search;
-	$x['photos'] = array();
-	$x['links'] = array();
-	$x['suggestions'] = array();
-	$x['data'] = array();
-
-
 	// Priority to people searches
 
 	if ($search) {
@@ -32,18 +22,23 @@ function search_ac_init(&$a){
 	}
 
 
-	$r = q("SELECT `abook_id`, `xchan_name`, `xchan_photo_s`, `xchan_url` FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d 
+	$r = q("SELECT `abook_id`, `xchan_name`, `xchan_photo_s`, `xchan_url`, `xchan_addr` FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d 
 		$people_sql_extra
 		ORDER BY `xchan_name` ASC ",
 		intval(local_user())
 	);
 
+	$results = array();
 	if($r) {
 		foreach($r as $g) {
-			$x['photos'][] = $g['xchan_photo_s'];
-			$x['links'][] = $g['xchan_url'];
-			$x['suggestions'][] = '@' . $g['xchan_name'];
-			$x['data'][] = 'cid=' . intval($g['abook_id']);
+			$results[] = array(
+				"photo"    => $g['xchan_photo_s'],
+				"name"     => '@'.$g['xchan_name'],
+				"id"       => $g['abook_id'],
+				"link"     => $g['xchan_url'],
+				"label"    => '',
+				"nick"     => '',
+			);
 		}
 	}
 
@@ -53,15 +48,24 @@ function search_ac_init(&$a){
 
 	if(count($r)) {
 		foreach($r as $g) {
-			$x['photos'][] = $a->get_baseurl() . '/images/hashtag.png';
-			$x['links'][] = $g['url'];
-			$x['suggestions'][] = '#' . $g['term'];
-			$x['data'][] = intval($g['tid']);
+			$results[] = array(
+				"photo"    => $a->get_baseurl() . '/images/hashtag.png',
+				"name"     => '#'.$g['term'],
+				"id"       => $g['tid'],
+				"link"     => $g['url'],
+				"label"    => '',
+				"nick"     => '',
+			);
 		}
 	}
 
 	header("content-type: application/json");
-	echo json_encode($x);
+	$o = array(
+		'start' => $start,
+		'count'	=> $count,
+		'items'	=> $results,
+	);
+	echo json_encode($o);
 
 	logger('search_ac: ' . print_r($x,true));
 
