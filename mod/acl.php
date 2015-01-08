@@ -293,9 +293,10 @@ function navbar_complete(&$a) {
 		$url = $directory['url'] . '/dirsearch';
 	}
 
+	$count = (x($_REQUEST,'count')?$_REQUEST['count']:100);
 	if($url) {
 		$query = $url . '?f=' ;
-		$query .= '&name=' . urlencode($search) . '&limit=50' . (($address) ? '&address=' . urlencode($search) : '');
+		$query .= '&name=' . urlencode($search) . "&limit=$count" . (($address) ? '&address=' . urlencode($search) : '');
 
 		$x = z_fetch_url($query);
 		if($x['success']) {
