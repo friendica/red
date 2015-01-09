@@ -56,12 +56,15 @@ function dir_sort_links() {
 
 	$current_order = (($_REQUEST['order']) ? $_REQUEST['order'] : 'normal');
 	$url = 'directory?';
+
 	$tmp = array_merge($_GET,$_POST);
 	unset($tmp['order']);
+	unset($tmp['q']);
 	$sorturl = $url . http_build_query($tmp);
-	$tmp = array_merge($_GET,$_POST);
 
+	$tmp = array_merge($_GET,$_POST);
 	unset($tmp['pubforums']);
+	unset($tmp['q']);
 	$forumsurl = $url . http_build_query($tmp);
 
 	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(
