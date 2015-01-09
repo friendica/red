@@ -55,16 +55,18 @@ function dir_sort_links() {
 	// Probably there's an easier way to do this
 
 	$current_order = (($_REQUEST['order']) ? $_REQUEST['order'] : 'normal');
-	$url = 'directory?';
+	$url = 'directory?f=';
 
 	$tmp = array_merge($_GET,$_POST);
 	unset($tmp['order']);
 	unset($tmp['q']);
+	unset($tmp['f']);
 	$sorturl = $url . http_build_query($tmp);
 
 	$tmp = array_merge($_GET,$_POST);
 	unset($tmp['pubforums']);
 	unset($tmp['q']);
+	unset($tmp['f']);
 	$forumsurl = $url . http_build_query($tmp);
 
 	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(
