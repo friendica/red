@@ -53,6 +53,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/Creating-Templates]Vorlagen erstellen mit Comanche[/zrl]
 [zrl=[baseurl]/help/Widgets]Widgets, die Teil der Standardinstallation sind[/zrl]
 [zrl=[baseurl]/help/plugins]Plugins[/zrl]
+[zrl=[baseurl]/help/doco]Selbst Dokumentation beisteuern[/zrl]
 [zrl=[baseurl]/help/DerivedTheme1]Einen Theme basierend auf einem anderen erstellen[/zrl]
 [zrl=[baseurl]/help/schema_development]Schemata[/zrl]
 [zrl=[baseurl]/help/Translations]Übersetzungen[/zrl]
@@ -66,6 +67,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/to_do_code]To-Do-Liste für Entwickler[/zrl]
 [zrl=[baseurl]/help/roadmap]Roadmap für Version 3[/zrl]
 [zrl=[baseurl]/help/git_for_non_developers]Git für Nicht-Entwickler[/zrl]
+[zrl=[baseurl]/help/dev_beginner]Schritt-für-Schritt-Einführung für neue Entwickler[/zrl]
 
 [size=large][b]Häufig gestellte Fragen für Entwickler[/b][/size]
 [zrl=[baseurl]/help/faq_developers]FAQ für Entwickler[/zrl]
