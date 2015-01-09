@@ -165,6 +165,7 @@ function notifier_run($argv, $argc){
 		}
 		xchan_mail_query($message[0]);
 		$uid = $message[0]['channel_id'];
+		$recipients[] = $message[0]['from_xchan']; // include clones
 		$recipients[] = $message[0]['to_xchan'];
 		$item = $message[0];
 
