@@ -93,6 +93,8 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "profiles.php", "profiles_8php.html", "profiles_8php" ],
     [ "profperm.php", "profperm_8php.html", "profperm_8php" ],
     [ "pubsites.php", "pubsites_8php.html", "pubsites_8php" ],
+    [ "pubsub.php", "pubsub_8php.html", "pubsub_8php" ],
+    [ "pubsubhubbub.php", "pubsubhubbub_8php.html", "pubsubhubbub_8php" ],
     [ "randprof.php", "randprof_8php.html", "randprof_8php" ],
     [ "rbmark.php", "rbmark_8php.html", "rbmark_8php" ],
     [ "receive.php", "receive_8php.html", "receive_8php" ],

@@ -1,6 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"classApp.html#a33a8e90b60ec4438f6fbf299d0f6839c":[5,0,6,62],
 "classApp.html#a344d2b7dc2f276648d521aee4da1731c":[5,0,6,23],
 "classApp.html#a3694aa1907aa103a2adbc71f926f0fa0":[5,0,6,50],
 "classApp.html#a3d84af5e42082098672531cd1a618853":[5,0,6,22],
@@ -249,5 +248,6 @@ var NAVTREEINDEX2 =
 "classRedMatrix_1_1RedDAV_1_1RedFile.html#ac945aa782d6c035d339e59974266ec4d":[5,0,3,1,3,6],
 "classRedMatrix_1_1RedDAV_1_1RedFile.html#af5c88b75d0c1f590af03755534cb167e":[5,0,3,1,3,3],
 "classTemplate.html":[5,0,25],
-"classTemplate.html#a07737733f6949bdedea1e3d301b2ab7b":[5,0,25,13]
+"classTemplate.html#a07737733f6949bdedea1e3d301b2ab7b":[5,0,25,13],
+"classTemplate.html#a285b5b2007dbbf733476273df3fed4ef":[5,0,25,12]
 };

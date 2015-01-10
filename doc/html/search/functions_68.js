@@ -25,5 +25,7 @@ var searchData=
   ['html2plain',['html2plain',['../html2plain_8php.html#ab3e121fa9f3feb16f9f942e705bc6c04',1,'html2plain.php']]],
   ['htmlactionspanel',['htmlActionsPanel',['../classRedMatrix_1_1RedDAV_1_1RedBrowser.html#a3bd98af2d1cdfd8f26deb914596176cf',1,'RedMatrix::RedDAV::RedBrowser']]],
   ['http_5fstatus_5fexit',['http_status_exit',['../include_2network_8php.html#a4cfb2c05a1c295317283d762440ce0b2',1,'network.php']]],
+  ['hub_5fpost_5freturn',['hub_post_return',['../pubsub_8php.html#ad4e82341660e72cb8eaad56aa1e9e945',1,'pubsub.php']]],
+  ['hub_5freturn',['hub_return',['../pubsub_8php.html#a24c84d42f653bdb084726c1e5791eebb',1,'pubsub.php']]],
   ['hubloc_5fchange_5fprimary',['hubloc_change_primary',['../hubloc_8php.html#ad86214b3a74084bd7b54e8d6c919ce4d',1,'hubloc.php']]]
 ];
