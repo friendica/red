@@ -241,7 +241,7 @@ function connedit_clone(&$a) {
 		unset($clone['abook_account']);
 		unset($clone['abook_channel']);
 
-		build_sync_packet(0 /* use the current local_user */, array(array('abook' => array($clone))));
+		build_sync_packet(0 /* use the current local_user */, array('abook' => array($clone)));
 }
 
 /* @brief Generate content of connection edit page
@@ -402,7 +402,7 @@ function connedit_content(&$a) {
 
 			contact_remove(local_user(), $orig_record[0]['abook_id']);
 			build_sync_packet(0 /* use the current local_user */, 
-				array(array('abook' => array(
+				array('abook' => array(array(
 					'abook_xchan' => $orig_record[0]['abook_xchan'],
 					'entry_deleted' => true))
 				)
