@@ -677,7 +677,7 @@ Functions</h2></td></tr>
 <p>$importer = the contact_record (joined to user_record) of the local user who owns this relationship. It is this person's stuff that is going to be updated. $contact = the person who is sending us stuff. If not set, we MAY be processing a "follow" activity from an external network and MAY create an appropriate contact record. Otherwise, we MUST have a contact record. $hub = should we find a hub declation in the feed, pass it back to our calling process, who might (or might not) try and subscribe to it. $datedir sorts in reverse order $pass - by default ($pass = 0) we cannot guarantee that a parent item has been imported prior to its children being seen in the stream unless we are certain of how the feed is arranged/ordered. With $pass = 1, we only pull parent items out of the stream. With $pass = 2, we only pull children (comments/likes).</p>
 <p>So running this twice, first with pass 1 and then with pass 2 will do the right thing regardless of feed ordering. This won't be adequate in a fully-threaded model where comments can have sub-threads. That would require some massive sorting to get all the feed items into a mostly linear ordering, and might still require recursion. </p>
 
-<p>Referenced by <a class="el" href="items_8php.html#a52c24114b73c0bdb605a03cd29712223">handle_feed()</a>.</p>
+<p>Referenced by <a class="el" href="items_8php.html#a52c24114b73c0bdb605a03cd29712223">handle_feed()</a>, and <a class="el" href="pubsub_8php.html#aac8bf73bc11e6fd32494791dadd13123">pubsub_post()</a>.</p>
 
 </div>
 </div>

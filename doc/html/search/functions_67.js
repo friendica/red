@@ -44,6 +44,7 @@ var searchData=
   ['get_5fdirectory_5frealm',['get_directory_realm',['../boot_8php.html#a329400dcb29897cdaae3020109272285',1,'boot.php']]],
   ['get_5fdisplay_5fmode',['get_display_mode',['../classItem.html#a23d4057883f8ed888c0c2ff12d8aa5d0',1,'Item']]],
   ['get_5fevents',['get_events',['../identity_8php.html#ae381db3d43f8e7c1da8b15d14ecf5312',1,'identity.php']]],
+  ['get_5ffeature_5fdefault',['get_feature_default',['../features_8php.html#ab9a273de13a12a1c561b380cabaea090',1,'features.php']]],
   ['get_5ffeatures',['get_features',['../features_8php.html#ae73c5b03b01c7284ed7e7e0e774e975c',1,'features.php']]],
   ['get_5ffeed_5ffor',['get_feed_for',['../items_8php.html#a04a35b610acfe54434df08adec39c0c7',1,'items.php']]],
   ['get_5ffirst_5fdim',['get_first_dim',['../datetime_8php.html#aba971b67f17fecf050813f1eba72367f',1,'datetime.php']]],
