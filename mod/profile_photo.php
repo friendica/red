@@ -130,6 +130,7 @@ function profile_photo_post(&$a) {
 		if($r) {
 
 			$base_image = $r[0];
+			$base_image['data'] = dbunescbin($base_image['data']);
 		
 			$im = photo_factory($base_image['data'], $base_image['type']);
 			if($im->is_valid()) {
