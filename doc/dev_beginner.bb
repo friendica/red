@@ -1,18 +1,18 @@
-[h2]You want to contribute to the Red Matrix?[/h2]
-[b]...and don't know really how to start?
-Then this is for you...[/b]
+[h2]You want to contribute code?[/h2]
+[b]...and don't know how to start?[/b]
+Then this is for you.
 
-You want to lean how to:
+This manual will guided you step-by-step to:
 [list]
-[*] debug the Red Matrix,
+[*] debug the Red Matrix (PHP),
 [*] contribute code to the project,
 [*] optionally - do it all from inside a virtual machine
 [/list]
 
 This manual was tested for
 [list]
-[*] Lubuntu Linux as host OS
-[*] Debian as guest OS running in a VM
+[*] Lubuntu (Ubuntu 14.0) as host OS
+[*] Debian (Wheezy) as guest OS running in a VM
 [/list]
 
 [h2]Content[/h2]
@@ -22,7 +22,7 @@ In this manual you will
 [*] Install a Virtual Machine (KVM)
 [*] Install Apache Web Server
 [*] Install PHP, MySQL, phpMyAdmin
-[*] Fork the project on github to be able contribute
+[*] Fork the project on github to be able to contribute
 [*] Install the RED Matrix
 [*] Debug the server via eclipse
 [*] Contribute your changes via github
@@ -179,22 +179,24 @@ Grant all rights for the user "red" to the database "red".
 Note the access details (hostname, username, password, database name).
 
 
-[h2]Fork the project on github to be able contribute[/h2]
+[h2]Fork the project on github to be able to contribute[/h2]
 
-Please follow the instruction in offiical [url=http://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project] documentation[/url] of git.
+Please follow the instruction in the offiical [url=http://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project] documentation[/url] of git.
 It is a good idea to read the whole manual! Git is different to other version control systems in many ways.
 
-You should
+Now you should
 [list]
 [*] create an account at github.com
 [*] fork https://github.com/friendica/red
 [*] fork https://github.com/friendica/red-addons
 [/list]
 
+If you not want to use GIT from the command line - there is a usefull Eclipse plugin named ""Eclipse Mylyn to GitHub connector".
+
 
 [h2]Install RED and its Addons[/h2]
 
-You should have created an account on github and forked the projects befor you procced.
+You should have created an account on github and forked the projects befor you procceed.
 
 Delete the directory www
 [code]root@debian /var/www/html $ cd ..
@@ -206,9 +208,9 @@ Install git (and optionally git-gui a client gui)
 
 Download the main project red and red-addons
 [code]
-root@debian:/var# git clone https://github.com/einervonvielen/red www
+root@debian:/var# git clone https://github.com/yourname/red www
 root@debian:/var# cd www/
-root@debian:/var/www# git clone https://github.com/einervonvielen/red-addons addon
+root@debian:/var/www# git clone https://github.com/yourname/red-addons addon
 [/code]
 
 Make this extra folder
@@ -316,6 +318,10 @@ Install the PHP plugin
 Menu > Help > Install new software...
 Install "PHP Developnent Tools ..."
 
+Optionally - Install the GitHub connector plugin
+Menu > Help > Install new software...
+Install "Eclipse Mylyn to GitHub connector"
+
 Configure the PHP plugin
 Menu > Window > Preferences...
 > General > Webbrowser > Change to "Use external web browser"
@@ -323,7 +329,7 @@ Menu > Window > Preferences...
 
 Create a new PHP project
 Menu > File > New Project > Choose PHP > "PHP Project"
-> Choose Create project at existing location and "/var/www"
+> Choose Create project at existing location" and "/var/www"
 
 Start debugging
 Open index.php and "Debug as..."
@@ -338,8 +344,10 @@ Expected:
 
 [h2]Contribute your changes via github[/h2]
 
-(There is a related page in this docs: [zrl=[baseurl]/help/git_for_non_developers]Git for Non-Developers[/zrl])
+There is a related page in this docs: [zrl=[baseurl]/help/git_for_non_developers]Git for Non-Developers[/zrl].
 As stated befor it is recommended to read the official documentation [url=http://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project]GitHub-Contributing-to-a-Project[/url] of git.
+
+Eclipse has a usefull plugin for GIT: "Eclipse Mylyn to GitHub connector".
 
 Make sure you have set your data
 [code]
@@ -398,7 +406,7 @@ Make the changes, check them, commit (to local repository), push (to online repo
 [code]
 surfer@debian:/var/www$ git status
 surfer@debian:/var/www$ git commit -a -m "added modification of branch"
-surfer@debian:/var/www$ git push origin dev_beginning
+surfer@debian:/var/www$ git push
 [/code]
 
 
