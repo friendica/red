@@ -2368,6 +2368,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	logger('build_sync_packet');
 
+	if($packet)
+		logger('packet: ' . print_r($packet,true),LOGGER_DATA);
+
 	if(! $uid)
 		$uid = local_user();
 
