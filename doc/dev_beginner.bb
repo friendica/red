@@ -406,7 +406,7 @@ Make the changes, check them, commit (to local repository), push (to online repo
 [code]
 surfer@debian:/var/www$ git status
 surfer@debian:/var/www$ git commit -a -m "added modification of branch"
-surfer@debian:/var/www$ git push dev_beginning
+surfer@debian:/var/www$ git push
 [/code]
 
 
