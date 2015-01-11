@@ -39,6 +39,9 @@ function pkcs5_unpad($text)
 } 
 
 function AES256CBC_encrypt($data,$key,$iv) {
+	if(get_config('system','openssl_encrypt')) {
+		return openssl_encrypt(pkcs5_pad($data,16),'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
+	}
 	return mcrypt_encrypt(
 		MCRYPT_RIJNDAEL_128, 
 		str_pad($key,32,"\0"), 
@@ -48,6 +51,9 @@ function AES256CBC_encrypt($data,$key,$iv) {
 }
 
 function AES256CBC_decrypt($data,$key,$iv) {
+	if(get_config('system','openssl_encrypt')) {
+		return openssl_decrypt(pkcs5_unpad($data,16),'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
+	}
 	return pkcs5_unpad(mcrypt_decrypt(
 		MCRYPT_RIJNDAEL_128, 
 		str_pad($key,32,"\0"), 
