@@ -197,7 +197,7 @@ class Conversation extends BaseObject {
 	 *      _ The data requested on success
 	 *      _ false on failure
 	 */
-	public function get_template_data($alike, $dlike) {
+	public function get_template_data($conv_responses) {
 		$result = array();
 
 		foreach($this->threads as $item) {
@@ -206,7 +206,7 @@ class Conversation extends BaseObject {
 				$item_data = $this->prepared_item;
 			}
 			else {
-				$item_data = $item->get_template_data($alike, $dlike);
+				$item_data = $item->get_template_data($conv_responses);
 			}
 			if(!$item_data) {
 				logger('[ERROR] Conversation::get_template_data : Failed to get item template data ('. $item->get_id() .').', LOGGER_DEBUG);

@@ -63,7 +63,7 @@ class Item extends BaseObject {
 	 *      _ false on failure
 	 */
 
-	public function get_template_data($alike, $dlike, $thread_level=1) {
+	public function get_template_data($conv_responses, $thread_level=1) {
 	
 		$result = array();
 
@@ -135,8 +135,8 @@ class Item extends BaseObject {
 
 		$location = format_location($item);
 
-		$like_count = ((x($alike,$item['mid'])) ? $alike[$item['mid']] : '');
-		$like_list = ((x($alike,$item['mid'])) ? $alike[$item['mid'] . '-l'] : '');
+		$like_count = ((x($conv_responses['like'],$item['mid'])) ? $conv_responses['like'][$item['mid']] : '');
+		$like_list = ((x($conv_responses['like'],$item['mid'])) ? $conv_responses['like'][$item['mid'] . '-l'] : '');
 		if (count($like_list) > MAX_LIKERS) {
 			$like_list_part = array_slice($like_list, 0, MAX_LIKERS);
 			array_push($like_list_part, '<a href="#" data-toggle="modal" data-target="#likeModal-' . $this->get_id() . '"><b>' . t('View all') . '</b></a>');
@@ -146,8 +146,8 @@ class Item extends BaseObject {
 		$like_button_label = tt('Like','Likes',$like_count,'noun');
 
 		if (feature_enabled($conv->get_profile_owner(),'dislike')) {
-			$dislike_count = ((x($dlike,$item['mid'])) ? $dlike[$item['mid']] : '');
-			$dislike_list = ((x($dlike,$item['mid'])) ? $dlike[$item['mid'] . '-l'] : '');
+			$dislike_count = ((x($conv_responses['dislike'],$item['mid'])) ? $conv_responses['dislike'][$item['mid']] : '');
+			$dislike_list = ((x($conv_responses['dislike'],$item['mid'])) ? $conv_responses['dislike'][$item['mid'] . '-l'] : '');
 			$dislike_button_label = tt('Dislike','Dislikes',$dislike_count,'noun');
 			if (count($dislike_list) > MAX_LIKERS) {
 				$dislike_list_part = array_slice($dislike_list, 0, MAX_LIKERS);
@@ -157,9 +157,9 @@ class Item extends BaseObject {
 			}
 		}
 
-		$showlike    = ((x($alike,$item['mid'])) ? format_like($alike[$item['mid']],$alike[$item['mid'] . '-l'],'like',$item['mid']) : '');
-		$showdislike = ((x($dlike,$item['mid']) && feature_enabled($conv->get_profile_owner(),'dislike'))  
-				? format_like($dlike[$item['mid']],$dlike[$item['mid'] . '-l'],'dislike',$item['mid']) : '');
+		$showlike    = ((x($conv_responses['like'],$item['mid'])) ? format_like($conv_responses['like'][$item['mid']],$conv_responses['like'][$item['mid'] . '-l'],'like',$item['mid']) : '');
+		$showdislike = ((x($conv_responses['dislike'],$item['mid']) && feature_enabled($conv->get_profile_owner(),'dislike'))  
+				? format_like($conv_responses['dislike'][$item['mid']],$conv_responses['dislike'][$item['mid'] . '-l'],'dislike',$item['mid']) : '');
 
 		/*
 		 * We should avoid doing this all the time, but it depends on the conversation mode
@@ -336,7 +336,7 @@ class Item extends BaseObject {
 
 		if(($this->get_display_mode() === 'normal') && ($nb_children > 0)) {
 			foreach($children as $child) {
-				$result['children'][] = $child->get_template_data($alike, $dlike, $thread_level + 1);
+				$result['children'][] = $child->get_template_data($conv_responses, $thread_level + 1);
 			}
 			// Collapse
 			if(($nb_children > 2) || ($thread_level > 1)) {

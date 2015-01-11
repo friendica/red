@@ -37,6 +37,18 @@ function like_content(&$a) {
 		case 'undislike':
 			$activity = ACTIVITY_DISLIKE;
 			break;
+		case 'agree':
+		case 'unagree':
+			$activity = ACTIVITY_AGREE;
+			break;
+		case 'disagree':
+		case 'undisagree':
+			$activity = ACTIVITY_DISAGREE;
+			break;
+		case 'abstain':
+		case 'unabstain':
+			$activity = ACTIVITY_ABSTAIN;
+			break;
 		default:
 			return;
 			break;
@@ -336,6 +348,14 @@ function like_content(&$a) {
 		$bodyverb = t('%1$s likes %2$s\'s %3$s');
 	if($verb === 'dislike')
 		$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
+	if($verb === 'agree')
+		$bodyverb = t('%1$s agrees with %2$s\'s %3$s');
+	if($verb === 'disagree')
+		$bodyverb = t('%1$s doesn\'t agree with %2$s\'s %3$s');
+	if($verb === 'abstain')
+		$bodyverb = t('%1$s abstains from a decision on %2$s\'s %3$s');
+
+
 
 	if(! isset($bodyverb))
 			killme(); 
