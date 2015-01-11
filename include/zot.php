@@ -1542,15 +1542,20 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 			continue;
 		}
 
-		$r = q("select id, edited, item_flags, mid, parent_mid from item where mid = '%s' and uid = %d limit 1",
+		$r = q("select id, edited, item_restrict, item_flags, mid, parent_mid from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['mid']),
 			intval($channel['channel_id'])
 		);
 		if($r) {
 			// We already have this post.
-			// Maybe it has been edited? 
 			$item_id = $r[0]['id'];
-			if($arr['edited'] > $r[0]['edited']) {
+			if($r[0]['item_restrict'] & ITEM_DELETED) {
+				// It was deleted locally. 
+				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				continue;
+			}			
+			// Maybe it has been edited? 
+			elseif($arr['edited'] > $r[0]['edited']) {
 				$arr['id'] = $r[0]['id'];
 				$arr['uid'] = $channel['channel_id'];
 				update_imported_item($sender,$arr,$channel['channel_id']);
@@ -2362,6 +2367,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	$a = get_app();
 
 	logger('build_sync_packet');
+
+	if($packet)
+		logger('packet: ' . print_r($packet,true),LOGGER_DATA);
 
 	if(! $uid)
 		$uid = local_user();

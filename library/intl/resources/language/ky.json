@@ -1,0 +1,738 @@
+{
+    "ast": {
+        "code": "ast",
+        "name": "Asturian"
+    },
+    "bas": {
+        "code": "bas",
+        "name": "Basaa"
+    },
+    "ksh": {
+        "code": "ksh",
+        "name": "Colognian"
+    },
+    "de-AT": {
+        "code": "de-AT",
+        "name": "de_AT"
+    },
+    "en-AU": {
+        "code": "en-AU",
+        "name": "en_AU"
+    },
+    "en-CA": {
+        "code": "en-CA",
+        "name": "en_CA"
+    },
+    "en-GB": {
+        "code": "en-GB",
+        "name": "en_GB"
+    },
+    "en-US": {
+        "code": "en-US",
+        "name": "en_US"
+    },
+    "es-MX": {
+        "code": "es-MX",
+        "name": "es_MX"
+    },
+    "ewo": {
+        "code": "ewo",
+        "name": "Ewondo"
+    },
+    "fr-CA": {
+        "code": "fr-CA",
+        "name": "fr_CA"
+    },
+    "fr-CH": {
+        "code": "fr-CH",
+        "name": "fr_CH"
+    },
+    "fur": {
+        "code": "fur",
+        "name": "Friulian"
+    },
+    "ff": {
+        "code": "ff",
+        "name": "Fulah"
+    },
+    "pt-BR": {
+        "code": "pt-BR",
+        "name": "pt_BR"
+    },
+    "gd": {
+        "code": "gd",
+        "name": "Scottish Gaelic"
+    },
+    "wae": {
+        "code": "wae",
+        "name": "Walser"
+    },
+    "yav": {
+        "code": "yav",
+        "name": "Yangben"
+    },
+    "agq": {
+        "code": "agq",
+        "name": "агемче"
+    },
+    "az": {
+        "code": "az",
+        "name": "азербайжанча"
+    },
+    "ar-001": {
+        "code": "ar-001",
+        "name": "азыркы адабий араб тилинде"
+    },
+    "ak": {
+        "code": "ak",
+        "name": "аканча"
+    },
+    "sq": {
+        "code": "sq",
+        "name": "албанча"
+    },
+    "am": {
+        "code": "am",
+        "name": "амхарча"
+    },
+    "en": {
+        "code": "en",
+        "name": "англисче"
+    },
+    "ar": {
+        "code": "ar",
+        "name": "арабча"
+    },
+    "hy": {
+        "code": "hy",
+        "name": "армянча"
+    },
+    "asa": {
+        "code": "asa",
+        "name": "асуча"
+    },
+    "af": {
+        "code": "af",
+        "name": "африкаанча"
+    },
+    "bm": {
+        "code": "bm",
+        "name": "бамбарада"
+    },
+    "bn": {
+        "code": "bn",
+        "name": "бангладешче"
+    },
+    "eu": {
+        "code": "eu",
+        "name": "баскча"
+    },
+    "fy": {
+        "code": "fy",
+        "name": "батыш фризче"
+    },
+    "ksf": {
+        "code": "ksf",
+        "name": "бафияча"
+    },
+    "be": {
+        "code": "be",
+        "name": "беларусча"
+    },
+    "bez": {
+        "code": "bez",
+        "name": "бенача"
+    },
+    "brx": {
+        "code": "brx",
+        "name": "бододо"
+    },
+    "bg": {
+        "code": "bg",
+        "name": "болгарча"
+    },
+    "tzm": {
+        "code": "tzm",
+        "name": "борбордук Атлас тамазитче"
+    },
+    "bs": {
+        "code": "bs",
+        "name": "боснийче"
+    },
+    "br": {
+        "code": "br",
+        "name": "бретончо"
+    },
+    "my": {
+        "code": "my",
+        "name": "бурмача"
+    },
+    "vai": {
+        "code": "vai",
+        "name": "вайиче"
+    },
+    "vun": {
+        "code": "vun",
+        "name": "вунжочо"
+    },
+    "vi": {
+        "code": "vi",
+        "name": "вьетнамча"
+    },
+    "gl": {
+        "code": "gl",
+        "name": "галисияча"
+    },
+    "lg": {
+        "code": "lg",
+        "name": "гандача"
+    },
+    "nl": {
+        "code": "nl",
+        "name": "голландча"
+    },
+    "el": {
+        "code": "el",
+        "name": "грекче"
+    },
+    "ka": {
+        "code": "ka",
+        "name": "грузинче"
+    },
+    "gu": {
+        "code": "gu",
+        "name": "гужаратча"
+    },
+    "guz": {
+        "code": "guz",
+        "name": "гусиче"
+    },
+    "da": {
+        "code": "da",
+        "name": "датча"
+    },
+    "de-CH": {
+        "code": "de-CH",
+        "name": "жогорку немисче (Швейцария)"
+    },
+    "hsb": {
+        "code": "hsb",
+        "name": "жогорку сорбианча"
+    },
+    "dyo": {
+        "code": "dyo",
+        "name": "жола-фониче"
+    },
+    "dz": {
+        "code": "dz",
+        "name": "жонгуча"
+    },
+    "dje": {
+        "code": "dje",
+        "name": "замрача"
+    },
+    "zu": {
+        "code": "zu",
+        "name": "зулуча"
+    },
+    "he": {
+        "code": "he",
+        "name": "ивритте"
+    },
+    "id": {
+        "code": "id",
+        "name": "индонезче"
+    },
+    "ga": {
+        "code": "ga",
+        "name": "ирландча"
+    },
+    "is": {
+        "code": "is",
+        "name": "исландча"
+    },
+    "es": {
+        "code": "es",
+        "name": "испанча"
+    },
+    "es-ES": {
+        "code": "es-ES",
+        "name": "испанча (Европа)"
+    },
+    "it": {
+        "code": "it",
+        "name": "италиянча"
+    },
+    "yo": {
+        "code": "yo",
+        "name": "йорубача"
+    },
+    "kea": {
+        "code": "kea",
+        "name": "кабувердиче"
+    },
+    "kab": {
+        "code": "kab",
+        "name": "кабылча"
+    },
+    "kk": {
+        "code": "kk",
+        "name": "казакча"
+    },
+    "kl": {
+        "code": "kl",
+        "name": "калаалисутча"
+    },
+    "kln": {
+        "code": "kln",
+        "name": "каленжиче"
+    },
+    "kam": {
+        "code": "kam",
+        "name": "камбача"
+    },
+    "kn": {
+        "code": "kn",
+        "name": "каннадача"
+    },
+    "ca": {
+        "code": "ca",
+        "name": "каталанча"
+    },
+    "ks": {
+        "code": "ks",
+        "name": "кашмирче"
+    },
+    "nmg": {
+        "code": "nmg",
+        "name": "квасиочо"
+    },
+    "ki": {
+        "code": "ki",
+        "name": "кикуйиче"
+    },
+    "km": {
+        "code": "km",
+        "name": "кмерче"
+    },
+    "khq": {
+        "code": "khq",
+        "name": "койра чиниче"
+    },
+    "ses": {
+        "code": "ses",
+        "name": "койраборо сенниче"
+    },
+    "swc": {
+        "code": "swc",
+        "name": "конго суахаличе"
+    },
+    "ko": {
+        "code": "ko",
+        "name": "корейче"
+    },
+    "ky": {
+        "code": "ky",
+        "name": "кыргызча"
+    },
+    "zh": {
+        "code": "zh",
+        "name": "кытайча"
+    },
+    "zh-Hans": {
+        "code": "zh-Hans",
+        "name": "кытайча (жөнөкөйлөштүрүлгөн)"
+    },
+    "zh-Hant": {
+        "code": "zh-Hant",
+        "name": "кытайча (салттуу)"
+    },
+    "lag": {
+        "code": "lag",
+        "name": "лангиче"
+    },
+    "lo": {
+        "code": "lo",
+        "name": "лаочо"
+    },
+    "lv": {
+        "code": "lv",
+        "name": "латышча"
+    },
+    "ln": {
+        "code": "ln",
+        "name": "лингалача"
+    },
+    "lt": {
+        "code": "lt",
+        "name": "литовчо"
+    },
+    "lu": {
+        "code": "lu",
+        "name": "луба-катангача"
+    },
+    "luo": {
+        "code": "luo",
+        "name": "луочо"
+    },
+    "luy": {
+        "code": "luy",
+        "name": "лухияча"
+    },
+    "lb": {
+        "code": "lb",
+        "name": "люксембургча"
+    },
+    "hu": {
+        "code": "hu",
+        "name": "мажарча"
+    },
+    "mk": {
+        "code": "mk",
+        "name": "македончо"
+    },
+    "kde": {
+        "code": "kde",
+        "name": "макондече"
+    },
+    "mgh": {
+        "code": "mgh",
+        "name": "макуача"
+    },
+    "mg": {
+        "code": "mg",
+        "name": "малагасча"
+    },
+    "ml": {
+        "code": "ml",
+        "name": "малайаламча"
+    },
+    "ms": {
+        "code": "ms",
+        "name": "малайча"
+    },
+    "mt": {
+        "code": "mt",
+        "name": "малтизче"
+    },
+    "mr": {
+        "code": "mr",
+        "name": "маратиче"
+    },
+    "zgh": {
+        "code": "zgh",
+        "name": "марокко тамазигт адабий тилинде"
+    },
+    "mas": {
+        "code": "mas",
+        "name": "масайча"
+    },
+    "jmc": {
+        "code": "jmc",
+        "name": "мачамече"
+    },
+    "mer": {
+        "code": "mer",
+        "name": "меруча"
+    },
+    "ro-MD": {
+        "code": "ro-MD",
+        "name": "молдованча"
+    },
+    "mn": {
+        "code": "mn",
+        "name": "моңголчо"
+    },
+    "mfe": {
+        "code": "mfe",
+        "name": "морисианча"
+    },
+    "mua": {
+        "code": "mua",
+        "name": "мундангча"
+    },
+    "naq": {
+        "code": "naq",
+        "name": "намача"
+    },
+    "jgo": {
+        "code": "jgo",
+        "name": "нгомбача"
+    },
+    "de": {
+        "code": "de",
+        "name": "немисче"
+    },
+    "gsw": {
+        "code": "gsw",
+        "name": "немисче (Швейцария)"
+    },
+    "ne": {
+        "code": "ne",
+        "name": "непалча"
+    },
+    "nb": {
+        "code": "nb",
+        "name": "норвежче (Букмал)"
+    },
+    "nn": {
+        "code": "nn",
+        "name": "норвежче (Нинорск)"
+    },
+    "nus": {
+        "code": "nus",
+        "name": "нуерче"
+    },
+    "nyn": {
+        "code": "nyn",
+        "name": "ныйанколчо"
+    },
+    "or": {
+        "code": "or",
+        "name": "орияча"
+    },
+    "ru": {
+        "code": "ru",
+        "name": "орусча"
+    },
+    "uz": {
+        "code": "uz",
+        "name": "өзбекче"
+    },
+    "ps": {
+        "code": "ps",
+        "name": "пашточо"
+    },
+    "pl": {
+        "code": "pl",
+        "name": "полякча"
+    },
+    "pt": {
+        "code": "pt",
+        "name": "португалча"
+    },
+    "pt-PT": {
+        "code": "pt-PT",
+        "name": "португалча (Европа)"
+    },
+    "pa": {
+        "code": "pa",
+        "name": "пунжабиче"
+    },
+    "rm": {
+        "code": "rm",
+        "name": "романшча"
+    },
+    "rof": {
+        "code": "rof",
+        "name": "ромбочо"
+    },
+    "rwk": {
+        "code": "rwk",
+        "name": "руача"
+    },
+    "ro": {
+        "code": "ro",
+        "name": "румынча"
+    },
+    "rn": {
+        "code": "rn",
+        "name": "рундиче"
+    },
+    "saq": {
+        "code": "saq",
+        "name": "самбуруча"
+    },
+    "sg": {
+        "code": "sg",
+        "name": "сангочо"
+    },
+    "sbp": {
+        "code": "sbp",
+        "name": "сангуча"
+    },
+    "seh": {
+        "code": "seh",
+        "name": "сенача"
+    },
+    "sr": {
+        "code": "sr",
+        "name": "сербче"
+    },
+    "si": {
+        "code": "si",
+        "name": "сингалача"
+    },
+    "sk": {
+        "code": "sk",
+        "name": "словакча"
+    },
+    "sl": {
+        "code": "sl",
+        "name": "словенче"
+    },
+    "xog": {
+        "code": "xog",
+        "name": "согача"
+    },
+    "so": {
+        "code": "so",
+        "name": "сомаличе"
+    },
+    "sw": {
+        "code": "sw",
+        "name": "суахиличе"
+    },
+    "dav": {
+        "code": "dav",
+        "name": "таитача"
+    },
+    "th": {
+        "code": "th",
+        "name": "тайча"
+    },
+    "ta": {
+        "code": "ta",
+        "name": "тамилче"
+    },
+    "twq": {
+        "code": "twq",
+        "name": "тасабакча"
+    },
+    "shi": {
+        "code": "shi",
+        "name": "ташелитче"
+    },
+    "te": {
+        "code": "te",
+        "name": "телугуча"
+    },
+    "teo": {
+        "code": "teo",
+        "name": "тесочо"
+    },
+    "bo": {
+        "code": "bo",
+        "name": "тибетче"
+    },
+    "ti": {
+        "code": "ti",
+        "name": "тигриниача"
+    },
+    "to": {
+        "code": "to",
+        "name": "тонгача"
+    },
+    "dsb": {
+        "code": "dsb",
+        "name": "төмөнкү сорбианча"
+    },
+    "nd": {
+        "code": "nd",
+        "name": "түндүк ндыбелче"
+    },
+    "se": {
+        "code": "se",
+        "name": "түндүк самиче"
+    },
+    "tr": {
+        "code": "tr",
+        "name": "түркчө"
+    },
+    "cy": {
+        "code": "cy",
+        "name": "уелшче"
+    },
+    "ug": {
+        "code": "ug",
+        "name": "уйгурча"
+    },
+    "uk": {
+        "code": "uk",
+        "name": "украинче"
+    },
+    "ur": {
+        "code": "ur",
+        "name": "урдуча"
+    },
+    "fo": {
+        "code": "fo",
+        "name": "фароэче"
+    },
+    "fa": {
+        "code": "fa",
+        "name": "фарсыча"
+    },
+    "fil": {
+        "code": "fil",
+        "name": "филипино"
+    },
+    "fi": {
+        "code": "fi",
+        "name": "финче"
+    },
+    "nl-BE": {
+        "code": "nl-BE",
+        "name": "фламандча"
+    },
+    "fr": {
+        "code": "fr",
+        "name": "французча"
+    },
+    "ha": {
+        "code": "ha",
+        "name": "хаусача"
+    },
+    "hi": {
+        "code": "hi",
+        "name": "хиндиче"
+    },
+    "hr": {
+        "code": "hr",
+        "name": "хорватча"
+    },
+    "chr": {
+        "code": "chr",
+        "name": "черокиче"
+    },
+    "cs": {
+        "code": "cs",
+        "name": "чехче"
+    },
+    "cgg": {
+        "code": "cgg",
+        "name": "чигача"
+    },
+    "ksb": {
+        "code": "ksb",
+        "name": "шамабалача"
+    },
+    "sv": {
+        "code": "sv",
+        "name": "шведче"
+    },
+    "sn": {
+        "code": "sn",
+        "name": "шонача"
+    },
+    "ee": {
+        "code": "ee",
+        "name": "эбече"
+    },
+    "ebu": {
+        "code": "ebu",
+        "name": "эмбуча"
+    },
+    "eo": {
+        "code": "eo",
+        "name": "эсперанто"
+    },
+    "et": {
+        "code": "et",
+        "name": "эстончо"
+    },
+    "ja": {
+        "code": "ja",
+        "name": "япончо"
+    }
+}

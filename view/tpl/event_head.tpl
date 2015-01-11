@@ -24,6 +24,11 @@
 			eventClick: function(calEvent, jsEvent, view) {
 				showEvent(calEvent.id);
 			},
+			loading: function(isLoading, view) {
+				if(!isLoading) {
+					$('td.fc-day').dblclick(function() { window.location.href='/events/new?start='+$(this).data('date'); });
+				}
+			},
 
 			eventRender: function(event, element, view) {
 				//console.log(view.name);

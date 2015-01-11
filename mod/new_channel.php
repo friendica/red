@@ -115,11 +115,8 @@ function new_channel_content(&$a) {
 		'$nick_desc'    => t('Your nickname will be used to create an easily remembered channel address (like an email address) which you can share with others.'),
 		'$label_import' => t('Or <a href="import">import an existing channel</a> from another location'),
 		'$name'         => $name,
-		'$label_role'   => t('Channel Type'),
-		'$questionmark' => t('?'),
-		'$what_is_role' => t('What is this?'),
-		'$help_role'   => t('Please choose a channel type (such as social networking or community forum) and privacy requirements so we can select the best permissions for you'),
-		'$role_select'  => role_selector(($privacy_role) ? $privacy_role : 'social'),
+		'$help_role'    => t('Please choose a channel type (such as social networking or community forum) and privacy requirements so we can select the best permissions for you'),
+		'$role' => array('permissions_role' , t('Channel Type'), ($privacy_role) ? $privacy_role : 'social', '<a href="help/roles" target="_blank">'.t('Read more about roles').'</a>',get_roles()),
 		'$nickname'     => $nickname,
 		'$submit'       => t('Create')
 	));

@@ -370,7 +370,7 @@ function photos_post(&$a) {
 					if($fullnametagged)
 						continue;
 	
-					require_once('mod/item.php');
+					require_once('include/text.php');
 					$body = $access_tag = '';
 	
 					$success = handle_tag($a, $body, $access_tag, $str_tags, (local_user()) ? local_user() : $a->profile['profile_uid'] , $tag); 

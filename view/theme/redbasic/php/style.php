@@ -272,6 +272,8 @@ if(! $a->install) {
       $advperm_gradientcol = "#E8E8E8";
    if(! $cal_bgcolour)
 		$cal_bgcolour = "#FCF8E3";
+   if(! $chat_txtbgcol)
+		$chat_txtbgcol = "#EEE";
    if(! $fancybox_bgcolour)
       $fancybox_bgcolour = "#FFF";
 	if (!$comment_padding)
@@ -409,6 +411,7 @@ $options = array (
 '$advperm_bordercol' => $advperm_bordercol,
 '$advperm_gradientcol' => $advperm_gradientcol,
 '$cal_bgcolour' => $cal_bgcolour,
+'$chat_txtbgcol' => $chat_txtbgcol,
 '$fancybox_bgcolour' => $fancybox_bgcolour,
 '$pmenu_top' => $pmenu_top,
 '$pmenu_reply' => $pmenu_reply,

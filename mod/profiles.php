@@ -11,7 +11,7 @@ function profiles_init(&$a) {
 
 	if((argc() > 2) && (argv(1) === "drop") && intval(argv(2))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is_default` = 0 LIMIT 1",
-			intval($a->argv[2]),
+			intval(argv(2)),
 			intval(local_user())
 		);
 		if(! count($r)) {
@@ -156,9 +156,18 @@ function profiles_init(&$a) {
 
 	// Run profile_load() here to make sure the theme is set before
 	// we start loading content
-	if((argc() > 1) && (intval(argv(1)))) {
+	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_user(),'multi_profiles')) {
+		if(feature_enabled(local_user(),'multi_profiles'))
+			$id = $a->argv[1];
+		else {
+			$x = q("select id from profile where uid = %d and is_default = 1",
+				intval(local_user())
+			);
+			if($x)
+				$id = $x[0]['id'];
+		}
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($a->argv[1]),
+			intval($id),
 			intval(local_user())
 		);
 		if(! count($r)) {
@@ -556,9 +565,18 @@ function profiles_content(&$a) {
 	$profile_fields_basic    = get_profile_fields_basic();
 	$profile_fields_advanced = get_profile_fields_advanced();
 
-	if((argc() > 1) && (intval(argv(1)))) {
+	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_user(),'multi_profiles')) {
+		if(feature_enabled(local_user(),'multi_profiles'))
+			$id = $a->argv[1];
+		else {
+			$x = q("select id from profile where uid = %d and is_default = 1",
+				intval(local_user())
+			);
+			if($x)
+				$id = $x[0]['id'];
+		}		
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($a->argv[1]),
+			intval($id),
 			intval(local_user())
 		);
 		if(! count($r)) {
@@ -586,13 +604,12 @@ function profiles_content(&$a) {
 
 
 		$opt_tpl = get_markup_template("profile_hide_friends.tpl");
-		$hide_friends = replace_macros($opt_tpl,array(
-			'$desc'         => t('Hide your contact/friend list from viewers of this profile?'),
-			'$yes_str'      => t('Yes'),
-			'$no_str'       => t('No'),
-			'$yes_selected' => (($r[0]['hide_friends']) ? " checked=\"checked\" " : ""),
-			'$no_selected'  => (($r[0]['hide_friends'] == 0) ? " checked=\"checked\" " : "")
-		));
+		$hide_friends = replace_macros($opt_tpl,array('$field' => array(
+                       'hide-friends',
+                       t('Hide your contact/friend list from viewers of this profile?'),
+                       $r[0]['hide_friends'],
+                       '',
+               )));
 
 		$q = q("select * from profdef where true");
 		if($q) {

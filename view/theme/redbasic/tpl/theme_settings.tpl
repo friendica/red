@@ -34,7 +34,7 @@
 {{include file="field_input.tpl" field=$nav_min_opacity}}
 {{include file="field_input.tpl" field=$top_photo}}
 {{include file="field_input.tpl" field=$reply_photo}}
-{{include file="field_checkbox.tpl" field=$sloppy_photos}}
+{{*include file="field_checkbox.tpl" field=$sloppy_photos*}}
 <script>
 	$(function(){
 		$('#id_redbasic_nav_bg,#id_redbasic_nav_gradient_top,#id_redbasic_nav_gradient_bottom,#id_redbasic_nav_active_gradient_top,#id_redbasic_nav_active_gradient_bottom').colorpicker();

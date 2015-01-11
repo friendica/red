@@ -835,7 +835,9 @@ function get_item_elements($x) {
 
 
 	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
-		$arr['item_restrict'] = ITEM_DELETED; 
+		$arr['item_restrict'] = ITEM_DELETED;
+	if(array_key_exists('flags',$x) && in_array('hidden',$x['flags']))
+		$arr['item_restrict'] = ITEM_HIDDEN;
 
 	// Here's the deal - the site might be down or whatever but if there's a new person you've never
 	// seen before sending stuff to your stream, we MUST be able to look them up and import their data from their
@@ -1306,6 +1308,8 @@ function encode_item_flags($item) {
 
 	if($item['item_restrict'] & ITEM_DELETED)
 		$ret[] = 'deleted';
+	if($item['item_restrict'] & ITEM_HIDDEN)
+		$ret[] = 'hidden';
 	if($item['item_flags'] & ITEM_THREAD_TOP)
 		$ret[] = 'thread_parent';
 	if($item['item_flags'] & ITEM_NSFW)
@@ -3183,7 +3187,7 @@ function mail_store($arr) {
 	$arr['account_id']    = ((x($arr,'account_id'))           ? intval($arr['account_id'])                 : 0);
 	$arr['mid']           = ((x($arr,'mid'))           ? notags(trim($arr['mid']))           : random_string());
 	$arr['from_xchan']    = ((x($arr,'from_xchan'))  ? notags(trim($arr['from_xchan']))  : '');
-	$arr['to_xchan']   = ((x($arr,'to_xchan'))   ? notags(trim($arr['to_xchan']))   : '');
+	$arr['to_xchan']      = ((x($arr,'to_xchan'))   ? notags(trim($arr['to_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['expires']       = ((x($arr,'expires') !== false) ? datetime_convert('UTC','UTC',$arr['expires']) : NULL_DATE);
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');

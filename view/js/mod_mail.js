@@ -1,13 +1,6 @@
 $(document).ready(function() { 
-	var a; 
-	a = $("#recip").autocomplete({ 
-		serviceUrl: baseurl + '/acl',
-		minChars: 2,
-		width: 250,
-		id: 'recip-ac',
-		onSelect: function(value,data) {
-			$("#recip-complete").val(data);
-		},
+	$("#recip").contact_autocomplete(baseurl + '/acl', '', false, function(data) {
+		$("#recip-complete").val(data.xid);
 	});
 
 }); 

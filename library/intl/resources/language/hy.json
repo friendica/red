@@ -1,0 +1,738 @@
+{
+    "ast": {
+        "code": "ast",
+        "name": "Asturian"
+    },
+    "bas": {
+        "code": "bas",
+        "name": "Basaa"
+    },
+    "ksh": {
+        "code": "ksh",
+        "name": "Colognian"
+    },
+    "ewo": {
+        "code": "ewo",
+        "name": "Ewondo"
+    },
+    "fur": {
+        "code": "fur",
+        "name": "Friulian"
+    },
+    "ff": {
+        "code": "ff",
+        "name": "Fulah"
+    },
+    "wae": {
+        "code": "wae",
+        "name": "Walser"
+    },
+    "yav": {
+        "code": "yav",
+        "name": "Yangben"
+    },
+    "az": {
+        "code": "az",
+        "name": "ադրբեջաներեն"
+    },
+    "sq": {
+        "code": "sq",
+        "name": "ալբաներեն"
+    },
+    "agq": {
+        "code": "agq",
+        "name": "աղեմ"
+    },
+    "en-US": {
+        "code": "en-US",
+        "name": "ամերիկյան անգլերեն"
+    },
+    "am": {
+        "code": "am",
+        "name": "ամհարերեն"
+    },
+    "en": {
+        "code": "en",
+        "name": "անգլերեն"
+    },
+    "asa": {
+        "code": "asa",
+        "name": "ասու"
+    },
+    "zh-Hant": {
+        "code": "zh-Hant",
+        "name": "ավանդական չինարեն"
+    },
+    "en-AU": {
+        "code": "en-AU",
+        "name": "ավստրալական անգլերեն"
+    },
+    "de-AT": {
+        "code": "de-AT",
+        "name": "ավստրիական գերմաներեն"
+    },
+    "ar": {
+        "code": "ar",
+        "name": "արաբերեն"
+    },
+    "fy": {
+        "code": "fy",
+        "name": "արևմտյան ֆրիզերեն"
+    },
+    "ak": {
+        "code": "ak",
+        "name": "աքաներեն"
+    },
+    "af": {
+        "code": "af",
+        "name": "աֆրիկաանս"
+    },
+    "bm": {
+        "code": "bm",
+        "name": "բամբարա"
+    },
+    "eu": {
+        "code": "eu",
+        "name": "բասկերեն"
+    },
+    "ksf": {
+        "code": "ksf",
+        "name": "բաֆիա"
+    },
+    "be": {
+        "code": "be",
+        "name": "բելառուսերեն"
+    },
+    "bez": {
+        "code": "bez",
+        "name": "բենա"
+    },
+    "bn": {
+        "code": "bn",
+        "name": "բենգալերեն"
+    },
+    "my": {
+        "code": "my",
+        "name": "բիրմայերեն"
+    },
+    "brx": {
+        "code": "brx",
+        "name": "բոդո"
+    },
+    "bs": {
+        "code": "bs",
+        "name": "բոսնիերեն"
+    },
+    "bg": {
+        "code": "bg",
+        "name": "բուլղարերեն"
+    },
+    "pt-BR": {
+        "code": "pt-BR",
+        "name": "բրազիլական պորտուգալերեն"
+    },
+    "br": {
+        "code": "br",
+        "name": "բրետոներեն"
+    },
+    "en-GB": {
+        "code": "en-GB",
+        "name": "բրիտանական անգլերեն"
+    },
+    "gd": {
+        "code": "gd",
+        "name": "Գաելյան Շոտլանդերեն"
+    },
+    "gl": {
+        "code": "gl",
+        "name": "գալիսերեն"
+    },
+    "lg": {
+        "code": "lg",
+        "name": "գանդա"
+    },
+    "de": {
+        "code": "de",
+        "name": "գերմաներեն"
+    },
+    "gu": {
+        "code": "gu",
+        "name": "գուջարաթի"
+    },
+    "guz": {
+        "code": "guz",
+        "name": "գուսի"
+    },
+    "da": {
+        "code": "da",
+        "name": "դանիերեն"
+    },
+    "he": {
+        "code": "he",
+        "name": "եբրայերեն"
+    },
+    "es-ES": {
+        "code": "es-ES",
+        "name": "եվրոպական իսպաներեն"
+    },
+    "pt-PT": {
+        "code": "pt-PT",
+        "name": "եվրոպական պորտուգալերեն"
+    },
+    "dje": {
+        "code": "dje",
+        "name": "զարմա"
+    },
+    "zu": {
+        "code": "zu",
+        "name": "զուլուսերեն"
+    },
+    "ebu": {
+        "code": "ebu",
+        "name": "էմբու"
+    },
+    "eo": {
+        "code": "eo",
+        "name": "էսպերանտո"
+    },
+    "et": {
+        "code": "et",
+        "name": "էստոներեն"
+    },
+    "ee": {
+        "code": "ee",
+        "name": "էվե"
+    },
+    "dav": {
+        "code": "dav",
+        "name": "թաիթա"
+    },
+    "ta": {
+        "code": "ta",
+        "name": "թամիլերեն"
+    },
+    "th": {
+        "code": "th",
+        "name": "թայերեն"
+    },
+    "te": {
+        "code": "te",
+        "name": "թելուգու"
+    },
+    "ti": {
+        "code": "ti",
+        "name": "թիգրինիա"
+    },
+    "tr": {
+        "code": "tr",
+        "name": "թուրքերեն"
+    },
+    "ar-001": {
+        "code": "ar-001",
+        "name": "ժամանակակից ստանդարտ արաբերեն"
+    },
+    "id": {
+        "code": "id",
+        "name": "ինդոնեզերեն"
+    },
+    "ga": {
+        "code": "ga",
+        "name": "իռլանդերեն"
+    },
+    "is": {
+        "code": "is",
+        "name": "իսլանդերեն"
+    },
+    "es": {
+        "code": "es",
+        "name": "իսպաներեն"
+    },
+    "it": {
+        "code": "it",
+        "name": "իտալերեն"
+    },
+    "lag": {
+        "code": "lag",
+        "name": "լանգի"
+    },
+    "lo": {
+        "code": "lo",
+        "name": "լաոսերեն"
+    },
+    "lv": {
+        "code": "lv",
+        "name": "լատվիերեն"
+    },
+    "pl": {
+        "code": "pl",
+        "name": "լեհերեն"
+    },
+    "ln": {
+        "code": "ln",
+        "name": "լինգալա"
+    },
+    "lt": {
+        "code": "lt",
+        "name": "լիտվերեն"
+    },
+    "lb": {
+        "code": "lb",
+        "name": "լյուքսեմբուրգերեն"
+    },
+    "lu": {
+        "code": "lu",
+        "name": "լուբա-կատանգա"
+    },
+    "luy": {
+        "code": "luy",
+        "name": "լույա"
+    },
+    "luo": {
+        "code": "luo",
+        "name": "լուո"
+    },
+    "hr": {
+        "code": "hr",
+        "name": "խորվաթերեն"
+    },
+    "kab": {
+        "code": "kab",
+        "name": "կաբիլերեն"
+    },
+    "kl": {
+        "code": "kl",
+        "name": "կալաալիսուտ"
+    },
+    "kln": {
+        "code": "kln",
+        "name": "կալենջին"
+    },
+    "kam": {
+        "code": "kam",
+        "name": "կամբա"
+    },
+    "en-CA": {
+        "code": "en-CA",
+        "name": "կանադական անգլերեն"
+    },
+    "fr-CA": {
+        "code": "fr-CA",
+        "name": "կանադական ֆրանսերեն"
+    },
+    "kn": {
+        "code": "kn",
+        "name": "կաննադա"
+    },
+    "ca": {
+        "code": "ca",
+        "name": "կատալաներեն"
+    },
+    "tzm": {
+        "code": "tzm",
+        "name": "կենտրոնատլասյան թամազիխտ"
+    },
+    "ki": {
+        "code": "ki",
+        "name": "կիկույու"
+    },
+    "khq": {
+        "code": "khq",
+        "name": "կոյրա չինի"
+    },
+    "ses": {
+        "code": "ses",
+        "name": "կոյրաբորո սեննի"
+    },
+    "swc": {
+        "code": "swc",
+        "name": "կոնգոյի սուահիլի"
+    },
+    "ko": {
+        "code": "ko",
+        "name": "կորեերեն"
+    },
+    "kea": {
+        "code": "kea",
+        "name": "կուբավերդիանու"
+    },
+    "nmg": {
+        "code": "nmg",
+        "name": "կվասիո"
+    },
+    "hy": {
+        "code": "hy",
+        "name": "հայերեն"
+    },
+    "ha": {
+        "code": "ha",
+        "name": "հաուսա"
+    },
+    "hi": {
+        "code": "hi",
+        "name": "հինդի"
+    },
+    "nd": {
+        "code": "nd",
+        "name": "հյուսիսային նդեբելե"
+    },
+    "se": {
+        "code": "se",
+        "name": "հյուսիսային սամի"
+    },
+    "nl": {
+        "code": "nl",
+        "name": "հոլանդերեն"
+    },
+    "el": {
+        "code": "el",
+        "name": "հունարեն"
+    },
+    "hu": {
+        "code": "hu",
+        "name": "հունգարերեն"
+    },
+    "kk": {
+        "code": "kk",
+        "name": "ղազախերեն"
+    },
+    "ky": {
+        "code": "ky",
+        "name": "ղրղզերեն"
+    },
+    "ja": {
+        "code": "ja",
+        "name": "ճապոներեն"
+    },
+    "mg": {
+        "code": "mg",
+        "name": "մալագասերեն"
+    },
+    "ml": {
+        "code": "ml",
+        "name": "մալայալամ"
+    },
+    "ms": {
+        "code": "ms",
+        "name": "մալայերեն"
+    },
+    "mt": {
+        "code": "mt",
+        "name": "մալթերեն"
+    },
+    "mk": {
+        "code": "mk",
+        "name": "մակեդոներեն"
+    },
+    "kde": {
+        "code": "kde",
+        "name": "մակոնդե"
+    },
+    "jmc": {
+        "code": "jmc",
+        "name": "մաշամե"
+    },
+    "mas": {
+        "code": "mas",
+        "name": "մասաի"
+    },
+    "mr": {
+        "code": "mr",
+        "name": "մարաթի"
+    },
+    "mgh": {
+        "code": "mgh",
+        "name": "մաքուա-մետտո"
+    },
+    "mer": {
+        "code": "mer",
+        "name": "մերու"
+    },
+    "es-MX": {
+        "code": "es-MX",
+        "name": "մեքսիկական իսպաներեն"
+    },
+    "ro-MD": {
+        "code": "ro-MD",
+        "name": "մոլդովերեն"
+    },
+    "mn": {
+        "code": "mn",
+        "name": "մոնղոլերեն"
+    },
+    "mfe": {
+        "code": "mfe",
+        "name": "մորիսյեն"
+    },
+    "mua": {
+        "code": "mua",
+        "name": "մունդանգ"
+    },
+    "yo": {
+        "code": "yo",
+        "name": "յորուբա"
+    },
+    "naq": {
+        "code": "naq",
+        "name": "նամա"
+    },
+    "jgo": {
+        "code": "jgo",
+        "name": "նգոմբա"
+    },
+    "ne": {
+        "code": "ne",
+        "name": "նեպալերեն"
+    },
+    "nyn": {
+        "code": "nyn",
+        "name": "նյանկոլե"
+    },
+    "nb": {
+        "code": "nb",
+        "name": "նորվեգերեն բուկմոլ"
+    },
+    "nn": {
+        "code": "nn",
+        "name": "նորվեգերեն նյունորսկ"
+    },
+    "nus": {
+        "code": "nus",
+        "name": "նուեր"
+    },
+    "ksb": {
+        "code": "ksb",
+        "name": "շամբալա"
+    },
+    "chr": {
+        "code": "chr",
+        "name": "շերոկի"
+    },
+    "sn": {
+        "code": "sn",
+        "name": "շոնա"
+    },
+    "sv": {
+        "code": "sv",
+        "name": "շվեդերեն"
+    },
+    "de-CH": {
+        "code": "de-CH",
+        "name": "շվեյցարական բարձր գերմաներեն"
+    },
+    "gsw": {
+        "code": "gsw",
+        "name": "շվեյցարական գերմաներեն"
+    },
+    "fr-CH": {
+        "code": "fr-CH",
+        "name": "շվեյցարական ֆրանսերեն"
+    },
+    "cy": {
+        "code": "cy",
+        "name": "ուելսերեն"
+    },
+    "uz": {
+        "code": "uz",
+        "name": "ուզբեկերեն"
+    },
+    "uk": {
+        "code": "uk",
+        "name": "ուկրաիներեն"
+    },
+    "ug": {
+        "code": "ug",
+        "name": "ույղուրերեն"
+    },
+    "ur": {
+        "code": "ur",
+        "name": "ուրդու"
+    },
+    "cs": {
+        "code": "cs",
+        "name": "չեխերեն"
+    },
+    "cgg": {
+        "code": "cgg",
+        "name": "չիգա"
+    },
+    "zh": {
+        "code": "zh",
+        "name": "չինարեն"
+    },
+    "zh-Hans": {
+        "code": "zh-Hans",
+        "name": "պարզեցված չինարեն"
+    },
+    "fa": {
+        "code": "fa",
+        "name": "պարսկերեն"
+    },
+    "pt": {
+        "code": "pt",
+        "name": "պորտուգալերեն"
+    },
+    "dyo": {
+        "code": "dyo",
+        "name": "ջոլա-ֆոնյի"
+    },
+    "dz": {
+        "code": "dz",
+        "name": "ջոնգքհա"
+    },
+    "rm": {
+        "code": "rm",
+        "name": "ռոմանշերեն"
+    },
+    "rof": {
+        "code": "rof",
+        "name": "ռոմբո"
+    },
+    "ro": {
+        "code": "ro",
+        "name": "ռումիներեն"
+    },
+    "rn": {
+        "code": "rn",
+        "name": "ռունդի"
+    },
+    "ru": {
+        "code": "ru",
+        "name": "ռուսերեն"
+    },
+    "rwk": {
+        "code": "rwk",
+        "name": "ռվա"
+    },
+    "saq": {
+        "code": "saq",
+        "name": "սամբուրու"
+    },
+    "sg": {
+        "code": "sg",
+        "name": "սանգո"
+    },
+    "sbp": {
+        "code": "sbp",
+        "name": "սանգու"
+    },
+    "seh": {
+        "code": "seh",
+        "name": "սենա"
+    },
+    "sr": {
+        "code": "sr",
+        "name": "սերբերեն"
+    },
+    "si": {
+        "code": "si",
+        "name": "սինհալերեն"
+    },
+    "sk": {
+        "code": "sk",
+        "name": "սլովակերեն"
+    },
+    "sl": {
+        "code": "sl",
+        "name": "սլովեներեն"
+    },
+    "xog": {
+        "code": "xog",
+        "name": "սոգա"
+    },
+    "so": {
+        "code": "so",
+        "name": "սոմալիերեն"
+    },
+    "sw": {
+        "code": "sw",
+        "name": "սուահիլի"
+    },
+    "zgh": {
+        "code": "zgh",
+        "name": "ստանդարտ մարոկական թամազիղտ"
+    },
+    "dsb": {
+        "code": "dsb",
+        "name": "ստորին սորբիերեն"
+    },
+    "vai": {
+        "code": "vai",
+        "name": "վաի"
+    },
+    "hsb": {
+        "code": "hsb",
+        "name": "վերին սորբիերեն"
+    },
+    "vi": {
+        "code": "vi",
+        "name": "վիետնամերեն"
+    },
+    "vun": {
+        "code": "vun",
+        "name": "վունջո"
+    },
+    "ka": {
+        "code": "ka",
+        "name": "վրացերեն"
+    },
+    "shi": {
+        "code": "shi",
+        "name": "տաշելհիթ"
+    },
+    "twq": {
+        "code": "twq",
+        "name": "տասավաք"
+    },
+    "teo": {
+        "code": "teo",
+        "name": "տեսո"
+    },
+    "bo": {
+        "code": "bo",
+        "name": "տիբեթերեն"
+    },
+    "to": {
+        "code": "to",
+        "name": "տոնգա"
+    },
+    "pa": {
+        "code": "pa",
+        "name": "փենջաբերեն"
+    },
+    "ps": {
+        "code": "ps",
+        "name": "փուշթու"
+    },
+    "ks": {
+        "code": "ks",
+        "name": "քաշմիրերեն"
+    },
+    "km": {
+        "code": "km",
+        "name": "քմերերեն"
+    },
+    "or": {
+        "code": "or",
+        "name": "օրիյա"
+    },
+    "fo": {
+        "code": "fo",
+        "name": "ֆարյորերեն"
+    },
+    "fil": {
+        "code": "fil",
+        "name": "ֆիլիպիներեն"
+    },
+    "fi": {
+        "code": "fi",
+        "name": "ֆիններեն"
+    },
+    "nl-BE": {
+        "code": "nl-BE",
+        "name": "ֆլամանդերեն"
+    },
+    "fr": {
+        "code": "fr",
+        "name": "ֆրանսերեն"
+    }
+}

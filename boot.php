@@ -221,7 +221,7 @@ define ( 'PAGE_NORMAL',            0x0000 );
 define ( 'PAGE_HIDDEN',            0x0001 );
 define ( 'PAGE_AUTOCONNECT',       0x0002 );
 define ( 'PAGE_APPLICATION',       0x0004 );
-define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for directory synchronisation
+
 define ( 'PAGE_PREMIUM',           0x0010 );
 define ( 'PAGE_ADULT',             0x0020 );
 define ( 'PAGE_CENSORED',          0x0040 ); // Site admin has blocked this channel from appearing in casual search results and site feeds
@@ -240,6 +240,8 @@ define ( 'PHOTO_PROFILE',          0x0001 );
 define ( 'PHOTO_XCHAN',            0x0002 );
 define ( 'PHOTO_THING',            0x0004 );
 define ( 'PHOTO_ADULT',            0x0008 );
+
+define ( 'PHOTO_FLAG_OS',          0x4000 );
 
 /**
  * Menu types
@@ -495,6 +497,7 @@ define ( 'ACTIVITY_FAVORITE',    NAMESPACE_ACTIVITY_SCHEMA . 'favorite' );
 
 define ( 'ACTIVITY_POKE',        NAMESPACE_ZOT . '/activity/poke' );
 define ( 'ACTIVITY_MOOD',        NAMESPACE_ZOT . '/activity/mood' );
+define ( 'ACTIVITY_FILE',        NAMESPACE_ZOT . '/activity/file' );
 
 define ( 'ACTIVITY_OBJ_COMMENT', NAMESPACE_ACTIVITY_SCHEMA . 'comment' );
 define ( 'ACTIVITY_OBJ_NOTE',    NAMESPACE_ACTIVITY_SCHEMA . 'note' );
@@ -552,7 +555,7 @@ define ( 'ITEM_DELAYED_PUBLISH', 0x0080);
 define ( 'ITEM_BUILDBLOCK',      0x0100);	// Named thusly to make sure nobody confuses this with ITEM_BLOCKED
 define ( 'ITEM_PDL',			 0x0200);	// Page Description Language - e.g. Comanche
 define ( 'ITEM_BUG',			 0x0400);	// Is a bug, can be used by the internal bug tracker
-define ( 'ITEM_PENDING_REMOVE',  0x0800);  // deleted, notification period has lapsed
+define ( 'ITEM_PENDING_REMOVE',  0x0800);   // deleted, notification period has lapsed
 
 /**
  * Item Flags
@@ -1022,6 +1025,7 @@ class App {
 			'$head_js' => head_get_js(),
 			'$js_strings' => js_strings(),
 			'$zid' => get_my_address(),
+			'$channel_id' => $this->profile['uid'],
 		)) . $this->page['htmlhead'];
 
 		// always put main.js at the end
@@ -2180,4 +2184,20 @@ function get_directory_realm() {
 function get_poller_runtime() {
 	$t = get_config('system','lastpoll');
 	return relative_date($t);
+}
+
+function z_get_upload_dir() {
+	$upload_dir = get_config('system','uploaddir');
+	if(! $upload_dir)
+		$upload_dir = ini_get('upload_tmp_dir');
+	if(! $upload_dir)
+		$upload_dir = sys_get_temp_dir();
+	return $upload_dir;
+}
+
+function z_get_temp_dir() {
+	$temp_dir = get_config('system','tempdir');
+	if(! $temp_dir)
+		$temp_dir = sys_get_temp_dir();
+	return $upload_dir;
 }

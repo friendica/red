@@ -46,6 +46,7 @@ function ping_init(&$a) {
 	if(local_user())  {
 		$vnotify = get_pconfig(local_user(),'system','vnotify');
 		$evdays = intval(get_pconfig(local_user(),'system','evdays'));
+		$ob_hash = get_observer_hash();
 	}
 
 	// if unset show all visual notification types
@@ -275,10 +276,12 @@ function ping_init(&$a) {
 		$result = array();
 
 		$r = q("SELECT * FROM item
-			WHERE item_restrict = %d and ( item_flags & %d ) > 0 and uid = %d",
+			WHERE item_restrict = %d and ( item_flags & %d ) > 0 and uid = %d
+			and author_xchan != '%s' ORDER BY created DESC",
 			intval(ITEM_VISIBLE),
 			intval(ITEM_UNSEEN),
-			intval(local_user())
+			intval(local_user()),
+			dbesc($ob_hash)
 		);
 
 		if($r) {
@@ -297,7 +300,7 @@ function ping_init(&$a) {
 	if(argc() > 1 && (argv(1) === 'intros')) {
 		$result = array();
 
-		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or (xchan_flags & %d) > 0)",
+		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or (xchan_flags & %d) > 0) ORDER BY abook_created DESC",
 			intval(local_user()),
 			intval(ABOOK_FLAG_PENDING),
 			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
@@ -381,10 +384,12 @@ function ping_init(&$a) {
 
 	if($vnotify & (VNOTIFY_NETWORK|VNOTIFY_CHANNEL)) {
 		$r = q("SELECT id, item_restrict, item_flags FROM item
-			WHERE (item_restrict = %d) and ( item_flags & %d ) > 0 and uid = %d",
+			WHERE (item_restrict = %d) and ( item_flags & %d ) > 0 and uid = %d
+			and author_xchan != '%s'",
 			intval(ITEM_VISIBLE),
 			intval(ITEM_UNSEEN),
-			intval(local_user())
+			intval(local_user()),
+			dbesc($ob_hash)
 		);
 
 		if($r) {	

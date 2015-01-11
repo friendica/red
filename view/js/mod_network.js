@@ -1,10 +1,5 @@
 $(document).ready(function() { 
-	var a; 
-	a = $("#search-text").autocomplete({ 
-		serviceUrl: baseurl + '/search_ac',
-		minChars: 2,
-		id: 'search-text-ac',
-	});
+	$("#search-text").contact_autocomplete(baseurl + '/search_ac');
 	$('.jslider-scale ins').addClass('hidden-xs');
 }); 
 

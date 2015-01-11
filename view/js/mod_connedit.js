@@ -1,7 +1,7 @@
 
 function abook_perms_msg() {
 	$('.abook-permschange').show();
-	$('.abook-permschange').html(aStr['permschange']);
+//	$('.abook-permschange').html(aStr['permschange']);
 	$('.abook-permssave').show();
 }
 

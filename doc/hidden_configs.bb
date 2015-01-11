@@ -128,6 +128,9 @@ This document assumes you're an administrator.
         When requesting a random profile, check that it actually exists first
     [b]randprofile > retry[/b]
         Number of times to retry getting a random profile
+    [b]system > photo_cache_time[/b]
+        How long to cache photos, in seconds. Default is 86400 (1 day).
+        Longer time increases performance, but it also means it takes longer for changed permissions to apply.
 
 		
 #include doc/macros/main_footer.bb;

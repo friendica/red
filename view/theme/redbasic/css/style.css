@@ -301,14 +301,12 @@ footer {
 #main-login #id_remember {
 	float: left;
 	padding: 0;
-	margin-top: 15px;
 	margin-bottom: 0;
 	margin-left: 0;
 	width: 20px;
 }
 
-#main-login .field.checkbox label {
-	margin-top: 15px;
+#main-login .field.checkbox > label {
 	margin-bottom: 0;
 	float: left;
 	width: 100px;
@@ -373,13 +371,14 @@ footer {
 	font-weight: bold;
 }
 
-#profile-edit-wrapper .field label {
+#profile-edit-wrapper .field {
 	margin-top: 20px;
+}
+#profile-edit-wrapper .field > label {
 	width: 175px;
 }
 
 #profile-edit-wrapper .field input[type="text"] {
-	margin-top: 20px;
 	width: 220px;
 }
 
@@ -687,18 +686,6 @@ footer {
   height: 0;
   padding: 75% 0 0 0;
   overflow: hidden;
-}
-
-#photos-upload-perms-menu, #photos-upload-perms-menu:visited, #photos-upload-perms-menu:link {
-	color: #8888FF;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-#photos-upload-perms-menu:hover {
-	color: #0000FF;
-	text-decoration: underline;
-	cursor: pointer;
 }
 
 #photo-view-wrapper {
@@ -1041,7 +1028,7 @@ footer {
     background: none repeat scroll 0% 0% $cal_bgcolour !important;
 }
 
-#fancybox-content {
+#colorbox {
 	border: 0px solid $fancybox_bgcolour;
 	background-color: $fancybox_bgcolour;
 }
@@ -1254,7 +1241,7 @@ footer {
 	width: 100%
 }
 
-.field label {
+.field > label {
 	float: left;
 	width: 350px;
 }
@@ -1308,6 +1295,8 @@ footer {
 .hidden { display: none!important; }
 
 .field.radio .field_help { margin-left: 0px; }
+.field.checkbox .field_help { display: inline; margin-left: 10px; }
+
 
 /**
  * OAuth
@@ -1774,7 +1763,6 @@ img.mail-list-sender-photo {
 	color: #777;
 }
 
-#jot-perms-icon,
 .jot-icons {
 	color: $toolicon_colour;
 }
@@ -1990,7 +1978,7 @@ img.mail-list-sender-photo {
 
 .chat-item-text {
 	border-radius: $radiuspx;
-	background-color: #eee;
+	background-color: $chat_txtbgcol;
 }
 
 /* nav bootstrap */
@@ -2031,6 +2019,43 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	color: $nav_active_icon_colour;
 }
 
+.section-title-wrapper {
+	padding: 7px 10px;
+	background-color: $item_colour;
+	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radiuspx;
+	margin-bottom: 3px;
+}
+
+.section-title-wrapper h2 {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.section-content-tools-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	margin-bottom: 3px;
+}
+
+.section-content-wrapper {
+	padding: 7px 10px;
+	background-color: $comment_item_colour;
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
+}
+
+.section-content-wrapper-np {
+	background-color: $comment_item_colour;
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
+}
+
+[id^="cloud-index-"]:hover,
+.cloud-index-active {
+	background-color: $item_colour;
+}
+
 /* bootstrap overrides */
 
 blockquote {
@@ -2049,6 +2074,20 @@ blockquote {
 
 nav .badge:hover {
 	background-color: #999;
+}
+
+nav .badge.home-update,
+nav .badge.notify-update,
+nav .badge.intro-update,
+nav .badge.mail-update {
+	background-color:#C9302C;
+}
+
+nav .badge.home-update:hover,
+nav .badge.notify-update:hover,
+nav .badge.intro-update:hover,
+nav .badge.mail-update:hover {
+	background-color:#D9534F;
 }
 
 .dropdown-menu {
@@ -2226,32 +2265,6 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 	background-image: linear-gradient(to bottom, $advperm_gradientcol 0px, $advperm_bgcolour 100%);
 }
 
-.section-title-wrapper {
-	padding: 7px 10px;
-	background-color: $item_colour;
-	border-top-left-radius: $radiuspx;
-	border-top-right-radius: $radiuspx;
-	margin-bottom: 3px;
-}
-
-.section-title-wrapper h2 {
-	margin-top: 0px;
-	margin-bottom: 0px;
-}
-
-.section-content-tools-wrapper {
-	padding: 7px 10px;
-	background-color: $comment_item_colour;
-	margin-bottom: 3px;
-}
-
-.section-content-wrapper {
-	padding: 7px 10px;
-	background-color: $comment_item_colour;
-	border-bottom-left-radius: $radiuspx;
-	border-bottom-right-radius: $radiuspx;
-}
-
 @media screen and (max-width: 767px) {
 	aside#region_1 {
 		background: rgba(0, 0, 0, .1);
@@ -2337,4 +2350,69 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 .jothidden .bootstrap-tagsinput:hover, .jothidden .bootstrap-tagsinput:focus {
 	border: 1px solid #cccccc;
+}
+
+/* Abusing theme-green is less work than makeing a new new one */
+.theme-green .back-bar .selected-bar { background-color: #000000; background-image: none; !important }
+
+
+/* Turn checkboxes into switches */
+.field.checkbox .fieldhelp { vertical-align:top; }
+.field.checkbox > div {
+    position: relative; width: 70px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    display:inline-block;
+}
+
+.field.checkbox input {
+    display: none;
+}
+
+.field.checkbox > div label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #999999;
+    border-radius: 20px;
+    margin:0px;
+}
+
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+    -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
+}
+
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 20px; padding: 0; line-height:20px;
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+
+.onoffswitch-inner:before {
+    content: attr(data-on);
+    padding-left: 10px;
+    background-color: #EEEEEE;
+}
+
+.onoffswitch-inner:after {
+    content: attr(data-off);
+    padding-right: 10px;
+    background-color: #EEEEEE; color: #999999;
+    text-align: right;
+}
+
+.onoffswitch-switch {
+    display: block; width: 25px; margin-left: 6px; margin-right: 6px; margin-top:5%; margin-bottom:5%;
+    background: #A1A1A1;
+    border: 2px solid #999999; border-radius: 20px;
+    position: absolute; top: 0; bottom: 0; right: 36px;
+    -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s;
+}
+
+.field.checkbox > div > input:checked + label .onoffswitch-inner {
+    margin-left: 0;
+}
+
+.field.checkbox > div > input:checked + label .onoffswitch-switch {
+    right: -2px;
+    background-color: #27A1CA;
 }

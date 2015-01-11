@@ -3,7 +3,7 @@
 	margin-top: 30px;
 }
 
-#group-edit-form label {
+#group-edit-form > label {
 	float: left;
 	width: 300px;
 }

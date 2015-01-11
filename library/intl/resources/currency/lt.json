@@ -1,0 +1,634 @@
+{
+    "AFN": {
+        "name": "Afganistano afganis",
+        "symbol": "AFN"
+    },
+    "ALL": {
+        "name": "Albanijos lekas",
+        "symbol": "ALL"
+    },
+    "DZD": {
+        "name": "Alžyro dinaras",
+        "symbol": "DZD"
+    },
+    "AOA": {
+        "name": "Angolos kvanza",
+        "symbol": "AOA"
+    },
+    "ARS": {
+        "name": "Argentinos pesas",
+        "symbol": "ARS"
+    },
+    "AMD": {
+        "name": "Armėnijos dramas",
+        "symbol": "AMD"
+    },
+    "AWG": {
+        "name": "Arubos guldenas",
+        "symbol": "AWG"
+    },
+    "AUD": {
+        "name": "Australijos doleris",
+        "symbol": "AUD"
+    },
+    "AZN": {
+        "name": "Azerbaidžano manatas",
+        "symbol": "AZN"
+    },
+    "BSD": {
+        "name": "Bahamų doleris",
+        "symbol": "BSD"
+    },
+    "BHD": {
+        "name": "Bahreino dinaras",
+        "symbol": "BHD"
+    },
+    "BYR": {
+        "name": "Baltarusijos rublis",
+        "symbol": "BYR"
+    },
+    "BDT": {
+        "name": "Bangladešo taka",
+        "symbol": "BDT"
+    },
+    "BBD": {
+        "name": "Barbadoso doleris",
+        "symbol": "BBD"
+    },
+    "BZD": {
+        "name": "Belizo doleris",
+        "symbol": "BZD"
+    },
+    "BMD": {
+        "name": "Bermudos doleris",
+        "symbol": "BMD"
+    },
+    "BOB": {
+        "name": "Bolivijos bolivijanas",
+        "symbol": "BOB"
+    },
+    "BAM": {
+        "name": "Bosnijos ir Hercegovinos konvertuojamoji markė",
+        "symbol": "BAM"
+    },
+    "BWP": {
+        "name": "Botsvanos pula",
+        "symbol": "BWP"
+    },
+    "BRL": {
+        "name": "Brazilijos realas",
+        "symbol": "BRL"
+    },
+    "BND": {
+        "name": "Brunėjaus doleris",
+        "symbol": "BND"
+    },
+    "BGN": {
+        "name": "Bulgarijos levas",
+        "symbol": "BGN"
+    },
+    "BIF": {
+        "name": "Burundžio frankas",
+        "symbol": "BIF"
+    },
+    "BTN": {
+        "name": "Butano ngultrumas",
+        "symbol": "BTN"
+    },
+    "XOF": {
+        "name": "CFA BCEAO frankas",
+        "symbol": "XOF"
+    },
+    "XAF": {
+        "name": "CFA BEAC frankas",
+        "symbol": "XAF"
+    },
+    "XPF": {
+        "name": "CFP frankas",
+        "symbol": "XPF"
+    },
+    "CZK": {
+        "name": "Čekijos krona",
+        "symbol": "CZK"
+    },
+    "CLP": {
+        "name": "Čilės pesas",
+        "symbol": "CLP"
+    },
+    "DKK": {
+        "name": "Danijos krona",
+        "symbol": "DKK"
+    },
+    "GBP": {
+        "name": "Didžiosios Britanijos svaras sterlingų",
+        "symbol": "GBP"
+    },
+    "DOP": {
+        "name": "Dominikos pesas",
+        "symbol": "DOP"
+    },
+    "DJF": {
+        "name": "Džibučio frankas",
+        "symbol": "DJF"
+    },
+    "EGP": {
+        "name": "Egipto svaras",
+        "symbol": "EGP"
+    },
+    "ERN": {
+        "name": "Eritrėjos nakfa",
+        "symbol": "ERN"
+    },
+    "ETB": {
+        "name": "Etiopijos biras",
+        "symbol": "ETB"
+    },
+    "EUR": {
+        "name": "Euras",
+        "symbol": "EUR"
+    },
+    "FKP": {
+        "name": "Falklando salų svaras",
+        "symbol": "FKP"
+    },
+    "FJD": {
+        "name": "Fidžio doleris",
+        "symbol": "FJD"
+    },
+    "PHP": {
+        "name": "Filipinų pesas",
+        "symbol": "PHP"
+    },
+    "GYD": {
+        "name": "Gajanos doleris",
+        "symbol": "GYD"
+    },
+    "GMD": {
+        "name": "Gambijos dalasis",
+        "symbol": "GMD"
+    },
+    "GHS": {
+        "name": "Ganos sedis",
+        "symbol": "GHS"
+    },
+    "GIP": {
+        "name": "Gibraltaro svaras",
+        "symbol": "GIP"
+    },
+    "GEL": {
+        "name": "Gruzijos laris",
+        "symbol": "GEL"
+    },
+    "GTQ": {
+        "name": "Gvatemalos ketcalis",
+        "symbol": "GTQ"
+    },
+    "GNF": {
+        "name": "Gvinėjos frankas",
+        "symbol": "GNF"
+    },
+    "HTG": {
+        "name": "Haičio gurdas",
+        "symbol": "HTG"
+    },
+    "HNL": {
+        "name": "Hondūro lempira",
+        "symbol": "HNL"
+    },
+    "HKD": {
+        "name": "Honkongo doleris",
+        "symbol": "HKD"
+    },
+    "INR": {
+        "name": "Indijos rupija",
+        "symbol": "INR"
+    },
+    "IDR": {
+        "name": "Indonezijos rupija",
+        "symbol": "IDR"
+    },
+    "IQD": {
+        "name": "Irako dinaras",
+        "symbol": "IQD"
+    },
+    "IRR": {
+        "name": "Irano rialas",
+        "symbol": "IRR"
+    },
+    "ISK": {
+        "name": "Islandijos krona",
+        "symbol": "ISK"
+    },
+    "ILS": {
+        "name": "Izraelio naujasis šekelis",
+        "symbol": "ILS"
+    },
+    "JMD": {
+        "name": "Jamaikos doleris",
+        "symbol": "JMD"
+    },
+    "JPY": {
+        "name": "Japonijos jena",
+        "symbol": "JPY"
+    },
+    "USD": {
+        "name": "JAV doleris",
+        "symbol": "USD"
+    },
+    "YER": {
+        "name": "Jemeno rialas",
+        "symbol": "YER"
+    },
+    "JOD": {
+        "name": "Jordanijos dinaras",
+        "symbol": "JOD"
+    },
+    "AED": {
+        "name": "Jungtinių Arabų Emyratų dirhamas",
+        "symbol": "AED"
+    },
+    "KYD": {
+        "name": "Kaimanų salų doleris",
+        "symbol": "KYD"
+    },
+    "KHR": {
+        "name": "Kambodžos rielis",
+        "symbol": "KHR"
+    },
+    "CAD": {
+        "name": "Kanados doleris",
+        "symbol": "CAD"
+    },
+    "QAR": {
+        "name": "Kataro rialas",
+        "symbol": "QAR"
+    },
+    "KZT": {
+        "name": "Kazachstano tengė",
+        "symbol": "KZT"
+    },
+    "KES": {
+        "name": "Kenijos šilingas",
+        "symbol": "KES"
+    },
+    "CNY": {
+        "name": "Kinijos ženminbi juanis",
+        "symbol": "CNY"
+    },
+    "KGS": {
+        "name": "Kirgizijos somas",
+        "symbol": "KGS"
+    },
+    "COP": {
+        "name": "Kolumbijos pesas",
+        "symbol": "COP"
+    },
+    "KMF": {
+        "name": "Komoro frankas",
+        "symbol": "KMF"
+    },
+    "CDF": {
+        "name": "Kongo frankas",
+        "symbol": "CDF"
+    },
+    "CRC": {
+        "name": "Kosta Rikos kolonas",
+        "symbol": "CRC"
+    },
+    "HRK": {
+        "name": "Kroatijos kuna",
+        "symbol": "HRK"
+    },
+    "CUC": {
+        "name": "Kubos konvertuojamasis pesas",
+        "symbol": "CUC"
+    },
+    "CUP": {
+        "name": "Kubos pesas",
+        "symbol": "CUP"
+    },
+    "KWD": {
+        "name": "Kuveito dinaras",
+        "symbol": "KWD"
+    },
+    "LAK": {
+        "name": "Laoso kipas",
+        "symbol": "LAK"
+    },
+    "PLN": {
+        "name": "Lenkijos zlotas",
+        "symbol": "PLN"
+    },
+    "LSL": {
+        "name": "Lesoto lotis",
+        "symbol": "LSL"
+    },
+    "LBP": {
+        "name": "Libano svaras",
+        "symbol": "LBP"
+    },
+    "LRD": {
+        "name": "Liberijos doleris",
+        "symbol": "LRD"
+    },
+    "LYD": {
+        "name": "Libijos dinaras",
+        "symbol": "LYD"
+    },
+    "LTL": {
+        "name": "Lietuvos litas",
+        "symbol": "LTL"
+    },
+    "MGA": {
+        "name": "Madagaskaro ariaris",
+        "symbol": "MGA"
+    },
+    "MOP": {
+        "name": "Makao pataka",
+        "symbol": "MOP"
+    },
+    "MKD": {
+        "name": "Makedonijos denaras",
+        "symbol": "MKD"
+    },
+    "MYR": {
+        "name": "Malaizijos ringitas",
+        "symbol": "MYR"
+    },
+    "MWK": {
+        "name": "Malavio kvača",
+        "symbol": "MWK"
+    },
+    "MVR": {
+        "name": "Maldyvų rufija",
+        "symbol": "MVR"
+    },
+    "MAD": {
+        "name": "Maroko dirhamas",
+        "symbol": "MAD"
+    },
+    "MUR": {
+        "name": "Mauricijaus rupija",
+        "symbol": "MUR"
+    },
+    "MRO": {
+        "name": "Mauritanijos ugija",
+        "symbol": "MRO"
+    },
+    "MXN": {
+        "name": "Meksikos pesas",
+        "symbol": "MXN"
+    },
+    "MMK": {
+        "name": "Mianmaro kijatas",
+        "symbol": "MMK"
+    },
+    "MDL": {
+        "name": "Moldovos lėja",
+        "symbol": "MDL"
+    },
+    "MNT": {
+        "name": "Mongolijos tugrikas",
+        "symbol": "MNT"
+    },
+    "MZN": {
+        "name": "Mozambiko metikalis",
+        "symbol": "MZN"
+    },
+    "NAD": {
+        "name": "Namibijos doleris",
+        "symbol": "NAD"
+    },
+    "NZD": {
+        "name": "Naujosios Zelandijos doleris",
+        "symbol": "NZD"
+    },
+    "NPR": {
+        "name": "Nepalo rupija",
+        "symbol": "NPR"
+    },
+    "NGN": {
+        "name": "Nigerijos naira",
+        "symbol": "NGN"
+    },
+    "NIO": {
+        "name": "Nikaragvos kordoba",
+        "symbol": "NIO"
+    },
+    "NOK": {
+        "name": "Norvegijos krona",
+        "symbol": "NOK"
+    },
+    "ANG": {
+        "name": "Olandijos Antilų guldenas",
+        "symbol": "ANG"
+    },
+    "OMR": {
+        "name": "Omano rialas",
+        "symbol": "OMR"
+    },
+    "PKR": {
+        "name": "Pakistano rupija",
+        "symbol": "PKR"
+    },
+    "PAB": {
+        "name": "Panamos balboja",
+        "symbol": "PAB"
+    },
+    "PGK": {
+        "name": "Papua Naujosios Gvinėjos kina",
+        "symbol": "PGK"
+    },
+    "PYG": {
+        "name": "Paragvajaus guaranis",
+        "symbol": "PYG"
+    },
+    "PEN": {
+        "name": "Peru naujasis solis",
+        "symbol": "PEN"
+    },
+    "ZAR": {
+        "name": "Pietų Afrikos Respublikos randas",
+        "symbol": "ZAR"
+    },
+    "KRW": {
+        "name": "Pietų Korėjos vonas",
+        "symbol": "KRW"
+    },
+    "SSP": {
+        "name": "Pietų Sudano svaras",
+        "symbol": "SSP"
+    },
+    "XCD": {
+        "name": "Rytų Karibų doleris",
+        "symbol": "XCD"
+    },
+    "RWF": {
+        "name": "Ruandos frankas",
+        "symbol": "RWF"
+    },
+    "RON": {
+        "name": "Rumunijos lėja",
+        "symbol": "RON"
+    },
+    "RUB": {
+        "name": "Rusijos rublis",
+        "symbol": "RUB"
+    },
+    "SBD": {
+        "name": "Saliamono salų doleris",
+        "symbol": "SBD"
+    },
+    "SVC": {
+        "name": "Salvadoro kolonas",
+        "symbol": "SVC"
+    },
+    "WST": {
+        "name": "Samoa tala",
+        "symbol": "WST"
+    },
+    "STD": {
+        "name": "San Tomės ir Principės dobra",
+        "symbol": "STD"
+    },
+    "SAR": {
+        "name": "Saudo Arabijos rijalas",
+        "symbol": "SAR"
+    },
+    "SCR": {
+        "name": "Seišelių rupija",
+        "symbol": "SCR"
+    },
+    "RSD": {
+        "name": "Serbijos dinaras",
+        "symbol": "RSD"
+    },
+    "SLL": {
+        "name": "Siera Leonės leonė",
+        "symbol": "SLL"
+    },
+    "SGD": {
+        "name": "Singapūro doleris",
+        "symbol": "SGD"
+    },
+    "SYP": {
+        "name": "Sirijos svaras",
+        "symbol": "SYP"
+    },
+    "SOS": {
+        "name": "Somalio šilingas",
+        "symbol": "SOS"
+    },
+    "SDG": {
+        "name": "Sudano svaras",
+        "symbol": "SDG"
+    },
+    "SRD": {
+        "name": "Surimano doleris",
+        "symbol": "SRD"
+    },
+    "SZL": {
+        "name": "Svazilando lilangenis",
+        "symbol": "SZL"
+    },
+    "KPW": {
+        "name": "Šiaurės Korėjos vonas",
+        "symbol": "KPW"
+    },
+    "LKR": {
+        "name": "Šri Lankos rupija",
+        "symbol": "LKR"
+    },
+    "SHP": {
+        "name": "Šv. Elenos salų svaras",
+        "symbol": "SHP"
+    },
+    "SEK": {
+        "name": "Švedijos krona",
+        "symbol": "SEK"
+    },
+    "CHF": {
+        "name": "Šveicarijos frankas",
+        "symbol": "CHF"
+    },
+    "TJS": {
+        "name": "Tadžikistano somonis",
+        "symbol": "TJS"
+    },
+    "THB": {
+        "name": "Tailando batas",
+        "symbol": "THB"
+    },
+    "TWD": {
+        "name": "Taivano naujasis doleris",
+        "symbol": "TWD"
+    },
+    "TZS": {
+        "name": "Tanzanijos šilingas",
+        "symbol": "TZS"
+    },
+    "TOP": {
+        "name": "Tongo paanga",
+        "symbol": "TOP"
+    },
+    "TTD": {
+        "name": "Trinidado ir Tobago doleris",
+        "symbol": "TTD"
+    },
+    "TND": {
+        "name": "Tuniso dinaras",
+        "symbol": "TND"
+    },
+    "TRY": {
+        "name": "Turkijos lira",
+        "symbol": "TRY"
+    },
+    "TMT": {
+        "name": "Turkmėnistano manatas",
+        "symbol": "TMT"
+    },
+    "UGX": {
+        "name": "Ugandos šilingas",
+        "symbol": "UGX"
+    },
+    "UAH": {
+        "name": "Ukrainos grivina",
+        "symbol": "UAH"
+    },
+    "UYU": {
+        "name": "Urugvajaus pesas",
+        "symbol": "UYU"
+    },
+    "UZS": {
+        "name": "Uzbekistano sumas",
+        "symbol": "UZS"
+    },
+    "VUV": {
+        "name": "Vanuatu vatas",
+        "symbol": "VUV"
+    },
+    "VEF": {
+        "name": "Venesuelos bolivaras",
+        "symbol": "VEF"
+    },
+    "HUF": {
+        "name": "Vengrijos forintas",
+        "symbol": "HUF"
+    },
+    "VND": {
+        "name": "Vietnamo dongas",
+        "symbol": "VND"
+    },
+    "ZMW": {
+        "name": "Zambijos kvača",
+        "symbol": "ZMW"
+    },
+    "ZWL": {
+        "name": "Zimbabvės doleris (2009)",
+        "symbol": "ZWL"
+    },
+    "CVE": {
+        "name": "Žaliojo Kyšulio eskudas",
+        "symbol": "CVE"
+    }
+}

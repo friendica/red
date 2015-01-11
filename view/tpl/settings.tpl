@@ -9,7 +9,7 @@
 <h3 class="settings-heading">{{$h_basic}}</h3>
 
 {{include file="field_input.tpl" field=$username}}
-{{include file="field_custom.tpl" field=$timezone}}
+{{include file="field_select_grouped.tpl" field=$timezone}}
 {{include file="field_input.tpl" field=$defloc}}
 {{include file="field_checkbox.tpl" field=$allowloc}}
 
@@ -22,10 +22,7 @@
 
 <h3 class="settings-heading">{{$h_prv}}</h3>
 
-<div class="field custom">
-<label for="privacy-role-select">{{$role_lbl}}</label>
-{{$role_select}}
-</div>
+{{include file="field_select_grouped.tpl" field=$role}}
 
 <div id="advanced-perm" style="display:{{if $permissions_set}}none{{else}}block{{/if}};">
 {{include file="field_checkbox.tpl" field=$hide_presence}}
@@ -62,7 +59,7 @@
 
 {{$suggestme}}
 
-{{include file="field_yesno.tpl" field=$blocktags}}
+{{include file="field_checkbox.tpl" field=$blocktags}}
 
 
 {{include file="field_input.tpl" field=$expire}}
@@ -113,6 +110,8 @@
 {{include file="field_intcheckbox.tpl" field=$vnotify7}}
 {{include file="field_intcheckbox.tpl" field=$vnotify8}}
 {{include file="field_intcheckbox.tpl" field=$vnotify9}}
+{{include file="field_intcheckbox.tpl" field=$vnotify11}}
+{{include file="field_intcheckbox.tpl" field=$always_show_in_notices}}
 
 {{*include file="field_intcheckbox.tpl" field=$vnotify11*}}
 </div>

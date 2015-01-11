@@ -135,11 +135,13 @@
 
 	function showHideComments(id) {
 		if( $('#collapsed-comments-' + id).is(':visible')) {
+			$('#collapsed-comments-' + id + ' .autotime').timeago('dispose');
 			$('#collapsed-comments-' + id).slideUp();
 			$('#hide-comments-' + id).html(aStr['showmore']);
 			$('#hide-comments-total-' + id).show();
 		}
 		else {
+			$('#collapsed-comments-' + id + ' .autotime').timeago();
 			$('#collapsed-comments-' + id).slideDown();
 			$('#hide-comments-' + id).html(aStr['showfewer']);
 			$('#hide-comments-total-' + id).hide();
@@ -269,9 +271,9 @@
 		}
 
 		// fancyboxes
-		$("a.popupbox").fancybox({
-			'transitionIn' : 'elastic',
-			'transitionOut' : 'elastic'
+		// Is this actually used anywhere?
+		$("a.popupbox").colorbox({
+			'transition' : 'elastic'
 		});
 		
 
@@ -452,6 +454,7 @@ function updateConvItems(mode,data) {
 		$('.thread-wrapper.toplevel_item',data).each(function() {
 
 			var ident = $(this).attr('id');
+			// This should probably use the context argument instead
 			var commentWrap = $('#'+ident+' .collapsed-comments').attr('id');
 			var itmId = 0;
 			var isVisible = false;
@@ -468,7 +471,7 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
 			}
 			else {
 				$('img',this).each(function() {
@@ -479,7 +482,7 @@ function updateConvItems(mode,data) {
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
 			}
 			prev = ident;
 		});
@@ -510,7 +513,7 @@ function updateConvItems(mode,data) {
 				$('#threads-end').before($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
 			}
 			else {
 				$('img',this).each(function() {
@@ -521,7 +524,7 @@ function updateConvItems(mode,data) {
 				$('#' + ident).replaceWith($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
 			}
 		});
 
@@ -555,7 +558,7 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				if(isVisible)
 					showHideComments(itmId);
-				$(".autotime").timeago();
+				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
 
 			}
 			prev = ident;
@@ -574,7 +577,7 @@ function updateConvItems(mode,data) {
 	}
 
 	/* autocomplete @nicknames */
-	$(".comment-edit-form  textarea").contact_autocomplete(baseurl+"/acl?f=&n=1");
+	$(".comment-edit-form  textarea").editor_autocomplete(baseurl+"/acl?f=&n=1");
 	
 	var bimgs = $(".wall-item-body img").not(function() { return this.complete; });
 	var bimgcount = bimgs.length;
@@ -598,14 +601,19 @@ function updateConvItems(mode,data) {
 		$(".wall-item-body, .contact-info").each(function() {
 			if($(this).height() > divmore_height + 10) {
 				if(! $(this).hasClass('divmore')) {
-					$(this).divgrow({ initialHeight: divmore_height, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
+					$(this).readmore({
+						collapsedHeight: divmore_height, 
+						moreLink: '<a href="#" class="divgrow-showmore">'+aStr['divgrowmore']+'</a>',
+						lessLink: '<a href="#" class="divgrow-showmore">'+aStr['divgrowless']+'</a>'
+					});
 					$(this).addClass('divmore');
 				}
-			}					
+			}
 		});
 	}
 
 	function liveUpdate() {
+		if(typeof profile_uid === 'undefined') profile_uid = false; /* Should probably be unified with channelId defined in head.tpl */
 		if((src == null) || (stopped) || (! profile_uid)) { $('.like-rotator').spin(false); return; }
 		if(($('.comment-edit-text-full').length) || (in_progress)) {
 			if(livetime) {
@@ -844,10 +852,12 @@ function updateConvItems(mode,data) {
 	}
 
 	function filestorage(event,nick,id) {
+		$('#cloud-index-' + last_filestorage_id).removeClass('cloud-index-active');
 		$('#perms-panel-' + last_filestorage_id).hide().html('');
 		$('#file-edit-' + id).spin('tiny');
 		delete acl;
 		$.get('filestorage/' + nick + '/' + id + '/edit', function(data) {
+			$('#cloud-index-' + id).addClass('cloud-index-active');
 			$('#perms-panel-' + id).html(data).show();
 			$('#file-edit-' + id).spin(false);
 			last_filestorage_id = id;

@@ -20,7 +20,7 @@
 {{include file="field_input.tpl" field=$adminmail}}
 {{include file="field_input.tpl" field=$siteurl}}
 
-{{$timezone}}
+{{include file="field_select_grouped.tpl" field=$timezone}}
 
 <input id="install-submit" type="submit" name="submit" value="{{$submit}}" /> 
 

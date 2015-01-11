@@ -28,7 +28,7 @@ ul#settings-privacy-macros {
 	margin-bottom: 10px;
 }
 
-#settings-permissions-wrapper .field label{
+#settings-permissions-wrapper .field > label {
 	width: 350px;
 }
 
@@ -41,7 +41,7 @@ ul#settings-privacy-macros {
 	margin-bottom: 45px;
 }
 
-#settings-notifications label {
+#settings-notifications .field > label {
 	margin-left: 20px;
 	width: 330px;
 }

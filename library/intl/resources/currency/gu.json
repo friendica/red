@@ -1,0 +1,634 @@
+{
+    "XOF": {
+        "name": "[CFA] ફ્રેંક [BCEAO]",
+        "symbol": "CFA"
+    },
+    "XAF": {
+        "name": "[CFA] ફ્રેંક [BEAC]",
+        "symbol": "FCFA"
+    },
+    "XPF": {
+        "name": "[CFP] ફ્રેંક",
+        "symbol": "CFPF"
+    },
+    "SVC": {
+        "name": "SVC",
+        "symbol": "SVC"
+    },
+    "ZWL": {
+        "name": "ZWL",
+        "symbol": "ZWL"
+    },
+    "AOA": {
+        "name": "અંગોલિયન ક્વાન્ઝા",
+        "symbol": "AOA"
+    },
+    "AZN": {
+        "name": "અઝરબૈજાની મનાત",
+        "symbol": "AZN"
+    },
+    "AFN": {
+        "name": "અફ્ગાન અફ્ગાની",
+        "symbol": "AFN"
+    },
+    "AWG": {
+        "name": "અરુબન ફ્લોરિન",
+        "symbol": "AWG"
+    },
+    "ARS": {
+        "name": "અર્જેન્ટીના પેસો",
+        "symbol": "ARS"
+    },
+    "AMD": {
+        "name": "અર્મેનિયન ડ્રેમ",
+        "symbol": "AMD"
+    },
+    "DZD": {
+        "name": "અલ્જિરિયન દિનાર",
+        "symbol": "DZD"
+    },
+    "ALL": {
+        "name": "અલ્બેનિયન લેક",
+        "symbol": "ALL"
+    },
+    "ISK": {
+        "name": "આઇસલેન્ડિક ક્રોના",
+        "symbol": "ISK"
+    },
+    "EGP": {
+        "name": "ઇજિપ્તિયન પાઉન્ડ",
+        "symbol": "EGP"
+    },
+    "ILS": {
+        "name": "ઇઝરાયેલી ન્યુ શેકલ",
+        "symbol": "₪"
+    },
+    "ETB": {
+        "name": "ઇથિયોપીયન બિર",
+        "symbol": "ETB"
+    },
+    "IDR": {
+        "name": "ઇન્ડોનેશિયન રૂપિયા",
+        "symbol": "IDR"
+    },
+    "IQD": {
+        "name": "ઇરાકી દિનાર",
+        "symbol": "IQD"
+    },
+    "IRR": {
+        "name": "ઇરાનિયન રિયાલ",
+        "symbol": "IRR"
+    },
+    "XCD": {
+        "name": "ઇસ્ટ કેરિબિયન ડોલર",
+        "symbol": "EC$"
+    },
+    "UZS": {
+        "name": "ઉઝ્બેકિસ્તાન સોમ",
+        "symbol": "UZS"
+    },
+    "KPW": {
+        "name": "ઉત્તર કોરિયન વન",
+        "symbol": "KPW"
+    },
+    "UYU": {
+        "name": "ઉરુગ્વેયન પેસો",
+        "symbol": "UYU"
+    },
+    "ERN": {
+        "name": "એરિટ્રેયન નક્ફા",
+        "symbol": "ERN"
+    },
+    "AUD": {
+        "name": "ઑસ્ટ્રેલિયન ડૉલર",
+        "symbol": "A$"
+    },
+    "OMR": {
+        "name": "ઓમાની રિયાલ",
+        "symbol": "OMR"
+    },
+    "KZT": {
+        "name": "કઝાકિસ્તાની ટેંગ",
+        "symbol": "KZT"
+    },
+    "QAR": {
+        "name": "કતારી રિયાલ",
+        "symbol": "QAR"
+    },
+    "KGS": {
+        "name": "કિર્ગિસ્તાની સોમ",
+        "symbol": "KGS"
+    },
+    "KWD": {
+        "name": "કુવૈતી દિનાર",
+        "symbol": "KWD"
+    },
+    "CAD": {
+        "name": "કેનેડિયન ડૉલર",
+        "symbol": "CA$"
+    },
+    "KES": {
+        "name": "કેન્યેન શિલિંગ",
+        "symbol": "KES"
+    },
+    "CVE": {
+        "name": "કેપ વર્દિયન એસ્કુડો",
+        "symbol": "CVE"
+    },
+    "KHR": {
+        "name": "કેમ્બોડિયન રીઅલ",
+        "symbol": "KHR"
+    },
+    "KYD": {
+        "name": "કેયમેન આઇલેંડ્સ ડોલર",
+        "symbol": "KYD"
+    },
+    "CDF": {
+        "name": "કોંગોલિઝ ફ્રેંક",
+        "symbol": "CDF"
+    },
+    "KMF": {
+        "name": "કોમોરિઅન ફ્રેંક",
+        "symbol": "KMF"
+    },
+    "COP": {
+        "name": "કોલમ્બિયન પેસો",
+        "symbol": "COP"
+    },
+    "CRC": {
+        "name": "કોસ્ટા રિકન કોલોન",
+        "symbol": "CRC"
+    },
+    "CUP": {
+        "name": "ક્યુબન પેસો",
+        "symbol": "CUP"
+    },
+    "CUC": {
+        "name": "ક્યુબન રૂપાંતર યોગ્ય પેસો",
+        "symbol": "CUC"
+    },
+    "HRK": {
+        "name": "ક્રોએશિયન ક્યુના",
+        "symbol": "HRK"
+    },
+    "GYD": {
+        "name": "ગયાનિઝ ડોલર",
+        "symbol": "GYD"
+    },
+    "GNF": {
+        "name": "ગિનીયન ફ્રેંક",
+        "symbol": "GNF"
+    },
+    "GMD": {
+        "name": "ગેમ્બિયન દલાસી",
+        "symbol": "GMD"
+    },
+    "GTQ": {
+        "name": "ગ્વાટેમાલા કુઇટ્ઝલ",
+        "symbol": "GTQ"
+    },
+    "GHS": {
+        "name": "ઘાનાઇયન સેડી",
+        "symbol": "GHS"
+    },
+    "CNY": {
+        "name": "ચાઇનિઝ યુઆન",
+        "symbol": "CN¥"
+    },
+    "CLP": {
+        "name": "ચિલિઅન પેસો",
+        "symbol": "CLP"
+    },
+    "CZK": {
+        "name": "ચેક રીપબ્લિક કોરુના",
+        "symbol": "CZK"
+    },
+    "JMD": {
+        "name": "જમૈકિયન ડોલર",
+        "symbol": "JMD"
+    },
+    "JPY": {
+        "name": "જાપાનીઝ યેન",
+        "symbol": "JP¥"
+    },
+    "DJF": {
+        "name": "જિબુટિયન ફ્રેંક",
+        "symbol": "DJF"
+    },
+    "GIP": {
+        "name": "જીબ્રાલ્ટર પાઉન્ડ",
+        "symbol": "GIP"
+    },
+    "JOD": {
+        "name": "જોર્ડનિયન દિનાર",
+        "symbol": "JOD"
+    },
+    "GEL": {
+        "name": "જ્યોર્જિઅન લારી",
+        "symbol": "GEL"
+    },
+    "ZMW": {
+        "name": "ઝામ્બિયન ક્વાચા",
+        "symbol": "ZMW"
+    },
+    "TOP": {
+        "name": "ટોંગન પ’અંગા",
+        "symbol": "TOP"
+    },
+    "TND": {
+        "name": "ટ્યુનિશિયન દિનાર",
+        "symbol": "TND"
+    },
+    "DKK": {
+        "name": "ડેનિશ ક્રોન",
+        "symbol": "DKK"
+    },
+    "DOP": {
+        "name": "ડોમિનિકન પેસો",
+        "symbol": "DOP"
+    },
+    "TJS": {
+        "name": "તાજિકિસ્તાની સોમોની",
+        "symbol": "TJS"
+    },
+    "TZS": {
+        "name": "તાન્ઝાનિયન શિલિંગ",
+        "symbol": "TZS"
+    },
+    "TMT": {
+        "name": "તુર્કમેનિસ્તાની મનત",
+        "symbol": "TMT"
+    },
+    "TRY": {
+        "name": "તુર્કિશ લિરા",
+        "symbol": "TRY"
+    },
+    "TTD": {
+        "name": "ત્રિનિદાદ અને ટોબેગો ડોલર",
+        "symbol": "TTD"
+    },
+    "THB": {
+        "name": "થાઇ બાહ્ત",
+        "symbol": "฿"
+    },
+    "ZAR": {
+        "name": "દક્ષિણ આફ્રિકી રેંડ",
+        "symbol": "ZAR"
+    },
+    "KRW": {
+        "name": "દક્ષિણ કોરિયન વન",
+        "symbol": "₩"
+    },
+    "SSP": {
+        "name": "દક્ષિણ સુદાનિઝ પાઉન્ડ",
+        "symbol": "SSP"
+    },
+    "NGN": {
+        "name": "નાઇજીરિયન નૈરા",
+        "symbol": "NGN"
+    },
+    "NAD": {
+        "name": "નામિબિયન ડોલર",
+        "symbol": "NAD"
+    },
+    "NIO": {
+        "name": "નિકારાગુઅન કોર્ડોબા",
+        "symbol": "NIO"
+    },
+    "ANG": {
+        "name": "નેધરલેંડ એંટિલિન ગિલ્ડર",
+        "symbol": "ANG"
+    },
+    "NPR": {
+        "name": "નેપાલિઝ રૂપી",
+        "symbol": "NPR"
+    },
+    "NOK": {
+        "name": "નૉર્વેજિયન ક્રોન",
+        "symbol": "NOK"
+    },
+    "TWD": {
+        "name": "ન્યુ તાઇવાન ડૉલર",
+        "symbol": "NT$"
+    },
+    "NZD": {
+        "name": "ન્યૂઝિલેંડ ડૉલર",
+        "symbol": "NZ$"
+    },
+    "PAB": {
+        "name": "પનામેનિયન બાલ્બોઆ",
+        "symbol": "PAB"
+    },
+    "PYG": {
+        "name": "પરાગ્વેયન ગુઆરાની",
+        "symbol": "PYG"
+    },
+    "PKR": {
+        "name": "પાકિસ્તાની રૂપી",
+        "symbol": "PKR"
+    },
+    "PGK": {
+        "name": "પાપુઆ ન્યૂ ગિનીયન કિના",
+        "symbol": "PGK"
+    },
+    "PEN": {
+        "name": "પેરુવિયન ન્યુવો સોલ",
+        "symbol": "PEN"
+    },
+    "PLN": {
+        "name": "પોલિસ ઝ્લોટી",
+        "symbol": "PLN"
+    },
+    "FJD": {
+        "name": "ફિજિઅન ડોલર",
+        "symbol": "FJD"
+    },
+    "PHP": {
+        "name": "ફિલીપાઇન પેસો",
+        "symbol": "PHP"
+    },
+    "FKP": {
+        "name": "ફૉકલેન્ડ આઇલેંડ્સ પાઉન્ડ",
+        "symbol": "FKP"
+    },
+    "BMD": {
+        "name": "બર્મુડન ડોલર",
+        "symbol": "BMD"
+    },
+    "BGN": {
+        "name": "બલ્ગેરીયન લેવ",
+        "symbol": "BGN"
+    },
+    "BSD": {
+        "name": "બહામિયન ડોલર",
+        "symbol": "BSD"
+    },
+    "BDT": {
+        "name": "બાંગલાદેશી ટાકા",
+        "symbol": "BDT"
+    },
+    "BBD": {
+        "name": "બાર્બાડિયન ડોલર",
+        "symbol": "BBD"
+    },
+    "BIF": {
+        "name": "બુરુન્ડિયન ફ્રેંક",
+        "symbol": "BIF"
+    },
+    "BYR": {
+        "name": "બેલારુશિયન રૂબલ",
+        "symbol": "BYR"
+    },
+    "BZD": {
+        "name": "બેલિઝ ડોલર",
+        "symbol": "BZD"
+    },
+    "BHD": {
+        "name": "બેહરિની દિનાર",
+        "symbol": "BHD"
+    },
+    "BWP": {
+        "name": "બોત્સવાનન પુલા",
+        "symbol": "BWP"
+    },
+    "BOB": {
+        "name": "બોલિવિયન બોલિવિયાનો",
+        "symbol": "BOB"
+    },
+    "BAM": {
+        "name": "બોસ્નિયા અને હર્ઝેગોવિના રૂપાંતર યોગ્ય માર્ક",
+        "symbol": "BAM"
+    },
+    "BRL": {
+        "name": "બ્રાઝિલીયન રિઆલ",
+        "symbol": "R$"
+    },
+    "GBP": {
+        "name": "બ્રિટિશ પાઉન્ડ સ્ટર્લિંગ",
+        "symbol": "£"
+    },
+    "BND": {
+        "name": "બ્રુનેઇ ડોલર",
+        "symbol": "BND"
+    },
+    "INR": {
+        "name": "ભારતીય રૂપિયા",
+        "symbol": "₹"
+    },
+    "BTN": {
+        "name": "ભુતાનિઝ એંગુલ્ત્રમ",
+        "symbol": "BTN"
+    },
+    "MYR": {
+        "name": "મલેશિયન રિંગ્ગેટ",
+        "symbol": "MYR"
+    },
+    "MOP": {
+        "name": "માકાનિઝ પતાકા",
+        "symbol": "MOP"
+    },
+    "MGA": {
+        "name": "માલાગેસી અરીઆરી",
+        "symbol": "MGA"
+    },
+    "MWK": {
+        "name": "માલાવિયન ક્વાચા",
+        "symbol": "MWK"
+    },
+    "MVR": {
+        "name": "માલ્દિવિયન રુફિયા",
+        "symbol": "MVR"
+    },
+    "MXN": {
+        "name": "મેક્સિકન પેસો",
+        "symbol": "MX$"
+    },
+    "MKD": {
+        "name": "મેસેડોનિયન દિનાર",
+        "symbol": "MKD"
+    },
+    "MNT": {
+        "name": "મોંગોલિયન ટગરિક",
+        "symbol": "MNT"
+    },
+    "MZN": {
+        "name": "મોઝામ્બિકન મેટિકલ",
+        "symbol": "MZN"
+    },
+    "MRO": {
+        "name": "મોરીશેનિયન ઓગુયા",
+        "symbol": "MRO"
+    },
+    "MUR": {
+        "name": "મોરેશીઅન રૂપી",
+        "symbol": "MUR"
+    },
+    "MAD": {
+        "name": "મોરોક્કન દિરહામ",
+        "symbol": "MAD"
+    },
+    "MDL": {
+        "name": "મોલડોવેન લિયુ",
+        "symbol": "MDL"
+    },
+    "MMK": {
+        "name": "મ્યાંમાર ક્યાત",
+        "symbol": "MMK"
+    },
+    "USD": {
+        "name": "યુઍસ ડોલર",
+        "symbol": "US$"
+    },
+    "UAH": {
+        "name": "યુક્રેનિયન હ્રિવિનિયા",
+        "symbol": "UAH"
+    },
+    "UGX": {
+        "name": "યુગાંડન શિલિંગ",
+        "symbol": "UGX"
+    },
+    "AED": {
+        "name": "યુનાઈટેડ આરબ અમિરાત દિરહામ",
+        "symbol": "AED"
+    },
+    "EUR": {
+        "name": "યુરો",
+        "symbol": "€"
+    },
+    "YER": {
+        "name": "યેમેની રિઆલ",
+        "symbol": "YER"
+    },
+    "RWF": {
+        "name": "રવાંડન ફ્રેંક",
+        "symbol": "RWF"
+    },
+    "RUB": {
+        "name": "રશિયન રબલ",
+        "symbol": "RUB"
+    },
+    "RON": {
+        "name": "રોમાનિયન લેઉ",
+        "symbol": "RON"
+    },
+    "LAK": {
+        "name": "લાઓશિયન કિપ",
+        "symbol": "LAK"
+    },
+    "LTL": {
+        "name": "લિથુએનિયન લિતાસ",
+        "symbol": "LTL"
+    },
+    "LRD": {
+        "name": "લિબેરિયન ડોલર",
+        "symbol": "LRD"
+    },
+    "LYD": {
+        "name": "લિબ્યન દિનાર",
+        "symbol": "LYD"
+    },
+    "LBP": {
+        "name": "લેબેનિઝ પાઉન્ડ",
+        "symbol": "LBP"
+    },
+    "LSL": {
+        "name": "લેસોથો લોતી",
+        "symbol": "LSL"
+    },
+    "VUV": {
+        "name": "વનૌતુ વાતુ",
+        "symbol": "VUV"
+    },
+    "VND": {
+        "name": "વિયેતનામીસ ડોંગ",
+        "symbol": "₫"
+    },
+    "VEF": {
+        "name": "વેનેઝુએલન બોલિવર",
+        "symbol": "VEF"
+    },
+    "LKR": {
+        "name": "શ્રી લંકન રૂપી",
+        "symbol": "LKR"
+    },
+    "WST": {
+        "name": "સમોઅન તાલા",
+        "symbol": "WST"
+    },
+    "RSD": {
+        "name": "સર્બિયન દિનાર",
+        "symbol": "RSD"
+    },
+    "SYP": {
+        "name": "સાઇરિયન પાઉન્ડ",
+        "symbol": "SYP"
+    },
+    "SAR": {
+        "name": "સાઉદી રિયાલ",
+        "symbol": "SAR"
+    },
+    "STD": {
+        "name": "સાઓ ટૉમ એન્ડ પ્રિંસાઇપ ડોબ્રા",
+        "symbol": "STD"
+    },
+    "SGD": {
+        "name": "સિંગાપુર ડૉલર",
+        "symbol": "SGD"
+    },
+    "SLL": {
+        "name": "સિએરા લિઓનિઅન લિઓન",
+        "symbol": "SLL"
+    },
+    "SDG": {
+        "name": "સુદાનિઝ પાઉન્ડ",
+        "symbol": "SDG"
+    },
+    "SRD": {
+        "name": "સૂરીનામિઝ ડોલર",
+        "symbol": "SRD"
+    },
+    "SHP": {
+        "name": "સેંટ હેલેના પાઉન્ડ",
+        "symbol": "SHP"
+    },
+    "SCR": {
+        "name": "સેશેલોઈ રૂપી",
+        "symbol": "SCR"
+    },
+    "SOS": {
+        "name": "સોમાલી શિલિંગ",
+        "symbol": "SOS"
+    },
+    "SBD": {
+        "name": "સોલોમન આઇલેંડ્સ ડોલર",
+        "symbol": "SBD"
+    },
+    "SZL": {
+        "name": "સ્વાઝી લિલાન્ગેની",
+        "symbol": "SZL"
+    },
+    "CHF": {
+        "name": "સ્વિસ ફ્રેંક",
+        "symbol": "CHF"
+    },
+    "SEK": {
+        "name": "સ્વીડિશ ક્રોના",
+        "symbol": "SEK"
+    },
+    "HUF": {
+        "name": "હંગેરીયન ફોરિન્ત",
+        "symbol": "HUF"
+    },
+    "HTG": {
+        "name": "હાઇટિઇન ગોર્ડ",
+        "symbol": "HTG"
+    },
+    "HKD": {
+        "name": "હોંગ કોંગ ડૉલર",
+        "symbol": "HK$"
+    },
+    "HNL": {
+        "name": "હોન્ડ્યુરન લેમ્પિરા",
+        "symbol": "HNL"
+    }
+}

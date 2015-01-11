@@ -6,8 +6,8 @@ require_once("include/smarty.php");
 
 /**
  * This is our template processor
- * 
- * @param string|FriendicaSmarty $s the string requiring macro substitution, 
+ *
+ * @param string|FriendicaSmarty $s the string requiring macro substitution,
  *									or an instance of FriendicaSmarty
  * @param array $r key value pairs (search => replace)
  * @return string substituted string
@@ -17,10 +17,10 @@ function replace_macros($s,$r) {
 
 	$arr = array('template' => $s, 'params' => $r);
 	call_hooks('replace_macros', $arr);
-	
+
 	$t = $a->template_engine();
 	$output = $t->replace_macros($arr['template'],$arr['params']);
-	
+
 	return $output;
 }
 
@@ -40,7 +40,7 @@ function random_string($size = 64,$type = RANDOM_STRING_HEX) {
 }
 
 /**
- * This is our primary input filter. 
+ * This is our primary input filter.
  *
  * The high bit hack only involved some old IE browser, forget which (IE5/Mac?)
  * that had an XSS attack vector due to stripping the high-bit on an 8-bit character
@@ -105,7 +105,7 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 		return purify_html($s);
 
 	return escape_tags($s);
-	
+
 }
 
 
@@ -316,23 +316,23 @@ function paginate(&$a) {
 
 	if($a->pager['total'] > $a->pager['itemspage']) {
 		$o .= '<div class="pager">';
-    		if($a->pager['page'] != 1)
+		if($a->pager['page'] != 1)
 			$o .= '<span class="pager_prev">'."<a href=\"$url".'&page='.($a->pager['page'] - 1).'">' . t('prev') . '</a></span> ';
 
 		$o .=  "<span class=\"pager_first\"><a href=\"$url"."&page=1\">" . t('first') . "</a></span> ";
 
-    		$numpages = $a->pager['total'] / $a->pager['itemspage'];
+			$numpages = $a->pager['total'] / $a->pager['itemspage'];
 
 			$numstart = 1;
-    		$numstop = $numpages;
+			$numstop = $numpages;
 
-    		if($numpages > 14) {
-      			$numstart = (($pagenum > 7) ? ($pagenum - 7) : 1);
-      			$numstop = (($pagenum > ($numpages - 7)) ? $numpages : ($numstart + 14));
-    		}
+			if($numpages > 14) {
+				$numstart = (($pagenum > 7) ? ($pagenum - 7) : 1);
+				$numstop = (($pagenum > ($numpages - 7)) ? $numpages : ($numstart + 14));
+			}
 
 		for($i = $numstart; $i <= $numstop; $i++){
-      			if($i == $a->pager['page'])
+			if($i == $a->pager['page'])
 				$o .= '<span class="pager_current">'.(($i < 10) ? '&nbsp;'.$i : $i);
 			else
 				$o .= "<span class=\"pager_n\"><a href=\"$url"."&page=$i\">".(($i < 10) ? '&nbsp;'.$i : $i)."</a>";
@@ -350,7 +350,7 @@ function paginate(&$a) {
 		$lastpage = (($numpages > intval($numpages)) ? intval($numpages)+1 : $numpages);
 		$o .= "<span class=\"pager_last\"><a href=\"$url"."&page=$lastpage\">" . t('last') . "</a></span> ";
 
-    		if(($a->pager['total'] - ($a->pager['itemspage'] * $a->pager['page'])) > 0)
+		if(($a->pager['total'] - ($a->pager['itemspage'] * $a->pager['page'])) > 0)
 			$o .= '<span class="pager_next">'."<a href=\"$url"."&page=".($a->pager['page'] + 1).'">' . t('next') . '</a></span>';
 		$o .= '</div>'."\r\n";
 	}
@@ -1629,7 +1629,7 @@ function lang_selector() {
 			$ll = substr($l,5);
 			$ll = substr($ll,0,strrpos($ll,'/'));
 			$selected = (($ll === $a->language && (x($_SESSION, 'language'))) ? $ll : $selected);
-			$lang_options[$ll]=$ll;
+			$lang_options[$ll] = get_language_name($ll, $ll) . " ($ll)";
 		}
 	}
 
@@ -2207,10 +2207,10 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 		if(strrpos($newname,'+')) {
 			//get the id
 
+			$tagcid = substr($newname,strrpos($newname,'+') + 1);
+
 			if(strrpos($tagcid,' '))
 				$tagcid = substr($tagcid,0,strrpos($tagcid,' '));
-			
-			$tagcid = substr($newname,strrpos($newname,'+') + 1);
 
 			if(strlen($tagcid) < 16)
 				$abook_id = intval($tagcid);

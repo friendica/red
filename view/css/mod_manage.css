@@ -1,7 +1,6 @@
 #channels-selected {
 	color: #666666;
 	font-size: 0.8em;
-
 }
 
 #channels-desc {
@@ -14,33 +13,23 @@
 .channels-break {
 	margin-bottom: 15px;
 }
-#selected-channel {
-	float: left;
-	margin-left: 0;
-}
-
-.channels-end.selected {
-	clear: both;
-}
-
-#selected-channel .channel-selection {
-	clear: both;
-	margin: 0 auto 0 auto;
-}
 
 .channel-selection-default {
 	font-size: 0.8em;
 	margin-bottom: 10px;
 }
 
-#all-channels .channel-selection {
+.channel-selection {
 	width: 12em;
 	height: 16em;
 	float: left;
-	margin: 0 15px 15px 0;
+	text-align: center;
 }
-.channels-end {
-	clear: both;
+
+.channel-selection img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .channel-selection-name-link {
@@ -50,7 +39,6 @@
 
 .channel-selection-name-link .channel-name {
 	padding-top: 10px;
-	text-align: left;	
 	word-wrap: break-word;
 	overflow: hidden;
 }
@@ -58,4 +46,12 @@
 .channels-notifications-wrapper {
 	clear: both;
 	padding-top: 10px;
+}
+
+.selected-channel img {
+	border: 2px solid #ff0000;
+}
+
+.channels-end {
+	clear: both;
 }

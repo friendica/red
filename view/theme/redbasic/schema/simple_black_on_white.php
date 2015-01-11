@@ -176,6 +176,8 @@
       $advperm_gradientcol = "#fff";
    if(! $cal_bgcolour)
       $cal_bgcolour = "#fff";
+   if(! $chat_txtbgcol)
+      $chat_txtbgcol = "#fff";
    if(! $fancybox_bgcolour)
       $fancybox_bgcolour = "#fff";
 	if (!$admintable_hoverbgcol)

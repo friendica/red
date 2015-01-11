@@ -216,10 +216,9 @@ function connedit_post(&$a) {
 		$arr = array('channel_id' => local_user(), 'abook' => $a->poi);
 		call_hooks('accept_follow', $arr);
 	}
-dbg(1);
+
 	if(! is_null($autoperms)) 
 		set_pconfig(local_user(),'system','autoperms',(($autoperms) ? $abook_my_perms : 0));
-dbg(0);
 
 	connedit_clone($a);
 
@@ -403,9 +402,9 @@ function connedit_content(&$a) {
 
 			contact_remove(local_user(), $orig_record[0]['abook_id']);
 			build_sync_packet(0 /* use the current local_user */, 
-				array('abook' => array(
+				array('abook' => array(array(
 					'abook_xchan' => $orig_record[0]['abook_xchan'],
-					'entry_deleted' => true)
+					'entry_deleted' => true))
 				)
 			);
 
@@ -444,32 +443,34 @@ function connedit_content(&$a) {
 				'url'   => $a->get_baseurl(true) . '/network/?f=&cid=' . $contact['abook_id'], 
 				'sel'   => '',
 				'title' => t('View recent posts and comments'),
-			),
+			)
+		);
 
+		$buttons = array(
 			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? t('Unblock') : t('Block')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/block', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? 'active' : ''),
-				'title' => t('Block or Unblock this connection'),
+				'title' => t('Block (or Unblock) all communications with this connection'),
 			),
 
 			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? t('Unignore') : t('Ignore')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/ignore', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? 'active' : ''),
-				'title' => t('Ignore or Unignore this connection'),
+				'title' => t('Ignore (or Unignore) all inbound communications from this connection'),
 			),
 			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? t('Unarchive') : t('Archive')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/archive', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? 'active' : ''),
-				'title' => t('Archive or Unarchive this connection'),
+				'title' => t('Archive (or Unarchive) this connection - mark channel dead but keep content'),
 			),
 			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? t('Unhide') : t('Hide')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/hide', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? 'active' : ''),
-				'title' => t('Hide or Unhide this connection'),
+				'title' => t('Hide or Unhide this connection from your other connections'),
 			),
 
 			array(
@@ -542,11 +543,15 @@ function connedit_content(&$a) {
 			'$notself'        => (($self) ? '' : '1'),
 			'$self'           => (($self) ? '1' : ''),
 			'$autolbl'        => t('Apply the permissions indicated on this page to all new connections.'),
+			'$buttons'        => (($self) ? '' : $buttons),
 			'$viewprof'       => t('View Profile'),
 			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
 			'$slide'          => $slide,
 			'$tabs'           => $t,
 			'$tab_str'        => $tab_str,
+			'$perms_step1'    => t('<p>Step #1. (Completed).</p><p>Create connection with minimal or no permissions.</p>'),
+			'$perms_step2'    => t('<p>Step #2. (Incomplete).</p><p>Review and/or edit the default individual permissions on this page, if desired.</p>'),
+			'$perms_step3'    => t('<p>Step #3. (Incomplete).</p><p>Submit this page to apply the selected permissions.</p><p>Until this is complete, this connection may have insufficient permission to communicate with you.</p>'),
 			'$is_pending'     => (($contact['abook_flags'] & ABOOK_FLAG_PENDING) ? 1 : ''),
 			'$unapproved'     => $unapproved,
 			'$inherited'      => t('inherited'),
@@ -598,12 +603,8 @@ function connedit_content(&$a) {
 			'$ignored'        => (($contact['readonly']) ? t('Currently ignored') : ''),
 			'$archived'       => (($contact['archive']) ? t('Currently archived') : ''),
 			'$pending'        => (($contact['archive']) ? t('Currently pending') : ''),
-			'$hidden'         => array('hidden', t('Hide this contact from others'), ($contact['hidden'] == 1), t('Replies/likes to your public posts <strong>may</strong> still be visible')),
-			'$photo'          => $contact['photo'],
 			'$name'           => $contact['name'],
-			'$dir_icon'       => $dir_icon,
 			'$alt_text'       => $alt_text,
-			'$sparkle'        => $sparkle,
 			'$url'            => $url
 
 		));

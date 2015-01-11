@@ -1,13 +1,5 @@
 $(document).ready(function() { 
-	var a; 
-	a = $("#contacts-search").autocomplete({ 
-		serviceUrl: baseurl + '/acl',
-		minChars: 2,
-		width: 250,
-		id: 'contact-search-ac',
-	});
-	a.setOptions({ autoSubmit: true, params: { type: 'a' }});
-
+	$("#contacts-search").contact_autocomplete(baseurl + '/acl', 'a', true);
 }); 
 
 $("#contacts-search").keyup(function(event){

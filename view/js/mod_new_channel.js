@@ -1,5 +1,5 @@
 	$(document).ready(function() {
-//		$("#privacy-role-select").sSelect();
+//		$("#id_permissions_role").sSelect();
 		$("#newchannel-name").blur(function() {
 			$("#name-spinner").spin('small');
 			var zreg_name = $("#newchannel-name").val();

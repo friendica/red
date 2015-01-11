@@ -32,7 +32,7 @@ function filestorage_post(&$a) {
 	$str_group_deny    = perms2str($_REQUEST['group_deny']);
 	$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
  
-	attach_change_permissions($channel_id, $resource, $str_contact_allow, $str_group_allow, $str_contact_deny,$str_group_deny, $recurse = false);
+	attach_change_permissions($channel_id, $resource, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny, $recurse);
 
 	//Build directory tree and redirect
 	$channel = $a->get_channel();
@@ -127,10 +127,14 @@ function filestorage_content(&$a) {
 
 		$lockstate = (($f['allow_cid'] || $f['allow_gid'] || $f['deny_cid'] || $f['deny_gid']) ? 'lock' : 'unlock'); 
 
+		// Encode path that is used for link so it's a valid URL
+		// Keep slashes as slashes, otherwise mod_rewrite doesn't work correctly
+		$encoded_path = str_replace('%2F', '/', rawurlencode($cloudpath));
+
 		$o = replace_macros(get_markup_template('attach_edit.tpl'), array(
 			'$header' => t('Edit file permissions'),
 			'$file' => $f,
-			'$cloudpath' => z_root() . '/' . $cloudpath,
+			'$cloudpath' => z_root() . '/' . $encoded_path,
 			'$parentpath' => $parentpath,
 			'$uid' => $channel['channel_id'],
 			'$channelnick' => $channel['channel_address'],
@@ -143,7 +147,9 @@ function filestorage_content(&$a) {
 			'$isadir' => $is_a_dir,
 			'$cpdesc' => t('Copy/paste this code to attach file to a post'),
 			'$cpldesc' => t('Copy/paste this URL to link file from a web page'),
-			'$submit' => t('Submit')
+			'$submit' => t('Submit'),
+			'$attach_btn_title' => t('Attach this file to a new post'),
+			'$link_btn_title' => t('Show URL to this file'),
 		));
 
 		echo $o;

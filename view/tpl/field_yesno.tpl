@@ -1,5 +1,5 @@
 	<div class='field yesno'>
-		<label for='id_{{$field.0}}'>{{$field.1}}</label>
+		<label class="mainlabel" for='id_{{$field.0}}'>{{$field.1}}</label>
 		<div class='onoff' id="id_{{$field.0}}_onoff">
 			<input  type="hidden" name='{{$field.0}}' id='id_{{$field.0}}' value="{{$field.2}}">
 			<a href="#" class='off'>

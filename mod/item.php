@@ -470,10 +470,12 @@ function item_post(&$a) {
 
 		require_once('include/text.php');			
 		if($uid && $uid == $profile_uid && feature_enabled($uid,'markdown')) {
-			require_once('include/bb2diaspora.php');			
-			$body = diaspora2bb(escape_tags($body),true);
+			require_once('include/bb2diaspora.php');
+			$body = escape_tags($body);
+			$body = preg_replace_callback('/\[share(.*?)\]/ism','share_shield',$body);			
+			$body = diaspora2bb($body,true);
+			$body = preg_replace_callback('/\[share(.*?)\]/ism','share_unshield',$body);
 		}
-
 
 		// BBCODE alert: the following functions assume bbcode input
 		// and will require alternatives for alternative content-types (text/html, text/markdown, text/plain, etc.)
@@ -683,7 +685,8 @@ function item_post(&$a) {
 		}
 	}
 
-	$item_flags |= ITEM_UNSEEN;
+	if(local_user() != $profile_uid)
+		$item_flags |= ITEM_UNSEEN;
 	
 	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$item_flags = $item_flags | ITEM_WALL;
