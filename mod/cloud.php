@@ -12,6 +12,29 @@ use RedMatrix\RedDAV;
 // composer autoloader for SabreDAV
 require_once('vendor/autoload.php');
 
+if(! defined('TRINIDAD')) {
+	// workaround for HTTP-auth in CGI mode
+	if (x($_SERVER, 'REDIRECT_REMOTE_USER')) {
+ 		$userpass = base64_decode(substr($_SERVER["REDIRECT_REMOTE_USER"], 6)) ;
+		if(strlen($userpass)) {
+	 		list($name, $password) = explode(':', $userpass);
+			$_SERVER['PHP_AUTH_USER'] = $name;
+			$_SERVER['PHP_AUTH_PW'] = $password;
+		}
+	}
+
+	if (x($_SERVER, 'HTTP_AUTHORIZATION')) {
+		$userpass = base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)) ;
+		if(strlen($userpass)) {
+			list($name, $password) = explode(':', $userpass);
+			$_SERVER['PHP_AUTH_USER'] = $name;
+			$_SERVER['PHP_AUTH_PW'] = $password;
+		}
+	}
+}
+
+
+
 /**
  * @brief Fires up the SabreDAV server.
  *
@@ -107,8 +130,19 @@ function cloud_init(&$a) {
 	}
 
 	if ((! $auth->observer) && (! $isapublic_file) && (! $davguest)) {
-		logger('mod_cloud: auth exception' . $e->getMessage());
-		http_status_exit($e->getHTTPCode(), $e->getMessage());
+		if(defined('TRINIDAD')) {
+			logger('mod_cloud: auth exception' . $e->getMessage());
+			http_status_exit($e->getHTTPCode(), $e->getMessage());
+		}
+		else {
+			try {
+				$auth->Authenticate($server, t('RedMatrix channel'));
+			}
+			catch (Exception $e) {
+				logger('mod_cloud: auth exception' . $e->getMessage());
+				http_status_exit($e->getHTTPCode(), $e->getMessage());
+			}
+		}
 	}
 
 	require_once('include/RedDAV/RedBrowser.php');
