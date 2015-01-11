@@ -590,6 +590,32 @@ function service_class_allows($uid,$property,$usage = false) {
 	}
 }
 
+// like service_class_allows but queries by account rather than channel
+function account_service_class_allows($aid,$property,$usage = false) {
+	$a = get_app();
+	$r = q("select account_service_class as service_class from account where account_id = %d limit 1",
+		intval($aid)
+	);
+	if($r !== false and count($r)) {
+		$service_class = $r[0]['service_class'];
+	}
+
+	if(! x($service_class))
+		return true; // everything is allowed
+
+	$arr = get_config('service_class',$service_class);
+	if(! is_array($arr) || (! count($arr)))
+		return true;
+
+	if($usage === false)
+		return ((x($arr[$property])) ? (bool) $arr[$property] : true);
+	else {
+		if(! array_key_exists($property,$arr))
+			return true;
+		return (((intval($usage)) < intval($arr[$property])) ? true : false);
+	}
+}
+
 
 function service_class_fetch($uid,$property) {
 	$a = get_app();
