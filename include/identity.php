@@ -34,7 +34,7 @@ function identity_check_service_class($account_id) {
 
 	$ret['total_identities'] = intval($r[0]['total']);
 
-	if(! service_class_allows($account_id,'total_identities',$r[0]['total'])) {
+	if(! account_service_class_allows($account_id,'total_identities',$r[0]['total'])) {
 		$result['message'] .= upgrade_message();
 		return $result;
 	}

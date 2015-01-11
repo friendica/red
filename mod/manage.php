@@ -131,7 +131,7 @@ function manage_content(&$a) {
 			intval(get_account_id()),
 			intval(PAGE_REMOVED)
 		);
-		$limit = service_class_fetch(local_user(),'total_identities');
+		$limit = account_service_class_fetch(get_account_id(),'total_identities');
 		if($limit !== false) {
 			$channel_usage_message = sprintf( t("You have created %1$.0f of %2$.0f allowed channels."), $r[0]['total'], $limit);
 		}
