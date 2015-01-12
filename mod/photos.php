@@ -351,56 +351,27 @@ function photos_post(&$a) {
 			if($x !== '@' && $x !== '#')
 				$rawtags = '@' . $rawtags;
 
-			$taginfo = array();
-			$tags = get_tags($rawtags);
+			require_once('include/text.php');
+			$profile_uid = $a->profile['profile_uid'];
 
-			if(count($tags)) {
-				foreach($tags as $tag) {
+			$results = linkify_tags($a, $rawtags, local_user(), $profile_uid);
 
-					// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
-					// Robert Johnson should be first in the $tags array
+			$success = $results['success'];
+			$post_tags = array();
 
-					$fullnametagged = false;
-					for($x = 0; $x < count($tagged); $x ++) {
-						if(stristr($tagged[$x],$tag . ' ')) {
-							$fullnametagged = true;
-							break;
-						}
-					}
-					if($fullnametagged)
-						continue;
-	
-					require_once('include/text.php');
-					$body = $access_tag = '';
-	
-					$success = handle_tag($a, $body, $access_tag, $str_tags, (local_user()) ? local_user() : $a->profile['profile_uid'] , $tag); 
-					logger('handle_tag: ' . print_r($success,tue), LOGGER_DEBUG);
-					if($access_tag) {
-						logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DEBUG);
-						if(strpos($access_tag,'cid:') === 0) {
-							$str_contact_allow .= '<' . substr($access_tag,4) . '>';
-							$access_tag = '';	
-						}
-						elseif(strpos($access_tag,'gid:') === 0) {
-							$str_group_allow .= '<' . substr($access_tag,4) . '>';
-							$access_tag = '';	
-						}
-					}
-	
-					if($success['replaced']) {
-						$tagged[] = $tag;
-
-						$post_tags[] = array(
-							'uid'   => $a->profile['profile_uid'], 
-							'type'  => $success['termtype'],
-							'otype' => TERM_OBJ_POST,
-							'term'  => $success['term'],
-							'url'   => $success['url']
-						); 				
-					}
+			foreach($results as $result) {
+				$success = $result['success'];
+				if($success['replaced']) {
+					$post_tags[] = array(
+						'uid'   => $profile_uid, 
+						'type'  => $success['termtype'],
+						'otype' => TERM_OBJ_POST,
+						'term'  => $success['term'],
+						'url'   => $success['url']
+					); 				
 				}
 			}
-		
+
 			$r = q("select * from item where id = %d and uid = %d limit 1",
 				intval($item_id),
 				intval($page_owner_uid)
