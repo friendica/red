@@ -287,7 +287,7 @@ function connedit_content(&$a) {
 				$o .= "\$('#me_id_perms_" . $p . "').attr('checked','checked'); \n";
 			}
 		}
-		$o .= "abook_perms_msg(); }\n</script>\n";
+		$o .= " }\n</script>\n";
 	}
 
 	if(argc() == 3) {
