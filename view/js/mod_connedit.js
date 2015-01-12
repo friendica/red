@@ -1,9 +1,15 @@
 
 function abook_perms_msg() {
-	$('.abook-permschange').show();
+	$('.abook-permsmsg').show();
 //	$('.abook-permschange').html(aStr['permschange']);
 	$('.abook-permssave').show();
 }
+
+function abook_perms_new() {
+	$('.abook-permsnew').show();
+	$('.abook-permssave').show();
+}
+
 
 $(document).ready(function() {
 	if(typeof(after_following) !== 'undefined' && after_following) {
@@ -11,6 +17,7 @@ $(document).ready(function() {
 			connectDefaultShare();
 		else
 			connectFullShare();
+		abook_perms_new();
 	}
 
 	$('#id_pending').click(function() {
@@ -18,11 +25,12 @@ $(document).ready(function() {
 			connectDefaultShare();
 		else
 			connectFullShare();
+		abook_perms_new();
 	});
 
-	$('.abook-edit-me').click(function() {
-		abook_perms_msg();
-	});
+//	$('.abook-edit-me').click(function() {
+//		abook_perms_msg();
+//	});
 
 });
 
@@ -46,7 +54,7 @@ function connectFullShare() {
 	$('#me_id_perms_view_storage').attr('checked','checked');
 	$('#me_id_perms_republish').attr('checked','checked');
 	$('#me_id_perms_post_like').attr('checked','checked');
-	abook_perms_msg();
+//	abook_perms_msg();
 }
 
 function connectCautiousShare() {
@@ -64,7 +72,7 @@ function connectCautiousShare() {
 	$('#me_id_perms_post_comments').attr('checked','checked');
 	$('#me_id_perms_post_mail').attr('checked','checked');
 	$('#me_id_perms_post_like').attr('checked','checked');
-	abook_perms_msg();
+//	abook_perms_msg();
 
 }
 
@@ -87,7 +95,7 @@ function connectForum() {
 	$('#me_id_perms_tag_deliver').attr('checked','checked');
 	$('#me_id_perms_republish').attr('checked','checked');
 	$('#me_id_perms_post_like').attr('checked','checked');
-	abook_perms_msg();
+//	abook_perms_msg();
 
 }
 
@@ -96,7 +104,7 @@ function connectClear() {
 		if(! $(this).is(':disabled'))
 			$(this).removeAttr('checked');
 	});
-	abook_perms_msg();
+//	abook_perms_msg();
 
 }
 
@@ -112,7 +120,7 @@ function connectSoapBox() {
 	$('#me_id_perms_view_contacts').attr('checked','checked');
 	$('#me_id_perms_view_storage').attr('checked','checked');
 	$('#me_id_perms_view_pages').attr('checked','checked');
-	abook_perms_msg();
+//	abook_perms_msg();
 
 }
 
@@ -124,7 +132,7 @@ function connectFollowOnly() {
 	});
 
 	$('#me_id_perms_send_stream').attr('checked','checked');
-	abook_perms_msg();
+//	abook_perms_msg();
 
 }
 

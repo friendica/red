@@ -21,6 +21,13 @@
 	padding: 20px 5px 10px;
 }
 
+.abook-perms-msg {
+	background: orange;
+	font-weight: bold;
+	margin: 10px;
+	padding: 20px 5px 10px;
+}
+
 .abook-permschange {
 	width: 100%;
 }

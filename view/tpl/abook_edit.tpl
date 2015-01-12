@@ -17,11 +17,14 @@
 <div id="contact-edit-wrapper">
 <form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
 
-<div class="abook-permschange" style="display: none;">
-<div class="abook-perms-steps"><i class="icon-check"></i><br />{{$perms_step1}}</div>
-<div class="abook-perms-steps"><i class="icon-check-empty"></i><br />{{$perms_step2}}</div>
-<div class="abook-perms-steps"><i class="icon-check-empty"></i><br />{{$perms_step3}}</div>
+<div class="abook-permsnew" style="display: none;">
+<div class="abook-perms-msg">{{$perms_step1}}</div>
 </div>
+
+<div class="abook-permsmsg" style="display: none;">
+<div class="abook-perms-msg">{{$perms_new}}</div>
+</div>
+
 
 <div class="abook-permssave" style="display: none;">
 <input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
@@ -87,6 +90,16 @@
 
 
 <input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
+
+{{if $self && $noperms}}
+<script>		
+	if(typeof(connectDefaultShare) !== 'undefined')
+		connectDefaultShare();
+	else
+		connectFullShare();
+	abook_perms_msg();
+</script>
+{{/if}}
 
 </form>
 </div>
