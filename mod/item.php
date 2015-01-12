@@ -575,77 +575,25 @@ function item_post(&$a) {
 		$body = scale_external_images($body,false);
 
 
-		/**
-		 * Look for any tags and linkify them
-		 */
+		// Look for tags and linkify them
+		$results = linkify_tags($a, $body, $uid, $profile_uid);
 
-		$str_tags = '';
-		$inform   = '';
+		// Set permissions based on tag replacements
+		set_linkified_perms($results, $str_contact_allow, $str_group_allow, $profile_uid, $parent_item);
+
 		$post_tags = array();
-
-		$tags = get_tags($body);
-
-		$tagged = array();
-
-		if(count($tags)) {
-			$first_access_tag = true;
-			foreach($tags as $tag) {
-
-				// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
-				// Robert Johnson should be first in the $tags array
-
-				$fullnametagged = false;
-				for($x = 0; $x < count($tagged); $x ++) {
-					if(stristr($tagged[$x],$tag . ' ')) {
-						$fullnametagged = true;
-						break;
-					}
-				}
-				if($fullnametagged)
-					continue;
-
-				$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : $profile_uid , $tag); 
-				logger('handle_tag: ' . print_r($success,true), LOGGER_DATA);
-				if(($access_tag) && (! $parent_item)) {
-					logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DATA);
-					if ($first_access_tag && (! get_pconfig($profile_uid,'system','no_private_mention_acl_override'))) {
-
-						// This is a tough call, hence configurable. The issue is that one can type in a @!privacy mention
-						// and also have a default ACL (perhaps from viewing a collection) and could be suprised that the 
-						// privacy mention wasn't the only recipient. So the default is to wipe out the existing ACL if a
-						// private mention is found. This can be over-ridden if you wish private mentions to be in 
-						// addition to the current ACL settings.
-
-						$str_contact_allow = '';
-						$str_group_allow = '';
-						$first_access_tag = false;
-					}
-					if(strpos($access_tag,'cid:') === 0) {
-						$str_contact_allow .= '<' . substr($access_tag,4) . '>';
-						$access_tag = '';	
-					}
-					elseif(strpos($access_tag,'gid:') === 0) {
-						$str_group_allow .= '<' . substr($access_tag,4) . '>';
-						$access_tag = '';	
-					}
-				}
-
-				if($success['replaced']) {
-					$tagged[] = $tag;
-					$post_tags[] = array(
-						'uid'   => $profile_uid, 
-						'type'  => $success['termtype'],
-						'otype' => TERM_OBJ_POST,
-						'term'  => $success['term'],
-						'url'   => $success['url']
-					); 				
-				}
+		foreach($results as $result) {
+			$success = $result['success'];
+			if($success['replaced']) {
+				$post_tags[] = array(
+					'uid'   => $profile_uid, 
+					'type'  => $success['termtype'],
+					'otype' => TERM_OBJ_POST,
+					'term'  => $success['term'],
+					'url'   => $success['url']
+				); 				
 			}
 		}
-
-
-//	logger('post_tags: ' . print_r($post_tags,true));
-
 
 		$attachments = '';
 		$match = false;

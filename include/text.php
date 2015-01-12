@@ -2350,3 +2350,33 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 
 	return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $newname, 'url' => $url, 'contact' => $r[0]);
 }
+
+function linkify_tags($a, &$body, $uid, $profile_uid) {
+	$str_tags = '';
+	$tagged = array();
+	$result = array();
+
+	$tags = get_tags($body);
+	if(count($tags)) {
+		foreach($tags as $tag) {
+			// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
+			// Robert Johnson should be first in the $tags array
+
+			$fullnametagged = false;
+			for($x = 0; $x < count($tagged); $x ++) {
+				if(stristr($tagged[$x],$tag . ' ')) {
+					$fullnametagged = true;
+					break;
+				}
+			}
+			if($fullnametagged)
+				continue;
+
+			$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : $profile_uid , $tag); 
+			$results[] = array('success' => $success, 'access_tag' => $access_tag);
+			if($success['replaced']) $tagged[] = $tag;
+		}
+	}
+	return $results;
+}
+
