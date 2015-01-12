@@ -225,6 +225,8 @@
         element = this.element;
       }
 
+      setBoxHeights($(element)); // Workaroud for problems with collapse
+
       var $this = this,
           $element = $(element),
           newHeight = '',
