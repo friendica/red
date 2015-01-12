@@ -4,7 +4,7 @@ var ispublic = aStr['everybody'];
 $(document).ready(function() {
 	$(document).ready(function() { 
 		$("#photo-edit-newtag").contact_autocomplete(baseurl + '/acl', 'p', false, function(data) {
-			$("#photo-edit-newtag").val('@' + data.name.replace(' ','_')); // TODO: Get rid of underscore
+			$("#photo-edit-newtag").val('@' + data.name);
 		});
 	}); 
 
