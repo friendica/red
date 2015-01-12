@@ -615,7 +615,6 @@ function load_database_rem($v, $i){
 
 
 function load_database($db) {
-	file_put_contents('debug-foo.log', 'Loading schema: '.$db->get_install_script());
 	$str = file_get_contents($db->get_install_script());
 	$arr = explode(';',$str);
 	$errors = false;
