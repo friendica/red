@@ -1125,6 +1125,8 @@ $(document).ready(function() {
 
 
 	$(".autotime").timeago();
+	$("#toc").tableOfContents(); 
+	
 
 });
 
