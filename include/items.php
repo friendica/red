@@ -3939,7 +3939,7 @@ function drop_items($items) {
 // $stage = 1 => set deleted flag on the item and perform intial notifications
 // $stage = 2 => perform low level delete at a later stage
 
-function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL) {
+function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = false) {
 
 
 	$a = get_app();
@@ -3958,6 +3958,8 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL) {
 	}
 
 	$item = $r[0];
+
+	$linked_item = (($item['resource_id']) ? true : false);
 
 	$ok_to_delete = false;
 
@@ -3980,9 +3982,10 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL) {
 		// hook calls a remote process which loops. We'll delete it properly in a second.
 
 		$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ) WHERE id = %d",
-			intval(ITEM_DELETED),
+			intval(($linked_item && ! $force) ? ITEM_HIDDEN : ITEM_DELETED),
 			intval($item['id'])
 		);
+
 
 		$arr = array('item' => $item, 'interactive' => $interactive, 'stage' => $stage);
 		call_hooks('drop_item', $arr );
@@ -3995,10 +3998,10 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL) {
 		);
 		if($items) {
 			foreach($items as $i)
-				delete_item_lowlevel($i,$stage);
+				delete_item_lowlevel($i,$stage,$force);
 		}
 		else
-			delete_item_lowlevel($item,$stage);
+			delete_item_lowlevel($item,$stage,$force);
 
 		if(! $interactive)
 			return 1;
@@ -4030,8 +4033,9 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL) {
 // It merely destroys all resources associated with an item. 
 // Please do not use without a suitable wrapper.
 
-function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
+function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL,$force = false) {
 
+	$linked_item = (($item['resource_id']) ? true : false);
 
 	switch($stage) {
 		case DROPITEM_PHASE2:
@@ -4047,7 +4051,7 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 		case DROPITEM_PHASE1:
 			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ),
 				changed = '%s', edited = '%s'  WHERE id = %d",
-				intval(ITEM_DELETED),
+				intval(($linked_item && ! $force) ? ITEM_HIDDEN : ITEM_DELETED),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
 				intval($item['id'])
@@ -4058,7 +4062,7 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 		default:
 			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
 				changed = '%s', edited = '%s'  WHERE id = %d",
-				intval(ITEM_DELETED),
+				intval(($linked_item && ! $force) ? ITEM_HIDDEN : ITEM_DELETED),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
 				intval($item['id'])
@@ -4073,25 +4077,6 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 		intval($item['id']),
 		intval($item['uid'])
 	);
-
-	// If item is a link to a photo/event resource, nuke all the associated photos/events 
-	// This only applies to photos uploaded from the photos page. Photos inserted into a post do not
-	// generate a resource_id and therefore aren't intimately linked to the item. 
-
-	if(strlen($item['resource_id'])) {
-		if($item['resource_type'] === 'event') {
-			q("delete from event where event_hash = '%s' and uid = %d",
-				dbesc($item['resource_id']),
-				intval($item['uid'])
-			);				
-		}
-		elseif($item['resource_type'] === 'photo') {
-			q("DELETE FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d ",
-				dbesc($item['resource_id']),
-				intval($item['uid'])
-			);
-		}
-	}
 
 
 	// network deletion request. Keep the message structure so that we can deliver delete notifications.
@@ -4115,8 +4100,7 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 		intval(TERM_OBJ_POST)
 	);
 
-// FIXME remove notifications for this item
-
+	// FIXME remove notifications for this item
 
 	return true;
 }

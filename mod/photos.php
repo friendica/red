@@ -140,7 +140,7 @@ function photos_post(&$a) {
 			);
 			if($r) {
 				foreach($r as $i) {
-					drop_item($i['id'],false);
+					drop_item($i['id'],false,DROPITEM_PHASE1,true /* force removal of linked items */);
 					if(! $item_restrict)
 						proc_run('php','include/notifier.php','drop',$i['id']);
 				}
