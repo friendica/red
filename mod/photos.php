@@ -354,7 +354,7 @@ function photos_post(&$a) {
 			require_once('include/text.php');
 			$profile_uid = $a->profile['profile_uid'];
 
-			$results = linkify_tags($a, $rawtags, local_user(), $profile_uid);
+			$results = linkify_tags($a, $rawtags, (local_user()) ? local_user() : $profile_uid);
 
 			$success = $results['success'];
 			$post_tags = array();
