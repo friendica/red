@@ -296,7 +296,7 @@ function profiles_post(&$a) {
 		$work         = fix_mce_lf(escape_tags(trim($_POST['work'])));
 		$education    = fix_mce_lf(escape_tags(trim($_POST['education'])));
 
-		$hide_friends = (($_POST['hide_friends'] == 1) ? 1: 0);
+		$hide_friends = ((intval($_POST['hide_friends'])) ? 1: 0);
 
 		$with         = ((x($_POST,'with')) ? escape_tags(trim($_POST['with'])) : '');
 
@@ -605,7 +605,7 @@ function profiles_content(&$a) {
 
 		$opt_tpl = get_markup_template("profile_hide_friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array('$field' => array(
-                       'hide-friends',
+                       'hide_friends',
                        t('Hide your contact/friend list from viewers of this profile?'),
                        $r[0]['hide_friends'],
                        '',

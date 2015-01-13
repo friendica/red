@@ -251,6 +251,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'$tags'    => $hashtags,
 			'$dend'    => $datequery,
 			'$mid'     => '',
+			'$verb'     => '',
 			'$dbegin'  => $datequery2
 		));
 	}

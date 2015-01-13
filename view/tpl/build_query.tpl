@@ -26,6 +26,7 @@
 	var bParam_dend = "{{$dend}}";
 	var bParam_dbegin = "{{$dbegin}}";
 	var bParam_mid = "{{$mid}}";
+	var bParam_verb = "{{$verb}}";
 
 	function buildCmd() {
 		var udargs = ((page_load) ? "/load" : "");
@@ -51,6 +52,7 @@
 		if(bParam_dend != "") bCmd = bCmd + "&dend=" + bParam_dend;
 		if(bParam_dbegin != "") bCmd = bCmd + "&dbegin=" + bParam_dbegin;
 		if(bParam_mid != "") bCmd = bCmd + "&mid=" + bParam_mid;
+		if(bParam_verb != "") bCmd = bCmd + "&verb=" + bParam_verb;
 		if(bParam_page != 1) bCmd = bCmd + "&page=" + bParam_page;
 		return(bCmd);
 	}

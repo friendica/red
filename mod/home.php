@@ -144,6 +144,7 @@ function home_content(&$a, $update = 0, $load = false) {
 					'$tags'    => '',
 					'$dend'    => '',
 					'$mid'     => '',
+					'$verb'     => '',
 					'$dbegin'  => ''
 				));
 			}
