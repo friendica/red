@@ -267,6 +267,15 @@ class RedBrowser extends DAV\Browser\Plugin {
 
 		get_app()->page['content'] = $html;
 		load_pdl(get_app());
+
+		$theme_info_file = "view/theme/" . current_theme() . "/php/theme.php";
+		if (file_exists($theme_info_file)){
+			require_once($theme_info_file);
+			if (function_exists(str_replace('-', '_', current_theme()) . '_init')) {
+				$func = str_replace('-', '_', current_theme()) . '_init';
+				$func($a);
+			}
+		}
 		construct_page(get_app());
 	}
 
