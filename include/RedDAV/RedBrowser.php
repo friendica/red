@@ -273,7 +273,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 			require_once($theme_info_file);
 			if (function_exists(str_replace('-', '_', current_theme()) . '_init')) {
 				$func = str_replace('-', '_', current_theme()) . '_init';
-				$func($a);
+				$func(get_app());
 			}
 		}
 		construct_page(get_app());
