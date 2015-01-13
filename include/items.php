@@ -4060,13 +4060,24 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL,$force = false) {
 
 		case DROPITEM_NORMAL:
 		default:
-			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
-				changed = '%s', edited = '%s'  WHERE id = %d",
-				intval(($linked_item && ! $force) ? ITEM_HIDDEN : ITEM_DELETED),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				intval($item['id'])
-			);
+			if($linked_item && ! $force) {
+				$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), 
+					changed = '%s', edited = '%s'  WHERE id = %d",
+					intval(ITEM_HIDDEN),
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					intval($item['id'])
+				);
+			}
+			else {
+				$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
+					changed = '%s', edited = '%s'  WHERE id = %d",
+					intval(ITEM_DELETED),
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					intval($item['id'])
+				);
+			}
 			break;
 	}
 
