@@ -55,6 +55,15 @@ function connedit_post(&$a) {
 	if(! $contact_id)
 		return;
 
+	// TODO if configured for hassle-free permissions, we'll post the form with ajax as soon as the
+	// connection enable is toggled to a special autopost url and set permissions immediately, leaving 
+	// the other form elements alone pending a manual submit of the form. The downside is that there 
+	// will be a window of opportunity when the permissions have been set but before you've had a chance
+	// to review and possibly restrict them. The upside is we won't have to warn you that your connection
+	// can't do anything until you save the bloody form.  
+
+	$autopost = (((argc() > 2) && (argv(2) === 'auto')) ? true : false);
+		
 	$orig_record = q("SELECT * FROM abook WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
 		intval($contact_id),
 		intval(local_user())
