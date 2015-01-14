@@ -834,6 +834,11 @@ function get_item_elements($x) {
 	$arr['item_flags'] = 0;
 
 
+	if(array_key_exists('flags',$x) && in_array('consensus',$x['flags']))
+		$arr['item_flags'] |= ITEM_CONSENSUS;
+
+
+
 	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
 		$arr['item_restrict'] = ITEM_DELETED;
 	if(array_key_exists('flags',$x) && in_array('hidden',$x['flags']))
@@ -1314,6 +1319,8 @@ function encode_item_flags($item) {
 		$ret[] = 'thread_parent';
 	if($item['item_flags'] & ITEM_NSFW)
 		$ret[] = 'nsfw';
+	if($item['item_flags'] & ITEM_CONSENSUS)
+		$ret[] = 'consensus';
 	if($item['item_private'])
 		$ret[] = 'private';
 	
