@@ -2673,7 +2673,7 @@ function tag_deliver($uid,$item_id) {
 	 * Fetch stuff we need - a channel and an item
 	 */
 
-	$u = q("select * from channel where channel_id = %d limit 1",
+	$u = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_id = %d limit 1",
 		intval($uid)
 	);
 	if(! $u)
@@ -2811,7 +2811,7 @@ function tag_deliver($uid,$item_id) {
 	if($terms)
 		logger('tag_deliver: post mentions: ' . print_r($terms,true), LOGGER_DATA);
 
-	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['channel_address']);
+	$link = normalise_link($u[0]['xchan_url']);
 
 	if($terms) {
 		foreach($terms as $term) {
@@ -2952,7 +2952,7 @@ function tgroup_check($uid,$item) {
 	if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver'))
 		return false;
 
-	$u = q("select * from channel where channel_id = %d limit 1",
+	$u = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_id = %d limit 1",
 		intval($uid)
 	);
 
@@ -2964,7 +2964,7 @@ function tgroup_check($uid,$item) {
 	if($terms)
 		logger('tgroup_check: post mentions: ' . print_r($terms,true), LOGGER_DATA);
 
-	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['channel_address']);
+	$link = normalise_link($u[0]['xchan_url']);
 
 	if($terms) {
 		foreach($terms as $term) {
