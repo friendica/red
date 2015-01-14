@@ -109,6 +109,11 @@ function home_content(&$a, $update = 0, $load = false) {
 		}
 		else {
 
+			if(get_config('system','disable_discover_tab')) {
+				call_hooks('home_content',$o);
+				return $o;
+			}
+
 			if(! $update) {
 
 				$maxheight = get_config('system','home_divmore_height');
