@@ -126,7 +126,8 @@ function siteinfo_content(&$a) {
 	else
 		$plugins_text = t('No installed plugins/addons/apps');
 
-	$admininfo = bbcode(get_config('system','admininfo'));
+	$txt = get_config('system','admininfo');
+	$admininfo = bbcode($txt);
 
 	if(file_exists('doc/site_donate.html'))
 		$donate .= file_get_contents('doc/site_donate.html');

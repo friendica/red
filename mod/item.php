@@ -576,7 +576,7 @@ function item_post(&$a) {
 
 
 		// Look for tags and linkify them
-		$results = linkify_tags($a, $body, $uid, $profile_uid);
+		$results = linkify_tags($a, $body, ($uid) ? $uid : $profile_uid);
 
 		// Set permissions based on tag replacements
 		set_linkified_perms($results, $str_contact_allow, $str_group_allow, $profile_uid, $parent_item);

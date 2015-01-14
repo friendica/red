@@ -2351,7 +2351,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 	return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $newname, 'url' => $url, 'contact' => $r[0]);
 }
 
-function linkify_tags($a, &$body, $uid, $profile_uid) {
+function linkify_tags($a, &$body, $uid) {
 	$str_tags = '';
 	$tagged = array();
 	$result = array();
