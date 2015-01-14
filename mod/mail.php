@@ -83,6 +83,9 @@ function mail_post(&$a) {
 //		$body = fix_mce_lf($body);
 //	}
 
+	require_once('include/text.php');
+	linkify_tags($a, $body, local_user());
+
 	if(! $recipient) {
 		notice('No recipient found.');
 		$a->argc = 2;

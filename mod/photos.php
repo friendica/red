@@ -140,7 +140,7 @@ function photos_post(&$a) {
 			);
 			if($r) {
 				foreach($r as $i) {
-					drop_item($i['id'],false);
+					drop_item($i['id'],false,DROPITEM_PHASE1,true /* force removal of linked items */);
 					if(! $item_restrict)
 						proc_run('php','include/notifier.php','drop',$i['id']);
 				}
@@ -354,7 +354,7 @@ function photos_post(&$a) {
 			require_once('include/text.php');
 			$profile_uid = $a->profile['profile_uid'];
 
-			$results = linkify_tags($a, $rawtags, local_user(), $profile_uid);
+			$results = linkify_tags($a, $rawtags, (local_user()) ? local_user() : $profile_uid);
 
 			$success = $results['success'];
 			$post_tags = array();

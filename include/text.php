@@ -92,10 +92,10 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 		return escape_tags($s);
 	if($type == 'text/plain')
 		return escape_tags($s);
-	$r = q("select account_id, account_roles from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
+	$r = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
 		intval($channel_id)
 	);
-	if($r && ($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE)) {
+	if($r && (($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
 		if(local_user() && (get_account_id() == $r[0]['account_id'])) {
 			return $s;
 		}
@@ -1584,13 +1584,13 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 		'text/plain'
 	);
 
-	$r = q("select account_id, account_roles from account left join channel on account_id = channel_account_id where
+	$r = q("select account_id, account_roles, channel_pageflags from account left join channel on account_id = channel_account_id where
 		channel_id = %d limit 1",
 		intval($channel_id)
 	);
 
 	if($r) {
-		if($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) {
+		if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
 			if(local_user() && get_account_id() == $r[0]['account_id'])
 				$x[] = 'application/x-php';
 		}
@@ -2351,7 +2351,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 	return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $newname, 'url' => $url, 'contact' => $r[0]);
 }
 
-function linkify_tags($a, &$body, $uid, $profile_uid) {
+function linkify_tags($a, &$body, $uid) {
 	$str_tags = '';
 	$tagged = array();
 	$result = array();

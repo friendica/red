@@ -286,6 +286,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			'$cats' => (($category) ? $category : ''),
 			'$tags' => (($hashtags) ? $hashtags : ''),
 			'$mid' => $mid,
+			'$verb' => '',
 			'$dend' => $datequery,
 			'$dbegin' => $datequery2
 		));

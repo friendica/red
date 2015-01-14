@@ -75,11 +75,11 @@ function impel_init(&$a) {
     $execflag = false;
 
 	if($arr['mimetype'] === 'application/x-php') {
-		$z = q("select account_id, account_roles from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
+		$z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
 			intval(local_user())
 		);
 
-		if($z && ($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE)) {
+		if($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
 			$execflag = true;
 		}
 	}

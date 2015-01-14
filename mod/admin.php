@@ -288,6 +288,8 @@ function admin_page_site_post(&$a){
 		del_config('system','admininfo');
 	}
 	else {
+		require_once('include/text.php');
+		linkify_tags($a, $admininfo, local_user());
 		set_config('system','admininfo', $admininfo);
 	}
 	set_config('system','language', $language);

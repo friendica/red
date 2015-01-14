@@ -75,6 +75,10 @@ function events_post(&$a) {
 	$location = escape_tags(trim($_POST['location']));
 	$type     = 'event';
 
+	require_once('include/text.php');
+	linkify_tags($a, $desc, local_user());
+	linkify_tags($a, $location, local_user());
+
 	$action = ($event_hash == '') ? 'new' : "event/" . $event_hash;
 	$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish";
 	if(strcmp($finish,$start) < 0 && !$nofinish) {

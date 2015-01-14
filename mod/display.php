@@ -136,6 +136,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'$tags' => '',
 			'$dend' => '',
 			'$dbegin' => '',
+			'$verb' => '',
 			'$mid' => $item_hash
 		));
 

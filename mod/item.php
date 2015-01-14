@@ -449,10 +449,10 @@ function item_post(&$a) {
 	$execflag = false;
 
 	if($mimetype === 'application/x-php') {
-		$z = q("select account_id, account_roles from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
+		$z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
 			intval($profile_uid)
 		);
-		if($z && ($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE)) {
+		if($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
 			if($uid && (get_account_id() == $z[0]['account_id'])) {
 				$execflag = true;
 			}
@@ -576,7 +576,7 @@ function item_post(&$a) {
 
 
 		// Look for tags and linkify them
-		$results = linkify_tags($a, $body, $uid, $profile_uid);
+		$results = linkify_tags($a, $body, ($uid) ? $uid : $profile_uid);
 
 		// Set permissions based on tag replacements
 		set_linkified_perms($results, $str_contact_allow, $str_group_allow, $profile_uid, $parent_item);

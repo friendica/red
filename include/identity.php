@@ -1205,21 +1205,9 @@ function advanced_profile(&$a) {
 
 		if($txt = prepare_text($a->profile['dislikes'])) $profile['dislikes'] = array( t('Dislikes:'), $txt);
 
-
 		if($txt = prepare_text($a->profile['contact'])) $profile['contact'] = array( t('Contact information and Social Networks:'), $txt);
 
-		// Support tags in the other channels field (probably want to restrict it to channels only?)
-		$txt = $a->profile['channels'];
-		$matches = get_tags($txt);
-		$access_tag = '';
-		$str_tags = '';
-		foreach($matches as $m) {
-			$success = handle_tag($a, $txt, $access_tag, $str_tags, $a->profile_uid, $m);  // Use uid of the profile maker
-		}
-
-		if($txt = prepare_text($txt)) {
-			$profile['channels'] = array( t('My other channels:'), $txt);
-		}
+		if($txt = prepare_text($a->profile['channels'])) $profile['channels'] = array( t('My other channels:'), $txt);
 
 		if($txt = prepare_text($a->profile['music'])) $profile['music'] = array( t('Musical interests:'), $txt);
 		
