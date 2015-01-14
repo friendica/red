@@ -1125,7 +1125,7 @@ $(document).ready(function() {
 
 
 	$(".autotime").timeago();
-	$("#toc").tableOfContents(); 
+	$("#toc").toc({content: "div.page-body", headings: "h1,h2,h3,h4"});
 	
 
 });
