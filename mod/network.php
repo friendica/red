@@ -47,7 +47,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	$gid        = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
 	$category   = ((x($_REQUEST,'cat')) ? $_REQUEST['cat'] : '');
 	$hashtags   = ((x($_REQUEST,'tag')) ? $_REQUEST['tag'] : '');
-
+	$verb       = ((x($_REQUEST,'verb')) ? $_REQUEST['verb'] : '');
 
 	$search = (($_GET['search']) ? $_GET['search'] : '');
 	if($search) {
@@ -251,7 +251,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'$tags'    => $hashtags,
 			'$dend'    => $datequery,
 			'$mid'     => '',
-			'$verb'     => '',
+			'$verb'     => $verb,
 			'$dbegin'  => $datequery2
 		));
 	}
@@ -278,6 +278,12 @@ function network_content(&$a, $update = 0, $load = false) {
 				dbesc(protect_sprintf('%' . $search . '%'))
 			);
 		}
+	}
+
+	if($verb) {
+		$sql_extra .= sprintf(" AND item.verb like '%s' ",
+			dbesc(protect_sprintf('%' . $verb . '%'))
+		);
 	}
 
 	if(strlen($file)) {
