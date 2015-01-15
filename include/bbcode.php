@@ -575,6 +575,10 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	if (strpos($Text,'[h6]') !== false) {
 		$Text = preg_replace("(\[h6\](.*?)\[\/h6\])ism",'<h6>$1</h6>',$Text);
 	}
+	// Check for table of content
+	if (strpos($Text,'[toc]') !== false) {
+		$Text = preg_replace("/\[toc\]/ism",'<ul id="toc"></ul>',$Text);
+	}
 	// Check for centered text
 	if (strpos($Text,'[/center]') !== false) {	
 	$Text = preg_replace("(\[center\](.*?)\[\/center\])ism","<div style=\"text-align:center;\">$1</div>",$Text);
