@@ -1004,7 +1004,10 @@ function settings_content(&$a) {
 			$evdays = 3;
 
 		$permissions_role = get_pconfig(local_user(),'system','permissions_role');
-		$permissions_set = (($permissions_role && $permissions_role != 'custom') ? true : false);
+		if(! $permissions_role)
+			$permissions_role = 'custom';
+
+		$permissions_set = (($permissions_role != 'custom') ? true : false);
 		$vnotify = get_pconfig(local_user(),'system','vnotify');
 		$always_show_in_notices = get_pconfig(local_user(),'system','always_show_in_notices');
 		if($vnotify === false)
