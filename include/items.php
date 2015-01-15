@@ -419,6 +419,9 @@ function post_activity_item($arr) {
 
 	$arr['verb']         = 	((x($arr,'verb')) ? $arr['verb'] : ACTIVITY_POST);
 	$arr['obj_type']     =  ((x($arr,'obj_type')) ? $arr['obj_type'] : ACTIVITY_OBJ_NOTE);
+	if($is_comment)
+		$arr['obj_type'] = ACTIVITY_OBJ_COMMENT;
+
 
 	$arr['allow_cid']    = ((x($arr,'allow_cid')) ? $arr['allow_cid'] : $channel['channel_allow_cid']);
 	$arr['allow_gid']    = ((x($arr,'allow_gid')) ? $arr['allow_gid'] : $channel['channel_allow_gid']);
@@ -2026,8 +2029,8 @@ function item_store($arr,$allow_exec = false) {
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
 	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
 	$arr['thr_parent']    = ((x($arr,'thr_parent'))    ? notags(trim($arr['thr_parent']))    : $arr['parent_mid']);
-	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : '');
-	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : '');
+	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : ACTIVITY_POST);
+	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : ACTIVITY_OBJ_NOTE);
 	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
 	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : '');
 	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
@@ -2091,6 +2094,8 @@ function item_store($arr,$allow_exec = false) {
 				return $ret;
 			}
 
+			if($arr['obj_type'] == ACTIVITY_OBJ_NOTE)
+				$arr['obj_type'] = ACTIVITY_OBJ_COMMENT;
 
 			// is the new message multi-level threaded?
 			// even though we don't support it now, preserve the info

@@ -133,6 +133,9 @@ function item_post(&$a) {
 		if(! x($_REQUEST,'type'))
 			$_REQUEST['type'] = 'net-comment';
 
+		if($obj_type == ACTIVITY_OBJ_POST)
+			$obj_type = ACTIVITY_OBJ_COMMENT;
+
 		if($parent) {
 			$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
 				intval($parent)
@@ -579,20 +582,23 @@ function item_post(&$a) {
 		// Look for tags and linkify them
 		$results = linkify_tags($a, $body, ($uid) ? $uid : $profile_uid);
 
-		// Set permissions based on tag replacements
-		set_linkified_perms($results, $str_contact_allow, $str_group_allow, $profile_uid, $parent_item);
+		if($results) {
 
-		$post_tags = array();
-		foreach($results as $result) {
-			$success = $result['success'];
-			if($success['replaced']) {
-				$post_tags[] = array(
-					'uid'   => $profile_uid, 
-					'type'  => $success['termtype'],
-					'otype' => TERM_OBJ_POST,
-					'term'  => $success['term'],
-					'url'   => $success['url']
-				); 				
+			// Set permissions based on tag replacements
+			set_linkified_perms($results, $str_contact_allow, $str_group_allow, $profile_uid, $parent_item);
+
+			$post_tags = array();
+			foreach($results as $result) {
+				$success = $result['success'];
+				if($success['replaced']) {
+					$post_tags[] = array(
+						'uid'   => $profile_uid, 
+						'type'  => $success['termtype'],
+						'otype' => TERM_OBJ_POST,
+						'term'  => $success['term'],
+						'url'   => $success['url']
+					); 				
+				}
 			}
 		}
 
@@ -700,6 +706,7 @@ function item_post(&$a) {
 	$datarray['location']       = $location;
 	$datarray['coord']          = $coord;
 	$datarray['verb']           = $verb;
+	$datarray['obj_type']       = $obj_type;
 	$datarray['allow_cid']      = $str_contact_allow;
 	$datarray['allow_gid']      = $str_group_allow;
 	$datarray['deny_cid']       = $str_contact_deny;
