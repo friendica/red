@@ -178,7 +178,8 @@ function poco_init(&$a) {
 				if($fields_ret['photos'])
 					$entry['photos'] = array(array('value' => $rr['xchan_photo_l'], 'mimetype' => $rr['xchan_photo_mimetype'], 'type' => 'profile'));
 				if($fields_ret['rating']) {
-					$entry['rating'] = ((array_key_exists('abook_rating',$rr)) ? array(intval($rr['abook_rating'])) : 0);
+					$entry['rating'] = ((array_key_exists('abook_rating',$rr)) ? intval($rr['abook_rating'])) : 0);
+					$entry['rating_text'] = ((array_key_exists('abook_rating_text',$rr)) ? $rr['abook_rating_text'])) : '');
 					// maybe this should be a composite calculated rating in $system_mode
 					if($system_mode)
 						$entry['rating'] = 0;

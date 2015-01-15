@@ -524,6 +524,12 @@ function connedit_content(&$a) {
 			));
 		}
 
+
+		$rating = replace_macros(get_markup_template('rating_slider.tpl'),array(
+			'$min' => -10,
+			'$val' => (($contact['abook_rating']) ? $contact['abook_rating'] : 0),
+		));
+
 		$perms = array();
 		$channel = $a->get_channel();
 
@@ -555,6 +561,8 @@ function connedit_content(&$a) {
 			'$buttons'        => (($self) ? '' : $buttons),
 			'$viewprof'       => t('View Profile'),
 			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
+			'$lbl_rating'     => t('Rating (this information is public)'),
+			'$rating'         => $rating,
 			'$slide'          => $slide,
 			'$tabs'           => $t,
 			'$tab_str'        => $tab_str,

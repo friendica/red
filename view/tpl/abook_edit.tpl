@@ -43,6 +43,14 @@
 {{$slide}}
 
 {{/if}}
+
+{{if $rating}}
+<h3>{{$lbl_rating}}</h3>
+
+{{$rating}}
+
+{{/if}}
+
 {{/if}}
 
 
