@@ -61,18 +61,12 @@
   }
 
   function setBoxHeights(element) {
-    var el = element.clone().css({
-          height: 'auto',
-          width: element.width(),
-          maxHeight: 'none',
-          overflow: 'hidden'
-        }).insertAfter(element),
+    var el = element,
         expandedHeight = el.outerHeight(),
         cssMaxHeight = parseInt(el.css({maxHeight: ''}).css('max-height').replace(/[^-\d\.]/g, ''), 10),
         defaultHeight = element.data('defaultHeight');
 
-    el.remove();
-
+console.log("el height: " + expandedHeight);
     var collapsedHeight = element.data('collapsedHeight') || defaultHeight;
 
     if (!cssMaxHeight) {
@@ -206,10 +200,6 @@
           }
         }
       });
-
-      window.addEventListener('resize', function() {
-        resizeBoxes();
-      });
     },
 
     toggle: function(trigger, element, event) {
@@ -224,8 +214,6 @@
       if (! element) {
         element = this.element;
       }
-
-      setBoxHeights($(element)); // Workaroud for problems with collapse
 
       var $this = this,
           $element = $(element),
