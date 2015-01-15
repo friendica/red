@@ -421,6 +421,14 @@ function notification($params) {
 
 		logger('notification: sending notification email');
 
+		$hn = get_pconfig($recip['channel_id'],'system','email_notify_host');
+		if($hn && (! stristr(get_app()->get_hostname(),$hn))) {
+			// this isn't the email notification host
+			pop_lang();
+			return;
+		}
+
+
 
 		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r", "\\n"), array( "", "\n"), $body))),ENT_QUOTES,'UTF-8'));
 
