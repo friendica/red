@@ -606,8 +606,10 @@ function get_tags($s) {
 	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
 
 	// ignore anything in [style= ]
-
 	$s = preg_replace('/\[style=(.*?)\]/sm','',$s);
+
+	// ignore anything in [color= ], because it may contain color codes which are mistaken for tags
+	$s = preg_replace('/\[color=(.*?)\]/sm','',$s);
 
 	// match any double quoted tags
 
@@ -620,12 +622,11 @@ function get_tags($s) {
 	// Match full names against @tags including the space between first and last
 	// We will look these up afterward to see if they are full names or not recognisable.
 
-	if(preg_match_all('/(@[^ \x0D\x0A,:?\[]+ [^ \x0D\x0A@,:?\[]+)([ \x0D\x0A@,:?\[]|$)/',$s,$match)) {
+	// The lookbehind is used to prevent a match in the middle of a word
+	// '=' needs to be avoided because when the replacement is made (in handle_tag()) it has to be ignored there
+	// Feel free to allow '=' if the issue with '=' is solved in handle_tag()
+	if(preg_match_all('/(?<![a-zA-Z0-9=])(@[^ \x0D\x0A,:?\[]+ [^ \x0D\x0A@,:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
-			if(strstr($mtch,"]")) {
-				// we might be inside a bbcode color tag - leave it alone
-				continue;
-			}
 			if(substr($mtch,-1,1) === '.')
 				$ret[] = substr($mtch,0,-1);
 			else
@@ -636,19 +637,12 @@ function get_tags($s) {
 	// Otherwise pull out single word tags. These can be @nickname, @first_last
 	// and #hash tags.
 
-	if(preg_match_all('/([@#][^ \x0D\x0A,;:?\[]+)([ \x0D\x0A,;:?\[]|$)/',$s,$match)) {
+	if(preg_match_all('/(?<![a-zA-Z0-9=])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
-			if(strstr($mtch,"]")) {
-				// we might be inside a bbcode color tag - leave it alone
-				continue;
-			}
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);
 			// ignore strictly numeric tags like #1 or #^ bookmarks or ## double hash
 			if((strpos($mtch,'#') === 0) && ( ctype_digit(substr($mtch,1)) || substr($mtch,1,1) === '^') || substr($mtch,1,1) === '#')
-				continue;
-			// try not to catch url fragments
-			if(strpos($s,$mtch) && preg_match('/[a-zA-z0-9\/]/',substr($s,strpos($s,$mtch)-1,1)))
 				continue;
 			// or quote remnants from the quoted strings we already picked out earlier
 			if(strpos($mtch,'&quot'))
@@ -2155,8 +2149,11 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			//create text for link
 			$url = $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag);
 			$newtag = '#[zrl=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/zrl]';
-			//replace tag by the link
-			$body = str_replace($tag, $newtag, $body);
+			//replace tag by the link. Make sure to not replace something in the middle of a word
+			// The '=' is needed to not replace color codes if the code is also used as a tag
+			// Much better would be to somehow completely avoiding things in e.g. [color]-tags.
+			// This would allow writing things like "my favourite tag=#foobar".
+			$body = preg_replace('/(?<![a-zA-Z0-9=])'.preg_quote($tag).'/', $newtag, $body);
 			$replaced = true;
 		}
 		//is the link already in str_tags?
