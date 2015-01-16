@@ -119,6 +119,7 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 		'$name'    => $xchan['xchan_name'],
 		'$photo'   => ((is_array($a->profile) && array_key_exists('photo',$a->profile)) ? $a->profile['photo'] : $xchan['xchan_photo_l']),
 		'$follow'  => $xchan['xchan_addr'],
+		'$link'    => zid($xchan['xchan_url']),
 		'$connect' => $connect,
 		'$newwin'  => (($mode === 'chanview') ? t('New window') : ''),
 		'$newtit'  => t('Open the selected location in a different window or browser tab'),

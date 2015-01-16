@@ -1,7 +1,7 @@
 <?php
 
-function prep_content(&$a) {
 
+function prep_init(&$a) {
 
 	$poco_rating = get_config('system','poco_rating_enable');
 	// if unset default to enabled
@@ -23,19 +23,40 @@ function prep_content(&$a) {
 		dbesc($hash . '%')
 	);
 
+	if($p)
+		$a->poi = $p[0];
+
+}
+
+
+
+
+
+function prep_content(&$a) {
+
+
+	$poco_rating = get_config('system','poco_rating_enable');
+	// if unset default to enabled
+	if($poco_rating === false)
+		$poco_rating = true;
+
+	if(! $poco_rating)
+		return;
+
+	if(! $a->poi)
+		return;
+
 	$r = q("select * from xlink left join xchan on xlink_xchan = xchan_hash where xlink_link like '%s' and xlink_rating != 0",
-		dbesc($hash . '%')
+		dbesc($a->poi['xchan_hash'])
 	);
 
 	$ret = array();
 
-	if($p && $r) {
-		$ret['poi'] = $p[0];
-		$ret['raters'] = $r;
-
+	if($r) {
 		$o = replace_macros(get_markup_template('prep.tpl'),array(
 			'$header' => t('Ratings'),
-			'$poi' => $p[0],
+			'$rating_lbl' => t('Rating: ' ),
+			'$rating_text_lbl' => t('Description: '),
 			'$raters' => $r
 		));
 
