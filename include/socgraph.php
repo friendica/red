@@ -72,6 +72,9 @@ function poco_load($xchan = '',$url = null) {
 	if($xchan) {
 		if(array_key_exists('chatrooms',$j) && is_array($j['chatrooms'])) {
 			foreach($j['chatrooms'] as $room) {
+				if((! $room['url']) || (! $room['desc']))
+					continue;
+
 				$r = q("select * from xchat where xchat_url = '%s' and xchat_xchan = '%s' limit 1",
 					dbesc($room['url']),
 					dbesc($xchan)
