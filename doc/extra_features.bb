@@ -1,3 +1,4 @@
+// multiple of these have been enabled by default. should we note this here somewhere, move it or remove them from this file?
 [b]Features[/b]
 
 The default interface of the Red Matrix was designed to be uncluttered. There are a huge number of extra features (some of which are extremely useful) which you can turn on and get the most of the application. These are found under the Extra Features link of your Settings page.

@@ -10,8 +10,6 @@ That said, if you want other friends to be able to find you, it helps to have th
 [*]A photo of you
 [*]Your location on the planet, at least to a country level.[/ul]
 
-Without this basic information, you could get very lonely here. Most people (even your best friends) will not try and connect with somebody that has a fake name or doesn't contain a real photo.
-
 In addition, if you'd like to meet people that share some general interests with you, please take a moment and add some &quot;Keywords&quot; to your profile. Such as &quot;music, linux, photography&quot; or whatever. You can add as many keywords as you like.
 
 To create an alternate profile, first go to [zrl=[baseurl]/settings/features]Settings &gt; Additional Features[/zrl] and enable &quot;Multiple Profiles&quot; there, otherwise you won't have the ability to use more than just your default profile.
@@ -31,5 +29,9 @@ If you do not wish to be found be people unless you give them your channel addre
 On the directory page, you may search for people with published profiles. Currently, only the name field and the keywords are searched.  You may also include such keywords in your default profile - which may be used to search for common interests with other members. Keywords are used in the channel suggestion tool and although they aren't visible in the directory, they are shown if people visit your profile page.
 
 On your Connnections page and in the directory there is a link to &quot;Suggestions&quot; or &quot;Channel Suggestions&quot;, respectively. This will find channels who have matching and/or similar keywords. The more keywords you provide, the more relevant the search results that are returned. These are sorted by relevance.
+
+See Also
+
+[zrl=[baseurl]/help/AdvancedSearch]Advanced Searching[/zrl]
 
 #include doc/macros/main_footer.bb;

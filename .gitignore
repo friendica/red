@@ -50,3 +50,6 @@ doc/SiteTOS.md
 
 #Ingore site theme schemas
 view/theme/redbasic/schema/default.php
+
+#Ignore emacs tempfiles
+.#*
