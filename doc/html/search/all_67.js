@@ -101,7 +101,7 @@ var searchData=
   ['get_5ftags',['get_tags',['../text_8php.html#a4659fbc4e54ddc700c3aa66b9092c623',1,'text.php']]],
   ['get_5ftaxonomy',['get_taxonomy',['../classRedMatrix_1_1Import_1_1Import.html#ae3c6472bea1a44025bc2e152604eb20c',1,'RedMatrix::Import::Import']]],
   ['get_5ftemplate',['get_template',['../classItem.html#aba23a0a9d89e316d2b343cc46d695d91',1,'Item']]],
-  ['get_5ftemplate_5fdata',['get_template_data',['../classConversation.html#a2a96b7a6573ae53db861624659e831cb',1,'Conversation\get_template_data()'],['../classItem.html#ad5dcbe0b94cb2d5719bc5b6bd8ad60c8',1,'Item\get_template_data()']]],
+  ['get_5ftemplate_5fdata',['get_template_data',['../classConversation.html#ac5900b46e6a1c93360bb8e58f8b3540b',1,'Conversation\get_template_data()'],['../classItem.html#a50d0fdf47006f47a0dc89cfd0d7e690d',1,'Item\get_template_data()']]],
   ['get_5ftemplate_5fengine',['get_template_engine',['../classApp.html#acb27e607fe4c82603444676e25c36b70',1,'App']]],
   ['get_5ftemplate_5fldelim',['get_template_ldelim',['../classApp.html#a2eb832a8577dee7d40b93abdf6d1d35a',1,'App']]],
   ['get_5ftemplate_5frdelim',['get_template_rdelim',['../classApp.html#aab23c59172310fd30f2d60dc039d3eea',1,'App']]],

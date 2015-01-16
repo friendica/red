@@ -20,7 +20,7 @@ var classItem =
     [ "get_parent", "classItem.html#a4b92e3a9d6212c553aa2661489bd95d8", null ],
     [ "get_redirect_url", "classItem.html#a428f448f89a8629055ea3294eb942aea", null ],
     [ "get_template", "classItem.html#aba23a0a9d89e316d2b343cc46d695d91", null ],
-    [ "get_template_data", "classItem.html#ad5dcbe0b94cb2d5719bc5b6bd8ad60c8", null ],
+    [ "get_template_data", "classItem.html#a50d0fdf47006f47a0dc89cfd0d7e690d", null ],
     [ "is_commentable", "classItem.html#ac04525a8be24c12b0a2ae4ca1ba4b967", null ],
     [ "is_threaded", "classItem.html#a5b2fafdca55aefeaa08993a5a60529f0", null ],
     [ "is_toplevel", "classItem.html#aa49e40f961dff66da32c5ae110e32993", null ],

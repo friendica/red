@@ -19,6 +19,14 @@ function prep_init(&$a) {
 		return;
 	}
 
+	if(strpos($hash,'@')) {
+		$r = q("select * from hubloc where hubloc_addr = '%s' limit 1",
+			dbesc($hash)
+		);
+		if($r)
+			$hash = $r[0]['hubloc_hash'];
+	} 
+
 	$p = q("select * from xchan where xchan_hash like '%s'",
 		dbesc($hash . '%')
 	);
@@ -50,19 +58,18 @@ function prep_content(&$a) {
 		dbesc($a->poi['xchan_hash'])
 	);
 
-	$ret = array();
+	if(! $r)
+		notice( t('No ratings available') . EOL);
 
-	if($r) {
-		$o = replace_macros(get_markup_template('prep.tpl'),array(
-			'$header' => t('Ratings'),
-			'$rating_lbl' => t('Rating: ' ),
-			'$rating_text_lbl' => t('Description: '),
-			'$raters' => $r
-		));
 
-		return $o;
-	}
-	return '';
+	$o = replace_macros(get_markup_template('prep.tpl'),array(
+		'$header' => t('Ratings'),
+		'$rating_lbl' => t('Rating: ' ),
+		'$rating_text_lbl' => t('Description: '),
+		'$raters' => $r
+	));
+
+	return $o;
 }
 
 			

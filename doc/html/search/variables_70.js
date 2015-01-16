@@ -2,6 +2,7 @@ var searchData=
 [
   ['page',['page',['../mod__import_8php.html#a8db1899eeeb44dabd0904065b63627bb',1,'mod_import.php']]],
   ['page_5fadult',['PAGE_ADULT',['../boot_8php.html#ace83842dbeb84f7ed9ac59a9f57a7c32',1,'boot.php']]],
+  ['page_5fallowcode',['PAGE_ALLOWCODE',['../boot_8php.html#adb4c9bd011f9aaeb253742da18373b64',1,'boot.php']]],
   ['page_5fapplication',['PAGE_APPLICATION',['../boot_8php.html#a8231d115060d41a9c2a677f2c86f10ed',1,'boot.php']]],
   ['page_5fautoconnect',['PAGE_AUTOCONNECT',['../boot_8php.html#aa275653b9c87abc7391bb8040c1c2de9',1,'boot.php']]],
   ['page_5fcensored',['PAGE_CENSORED',['../boot_8php.html#a36003bebe4ce860c6652bcc3e09b2214',1,'boot.php']]],

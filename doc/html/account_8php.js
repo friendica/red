@@ -1,5 +1,6 @@
 var account_8php =
 [
+    [ "account_service_class_allows", "account_8php.html#ac70e1d198246b029a3cedb7d6f7868bd", null ],
     [ "account_service_class_fetch", "account_8php.html#a4328c40ee4b3d68630cf1ebb7b9d4d89", null ],
     [ "account_total", "account_8php.html#a43e3042b2723d76915a030bac3c668b6", null ],
     [ "check_account_admin", "account_8php.html#a917d74aad0baf3e0c4b51cf1051e654f", null ],

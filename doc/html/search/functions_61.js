@@ -5,6 +5,7 @@ var searchData=
   ['abook_5ftoggle_5fflag',['abook_toggle_flag',['../Contact_8php.html#a024919623a830e8703ac4f23496dd66c',1,'Contact.php']]],
   ['absurl',['absurl',['../boot_8php.html#a081307d681d7d04f17b9ced2076e7c85',1,'boot.php']]],
   ['account_5fremove',['account_remove',['../Contact_8php.html#a5101d7eca5d6f387e5555f03fe249e33',1,'Contact.php']]],
+  ['account_5fservice_5fclass_5fallows',['account_service_class_allows',['../account_8php.html#ac70e1d198246b029a3cedb7d6f7868bd',1,'account.php']]],
   ['account_5fservice_5fclass_5ffetch',['account_service_class_fetch',['../account_8php.html#a4328c40ee4b3d68630cf1ebb7b9d4d89',1,'account.php']]],
   ['account_5ftotal',['account_total',['../account_8php.html#a43e3042b2723d76915a030bac3c668b6',1,'account.php']]],
   ['account_5fverify_5fpassword',['account_verify_password',['../auth_8php.html#a07bae0e623e2daa9ee2cd5a8aa294dee',1,'auth.php']]],

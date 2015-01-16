@@ -11,6 +11,7 @@ var searchData=
   ['limit_5fbody_5fsize',['limit_body_size',['../items_8php.html#af94c281016c6c912d06e064113336c5c',1,'items.php']]],
   ['link_5fcompare',['link_compare',['../text_8php.html#a47c1e4a5f3f53027daacd8a9db24f285',1,'text.php']]],
   ['linkify',['linkify',['../text_8php.html#a11255c8c4e5245b6c24f97684826aa54',1,'text.php']]],
+  ['linkify_5ftags',['linkify_tags',['../text_8php.html#a4e4045a07c55cacf3e4b63bde190d954',1,'text.php']]],
   ['list_5fpost_5fdates',['list_post_dates',['../items_8php.html#ab33fa9756aaa5f39a6104d57a62baf00',1,'items.php']]],
   ['list_5fpublic_5fsites',['list_public_sites',['../dirsearch_8php.html#a985d410a170549429857af6ff2673149',1,'dirsearch.php']]],
   ['list_5fsmilies',['list_smilies',['../text_8php.html#a4446c7f8996a280f7e08b7bfe6c6c8bc',1,'text.php']]],

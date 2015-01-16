@@ -236,10 +236,10 @@ Functions</h2></td></tr>
 <tr class="separator:af6237605c60d69abdd959ddbbee3420c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a668ece2c37f05cc3abe538eb0dabfe55"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a668ece2c37f05cc3abe538eb0dabfe55">drop_items</a> ($items)</td></tr>
 <tr class="separator:a668ece2c37f05cc3abe538eb0dabfe55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a555762e1022a4b8e3c3abd32e7812408"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a555762e1022a4b8e3c3abd32e7812408">drop_item</a> ($id, $interactive=true, $stage=<a class="el" href="boot_8php.html#a7037bcbca223395c06bc67f65024de7a">DROPITEM_NORMAL</a>)</td></tr>
-<tr class="separator:a555762e1022a4b8e3c3abd32e7812408"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac8c9eb4338e2a996c43914392c6cfdb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#aac8c9eb4338e2a996c43914392c6cfdb">delete_item_lowlevel</a> ($item, $stage=<a class="el" href="boot_8php.html#a7037bcbca223395c06bc67f65024de7a">DROPITEM_NORMAL</a>)</td></tr>
-<tr class="separator:aac8c9eb4338e2a996c43914392c6cfdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad65e3d4d8c537e560286b735a285e33e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#ad65e3d4d8c537e560286b735a285e33e">drop_item</a> ($id, $interactive=true, $stage=<a class="el" href="boot_8php.html#a7037bcbca223395c06bc67f65024de7a">DROPITEM_NORMAL</a>, $force=false)</td></tr>
+<tr class="separator:ad65e3d4d8c537e560286b735a285e33e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b448675b71b00ee5ef798468dde4d22"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a6b448675b71b00ee5ef798468dde4d22">delete_item_lowlevel</a> ($item, $stage=<a class="el" href="boot_8php.html#a7037bcbca223395c06bc67f65024de7a">DROPITEM_NORMAL</a>, $force=false)</td></tr>
+<tr class="separator:a6b448675b71b00ee5ef798468dde4d22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cf98bb619f07dd18f602683a55a5f59"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a0cf98bb619f07dd18f602683a55a5f59">first_post_date</a> ($uid, $wall=false)</td></tr>
 <tr class="separator:a0cf98bb619f07dd18f602683a55a5f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab33fa9756aaa5f39a6104d57a62baf00"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#ab33fa9756aaa5f39a6104d57a62baf00">list_post_dates</a> ($uid, $wall, $mindate)</td></tr>
@@ -258,6 +258,8 @@ Functions</h2></td></tr>
 <tr class="separator:a02ca33c31ed535d24894f8a9a91ce9df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ed782ff5b9cf050bec931e06de12c00"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a5ed782ff5b9cf050bec931e06de12c00">item_remove_cid</a> ($xchan_hash, $mid, $uid)</td></tr>
 <tr class="separator:a5ed782ff5b9cf050bec931e06de12c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5db83ea87c32d1ccd953a372dcc5919c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a5db83ea87c32d1ccd953a372dcc5919c">set_linkified_perms</a> ($linkified, &amp;$str_contact_allow, &amp;$str_group_allow, $profile_uid, $parent_item=false)</td></tr>
+<tr class="separator:a5db83ea87c32d1ccd953a372dcc5919c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a36e656667193c83aa2cc03a024fc131b"></a>
@@ -699,7 +701,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aac8c9eb4338e2a996c43914392c6cfdb"></a>
+<a class="anchor" id="a6b448675b71b00ee5ef798468dde4d22"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -713,7 +715,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$stage</em> = <code><a class="el" href="boot_8php.html#a7037bcbca223395c06bc67f65024de7a">DROPITEM_NORMAL</a></code>&#160;</td>
+          <td class="paramname"><em>$stage</em> = <code><a class="el" href="boot_8php.html#a7037bcbca223395c06bc67f65024de7a">DROPITEM_NORMAL</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$force</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -723,11 +731,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="items_8php.html#a555762e1022a4b8e3c3abd32e7812408">drop_item()</a>.</p>
+<p>Referenced by <a class="el" href="items_8php.html#ad65e3d4d8c537e560286b735a285e33e">drop_item()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a555762e1022a4b8e3c3abd32e7812408"></a>
+<a class="anchor" id="ad65e3d4d8c537e560286b735a285e33e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -747,7 +755,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$stage</em> = <code><a class="el" href="boot_8php.html#a7037bcbca223395c06bc67f65024de7a">DROPITEM_NORMAL</a></code>&#160;</td>
+          <td class="paramname"><em>$stage</em> = <code><a class="el" href="boot_8php.html#a7037bcbca223395c06bc67f65024de7a">DROPITEM_NORMAL</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$force</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1846,6 +1860,52 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="diaspora_8php.html#a0fb2abe304aae19efc040a5e6b917829">diaspora_comment()</a>, <a class="el" href="items_8php.html#a2541e6861a56d145c9281877cc501615">item_store()</a>, and <a class="el" href="items_8php.html#acf0bf7c9d21ac84f32effb754f7ad484">item_store_update()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5db83ea87c32d1ccd953a372dcc5919c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">set_linkified_perms </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$linkified</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&amp;&#160;</td>
+          <td class="paramname"><em>$str_contact_allow</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&amp;&#160;</td>
+          <td class="paramname"><em>$str_group_allow</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$profile_uid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$parent_item</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>.</p>
 
 </div>
 </div>

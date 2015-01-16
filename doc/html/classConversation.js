@@ -6,7 +6,7 @@ var classConversation =
     [ "get_mode", "classConversation.html#a87a0d704d5f2b1a008cc2e9ce06a1bcd", null ],
     [ "get_observer", "classConversation.html#ae3d4190142e12b57051f11f2911f77a0", null ],
     [ "get_profile_owner", "classConversation.html#a5effe8ad3007e01333df44b81432b813", null ],
-    [ "get_template_data", "classConversation.html#a2a96b7a6573ae53db861624659e831cb", null ],
+    [ "get_template_data", "classConversation.html#ac5900b46e6a1c93360bb8e58f8b3540b", null ],
     [ "get_thread", "classConversation.html#a4cff75d8c46b517e7133e4d0da6fc1c8", null ],
     [ "is_commentable", "classConversation.html#a8b47c92b69459d461ea3cc9aae9597a3", null ],
     [ "is_preview", "classConversation.html#adf25ce023b69a166c63c6e84e02c136a", null ],
