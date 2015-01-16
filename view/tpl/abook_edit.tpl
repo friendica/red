@@ -76,11 +76,12 @@
 </div>
 {{/if}}
 
+{{if $rating}}
 {{if $notself}}
 <h3 class="abook-rating-text-desc">{{$lbl_rating_txt}}</h3>
 <textarea name="rating_text" id="rating-text" >{{$rating_txt}}</textarea>
 {{/if}}
-
+{{/if}}
 
 {{if $multiprofs }}
 <div>

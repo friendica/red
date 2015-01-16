@@ -534,11 +534,21 @@ function connedit_content(&$a) {
 			));
 		}
 
+		$poco_rating = get_config('system','poco_rating_enable');
+		// if unset default to enabled
+		if($poco_rating === false)
+			$poco_rating = true;
 
-		$rating = replace_macros(get_markup_template('rating_slider.tpl'),array(
-			'$min' => -10,
-			'$val' => (($contact['abook_rating']) ? $contact['abook_rating'] : 0),
-		));
+		if($poco_rating) {
+			$rating = replace_macros(get_markup_template('rating_slider.tpl'),array(
+				'$min' => -10,
+				'$val' => (($contact['abook_rating']) ? $contact['abook_rating'] : 0),
+			));
+		}
+		else {
+			$rating = false;
+		}
+
 
 		$perms = array();
 		$channel = $a->get_channel();
