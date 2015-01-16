@@ -2,6 +2,15 @@
 
 function prep_content(&$a) {
 
+
+	$poco_rating = get_config('system','poco_rating_enable');
+	// if unset default to enabled
+	if($poco_rating === false)
+		$poco_rating = true;
+
+	if(! $poco_rating)
+		return;
+
 	if(argc() > 1)
 		$hash = argv(1);
 
