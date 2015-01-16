@@ -131,7 +131,8 @@ This document assumes you're an administrator.
     [b]system > photo_cache_time[/b]
         How long to cache photos, in seconds. Default is 86400 (1 day).
         Longer time increases performance, but it also means it takes longer for changed permissions to apply.
-
+	[b]system > poco_rating_enable[/b]
+		Distributed reputation reporting and data collection may be disabled. If your site does not participate in distributed reputation you will also not be able to make use of the data from your connections on other sites. By default and in the absence of any setting it is enabled. Individual members can opt out by restricting who can see their connections or by not providing any reputation information for their connections. 
 		
 #include doc/macros/main_footer.bb;
 
