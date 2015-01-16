@@ -10,19 +10,19 @@ We highly recommend that you use the "typical social network" settings when you 
 
 Be aware that altering the scope of who can see your "public" items is a more or less [b]permanent[/b] change. Your public items have no identified permissions attached to them - they are public. If you restrict who can see these items, there is no way of making any single item public ever again - without allowing access to every public item you ever created. You are certainly free to do this, but beware of the consequences.
 
-A more useful privacy setup is to leave "public" items visible to anybody on the internet; but force everything you create to be restricted. This can be done on your Settings page by setting a Default Privacy Group for all new contacts, and setting your Default Post Permissions to restrict all your posts to that group. We use the Default Post Permissions for everything you create - posts, photos, events, webpages, and everything else. However you can then edit the permissions when you create any individual thing and remove your default privacy group to make just that item visible to anybody.   
+A more useful privacy setup is to leave "public" items visible to anybody on the internet; but force everything you create to be restricted. This can be done on your Channel Settings page by selecting the role "Social - restricted". This ensures a Default Privacy Group for all new contacts, and sets your Default Post Permissions to restrict all your posts to that group. We use the Default Post Permissions for everything you create - posts, photos, events, webpages, and everything else. However you can then edit the permissions when you create any individual thing and remove your default privacy group to make just that item visible to anybody.   
 
 
 
 The scopes of permissions are:
 
-[li]Nobody Except Yourself. This is self explanatory. Only you will be allowed to use this permission.[/li]
+[li]Nobody Except Yourself. This is self explanatory. Only you will be allowed access.[/li]
 
 [li]Only those you specifically allow. By default, people you are not connected to, and all new contacts will have this permission denied. You will be able to make exceptions for individual channels on their contact edit screen.[/li]
 
 [li]Anybody in your address book. Anybody you do not know will have this permission denied, but anybody you accept as a contact will have this permission approved. This is the way most legacy platforms handle permissions.[/li]
 
-[li]Anybody On This Website. Anybody using the same website as you will have permission approved. Anybody who registered at a different site will have this permission denied.[/li]
+[li]Anybody On This Hub. Anybody using the same hub as you will have permission approved. Anybody who registered at a different hub will have this permission denied.[/li]
 
 [li]Anybody in this network. Anybody in the Red Matrix will have this permission approved. Even complete strangers. However, anybody not logged in/authenticated will have this permission denied.[/li]
 
