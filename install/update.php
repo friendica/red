@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1131 );
+define( 'UPDATE_VERSION' , 1132 );
 
 /**
  *
@@ -1483,4 +1483,14 @@ function update_r1130() {
 	);		
 
 	return UPDATE_SUCCESS;
+}
+
+function update_r1131() {
+	$r1 = q("ALTER TABLE `abook` ADD `abook_rating_text` TEXT NOT NULL DEFAULT '' AFTER `abook_rating` ");
+	$r2 = q("ALTER TABLE `xlink` ADD `xlink_rating_text` TEXT NOT NULL DEFAULT '' AFTER `xlink_rating` ");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
 }

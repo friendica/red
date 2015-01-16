@@ -107,6 +107,14 @@ function connedit_post(&$a) {
 	if($closeness < 0)
 		$closeness = 99;
 
+	$rating = intval($_POST['rating']);
+	if($rating < (-10))
+		$rating = (-10);
+	if($rating > 10)
+		$rating = 10;
+
+	$rating_text = escape_tags($_REQUEST['rating_text']);
+
 	$abook_my_perms = 0;
 
 	foreach($_POST as $k => $v) {
@@ -125,11 +133,13 @@ function connedit_post(&$a) {
 		$new_friend = true;
 	}
 
-	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_flags = %d
+	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_rating = %d, abook_rating_text = '%s', abook_flags = %d
 		where abook_id = %d AND abook_channel = %d",
 		dbesc($profile_id),
 		intval($abook_my_perms),
 		intval($closeness),
+		intval($rating),
+		dbesc($rating_text),
 		intval($abook_flags),
 		intval($contact_id),
 		intval(local_user())
@@ -524,6 +534,22 @@ function connedit_content(&$a) {
 			));
 		}
 
+		$poco_rating = get_config('system','poco_rating_enable');
+		// if unset default to enabled
+		if($poco_rating === false)
+			$poco_rating = true;
+
+		if($poco_rating) {
+			$rating = replace_macros(get_markup_template('rating_slider.tpl'),array(
+				'$min' => -10,
+				'$val' => (($contact['abook_rating']) ? $contact['abook_rating'] : 0),
+			));
+		}
+		else {
+			$rating = false;
+		}
+
+
 		$perms = array();
 		$channel = $a->get_channel();
 
@@ -555,6 +581,11 @@ function connedit_content(&$a) {
 			'$buttons'        => (($self) ? '' : $buttons),
 			'$viewprof'       => t('View Profile'),
 			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
+			'$lbl_rating'     => t('Rating (this information may be public)'),
+			'$lbl_rating_txt' => t('Optionally explain your rating (this information may be public)'),
+			'$rating_txt'     => $contact['abook_rating_text'],
+			'$rating'         => $rating,
+			'$rating_val'     => $contact['abook_rating'],
 			'$slide'          => $slide,
 			'$tabs'           => $t,
 			'$tab_str'        => $tab_str,

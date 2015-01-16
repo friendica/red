@@ -117,6 +117,7 @@ function poco_load($xchan = '',$url = null) {
 		$name   = $entry['displayName'];
 		$hash   = $entry['hash'];
 		$rating = ((array_key_exists('rating',$entry)) ? intval($entry['rating']) : 0);
+		$rating = ((array_key_exists('rating_text',$entry)) ? escape_tags($entry['rating_text']) :'');
 
 		if(x($entry,'urls') && is_array($entry['urls'])) {
 			foreach($entry['urls'] as $url) {
@@ -188,17 +189,19 @@ function poco_load($xchan = '',$url = null) {
 		);
 
 		if(! $r) {
-			q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_updated ) values ( '%s', '%s', %d, '%s' ) ",
+			q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_updated ) values ( '%s', '%s', %d, '%s', '%s' ) ",
 				dbesc($xchan),
 				dbesc($hash),
 				intval($rating),
+				dbesc($rating_text),
 				dbesc(datetime_convert())
 			);
 		}
 		else {
-			q("update xlink set xlink_updated = '%s', xlink_rating = %d where xlink_id = %d",
+			q("update xlink set xlink_updated = '%s', xlink_rating = %d, xlink_rating_text = '%s' where xlink_id = %d",
 				dbesc(datetime_convert()),
 				intval($rating),
+				dbesc($rating_text),
 				intval($r[0]['xlink_id'])
 			);
 		}

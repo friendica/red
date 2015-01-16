@@ -52,6 +52,15 @@
 	width: 600px !important;
 }
 
+#rating-slider {
+	width: 600px !important;
+}
+
+#rating-text {
+	width: 400px;
+	height: 60px;
+}
+
 .abook-edit-them, .abook-edit-me {
 	float: left;
 	margin-left: 10px;

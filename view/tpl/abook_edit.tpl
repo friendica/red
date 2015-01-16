@@ -43,6 +43,15 @@
 {{$slide}}
 
 {{/if}}
+
+{{if $rating}}
+<h3>{{$lbl_rating}}</h3>
+
+{{$rating}}
+
+
+{{/if}}
+
 {{/if}}
 
 
@@ -57,6 +66,7 @@
 
 <input type="hidden" name="contact_id" value="{{$contact_id}}">
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
+<input id="contact-rating-mirror" type="hidden" name="rating" value="{{$rating_val}}" />
 
 
 
@@ -64,6 +74,13 @@
 <div class="abook-pending-contact">
 {{include file="field_checkbox.tpl" field=$unapproved}}
 </div>
+{{/if}}
+
+{{if $rating}}
+{{if $notself}}
+<h3 class="abook-rating-text-desc">{{$lbl_rating_txt}}</h3>
+<textarea name="rating_text" id="rating-text" >{{$rating_txt}}</textarea>
+{{/if}}
 {{/if}}
 
 {{if $multiprofs }}
