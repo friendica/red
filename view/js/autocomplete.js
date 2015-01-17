@@ -59,7 +59,6 @@ function contact_format(item) {
 		return "<div class='{0}' title='{4}'><img src='{1}'>{2}{3}</div>".format(item.taggable, item.photo, item.name, desc, item.link)
 	}
 	else
-console.log("item"+item);
 		return "<div>"+item.text+"</div>"
 }
 
