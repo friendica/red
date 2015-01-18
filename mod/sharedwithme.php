@@ -62,7 +62,7 @@ function sharedwithme_content(&$a) {
 			intval(local_user())
 		);
 
-		goaway(z_root() . '/sharedfiles');
+		goaway(z_root() . '/sharedwithme');
 	}
 
 	//drop all files - localuser
@@ -73,7 +73,7 @@ function sharedwithme_content(&$a) {
 			intval(local_user())
 		);
 
-		goaway(z_root() . '/sharedfiles');
+		goaway(z_root() . '/sharedwithme');
 	}
 
 	//list files
