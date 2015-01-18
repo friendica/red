@@ -249,7 +249,10 @@ class RedBrowser extends DAV\Browser\Plugin {
 				'$header' => t('Files') . ": " . $this->escapeHTML($path) . "/",
 				'$quota' => $quota,
 				'$total' => t('Total'),
-				'$actionspanel' => $output
+				'$actionspanel' => $output,
+				'$shared' => t('Shared'),
+				'$create' => t('Create'),
+				'upload' => t('Upload')
 			));
 
 		$html .= replace_macros(get_markup_template('cloud_directory.tpl'), array(
