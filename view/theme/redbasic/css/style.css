@@ -1031,6 +1031,7 @@ footer {
 #colorbox {
 	border: 0px solid $fancybox_bgcolour;
 	background-color: $fancybox_bgcolour;
+	z-index: 9;
 }
 
 .settings-block {
