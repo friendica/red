@@ -753,13 +753,16 @@ function attach_delete($channel_id, $resource) {
 
 	$channel_address = (($c) ? $c[0]['channel_address'] : 'notfound');
 
-	$r = q("SELECT hash, flags, folder FROM attach WHERE hash = '%s' AND uid = %d limit 1",
+	$r = q("SELECT hash, filename, flags, folder FROM attach WHERE hash = '%s' AND uid = %d limit 1",
 		dbesc($resource),
 		intval($channel_id)
 	);
 
+
 	if(! $r)
 		return;
+
+	$url = get_parent_cloudpath($channel_id, $channel_address, $resource) . $r[0]['filename'];
 
 	// If resource is a directory delete everything in the directory recursive
 	if($r[0]['flags'] & ATTACH_FLAG_DIR) {
@@ -802,6 +805,8 @@ function attach_delete($channel_id, $resource) {
 		dbesc($r[0]['folder']),
 		intval($channel_id)
 	);
+
+	file_activity($channel_id, $resource, $allow_cid='', $allow_gid='', $deny_cid='', $deny_gid='', $url, 'drop', $no_activity=false);
 }
 
 /**
@@ -933,4 +938,106 @@ function pipe_streams($in, $out) {
 	while (!feof($in))
 		$size += fwrite($out, fread($in, 8192));
 	return $size;
+}
+
+function file_activity($channel_id, $hash, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $url, $action, $no_activity) {
+
+	require_once('include/items.php');
+
+	$url = rawurlencode($url);
+
+	$poster = get_app()->get_observer();
+
+	$verb = ACTIVITY_FILE . '/' . $action . '/' . $hash;
+
+	$mid = item_message_id();
+
+	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_UNSEEN;
+
+	if($action == 'post') {
+		//check if activity item exists
+		//if yes send drop activity and create a new one
+
+		$r = q("SELECT * FROM item WHERE verb = '%s'",
+			dbesc($verb)
+		);
+
+		if($r) {
+
+			$dmid = item_message_id();
+			$updateverb = ACTIVITY_FILE . '/drop/' . $hash . '#' . $mid;
+
+			$arr = array();
+
+			$arr['aid']           = get_account_id();
+			$arr['uid']           = $channel_id;
+			$arr['mid']           = $dmid;
+			$arr['parent_mid']    = $dmid;
+			$arr['item_flags']    = $item_flags;
+			$arr['author_xchan']  = $poster['xchan_hash'];
+			$arr['owner_xchan']   = $poster['xchan_hash'];
+			$arr['title']         = '';
+			$arr['allow_cid']     = $allow_cid;
+			$arr['allow_gid']     = $allow_gid;
+			$arr['deny_cid']      = $deny_cid;
+			$arr['deny_gid']      = $deny_gid;
+			$arr['item_restrict']  = ITEM_HIDDEN;
+			$arr['item_private']  = 0;
+			$arr['verb']          = $updateverb;
+			$arr['body']          = $url;
+
+			$post = item_store($arr);
+			$item_id = $post['item_id'];
+
+			if($item_id) {
+				proc_run('php',"include/notifier.php","activity",$item_id);
+			}
+
+			//call_hooks('post_local_end', $arr);
+
+			//notice( t('File activity updated') . EOL);
+
+			if($no_activity) {
+				return;
+			}
+
+		}
+	}
+
+	if($no_activity) {
+		return;
+	}
+
+	$arr = array();
+
+	$arr['aid']           = get_account_id();
+	$arr['uid']           = $channel_id;
+	$arr['mid']           = $mid;
+	$arr['parent_mid']    = $mid;
+	$arr['item_flags']    = $item_flags;
+	$arr['author_xchan']  = $poster['xchan_hash'];
+	$arr['owner_xchan']   = $poster['xchan_hash'];
+	$arr['title']         = '';
+	$arr['allow_cid']     = $allow_cid;
+	$arr['allow_gid']     = $allow_gid;
+	$arr['deny_cid']      = $deny_cid;
+	$arr['deny_gid']      = $deny_gid;
+	$arr['item_restrict']  = ITEM_HIDDEN;
+	$arr['item_private']  = 0;
+	$arr['verb']          = $verb;
+	$arr['body']          = $url;
+
+	$post = item_store($arr);
+	$item_id = $post['item_id'];
+
+	if($item_id) {
+		proc_run('php',"include/notifier.php","activity",$item_id);
+	}
+
+	//call_hooks('post_local_end', $arr);
+
+	//(($action === 'post') ?  notice( t('File activity posted') . EOL) : notice( t('File activity dropped') . EOL));
+
+	return;
+
 }
