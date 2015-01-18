@@ -86,7 +86,7 @@ function sharedwithme_content(&$a) {
 
 	$o .= '<div class="section-title-wrapper">';
 
-	$o .= '<a href="/sharedfiles/dropall" onclick="return confirmDelete();" class="btn btn-xs btn-default pull-right"><i class="icon-trash"></i>&nbsp;' . t('Remove all entries') . '</a>';
+	$o .= '<a href="/sharedwithme/dropall" onclick="return confirmDelete();" class="btn btn-xs btn-default pull-right"><i class="icon-trash"></i>&nbsp;' . t('Remove all entries') . '</a>';
 	
 	$o .= '<h2>' . t('Files shared with me') . '</h2>';
 
@@ -100,7 +100,7 @@ function sharedwithme_content(&$a) {
 			if($rr['owner_xchan'] != $channel['channel_hash']) {
 				unobscure($rr);
 				$url = rawurldecode($rr['body']);
-				$o .= '<a href="' . $url . '?f=&zid=' . $channel['xchan_addr'] . '">' . $url . '</a>&nbsp;<a href="/sharedfiles/' . $rr['id'] . '/drop" onclick="return confirmDelete();"><i class="icon-trash drop-icons"></i></a><br><br>';
+				$o .= '<a href="' . $url . '?f=&zid=' . $channel['xchan_addr'] . '">' . $url . '</a>&nbsp;<a href="/sharedwithme/' . $rr['id'] . '/drop" onclick="return confirmDelete();"><i class="icon-trash drop-icons"></i></a><br><br>';
 			}
 		}
 	}
