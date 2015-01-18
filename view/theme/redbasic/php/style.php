@@ -275,7 +275,7 @@ if(! $a->install) {
    if(! $chat_txtbgcol)
 		$chat_txtbgcol = "#EEE";
    if(! $fancybox_bgcolour)
-      $fancybox_bgcolour = "#FFF";
+      $fancybox_bgcolour = "#FFFFFF";
 	if (!$comment_padding)
 		$comment_padding="0px";	
 	if (!$comment_border_left)

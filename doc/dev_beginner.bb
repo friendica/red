@@ -1,32 +1,15 @@
 [h2]You want to contribute code?[/h2]
-[b]...and don't know how to start?[/b]
-Then this is for you.
-
-This manual will guided you step-by-step to:
+[b]...and don't know how to start to...[/b]
 [list]
-[*] debug the Red Matrix (PHP),
+[*] debug the red#matrix (php on the webserver),
 [*] contribute code to the project,
 [*] optionally - do it all from inside a virtual machine
 [/list]
+This manual was tested for Debian (Wheezy) as virtual machine on Lubuntu (Ubuntu 14.0) as host.
 
-This manual was tested for
-[list]
-[*] Lubuntu (Ubuntu 14.0) as host OS
-[*] Debian (Wheezy) as guest OS running in a VM
-[/list]
+Content
 
-[h2]Content[/h2]
-
-In this manual you will
-[list=1]
-[*] Install a Virtual Machine (KVM)
-[*] Install Apache Web Server
-[*] Install PHP, MySQL, phpMyAdmin
-[*] Fork the project on github to be able to contribute
-[*] Install the RED Matrix
-[*] Debug the server via eclipse
-[*] Contribute your changes via github
-[/list]
+[toc]
 
 [h2]Install a Virtual Machine (KVM)[/h2]
 
@@ -81,6 +64,8 @@ Should show you a page like "It works"
 
 [h2]Install PHP, MySQL, phpMyAdmin[/h2]
 
+[h3]PHP, MySQL[/h3]
+
 [code]su -l
 apt-get install libapache2-mod-php5 php5 php-pear php5-xcache php5-curl php5-mcrypt php5-xdebug
 apt-get install php5-mysql
@@ -92,6 +77,8 @@ Optional since its already enabled during phpmyadmin setup
 php5enmod mcrypt
 [/code]
 
+[h3]phpMyAdmin[/h3]
+
 Install php myadmin
 [code]apt-get install phpmyadmin[/code]
 
@@ -101,7 +88,7 @@ Configuring phpmyadmin
 
 (Source #^[url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
 
-[b]Enable rewrite[/b]
+[h3]Enable rewrite[/h3]
 
 The default installation of Apache2 comes with mod_rewrite installed. To check whether this is the case, verify the existence of /etc/apache2/mods-available/rewrite.load
 
@@ -134,7 +121,7 @@ Finally, restart Apache2.
 root@debian /var/www $service apache2 restart
 [/code]
 
-[b]Test installation[/b]
+[h3]Test installation[/h3]
 
 [code]cd /var/www[/code]
 
@@ -167,8 +154,8 @@ open webbrowser on PC and try #^[url=http://localhost/phpmyadmin]http://localhos
 
 (Source #^[url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
 
+[h3]Create an empty database... that is later used by the red#matrix[/h3]
 
-[b]Create an empty database... that is later used by RED[/b]
 
 open webbrowser on PC and try #^[url=http://localhost/phpmyadmin]http://localhost/phpmyadmin[/url]
 
@@ -179,7 +166,7 @@ Grant all rights for the user "red" to the database "red".
 Note the access details (hostname, username, password, database name).
 
 
-[h2]Fork the project on github to be able to contribute[/h2]
+[h2]Fork the project on github[/h2]
 
 Please follow the instruction in the offiical [url=http://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project] documentation[/url] of git.
 It is a good idea to read the whole manual! Git is different to other version control systems in many ways.
@@ -196,6 +183,8 @@ If you not want to use GIT from the command line - there is a usefull Eclipse pl
 
 [h2]Install RED and its Addons[/h2]
 
+[h3]Git at your computer / vm[/h3]
+
 You should have created an account on github and forked the projects befor you procceed.
 
 Delete the directory www
@@ -205,6 +194,8 @@ rm -R www/
 
 Install git (and optionally git-gui a client gui)
 [code]apt-get install git git-gui[/code]
+
+[h3]Download red#matri and addons[/h3]
 
 Download the main project red and red-addons
 [code]
@@ -243,6 +234,8 @@ If you are still not able to modify the project files you can check the members 
 cat /etc/group
 [/code]
 
+[h3]Register yourself as admin[/h3]
+
 Open http://localhost and init the matrix
 
 Befor you register a first user switch off the registration mails.
@@ -252,6 +245,8 @@ and make sure "0" is set in this line
 $a->config['system']['verify_email'] = 0;
 [/code]
 You should be able to change the file as "yourself" (instead of using root or www-data).
+
+[h3]Cron and the poller[/h3]
 
 Important!
 Run the poller  to pick up the recent "public" postings of your friends
@@ -344,6 +339,8 @@ Expected:
 
 [h2]Contribute your changes via github[/h2]
 
+[h3]Preparations[/h3]
+
 There is a related page in this docs: [zrl=[baseurl]/help/git_for_non_developers]Git for Non-Developers[/zrl].
 As stated befor it is recommended to read the official documentation [url=http://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project]GitHub-Contributing-to-a-Project[/url] of git.
 
@@ -354,6 +351,8 @@ Make sure you have set your data
 surfer@debian:/var/www$ git config --global user.name "Your Name"
 surfer@debian:/var/www$ git config --global user.email "your@mail.com"
 [/code]
+
+[h3]Your first contribution[/h3]
 
 Create a descriptive topic branch
 [code]
@@ -401,8 +400,15 @@ surfer@debian:/var/www$ git push
 
 Now you can go to your (online) account at github and create the pull request.
 
+[h3]Following contributions[/h3]
+
 In case the main devolpers want you to change something.
-Make the changes, check them, commit (to local repository), push (to online repository)
+Fetch the newest work from the remote upstream/master to be sure you have the latest changes.
+[code]
+surfer@debian:/var/www$ git fetch upstream
+surfer@debian:/var/www$ git merge upstream/master
+[/code]
+Make your changes, test them, commit (to local repository), push (to online repository)
 [code]
 surfer@debian:/var/www$ git status
 surfer@debian:/var/www$ git commit -a -m "added modification of branch"
