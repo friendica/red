@@ -82,7 +82,7 @@ function sharedwithme_content(&$a) {
 		intval(local_user())
 	);
 	
-	$o = profile_tabs($a, $is_owner, $channel['channel_id']);
+	$o = profile_tabs($a, $is_owner, $channel['channel_address']);
 
 	$o .= '<div class="section-title-wrapper">';
 
