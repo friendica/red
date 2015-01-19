@@ -481,7 +481,7 @@ function widget_settings_menu($arr) {
 		),
 
 		array(
-			'label'	=> t('Feature settings'),
+			'label'	=> t('Feature/Addon settings'),
 			'url' 	=> $a->get_baseurl(true).'/settings/featured',
 			'selected'	=> ((argv(1) === 'featured') ? 'active' : ''),
 		),
