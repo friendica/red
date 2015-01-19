@@ -26,6 +26,14 @@
 		include_once($file);
 	}
 
+	echo "Directory: include/RedDAV\n";
+	$files = glob('include/RedDAV/*.php');
+	foreach($files as $file) {
+		echo $file . "\n";
+		include_once($file);
+	}
+
+
 	echo "Directory: include/photo\n";
 	$files = glob('include/photo/*.php');
 	foreach($files as $file) {
