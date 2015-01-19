@@ -31,22 +31,37 @@ function find_upstream_directory($dirmode) {
 }
 
 function check_upstream_directory() {
+
 	/**
 	* Directories may come and go over time.  We will need to check that our 
 	* directory server is still valid occasionally, and reset to something that
 	* is if our directory has gone offline for any reason
 	*/
+
 	$directory = get_config('system','directory_server');
-	if ($directory) {
-		$r = q("select * from site where site_url = '%s' and (site_flags & %d) > 0 ",
-			dbesc($directory),
-			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY|DIRECTORY_MODE_STANDALONE)
-		);
-	}
-	// If we've got something, it's still a directory.  If we haven't, we need to reset and let find_upstream_directory() fix it
-		if (! $r) {
-			set_config('system','directory_server','');
+
+	// it's possible there is no directory server configured and the local hub is being used.
+	// If so, default to preserving the absence of a specific server setting.
+
+	$isadir = true; 
+
+	if($directory) {
+		$h = parse_url($directory);
+		if($h) {
+			$x = zot_finger('sys@' . $h['host']);
+			if($x['success']) {
+				$j = json_decode($x['body'],true);
+				if(array_key_exists('site',$j) && array_key_exists('directory_mode',$j['site'])) {
+					if($j['site']['directory_mode'] === 'normal') {
+						$isadir = false;
+					}
+				}
+			}
 		}
+	}
+
+	if(! $isadir)
+		set_config('system','directory_server','');
 	return;
 }
 	
