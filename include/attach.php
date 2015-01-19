@@ -820,7 +820,7 @@ function attach_delete($channel_id, $resource) {
  *  path to the file in cloud/
  */
 function get_cloudpath($arr) {
-	$basepath = 'cloud/';
+	$basepath = get_app()->module . '/';
 
 	if($arr['uid']) {
 		$r = q("select channel_address from channel where channel_id = %d limit 1",
@@ -880,7 +880,7 @@ function get_parent_cloudpath($channel_id, $channel_name, $attachHash) {
 			$parentFullPath = $parentName . '/' . $parentFullPath;
 		}
 	} while ($parentHash);
-	$parentFullPath = z_root() . '/cloud/' . $channel_name . '/' . $parentFullPath;
+	$parentFullPath = z_root() . '/' . get_app()->module . '/' . $channel_name . '/' . $parentFullPath;
 
 	return $parentFullPath;
 }

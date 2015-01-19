@@ -52,7 +52,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		//logger('directory ' . $ext_path, LOGGER_DATA);
 		$this->ext_path = $ext_path;
 		// remove "/cloud" from the beginning of the path
-		$this->red_path = ((strpos($ext_path, '/cloud') === 0) ? substr($ext_path, 6) : $ext_path);
+		$modulename = get_app()->module; 
+		$this->red_path = ((strpos($ext_path, '/' . $modulename') === 0) ? substr($ext_path, strlen($modulename) + 1) : $ext_path);
 		if (! $this->red_path) {
 			$this->red_path = '/';
 		}
@@ -112,8 +113,9 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
-		if ($this->red_path === '/' && $name === 'cloud') {
-			return new RedDirectory('/cloud', $this->auth);
+		$modulename = get_app()->module;
+		if ($this->red_path === '/' && $name === $modulename) {
+			return new RedDirectory('/' . $modulename, $this->auth);
 		}
 
 		$x = RedFileData($this->ext_path . '/' . $name, $this->auth);
@@ -316,8 +318,9 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	public function childExists($name) {
 		// On /cloud we show a list of available channels.
 		// @todo what happens if no channels are available?
-		if ($this->red_path === '/' && $name === 'cloud') {
-			//logger('We are at /cloud show a channel list', LOGGER_DEBUG);
+		$modulename = get_app()->module;
+		if ($this->red_path === '/' && $name === $modulename) {
+			//logger('We are at ' $modulename . ' show a channel list', LOGGER_DEBUG);
 			return true;
 		}
 
@@ -338,14 +341,15 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	function getDir() {
 		//logger($this->ext_path, LOGGER_DEBUG);
 		$this->auth->log();
+		$modulename = get_app->module;
 
 		$file = $this->ext_path;
 
-		$x = strpos($file, '/cloud');
+		$x = strpos($file, '/' . $modulename);
 		if ($x === false)
 			return;
 		if ($x === 0) {
-			$file = substr($file, 6);
+			$file = substr($file, strlen($modulename) + 1);
 		}
 
 		if ((! $file) || ($file === '/')) {
