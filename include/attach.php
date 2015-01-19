@@ -811,6 +811,7 @@ function attach_delete($channel_id, $resource) {
 
 /**
  * @brief Returns path to file in cloud/.
+ * This function cannot be used with mod/dav as it always returns a path valid under mod/cloud
  * 
  * @param array
  *  $arr[uid] int the channels uid
@@ -820,7 +821,7 @@ function attach_delete($channel_id, $resource) {
  *  path to the file in cloud/
  */
 function get_cloudpath($arr) {
-	$basepath = get_app()->module . '/';
+	$basepath = 'cloud/';
 
 	if($arr['uid']) {
 		$r = q("select channel_address from channel where channel_id = %d limit 1",
@@ -862,6 +863,7 @@ function get_cloudpath($arr) {
 
 /**
  * @brief Returns path to parent folder in cloud/.
+ * This function cannot be used with mod/dav as it always returns a path valid under mod/cloud
  *
  * @param int $channel_id
  *  The id of the channel
@@ -880,7 +882,7 @@ function get_parent_cloudpath($channel_id, $channel_name, $attachHash) {
 			$parentFullPath = $parentName . '/' . $parentFullPath;
 		}
 	} while ($parentHash);
-	$parentFullPath = z_root() . '/' . get_app()->module . '/' . $channel_name . '/' . $parentFullPath;
+	$parentFullPath = z_root() . '/cloud/' . $channel_name . '/' . $parentFullPath;
 
 	return $parentFullPath;
 }
