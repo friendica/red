@@ -22,13 +22,16 @@ Once you have provided the necessary details, click the 'Register' button. Some 
 
 [b]Create a Channel[/b]
 
-Next, you will be presented with the &quot;Add a channel&quot; screen. Normally, your first channel will be one that represents you - so using your own name (or psuedonym) as the channel name is a good idea. The channel name should be thought of as a title, or brief description of your channel. The &quot;choose a short nickname&quot; box is similar to a &quot;username&quot; field. We will use whatever you enter here to create a channel address, which other people will use to connect to you, and you will use to log in to other sites. This looks like an email address, and takes the form nickname@siteyouregisteredat.xyz
+Next, you will be presented with the &quot;Add a channel&quot; screen. Normally, your first channel will be one that represents you - so using your own name (or psuedonym) as the channel name is a good idea. The channel name should be thought of as a title, or brief description of your channel. The &quot;choose a short nickname&quot; box is similar to a &quot;username&quot; field. We will use whatever you enter here to create a channel address, which other people will use to connect to you, and you will use to log in to other sites. This looks like an email address, and takes the form nickname@siteyouregisteredat.xyz*
 
 When your channel is created you will be taken straight to your settings page where you can define permissions, enable features, etc. All these things are covered in the appropriate section of the helpfiles.
+
+*Note: It is not possible to change this address after creating the channel.
 
 See Also
 
 [zrl=[baseurl]/help/permissions]Permissions[/zrl]
+[zrl=[baseurl]/help/privacy]Privacy[/zrl]
 [zrl=[baseurl]/help/profiles]Profiles[/zrl]
 [zrl=[baseurl]/help/remove_account]Remove Account[/zrl]
 

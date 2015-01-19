@@ -10,7 +10,7 @@ You will need to confirm your password and the channel you are currently logged 
 
 This is irreversible.
 
-If you have identity clones on other sites this only removes  by default the channel instance which exists on this site.
+If you have identity clones on other hubs this only removes  by default the channel instance which exists on this hub.
 
 [b]Remove Account[/b]
 
@@ -22,6 +22,6 @@ You will need to confirm your password and the account you are currently logged 
 
 This is irreversible.
 
-All your channels will be deleted. If you have identity clones on other sites this only removes by default the channels instances which exists on this site.
+All your channels will be deleted. If you have identity clones on other hubs this only removes by default the channels instances which exists on this hub.
 
 #include doc/macros/main_footer.bb;
