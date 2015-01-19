@@ -96,7 +96,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		$size = 0;
 
 		// @todo only 3 values are needed
-		$c = q("SELECT * FROM channel WHERE channel_id = %d AND NOT (channel_pageflags & %d)>0 LIMIT 1",
+		$c = q("SELECT * FROM channel WHERE channel_id = %d AND (channel_pageflags & %d) = 0 LIMIT 1",
 			intval($this->auth->owner_id),
 			intval(PAGE_REMOVED)
 		);
@@ -107,14 +107,15 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		);
 		if ($r) {
 			if ($r[0]['flags'] & ATTACH_FLAG_OS) {
-				$f = 'store/' . $this->auth->owner_nick . '/' . (($r[0]['data']) ? $r[0]['data'] : '');
+				$fname = dbunescbin($r[0]['data']);
+				$f = 'store/' . $this->auth->owner_nick . '/' . (($fname) ? $fname : '');
 				// @todo check return value and set $size directly
 				@file_put_contents($f, $data);
 				$size = @filesize($f);
 				logger('filename: ' . $f . ' size: ' . $size, LOGGER_DEBUG);
 			} else {
 				$r = q("UPDATE attach SET data = '%s' WHERE hash = '%s' AND uid = %d",
-					dbesc(stream_get_contents($data)),
+					dbescbin(stream_get_contents($data)),
 					dbesc($this->data['hash']),
 					intval($this->data['uid'])
 				);
@@ -191,10 +192,10 @@ class RedFile extends DAV\Node implements DAV\IFile {
 			}
 
 			if ($r[0]['flags'] & ATTACH_FLAG_OS ) {
-				$f = 'store/' . $this->auth->owner_nick . '/' . (($this->os_path) ? $this->os_path . '/' : '') . $r[0]['data'];
+				$f = 'store/' . $this->auth->owner_nick . '/' . (($this->os_path) ? $this->os_path . '/' : '') . dbunescbin($r[0]['data']);
 				return fopen($f, 'rb');
 			}
-			return $r[0]['data'];
+			return dbunescbin($r[0]['data']);
 		}
 	}
 
