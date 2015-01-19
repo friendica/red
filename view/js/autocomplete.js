@@ -15,7 +15,7 @@ function contact_search(term, callback, backend_url, type, extra_channels) {
 			// Filter old results locally
 			var matching = contact_search.cache[bt][t].filter(function (x) { return (x.name.toLowerCase().indexOf(lterm) >= 0 || x.nick.toLowerCase().indexOf(lterm) >= 0); });
 			matching.unshift({taggable:false, text: term, replace: term});
-			callback(matching);
+			setTimeout(function() { callback(matching)} , 1); // Use "pseudo-thread" to avoid some problems
 			return;
 		}
 	}
