@@ -53,7 +53,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		$this->ext_path = $ext_path;
 		// remove "/cloud" from the beginning of the path
 		$modulename = get_app()->module; 
-		$this->red_path = ((strpos($ext_path, '/' . $modulename') === 0) ? substr($ext_path, strlen($modulename) + 1) : $ext_path);
+		$this->red_path = ((strpos($ext_path, '/' . $modulename) === 0) ? substr($ext_path, strlen($modulename) + 1) : $ext_path);
 		if (! $this->red_path) {
 			$this->red_path = '/';
 		}
@@ -341,7 +341,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	function getDir() {
 		//logger($this->ext_path, LOGGER_DEBUG);
 		$this->auth->log();
-		$modulename = get_app->module;
+		$modulename = get_app()->module;
 
 		$file = $this->ext_path;
 
