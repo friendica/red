@@ -32,19 +32,6 @@ nav .dropdown-menu {
 	margin-top: 0px;
 }
 
-nav .dropdown-menu .contactname {
-	padding-top: 2px;
-	font-weight: bold;
-	display: block;
-}
-
-nav .dropdown-menu li a {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	//line-height: 1em;
-	padding: 5px 10px;
-}
-
 nav .navbar-collapse .navbar-left {
 	float: left;
 }
@@ -64,6 +51,13 @@ nav .navbar-toggle {
 	width: 32px;
 	height: 32px;
 	margin-right: 5px;
+}
+
+.dropdown-menu li a {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1em;
+	padding: 5px 10px;
 }
 
 .nav-tabs.nav-justified > li {

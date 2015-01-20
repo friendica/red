@@ -56,7 +56,7 @@ function contact_format(item) {
 		var desc = ((item.label) ? item.nick + ' ' + item.label : item.nick)
 		if(typeof desc === 'undefined') desc = '';
 		if(desc) desc = ' ('+desc+')';
-		return "<div class='{0}' title='{4}'><img src='{1}'><b>{2}</b><br>{3}<div class='clear'></div></div>".format(item.taggable, item.photo, item.name, desc, item.link)
+		return "<div class='{0}' title='{4}'><img src='{1}'><span class='contactname'>{2}</span><span class='dropdown-sub-text'>{3}</span><div class='clear'></div></div>".format(item.taggable, item.photo, item.name, desc, item.link)
 	}
 	else
 		return "<div>"+item.text+"</div>"

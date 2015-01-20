@@ -1467,6 +1467,21 @@ header {
 	padding: 7px 7px 0px 0px;
 }
 
+.contactname {
+	padding-top: 2px;
+	font-weight: bold;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+}
+
+.dropdown-sub-text {
+	font-size: 0.833em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+}
+
 .notify-seen a {
 	background: $notifyseen_bgcolour;
 	color: $notifyseen_linkcolour !important;
