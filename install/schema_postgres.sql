@@ -1149,6 +1149,16 @@ create index "xlink_xchan" on xlink ("xlink_xchan");
 create index "xlink_link" on xlink ("xlink_link");
 create index "xlink_updated" on xlink ("xlink_updated");
 create index "xlink_rating" on xlink ("xlink_rating");
+CREATE TABLE "xperm" (
+  "xp_id" serial NOT NULL,
+  "xp_client" varchar( 20 ) NOT NULL DEFAULT '',
+  "xp_channel" bigint NOT NULL DEFAULT '0',
+  "xp_perm" varchar( 64 ) NOT NULL DEFAULT '',
+  PRIMARY_KEY ("xp_id")
+);
+create index "xp_client" on xperm ("xp_client");
+create index "xp_channel" on xperm ("xp_channel");
+create index "xp_perm" on xperm ("xp_perm");
 CREATE TABLE "xprof" (
   "xprof_hash" text NOT NULL,
   "xprof_age" numeric(3)  NOT NULL DEFAULT '0',

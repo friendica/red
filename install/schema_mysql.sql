@@ -1540,6 +1540,22 @@ CREATE TABLE IF NOT EXISTS `xlink` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `xperm`
+--
+
+CREATE TABLE IF NOT EXISTS `xperm` (
+  `xp_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  `xp_client` VARCHAR( 20 ) NOT NULL DEFAULT '',
+  `xp_channel` INT UNSIGNED NOT NULL DEFAULT '0',
+  `xp_perm` VARCHAR( 64 ) NOT NULL DEFAULT '',
+  KEY `xp_client` (`xp_client`),
+  KEY `xp_channel` (`xp_channel`),
+  KEY `xp_perm` (`xp_perm`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `xprof`
 --
 
