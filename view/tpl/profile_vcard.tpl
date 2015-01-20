@@ -6,7 +6,7 @@
 	<ul class="dropdown-menu" role="menu">
 		{{foreach $profile.menu.entries as $e}}
 		<li>
-			<a href="profiles/{{$e.id}}"><img src='{{$e.photo}}'>{{$e.profile_name}}</a>
+			<a href="profiles/{{$e.id}}"><img src='{{$e.photo}}'>{{$e.profile_name}}<div class='clear'></div></a>
 		</li>
 		{{/foreach}}
 		<li><a href="profile_photo" >{{$profile.menu.chg_photo}}</a></li>

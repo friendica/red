@@ -41,7 +41,7 @@ nav .dropdown-menu .contactname {
 nav .dropdown-menu li a {
 	overflow: hidden;
 	text-overflow: ellipsis;
-	line-height: 1em;
+	//line-height: 1em;
 	padding: 5px 10px;
 }
 
