@@ -56,7 +56,7 @@ function contact_format(item) {
 		var desc = ((item.label) ? item.nick + ' ' + item.label : item.nick)
 		if(typeof desc === 'undefined') desc = '';
 		if(desc) desc = ' ('+desc+')';
-		return "<div class='{0}' title='{4}'><img src='{1}'>{2}{3}</div>".format(item.taggable, item.photo, item.name, desc, item.link)
+		return "<div class='{0}' title='{4}'><img src='{1}'><span class='contactname'>{2}</span><span class='dropdown-sub-text'>{3}</span><div class='clear'></div></div>".format(item.taggable, item.photo, item.name, desc, item.link)
 	}
 	else
 		return "<div>"+item.text+"</div>"
@@ -111,7 +111,7 @@ function submit_form(e) {
 		replace: function(item) { return "$1"+item['text'] + ' '; },
 	}
 	this.attr('autocomplete','off');
-	this.textcomplete([contacts,smilies],{className:'acpopup',zIndex:1050});
+	this.textcomplete([contacts,smilies],{className:'acpopup',zIndex:1020});
   };
 })( jQuery );
 
@@ -130,7 +130,7 @@ function submit_form(e) {
 		template: contact_format,
 	}
 	this.attr('autocomplete','off');
-	var a = this.textcomplete([contacts],{className:'acpopup',maxCount:100,zIndex: 1050});
+	var a = this.textcomplete([contacts],{className:'acpopup',maxCount:100,zIndex: 1020,appendTo:'nav'});
 
 	a.on('textComplete:select', function(e,value,strategy) { submit_form(this); });
 	
@@ -153,7 +153,7 @@ function submit_form(e) {
 	}
 
 	this.attr('autocomplete','off');
-	var a = this.textcomplete([contacts],{className:'acpopup',zIndex:1050});
+	var a = this.textcomplete([contacts],{className:'acpopup',zIndex:1020});
 
 	if(autosubmit)
 		a.on('textComplete:select', function(e,value,strategy) { submit_form(this); });
