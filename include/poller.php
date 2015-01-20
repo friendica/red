@@ -158,6 +158,13 @@ function poller_run($argv, $argc){
 			mark_orphan_hubsxchans();
 
 
+			// get rid of really old poco records
+
+			q("delete from xlink where xlink_updated < %s - INTERVAL %s",
+				db_utcnow(), db_quoteinterval('14 DAY')
+			);
+
+
 			/**
 			 * End Cron Weekly
 			 */
