@@ -120,7 +120,7 @@ function poco_load($xchan = '',$url = null) {
 		$name   = $entry['displayName'];
 		$hash   = $entry['hash'];
 		$rating = ((array_key_exists('rating',$entry)) ? intval($entry['rating']) : 0);
-		$rating = ((array_key_exists('rating_text',$entry)) ? escape_tags($entry['rating_text']) :'');
+		$rating_text = ((array_key_exists('rating_text',$entry)) ? escape_tags($entry['rating_text']) :'');
 
 		if(x($entry,'urls') && is_array($entry['urls'])) {
 			foreach($entry['urls'] as $url) {
