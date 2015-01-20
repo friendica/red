@@ -38,13 +38,6 @@ nav .dropdown-menu .contactname {
 	display: block;
 }
 
-nav .dropdown-menu img {
-	float: left;
-	margin-right: 5px;
-	width: 32px;
-	height: 32px;
-}
-
 nav .dropdown-menu li a {
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -67,6 +60,7 @@ nav .navbar-toggle {
 /* nav overrides end */
 
 .dropdown-menu img {
+	float: left;
 	width: 32px;
 	height: 32px;
 	margin-right: 5px;
