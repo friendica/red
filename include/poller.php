@@ -389,7 +389,7 @@ function poller_run($argv, $argc){
 	}
 
 	if($dirmode == DIRECTORY_MODE_SECONDARY || $dirmode == DIRECTORY_MODE_PRIMARY) {
-		$r = q("select distinct ud_addr, updates.* from updates where ( ud_flags & %d ) = 0 and ud_addr != '' and ( ud_last = '%s' OR ud_last > %s - INTERVAL %s ) group by ud_addr ",
+		$r = q("SELECT u.ud_addr, u.ud_id, u.ud_last FROM updates AS u INNER JOIN (SELECT ud_addr, max(ud_last) AS ud_last FROM updates WHERE ( ud_flags & %d ) = 0 AND ud_addr != '' AND ( ud_last = '%s' OR ud_last > %s - INTERVAL %s ) GROUP BY ud_addr) AS s ON s.ud_addr = u.ud_addr AND s.ud_last = u.ud_last ",
 			intval(UPDATE_FLAGS_UPDATED),
 			dbesc(NULL_DATE),
 			db_utcnow(), db_quoteinterval('7 DAY')
