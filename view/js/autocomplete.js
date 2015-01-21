@@ -3,15 +3,18 @@
  *
  * require jQuery, jquery.textcomplete
  */
-function contact_search(term, callback, backend_url, type, extra_channels) {
+function contact_search(term, callback, backend_url, type, extra_channels, spinelement) {
+	if(spinelement){
+		$(spinelement).spin('tiny');
+	}
 	// Check if there is a cached result that contains the same information we would get with a full server-side search
-
 	var bt = backend_url+type;
 	if(!(bt in contact_search.cache)) contact_search.cache[bt] = {};
 
 	var lterm = term.toLowerCase(); // Ignore case
 	for(t in contact_search.cache[bt]) {
 		if(lterm.indexOf(t) >= 0) { // A more broad search has been performed already, so use those results
+			$(spinelement).spin(false);
 			// Filter old results locally
 			var matching = contact_search.cache[bt][t].filter(function (x) { return (x.name.toLowerCase().indexOf(lterm) >= 0 || (typeof x.nick !== 'undefined'  && x.nick.toLowerCase().indexOf(lterm) >= 0)); }); // Need to check that nick exists because groups don't have one
 			matching.unshift({taggable:false, text: term, replace: term});
@@ -44,6 +47,7 @@ function contact_search(term, callback, backend_url, type, extra_channels) {
 			var items = data.items.slice(0);
 			items.unshift({taggable:false, text: term, replace: term});
 			callback(items);
+			$(spinelement).spin(false);
 		},
 	}).fail(function () {callback([]); }); // Callback must be invoked even if something went wrong.
 }
@@ -98,7 +102,7 @@ function submit_form(e) {
 	contacts = {
 		match: /(^|\s)(@\!*)([^ \n]+)$/,
 		index: 3,
-		search: function(term, callback) { contact_search(term, callback, backend_url, 'c', extra_channels); },
+		search: function(term, callback) { contact_search(term, callback, backend_url, 'c', extra_channels, spinelement=false); },
 		replace: editor_replace,
 		template: contact_format,
 	}
@@ -125,7 +129,7 @@ function submit_form(e) {
 	contacts = {
 		match: /(^@)([^\n]{2,})$/,
 		index: 2,
-		search: function(term, callback) { contact_search(term, callback, backend_url, 'x',[]); },
+		search: function(term, callback) { contact_search(term, callback, backend_url, 'x', [], spinelement='#nav-search-spinner'); },
 		replace: basic_replace,
 		template: contact_format,
 	}
@@ -147,7 +151,7 @@ function submit_form(e) {
 	contacts = {
 		match: /(^)([^\n]+)$/,
 		index: 2,
-		search: function(term, callback) { contact_search(term, callback, backend_url, typ,[]); },
+		search: function(term, callback) { contact_search(term, callback, backend_url, typ,[], spinelement=false); },
 		replace: basic_replace,
 		template: contact_format,
 	}
