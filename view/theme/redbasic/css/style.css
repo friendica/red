@@ -876,8 +876,8 @@ footer {
 
 nav .acpopup {
 	top: 49px !important;
-	right: 30px !important;
-	margin-left: -45px;
+	margin-left: -35px;
+	width: 290px;
 }
 
 .profile-clear {
