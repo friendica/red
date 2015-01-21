@@ -81,7 +81,6 @@ define ( 'DIRECTORY_FALLBACK_MASTER',  'https://zothub.com');
 $DIRECTORY_FALLBACK_SERVERS = array( 
 	'https://zothub.com', 
 	'https://zotid.net', 
-	'https://redmatrix.nl', 
 	'https://red.zottel.red',
 	'https://red.pixelbits.de',
 	'https://whogotzot.com'

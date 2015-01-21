@@ -1515,7 +1515,7 @@ function update_r1133() {
 			xp_client varchar( 20 ) NOT NULL DEFAULT '',
 			xp_channel bigint NOT NULL DEFAULT '0',
 			xp_perm varchar( 64 ) NOT NULL DEFAULT '',
-			PRIMARY_KEY (\"xp_id\") ");
+			PRIMARY KEY (\"xp_id\") ");
 		$r2 = q("create index \"xp_client\" on xperm (\"xp_client\", 
 			create index \"xp_channel\" on xperm (\"xp_channel\"),
 			create index \"xp_perm\" on xperm (\"xp_perm\") ");
