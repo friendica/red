@@ -1,5 +1,6 @@
 <?php
 require_once('include/conversation.php');
+require_once('include/text.php');
 
 function sharedwithme_content(&$a) {
 	if(! local_user()) {
@@ -105,7 +106,7 @@ function sharedwithme_content(&$a) {
 	if($r) {
 		foreach($r as $rr) {
 			$object = json_decode($rr['object'],true);
-			$url = rawurldecode($object['link']['href']);
+			$url = rawurldecode(get_rel_link($object['link'],'alternate'));
 			$o .= '<a href="' . $url . '?f=&zid=' . $channel['xchan_addr'] . '">' . $url . '</a>&nbsp;<a href="/sharedwithme/' . $rr['id'] . '/drop" onclick="return confirmDelete();"><i class="icon-trash drop-icons"></i></a><br><br>';
 		}
 	}
