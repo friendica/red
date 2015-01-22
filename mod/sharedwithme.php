@@ -12,7 +12,7 @@ function sharedwithme_content(&$a) {
 
 	$is_owner = (local_user() && (local_user() == $channel['channel_id']));
 
-	//maintenance - see if a file got dropped and remove it systemwide 
+	//maintenance - see if a file got dropped and remove it systemwide - this should possibly go to include/poller
 	$x = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND uid = %d",
 		dbesc(ACTIVITY_UPDATE),
 		dbesc(ACTIVITY_OBJ_FILE),
@@ -26,18 +26,21 @@ function sharedwithme_content(&$a) {
 			$object = json_decode($xx['object'],true);
 			$hash = $object['hash'];
 
-			//If object has a mid it's an update - the inlcuded mid is the latest and should not be removed
+			//If object has a mid it's an update activity - the inlcuded mid is the latest and should not be removed
 			$update = (($object['mid']) ? true : false);
 
 			if($update) {
 
 				$mid = $object['mid'];
 
-				$y = q("DELETE FROM item WHERE (mid != '%s' AND obj_type = '%s' AND object LIKE '%s') AND (verb = '%s' OR verb = '%s')",
+				unset($object['mid']); //remove mid from object to match the post activity object
+
+				$y = q("DELETE FROM item WHERE (mid != '%s' AND obj_type = '%s') AND (object = '%s' AND verb = '%s') OR (object = '%s' AND verb = '%s')",
 					dbesc($mid),
 					dbesc(ACTIVITY_OBJ_FILE),
-					dbesc('%"hash":"' . $hash . '"%'),
+					dbesc(json_encode($object)),
 					dbesc(ACTIVITY_POST),
+					dbesc($xx['object']),
 					dbesc(ACTIVITY_UPDATE)
 				);
 
