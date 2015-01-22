@@ -1,5 +1,4 @@
 <?php
-require_once('include/text.php');
 require_once('include/conversation.php');
 
 function sharedwithme_content(&$a) {
@@ -12,38 +11,44 @@ function sharedwithme_content(&$a) {
 
 	$is_owner = (local_user() && (local_user() == $channel['channel_id']));
 
-	$postverb = ACTIVITY_FILE . '/post/';
-	$dropverb = ACTIVITY_FILE . '/drop/';
-
 	//maintenance - see if a file got dropped and remove it systemwide 
-	$x = q("SELECT * FROM item WHERE verb LIKE '%s' AND uid = %d",
-		dbesc($dropverb . '%'),
+	$x = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND uid = %d",
+		dbesc(ACTIVITY_UPDATE),
+		dbesc(ACTIVITY_OBJ_FILE),
 		intval(local_user())
 	);
-	
+
 	if($x) {
-		
+
 		foreach($x as $xx) {
 
-			$hash = substr($xx['verb'], 39);
+			$object = json_decode($xx['object'],true);
+			$hash = $object['hash'];
 
-			$update = strpos($hash, '#');
+			//If object has a mid it's an update - the inlcuded mid is the latest and should not be removed
+			$update = (($object['mid']) ? true : false);
 
-			if($update === false) {
-				q("DELETE FROM item WHERE verb = '%s' OR verb = '%s'",
-					dbesc($postverb . $hash),
-					dbesc($dropverb . $hash)
+			if($update) {
+
+				$mid = $object['mid'];
+
+				$y = q("DELETE FROM item WHERE (mid != '%s' AND obj_type = '%s' AND object LIKE '%s') AND (verb = '%s' OR verb = '%s')",
+					dbesc($mid),
+					dbesc(ACTIVITY_OBJ_FILE),
+					dbesc('%"hash":"' . $hash . '"%'),
+					dbesc(ACTIVITY_POST),
+					dbesc(ACTIVITY_UPDATE)
 				);
+
 			}
 
 			else {
-				
-				$arr = explode('#', $hash);
-				
-				q("DELETE FROM item WHERE mid != '%s' AND verb = '%s' OR verb = '%s'",
-					dbesc($arr[1]),
-					dbesc($postverb . $arr[0]),
-					dbesc($dropverb . $hash)
+
+				$z = q("DELETE FROM item WHERE (obj_type = '%s' AND object LIKE '%s') AND (verb = '%s' OR verb = '%s')",
+					dbesc(ACTIVITY_OBJ_FILE),
+					dbesc('%"hash":"' . $hash . '"%'),
+					dbesc(ACTIVITY_POST),
+					dbesc(ACTIVITY_UPDATE)
 				);
 
 			}
@@ -68,8 +73,9 @@ function sharedwithme_content(&$a) {
 	//drop all files - localuser
 	if((argc() > 1) && (argv(1) === 'dropall')) {
 
-		q("DELETE FROM item WHERE verb LIKE '%s' AND uid = %d",
-			dbesc($postverb . '%'),
+		q("DELETE FROM item WHERE verb = '%s' AND obj_type = '%s' AND uid = %d",
+			dbesc(ACTIVITY_POST),
+			dbesc(ACTIVITY_OBJ_FILE),
 			intval(local_user())
 		);
 
@@ -77,11 +83,13 @@ function sharedwithme_content(&$a) {
 	}
 
 	//list files
-	$r = q("SELECT * FROM item WHERE verb LIKE '%s' AND uid = %d",
-		dbesc($postverb . '%'),
-		intval(local_user())
+	$r = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND uid = %d AND owner_xchan != '%s'",
+		dbesc(ACTIVITY_POST),
+		dbesc(ACTIVITY_OBJ_FILE),
+		intval(local_user()),
+		dbesc($channel['channel_hash'])
 	);
-	
+
 	$o = profile_tabs($a, $is_owner, $channel['channel_address']);
 
 	$o .= '<div class="section-title-wrapper">';
@@ -96,19 +104,15 @@ function sharedwithme_content(&$a) {
 
 	if($r) {
 		foreach($r as $rr) {
-			//don't display the files we shared with others
-			if($rr['owner_xchan'] != $channel['channel_hash']) {
-				unobscure($rr);
-				$url = rawurldecode($rr['body']);
-				$o .= '<a href="' . $url . '?f=&zid=' . $channel['xchan_addr'] . '">' . $url . '</a>&nbsp;<a href="/sharedwithme/' . $rr['id'] . '/drop" onclick="return confirmDelete();"><i class="icon-trash drop-icons"></i></a><br><br>';
-			}
+			$object = json_decode($rr['object'],true);
+			$url = rawurldecode($object['link']['href']);
+			$o .= '<a href="' . $url . '?f=&zid=' . $channel['xchan_addr'] . '">' . $url . '</a>&nbsp;<a href="/sharedwithme/' . $rr['id'] . '/drop" onclick="return confirmDelete();"><i class="icon-trash drop-icons"></i></a><br><br>';
 		}
 	}
 
 	$o .= '</div>';
 
 	return $o;
-	
 
 }
 
