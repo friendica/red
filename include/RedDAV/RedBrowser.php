@@ -378,11 +378,14 @@ class RedBrowser extends DAV\Browser\Plugin {
 					'audio/mpeg' => 'icon-music',
 					'audio/wav' => 'icon-music',
 					'application/ogg' => 'icon-music',
+					'audio/ogg' => 'icon-music',
+					'audio/webm' => 'icon-music',
+					'audio/mp4' => 'icon-music',
 
 					//Video
 					'video/quicktime' => 'icon-film',
-
-
+					'video/webm' => 'icon-film',
+					'video/mp4' => 'icon-film'
 				);
 
 		$iconFromType = 'icon-file-alt';

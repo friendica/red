@@ -64,6 +64,11 @@ function z_mime_content_type($filename) {
 	'qt' => 'video/quicktime',
 	'mov' => 'video/quicktime',
 	'ogg' => 'application/ogg',
+	'opus' => 'audio/ogg',
+	'webm' => 'audio/webm',
+	'webm' => 'video/webm',
+	'mp4' => 'audio/mp4',
+	'mp4' => 'video/mp4',
 
 	// adobe
 	'pdf' => 'application/pdf',
@@ -81,6 +86,22 @@ function z_mime_content_type($filename) {
 	// open office
 	'odt' => 'application/vnd.oasis.opendocument.text',
 	'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+	'odp' => 'application/vnd.oasis.opendocument.presentation',
+	'odg' => 'application/vnd.oasis.opendocument.graphics',
+	'odc' => 'application/vnd.oasis.opendocument.chart',
+	'odf' => 'application/vnd.oasis.opendocument.formula',
+	'odi' => 'application/vnd.oasis.opendocument.image',
+	'odm' => 'application/vnd.oasis.opendocument.text-master',
+	'odb' => 'application/vnd.oasis.opendocument.base',
+	'odb' => 'application/vnd.oasis.opendocument.database',
+	'ott' => 'application/vnd.oasis.opendocument.text-template',
+	'ots' => 'application/vnd.oasis.opendocument.spreadsheet-template',
+	'otp' => 'application/vnd.oasis.opendocument.presentation-template',
+	'otg' => 'application/vnd.oasis.opendocument.graphics-template',
+	'otc' => 'application/vnd.oasis.opendocument.chart-template',
+	'otf' => 'application/vnd.oasis.opendocument.formula-template',
+	'oti' => 'application/vnd.oasis.opendocument.image-template',
+	'oth' => 'application/vnd.oasis.opendocument.text-web'
 	);
 
 	$dot = strpos($filename, '.');
