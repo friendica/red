@@ -2,6 +2,9 @@
 
 Roadmap for Redmatrix V3
 
+Crypto
+	Convert E2EE to dynamic loading (on demand) using jQuery.getScript() [or other methods] to only load encryption libs when you require them. This should also support multiple encryption libraries (e.g. SJCL, others) triggered from the choice of algorithm and remain pluggable.
+ 
 
 Subscriptions and business models
 	Build enough into core(/addons) to generate income (or at least try and cover costs) out of the box
