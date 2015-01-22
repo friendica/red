@@ -753,7 +753,7 @@ function attach_delete($channel_id, $resource) {
 
 	$channel_address = (($c) ? $c[0]['channel_address'] : 'notfound');
 
-	$r = q("SELECT hash, filename, flags, folder FROM attach WHERE hash = '%s' AND uid = %d limit 1",
+	$r = q("SELECT hash, flags, folder FROM attach WHERE hash = '%s' AND uid = %d limit 1",
 		dbesc($resource),
 		intval($channel_id)
 	);
@@ -761,8 +761,6 @@ function attach_delete($channel_id, $resource) {
 
 	if(! $r)
 		return;
-
-	$url = get_parent_cloudpath($channel_id, $channel_address, $resource) . $r[0]['filename'];
 
 	// If resource is a directory delete everything in the directory recursive
 	if($r[0]['flags'] & ATTACH_FLAG_DIR) {
@@ -806,7 +804,7 @@ function attach_delete($channel_id, $resource) {
 		intval($channel_id)
 	);
 
-	file_activity($channel_id, $resource, $allow_cid='', $allow_gid='', $deny_cid='', $deny_gid='', $url, 'drop', $no_activity=false);
+	file_activity($channel_id, $resource, $cloudpath='', $allow_cid='', $allow_gid='', $deny_cid='', $deny_gid='', 'drop', $no_activity=false);
 }
 
 /**
@@ -942,32 +940,77 @@ function pipe_streams($in, $out) {
 	return $size;
 }
 
-function file_activity($channel_id, $hash, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $url, $action, $no_activity) {
+function file_activity($channel_id, $hash, $cloudpath, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $verb, $no_activity) {
 
 	require_once('include/items.php');
 
-	$url = rawurlencode($url);
-
 	$poster = get_app()->get_observer();
 
-	$verb = ACTIVITY_FILE . '/' . $action . '/' . $hash;
+	switch($verb) {
+		case 'post':
+			$activity = ACTIVITY_POST;
+			$x = q("SELECT creator, filename, filetype, filesize, revision, folder, flags, created, edited FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
+				intval($channel_id),
+				dbesc($hash)
+			);
+			break;
+		case 'drop':
+			$activity = ACTIVITY_UPDATE;
+			break;
+		default:
+			return;
+			break;
+	}
+
+	$url = (($cloudpath && $x[0]['filename']) ? rawurlencode($cloudpath . $x[0]['filename']) : 'unavailable');
 
 	$mid = item_message_id();
 
 	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_UNSEEN;
 
-	if($action == 'post') {
-		//check if activity item exists
-		//if yes send drop activity and create a new one
+	$links   = array();
+	$links[] = array(
+		'rel' => 'alternate',
+		'type' => 'text/html',
+		'href' => $url
+	);
 
-		$r = q("SELECT * FROM item WHERE verb = '%s'",
-			dbesc($verb)
+	$objtype = ACTIVITY_OBJ_FILE;
+
+	$object = array(
+		'type'  => ACTIVITY_OBJ_FILE,
+		'title' => (($x[0]['filename']) ? $x[0]['filename'] : 'unavailable'),
+		'id'    => $url,
+		'link'  => $links,
+
+		'hash'		=> $hash,
+		'creator'	=> (($x[0]['creator']) ? $x[0]['creator'] : ''),
+		'filename'	=> (($x[0]['filename']) ? $x[0]['filename'] : ''),
+		'filetype'	=> (($x[0]['filetype']) ? $x[0]['filetype'] : ''),
+		'filesize'	=> (($x[0]['filesize']) ? $x[0]['filesize'] : ''),
+		'revision'	=> (($x[0]['revision']) ? $x[0]['revision'] : ''),
+		'folder'	=> (($x[0]['folder']) ? $x[0]['folder'] : ''),
+		'flags'		=> (($x[0]['flags']) ? $x[0]['flags'] : ''),
+		'created'	=> (($x[0]['created']) ? $x[0]['created'] : ''),
+		'edited'	=> (($x[0]['edited']) ? $x[0]['edited'] : '')
+	);
+
+	$private = (($allow_cid || $allow_gid || $deny_cid || $deny_gid) ? 1 : 0);
+
+	if($verb == 'post') {
+		//check if activity item exists
+		//if yes send update (drop) activity and create a new one
+		$y = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND object LIKE '%s'",
+			dbesc(ACTIVITY_POST),
+			dbesc(ACTIVITY_OBJ_FILE),
+			dbesc('%"hash":"' . $hash . '"%')
 		);
 
-		if($r) {
+		if($y) {
 
 			$dmid = item_message_id();
-			$updateverb = ACTIVITY_FILE . '/drop/' . $hash . '#' . $mid;
+
+			$object['mid'] = $mid; //attach mid for update object
 
 			$arr = array();
 
@@ -979,14 +1022,17 @@ function file_activity($channel_id, $hash, $allow_cid, $allow_gid, $deny_cid, $d
 			$arr['author_xchan']  = $poster['xchan_hash'];
 			$arr['owner_xchan']   = $poster['xchan_hash'];
 			$arr['title']         = '';
-			$arr['allow_cid']     = $allow_cid;
-			$arr['allow_gid']     = $allow_gid;
-			$arr['deny_cid']      = $deny_cid;
-			$arr['deny_gid']      = $deny_gid;
+			//updates must be visible to everybody -> perms may have changed
+			$arr['allow_cid']     = '';
+			$arr['allow_gid']     = '';
+			$arr['deny_cid']      = '';
+			$arr['deny_gid']      = '';
 			$arr['item_restrict']  = ITEM_HIDDEN;
 			$arr['item_private']  = 0;
-			$arr['verb']          = $updateverb;
-			$arr['body']          = $url;
+			$arr['verb']          = ACTIVITY_UPDATE;
+			$arr['obj_type']      = $objtype;
+			$arr['object']        = json_encode($object);
+			$arr['body']          = '';
 
 			$post = item_store($arr);
 			$item_id = $post['item_id'];
@@ -995,7 +1041,9 @@ function file_activity($channel_id, $hash, $allow_cid, $allow_gid, $deny_cid, $d
 				proc_run('php',"include/notifier.php","activity",$item_id);
 			}
 
-			//call_hooks('post_local_end', $arr);
+			call_hooks('post_local_end', $arr);
+
+			unset($object['mid']); //remove mid for new object
 
 			//notice( t('File activity updated') . EOL);
 
@@ -1025,9 +1073,11 @@ function file_activity($channel_id, $hash, $allow_cid, $allow_gid, $deny_cid, $d
 	$arr['deny_cid']      = $deny_cid;
 	$arr['deny_gid']      = $deny_gid;
 	$arr['item_restrict']  = ITEM_HIDDEN;
-	$arr['item_private']  = 0;
-	$arr['verb']          = $verb;
-	$arr['body']          = $url;
+	$arr['item_private']  = $private;
+	$arr['verb']          = $activity;
+	$arr['obj_type']      = $objtype;
+	$arr['object']        = json_encode($object);
+	$arr['body']          = '';
 
 	$post = item_store($arr);
 	$item_id = $post['item_id'];
@@ -1036,9 +1086,9 @@ function file_activity($channel_id, $hash, $allow_cid, $allow_gid, $deny_cid, $d
 		proc_run('php',"include/notifier.php","activity",$item_id);
 	}
 
-	//call_hooks('post_local_end', $arr);
+	call_hooks('post_local_end', $arr);
 
-	//(($action === 'post') ?  notice( t('File activity posted') . EOL) : notice( t('File activity dropped') . EOL));
+	//(($verb === 'post') ?  notice( t('File activity posted') . EOL) : notice( t('File activity dropped') . EOL));
 
 	return;
 

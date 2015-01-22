@@ -124,9 +124,8 @@ if (typeof jQuery === 'undefined') {
     this.views      = [];
     this.option     = $.extend({}, Completer._getDefaults(), option);
 
-
     if (!this.$el.is('input[type=text]') && !this.$el.is('textarea') && !element.isContentEditable && element.contentEditable != 'true') {
-      throw new Error('textcomplete must be called on a input[type=text], Textarea or a ContentEditable.');
+      throw new Error('textcomplete must be called on a Textarea or a ContentEditable.');
     }
 
     if (element === document.activeElement) {
@@ -414,6 +413,22 @@ if (typeof jQuery === 'undefined') {
 
     setPosition: function (position) {
       this.$el.css(this._applyPlacement(position));
+
+      // Make the dropdown fixed if the input is also fixed
+      // This can't be done during init, as textcomplete may be used on multiple elements on the same page
+      // Because the same dropdown is reused behind the scenes, we need to recheck every time the dropdown is showed
+      var position = 'absolute';
+      // Check if input or one of its parents has positioning we need to care about
+      this.$inputEl.add(this.$inputEl.parents()).each(function() { 
+        if($(this).css('position') === 'absolute') // The element has absolute positioning, so it's all OK
+          return false;
+        if($(this).css('position') === 'fixed') {
+          position = 'fixed';
+          return false;
+        }
+      });
+      this.$el.css({ position: position }); // Update positioning
+
       return this;
     },
 

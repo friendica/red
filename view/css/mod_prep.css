@@ -6,3 +6,7 @@
 .prep-details {
 	float: left;
 }
+
+.directory-item {
+	margin: 10px;
+}
