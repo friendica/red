@@ -84,7 +84,8 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://red.zottel.red',
 	'https://red.pixelbits.de',
 	'https://my.federated.social',
-	'https://whogotzot.com'
+	'https://whogotzot.com',
+	'https://redmatrix.nl'
 );
 
 
@@ -501,7 +502,6 @@ define ( 'ACTIVITY_FAVORITE',    NAMESPACE_ACTIVITY_SCHEMA . 'favorite' );
 
 define ( 'ACTIVITY_POKE',        NAMESPACE_ZOT . '/activity/poke' );
 define ( 'ACTIVITY_MOOD',        NAMESPACE_ZOT . '/activity/mood' );
-define ( 'ACTIVITY_FILE',        NAMESPACE_ZOT . '/activity/file' );
 
 define ( 'ACTIVITY_OBJ_COMMENT', NAMESPACE_ACTIVITY_SCHEMA . 'comment' );
 define ( 'ACTIVITY_OBJ_NOTE',    NAMESPACE_ACTIVITY_SCHEMA . 'note' );
@@ -515,6 +515,7 @@ define ( 'ACTIVITY_OBJ_TAGTERM', NAMESPACE_ZOT  . '/activity/tagterm' );
 define ( 'ACTIVITY_OBJ_PROFILE', NAMESPACE_ZOT  . '/activity/profile' );
 define ( 'ACTIVITY_OBJ_THING',   NAMESPACE_ZOT  . '/activity/thing' );
 define ( 'ACTIVITY_OBJ_LOCATION',NAMESPACE_ZOT  . '/activity/location' );
+define ( 'ACTIVITY_OBJ_FILE',    NAMESPACE_ZOT  . '/activity/file' );
 
 /**
  * item weight for query ordering
