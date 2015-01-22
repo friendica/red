@@ -968,7 +968,8 @@ function file_activity($channel_id, $hash, $cloudpath, $allow_cid, $allow_gid, $
 
 	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_UNSEEN;
 
-	$links = array(
+	$links   = array();
+	$links[] = array(
 		'rel' => 'alternate',
 		'type' => 'text/html',
 		'href' => $url
