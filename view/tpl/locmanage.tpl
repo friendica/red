@@ -2,10 +2,10 @@
 
 <script>
 function primehub(id) {
-	$.post('locs','primary='+id,function(data) { window.location.href=window.location.href; });
+	$.post(baseurl + '/locs','primary='+id,function(data) { window.location.href=window.location.href; });
 }
 function drophub(id) {
-	$.post('locs','drop='+id,function(data) { window.location.href=window.location.href; });
+	$.post(baseurl + '/locs','drop='+id,function(data) { window.location.href=window.location.href; });
 }
 </script>
 
@@ -17,7 +17,7 @@ function drophub(id) {
 {{$hub.hubloc_url}} ({{$hub.hubloc_addr}}){{if $hub.deleted}}</strike>{{/if}}</td>
 <td>
 
-{{if $hub.primary}}<i class="icon-check"></i>{{else}}<button class="btn btn-std"><i class="icon-check-empty" onclick="primehub({{$hub.hubloc_id}}); return false;" ></i></button>{{/if}}
+{{if $hub.primary}}<i class="icon-check"></i>{{else}}<button class="btn btn-std" onclick="primehub({{$hub.hubloc_id}}); return false;" ><i class="icon-check-empty"  ></i></button>{{/if}}
 </td>
 <td>{{if $hub.primary}}{{else}}{{if ! $hub.deleted}}<button class="btn btn-std" onclick="drophub({{$hub.hubloc_id}}); return false;"><i class="icon-remove"></i></button>{{/if}}{{/if}}</td>
 </tr>

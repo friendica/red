@@ -11,15 +11,18 @@ function locs_post(&$a) {
 	if($_REQUEST['primary']) {
 		$hubloc_id = intval($_REQUEST['primary']);
 		if($hubloc_id) {
+
 			$r = q("select hubloc_id from hubloc where hubloc_id = %d and hubloc_hash = '%s' limit 1",
 				intval($hubloc_id),
 				dbesc($channel['channel_hash'])
 			);
+
 			if(! $r) {
 				notice( t('Location not found.') . EOL);
 				return;
 			}
-			$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where (hubloc_flags & %d)>0 and hubloc_hash = '%s' ",
+
+			$r = q("update hubloc set hubloc_flags = (hubloc_flags - %d) where (hubloc_flags & %d)>0 and hubloc_hash = '%s' ",
 				intval(HUBLOC_FLAGS_PRIMARY),
 				intval(HUBLOC_FLAGS_PRIMARY),
 				dbesc($channel['channel_hash'])
@@ -29,6 +32,7 @@ function locs_post(&$a) {
 				intval($hubloc_id),
 				dbesc($channel['channel_hash'])
 			);
+
 			proc_run('php','include/notifier.php','location',$channel['channel_id']);
 			return;
 		}			
