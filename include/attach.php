@@ -1107,7 +1107,7 @@ function get_file_activity_object($channel_id, $hash, $cloudpath) {
 
 	$object = array(
 		'type'  => ACTIVITY_OBJ_FILE,
-		'title' => $x[0]['filename']),
+		'title' => $x[0]['filename'],
 		'id'    => $url,
 		'link'  => $links,
 
