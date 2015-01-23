@@ -42,10 +42,10 @@ var NAVTREEINDEX =
 "classRedMatrix_1_1RedDAV_1_1RedFile.html#ab7ab7ba81fab28eb02382cfdfd80ecfe",
 "datetime_8php.html#a77bb385ae8a9e7ca663309c102c0d766",
 "functions_func_0x65.html",
-"include_2attach_8php.html#a4dbfd7e1cef52aa9ef52f4b88929fa86",
-"manage_8php.html",
-"profperm_8php.html",
-"text_8php.html#a4bbb7d00c05cd20b4e043424f322388f"
+"include_2attach_8php.html#a3634af95f11a023dd8e882c3c7a3600d",
+"mail_8php.html#acfc2cc0bf4e0b178207758384977f25a",
+"profiles_8php.html#ab0362c81b1d3b0b12a772b9fac446e04",
+"text_8php.html#a4659fbc4e54ddc700c3aa66b9092c623"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
