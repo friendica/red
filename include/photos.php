@@ -256,6 +256,15 @@ function photo_upload($channel, $observer, $args) {
 	else
 		$tag = '[zmg]';
 
+	$preferred = intval(get_pconfig($channel['channel_id'],'system','post_photores'));
+	if($preferred == 1) {
+		$tag = '[zmg]';
+		if($r2)
+			$smallest = 1;
+		else
+			$smallest = 0;
+	}
+
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
 				. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
 				. '[/zrl]';

@@ -114,6 +114,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "settings.php", "settings_8php.html", "settings_8php" ],
     [ "setup.php", "setup_8php.html", "setup_8php" ],
     [ "share.php", "share_8php.html", "share_8php" ],
+    [ "sharedwithme.php", "sharedwithme_8php.html", "sharedwithme_8php" ],
     [ "siteinfo.php", "siteinfo_8php.html", "siteinfo_8php" ],
     [ "sitelist.php", "sitelist_8php.html", "sitelist_8php" ],
     [ "smilies.php", "smilies_8php.html", "smilies_8php" ],

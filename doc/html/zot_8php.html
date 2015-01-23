@@ -122,8 +122,8 @@ Functions</h2></td></tr>
 <tr class="separator:a084c581d534e7e3b759488b46602288f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3e9b99ddb11353f37f265a05bb42142"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#ab3e9b99ddb11353f37f265a05bb42142">zot_zot</a> ($url, $data)</td></tr>
 <tr class="separator:ab3e9b99ddb11353f37f265a05bb42142"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95528377d7303131958c9f0b7158fdce"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a95528377d7303131958c9f0b7158fdce">zot_finger</a> ($webbie, $channel, $autofallback=true)</td></tr>
-<tr class="separator:a95528377d7303131958c9f0b7158fdce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa77f03d4e89a70ebf0402e1cc9426d7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#aaa77f03d4e89a70ebf0402e1cc9426d7">zot_finger</a> ($webbie, $channel=null, $autofallback=true)</td></tr>
+<tr class="separator:aaa77f03d4e89a70ebf0402e1cc9426d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ac30ff51274bf0b6d3eade37972145c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a7ac30ff51274bf0b6d3eade37972145c">zot_refresh</a> ($them, $channel=null, $force=false)</td></tr>
 <tr class="separator:a7ac30ff51274bf0b6d3eade37972145c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55056e863a7860bc0cf922e78fcce073"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a55056e863a7860bc0cf922e78fcce073">zot_gethub</a> ($arr)</td></tr>
@@ -939,7 +939,7 @@ which will be processed and delivered before this function ultimately returns.
 
 </div>
 </div>
-<a class="anchor" id="a95528377d7303131958c9f0b7158fdce"></a>
+<a class="anchor" id="aaa77f03d4e89a70ebf0402e1cc9426d7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -953,7 +953,7 @@ which will be processed and delivered before this function ultimately returns.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$channel</em>, </td>
+          <td class="paramname"><em>$channel</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -980,7 +980,7 @@ which will be processed and delivered before this function ultimately returns.
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>: array =&gt; see z_post_url and <a class="el" href="zfinger_8php.html">mod/zfinger.php</a> </dd></dl>
 
-<p>Referenced by <a class="el" href="chanview_8php.html#a4192c6da888c8c1165851acf9ad4cb8b">chanview_content()</a>, <a class="el" href="gprobe_8php.html#adf72cb0a70b5b9d99fdec1cc60e18ed1">gprobe_run()</a>, <a class="el" href="magic_8php.html#acea2cc792849ca2d71d4b689f66518bf">magic_init()</a>, <a class="el" href="mail_8php.html#acfc2cc0bf4e0b178207758384977f25a">mail_post()</a>, <a class="el" href="include_2follow_8php.html#ae387d4ae097c23d69f3247e7f08140c7">new_contact()</a>, <a class="el" href="socgraph_8php.html#a5ef8bef37161df53718a21e93d02fbd6">poco_load()</a>, <a class="el" href="post_8php.html#af4b48181ce773ef0cdfc972441445c34">post_init()</a>, <a class="el" href="mod_2probe_8php.html#a1f1db3fa6038e451e737964c94bf5e99">probe_content()</a>, <a class="el" href="zot_8php.html#ac301c67864917c35922257950ae0f95c">process_channel_sync_delivery()</a>, and <a class="el" href="dir__fns_8php.html#a44062d4b471d1e83f92f6c184585aa13">update_directory_entry()</a>.</p>
+<p>Referenced by <a class="el" href="chanview_8php.html#a4192c6da888c8c1165851acf9ad4cb8b">chanview_content()</a>, <a class="el" href="dir__fns_8php.html#a2f7d74bb2aea8bcd2537aee5c6708a16">check_upstream_directory()</a>, <a class="el" href="gprobe_8php.html#adf72cb0a70b5b9d99fdec1cc60e18ed1">gprobe_run()</a>, <a class="el" href="magic_8php.html#acea2cc792849ca2d71d4b689f66518bf">magic_init()</a>, <a class="el" href="mail_8php.html#acfc2cc0bf4e0b178207758384977f25a">mail_post()</a>, <a class="el" href="include_2follow_8php.html#ae387d4ae097c23d69f3247e7f08140c7">new_contact()</a>, <a class="el" href="socgraph_8php.html#a5ef8bef37161df53718a21e93d02fbd6">poco_load()</a>, <a class="el" href="post_8php.html#af4b48181ce773ef0cdfc972441445c34">post_init()</a>, <a class="el" href="mod_2probe_8php.html#a1f1db3fa6038e451e737964c94bf5e99">probe_content()</a>, <a class="el" href="zot_8php.html#ac301c67864917c35922257950ae0f95c">process_channel_sync_delivery()</a>, and <a class="el" href="dir__fns_8php.html#a44062d4b471d1e83f92f6c184585aa13">update_directory_entry()</a>.</p>
 
 </div>
 </div>
