@@ -1096,31 +1096,31 @@ function get_file_activity_object($channel_id, $hash, $cloudpath) {
 		dbesc($hash)
 	);
 
-	$url = (($cloudpath && $x[0]['filename']) ? rawurlencode($cloudpath . $x[0]['filename']) : 'unavailable');
+	$url = rawurlencode($cloudpath . $x[0]['filename']);
 
 	$links   = array();
 	$links[] = array(
-		'rel' => 'alternate',
+		'rel'  => 'alternate',
 		'type' => 'text/html',
 		'href' => $url
 	);
 
 	$object = array(
 		'type'  => ACTIVITY_OBJ_FILE,
-		'title' => (($x[0]['filename']) ? $x[0]['filename'] : 'unavailable'),
+		'title' => $x[0]['filename']),
 		'id'    => $url,
 		'link'  => $links,
 
 		'hash'		=> $hash,
-		'creator'	=> (($x[0]['creator']) ? $x[0]['creator'] : ''),
-		'filename'	=> (($x[0]['filename']) ? $x[0]['filename'] : ''),
-		'filetype'	=> (($x[0]['filetype']) ? $x[0]['filetype'] : ''),
-		'filesize'	=> (($x[0]['filesize']) ? $x[0]['filesize'] : ''),
-		'revision'	=> (($x[0]['revision']) ? $x[0]['revision'] : ''),
-		'folder'	=> (($x[0]['folder']) ? $x[0]['folder'] : ''),
-		'flags'		=> (($x[0]['flags']) ? $x[0]['flags'] : ''),
-		'created'	=> (($x[0]['created']) ? $x[0]['created'] : ''),
-		'edited'	=> (($x[0]['edited']) ? $x[0]['edited'] : '')
+		'creator'	=> $x[0]['creator'],
+		'filename'	=> $x[0]['filename'],
+		'filetype'	=> $x[0]['filetype'],
+		'filesize'	=> $x[0]['filesize'],
+		'revision'	=> $x[0]['revision'],
+		'folder'	=> $x[0]['folder'],
+		'flags'		=> $x[0]['flags'],
+		'created'	=> $x[0]['created'],
+		'edited'	=> $x[0]['edited']
 	);
 
 	return $object;
