@@ -48,9 +48,9 @@ function sharedwithme_content(&$a) {
 
 			else {
 
-				$z = q("DELETE FROM item WHERE (obj_type = '%s' AND object LIKE '%s') AND (verb = '%s' OR verb = '%s')",
+				$z = q("DELETE FROM item WHERE (obj_type = '%s' AND object = '%s') AND (verb = '%s' OR verb = '%s')",
 					dbesc(ACTIVITY_OBJ_FILE),
-					dbesc('%"hash":"' . $hash . '"%'),
+					dbesc($xx['object']),
 					dbesc(ACTIVITY_POST),
 					dbesc(ACTIVITY_UPDATE)
 				);
