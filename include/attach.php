@@ -987,11 +987,18 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		dbesc($jsonobject)
 	);
 
-
 	if($y) {
 		$update = true;
 		$object['d_mid'] = $y[0]['mid']; //attach mid of the old object
 		$u_jsonobject = json_encode($object);
+
+		//we have got the relevant info - delete the old item before we create the new one
+		$z = q("DELETE FROM item WHERE obj_type = '%s' AND verb = '%s' AND mid = '%s'",
+			dbesc(ACTIVITY_OBJ_FILE),
+			dbesc(ACTIVITY_POST),
+			dbesc($y[0]['mid'])
+		);
+
 	}
 
 	if($update && $verb == 'post' ) {
