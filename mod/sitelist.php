@@ -9,8 +9,9 @@ function sitelist_init(&$a) {
 
 
 	$sql_order = " order by site_url ";
+	$rand = db_getfunc('rand');
 	if($order == 'random')
-		$sql_order = " order by rand() ";
+		$sql_order = " order by $rand ";
 
 	$sql_limit = " limit $start, $limit ";
 

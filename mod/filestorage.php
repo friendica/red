@@ -38,8 +38,9 @@ function filestorage_post(&$a) {
 	//Build directory tree and redirect
 	$channel = $a->get_channel();
 	$cloudPath = get_parent_cloudpath($channel_id, $channel['channel_address'], $resource);
+	$object = get_file_activity_object($channel_id, $resource, $cloudPath);
 
-	file_activity($channel_id, $resource, $cloudPath, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny, 'post', $no_activity);
+	file_activity($channel_id, $object, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny, 'post', $no_activity);
 
 	goaway($cloudPath);
 }

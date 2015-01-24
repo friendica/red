@@ -24,38 +24,17 @@ function sharedwithme_content(&$a) {
 		foreach($x as $xx) {
 
 			$object = json_decode($xx['object'],true);
-			$hash = $object['hash'];
 
-			//If object has a mid it's an update activity - the inlcuded mid is the latest and should not be removed
-			$update = (($object['mid']) ? true : false);
+			$d_mid = $object['d_mid'];
+			$u_mid = $xx['mid'];
 
-			if($update) {
-
-				$mid = $object['mid'];
-
-				unset($object['mid']); //remove mid from object to match the post activity object
-
-				$y = q("DELETE FROM item WHERE (mid != '%s' AND obj_type = '%s') AND (object = '%s' AND verb = '%s') OR (object = '%s' AND verb = '%s')",
-					dbesc($mid),
-					dbesc(ACTIVITY_OBJ_FILE),
-					dbesc(json_encode($object)),
-					dbesc(ACTIVITY_POST),
-					dbesc($xx['object']),
-					dbesc(ACTIVITY_UPDATE)
-				);
-
-			}
-
-			else {
-
-				$z = q("DELETE FROM item WHERE (obj_type = '%s' AND object LIKE '%s') AND (verb = '%s' OR verb = '%s')",
-					dbesc(ACTIVITY_OBJ_FILE),
-					dbesc('%"hash":"' . $hash . '"%'),
-					dbesc(ACTIVITY_POST),
-					dbesc(ACTIVITY_UPDATE)
-				);
-
-			}
+			$y = q("DELETE FROM item WHERE obj_type = '%s' AND (verb = '%s' AND mid = '%s') OR (verb = '%s' AND mid = '%s')",
+				dbesc(ACTIVITY_OBJ_FILE),
+				dbesc(ACTIVITY_POST),
+				dbesc($d_mid),
+				dbesc(ACTIVITY_UPDATE),
+				dbesc($u_mid)
+			);
 
 		}
 
