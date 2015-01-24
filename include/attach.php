@@ -981,10 +981,11 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	$jsonobject = json_encode($object);
 
 	//check if item for this object exists
-	$y = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND object = '%s' LIMIT 1",
+	$y = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND resource_id = '%s' AND uid = %d LIMIT 1",
 		dbesc(ACTIVITY_POST),
 		dbesc($objtype),
-		dbesc($jsonobject)
+		dbesc($object['hash']),
+		intval(local_user())
 	);
 
 	if($y) {
@@ -1026,6 +1027,8 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		$arr['verb']          = ACTIVITY_UPDATE;
 		$arr['obj_type']      = $objtype;
 		$arr['object']        = $u_jsonobject;
+		$arr['resource_id']   = $object['hash'];
+		$arr['resource_type'] = 'attach';
 		$arr['body']          = '';
 
 		$post = item_store($arr);
@@ -1064,6 +1067,8 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	$arr['item_private']  = $private;
 	$arr['verb']          = (($update) ? ACTIVITY_UPDATE : ACTIVITY_POST);
 	$arr['obj_type']      = $objtype;
+	$arr['resource_id']   = $object['hash'];
+	$arr['resource_type'] = 'attach';
 	$arr['object']        = (($update) ? $u_jsonobject : $jsonobject);
 	$arr['body']          = '';
 
