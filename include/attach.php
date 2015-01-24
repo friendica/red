@@ -968,18 +968,6 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	require_once('include/items.php');
 
-	switch($verb) {
-		case 'post':
-			$activity = ACTIVITY_POST;
-			break;
-		case 'update':
-			$activity = ACTIVITY_UPDATE;
-			break;
-		default:
-			return;
-			break;
-	}
-
 	$poster = get_app()->get_observer();
 
 	$mid = item_message_id();
@@ -988,65 +976,63 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_UNSEEN;
 
-	$jsonobject = json_encode($object);
-
 	$private = (($allow_cid || $allow_gid || $deny_cid || $deny_gid) ? 1 : 0);
 
-	if($verb == 'post') {
-		//check if activity item exists
-		//if yes send update (drop) activity and create a new one
-		$y = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND object = '%s' LIMIT 1",
-			dbesc(ACTIVITY_POST),
-			dbesc($objtype),
-			dbesc($jsonobject)
-		);
+	$jsonobject = json_encode($object);
 
-		if($y) {
+	//check if item for this object exists
+	$y = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND object = '%s' LIMIT 1",
+		dbesc(ACTIVITY_POST),
+		dbesc($objtype),
+		dbesc($jsonobject)
+	);
 
-			$dmid = item_message_id();
 
-			$object['mid'] = $mid; //attach mid for update object
+	if($y) {
+		$update = true;
+		$object['d_mid'] = $y[0]['mid']; //attach mid of the old object
+		$u_jsonobject = json_encode($object);
+	}
 
-			$ujsonobject = json_encode($object);
+	if($update && $verb == 'post' ) {
+		//send update activity and create a new one
 
-			$arr = array();
+		$u_mid = item_message_id();
 
-			$arr['aid']           = get_account_id();
-			$arr['uid']           = $channel_id;
-			$arr['mid']           = $dmid;
-			$arr['parent_mid']    = $dmid;
-			$arr['item_flags']    = $item_flags;
-			$arr['author_xchan']  = $poster['xchan_hash'];
-			$arr['owner_xchan']   = $poster['xchan_hash'];
-			$arr['title']         = '';
-			//updates must be visible to everybody -> perms may have changed
-			$arr['allow_cid']     = '';
-			$arr['allow_gid']     = '';
-			$arr['deny_cid']      = '';
-			$arr['deny_gid']      = '';
-			$arr['item_restrict']  = ITEM_HIDDEN;
-			$arr['item_private']  = 0;
-			$arr['verb']          = ACTIVITY_UPDATE;
-			$arr['obj_type']      = $objtype;
-			$arr['object']        = $ujsonobject;
-			$arr['body']          = '';
+		$arr = array();
 
-			$post = item_store($arr);
-			$item_id = $post['item_id'];
+		$arr['aid']           = get_account_id();
+		$arr['uid']           = $channel_id;
+		$arr['mid']           = $u_mid;
+		$arr['parent_mid']    = $u_mid;
+		$arr['item_flags']    = $item_flags;
+		$arr['author_xchan']  = $poster['xchan_hash'];
+		$arr['owner_xchan']   = $poster['xchan_hash'];
+		$arr['title']         = '';
+		//updates should be visible to everybody -> perms may have changed
+		$arr['allow_cid']     = '';
+		$arr['allow_gid']     = '';
+		$arr['deny_cid']      = '';
+		$arr['deny_gid']      = '';
+		$arr['item_restrict']  = ITEM_HIDDEN;
+		$arr['item_private']  = 0;
+		$arr['verb']          = ACTIVITY_UPDATE;
+		$arr['obj_type']      = $objtype;
+		$arr['object']        = $u_jsonobject;
+		$arr['body']          = '';
 
-			if($item_id) {
-				proc_run('php',"include/notifier.php","activity",$item_id);
-			}
-
-			call_hooks('post_local_end', $arr);
-
-			//notice( t('File activity updated') . EOL);
-
-			if($no_activity) {
-				return;
-			}
-
+		$post = item_store($arr);
+		$item_id = $post['item_id'];
+		if($item_id) {
+			proc_run('php',"include/notifier.php","activity",$item_id);
 		}
+
+		call_hooks('post_local_end', $arr);
+
+		$update = false;
+
+		notice( t('File activity updated') . EOL);
+
 	}
 
 	if($no_activity) {
@@ -1069,9 +1055,9 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	$arr['deny_gid']      = $deny_gid;
 	$arr['item_restrict']  = ITEM_HIDDEN;
 	$arr['item_private']  = $private;
-	$arr['verb']          = $activity;
+	$arr['verb']          = (($update) ? ACTIVITY_UPDATE : ACTIVITY_POST);
 	$arr['obj_type']      = $objtype;
-	$arr['object']        = $jsonobject;
+	$arr['object']        = (($update) ? $u_jsonobject : $jsonobject);
 	$arr['body']          = '';
 
 	$post = item_store($arr);
@@ -1083,7 +1069,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	call_hooks('post_local_end', $arr);
 
-	//(($verb === 'post') ?  notice( t('File activity posted') . EOL) : notice( t('File activity dropped') . EOL));
+	(($verb === 'post') ?  notice( t('File activity posted') . EOL) : notice( t('File activity dropped') . EOL));
 
 	return;
 
