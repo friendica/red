@@ -1031,7 +1031,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 		$update = false;
 
-		notice( t('File activity updated') . EOL);
+		//notice( t('File activity updated') . EOL);
 
 	}
 
@@ -1069,7 +1069,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	call_hooks('post_local_end', $arr);
 
-	(($verb === 'post') ?  notice( t('File activity posted') . EOL) : notice( t('File activity dropped') . EOL));
+	//(($verb === 'post') ?  notice( t('File activity posted') . EOL) : notice( t('File activity dropped') . EOL));
 
 	return;
 
