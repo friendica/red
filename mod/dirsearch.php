@@ -355,14 +355,15 @@ function dir_parse_query($s) {
 
 function list_public_sites() {
 
+	$rand = db_getfunc('rand');
 	$realm = get_directory_realm();
 	if($realm == DIRECTORY_REALM) {
-		$r = q("select * from site where site_access != 0 and site_register !=0 and ( site_realm = '%s' or site_realm = '') order by rand()",
+		$r = q("select * from site where site_access != 0 and site_register !=0 and ( site_realm = '%s' or site_realm = '') order by $rand",
 			dbesc($realm)
 		);
 	}
 	else {
-		$r = q("select * from site where site_access != 0 and site_register !=0 and site_realm = '%s' order by rand()",
+		$r = q("select * from site where site_access != 0 and site_register !=0 and site_realm = '%s' order by $rand",
 			dbesc($realm)
 		);
 	}
