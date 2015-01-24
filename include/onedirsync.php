@@ -56,11 +56,10 @@ function onedirsync_run($argv, $argc){
 		dbesc($r[0]['ud_addr'])
 	);
 	if(($h) && ($h[0]['hubloc_status'] & HUBLOC_OFFLINE)) {
-		$y = q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and ( ud_flags & %d ) = 0 and ud_date < '%s' ",
+		$y = q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and ( ud_flags & %d ) = 0 ",
 			intval(UPDATE_FLAGS_UPDATED),
 			dbesc($r[0]['ud_addr']),
-			intval(UPDATE_FLAGS_UPDATED),
-			dbesc($x[0]['ud_date'])
+			intval(UPDATE_FLAGS_UPDATED)
 		);
 
 		return;
