@@ -23,7 +23,7 @@ var zot_8php =
     [ "zot_build_packet", "zot_8php.html#a084c581d534e7e3b759488b46602288f", null ],
     [ "zot_encode_locations", "zot_8php.html#ae26ce9f1ad74139193fb6319beac5fca", null ],
     [ "zot_fetch", "zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea", null ],
-    [ "zot_finger", "zot_8php.html#a95528377d7303131958c9f0b7158fdce", null ],
+    [ "zot_finger", "zot_8php.html#aaa77f03d4e89a70ebf0402e1cc9426d7", null ],
     [ "zot_get_hublocs", "zot_8php.html#ae7cec2b417b5858fd4a41070f843d1d7", null ],
     [ "zot_gethub", "zot_8php.html#a55056e863a7860bc0cf922e78fcce073", null ],
     [ "zot_import", "zot_8php.html#aeea071f17e306fe3d0c488551906bfab", null ],

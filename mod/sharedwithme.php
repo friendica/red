@@ -12,7 +12,7 @@ function sharedwithme_content(&$a) {
 
 	$is_owner = (local_user() && (local_user() == $channel['channel_id']));
 
-	//maintenance - see if a file got dropped and remove it systemwide 
+	//maintenance - see if a file got dropped and remove it systemwide - this should possibly go to include/poller
 	$x = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND uid = %d",
 		dbesc(ACTIVITY_UPDATE),
 		dbesc(ACTIVITY_OBJ_FILE),
@@ -24,35 +24,17 @@ function sharedwithme_content(&$a) {
 		foreach($x as $xx) {
 
 			$object = json_decode($xx['object'],true);
-			$hash = $object['hash'];
 
-			//If object has a mid it's an update - the inlcuded mid is the latest and should not be removed
-			$update = (($object['mid']) ? true : false);
+			$d_mid = $object['d_mid'];
+			$u_mid = $xx['mid'];
 
-			if($update) {
-
-				$mid = $object['mid'];
-
-				$y = q("DELETE FROM item WHERE (mid != '%s' AND obj_type = '%s' AND object LIKE '%s') AND (verb = '%s' OR verb = '%s')",
-					dbesc($mid),
-					dbesc(ACTIVITY_OBJ_FILE),
-					dbesc('%"hash":"' . $hash . '"%'),
-					dbesc(ACTIVITY_POST),
-					dbesc(ACTIVITY_UPDATE)
-				);
-
-			}
-
-			else {
-
-				$z = q("DELETE FROM item WHERE (obj_type = '%s' AND object LIKE '%s') AND (verb = '%s' OR verb = '%s')",
-					dbesc(ACTIVITY_OBJ_FILE),
-					dbesc('%"hash":"' . $hash . '"%'),
-					dbesc(ACTIVITY_POST),
-					dbesc(ACTIVITY_UPDATE)
-				);
-
-			}
+			$y = q("DELETE FROM item WHERE obj_type = '%s' AND (verb = '%s' AND mid = '%s') OR (verb = '%s' AND mid = '%s')",
+				dbesc(ACTIVITY_OBJ_FILE),
+				dbesc(ACTIVITY_POST),
+				dbesc($d_mid),
+				dbesc(ACTIVITY_UPDATE),
+				dbesc($u_mid)
+			);
 
 		}
 

@@ -21,7 +21,7 @@ var searchData=
   ['zot_5fencode_5flocations',['zot_encode_locations',['../zot_8php.html#ae26ce9f1ad74139193fb6319beac5fca',1,'zot.php']]],
   ['zot_5ffeed',['zot_feed',['../items_8php.html#a1cf89557f32d5dfbe8bd90448dc1aa92',1,'items.php']]],
   ['zot_5ffetch',['zot_fetch',['../zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea',1,'zot.php']]],
-  ['zot_5ffinger',['zot_finger',['../zot_8php.html#a95528377d7303131958c9f0b7158fdce',1,'zot.php']]],
+  ['zot_5ffinger',['zot_finger',['../zot_8php.html#aaa77f03d4e89a70ebf0402e1cc9426d7',1,'zot.php']]],
   ['zot_5fget_5fhublocs',['zot_get_hublocs',['../zot_8php.html#ae7cec2b417b5858fd4a41070f843d1d7',1,'zot.php']]],
   ['zot_5fgethub',['zot_gethub',['../zot_8php.html#a55056e863a7860bc0cf922e78fcce073',1,'zot.php']]],
   ['zot_5fimport',['zot_import',['../zot_8php.html#aeea071f17e306fe3d0c488551906bfab',1,'zot.php']]],
