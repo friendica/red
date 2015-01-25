@@ -464,24 +464,47 @@ function allowed_email($email) {
 		return false;
 
 	$str_allowed = get_config('system','allowed_email');
-	if(! $str_allowed)
+	$str_not_allowed = get_config('system','not_allowed_email');
+		
+	if(! $str_allowed && ! $str_not_allowed)
 		return true;
 
-	$found = false;
-
+	$return = false;
+	$found_allowed = false;	
+	$found_not_allowed = false;
+	
 	$fnmatch = function_exists('fnmatch');
+
 	$allowed = explode(',',$str_allowed);
 
 	if(count($allowed)) {
 		foreach($allowed as $a) {
 			$pat = strtolower(trim($a));
-			if(($fnmatch && fnmatch($pat,$domain)) || ($pat == $domain)) {
-				$found = true; 
+			if(($fnmatch && fnmatch($pat,$email)) || ($pat == $domain)) {
+				$found_allowed = true; 
 				break;
 			}
 		}
 	}
-	return $found;
+
+	$not_allowed = explode(',',$str_not_allowed);
+
+	if(count($not_allowed)) {
+		foreach($not_allowed as $na) {
+			$pat = strtolower(trim($na));
+			if(($fnmatch && fnmatch($pat,$email)) || ($pat == $domain)) {
+				$found_not_allowed = true; 
+				break;
+			}
+		}
+	}	
+	
+	if ($found_allowed) {
+		$return = true;	
+	} elseif (!$str_allowed && !$found_not_allowed) {
+		$return = true;	
+	}
+	return $return;
 }
 
 
