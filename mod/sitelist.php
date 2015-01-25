@@ -13,7 +13,7 @@ function sitelist_init(&$a) {
 	if($order == 'random')
 		$sql_order = " order by $rand ";
 
-	$sql_limit = " limit $start, $limit ";
+	$sql_limit = " LIMIT $limit OFFSET $start ";
 
 	$sql_extra = "";
 	if($open)
