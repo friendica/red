@@ -57,6 +57,7 @@ function get_features() {
 			t('Post Composition Features'),
 //			array('richtext',       t('Richtext Editor'),			t('Enable richtext editor'),false),
 			array('markdown',       t('Use Markdown'),              t('Allow use of "Markdown" to format posts'),false),
+			array('large_photos',   t('Large Photos'),              t('Include large (640px) photo thumbnails in posts. If not enabled, use small (320px) photo thumbnails'),false),
 			array('channel_sources', t('Channel Sources'),          t('Automatically import channel content from other channels or feeds'),false),
 			array('content_encrypt', t('Even More Encryption'),          t('Allow optional encryption of content end-to-end with a shared secret key'),false),
 			array('adult_photo_flagging', t('Flag Adult Photos'),   t('Provide photo edit option to hide adult photos from default album view'),false), 

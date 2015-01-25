@@ -251,19 +251,24 @@ function photo_upload($channel, $observer, $args) {
 
 	$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 
-	if ($width_x_height)
-		$tag = '[zmg=' . $width_x_height. ']';
-	else
-		$tag = '[zmg]';
+	// We should also put a width_x_height on large photos. Left as an exercise for 
+	// devs looking fo simple stuff to fix.
 
-	$preferred = intval(get_pconfig($channel['channel_id'],'system','post_photores'));
-	if($preferred == 1) {
+	$larger = feature_enabled($channel['channel_id'],'large_photos');
+	if($larger) {
 		$tag = '[zmg]';
 		if($r2)
 			$smallest = 1;
 		else
 			$smallest = 0;
 	}
+	else {
+		if ($width_x_height)
+			$tag = '[zmg=' . $width_x_height. ']';
+		else
+			$tag = '[zmg]';
+	}
+
 
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
 				. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
