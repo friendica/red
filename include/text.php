@@ -898,7 +898,8 @@ function sslify($s) {
 	$cnt = preg_match_all("/\<(.*?)src=\"(http\:.*?)\"(.*?)\>/",$s,$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $match) {
-			$s = str_replace($match[2],z_root() . '/sslify?f=&url=' . urlencode($match[2]),$s);
+			$filename = basename( parse_url($match[2],PHP_URL_PATH) );
+			$s = str_replace($match[2],z_root() . '/sslify/' . $filename . '?f=&url=' . urlencode($match[2]),$s);
 		}
 	}
 	return $s;
