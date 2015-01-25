@@ -90,6 +90,8 @@
 {{/if}}
 
 <h3>{{$permlbl}}</h3>
+<div id="connedit-perms-wrap" class="fakelink" onclick="openClose('connedit-perms');">{{$clickme}}</div>
+<div id="connedit-perms" style="display: none;" > 
 <div id="perm-desc" class="descriptive-text">{{$permnote}}</div>
 <table>
 <tr><td></td><td class="abook-them">{{$them}}</td><td colspan="2" class="abook-me">{{$me}}</td><td></td></tr>
@@ -100,6 +102,7 @@
 <tr><td colspan="5"><hr /></td></tr>
 </table>
 
+</div>
 </div>
 
 

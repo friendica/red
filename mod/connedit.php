@@ -573,6 +573,7 @@ function connedit_content(&$a) {
 			'$autolbl'        => t('Apply the permissions indicated on this page to all new connections.'),
 			'$buttons'        => (($self) ? '' : $buttons),
 			'$viewprof'       => t('View Profile'),
+			'$clickme'        => t('Click to open/close'),
 			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
 			'$lbl_rating'     => t('Rating (this information may be public)'),
 			'$lbl_rating_txt' => t('Optionally explain your rating (this information may be public)'),
@@ -620,6 +621,7 @@ function connedit_content(&$a) {
 			'$lblrecent'      => t('View conversations'),
 			'$lblsuggest'     => $lblsuggest,
 			'$delete'         => t('Delete contact'),
+			
 			'$poll_interval'  => contact_poll_interval($contact['priority'],(! $poll_enabled)),
 			'$poll_enabled'   => $poll_enabled,
 			'$lastupdtext'    => t('Last update:'),
