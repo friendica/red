@@ -30,11 +30,17 @@
 <input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
 </div>
 
-
-
 {{if $last_update}}
 {{$lastupdtext}} {{$last_update}}
 {{/if}}
+
+
+{{if $is_pending}}
+<div class="abook-pending-contact">
+{{include file="field_checkbox.tpl" field=$unapproved}}
+</div>
+{{/if}}
+
 
 {{if $notself}}
 {{if $slide}}
@@ -55,7 +61,6 @@
 {{/if}}
 
 
-
 {{if $self}}
 <div class="abook-autotext">
 <div id="autoperm-desc" class="descriptive-paragraph">{{$autolbl}}</div>
@@ -63,18 +68,10 @@
 </div>
 {{/if}}
 
-
 <input type="hidden" name="contact_id" value="{{$contact_id}}">
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
 <input id="contact-rating-mirror" type="hidden" name="rating" value="{{$rating_val}}" />
 
-
-
-{{if $is_pending}}
-<div class="abook-pending-contact">
-{{include file="field_checkbox.tpl" field=$unapproved}}
-</div>
-{{/if}}
 
 {{if $rating}}
 {{if $notself}}
