@@ -90,8 +90,12 @@
 {{/if}}
 
 <h3>{{$permlbl}}</h3>
+
+{{if $notself}}
 <div id="connedit-perms-wrap" class="fakelink" onclick="openClose('connedit-perms');">{{$clickme}}</div>
-<div id="connedit-perms" style="display: none;" > 
+<div id="connedit-perms" style="display: none;" >
+{{/if}}
+ 
 <div id="perm-desc" class="descriptive-text">{{$permnote}}</div>
 <table>
 <tr><td></td><td class="abook-them">{{$them}}</td><td colspan="2" class="abook-me">{{$me}}</td><td></td></tr>
@@ -103,8 +107,10 @@
 </table>
 
 </div>
-</div>
 
+{{if $notself}}
+</div>
+{{/if}}
 
 <input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
 
