@@ -2919,7 +2919,7 @@ function zot_process_message_request($data) {
 
 		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host 
 			from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d)>0
-			and not (hubloc_status & %d)>0 group by hubloc_sitekey",
+			and not (hubloc_status & %d)>0 ",
 			dbesc($sender_hash),
 			intval(HUBLOC_FLAGS_DELETED),
 			intval(HUBLOC_OFFLINE)
