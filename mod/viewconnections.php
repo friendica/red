@@ -83,7 +83,7 @@ function viewconnections_content(&$a) {
 
 	$tpl = get_markup_template("viewcontact_template.tpl");
 	$o .= replace_macros($tpl, array(
-		'$title' => t('View Connnections'),
+		'$title' => t('View Connections'),
 		'$contacts' => $contacts,
 		'$paginate' => paginate($a),
 	));
