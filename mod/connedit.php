@@ -131,6 +131,7 @@ function connedit_post(&$a) {
 	if(($_REQUEST['pending']) && ($abook_flags & ABOOK_FLAG_PENDING)) {
 		$abook_flags = ( $abook_flags ^ ABOOK_FLAG_PENDING );
 		$new_friend = true;
+
 	}
 
 	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_rating = %d, abook_rating_text = '%s', abook_flags = %d
@@ -273,27 +274,19 @@ function connedit_content(&$a) {
 	$sort_type = 0;
 	$o = '';
 
-	// this triggers some javascript to set Full Sharing by default after 
-	// completing a "follow" - which can be changed to something else before 
-	// form submission, but this gives us something useable
-
-	if($_GET['follow'] == 1) {
-		$o .= '<script>var after_following = 1;</script>';
-	}
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return login();
 	}
 
-	$my_perms = 0;
+	$my_perms = get_channel_default_perms(local_user());
 	$role = get_pconfig(local_user(),'system','permissions_role');
 	if($role) {
 		$x = get_role_perms($role);
 		if($x['perms_accept'])
 			$my_perms = $x['perms_accept'];
-		else
-			$my_perms = get_channel_default_perms(local_user());
 	}
+
 	if($my_perms) {
 		$o .= "<script>function connectDefaultShare() {
 		\$('.abook-edit-me').each(function() {

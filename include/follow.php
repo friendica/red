@@ -66,14 +66,15 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	$my_perms = get_channel_default_perms($uid);
 
-	if($is_red && $j) {
+	$role = get_pconfig($uid,'system','permissions_role');
+	if($role) {
+		$x = get_role_perms($role);
+		if($x['perms_follow'])
+			$my_perms = $x['perms_follow'];
+	}
 
-		$role = get_pconfig($uid,'system','permissions_role');
-		if($role) {
-			$x = get_role_perms($role);
-			if($x['perms_follow'])
-				$my_perms = $x['perms_follow'];
-		}
+
+	if($is_red && $j) {
 
 		logger('follow: ' . $url . ' ' . print_r($j,true), LOGGER_DEBUG);
 
@@ -104,7 +105,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			return $x;
 
 		$xchan_hash = $x['hash'];
-
 
 		$their_perms = 0;
 
@@ -163,12 +163,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		if($r) {
 			$xchan_hash = $r[0]['xchan_hash'];
 			$their_perms = 0;
-			$role = get_pconfig($uid,'system','permissions_role');
-			if($role) {
-				$x = get_role_perms($role);
-				if($x['perms_follow'])
-					$my_perms = $x['perms_follow'];
-			}
 		}
 	}
 
@@ -198,6 +192,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	}
 
 	if($is_http) {
+
 		if(! intval(get_config('system','feed_contacts'))) {
 			$result['message'] = t('Protocol disabled.');
 			return $result;

@@ -1,13 +1,13 @@
 
 function abook_perms_msg() {
-	$('.abook-permsmsg').show();
+//	$('.abook-permsmsg').show();
 //	$('.abook-permschange').html(aStr['permschange']);
-	$('.abook-permssave').show();
+//	$('.abook-permssave').show();
 }
 
 function abook_perms_new() {
-	$('.abook-permsnew').show();
-	$('.abook-permssave').show();
+//	$('.abook-permsnew').show();
+//	$('.abook-permssave').show();
 }
 
 
