@@ -80,6 +80,7 @@
 {{/if}}
 {{/if}}
 
+{{if $notself}}
 {{if $multiprofs }}
 <div>
 <h3>{{$lbl_vis1}}</h3>
@@ -87,6 +88,7 @@
 
 {{$profile_select}}
 </div>
+{{/if}}
 {{/if}}
 
 <h3>{{$permlbl}}</h3>
