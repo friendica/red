@@ -52,4 +52,4 @@
  SELECT SETVAL('public.xign_id_seq', COALESCE(MAX(id), 1) ) FROM public.xign;
  SELECT SETVAL('public.xlink_xlink_id_seq', COALESCE(MAX(xlink_id), 1) ) FROM public.xlink;
  SELECT SETVAL('public.xtag_xtag_id_seq', COALESCE(MAX(xtag_id), 1) ) FROM public.xtag;
-
+ SELECT SETVAL('public.xperm_xp_id_seq', COALESCE(MAX(xp_id), 1) ) FROM public.xperm;
