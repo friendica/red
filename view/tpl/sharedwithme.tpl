@@ -7,7 +7,6 @@
 		<tr>
 			<th width="1%"></th>
 			<th width="92%">{{$name}}</th>
-			<th width="1%"></th><th width="1%"></th><th width="1%"></th><th width="1%"></th>
 			<th width="1%"></th>
 			<th width="1%" class="hidden-xs">{{$size}}</th>
 			<th width="1%" class="hidden-xs">{{$lastmod}}</th>
@@ -16,13 +15,7 @@
 		<tr id="cloud-index-{{$item.id}}">
 			<td><i class="{{$item.objfiletypeclass}}" title="{{$item.objfiletype}}"></i></td>
 			<td><a href="{{$item.objurl}}">{{$item.objfilename}}</a></td>
-
-			<td></td>
-			<td></td>
-			<td></td>
-			<td class="cloud-index-tool"><a href="sharedwithme/{{$item.id}}/drop" title="{{$drop}}" onclick="return confirmDelete();"><i class="icon-trash drop-icons"></i></a></td>
-
-			<td>{{*{{$item.type}}*}}</td>
+			<td class="cloud-index-tool"><a href="/sharedwithme/{{$item.id}}/drop" title="{{$drop}}" onclick="return confirmDelete();"><i class="icon-trash drop-icons"></i></a></td>
 			<td class="hidden-xs">{{$item.objfilesize}}</td>
 			<td class="hidden-xs">{{$item.objedited}}</td>
 		</tr>
