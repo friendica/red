@@ -333,6 +333,7 @@ function notification($params) {
 
 	$datarray = array();
 	$datarray['hash']   = $hash;
+	$datarray['sender_hash'] = $sender['xchan_hash'];
 	$datarray['name']   = $sender['xchan_name'];
 	$datarray['url']    = $sender['xchan_url'];
 	$datarray['photo']  = $sender['xchan_photo_s'];
