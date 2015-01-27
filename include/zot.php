@@ -1522,14 +1522,34 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 
 				// going downstream check that we have the same upstream provider that
 				// sent it to us originally. Ignore it if it came from another source
-				// (with potentially different permissions)
+				// (with potentially different permissions).
+				// only compare the last hop since it could have arrived at the last location any number of ways.
+				// Always accept empty routes. 
+
+				$existing_route = explode(',', $r[0]['route']);
+				$routes = count($existing_route);
+				if($routes) {
+					$last_hop = array_pop($existing_route);
+					$last_prior_route = implode(',',$existing_route);
+				}
+				else {
+					$last_hop = '';
+					$last_prior_route = '';
+				}
 
 				$current_route = (($arr['route']) ? $arr['route'] . ',' : '') . $sender['hash'];
 
-				if($r[0]['route'] != $current_route) {
+				if($last_hop && $last_hop != $sender['hash']) {
+					logger('comment route mismatch: parent route = ' . $r[0]['route'] . ' expected = ' . $current_route, LOGGER_DEBUG);
+					logger('comment route mismatch: parent msg = ' . $r[0]['id'],LOGGER_DEBUG);
 					$result[] = array($d['hash'],'comment route mismatch',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 					continue;
 				}
+
+				// we'll add sender['hash'] onto this when we deliver it. $last_prior_route now has the previously stored route 
+				// *except* for the sender['hash'] which would've been the last hop before it got to us.
+
+				$arr['route'] = $last_prior_route;
 			}
 		}
 

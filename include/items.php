@@ -2186,6 +2186,20 @@ function item_store($arr,$allow_exec = false) {
 		unset($arr['term']);
 	}
 
+ 	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid) || strlen($public_policy))
+		$private = 1;
+	else
+		$private = $arr['item_private']; 
+
+	$arr['parent']          = $parent_id;
+	$arr['allow_cid']       = $allow_cid;
+	$arr['allow_gid']       = $allow_gid;
+	$arr['deny_cid']        = $deny_cid;
+	$arr['deny_gid']        = $deny_gid;
+	$arr['public_policy']   = $public_policy;
+	$arr['item_private']    = $private;
+	$arr['comments_closed'] = $comments_closed;
+
 	logger('item_store: ' . print_r($arr,true), LOGGER_DATA);
 
 	dbesc_array($arr);
@@ -2202,7 +2216,6 @@ function item_store($arr,$allow_exec = false) {
 		$arr['mid'],           // already dbesc'd
 		intval($arr['uid'])
 	);
-
 
 	if($r && count($r)) {
 		$current_post = $r[0]['id'];
@@ -2223,40 +2236,14 @@ function item_store($arr,$allow_exec = false) {
 		);
 	}
 
-	if((! $parent_id) || ($arr['parent_mid'] === $arr['mid']))	
-		$parent_id = $current_post;
+	$arr['id'] = $current_post;
 
- 	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid) || strlen($public_policy))
-		$private = 1;
-	else
-		$private = $arr['item_private']; 
+	if(! intval($r[0]['parent'])) {
+		$x = q("update item set parent = id where id = %d",
+			intval($r[0]['id'])
+		);
+	}
 
-	// Set parent id - and also make sure to inherit the parent's ACL's.
-
-	$r = q("UPDATE item SET parent = %d, allow_cid = '%s', allow_gid = '%s',
-		deny_cid = '%s', deny_gid = '%s', public_policy = '%s', item_private = %d, comments_closed = '%s' 
-		WHERE id = %d",
-		intval($parent_id),
-		dbesc($allow_cid),
-		dbesc($allow_gid),
-		dbesc($deny_cid),
-		dbesc($deny_gid),
-		dbesc($public_policy),
-		intval($private),
-		dbesc($comments_closed),
-		intval($current_post)
-	);
-
-	// These are probably redundant now that we've queried the just stored post
-	$arr['id']        = $current_post;
-	$arr['parent']    = $parent_id;
-	$arr['allow_cid'] = $allow_cid;
-	$arr['allow_gid'] = $allow_gid;
-	$arr['deny_cid']  = $deny_cid;
-	$arr['deny_gid']  = $deny_gid;
-	$arr['public_policy']  = $public_policy;
-	$arr['item_private']   = $private;
-	$arr['comments_closed'] = $comments_closed;
 
 	// Store taxonomy
 
