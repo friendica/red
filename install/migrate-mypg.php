@@ -33,7 +33,7 @@ function parse_htconfig($file) {
 function get_configtype(array $data) {
 	if(!isset($data['host'], $data['user'], $data['pass'], $data['data']))
 		return 'none';
-	if($data['type'] == 1)
+	if(@$data['type'] == 1)
 		return 'pgsql';
 	return 'mysql';
 }
@@ -112,7 +112,7 @@ foreach(array('install','include','mod','view') as $dir) {
 }
 
 $cfgfile = '.htconfig.php';
-if($argv[1] == '--resume') {
+if($argc >= 2 && $argv[1] == '--resume') {
 	if($argc < 4) {
 		echo "Resume usage {$argv[0]} --resume <table> <row>\n";
 		exit();

@@ -78,6 +78,7 @@ Zot is the great new communicaton protocol invented especially for the RedMatrix
 [url=https://github.com/friendica/red]Main Website[/url]
 [url=https://github.com/friendica/red-addons]Addon Website[/url]
 [url=https://zothub.com/channel/one]Development Channel[/url]
+[url=https://federated.social/channel/postgres]Postgres-specific RedMatrix Admin Support Channel[/url]
 
 [url=[baseurl]/help/credits]RedMatrix Credits[/url]
 
