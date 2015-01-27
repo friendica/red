@@ -160,7 +160,7 @@ function poller_run($argv, $argc){
 
 			// get rid of really old poco records
 
-			q("delete from xlink where xlink_updated < %s - INTERVAL %s",
+			q("delete from xlink where xlink_updated < %s - INTERVAL %s and xlink_static = 0 ",
 				db_utcnow(), db_quoteinterval('14 DAY')
 			);
 

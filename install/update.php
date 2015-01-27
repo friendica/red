@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1134 );
+define( 'UPDATE_VERSION' , 1135 );
 
 /**
  *
@@ -1536,4 +1536,15 @@ function update_r1133() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 
+}
+
+function update_r1134() {
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) { 
+		$r = q("ALTER TABLE xlink ADD xlink_static numeric(1) NOT NULL DEFAULT '0', create index xlink_static on xlink ( \"xlink_static\" ) ");
+	}
+	else
+		$r = q("ALTER TABLE xlink ADD xlink_static TINYINT( 1 ) NOT NULL DEFAULT '0', ADD INDEX ( xlink_static ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
 }

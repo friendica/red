@@ -186,13 +186,13 @@ function poco_load($xchan = '',$url = null) {
 		$total ++;
 
 
-		$r = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' limit 1",
+		$r = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 0 limit 1",
 			dbesc($xchan),
 			dbesc($hash)
 		);
 
 		if(! $r) {
-			q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_updated ) values ( '%s', '%s', %d, '%s', '%s' ) ",
+			q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_updated, xlink_static ) values ( '%s', '%s', %d, '%s', '%s', 0 ) ",
 				dbesc($xchan),
 				dbesc($hash),
 				intval($rating),
@@ -211,7 +211,7 @@ function poco_load($xchan = '',$url = null) {
 	}
 	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 
-	q("delete from xlink where xlink_xchan = '%s' and xlink_updated < %s - INTERVAL %s",
+	q("delete from xlink where xlink_xchan = '%s' and xlink_updated < %s - INTERVAL %s and xlink_static = 0",
 		dbesc($xchan),
 		db_utcnow(), db_quoteinterval('2 DAY')
 	);
@@ -222,7 +222,7 @@ function poco_load($xchan = '',$url = null) {
 
 function count_common_friends($uid,$xchan) {
 
-	$r = q("SELECT count(xlink_id) as total from xlink where xlink_xchan = '%s' and xlink_link in
+	$r = q("SELECT count(xlink_id) as total from xlink where xlink_xchan = '%s' and xlink_static = 0 and xlink_link in
 		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 )",
 		dbesc($xchan),
 		dbesc($xchan),
@@ -243,7 +243,7 @@ function common_friends($uid,$xchan,$start = 0,$limit=100000000,$shuffle = false
 	else
 		$sql_extra = " order by xchan_name asc "; 
 
-	$r = q("SELECT * from xchan left join xlink on xlink_link = xchan_hash where xlink_xchan = '%s' and xlink_link in
+	$r = q("SELECT * from xchan left join xlink on xlink_link = xchan_hash where xlink_xchan = '%s' and xlink_static = 0 and xlink_link in
 		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 ) $sql_extra limit %d offset %d",
 		dbesc($xchan),
 		dbesc($xchan),
@@ -340,6 +340,7 @@ function suggestion_query($uid, $myxchan, $start = 0, $limit = 80) {
 		and not xlink_link in ( select abook_xchan from abook where abook_channel = %d )
 		and not xlink_link in ( select xchan from xign where uid = %d )
 		and xlink_xchan != ''
+		and xlink_static = 0
 		and not ( xchan_flags & %d )>0
 		and not ( xchan_flags & %d )>0
 		group by xchan_hash order by total desc limit %d offset %d ",
@@ -360,6 +361,7 @@ function suggestion_query($uid, $myxchan, $start = 0, $limit = 80) {
 		where xlink_xchan = ''
 		and not xlink_link in ( select abook_xchan from abook where abook_channel = %d )
 		and not xlink_link in ( select xchan from xign where uid = %d )
+		and xlink_static = 0
 		and not ( xchan_flags & %d )>0
 		and not ( xchan_flags & %d )>0
 		group by xchan_hash order by total desc limit %d offset %d ",
@@ -405,7 +407,7 @@ function update_suggestions() {
 		// the targets may have changed their preferences and don't want to be suggested - and they 
 		// may have simply gone away. 
 
-		$r = q("delete from xlink where xlink_xchan = '' and xlink_updated < %s - INTERVAL %s",
+		$r = q("delete from xlink where xlink_xchan = '' and xlink_updated < %s - INTERVAL %s and xlink_static = 0",
 			db_utcnow(), db_quoteinterval('7 DAY')
 		);
 
