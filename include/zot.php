@@ -1096,6 +1096,12 @@ function zot_import($arr, $sender_url) {
 			$i['notify']['sender']['hash'] = make_xchan_hash($i['notify']['sender']['guid'],$i['notify']['sender']['guid_sig']);
 			$deliveries = null;
 
+			if(array_key_exists('message',$i) && array_key_exists('type',$i['message']) && $i['message']['type'] === 'rating') {
+				// rating messages are processed only by directory servers
+				logger('Rating received: ' . print_r($arr,true), LOGGER_DATA);
+				$result = process_rating_delivery($i['notify']['sender'],$arr);
+			}
+
 			if(array_key_exists('recipients',$i['notify']) && count($i['notify']['recipients'])) {
 				logger('specific recipients');
 				$recip_arr = array();
@@ -1115,7 +1121,8 @@ function zot_import($arr, $sender_url) {
 				// It's a specifically targetted post. If we were sent a public_scope hint (likely), 
 				// get rid of it so that it doesn't get stored and cause trouble. 
 
-				if(($i) && is_array($i) && array_key_exists('message',$i) && is_array($i['message']) && array_key_exists('public_scope',$i['message']))
+				if(($i) && is_array($i) && array_key_exists('message',$i) && is_array($i['message']) 
+					&& $i['message']['type'] === 'activity' && array_key_exists('public_scope',$i['message']))
 					unset($i['message']['public_scope']);
 
 				$deliveries = $r;
@@ -1124,7 +1131,7 @@ function zot_import($arr, $sender_url) {
 
 			}
 			else {
-				if(($i['message']) && (array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags']))) {
+				if(($i['message']) && (array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags'])) && $i['message']['type'] === 'activity') {
 					if(array_key_exists('public_scope',$i['message']) && $i['message']['public_scope'] === 'public') {
 						// This should not happen but until we can stop it...
 						logger('private message was delivered with no recipients.');
@@ -1215,6 +1222,7 @@ function zot_import($arr, $sender_url) {
 					$result = process_profile_delivery($i['notify']['sender'],$arr,$deliveries);
 
 				}
+
 				elseif($i['message']['type'] === 'channel_sync') {
 					// $arr = get_channelsync_elements($i['message']);
 
@@ -1770,6 +1778,41 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 	}
 	return $result;
 }
+
+function process_rating_delivery($sender,$arr) {
+
+	$dirmode = intval(get_config('system','directory_mode'));
+	if($dirmode == DIRECTORY_MODE_NORMAL)
+		return;
+
+	if(! $arr['target'])
+		return;
+
+	$r = q("select * from xlink where xlink_xchan = '%s' and xlink_target = '%s' limit 1",
+		dbesc($sender['hash']),
+		dbesc($arr['target'])
+	);		
+	if($r) {
+		$x = q("update xlink set xlink_rating = %d, xlink_rating_text = '%s', xlink_updated = '%s' where xlink_id = %d",
+			intval($arr['rating']),
+			intval($arr['rating_text']),
+			dbesc(datetime_convert()),
+			intval($r[0]['xlink_id'])
+		);
+	}
+	else {
+		$x = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_updated, xlink_static )
+			values( '%s', '%s', %d, '%s', '%s', 1 ) ",
+			dbesc($sender['hash']),
+			dbesc($arr['target']),
+			intval($arr['rating']),
+			intval($arr['rating_text']),
+			dbesc(datetime_convert())
+		);
+	}
+	return;
+}
+
 
 function process_profile_delivery($sender,$arr,$deliveries) {
 
