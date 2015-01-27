@@ -21,6 +21,10 @@ function search_content(&$a,$update = 0, $load = false) {
 	require_once('include/conversation.php');
 	require_once('include/items.php');
 
+	$format = (($_REQUEST['format']) ? $_REQUEST['format'] : '');
+	if($format !== '') {
+		$update = $load = 1;
+	}
 
 	$observer = $a->get_observer();
 	$observer_hash = (($observer) ? $observer['xchan_hash'] : '');
@@ -177,6 +181,19 @@ function search_content(&$a,$update = 0, $load = false) {
 		$items = fetch_post_tags($r,true);
 	} else {
 		$items = array();
+	}
+
+
+	if($format == 'json') {
+		$result = array();
+		require_once('include/conversation.php');
+		foreach($items as $item) {
+			$item['html'] = bbcode($item['body']);
+			$x = encode_item($item);
+			$x['html'] = prepare_text($item['body'],$item['mimetype']);
+			$result[] = $x;
+		}
+		json_return_and_die(array('success' => true,'messages' => $result));
 	}
 
 	if($tag) 
