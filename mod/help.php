@@ -37,20 +37,28 @@ function help_content(&$a) {
 	$text = '';
 
 	if(argc() > 1) {
-		$text = load_doc_file('doc/' . $a->argv[1] . '.md');
-		$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags(argv(1))));
+		$path = '';
+		for($x = 1; $x < argc(); $x ++) {
+			if(strlen($path))
+				$path .= '/';
+			$path .= argv($x);
+		}
+		$title = basename($path);
+
+		$text = load_doc_file('doc/' . $path . '.md');
+		$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags($title)));
 
 		if(! $text) {
-			$text = load_doc_file('doc/' . $a->argv[1] . '.bb');
+			$text = load_doc_file('doc/' . $path . '.bb');
 			if($text)
 				$doctype = 'bbcode';
-			$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('_',' ',notags(argv(1))));
+			$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('_',' ',notags($title)));
 		}
 		if(! $text) {
-			$text = load_doc_file('doc/' . $a->argv[1] . '.html');
+			$text = load_doc_file('doc/' . $path . '.html');
 			if($text)
 				$doctype = 'html';
-			$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags(argv(1))));
+			$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags($title)));
 		}
 	}
 
