@@ -73,27 +73,37 @@ function sharedwithme_content(&$a) {
 		dbesc($channel['channel_hash'])
 	);
 
-	$o = profile_tabs($a, $is_owner, $channel['channel_address']);
-
-	$o .= '<div class="section-title-wrapper">';
-
-	$o .= '<a href="/sharedwithme/dropall" onclick="return confirmDelete();" class="btn btn-xs btn-default pull-right"><i class="icon-trash"></i>&nbsp;' . t('Remove all entries') . '</a>';
-	
-	$o .= '<h2>' . t('Files shared with me') . '</h2>';
-
-	$o .= '</div>';
-
-	$o .= '<div class="section-content-wrapper">';
+	$items =array();
 
 	if($r) {
 		foreach($r as $rr) {
 			$object = json_decode($rr['object'],true);
-			$url = rawurldecode(get_rel_link($object['link'],'alternate'));
-			$o .= '<a href="' . $url . '?f=&zid=' . $channel['xchan_addr'] . '">' . $url . '</a>&nbsp;<a href="/sharedwithme/' . $rr['id'] . '/drop" onclick="return confirmDelete();"><i class="icon-trash drop-icons"></i></a><br><br>';
+
+			$item = array();
+			$item['id'] = $rr['id'];
+			$item['objfiletype'] = $object['filetype'];
+			$item['objfiletypeclass'] = getIconFromType($object['filetype']);
+			$item['objurl'] = rawurldecode(get_rel_link($object['link'],'alternate')) . '?f=&zid=' . $channel['xchan_addr'];
+			$item['objfilename'] = $object['filename'];
+			$item['objfilesize'] = userReadableSize($object['filesize']);
+			$item['objedited'] = $object['edited'];
+
+			$items[] = $item;
+
 		}
 	}
 
-	$o .= '</div>';
+	$o = profile_tabs($a, $is_owner, $channel['channel_address']);
+
+	$o .= replace_macros(get_markup_template('sharedwithme.tpl'), array(
+		'$header' => t('Files: shared with me'),
+		'$name' => t('Name'),
+		'$size' => t('Size'),
+		'$lastmod' => t('Last Modified'),
+		'$dropall' => t('Remove all files'),
+		'$drop' => t('Remove this file'),
+		'$items' => $items
+	));
 
 	return $o;
 

@@ -2378,3 +2378,74 @@ function linkify_tags($a, &$body, $uid) {
 	return $results;
 }
 
+/**
+ * @brief returns icon name for use with e.g. font-awesome based on mime-type
+ *
+ * @param string $type
+ * @return string
+ */
+function getIconFromType($type) {
+	$iconMap = array(
+		//Folder
+		t('Collection') => 'icon-folder-close',
+		//Common file
+		'application/octet-stream' => 'icon-file-alt',
+		//Text
+		'text/plain' => 'icon-file-text-alt',
+		'application/msword' => 'icon-file-text-alt',
+		'application/pdf' => 'icon-file-text-alt',
+		'application/vnd.oasis.opendocument.text' => 'icon-file-text-alt',
+		'application/epub+zip' => 'icon-book',
+		//Spreadsheet
+		'application/vnd.oasis.opendocument.spreadsheet' => 'icon-table',
+		'application/vnd.ms-excel' => 'icon-table',
+		//Image
+		'image/jpeg' => 'icon-picture',
+		'image/png' => 'icon-picture',
+		'image/gif' => 'icon-picture',
+		'image/svg+xml' => 'icon-picture',
+		//Archive
+		'application/zip' => 'icon-archive',
+		'application/x-rar-compressed' => 'icon-archive',
+		//Audio
+		'audio/mpeg' => 'icon-music',
+		'audio/wav' => 'icon-music',
+		'application/ogg' => 'icon-music',
+		'audio/ogg' => 'icon-music',
+		'audio/webm' => 'icon-music',
+		'audio/mp4' => 'icon-music',
+		//Video
+		'video/quicktime' => 'icon-film',
+		'video/webm' => 'icon-film',
+		'video/mp4' => 'icon-film'
+	);
+
+	$iconFromType = 'icon-file-alt';
+
+	if (array_key_exists($type, $iconMap)) {
+		$iconFromType = $iconMap[$type];
+	}
+
+	return $iconFromType;
+}
+
+/**
+ * @brief Returns a human readable formatted string for filesizes.
+ *
+ * @param int $size filesize in bytes
+ * @return string
+ */
+function userReadableSize($size) {
+	$ret = "";
+	if (is_numeric($size)) {
+		$incr = 0;
+		$k = 1024;
+		$unit = array('bytes', 'KB', 'MB', 'GB', 'TB', 'PB');
+		while (($size / $k) >= 1){
+			$incr++;
+			$size = round($size / $k, 2);
+		}
+		$ret = $size . " " . $unit[$incr];
+	}
+	return $ret;
+}
