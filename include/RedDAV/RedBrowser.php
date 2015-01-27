@@ -82,7 +82,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 			date_default_timezone_set($this->auth->getTimezone());
 
 		require_once('include/conversation.php');
-
+		require_once('include/text.php');
 		if ($this->auth->owner_nick) {
 			$html = profile_tabs(get_app(), (($is_owner) ? true : false), $this->auth->owner_nick);
 		}
@@ -208,9 +208,9 @@ class RedBrowser extends DAV\Browser\Plugin {
 			$ft['displayName'] = $displayName;
 			$ft['type'] = $type;
 			$ft['size'] = $size;
-			$ft['sizeFormatted'] = $this->userReadableSize($size);
+			$ft['sizeFormatted'] = userReadableSize($size);
 			$ft['lastmodified'] = (($lastmodified) ? datetime_convert('UTC', date_default_timezone_get(), $lastmodified) : '');
-			$ft['iconFromType'] = $this->getIconFromType($type);
+			$ft['iconFromType'] = getIconFromType($type);
 
 			$f[] = $ft;
 		}
@@ -224,13 +224,13 @@ class RedBrowser extends DAV\Browser\Plugin {
 		if ($used) {
 			$quotaDesc = t('%1$s used');
 			$quotaDesc = sprintf($quotaDesc,
-				$this->userReadableSize($used));
+				userReadableSize($used));
 		}
 		if ($limit && $used) {
 			$quotaDesc = t('%1$s used of %2$s (%3$s&#37;)');
 			$quotaDesc = sprintf($quotaDesc,
-				$this->userReadableSize($used),
-				$this->userReadableSize($limit),
+				userReadableSize($used),
+				userReadableSize($limit),
 				round($used / $limit, 1));
 		}
 
@@ -283,29 +283,6 @@ class RedBrowser extends DAV\Browser\Plugin {
 	}
 
 	/**
-	 * @brief Returns a human readable formatted string for filesizes.
-	 *
-	 * Don't we need such a functionality in other places, too?
-	 *
-	 * @param int $size filesize in bytes
-	 * @return string
-	 */
-	function userReadableSize($size) {
-		$ret = "";
-		if (is_numeric($size)) {
-			$incr = 0;
-			$k = 1024;
-			$unit = array('bytes', 'KB', 'MB', 'GB', 'TB', 'PB');
-			while (($size / $k) >= 1){
-				$incr++;
-				$size = round($size / $k, 2);
-			}
-			$ret = $size . " " . $unit[$incr];
-		}
-		return $ret;
-	}
-
-	/**
 	 * @brief Creates a form to add new folders and upload files.
 	 *
 	 * @param \Sabre\DAV\INode $node
@@ -340,65 +317,6 @@ class RedBrowser extends DAV\Browser\Plugin {
 	}
 
 	/**
-	 * @brief returns icon name for use with e.g. font-awesome based on mime-type
-	 *
-	 * @param string $type
-	 * @return string
-	 */
-	protected function getIconFromType($type) {
-		$iconMap = array(
-					//Folder
-					t('Collection') => 'icon-folder-close',
-
-					//Common file
-					'application/octet-stream' => 'icon-file-alt',
-
-					//Text
-					'text/plain' => 'icon-file-text-alt',
-					'application/msword' => 'icon-file-text-alt',
-					'application/pdf' => 'icon-file-text-alt',
-					'application/vnd.oasis.opendocument.text' => 'icon-file-text-alt',
-					'application/epub+zip' => 'icon-book',
-
-					//Spreadsheet
-					'application/vnd.oasis.opendocument.spreadsheet' => 'icon-table',
-					'application/vnd.ms-excel' => 'icon-table',
-
-					//Image
-					'image/jpeg' => 'icon-picture',
-					'image/png' => 'icon-picture',
-					'image/gif' => 'icon-picture',
-					'image/svg+xml' => 'icon-picture',
-
-					//Archive
-					'application/zip' => 'icon-archive',
-					'application/x-rar-compressed' => 'icon-archive',
-
-					//Audio
-					'audio/mpeg' => 'icon-music',
-					'audio/wav' => 'icon-music',
-					'application/ogg' => 'icon-music',
-					'audio/ogg' => 'icon-music',
-					'audio/webm' => 'icon-music',
-					'audio/mp4' => 'icon-music',
-
-					//Video
-					'video/quicktime' => 'icon-film',
-					'video/webm' => 'icon-film',
-					'video/mp4' => 'icon-film'
-				);
-
-		$iconFromType = 'icon-file-alt';
-
-		if (array_key_exists($type, $iconMap))
-			{
-			    $iconFromType = $iconMap[$type];
-			}
-
-		return $iconFromType;
-	}
-
-	/**
 	 * @brief Return the hash of an attachment.
 	 *
 	 * Given the owner, the parent folder and and attach name get the attachment
@@ -412,6 +330,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 	 *  The name of the attachment
 	 * @return string
 	 */
+
 	protected function findAttachHash($owner, $parentHash, $attachName) {
 		$r = q("SELECT hash FROM attach WHERE uid = %d AND folder = '%s' AND filename = '%s' ORDER BY edited DESC LIMIT 1",
 			intval($owner),

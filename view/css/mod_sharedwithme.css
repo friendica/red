@@ -1,0 +1,24 @@
+#cloud-index {
+	width: 100%;
+}
+
+#cloud-index td:nth-child(1){
+	padding: 7px 3px 7px 10px;
+}
+
+#cloud-index th:nth-child(4),
+#cloud-index td:nth-child(4){
+	padding: 7px 3px;
+	white-space: nowrap;
+}
+
+#cloud-index th:nth-child(5),
+#cloud-index td:nth-child(5){
+	padding: 7px 10px 7px 7px;
+	white-space: nowrap;
+}
+
+.cloud-index-tool {
+	padding: 7px 10px;
+}
+

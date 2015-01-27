@@ -195,6 +195,10 @@ a.wall-item-name-link {
 	clear: both;
 }
 
+.shared_header {
+	margin-bottom: 20px;
+}
+
 /* comment_item */
 
 .comment-edit-text-empty, .comment-edit-text-full {
