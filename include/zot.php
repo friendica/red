@@ -1537,7 +1537,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 					$last_prior_route = '';
 				}
 				
-				if($last_hop == 'undefined' || $sender['hash'] == 'undefined')
+				if(in_array('undefined',$existing_route) || $last_hop == 'undefined' || $sender['hash'] == 'undefined')
 					$last_hop = '';
 
 				$current_route = (($arr['route']) ? $arr['route'] . ',' : '') . $sender['hash'];
