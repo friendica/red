@@ -1485,7 +1485,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 			// As a side effect we will also do a preliminary check that we have the top-level-post, otherwise
 			// processing it is pointless. 
 
-			$r = q("select route from item where mid = '%s' and uid = %d limit 1",
+			$r = q("select route, id from item where mid = '%s' and uid = %d limit 1",
 				dbesc($arr['parent_mid']),
 				intval($channel['channel_id'])
 			);
