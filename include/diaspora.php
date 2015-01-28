@@ -15,7 +15,11 @@ function diaspora_dispatch_public($msg) {
 		return;
 	}
 
-	$sys_disabled = get_config('system','disable_diaspora_discover_tab');
+	$sys_disabled = true;
+
+	if(! get_config('system','disable_discover_tab')) {
+		$sys_disabled = get_config('system','disable_diaspora_discover_tab');
+	}
 	$sys = (($sys_disabled) ? null : get_sys_channel());
 
 	// find everybody following or allowing this author
