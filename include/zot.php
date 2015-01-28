@@ -1539,7 +1539,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 
 				$current_route = (($arr['route']) ? $arr['route'] . ',' : '') . $sender['hash'];
 
-				if($last_hop && $last_hop != $sender['hash']) {
+				if($last_hop && $last_hop != $sender['hash'] && $sender['hash'] != 'undefined') {
 					logger('comment route mismatch: parent route = ' . $r[0]['route'] . ' expected = ' . $current_route, LOGGER_DEBUG);
 					logger('comment route mismatch: parent msg = ' . $r[0]['id'],LOGGER_DEBUG);
 					$result[] = array($d['hash'],'comment route mismatch',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
