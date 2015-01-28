@@ -252,7 +252,8 @@ class RedBrowser extends DAV\Browser\Plugin {
 				'$actionspanel' => $output,
 				'$shared' => t('Shared'),
 				'$create' => t('Create'),
-				'upload' => t('Upload')
+				'$upload' => t('Upload'),
+				'$is_owner' => $is_owner
 			));
 
 		$html .= replace_macros(get_markup_template('cloud_directory.tpl'), array(
