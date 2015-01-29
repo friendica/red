@@ -125,7 +125,7 @@ function dirsearch_content(&$a) {
 
 
 	if($hash) {
-		$sql_extra = " AND xchan_hash = '" . dbesc($hash) . "' ";
+		$sql_extra = " AND xchan_hash like '" . dbesc($hash) . protect_sprintf('%') . "' ";
 	}
 
 
@@ -229,7 +229,17 @@ function dirsearch_content(&$a) {
 
 
 		foreach($r as $rr) {
+
 			$entry = array();
+
+			$pc = q("select count(xlink_rating) as total_ratings from xlink where xlink_link = '%s' and xlink_rating != 0 and xlink_static = 1 group by xlink_rating",
+				dbesc($rr['xchan_hash'])
+			);
+
+			if($pc)
+				$entry['total_ratings'] = intval($pc[0]['total_ratings']);
+			else
+				$entry['total_ratings'] = 0;
 
 			$entry['name']        = $rr['xchan_name'];
 			$entry['hash']        = $rr['xchan_hash'];
