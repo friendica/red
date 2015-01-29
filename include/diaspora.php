@@ -15,8 +15,14 @@ function diaspora_dispatch_public($msg) {
 		return;
 	}
 
-	// find everybody following or allowing this author
+	$sys_disabled = true;
 
+	if(! get_config('system','disable_discover_tab')) {
+		$sys_disabled = get_config('system','disable_diaspora_discover_tab');
+	}
+	$sys = (($sys_disabled) ? null : get_sys_channel());
+
+	// find everybody following or allowing this author
 
 	$r = q("SELECT * from channel where channel_id in ( SELECT abook_channel from abook left join xchan on abook_xchan = xchan_hash WHERE xchan_network like '%%diaspora%%' and xchan_addr = '%s' )",
 		dbesc($msg['author'])
@@ -29,6 +35,8 @@ function diaspora_dispatch_public($msg) {
 			logger('diaspora_public: delivering to: ' . $rr['channel_name'] . ' (' . $rr['channel_address'] . ') ');
 			diaspora_dispatch($rr,$msg);
 		}
+		if($sys)
+			diaspora_dispatch($sys,$msg);
 	}
 	else
 		logger('diaspora_public: no subscribers');

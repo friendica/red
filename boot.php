@@ -49,7 +49,7 @@ define ( 'RED_PLATFORM',            'redmatrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1134  );
+define ( 'DB_UPDATE_VERSION',       1135  );
 
 /**
  * Constant with a HTML line break.

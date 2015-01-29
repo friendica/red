@@ -33,7 +33,7 @@ function acl_init(&$a){
 		$sql_extra2 = "AND ( xchan_name LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " OR xchan_addr LIKE " . protect_sprintf( "'%" . dbesc($search) . ((strpos($search,'@') === false) ? "%@%'"  : "%'")) . ") ";
 
 		// This horrible mess is needed because position also returns 0 if nothing is found. W/ould be MUCH easier if it instead returned a very large value
-		// Otherwise we could just order by LEAST(POSTION($search IN xchan_name),POSITION($search IN xchan_addr)).
+		// Otherwise we could just order by LEAST(POSITION($search IN xchan_name),POSITION($search IN xchan_addr)).
 		$order_extra2 = "CASE WHEN xchan_name LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) ." then POSITION('".dbesc($search)."' IN xchan_name) else position('".dbesc($search)."' IN xchan_addr) end, ";
 		$col = ((strpos($search,'@') !== false) ? 'xchan_addr' : 'xchan_name' );
 		$sql_extra3 = "AND $col like " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";
@@ -171,6 +171,7 @@ function acl_init(&$a){
 		);
 	}
 	elseif(($type == 'a') || ($type == 'p')) {
+
 		$r = q("SELECT abook_id as id, xchan_name as name, xchan_hash as hash, xchan_addr as nick, xchan_photo_s as micro, xchan_network as network, xchan_url as url, xchan_addr as attag , abook_their_perms FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d
 			and not (xchan_flags & %d)>0
@@ -180,6 +181,7 @@ function acl_init(&$a){
 			intval(XCHAN_FLAGS_DELETED)
 
 		);
+
 	}
 	elseif($type == 'x') {
 		$r = navbar_complete($a);
@@ -209,7 +211,7 @@ function acl_init(&$a){
 		foreach($r as $g){
 
 			// remove RSS feeds from ACLs - they are inaccessible
-			if(strpos($g['hash'],'/'))
+			if(strpos($g['hash'],'/') && $type != 'a')
 				continue;
 
 			if(($g['abook_their_perms'] & PERMS_W_TAGWALL) && $type == 'c' && (! $noforums)) {
@@ -233,7 +235,7 @@ function acl_init(&$a){
 				"id"	   => $g['id'],
 				"xid"      => $g['hash'],
 				"link"     => $g['nick'],
-				"nick"     => substr($g['nick'],0,strpos($g['nick'],'@')),
+				"nick"     => (($g['nick']) ? substr($g['nick'],0,strpos($g['nick'],'@')) : t('RSS')),
 				"self"     => (($g['abook_flags'] & ABOOK_FLAG_SELF) ? 'abook-self' : ''),
 				"taggable" => '',
 				"label"    => '',
@@ -248,6 +250,8 @@ function acl_init(&$a){
 		'count'	=> $count,
 		'items'	=> $items,
 	);
+
+
 	
 	echo json_encode($o);
 

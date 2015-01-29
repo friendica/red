@@ -1096,6 +1096,12 @@ function zot_import($arr, $sender_url) {
 			$i['notify']['sender']['hash'] = make_xchan_hash($i['notify']['sender']['guid'],$i['notify']['sender']['guid_sig']);
 			$deliveries = null;
 
+			if(array_key_exists('message',$i) && array_key_exists('type',$i['message']) && $i['message']['type'] === 'rating') {
+				// rating messages are processed only by directory servers
+				logger('Rating received: ' . print_r($arr,true), LOGGER_DATA);
+				$result = process_rating_delivery($i['notify']['sender'],$arr);
+			}
+
 			if(array_key_exists('recipients',$i['notify']) && count($i['notify']['recipients'])) {
 				logger('specific recipients');
 				$recip_arr = array();
@@ -1115,7 +1121,8 @@ function zot_import($arr, $sender_url) {
 				// It's a specifically targetted post. If we were sent a public_scope hint (likely), 
 				// get rid of it so that it doesn't get stored and cause trouble. 
 
-				if(($i) && is_array($i) && array_key_exists('message',$i) && is_array($i['message']) && array_key_exists('public_scope',$i['message']))
+				if(($i) && is_array($i) && array_key_exists('message',$i) && is_array($i['message']) 
+					&& $i['message']['type'] === 'activity' && array_key_exists('public_scope',$i['message']))
 					unset($i['message']['public_scope']);
 
 				$deliveries = $r;
@@ -1124,7 +1131,7 @@ function zot_import($arr, $sender_url) {
 
 			}
 			else {
-				if(($i['message']) && (array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags']))) {
+				if(($i['message']) && (array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags'])) && $i['message']['type'] === 'activity') {
 					if(array_key_exists('public_scope',$i['message']) && $i['message']['public_scope'] === 'public') {
 						// This should not happen but until we can stop it...
 						logger('private message was delivered with no recipients.');
@@ -1215,6 +1222,7 @@ function zot_import($arr, $sender_url) {
 					$result = process_profile_delivery($i['notify']['sender'],$arr,$deliveries);
 
 				}
+
 				elseif($i['message']['type'] === 'channel_sync') {
 					// $arr = get_channelsync_elements($i['message']);
 
@@ -1477,7 +1485,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 			// As a side effect we will also do a preliminary check that we have the top-level-post, otherwise
 			// processing it is pointless. 
 
-			$r = q("select route from item where mid = '%s' and uid = %d limit 1",
+			$r = q("select route, id from item where mid = '%s' and uid = %d limit 1",
 				dbesc($arr['parent_mid']),
 				intval($channel['channel_id'])
 			);
@@ -1514,14 +1522,37 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 
 				// going downstream check that we have the same upstream provider that
 				// sent it to us originally. Ignore it if it came from another source
-				// (with potentially different permissions)
+				// (with potentially different permissions).
+				// only compare the last hop since it could have arrived at the last location any number of ways.
+				// Always accept empty routes and firehose items (route contains 'undefined') . 
+
+				$existing_route = explode(',', $r[0]['route']);
+				$routes = count($existing_route);
+				if($routes) {
+					$last_hop = array_pop($existing_route);
+					$last_prior_route = implode(',',$existing_route);
+				}
+				else {
+					$last_hop = '';
+					$last_prior_route = '';
+				}
+				
+				if(in_array('undefined',$existing_route) || $last_hop == 'undefined' || $sender['hash'] == 'undefined')
+					$last_hop = '';
 
 				$current_route = (($arr['route']) ? $arr['route'] . ',' : '') . $sender['hash'];
 
-				if($r[0]['route'] != $current_route) {
+				if($last_hop && $last_hop != $sender['hash']) {
+					logger('comment route mismatch: parent route = ' . $r[0]['route'] . ' expected = ' . $current_route, LOGGER_DEBUG);
+					logger('comment route mismatch: parent msg = ' . $r[0]['id'],LOGGER_DEBUG);
 					$result[] = array($d['hash'],'comment route mismatch',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 					continue;
 				}
+
+				// we'll add sender['hash'] onto this when we deliver it. $last_prior_route now has the previously stored route 
+				// *except* for the sender['hash'] which would've been the last hop before it got to us.
+
+				$arr['route'] = $last_prior_route;
 			}
 		}
 
@@ -1770,6 +1801,41 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 	}
 	return $result;
 }
+
+function process_rating_delivery($sender,$arr) {
+
+	$dirmode = intval(get_config('system','directory_mode'));
+	if($dirmode == DIRECTORY_MODE_NORMAL)
+		return;
+
+	if(! $arr['target'])
+		return;
+
+	$r = q("select * from xlink where xlink_xchan = '%s' and xlink_target = '%s' limit 1",
+		dbesc($sender['hash']),
+		dbesc($arr['target'])
+	);		
+	if($r) {
+		$x = q("update xlink set xlink_rating = %d, xlink_rating_text = '%s', xlink_updated = '%s' where xlink_id = %d",
+			intval($arr['rating']),
+			intval($arr['rating_text']),
+			dbesc(datetime_convert()),
+			intval($r[0]['xlink_id'])
+		);
+	}
+	else {
+		$x = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_updated, xlink_static )
+			values( '%s', '%s', %d, '%s', '%s', 1 ) ",
+			dbesc($sender['hash']),
+			dbesc($arr['target']),
+			intval($arr['rating']),
+			intval($arr['rating_text']),
+			dbesc(datetime_convert())
+		);
+	}
+	return;
+}
+
 
 function process_profile_delivery($sender,$arr,$deliveries) {
 

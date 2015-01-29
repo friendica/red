@@ -145,7 +145,7 @@ function onepoll_run($argv, $argc){
 
 	if($contact['xchan_connurl']) {	
 		$r = q("SELECT xlink_id from xlink 
-			where xlink_xchan = '%s' and xlink_updated > %s - INTERVAL %s limit 1",
+			where xlink_xchan = '%s' and xlink_updated > %s - INTERVAL %s and xlink_static = 0 limit 1",
 			intval($contact['xchan_hash']),
 			db_utcnow(), db_quoteinterval('1 DAY')
 		);

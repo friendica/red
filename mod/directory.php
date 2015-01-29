@@ -274,17 +274,21 @@ function directory_content(&$a) {
 						$arr = array('contact' => $rr, 'entry' => $entry);
 
 						call_hooks('directory_item', $arr);
-			
-						if($sort_order == '' && $suggest) {
-							$entries[$addresses[$rr['address']]] = $arr['entry']; // Use the same indexes as originally to get the best suggestion first
-						}
-						else {
-							$entries[] = $arr['entry'];
-						}
+
 						unset($profile);
 						unset($location);
 
+						if(! $arr['entry']) {
+							continue;
+						}			
+						
+						if($sort_order == '' && $suggest) {
+							$entries[$addresses[$rr['address']]] = $arr['entry']; // Use the same indexes as originally to get the best suggestion first
+						}
 
+						else {
+							$entries[] = $arr['entry'];
+						}
 					}
 
 					ksort($entries); // Sort array by key so that foreach-constructs work as expected

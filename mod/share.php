@@ -53,7 +53,7 @@ function share_init(&$a) {
 			"' avatar='".$r[0]['author']['xchan_photo_s'].
 			"' link='".$r[0]['plink'].
 			"' posted='".$r[0]['created'].
-			"' message_id='".$r[0]['mid']."']\n";
+			"' message_id='".$r[0]['mid']."']";
 		if($r[0]['title'])
 			$o .= '[b]'.$r[0]['title'].'[/b]'."\n";
 		$o .= $r[0]['body'];
