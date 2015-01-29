@@ -59,6 +59,7 @@ require_once('include/html2plain.php');
  *       relay					item_id (item was relayed to owner, we will deliver it as owner)
  *       location               channel_id
  *       request                channel_id            xchan_hash             message_id
+ *       rating                 xlink_id
  *
  */
 
@@ -295,6 +296,15 @@ function notifier_run($argv, $argc){
 		}
 		$private = false;
 		$packet_type = 'purge';
+	}
+	elseif($cmd === 'rating') {
+		$r = q("select * from xlink where xlink_id = %d and xlink_static = 1 limit 1",
+			intval($item_id)
+		);
+		if($r) {
+			logger('rating message: ' . print_r($r[0],true));
+			return;
+		}
 	}
 	else {
 

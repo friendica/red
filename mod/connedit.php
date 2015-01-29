@@ -55,6 +55,8 @@ function connedit_post(&$a) {
 	if(! $contact_id)
 		return;
 
+	$channel = $a->get_channel();
+
 	// TODO if configured for hassle-free permissions, we'll post the form with ajax as soon as the
 	// connection enable is toggled to a special autopost url and set permissions immediately, leaving 
 	// the other form elements alone pending a manual submit of the form. The downside is that there 
@@ -79,9 +81,11 @@ function connedit_post(&$a) {
 
 	if($orig_record[0]['abook_flags'] & ABOOK_FLAG_SELF) {
 		$autoperms = intval($_POST['autoperms']);
+		$is_self = true;
 	}
 	else {
 		$autoperms = null;
+		$is_self = false;
 	}
 
 
@@ -126,7 +130,40 @@ function connedit_post(&$a) {
 	$abook_flags = $orig_record[0]['abook_flags'];
 	$new_friend = false;
 
-
+	if(! $is_self) {
+		$z = q("select * from xlink where xlink_xchan = '%s' and xlink_xlink = '%s' and xlink_static = 1 limit 1",
+			dbesc($channel['channel_hash']),
+			dbesc($orig_record[0]['abook_xchan'])
+		);
+		if($z) {
+			$record = $z[0]['xlink_id'];
+			$w = q("update xlink set xlink_rating = '%d', xlink_rating_text = '%s', xlink_updated = '%s' 
+				where xlink_id = %d",
+				intval($rating),
+				dbesc($rating_text),
+				dbesc(datetime_convert()),
+				intval($record)
+			);
+		}
+		else {
+			$w = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_updated, xlink_static ) values ( '%s', '%s', %d, '%s', '%s', 1 ) ",
+				dbesc($channel['channel_hash']),
+				dbesc($orig_record[0]['abook_xchan']),
+				intval($rating),
+				dbesc($rating_text),
+				dbesc(datetime_convert())
+			);
+			$z = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1 limit 1",
+				dbesc($channel['channel_hash']),
+				dbesc($orig_record[0]['abook_xchan'])
+			);
+			if($z)
+				$record = $z[0]['xlink_id'];
+		}
+		if($record) {
+			proc_run('php','include/notifier.php','rating',$record);
+		}	
+	}
 
 	if(($_REQUEST['pending']) && ($abook_flags & ABOOK_FLAG_PENDING)) {
 		$abook_flags = ( $abook_flags ^ ABOOK_FLAG_PENDING );
@@ -167,7 +204,6 @@ function connedit_post(&$a) {
 	}
 
 	if($new_friend) {
-		$channel = $a->get_channel();
 		$default_group = $channel['channel_default_group'];
 		if($default_group) {
 			require_once('include/group.php');
