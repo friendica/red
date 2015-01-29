@@ -3,20 +3,20 @@ require_once('include/conversation.php');
 require_once('include/text.php');
 
 function sharedwithme_content(&$a) {
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 	
 	$channel = $a->get_channel();
 
-	$is_owner = (local_user() && (local_user() == $channel['channel_id']));
+	$is_owner = (local_channel() && (local_channel() == $channel['channel_id']));
 
 	//maintenance - see if a file got dropped and remove it systemwide - this should possibly go to include/poller
 	$x = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND uid = %d",
 		dbesc(ACTIVITY_UPDATE),
 		dbesc(ACTIVITY_OBJ_FILE),
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	if($x) {
@@ -47,7 +47,7 @@ function sharedwithme_content(&$a) {
 
 		q("DELETE FROM item WHERE id = %d AND uid = %d",
 			intval($id),
-			intval(local_user())
+			intval(local_channel())
 		);
 
 		goaway(z_root() . '/sharedwithme');
@@ -59,7 +59,7 @@ function sharedwithme_content(&$a) {
 		q("DELETE FROM item WHERE verb = '%s' AND obj_type = '%s' AND uid = %d",
 			dbesc(ACTIVITY_POST),
 			dbesc(ACTIVITY_OBJ_FILE),
-			intval(local_user())
+			intval(local_channel())
 		);
 
 		goaway(z_root() . '/sharedwithme');
@@ -69,7 +69,7 @@ function sharedwithme_content(&$a) {
 	$r = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND uid = %d AND owner_xchan != '%s'",
 		dbesc(ACTIVITY_POST),
 		dbesc(ACTIVITY_OBJ_FILE),
-		intval(local_user()),
+		intval(local_channel()),
 		dbesc($channel['channel_hash'])
 	);
 

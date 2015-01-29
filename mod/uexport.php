@@ -1,7 +1,7 @@
 <?php
 
 function uexport_init(&$a) {
-	if(! local_user())
+	if(! local_channel())
 		killme();
 
 	if(argc() > 1) {
@@ -14,7 +14,7 @@ function uexport_init(&$a) {
 
 
 		if(argc() > 1 && argv(1) === 'basic') {
-			echo json_encode(identity_basic_export(local_user()));
+			echo json_encode(identity_basic_export(local_channel()));
 			killme();
 		}
 
@@ -22,7 +22,7 @@ function uexport_init(&$a) {
 		// It probably needs to be built at the CLI and offered to download as a tarball.  Maybe stored in the members dav.
 
 		if(argc() > 1 && argv(1) === 'complete') {
-			echo json_encode(identity_basic_export(local_user(),true));
+			echo json_encode(identity_basic_export(local_channel(),true));
 			killme();
 		}
 	}

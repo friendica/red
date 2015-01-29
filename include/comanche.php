@@ -113,14 +113,14 @@ function comanche_replace_region($match) {
 
 /**
  * @function comanche_get_channel_id()
- *    Returns the channel_id of the profile owner of the page, or the local_user if there is no profile owner.
+ *    Returns the channel_id of the profile owner of the page, or the local_channel if there is no profile owner.
  * Otherwise returns 0
  */ 
 
 function comanche_get_channel_id() {
 	$channel_id = ((is_array(get_app()->profile)) ? get_app()->profile['profile_uid'] : 0);
-	if((! $channel_id) && (local_user()))
-		$channel_id = local_user();
+	if((! $channel_id) && (local_channel()))
+		$channel_id = local_channel();
 	return $channel_id;
 }
 

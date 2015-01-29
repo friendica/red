@@ -8,13 +8,13 @@ require_once('include/acl_selectors.php');
 
 
 function network_init(&$a) {
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
 	$channel = $a->get_channel();
-	$a->profile_uid = local_user();
+	$a->profile_uid = local_channel();
 	head_set_icon($channel['xchan_photo_s']);
 
 }
@@ -22,7 +22,7 @@ function network_init(&$a) {
 function network_content(&$a, $update = 0, $load = false) {
 
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		$_SESSION['return_url'] = $a->query_string;
 		return login(false);
 	}
@@ -54,7 +54,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		if(strpos($search,'@') === 0) {
 			$r = q("select abook_id from abook left join xchan on abook_xchan = xchan_hash where xchan_name = '%s' and abook_channel = %d limit 1",
 				dbesc(substr($search,1)),
-				intval(local_user())
+				intval(local_channel())
 			);
 			if($r) {
 				$_GET['cid'] = $r[0]['abook_id'];
@@ -76,7 +76,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	if($gid) {
 		$r = q("SELECT * FROM groups WHERE id = %d AND uid = %d LIMIT 1",
 			intval($gid),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! $r) {
 			if($update)
@@ -140,7 +140,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'acl'              => populate_acl((($group || $cid) ? $def_acl : $channel_acl)),
 			'bang'             => (($group || $cid) ? '!' : ''),
 			'visitor'          => true,
-			'profile_uid'      => local_user()
+			'profile_uid'      => local_channel()
 		);
 
 		$o .= status_editor($a,$x);
@@ -178,7 +178,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str )) or allow_gid like '" . protect_sprintf('%<' . dbesc($group_hash) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
 
-		$x = group_rec_byhash(local_user(), $group_hash);
+		$x = group_rec_byhash(local_channel(), $group_hash);
 
 		if($x)
 			$o = '<h2>' . t('Collection: ') . $x['name'] . '</h2>' . $o;
@@ -190,10 +190,10 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") > 0 limit 1",
 			intval($cid),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if($r) {
-			$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_user()) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
+			$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_channel()) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
 			$o = '<h2>' . t('Connection: ') . $r[0]['xchan_name'] . '</h2>' . $o;
 		}
 		else {
@@ -217,20 +217,20 @@ function network_content(&$a, $update = 0, $load = false) {
 		if($gid || $cid || $cmin || ($cmax != 99) || $star || $liked || $conv || $spam || $nouveau || $list)
 			$firehose = 0;
 
-		$maxheight = get_pconfig(local_user(),'system','network_divmore_height');
+		$maxheight = get_pconfig(local_channel(),'system','network_divmore_height');
 		if(! $maxheight)
 			$maxheight = 400;
 
 
 		$o .= '<div id="live-network"></div>' . "\r\n";
-		$o .= "<script> var profile_uid = " . local_user() 
+		$o .= "<script> var profile_uid = " . local_channel() 
 			. "; var profile_page = " . $a->pager['page'] 
 			. "; divmore_height = " . intval($maxheight) . "; </script>\r\n";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
 			'$pgtype'  => 'network',
-			'$uid'     => ((local_user()) ? local_user() : '0'),
+			'$uid'     => ((local_channel()) ? local_channel() : '0'),
 			'$gid'     => (($gid) ? $gid : '0'),
 			'$cid'     => (($cid) ? $cid : '0'),
 			'$cmin'    => (($cmin) ? $cmin : '0'),
@@ -304,7 +304,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	}
 	else {
-		$itemspage = get_pconfig(local_user(),'system','itemspage');
+		$itemspage = get_pconfig(local_channel(),'system','itemspage');
 		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']), intval($a->pager['start']));
 	}
@@ -338,10 +338,10 @@ function network_content(&$a, $update = 0, $load = false) {
 		$a->data['firehose'] = intval($sys['channel_id']);
 	}
 	else {
-		$uids = " and item.uid = " . local_user() . " ";
+		$uids = " and item.uid = " . local_channel() . " ";
 	}
 
-	if(get_pconfig(local_user(),'system','network_list_mode'))
+	if(get_pconfig(local_channel(),'system','network_list_mode'))
 		$page_mode = 'list';
 	else
 		$page_mode = 'client';
@@ -435,7 +435,7 @@ function network_content(&$a, $update = 0, $load = false) {
 				dbesc($parents_str)
 			);
 
-			xchan_query($items,true,(($firehose) ? local_user() : 0));
+			xchan_query($items,true,(($firehose) ? local_channel() : 0));
 			$items = fetch_post_tags($items,true);
 			$items = conv_sort($items,$ordering);
 		}
@@ -469,7 +469,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			WHERE (item_flags & %d) > 0 AND uid = %d $update_unseen ",
 			intval(ITEM_UNSEEN),
 			intval(ITEM_UNSEEN),
-			intval(local_user())
+			intval(local_channel())
 		);
 
 	$mode = (($nouveau) ? 'network-new' : 'network');

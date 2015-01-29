@@ -5,7 +5,7 @@ require_once('include/group.php');
 
 function group_post(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -15,10 +15,10 @@ function group_post(&$a) {
 		
 		$name = notags(trim($_POST['groupname']));
 		$public = intval($_POST['public']);
-		$r = group_add(local_user(),$name,$public);
+		$r = group_add(local_channel(),$name,$public);
 		if($r) {
 			info( t('Collection created.') . EOL );
-			$r = group_byname(local_user(),$name);
+			$r = group_byname(local_channel(),$name);
 			if($r)
 				goaway($a->get_baseurl() . '/group/' . $r);
 		}
@@ -32,7 +32,7 @@ function group_post(&$a) {
 		
 		$r = q("SELECT * FROM `groups` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval(argv(1)),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! $r) {
 			notice( t('Collection not found.') . EOL );
@@ -47,7 +47,7 @@ function group_post(&$a) {
 			$r = q("UPDATE `groups` SET `name` = '%s', visible = %d  WHERE `uid` = %d AND `id` = %d",
 				dbesc($groupname),
 				intval($public),
-				intval(local_user()),
+				intval(local_channel()),
 				intval($group['id'])
 			);
 			if($r)
@@ -64,14 +64,14 @@ function group_content(&$a) {
 
 	logger('mod_group: ' . $a->cmd,LOGGER_DEBUG);
 	
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied') . EOL);
 		return;
 	}
 
 	// Switch to text mode interface if we have more than 'n' contacts or group members
 
-	$switchtotext = get_pconfig(local_user(),'system','groupedit_image_limit');
+	$switchtotext = get_pconfig(local_channel(),'system','groupedit_image_limit');
 	if($switchtotext === false)
 		$switchtotext = get_config('system','groupedit_image_limit');
 	if($switchtotext === false)
@@ -99,10 +99,10 @@ function group_content(&$a) {
 		if(intval(argv(2))) {
 			$r = q("SELECT `name` FROM `groups` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(argv(2)),
-				intval(local_user())
+				intval(local_channel())
 			);
 			if($r) 
-				$result = group_rmv(local_user(),$r[0]['name']);
+				$result = group_rmv(local_channel(),$r[0]['name']);
 			if($result)
 				info( t('Collection removed.') . EOL);
 			else
@@ -119,7 +119,7 @@ function group_content(&$a) {
 
 		$r = q("SELECT abook_xchan from abook left join xchan on abook_xchan = xchan_hash where abook_xchan = '%s' and abook_channel = %d and not (xchan_flags & %d)>0 and not (abook_flags & %d)>0 and not (abook_flags & %d)>0 limit 1",
 			dbesc(base64url_decode(argv(2))),
-			intval(local_user()),
+			intval(local_channel()),
 			intval(XCHAN_FLAGS_DELETED),
 			intval(ABOOK_FLAG_BLOCKED),
 			intval(ABOOK_FLAG_PENDING)
@@ -134,7 +134,7 @@ function group_content(&$a) {
 		require_once('include/acl_selectors.php');
 		$r = q("SELECT * FROM `groups` WHERE `id` = %d AND `uid` = %d AND `deleted` = 0 LIMIT 1",
 			intval(argv(1)),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! $r) {
 			notice( t('Collection not found.') . EOL );
@@ -155,10 +155,10 @@ function group_content(&$a) {
 		if($change) {
 
 			if(in_array($change,$preselected)) {
-				group_rmv_member(local_user(),$group['name'],$change);
+				group_rmv_member(local_channel(),$group['name'],$change);
 			}
 			else {
-				group_add_member(local_user(),$group['name'],$change);
+				group_add_member(local_channel(),$group['name'],$change);
 			}
 
 			$members = group_get_members($group['id']);
@@ -208,11 +208,11 @@ function group_content(&$a) {
 			$groupeditor['members'][] = micropro($member,true,'mpgroup', $textmode);
 		}
 		else
-			group_rmv_member(local_user(),$group['name'],$member['xchan_hash']);
+			group_rmv_member(local_channel(),$group['name'],$member['xchan_hash']);
 	}
 
 	$r = q("SELECT abook.*, xchan.* FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel` = %d AND  not (abook_flags & %d)>0 and not (xchan_flags & %d)>0 and not (abook_flags & %d)>0 order by xchan_name asc",
-		intval(local_user()),
+		intval(local_channel()),
 		intval(ABOOK_FLAG_BLOCKED),
 		intval(XCHAN_FLAGS_DELETED),
 		intval(ABOOK_FLAG_PENDING)

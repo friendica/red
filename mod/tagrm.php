@@ -4,7 +4,7 @@ require_once('bbcode.php');
 
 function tagrm_post(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 
 
@@ -16,7 +16,7 @@ function tagrm_post(&$a) {
 
 	$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($item),
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	if(! $r)
@@ -52,7 +52,7 @@ function tagrm_post(&$a) {
 
 function tagrm_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 		// NOTREACHED
 	}
@@ -65,7 +65,7 @@ function tagrm_content(&$a) {
 
 		$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($item),
-			intval(local_user())
+			intval(local_channel())
 		);
 
 		if(! $r)
@@ -105,7 +105,7 @@ function tagrm_content(&$a) {
 
 		$r = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($item),
-			intval(local_user())
+			intval(local_channel())
 		);
 
 		if(! $r)

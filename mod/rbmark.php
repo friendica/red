@@ -48,7 +48,7 @@ function rbmark_content(&$a) {
 
 	$o = '';
 
-	if(! local_user()) {
+	if(! local_channel()) {
 
 		// The login procedure is going to bugger our $_REQUEST variables
 		// so save them in the session.

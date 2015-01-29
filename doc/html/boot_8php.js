@@ -32,7 +32,7 @@ var boot_8php =
     [ "killme", "boot_8php.html#aea7fc57a4d8e9dcb42f2601b0b9b761c", null ],
     [ "load_contact_links", "boot_8php.html#a719c7f3972d5f9268f37a41c76cd4ef6", null ],
     [ "load_pdl", "boot_8php.html#a50a6707a28c7d05d3f49eaabc7994501", null ],
-    [ "local_user", "boot_8php.html#ad4c9dc2c8a82e8f52b7404c1655eab44", null ],
+    [ "local_channel", "boot_8php.html#ad4c9dc2c8a82e8f52b7404c1655eab44", null ],
     [ "login", "boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4", null ],
     [ "notice", "boot_8php.html#a9255af5ae9c887520091ea04763c1a88", null ],
     [ "os_mkdir", "boot_8php.html#a5fbebdf7a1c0ea8f904dbd9d78c2c06c", null ],

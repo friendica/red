@@ -2,7 +2,7 @@
 
 // Autocomplete for saved searches. Should probably be put in the same place as the other autocompletes
 function search_ac_init(&$a){
-	if(!local_user())
+	if(!local_channel())
 		killme();
 
 
@@ -25,7 +25,7 @@ function search_ac_init(&$a){
 	$r = q("SELECT `abook_id`, `xchan_name`, `xchan_photo_s`, `xchan_url`, `xchan_addr` FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d 
 		$people_sql_extra
 		ORDER BY `xchan_name` ASC ",
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	$results = array();

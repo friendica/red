@@ -172,7 +172,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		return $result;
 	}
 
-	if((local_user()) && $uid == local_user()) {
+	if((local_channel()) && $uid == local_channel()) {
 		$aid = get_account_id();
 		$hash = get_observer_hash();
 		$ch = $a->get_channel();

@@ -24,7 +24,7 @@ function acl_init(&$a){
 		$search = $_REQUEST['query'];
 	}
 
-	if(!(local_user()))
+	if(!(local_channel()))
 		if(!($type == 'x' || $type == 'c'))
 			killme();
 
@@ -58,7 +58,7 @@ function acl_init(&$a){
 				ORDER BY `groups`.`name` 
 				LIMIT %d OFFSET %d",
 			db_concat('group_member.xchan', ','),
-			intval(local_user()),
+			intval(local_channel()),
 			intval($count),
 			intval($start)
 		);
@@ -88,14 +88,14 @@ function acl_init(&$a){
 		$extra_channels_sql = substr($extra_channels_sql,1); // Remove initial comma
 
 		// Getting info from the abook is better for local users because it contains info about permissions
-		if(local_user()) {
+		if(local_channel()) {
 			if($extra_channels_sql != '')
 				$extra_channels_sql = " OR (abook_channel IN ($extra_channels_sql)) and not (abook_flags & ". intval(ABOOK_FLAG_HIDDEN) . ') > 0';
 
 			$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, abook_flags 
 				FROM abook left join xchan on abook_xchan = xchan_hash 
 				WHERE (abook_channel = %d $extra_channels_sql) AND not ( abook_flags & %d )>0 and not (xchan_flags & %d )>0 $sql_extra2 order by $order_extra2 xchan_name asc" ,
-				intval(local_user()),
+				intval(local_channel()),
 				intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED),
 				intval(XCHAN_FLAGS_DELETED)
 			);
@@ -147,7 +147,7 @@ function acl_init(&$a){
 				});
 			}
 		}
-		if(intval(get_config('system','taganyone')) || intval(get_pconfig(local_user(),'system','taganyone'))) {
+		if(intval(get_config('system','taganyone')) || intval(get_pconfig(local_channel(),'system','taganyone'))) {
 			if((! $r) && $type == 'c') {
 				$r = q("SELECT substr(xchan_hash,1,18) as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, 0 as abook_their_perms, 0 as abook_flags 
 					FROM xchan 
@@ -165,7 +165,7 @@ function acl_init(&$a){
 			and not (xchan_flags & %d)>0
 			$sql_extra3
 			ORDER BY `xchan_name` ASC ",
-			intval(local_user()),
+			intval(local_channel()),
 			intval(PERMS_W_MAIL),
 			intval(XCHAN_FLAGS_DELETED)
 		);
@@ -177,7 +177,7 @@ function acl_init(&$a){
 			and not (xchan_flags & %d)>0
 			$sql_extra3
 			ORDER BY xchan_name ASC ",
-			intval(local_user()),
+			intval(local_channel()),
 			intval(XCHAN_FLAGS_DELETED)
 
 		);
@@ -263,7 +263,7 @@ function navbar_complete(&$a) {
 
 //	logger('navbar_complete');
 
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_user())) {
 		return;
 	}
 

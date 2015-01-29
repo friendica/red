@@ -9,7 +9,7 @@ function authtest_content(&$a) {
 	$auth_success = false;
 	$o .= '<h3>Magic-Auth Diagnostic</h3>';
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return $o;
 	}

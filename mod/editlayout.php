@@ -32,7 +32,7 @@ function editlayout_content(&$a) {
 
 	$which = argv(1);
 
-	$uid = local_user();
+	$uid = local_channel();
 	$owner = 0;
 	$channel = null;
 	$observer = $a->get_observer();

@@ -10,7 +10,7 @@ require_once('include/widgets.php');
 
 function connections_init(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	$channel = $a->get_channel();
@@ -21,7 +21,7 @@ function connections_init(&$a) {
 
 function connections_post(&$a) {
 	
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	$contact_id = intval(argv(1));
@@ -30,7 +30,7 @@ function connections_post(&$a) {
 
 	$orig_record = q("SELECT * FROM abook WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
 		intval($contact_id),
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	if(! $orig_record) {
@@ -45,7 +45,7 @@ function connections_post(&$a) {
 	if($profile_id) {
 		$r = q("SELECT profile_guid FROM profile WHERE profile_guid = '%s' AND `uid` = %d LIMIT 1",
 			dbesc($profile_id),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! count($r)) {
 			notice( t('Could not locate selected profile.') . EOL);
@@ -87,7 +87,7 @@ function connections_post(&$a) {
 		intval($closeness),
 		intval($abook_flags),
 		intval($contact_id),
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	if($r)
@@ -105,9 +105,9 @@ function connections_post(&$a) {
 		$default_group = $channel['channel_default_group'];
 		if($default_group) {
 			require_once('include/group.php');
-			$g = group_rec_byhash(local_user(),$default_group);
+			$g = group_rec_byhash(local_channel(),$default_group);
 			if($g)
-				group_add_member(local_user(),'',$a->data['abook_xchan'],$g['id']);
+				group_add_member(local_channel(),'',$a->data['abook_xchan'],$g['id']);
 		}
 
 
@@ -127,7 +127,7 @@ function connections_post(&$a) {
 	$r = q("SELECT abook.*, xchan.* 
 		FROM abook left join xchan on abook_xchan = xchan_hash
 		WHERE abook_channel = %d and abook_id = %d LIMIT 1",
-		intval(local_user()),
+		intval(local_channel()),
 		intval($contact_id)
 	);
 	if($r) {
@@ -135,7 +135,7 @@ function connections_post(&$a) {
 	}
 
 	if($new_friend) {
-		$arr = array('channel_id' => local_user(), 'abook' => $a->data['abook']);
+		$arr = array('channel_id' => local_channel(), 'abook' => $a->data['abook']);
 		call_hooks('accept_follow', $arr);
 	}
 
@@ -155,7 +155,7 @@ function connections_clone(&$a) {
 		unset($clone['abook_account']);
 		unset($clone['abook_channel']);
 
-		build_sync_packet(0 /* use the current local_user */, array('abook' => array($clone)));
+		build_sync_packet(0 /* use the current local_channel */, array('abook' => array($clone)));
 }
 
 
@@ -165,7 +165,7 @@ function connections_content(&$a) {
 	$o = '';
 
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return login();
 	}
@@ -215,7 +215,7 @@ function connections_content(&$a) {
 				break;
 			case 'ifpending':
 				$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d)>0 and not ((abook_flags & %d)>0 or (xchan_flags & %d)>0)",
-					intval(local_user()),
+					intval(local_channel()),
 					intval(ABOOK_FLAG_PENDING),
 					intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
 					intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
@@ -339,12 +339,12 @@ function connections_content(&$a) {
 	$sql_extra .= (($searching) ? protect_sprintf(" AND xchan_name like '%$search_txt%' ") : "");
 
 	if($_REQUEST['gid']) {
-		$sql_extra .= " and xchan_hash in ( select xchan from group_member where gid = " . intval($_REQUEST['gid']) . " and uid = " . intval(local_user()) . " ) ";
+		$sql_extra .= " and xchan_hash in ( select xchan from group_member where gid = " . intval($_REQUEST['gid']) . " and uid = " . intval(local_channel()) . " ) ";
 	}
  	
 	$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash 
 		where abook_channel = %d and not (abook_flags & %d)>0 and not (xchan_flags & %d )>0 $sql_extra $sql_extra2 ",
-		intval(local_user()),
+		intval(local_channel()),
 		intval(ABOOK_FLAG_SELF),
 		intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
 	);
@@ -355,7 +355,7 @@ function connections_content(&$a) {
 
 	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash
 		WHERE abook_channel = %d and not (abook_flags & %d)>0 and not ( xchan_flags & %d)>0 $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d OFFSET %d ",
-		intval(local_user()),
+		intval(local_channel()),
 		intval(ABOOK_FLAG_SELF),
 		intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN),
 		intval($a->pager['itemspage']),

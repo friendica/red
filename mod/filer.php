@@ -7,7 +7,7 @@ require_once('include/items.php');
 
 function filer_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		killme();
 	}
 
@@ -18,26 +18,26 @@ function filer_content(&$a) {
 
 	if($item_id && strlen($term)){
 		// file item
-		store_item_tag(local_user(),$item_id,TERM_OBJ_POST,TERM_FILE,$term,'');
+		store_item_tag(local_channel(),$item_id,TERM_OBJ_POST,TERM_FILE,$term,'');
 
 		// protect the entire conversation from periodic expiration
 
 		$r = q("select parent from item where id = %d and uid = %d limit 1",
 			intval($item_id),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if($r) {
 			$x = q("update item set item_flags = ( item_flags | %d ) where id = %d and uid = %d",
 				intval(ITEM_RETAINED),
 				intval($r[0]['parent']),
-				intval(local_user())
+				intval(local_channel())
 			);
 		}
 	} 
 	else {
 		$filetags = array();
 		$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
-			intval(local_user()),
+			intval(local_channel()),
 			intval(TERM_FILE)
 		);
 		if(count($r)) {

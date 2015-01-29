@@ -1,10 +1,10 @@
 <?php /** @file */
 
 function sources_post(&$a) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 
-	if(! feature_enabled(local_user(),'channel_sources'))
+	if(! feature_enabled(local_channel(),'channel_sources'))
 		return '';
 
 	$source = intval($_REQUEST['source']);
@@ -22,7 +22,7 @@ function sources_post(&$a) {
 	if($abook) {
 		$r = q("select abook_xchan from abook where abook_id = %d and abook_channel = %d limit 1",
 			intval($abook),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if($r) 
 			$xchan = $r[0]['abook_xchan'];
@@ -36,7 +36,7 @@ function sources_post(&$a) {
 	if(! $source) {
 		$r = q("insert into source ( src_channel_id, src_channel_xchan, src_xchan, src_patt )
 			values ( %d, '%s', '%s', '%s' ) ",
-			intval(local_user()),
+			intval(local_channel()),
 			dbesc($channel['channel_hash']),
 			dbesc($xchan),
 			dbesc($words)
@@ -50,7 +50,7 @@ function sources_post(&$a) {
 		$r = q("update source set src_xchan = '%s', src_patt = '%s' where src_channel_id = %d and src_id = %d",
 			dbesc($xchan),
 			dbesc($words),
-			intval(local_user()),
+			intval(local_channel()),
 			intval($source)
 		);
 		if($r) {
@@ -62,19 +62,19 @@ function sources_post(&$a) {
 
 
 function sources_content(&$a) {
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return '';
 	}
 
-	if(! feature_enabled(local_user(),'channel_sources')) {
+	if(! feature_enabled(local_channel(),'channel_sources')) {
 		return '';
 	} 
 
 	// list sources
 	if(argc() == 1) {
 		$r = q("select source.*, xchan.* from source left join xchan on src_xchan = xchan_hash where src_channel_id = %d",
-			intval(local_user())
+			intval(local_channel())
 		);
 		if($r) {
 			for($x = 0; $x < count($r); $x ++) {
@@ -111,12 +111,12 @@ function sources_content(&$a) {
 		// edit source
 		$r = q("select source.*, xchan.* from source left join xchan on src_xchan = xchan_hash where src_id = %d and src_channel_id = %d limit 1",
 			intval(argv(1)),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if($r) {
 			$x = q("select abook_id from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
 				dbesc($r[0]['src_xchan']),
-				intval(local_user())
+				intval(local_channel())
 			);
 		}
 		if(! $r) {
@@ -144,7 +144,7 @@ function sources_content(&$a) {
 	if(argc() == 3 && intval(argv(1)) && argv(2) === 'drop') {
 		$r = q("select * from source where src_id = %d and src_channel_id = %d limit 1",
 			intval(argv(1)),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! $r) {
 			notice( t('Source not found.') . EOL);
@@ -152,7 +152,7 @@ function sources_content(&$a) {
 		}
 		$r = q("delete from source where src_id = %d and src_channel_id = %d",
 			intval(argv(1)),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if($r)
 			info( t('Source removed') . EOL);

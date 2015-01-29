@@ -18,7 +18,7 @@
  * - <b>pconfig</b> is used for channel specific configurations and takes a
  * <i>channel_id</i> as identifier. It stores for example which features are
  * enabled per channel. The storage is of size MEDIUMTEXT.
- * @code $var = get_pconfig(local_user(), 'category', 'key');@endcode
+ * @code $var = get_pconfig(local_channel(), 'category', 'key');@endcode
  * - <b>xconfig</b> is the same as pconfig, except that it uses <i>xchan</i> as
  * an identifier. This is for example for people who do not have a local account.
  * The storage is of size MEDIUMTEXT.

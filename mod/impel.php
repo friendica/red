@@ -7,7 +7,7 @@ function impel_init(&$a) {
 
 	$ret = array('success' => false);
 
-	if(! local_user())
+	if(! local_channel())
 		json_return_and_die($ret);
 
 	logger('impel: ' . print_r($_REQUEST,true), LOGGER_DATA);
@@ -46,7 +46,7 @@ function impel_init(&$a) {
 			logger('mod_impel: unrecognised element type' . print_r($j,true));
 			break;
 	}
-	$arr['uid'] = local_user();
+	$arr['uid'] = local_channel();
 	$arr['aid'] = $channel['channel_account_id'];
 	$arr['title'] = $j['title'];
 	$arr['body'] = $j['body'];
@@ -76,7 +76,7 @@ function impel_init(&$a) {
 
 	if($arr['mimetype'] === 'application/x-php') {
 		$z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
-			intval(local_user())
+			intval(local_channel())
 		);
 
 		if($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
@@ -89,11 +89,11 @@ function impel_init(&$a) {
 	$z = q("select * from item_id where sid = '%s' and service = '%s' and uid = %d limit 1",
 		dbesc($pagetitle),
 		dbesc($namespace),
-		intval(local_user())
+		intval(local_channel())
 	);
 	$i = q("select id from item where mid = '%s' and uid = %d limit 1",
 		dbesc($arr['mid']),
-		intval(local_user())
+		intval(local_channel())
 	);
 	if($z && $i) {
 		$remote_id = $z[0]['id'];

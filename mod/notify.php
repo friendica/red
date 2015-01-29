@@ -2,20 +2,20 @@
 
 
 function notify_init(&$a) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	if(argc() > 2 && argv(1) === 'view' && intval(argv(2))) {
 		$r = q("select * from notify where id = %d and uid = %d limit 1",
 			intval(argv(2)),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if($r) {
 			q("update notify set seen = 1 where (( parent != '' and parent = '%s' and otype = '%s' ) or link = '%s' ) and uid = %d",
 				dbesc($r[0]['parent']),
 				dbesc($r[0]['otype']),
 				dbesc($r[0]['link']),
-				intval(local_user())
+				intval(local_channel())
 			);
 			goaway($r[0]['link']);
 		}
@@ -27,7 +27,7 @@ function notify_init(&$a) {
 
 
 function notify_content(&$a) {
-	if(! local_user())
+	if(! local_channel())
 		return login();
 
 	$notif_tpl = get_markup_template('notifications.tpl');
@@ -36,7 +36,7 @@ function notify_content(&$a) {
 	require_once('include/bbcode.php');
 
 	$r = q("SELECT * from notify where uid = %d and seen = 0 order by date desc",
-		intval(local_user())
+		intval(local_channel())
 	);
 		
 	if($r) {

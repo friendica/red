@@ -48,7 +48,7 @@ require_once('include/items.php');
 			}
 		}			
 		if ($_SESSION["allow_api"])
-			return local_user();
+			return local_channel();
 		return false;
 	}
 
@@ -308,7 +308,7 @@ require_once('include/items.php');
 				api_login($a); 
 				return False;
 			} else {
-				$user = local_user();
+				$user = local_channel();
 				$extra_query = " AND abook_channel = %d AND (abook_flags & " . ABOOK_FLAG_SELF . " )>0 ";
 			}
 			

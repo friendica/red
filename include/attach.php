@@ -985,7 +985,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		dbesc(ACTIVITY_POST),
 		dbesc($objtype),
 		dbesc($object['hash']),
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	if($y) {

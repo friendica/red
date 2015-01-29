@@ -430,16 +430,16 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 	require_once('bbcode.php');
 
-	$ssl_state = ((local_user()) ? true : false);
+	$ssl_state = ((local_channel()) ? true : false);
 
-	if(local_user())
-		load_pconfig(local_user(),'');
+	if(local_channel())
+		load_pconfig(local_channel(),'');
 
 	$arr_blocked = null;
 
-	if(local_user()) 
-		$str_blocked = get_pconfig(local_user(),'system','blocked');
-	if(! local_user() && ($mode == 'network')) {
+	if(local_channel()) 
+		$str_blocked = get_pconfig(local_channel(),'system','blocked');
+	if(! local_channel() && ($mode == 'network')) {
 		$sys = get_sys_channel();
 		$id = $sys['channel_id'];
  		$str_blocked = get_pconfig($id,'system','blocked');
@@ -461,7 +461,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 	if($mode === 'network') {
 
-		$profile_owner = local_user();
+		$profile_owner = local_channel();
 		$page_writeable = true;
 
 		if(!$update) {
@@ -492,7 +492,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 	elseif($mode === 'channel') {
 		$profile_owner = $a->profile['profile_uid'];
-		$page_writeable = ($profile_owner == local_user());
+		$page_writeable = ($profile_owner == local_channel());
 
 		if(!$update) {
 			$tab = notags(trim($_GET['tab']));
@@ -508,14 +508,14 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 	}
 
 	elseif($mode === 'display') {
-		$profile_owner = local_user();
+		$profile_owner = local_channel();
 		$page_writeable = false;
 		$live_update_div = '<div id="live-display"></div>' . "\r\n";
 	}
 
 	elseif($mode === 'page') {
 		$profile_owner = $a->profile['uid'];
-		$page_writeable = ($profile_owner == local_user());
+		$page_writeable = ($profile_owner == local_channel());
 		$live_update_div = '<div id="live-page"></div>' . "\r\n";
 	}
 
@@ -525,13 +525,13 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 	elseif($mode === 'photos') {
 		$profile_onwer = $a->profile['profile_uid'];
-		$page_writeable = ($profile_owner == local_user());
+		$page_writeable = ($profile_owner == local_channel());
 		$live_update_div = '<div id="live-photos"></div>' . "\r\n";
 		// for photos we've already formatted the top-level item (the photo)
 		$content_html = $a->data['photo_html'];
 	}
 
-	$page_dropping = ((local_user() && local_user() == $profile_owner) ? true : false);
+	$page_dropping = ((local_channel() && local_channel() == $profile_owner) ? true : false);
 
 	if(! feature_enabled($profile_owner,'multi_delete'))
 		$page_dropping = false;
@@ -545,7 +545,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 	else
 		$return_url = $_SESSION['return_url'] = $a->query_string;
 
-	load_contact_links(local_user());
+	load_contact_links(local_channel());
 
 	$cb = array('items' => $items, 'mode' => $mode, 'update' => $update, 'preview' => $preview);
 	call_hooks('conversation_start',$cb);
@@ -863,7 +863,7 @@ function best_link_url($item) {
 
 	$clean_url = normalise_link($item['author-link']);
 
-	if((local_user()) && (local_user() == $item['uid'])) {
+	if((local_channel()) && (local_channel() == $item['uid'])) {
 		if(isset($a->contacts) && x($a->contacts,$clean_url)) {
 			if($a->contacts[$clean_url]['network'] === NETWORK_DFRN) {
 				$best_url = $a->get_baseurl($ssl_state) . '/redir/' . $a->contacts[$clean_url]['id'];
@@ -899,17 +899,17 @@ function item_photo_menu($item){
 	$follow_url = "";
 
 
-	$local_user = local_user();
+	$local_channel = local_channel();
 
-	if($local_user) {
+	if($local_channel) {
 		$ssl_state = true;
 		if(! count($a->contacts))
-			load_contact_links($local_user);
+			load_contact_links($local_channel);
 		$channel = $a->get_channel();
 		$channel_hash = (($channel) ? $channel['channel_hash'] : '');
 	}
 
-	if(($local_user) && $local_user == $item['uid']) {
+	if(($local_channel) && $local_channel == $item['uid']) {
 		$vsrc_link = 'javascript:viewsrc(' . $item['id'] . '); return false;';
 		if($item['parent'] == $item['id'] && $channel && ($channel_hash != $item['author_xchan'])) {
 			$sub_link = 'javascript:dosubthread(' . $item['id'] . '); return false;';
@@ -923,7 +923,7 @@ function item_photo_menu($item){
 	if($a->contacts && array_key_exists($item['author_xchan'],$a->contacts))
 		$contact = $a->contacts[$item['author_xchan']];
 	else
-		if($local_user && $item['author']['xchan_addr'])
+		if($local_channel && $item['author']['xchan_addr'])
 			$follow_url = z_root() . '/follow/?f=&url=' . $item['author']['xchan_addr'];
 
 	if($contact) {
@@ -1075,7 +1075,7 @@ function status_editor($a,$x,$popup=false) {
 
 	$plaintext = true;
 
-//	if(feature_enabled(local_user(),'richtext'))
+//	if(feature_enabled(local_channel(),'richtext'))
 //		$plaintext = false;
 
 	$mimeselect = '';
@@ -1467,7 +1467,7 @@ function network_tabs() {
 		'title' => t('Sort by Post Date'),
 	);
 
-	if(feature_enabled(local_user(),'personal_tab')) {
+	if(feature_enabled(local_channel(),'personal_tab')) {
 		$tabs[] = array(
 			'label' => t('Personal'),
 			'url' => z_root() . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&conv=1',
@@ -1476,7 +1476,7 @@ function network_tabs() {
 		);
 	}
 
-	if(feature_enabled(local_user(),'new_tab')) { 
+	if(feature_enabled(local_channel(),'new_tab')) { 
 		$tabs[] = array(
 			'label' => t('New'),
 			'url' => z_root() . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&new=1' . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
@@ -1485,7 +1485,7 @@ function network_tabs() {
 		);
 	}
 
-	if(feature_enabled(local_user(),'star_posts')) {
+	if(feature_enabled(local_channel(),'star_posts')) {
 		$tabs[] = array(
 			'label' => t('Starred'),
 			'url'=>z_root() . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
@@ -1495,7 +1495,7 @@ function network_tabs() {
 	}
 	// Not yet implemented
 
-	if(feature_enabled(local_user(),'spam_filter')) {
+	if(feature_enabled(local_channel(),'spam_filter')) {
 		$tabs[] = array(
 			'label' => t('Spam'),
 			'url'=> z_root() . '/network?f=&spam=1',
@@ -1527,7 +1527,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 	if (is_null($nickname))
 		$nickname  = $channel['channel_address'];
 
-	$uid = (($a->profile['profile_uid']) ? $a->profile['profile_uid'] : local_user());
+	$uid = (($a->profile['profile_uid']) ? $a->profile['profile_uid'] : local_channel());
 	
 	if (get_pconfig($uid,'system','noprofiletabs'))
 		return;
@@ -1593,7 +1593,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 	}
 
 	require_once('include/menu.php');
-	$has_bookmarks = menu_list_count(local_user(),'',MENU_BOOKMARK) + menu_list_count(local_user(),'',MENU_SYSTEM|MENU_BOOKMARK);
+	$has_bookmarks = menu_list_count(local_channel(),'',MENU_BOOKMARK) + menu_list_count(local_channel(),'',MENU_SYSTEM|MENU_BOOKMARK);
 	if($is_owner && $has_bookmarks) {
 		$tabs[] = array(
 			'label' => t('Bookmarks'),

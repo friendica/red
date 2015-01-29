@@ -3,7 +3,7 @@
 
 function fsuggest_post(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		return;
 	}
 
@@ -14,7 +14,7 @@ function fsuggest_post(&$a) {
 
 	$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($contact_id),
-		intval(local_user())
+		intval(local_channel())
 	);
 	if(! count($r)) {
 		notice( t('Contact not found.') . EOL);
@@ -31,13 +31,13 @@ function fsuggest_post(&$a) {
 	if($new_contact) {
 		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($new_contact),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(count($r)) {
 
 			$x = q("INSERT INTO `fsuggest` ( `uid`,`cid`,`name`,`url`,`request`,`photo`,`note`,`created`)
 				VALUES ( %d, %d, '%s','%s','%s','%s','%s','%s')",
-				intval(local_user()),
+				intval(local_channel()),
 				intval($contact_id),
 				dbesc($r[0]['name']), 
 				dbesc($r[0]['url']), 
@@ -48,14 +48,14 @@ function fsuggest_post(&$a) {
 			);
 			$r = q("SELECT `id` FROM `fsuggest` WHERE `note` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($hash),
-				intval(local_user())
+				intval(local_channel())
 			);
 			if(count($r)) {
 				$fsuggest_id = $r[0]['id'];
 				q("UPDATE `fsuggest` SET `note` = '%s' WHERE `id` = %d AND `uid` = %d",
 					dbesc($note),
 					intval($fsuggest_id),
-					intval(local_user())
+					intval(local_channel())
 				);
 				proc_run('php', 'include/notifier.php', 'suggest' , $fsuggest_id);
 			}
@@ -74,7 +74,7 @@ function fsuggest_content(&$a) {
 
 	require_once('include/acl_selectors.php');
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -86,7 +86,7 @@ function fsuggest_content(&$a) {
 
 	$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($contact_id),
-		intval(local_user())
+		intval(local_channel())
 	);
 	if(! count($r)) {
 		notice( t('Contact not found.') . EOL);

@@ -3,7 +3,7 @@
 
 function service_limits_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}

@@ -2,13 +2,13 @@
 
 function notes_init(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	$ret = array('success' => true);
 	if($_REQUEST['note_text'] || $_REQUEST['note_text'] == '') {
 		$body = escape_tags($_REQUEST['note_text']);
-		set_pconfig(local_user(),'notes','text',$body);
+		set_pconfig(local_channel(),'notes','text',$body);
 	}
 
 	// push updates to channel clones

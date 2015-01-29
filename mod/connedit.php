@@ -21,14 +21,14 @@ require_once('include/widgets.php');
 
 function connedit_init(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	if((argc() >= 2) && intval(argv(1))) {
 		$r = q("SELECT abook.*, xchan.* 
 			FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d and abook_id = %d LIMIT 1",
-			intval(local_user()),
+			intval(local_channel()),
 			intval(argv(1))
 		);
 		if($r) {
@@ -48,7 +48,7 @@ function connedit_init(&$a) {
 
 function connedit_post(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	$contact_id = intval(argv(1));
@@ -66,7 +66,7 @@ function connedit_post(&$a) {
 		
 	$orig_record = q("SELECT * FROM abook WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
 		intval($contact_id),
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	if(! $orig_record) {
@@ -89,7 +89,7 @@ function connedit_post(&$a) {
 	if($profile_id) {
 		$r = q("SELECT profile_guid FROM profile WHERE profile_guid = '%s' AND `uid` = %d LIMIT 1",
 			dbesc($profile_id),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! count($r)) {
 			notice( t('Could not locate selected profile.') . EOL);
@@ -143,7 +143,7 @@ function connedit_post(&$a) {
 		dbesc($rating_text),
 		intval($abook_flags),
 		intval($contact_id),
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	if($orig_record[0]['abook_profile'] != $profile_id) { 
@@ -171,9 +171,9 @@ function connedit_post(&$a) {
 		$default_group = $channel['channel_default_group'];
 		if($default_group) {
 			require_once('include/group.php');
-			$g = group_rec_byhash(local_user(),$default_group);
+			$g = group_rec_byhash(local_channel(),$default_group);
 			if($g)
-				group_add_member(local_user(),'',$a->poi['abook_xchan'],$g['id']);
+				group_add_member(local_channel(),'',$a->poi['abook_xchan'],$g['id']);
 		}
 
 		// Check if settings permit ("post new friend activity" is allowed, and 
@@ -225,7 +225,7 @@ function connedit_post(&$a) {
 	$r = q("SELECT abook.*, xchan.* 
 		FROM abook left join xchan on abook_xchan = xchan_hash
 		WHERE abook_channel = %d and abook_id = %d LIMIT 1",
-		intval(local_user()),
+		intval(local_channel()),
 		intval($contact_id)
 	);
 	if($r) {
@@ -233,12 +233,12 @@ function connedit_post(&$a) {
 	}
 
 	if($new_friend) {
-		$arr = array('channel_id' => local_user(), 'abook' => $a->poi);
+		$arr = array('channel_id' => local_channel(), 'abook' => $a->poi);
 		call_hooks('accept_follow', $arr);
 	}
 
 	if(! is_null($autoperms)) 
-		set_pconfig(local_user(),'system','autoperms',(($autoperms) ? $abook_my_perms : 0));
+		set_pconfig(local_channel(),'system','autoperms',(($autoperms) ? $abook_my_perms : 0));
 
 	connedit_clone($a);
 
@@ -261,7 +261,7 @@ function connedit_clone(&$a) {
 		unset($clone['abook_account']);
 		unset($clone['abook_channel']);
 
-		build_sync_packet(0 /* use the current local_user */, array('abook' => array($clone)));
+		build_sync_packet(0 /* use the current local_channel */, array('abook' => array($clone)));
 }
 
 /* @brief Generate content of connection edit page
@@ -274,13 +274,13 @@ function connedit_content(&$a) {
 	$sort_type = 0;
 	$o = '';
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return login();
 	}
 
-	$my_perms = get_channel_default_perms(local_user());
-	$role = get_pconfig(local_user(),'system','permissions_role');
+	$my_perms = get_channel_default_perms(local_channel());
+	$role = get_pconfig(local_channel(),'system','permissions_role');
 	if($role) {
 		$x = get_role_perms($role);
 		if($x['perms_accept'])
@@ -313,7 +313,7 @@ function connedit_content(&$a) {
 		$orig_record = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d )>0 LIMIT 1",
 			intval($contact_id),
-			intval(local_user()),
+			intval(local_channel()),
 			intval(ABOOK_FLAG_SELF)
 		);
 
@@ -412,8 +412,8 @@ function connedit_content(&$a) {
 // in the background there could be a race condition preventing this packet from being sent in all cases.
 // PLACEHOLDER
 
-			contact_remove(local_user(), $orig_record[0]['abook_id']);
-			build_sync_packet(0 /* use the current local_user */, 
+			contact_remove(local_channel(), $orig_record[0]['abook_id']);
+			build_sync_packet(0 /* use the current local_channel */, 
 				array('abook' => array(array(
 					'abook_xchan' => $orig_record[0]['abook_xchan'],
 					'entry_deleted' => true))
@@ -512,7 +512,7 @@ function connedit_content(&$a) {
 
 		$tpl = get_markup_template("abook_edit.tpl");
 
-		if(feature_enabled(local_user(),'affinity')) {
+		if(feature_enabled(local_channel(),'affinity')) {
 
 			$slider_tpl = get_markup_template('contact_slider.tpl');
 			$slide = replace_macros($slider_tpl,array(
@@ -547,7 +547,7 @@ function connedit_content(&$a) {
 		$channel = $a->get_channel();
 
 		$global_perms = get_perms();
-		$existing = get_all_perms(local_user(),$contact['abook_xchan']); 
+		$existing = get_all_perms(local_channel(),$contact['abook_xchan']); 
 
 		$unapproved = array('pending', t('Approve this connection'), '', t('Accept connection to allow communication'));
 		
@@ -566,7 +566,7 @@ function connedit_content(&$a) {
 		$o .= replace_macros($tpl,array(
 
 			'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connections: settings for %s'),$contact['xchan_name'])),
-			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_user(),'system','autoperms')) ? 1 : 0), ''),
+			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), ''),
 			'$addr'           => $contact['xchan_addr'],
 			'$notself'        => (($self) ? '' : '1'),
 			'$self'           => (($self) ? '1' : ''),
@@ -611,7 +611,7 @@ function connedit_content(&$a) {
 			'$permnote'       => t('Some permissions may be inherited from your channel <a href="settings">privacy settings</a>, which have higher priority than individual settings. Changing those inherited settings on this page will have no effect.'),
 			'$advanced'       => t('Advanced Permissions'),
 			'$quick'          => t('Simple Permissions (select one and submit)'),
-			'$common_link'    => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],
+			'$common_link'    => $a->get_baseurl(true) . '/common/loc/' . local_channel() . '/' . $contact['id'],
 			'$all_friends'    => $all_friends,
 			'$relation_text'  => $relation_text,
 			'$visit'          => sprintf( t('Visit %s\'s profile - %s'),$contact['xchan_name'],$contact['xchan_url']),
@@ -630,7 +630,7 @@ function connedit_content(&$a) {
 			'$last_update'    => relative_date($contact['abook_connected']),
 			'$udnow'          => t('Update now'),
 			'$profile_select' => contact_profile_assign($contact['abook_profile']),
-			'$multiprofs'     => feature_enabled(local_user(),'multi_profiles'),
+			'$multiprofs'     => feature_enabled(local_channel(),'multi_profiles'),
 			'$contact_id'     => $contact['abook_id'],
 			'$block_text'     => (($contact['blocked']) ? t('Unblock') : t('Block') ),
 			'$ignore_text'    => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),

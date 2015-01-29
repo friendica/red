@@ -29,7 +29,7 @@ function rpost_content(&$a) {
 
 	$o = '';
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		if(remote_user()) {
 			// redirect to your own site.
 			// We can only do this with a GET request so you'll need to keep the text short or risk getting truncated
@@ -83,7 +83,7 @@ function rpost_content(&$a) {
 	}
 
 	$plaintext = true;
-//	if(feature_enabled(local_user(),'richtext'))
+//	if(feature_enabled(local_channel(),'richtext'))
 //		$plaintext = false;
 
 	if(array_key_exists('type', $_REQUEST) && $_REQUEST['type'] === 'html') {
@@ -119,7 +119,7 @@ function rpost_content(&$a) {
 		'bang' => '',
 //		'channel_select' => true,
 		'visitor' => true,
-		'profile_uid' => local_user(),
+		'profile_uid' => local_channel(),
 		'title' => $_REQUEST['title'],
 		'body' => $_REQUEST['body'],
 		'source' => ((x($_REQUEST,'source')) ? strip_tags($_REQUEST['source']) : ''),

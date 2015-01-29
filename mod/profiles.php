@@ -5,14 +5,14 @@ function profiles_init(&$a) {
 
 	nav_set_selected('profiles');
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		return;
 	}
 
 	if((argc() > 2) && (argv(1) === "drop") && intval(argv(2))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is_default` = 0 LIMIT 1",
 			intval(argv(2)),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! count($r)) {
 			notice( t('Profile not found.') . EOL);
@@ -26,13 +26,13 @@ function profiles_init(&$a) {
 		// move every contact using this profile as their default to the user default
 
 		$r = q("UPDATE abook SET abook_profile = (SELECT profile_guid AS FROM profile WHERE is_default = 1 AND uid = %d LIMIT 1) WHERE abook_profile = '%s' AND abook_channel = %d ",
-			intval(local_user()),
+			intval(local_channel()),
 			dbesc($profile_guid),
-			intval(local_user())
+			intval(local_channel())
 		);
 		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d",
 			intval(argv(2)),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if($r)
 			info( t('Profile deleted.') . EOL);
@@ -50,18 +50,18 @@ function profiles_init(&$a) {
 //		check_form_security_token_redirectOnErr('/profiles', 'profile_new', 't');
 
 		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
-			intval(local_user()));
+			intval(local_channel()));
 		$num_profiles = count($r0);
 
 		$name = t('Profile-') . ($num_profiles + 1);
 
 		$r1 = q("SELECT `name`, `photo`, `thumb` FROM `profile` WHERE `uid` = %d AND `is_default` = 1 LIMIT 1",
-			intval(local_user()));
+			intval(local_channel()));
 		
 		$r2 = q("INSERT INTO `profile` (`aid`, `uid` , `profile_guid`, `profile_name` , `name`, `photo`, `thumb`)
 			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 			intval(get_account_id()),
-			intval(local_user()),
+			intval(local_channel()),
 			dbesc(random_string()),
 			dbesc($name),
 			dbesc($r1[0]['name']),
@@ -70,7 +70,7 @@ function profiles_init(&$a) {
 		);
 
 		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile_name` = '%s' LIMIT 1",
-			intval(local_user()),
+			intval(local_channel()),
 			dbesc($name)
 		);
 
@@ -86,12 +86,12 @@ function profiles_init(&$a) {
 		check_form_security_token_redirectOnErr('/profiles', 'profile_clone', 't');
 
 		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
-			intval(local_user()));
+			intval(local_channel()));
 		$num_profiles = count($r0);
 
 		$name = t('Profile-') . ($num_profiles + 1);
 		$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
-			intval(local_user()),
+			intval(local_channel()),
 			intval($a->argv[2])
 		);
 		if(! count($r1)) {
@@ -114,7 +114,7 @@ function profiles_init(&$a) {
 			. "')" );
 
 		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile_name` = '%s' LIMIT 1",
-			intval(local_user()),
+			intval(local_channel()),
 			dbesc($name)
 		);
 		info( t('New profile created.') . EOL);
@@ -129,7 +129,7 @@ function profiles_init(&$a) {
 	if((argc() > 2) && (argv(1) === 'export')) {
 		
 		$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
-			intval(local_user()),
+			intval(local_channel()),
 			intval(argv(2))
 		);
 		if(! $r1) {
@@ -156,19 +156,19 @@ function profiles_init(&$a) {
 
 	// Run profile_load() here to make sure the theme is set before
 	// we start loading content
-	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_user(),'multi_profiles')) {
-		if(feature_enabled(local_user(),'multi_profiles'))
+	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_channel(),'multi_profiles')) {
+		if(feature_enabled(local_channel(),'multi_profiles'))
 			$id = $a->argv[1];
 		else {
 			$x = q("select id from profile where uid = %d and is_default = 1",
-				intval(local_user())
+				intval(local_channel())
 			);
 			if($x)
 				$id = $x[0]['id'];
 		}
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($id),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! count($r)) {
 			notice( t('Profile not found.') . EOL);
@@ -184,7 +184,7 @@ function profiles_init(&$a) {
 
 function profiles_post(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -225,7 +225,7 @@ function profiles_post(&$a) {
 	if((argc() > 1) && (argv(1) !== "new") && intval(argv(1))) {
 		$orig = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! count($orig)) {
 			notice( t('Profile not found.') . EOL);
@@ -299,20 +299,20 @@ function profiles_post(&$a) {
 		$hide_friends = ((intval($_POST['hide_friends'])) ? 1: 0);
 
 		require_once('include/text.php');
-		linkify_tags($a, $likes, local_user());
-		linkify_tags($a, $dislikes, local_user());
-		linkify_tags($a, $about, local_user());
-		linkify_tags($a, $interest, local_user());
-		linkify_tags($a, $interest, local_user());
-		linkify_tags($a, $contact, local_user());
-		linkify_tags($a, $channels, local_user());
-		linkify_tags($a, $music, local_user());
-		linkify_tags($a, $book, local_user());
-		linkify_tags($a, $tv, local_user());
-		linkify_tags($a, $film, local_user());
-		linkify_tags($a, $romance, local_user());
-		linkify_tags($a, $work, local_user());
-		linkify_tags($a, $education, local_user());
+		linkify_tags($a, $likes, local_channel());
+		linkify_tags($a, $dislikes, local_channel());
+		linkify_tags($a, $about, local_channel());
+		linkify_tags($a, $interest, local_channel());
+		linkify_tags($a, $interest, local_channel());
+		linkify_tags($a, $contact, local_channel());
+		linkify_tags($a, $channels, local_channel());
+		linkify_tags($a, $music, local_channel());
+		linkify_tags($a, $book, local_channel());
+		linkify_tags($a, $tv, local_channel());
+		linkify_tags($a, $film, local_channel());
+		linkify_tags($a, $romance, local_channel());
+		linkify_tags($a, $work, local_channel());
+		linkify_tags($a, $education, local_channel());
 
 
 		$with         = ((x($_POST,'with')) ? escape_tags(trim($_POST['with'])) : '');
@@ -338,12 +338,12 @@ function profiles_post(&$a) {
 
 				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE xchan_name = '%s' AND abook_channel = %d LIMIT 1",
 					dbesc($newname),
-					intval(local_user())
+					intval(local_channel())
 				);
 				if(! $r) {
 					$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE xchan_addr = '%s' AND abook_channel = %d LIMIT 1",
 						dbesc($lookup . '@%'),
-						intval(local_user())
+						intval(local_channel())
 					);
 				}
 				if($r) {
@@ -364,7 +364,7 @@ function profiles_post(&$a) {
 
 		$profile_fields_basic    = get_profile_fields_basic();
 		$profile_fields_advanced = get_profile_fields_advanced();
-		$advanced = ((feature_enabled(local_user(),'advanced_profiles')) ? true : false);
+		$advanced = ((feature_enabled(local_channel(),'advanced_profiles')) ? true : false);
 		if($advanced)
 			$fields = $profile_fields_advanced;
 		else
@@ -375,7 +375,7 @@ function profiles_post(&$a) {
 			foreach($z as $zz) {
 				if(array_key_exists($zz['field_name'],$fields)) {
 					$w = q("select * from profext where channel_id = %d and hash = '%s' and k = '%s' limit 1",
-						intval(local_user()),
+						intval(local_channel()),
 						dbesc($orig[0]['profile_guid']),
 						dbesc($zz['field_name'])
 					);
@@ -387,7 +387,7 @@ function profiles_post(&$a) {
 					}
 					else {
 						q("insert into profext ( channel_id, hash, k, v ) values ( %d, '%s', '%s', '%s') ",
-							intval(local_user()),
+							intval(local_channel()),
 							dbesc($orig[0]['profile_guid']),
 							dbesc($zz['field_name']),
 							dbesc(escape_tags(trim($_POST[$zz['field_name']])))
@@ -530,7 +530,7 @@ function profiles_post(&$a) {
 			dbesc($education),
 			intval($hide_friends),
 			intval(argv(1)),
-			intval(local_user())
+			intval(local_channel())
 		);
 
 		if($r)
@@ -538,11 +538,11 @@ function profiles_post(&$a) {
 
 		$r = q("select * from profile where id = %d and uid = %d limit 1",
 			intval(argv(1)),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if($r) {
 			require_once('include/zot.php');
-			build_sync_packet(local_user(),array('profile' => $r));
+			build_sync_packet(local_channel(),array('profile' => $r));
 		}
 
 		$channel = $a->get_channel();
@@ -558,7 +558,7 @@ function profiles_post(&$a) {
 		if($is_default) {
 			// reload the info for the sidebar widget - why does this not work?
 			profile_load($a,$channel['channel_address']);
-			proc_run('php','include/directory.php',local_user());
+			proc_run('php','include/directory.php',local_channel());
 		}
 	}
 }
@@ -572,7 +572,7 @@ function profiles_content(&$a) {
 
 	$channel = $a->get_channel();
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -582,19 +582,19 @@ function profiles_content(&$a) {
 	$profile_fields_basic    = get_profile_fields_basic();
 	$profile_fields_advanced = get_profile_fields_advanced();
 
-	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_user(),'multi_profiles')) {
-		if(feature_enabled(local_user(),'multi_profiles'))
+	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_channel(),'multi_profiles')) {
+		if(feature_enabled(local_channel(),'multi_profiles'))
 			$id = $a->argv[1];
 		else {
 			$x = q("select id from profile where uid = %d and is_default = 1",
-				intval(local_user())
+				intval(local_channel())
 			);
 			if($x)
 				$id = $x[0]['id'];
 		}		
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($id),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! count($r)) {
 			notice( t('Profile not found.') . EOL);
@@ -605,7 +605,7 @@ function profiles_content(&$a) {
 
 
 		$editselect = 'none';
-//		if(feature_enabled(local_user(),'richtext'))
+//		if(feature_enabled(local_channel(),'richtext'))
 //			$editselect = 'textareas';
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template('profed_head.tpl'), array(
@@ -613,7 +613,7 @@ function profiles_content(&$a) {
 			'$editselect' => $editselect,
 		));
 
-		$advanced = ((feature_enabled(local_user(),'advanced_profiles')) ? true : false);
+		$advanced = ((feature_enabled(local_channel(),'advanced_profiles')) ? true : false);
 		if($advanced)
 			$fields = $profile_fields_advanced;
 		else
@@ -636,7 +636,7 @@ function profiles_content(&$a) {
 				$mine = q("select v from profext where k = '%s' and hash = '%s' and channel_id = %d limit 1",
 					dbesc($qq['field_name']),					
 					dbesc($r[0]['profile_guid']),
-					intval(local_user())
+					intval(local_channel())
 				);
 
 				if(array_key_exists($qq['field_name'],$fields)) {
@@ -656,7 +656,7 @@ function profiles_content(&$a) {
 		$o .= replace_macros($tpl,array(
 
 			'$form_security_token' => get_form_security_token("profile_edit"),
-			'$profile_clone_link'  => ((feature_enabled(local_user(),'multi_profiles')) ? 'profiles/clone/' . $r[0]['id'] . '?t=' 
+			'$profile_clone_link'  => ((feature_enabled(local_channel(),'multi_profiles')) ? 'profiles/clone/' . $r[0]['id'] . '?t=' 
 				. get_form_security_token("profile_clone") : ''),
 			'$profile_drop_link'   => 'profiles/drop/' . $r[0]['id'] . '?t=' 
 				. get_form_security_token("profile_drop"),
@@ -671,7 +671,7 @@ function profiles_content(&$a) {
 			'$cr_prof'      => t('Create a new profile using these settings'),
 			'$cl_prof'      => t('Clone this profile'),
 			'$del_prof'     => t('Delete this profile'),
-			'$exportable'   => feature_enabled(local_user(),'profile_export'),
+			'$exportable'   => feature_enabled(local_channel(),'profile_export'),
 			'$lbl_import'   => t('Import profile from file'),
 			'$lbl_export'   => t('Export profile to file'),
 			'$lbl_profname' => t('Profile Name:'),
@@ -763,7 +763,7 @@ function profiles_content(&$a) {
 	else {
 
 		$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
-			local_user());
+			local_channel());
 		if(count($r)) {
 
 			$tpl_header = get_markup_template('profile_listing_header.tpl');

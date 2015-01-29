@@ -219,7 +219,7 @@ function post_init(&$a) {
 					$DNT = $j['DNT'];
 			}
 			// everything is good... maybe
-			if(local_user()) {
+			if(local_channel()) {
 
 				// tell them to logout if they're logged in locally as anything but the target remote account
 				// in which case just shut up because they don't need to be doing this at all.

@@ -76,7 +76,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 	 */
 	public function generateDirectoryIndex($path) {
 		// (owner_id = channel_id) is visitor owner of this directory?
-		$is_owner = ((local_user() && $this->auth->owner_id == local_user()) ? true : false);
+		$is_owner = ((local_channel() && $this->auth->owner_id == local_channel()) ? true : false);
 
 		if ($this->auth->getTimezone())
 			date_default_timezone_set($this->auth->getTimezone());

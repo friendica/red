@@ -4,7 +4,7 @@
 
 Returns numeric account_id if authenticated or 0. It is possible to be authenticated and not connected to a channel.
 
-[b]local_user()[/b]
+[b]local_channel()[/b]
 
 Returns authenticated numeric channel_id if authenticated and connected to a channel or 0. Sometimes referred to as $uid in the code.
 

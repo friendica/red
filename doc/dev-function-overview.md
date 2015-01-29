@@ -7,7 +7,7 @@ Red development - some useful basic functions
 
 Returns numeric account_id if authenticated or 0. It is possible to be authenticated and not connected to a channel.
 
-* local_user()
+* local_channel()
 
 Returns authenticated numeric channel_id if authenticated and connected to a channel or 0. Sometimes referred to as $uid in the code.
 

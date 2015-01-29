@@ -3,10 +3,10 @@
 function profile_activity($changed, $value) {
 	$a = get_app();
 
-	if(! local_user() || ! is_array($changed) || ! count($changed))
+	if(! local_channel() || ! is_array($changed) || ! count($changed))
 		return;
 
-	if(! get_pconfig(local_user(),'system','post_profilechange'))
+	if(! get_pconfig(local_channel(),'system','post_profilechange'))
 		return;
 
 	require_once('include/items.php');
@@ -18,7 +18,7 @@ function profile_activity($changed, $value) {
 
 	$arr = array();
 	$arr['mid']         = $arr['parent_mid'] = item_message_id();
-	$arr['uid']         = local_user();
+	$arr['uid']         = local_channel();
 	$arr['aid']         = $self['channel_account_id'];
 	$arr['owner_xchan'] = $arr['author_xchan'] = $self['xchan_hash'];
 	$arr['item_flags']  = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;

@@ -9,7 +9,7 @@ function chat_init(&$a) {
 	if(argc() > 1)
 		$which = argv(1);
 	if(! $which) {
-		if(local_user()) {
+		if(local_channel()) {
 			$channel = $a->get_channel();
 			if($channel && $channel['channel_address'])
 			$which = $channel['channel_address'];
@@ -23,7 +23,7 @@ function chat_init(&$a) {
 	$profile = 0;
 	$channel = $a->get_channel();
 
-	if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
+	if((local_channel()) && (argc() > 2) && (argv(2) === 'view')) {
 		$which = $channel['channel_address'];
 		$profile = argv(1);		
 	}
@@ -42,7 +42,7 @@ function chat_post(&$a) {
 	if($_POST['room_name'])
 		$room = strip_tags(trim($_POST['room_name']));	
 
-	if((! $room) || (! local_user()))
+	if((! $room) || (! local_channel()))
 		return;
 
 	$channel = $a->get_channel();
@@ -65,7 +65,7 @@ function chat_post(&$a) {
 
 	$x = q("select cr_id from chatroom where cr_name = '%s' and cr_uid = %d limit 1",
 		dbesc($room),
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	if($x)
@@ -81,7 +81,7 @@ function chat_post(&$a) {
 
 function chat_content(&$a) {
 
-	if(local_user())
+	if(local_channel())
 		$channel = $a->get_channel();
 
 	$ob = $a->get_observer();
@@ -169,7 +169,7 @@ function chat_content(&$a) {
 		}
 
 		$o = replace_macros(get_markup_template('chat.tpl'),array(
-			'$is_owner' => ((local_user() && local_user() == $x[0]['cr_uid']) ? true : false),
+			'$is_owner' => ((local_channel() && local_channel() == $x[0]['cr_uid']) ? true : false),
 			'$room_name' => $room_name,
 			'$room_id' => $room_id,
 			'$baseurl' => z_root(),
@@ -190,7 +190,7 @@ function chat_content(&$a) {
 
 
 
-	if(local_user() && argc() > 2 && argv(2) === 'new') {
+	if(local_channel() && argc() > 2 && argv(2) === 'new') {
 
 
 
@@ -217,7 +217,7 @@ function chat_content(&$a) {
 
 	require_once('include/conversation.php');
 
-	$o = profile_tabs($a,((local_user() && local_user() == $a->profile['profile_uid']) ? true : false),$a->profile['channel_address']);
+	$o = profile_tabs($a,((local_channel() && local_channel() == $a->profile['profile_uid']) ? true : false),$a->profile['channel_address']);
 
 	require_once('include/widgets.php');
 
@@ -227,7 +227,7 @@ function chat_content(&$a) {
 		'$nickname' => $channel['channel_address'],
 		'$rooms' => widget_chatroom_list(array()),
 		'$newroom' => t('New Chatroom'),
-		'$is_owner' => ((local_user() && local_user() == $a->profile['profile_uid']) ? 1 : 0)
+		'$is_owner' => ((local_channel() && local_channel() == $a->profile['profile_uid']) ? 1 : 0)
 	));
  
 	return $o;

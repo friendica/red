@@ -27,7 +27,7 @@ function lockview_content(&$a) {
 
 	$item = $r[0];
 
-	if($item['uid'] != local_user()) {
+	if($item['uid'] != local_channel()) {
 		echo '<li>' . t('Remote privacy information not available.') . '</li>';
 		killme();
 	}

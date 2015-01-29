@@ -4,7 +4,7 @@ require_once('include/Contact.php');
 
 function profperm_init(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	$channel = $a->get_channel();
@@ -19,7 +19,7 @@ function profperm_init(&$a) {
 
 function profperm_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied') . EOL);
 		return;
 	}
@@ -32,7 +32,7 @@ function profperm_content(&$a) {
 
 	// Switch to text mod interface if we have more than 'n' contacts or group members
 
-	$switchtotext = get_pconfig(local_user(),'system','groupedit_image_limit');
+	$switchtotext = get_pconfig(local_channel(),'system','groupedit_image_limit');
 	if($switchtotext === false)
 		$switchtotext = get_config('system','groupedit_image_limit');
 	if($switchtotext === false)
@@ -42,7 +42,7 @@ function profperm_content(&$a) {
 	if((argc() > 2) && intval(argv(1)) && intval(argv(2))) {
 		$r = q("SELECT abook_id FROM abook WHERE abook_id = %d and abook_channel = %d limit 1",
 			intval(argv(2)),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if($r)
 			$change = intval(argv(2));
@@ -52,7 +52,7 @@ function profperm_content(&$a) {
 	if((argc() > 1) && (intval(argv(1)))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is_default` = 0 LIMIT 1",
 			intval(argv(1)),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! $r) {
 			notice( t('Invalid profile identifier.') . EOL );
@@ -62,7 +62,7 @@ function profperm_content(&$a) {
 		$profile = $r[0];
 
 		$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d AND abook_profile = '%s'",
-			intval(local_user()),
+			intval(local_channel()),
 			dbesc($profile['profile_guid'])
 		);
 
@@ -77,14 +77,14 @@ function profperm_content(&$a) {
 			if(in_array($change,$ingroup)) {
 				q("UPDATE abook SET abook_profile = '' WHERE abook_id = %d AND abook_channel = %d",
 					intval($change),
-					intval(local_user())
+					intval(local_channel())
 				);
 			}
 			else {
 				q("UPDATE abook SET abook_profile = '%s' WHERE abook_id = %d AND abook_channel = %d",
 					dbesc($profile['profile_guid']),
 					intval($change),
-					intval(local_user())
+					intval(local_channel())
 				);
 
 			}
@@ -95,7 +95,7 @@ function profperm_content(&$a) {
 			profile_photo_set_profile_perms($profile['id']);
 
 			$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d AND abook_profile = '%s'",
-				intval(local_user()),
+				intval(local_channel()),
 				dbesc($profile['profile_guid'])
 			);
 
@@ -140,7 +140,7 @@ function profperm_content(&$a) {
 	$o .= '</div>';
 	$o .= '<div id="prof-all-contacts">';
 
-		$r = abook_connections(local_user());
+		$r = abook_connections(local_channel());
 
 		if($r) {
 			$textmode = (($switchtotext && (count($r) > $switchtotext)) ? true : false);

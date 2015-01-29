@@ -14,7 +14,7 @@ function oexchange_init(&$a) {
 
 function oexchange_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		if(remote_user()) {
 			$observer = $a->get_observer();
 			if($observer && $observer['xchan_url']) {
@@ -57,7 +57,7 @@ function oexchange_content(&$a) {
 
 	$post = array();
 
-	$post['profile_uid'] = local_user();
+	$post['profile_uid'] = local_channel();
 	$post['return'] = '/oexchange/done' ;
 	$post['body'] = $s;
 	$post['type'] = 'wall';

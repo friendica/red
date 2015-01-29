@@ -4,7 +4,7 @@ require_once('include/apps.php');
 
 function appman_post(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	if($_POST['url']) {
@@ -22,9 +22,9 @@ function appman_post(&$a) {
 			'sig' => escape_tags($_REQUEST['sig'])
 		);
 
-		$_REQUEST['appid'] = app_install(local_user(),$arr);
+		$_REQUEST['appid'] = app_install(local_channel(),$arr);
 
-		if(app_installed(local_user(),$arr))
+		if(app_installed(local_channel(),$arr))
 			info( t('App installed.') . EOL);
 
 		return;
@@ -39,13 +39,13 @@ function appman_post(&$a) {
 	}
 
 	if($_POST['install']) {
-		app_install(local_user(),$papp);
-		if(app_installed(local_user(),$papp))
+		app_install(local_channel(),$papp);
+		if(app_installed(local_channel(),$papp))
 			info( t('App installed.') . EOL);
 	}
 
 	if($_POST['delete']) {
-		app_destroy(local_user(),$papp);
+		app_destroy(local_channel(),$papp);
 	}
 
 	if($_POST['edit']) {
@@ -62,7 +62,7 @@ function appman_post(&$a) {
 
 function appman_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -73,7 +73,7 @@ function appman_content(&$a) {
 	if($_REQUEST['appid']) {
 		$r = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
 			dbesc($_REQUEST['appid']),
-			dbesc(local_user())
+			dbesc(local_channel())
 		);
 		if($r)
 			$app = $r[0];

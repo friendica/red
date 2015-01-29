@@ -21,12 +21,12 @@ function profile_init(&$a) {
 	$profile = '';
 	$channel = $a->get_channel();
 
-	if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
+	if((local_channel()) && (argc() > 2) && (argv(2) === 'view')) {
 		$which = $channel['channel_address'];
 		$profile = argv(1);		
 		$r = q("select profile_guid from profile where id = %d and uid = %d limit 1",
 			intval($profile),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! $r)
 			$profile = '';
@@ -66,7 +66,7 @@ function profile_content(&$a, $update = 0) {
 	}
 
 
-	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
+	$is_owner = ((local_channel()) && (local_channel() == $a->profile['profile_uid']) ? true : false);
 
 	if($a->profile['hidewall'] && (! $is_owner) && (! remote_user())) {
 		notice( t('Permission denied.') . EOL);

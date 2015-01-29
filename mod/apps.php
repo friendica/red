@@ -13,8 +13,8 @@ function apps_content(&$a) {
 
 	$syslist = get_system_apps();
 
-	if(local_user()) {
-		$list = app_list(local_user());
+	if(local_channel()) {
+		$list = app_list(local_channel());
 		if($list) {
 			foreach($list as $x) {
 				$syslist[] = app_encode($x);

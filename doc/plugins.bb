@@ -91,10 +91,10 @@ Let's go ahead and add some code to implement our post_local hook handler.
 
 	    logger('randplace invoked');
 
-	    if(! local_user())   /* non-zero if this is a logged in user of this system */
+	    if(! local_channel())   /* non-zero if this is a logged in user of this system */
 	        return;
 
-	    if(local_user() != $item['uid'])    /* Does this person own the post? */
+	    if(local_channel() != $item['uid'])    /* Does this person own the post? */
 	        return;
 
 	    if(($item['parent']) || ($item['item_restrict'])) {
@@ -104,7 +104,7 @@ Let's go ahead and add some code to implement our post_local hook handler.
 
 	    /* Retrieve our personal config setting */
 
-	    $active = get_pconfig(local_user(), 'randplace', 'enable');
+	    $active = get_pconfig(local_channel(), 'randplace', 'enable');
 
     	if(! $active)
         	return;
@@ -146,10 +146,10 @@ Now let's add our functions to create and store preference settings.
 	 */
 
 	function randplace_settings_post($a,$post) {
-	    if(! local_user())
+	    if(! local_channel())
 	        return;
 	    if($_POST['randplace-submit'])
-	        set_pconfig(local_user(),'randplace','enable',intval($_POST['randplace']));
+	        set_pconfig(local_channel(),'randplace','enable',intval($_POST['randplace']));
 	}
 
 
@@ -173,7 +173,7 @@ Now let's add our functions to create and store preference settings.
 
 	function randplace_settings(&amp;$a,&amp;$s) {
 
-	    if(! local_user())
+	    if(! local_channel())
 	        return;
 
 	    /* Add our stylesheet to the page so we can make our settings look nice */
@@ -182,7 +182,7 @@ Now let's add our functions to create and store preference settings.
 
 	    /* Get the current state of our config variable */
 
-	    $enabled = get_pconfig(local_user(),'randplace','enable');
+	    $enabled = get_pconfig(local_channel(),'randplace','enable');
 
 	    $checked = (($enabled) ? ' checked=&quot;checked&quot; ' : '');
 

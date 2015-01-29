@@ -30,7 +30,7 @@ function connect_post(&$a) {
 	if(! array_key_exists('channel', $a->data))
 		return;
 
-	$edit = ((local_user() && (local_user() == $a->data['channel']['channel_id'])) ? true : false);
+	$edit = ((local_channel() && (local_channel() == $a->data['channel']['channel_id'])) ? true : false);
 
 	if($edit) {
 		$has_premium = (($a->data['channel']['channel_pageflags'] & PAGE_PREMIUM) ? 1 : 0);
@@ -41,7 +41,7 @@ function connect_post(&$a) {
 			$r = q("update channel set channel_pageflags = ( channel_pageflags %s %d ) where channel_id = %d",
 				db_getfunc('^'),
 				intval(PAGE_PREMIUM),
-				intval(local_user()) 
+				intval(local_channel()) 
 			);
 			proc_run('php','include/notifier.php','refresh_all',$a->data['channel']['channel_id']);
 		}
@@ -75,7 +75,7 @@ function connect_post(&$a) {
 
 function connect_content(&$a) {
 
-	$edit = ((local_user() && (local_user() == $a->data['channel']['channel_id'])) ? true : false);
+	$edit = ((local_channel() && (local_channel() == $a->data['channel']['channel_id'])) ? true : false);
 
 	$text = get_pconfig($a->data['channel']['channel_id'],'system','selltext');
 

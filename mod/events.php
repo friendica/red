@@ -8,14 +8,14 @@ require_once('include/items.php');
 
 function events_post(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	$event_id = ((x($_POST,'event_id')) ? intval($_POST['event_id']) : 0);
 	$event_hash = ((x($_POST,'event_hash')) ? $_POST['event_hash'] : '');
 
 	$xchan = ((x($_POST,'xchan')) ? dbesc($_POST['xchan']) : '');
-	$uid      = local_user();
+	$uid      = local_channel();
 
 	$start_text = escape_tags($_REQUEST['start_text']);
 	$finish_text = escape_tags($_REQUEST['finish_text']);
@@ -76,8 +76,8 @@ function events_post(&$a) {
 	$type     = 'event';
 
 	require_once('include/text.php');
-	linkify_tags($a, $desc, local_user());
-	linkify_tags($a, $location, local_user());
+	linkify_tags($a, $desc, local_channel());
+	linkify_tags($a, $location, local_channel());
 
 	$action = ($event_hash == '') ? 'new' : "event/" . $event_hash;
 	$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish";
@@ -98,7 +98,7 @@ function events_post(&$a) {
 	if($event_id) {
 		$x = q("select * from event where id = %d and uid = %d limit 1",
 			intval($event_id),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! $x) {
 			notice( t('Event not found.') . EOL);
@@ -166,7 +166,7 @@ function events_post(&$a) {
 	$datarray['type'] = $type;
 	$datarray['adjust'] = $adjust;
 	$datarray['nofinish'] = $nofinish;
-	$datarray['uid'] = local_user();
+	$datarray['uid'] = local_channel();
 	$datarray['account'] = get_account_id();
 	$datarray['event_xchan'] = $channel['channel_hash'];
 	$datarray['allow_cid'] = $str_contact_allow;
@@ -195,7 +195,7 @@ function events_post(&$a) {
 
 function events_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -205,21 +205,21 @@ function events_content(&$a) {
 	if((argc() > 2) && (argv(1) === 'ignore') && intval(argv(2))) {
 		$r = q("update event set ignore = 1 where id = %d and uid = %d",
 			intval(argv(2)),
-			intval(local_user())
+			intval(local_channel())
 		);
 	}
 
 	if((argc() > 2) && (argv(1) === 'unignore') && intval(argv(2))) {
 		$r = q("update event set ignore = 0 where id = %d and uid = %d",
 			intval(argv(2)),
-			intval(local_user())
+			intval(local_channel())
 		);
 	}
 
 
 	$plaintext = true;
 
-//	if(feature_enabled(local_user(),'richtext'))
+//	if(feature_enabled(local_channel(),'richtext'))
 //		$plaintext = false;
 
 
@@ -265,7 +265,7 @@ function events_content(&$a) {
 	}
 
 	if($mode === 'add') {
-		event_addtocal($item_id,local_user());
+		event_addtocal($item_id,local_channel());
 		killme();
 	}
 
@@ -326,7 +326,7 @@ function events_content(&$a) {
 		if (x($_GET,'id')){
 		  	$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
                                 from event left join item on resource_id = event_hash where resource_type = 'event' and event.uid = %d and event.id = %d limit 1",
-				intval(local_user()),
+				intval(local_channel()),
 				intval($_GET['id'])
 			);
 		} else {
@@ -341,7 +341,7 @@ function events_content(&$a) {
 				where resource_type = 'event' and event.uid = %d and event.ignore = %d 
 				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' ) 
 				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' )) ",
-				intval(local_user()),
+				intval(local_channel()),
 				intval($ignored),
 				dbesc($start),
 				dbesc($finish),
@@ -463,7 +463,7 @@ function events_content(&$a) {
 	if($mode === 'edit' && $event_id) {
 		$r = q("SELECT * FROM `event` WHERE event_hash = '%s' AND `uid` = %d LIMIT 1",
 			dbesc($event_id),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(count($r))
 			$orig_event = $r[0];
@@ -534,14 +534,14 @@ function events_content(&$a) {
 		if(! $f)
 			$f = 'ymd';
 
-		$catsenabled = feature_enabled(local_user(),'categories');
+		$catsenabled = feature_enabled(local_channel(),'categories');
 
 		$category = '';
 
 		if($catsenabled && x($orig_event)){
 			$itm = q("select * from item where resource_type = 'event' and resource_id = '%s' and uid = %d limit 1",
 				dbesc($orig_event['event_hash']),
-				intval(local_user())
+				intval(local_channel())
 			);
 			$itm = fetch_post_tags($itm);
 			if($itm) {

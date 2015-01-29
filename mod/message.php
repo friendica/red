@@ -12,7 +12,7 @@ function message_content(&$a) {
 	$o = '';
 	nav_set_selected('messages');
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return login();
 	}
@@ -20,7 +20,7 @@ function message_content(&$a) {
 	$channel = $a->get_channel();
 	head_set_icon($channel['xchan_photo_s']);
 
-	$cipher = get_pconfig(local_user(),'system','default_cipher');
+	$cipher = get_pconfig(local_channel(),'system','default_cipher');
 	if(! $cipher)
 		$cipher = 'aes256';
 
@@ -36,7 +36,7 @@ function message_content(&$a) {
 		if(! intval(argv(2)))
 			return;
 		$cmd = argv(1);
-		$r = private_messages_drop(local_user(), argv(2), true);
+		$r = private_messages_drop(local_channel(), argv(2), true);
 		if($r)
 			info( t('Conversation removed.') . EOL );
 		goaway($a->get_baseurl(true) . '/message' );
@@ -50,7 +50,7 @@ function message_content(&$a) {
 		// private_messages_list() can do other more complicated stuff, for now keep it simple
 
 
-		$r = private_messages_list(local_user(), '', $a->pager['start'], $a->pager['itemspage']);
+		$r = private_messages_list(local_channel(), '', $a->pager['start'], $a->pager['itemspage']);
 
 		if(! $r) {
 			info( t('No messages.') . EOL);

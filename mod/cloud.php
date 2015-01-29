@@ -58,7 +58,7 @@ function cloud_init(&$a) {
 	$ob_hash = get_observer_hash();
 
 	if ($ob_hash) {
-		if (local_user()) {
+		if (local_channel()) {
 			$channel = $a->get_channel();
 			$auth->setCurrentUser($channel['channel_address']);
 			$auth->channel_id = $channel['channel_id'];
