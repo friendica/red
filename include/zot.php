@@ -1485,7 +1485,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 			// As a side effect we will also do a preliminary check that we have the top-level-post, otherwise
 			// processing it is pointless. 
 
-			$r = q("select route from item where mid = '%s' and uid = %d limit 1",
+			$r = q("select route, id from item where mid = '%s' and uid = %d limit 1",
 				dbesc($arr['parent_mid']),
 				intval($channel['channel_id'])
 			);
@@ -1524,7 +1524,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 				// sent it to us originally. Ignore it if it came from another source
 				// (with potentially different permissions).
 				// only compare the last hop since it could have arrived at the last location any number of ways.
-				// Always accept empty routes. 
+				// Always accept empty routes and firehose items (route contains 'undefined') . 
 
 				$existing_route = explode(',', $r[0]['route']);
 				$routes = count($existing_route);
@@ -1536,6 +1536,9 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 					$last_hop = '';
 					$last_prior_route = '';
 				}
+				
+				if(in_array('undefined',$existing_route) || $last_hop == 'undefined' || $sender['hash'] == 'undefined')
+					$last_hop = '';
 
 				$current_route = (($arr['route']) ? $arr['route'] . ',' : '') . $sender['hash'];
 

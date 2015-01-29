@@ -2852,12 +2852,27 @@ function tag_deliver($uid,$item_id) {
 		if(preg_match($pattern,$body,$matches)) 
 			$tagged = true;
 
-		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
-		if(preg_match($pattern,$body,$matches)) 
-			$plustagged = true;
+		$pattern = '/@\!?\[zrl\=(.*?)\](.*?)\+\[\/zrl\]/';
+
+		if(preg_match_all($pattern,$body,$matches,PREG_SET_ORDER)) {
+			$max_forums = get_config('system','max_tagged_forums');
+			if(! $max_forums)
+				$max_forums = 2;
+			$matched_forums = 0;
+			foreach($matches as $match) {
+				$matched_forums ++;
+				if($term['url'] === $match[1] && $term['term'] === $match[2]) {
+					if($matched_forums <= $max_forums) {
+						$plustagged = true;
+						break;
+					}
+					logger('forum ' . $term['term'] . ' exceeded max_tagged_forums - ignoring');
+				}
+			}
+		}
 
 		if(! ($tagged || $plustagged)) {
-			logger('tag_deliver: mention was in a reshare - ignoring');
+			logger('tag_deliver: mention was in a reshare or exceeded max_tagged_forums - ignoring');
 			return;
 		}
 
@@ -2974,6 +2989,7 @@ function tgroup_check($uid,$item) {
 		}
 	}				
 
+
 	if($mention) {
 		logger('tgroup_check: mention found for ' . $u[0]['channel_name']);
 	}
@@ -2982,6 +2998,7 @@ function tgroup_check($uid,$item) {
 
 	// At this point we've determined that the person receiving this post was mentioned in it.
 	// Now let's check if this mention was inside a reshare so we don't spam a forum
+	// note: $term has been set to the matching term
 
 
 	$body = $item['body'];
@@ -2993,13 +3010,34 @@ function tgroup_check($uid,$item) {
 
 	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$body);
 
-	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
+	
+//	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
 
-	if(! preg_match($pattern,$body,$matches)) {
-		logger('tgroup_check: mention was in a reshare - ignoring');
-		return false;
+	$pattern = '/@\!?\[zrl\=(.*?)\](.*?)\+\[\/zrl\]/';
+
+	$found = false;
+
+	if(preg_match_all($pattern,$body,$matches,PREG_SET_ORDER)) {
+		$max_forums = get_config('system','max_tagged_forums');
+		if(! $max_forums)
+			$max_forums = 2;
+		$matched_forums = 0;
+		foreach($matches as $match) {
+			$matched_forums ++;
+			if($term['url'] === $match[1] && $term['term'] === $match[2]) {
+				if($matched_forums <= $max_forums) {
+					$found = true;
+					break;
+				}
+				logger('forum ' . $term['term'] . ' exceeded max_tagged_forums - ignoring');
+			}
+		}
 	}
 
+	if(! $found) {
+		logger('tgroup_check: mention was in a reshare or exceeded max_tagged_forums - ignoring');
+		return false;
+	}
 
 	return true;
 

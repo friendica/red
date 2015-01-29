@@ -1,6 +1,6 @@
 
 Hallo {{$username}},
-	auf {{$sitename} wurde eine Rücksetzung Deines Passwortes angefordert. 
+auf {{$sitename}} wurde eine Rücksetzung Deines Passwortes angefordert. 
 Bitte klicke auf den Link unten, um diese Anforderung zu bestätigen,
 oder kopiere den Link und füge ihn in die Adresszeile Deines Browsers ein. 
 
@@ -27,6 +27,4 @@ Username:	{{$email}}
 
 
 Viele Grüße,
-	der Administrator von {{$sitename}}
-
- 
+der Administrator von {{$sitename}}
