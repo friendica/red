@@ -642,7 +642,7 @@ function widget_bookmarkedchats($arr) {
 	$h = get_observer_hash();
 	if(! $h)
 		return;
-	$r = q("select * from xchat where xchat_xchan = '%s' group by xchat_url order by xchat_desc",
+	$r = q("select xchat_url, xchat_desc from xchat where xchat_xchan = '%s' order by xchat_desc",
 		dbesc($h)
 	);
 	if($r) {
@@ -664,7 +664,7 @@ function widget_suggestedchats($arr) {
 	$h = get_observer_hash();
 	if(! $h)
 		return;
-	$r = q("select *, count(xchat_url) as total from xchat group by xchat_url order by total desc, xchat_desc limit 24");
+	$r = q("select xchat_url, xchat_desc, count(xchat_xchan) as total from xchat group by xchat_url, xchat_desc order by total desc, xchat_desc limit 24");
 	if($r) {
 		for($x = 0; $x < count($r); $x ++) {
 			$r[$x]['xchat_url'] = zid($r[$x]['xchat_url']);

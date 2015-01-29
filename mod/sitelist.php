@@ -28,7 +28,7 @@ function sitelist_init(&$a) {
 
 	$result = array('success' => false);
 
-	$r = q("select count(site_url) as total from site where 1 $sql_extra ");
+	$r = q("select count(site_url) as total from site where true $sql_extra ");
 	
 	if($r)
 		$result['total'] = intval($r[0]['total']);
