@@ -11,7 +11,7 @@ require_once('include/contact_widgets.php');
 
 function widget_profile($args) {
 	$a = get_app();
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_user())) ? true : false);
+	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
 	return profile_sidebar($a->profile, $block, true);
 }
 
@@ -362,7 +362,7 @@ function widget_fullprofile($arr) {
 	if(! $a->profile['profile_uid'])
 		return;
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_user())) ? true : false);
+	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
 
 	return profile_sidebar($a->profile, $block);
 }

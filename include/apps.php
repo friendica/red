@@ -233,7 +233,7 @@ function app_render($papp,$mode = 'view') {
 		$installed = app_installed(local_channel(),$papp);
 		$hosturl = z_root() . '/';
 	}
-	elseif(remote_user()) {
+	elseif(remote_channel()) {
 		$observer = get_app()->get_observer();
 		if($observer && $observer['xchan_network'] === 'zot') {
 			// some folks might have xchan_url redirected offsite, use the connurl

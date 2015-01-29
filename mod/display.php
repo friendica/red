@@ -5,7 +5,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 //	logger("mod-display: update = $update load = $load");
 
-	if(intval(get_config('system','block_public')) && (! local_channel()) && (! remote_user())) {
+	if(intval(get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}

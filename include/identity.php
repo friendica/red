@@ -783,7 +783,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 function profile_create_sidebar(&$a,$connect = true) {
 
-	$block = (((get_config('system','block_public')) && (! local_channel()) && (! remote_user())) ? true : false);
+	$block = (((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
 
 	$a->set_widget('profile',profile_sidebar($a->profile, $block, $connect));
 	return;
@@ -905,7 +905,7 @@ logger('online: ' . $profile['online']);
 		$block = true;
 	}
 
-	if(($profile['hidewall'] && (! local_channel()) && (! remote_user())) || $block ) {
+	if(($profile['hidewall'] && (! local_channel()) && (! remote_channel())) || $block ) {
 		$location = $pdesc = $gender = $marital = $homepage = $online = False;
 	}
 
@@ -1290,7 +1290,7 @@ function zid_init(&$a) {
 			$r = q("select * from hubloc where hubloc_addr = '%s' order by hubloc_connected desc limit 1",
 				dbesc($tmp_str)
 			);
-			if($r && remote_user() && remote_user() === $r[0]['hubloc_hash'])
+			if($r && remote_channel() && remote_channel() === $r[0]['hubloc_hash'])
 				return;
 			logger('zid_init: not authenticated. Invoking reverse magic-auth for ' . $tmp_str);
 			// try to avoid recursion - but send them home to do a proper magic auth
@@ -1421,7 +1421,7 @@ function get_online_status($nick) {
 
 	$ret = array('result' => false);
 
-	if(get_config('system','block_public') && ! local_channel() && ! remote_user())
+	if(get_config('system','block_public') && ! local_channel() && ! remote_channel())
 		return $ret;
 
 	$r = q("select channel_id, channel_hash from channel where channel_address = '%s' limit 1",

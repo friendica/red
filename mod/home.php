@@ -100,7 +100,7 @@ function home_content(&$a, $update = 0, $load = false) {
 		if($sitename) 
 			$o .= '<h1>' . sprintf( t("Welcome to %s") ,$sitename) . '</h1>';
 
-		if(intval(get_config('system','block_public')) && (! local_channel()) && (! remote_user())) {
+		if(intval(get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 			// If there's nothing special happening, just spit out a login box
 
 			if (! $a->config['system']['no_login_on_homepage'])

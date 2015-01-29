@@ -39,7 +39,7 @@ EOT;
 
 
 	}
-	elseif(remote_user())
+	elseif(remote_channel())
 		$observer = $a->get_observer();
 	
 
@@ -151,7 +151,7 @@ EOT;
 		$nav['home'] = array($homelink, t('Home'), "", t('Home Page'),'home_nav_btn');
 
 
-	if(($a->config['system']['register_policy'] == REGISTER_OPEN) && (! local_channel()) && (! remote_user()))
+	if(($a->config['system']['register_policy'] == REGISTER_OPEN) && (! local_channel()) && (! remote_channel()))
 		$nav['register'] = array('register',t('Register'), "", t('Create an account'),'register_nav_btn');
 
 	$help_url = z_root() . '/help?f=&cmd=' . $a->cmd;

@@ -4,7 +4,7 @@ require_once('include/Contact.php');
 
 function viewconnections_init(&$a) {
 
-	if((get_config('system','block_public')) && (! local_channel()) && (! remote_user())) {
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 		return;
 	}
 	if(argc() > 1)
@@ -13,7 +13,7 @@ function viewconnections_init(&$a) {
 
 function viewconnections_content(&$a) {
 
-	if((get_config('system','block_public')) && (! local_channel()) && (! remote_user())) {
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}

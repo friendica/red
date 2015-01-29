@@ -8,7 +8,7 @@ Returns numeric account_id if authenticated or 0. It is possible to be authentic
 
 Returns authenticated numeric channel_id if authenticated and connected to a channel or 0. Sometimes referred to as $uid in the code.
 
-[b]remote_user()[/b]
+[b]remote_channel()[/b]
 
 Returns authenticated string hash of Red global identifier, if authenticated via remote auth, or an empty string.
 

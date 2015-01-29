@@ -52,7 +52,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 	$datequery = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
 	$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
 
-	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
+	if(get_config('system','block_public') && (! get_account_id()) && (! remote_channel())) {
 			return login();
 	}
 

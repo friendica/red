@@ -148,7 +148,7 @@ function post_init(&$a) {
 		// If they are already authenticated and haven't changed credentials, 
 		// we can save an expensive network round trip and improve performance.
 
-		$remote = remote_user();
+		$remote = remote_channel();
 		$result = null;
 		$remote_service_class = '';
 		$remote_level = 0;

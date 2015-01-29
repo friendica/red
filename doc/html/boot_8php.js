@@ -37,7 +37,7 @@ var boot_8php =
     [ "notice", "boot_8php.html#a9255af5ae9c887520091ea04763c1a88", null ],
     [ "os_mkdir", "boot_8php.html#a5fbebdf7a1c0ea8f904dbd9d78c2c06c", null ],
     [ "proc_run", "boot_8php.html#ab346a2ece14993861f3e4206befa94f0", null ],
-    [ "remote_user", "boot_8php.html#a5542c5c2806ab8bca04bad53d47b5209", null ],
+    [ "remote_channel", "boot_8php.html#a5542c5c2806ab8bca04bad53d47b5209", null ],
     [ "startup", "boot_8php.html#aca47505b8732177f52bb2d647eb2741c", null ],
     [ "system_unavailable", "boot_8php.html#ac608a34f3bc180e7724192e0fd31f9b0", null ],
     [ "x", "boot_8php.html#ae97836b0547953be182a2334c9c91d3c", null ],

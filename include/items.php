@@ -3949,7 +3949,7 @@ function retain_item($id) {
 function drop_items($items) {
 	$uid = 0;
 
-	if(! local_channel() && ! remote_user())
+	if(! local_channel() && ! remote_channel())
 		return;
 
 	if(count($items)) {

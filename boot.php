@@ -1615,7 +1615,7 @@ function local_channel() {
  *
  * @return int|bool visitor_id or false
  */
-function remote_user() {
+function remote_channel() {
 	if((x($_SESSION, 'authenticated')) && (x($_SESSION, 'visitor_id')))
 		return $_SESSION['visitor_id'];
 

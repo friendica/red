@@ -11,7 +11,7 @@ require_once('include/Contact.php');
 function photos_init(&$a) {
 
 
-	if((get_config('system','block_public')) && (! local_channel()) && (! remote_user())) {
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 		return;
 	}
 
@@ -122,8 +122,8 @@ function photos_post(&$a) {
 
 			// get the list of photos we are about to delete
 
-			if(remote_user() && (! local_channel())) {
-				$str = photos_album_get_db_idstr($page_owner_uid,$album,remote_user());
+			if(remote_channel() && (! local_channel())) {
+				$str = photos_album_get_db_idstr($page_owner_uid,$album,remote_channel());
 			}
 			elseif(local_channel()) {
 				$str = photos_album_get_db_idstr(local_channel(),$album);
@@ -425,7 +425,7 @@ function photos_content(&$a) {
 	// photos/name/image/xxxxx
 
 
-	if((get_config('system','block_public')) && (! local_channel()) && (! remote_user())) {
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}

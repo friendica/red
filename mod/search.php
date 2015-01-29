@@ -9,7 +9,7 @@ function search_init(&$a) {
 function search_content(&$a,$update = 0, $load = false) {
 
 	if((get_config('system','block_public')) || (get_config('system','block_public_search'))) {
-		if ((! local_channel()) && (! remote_user())) {
+		if ((! local_channel()) && (! remote_channel())) {
 			notice( t('Public access denied.') . EOL);
 		return;
 		}

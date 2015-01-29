@@ -154,7 +154,7 @@ function permissions_sql($owner_id, $remote_verified = false, $groups = null) {
 		return '';
 
 	$local_channel = local_channel();
-	$remote_user = remote_user();
+	$remote_channel = remote_channel();
 
 	/**
 	 * Construct permissions
@@ -227,7 +227,7 @@ function item_permissions_sql($owner_id, $remote_verified = false, $groups = nul
 		return '';
 
 	$local_channel = local_channel();
-	$remote_user = remote_user();
+	$remote_channel = remote_channel();
 
 	/**
 	 * Construct permissions

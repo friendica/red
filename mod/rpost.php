@@ -30,7 +30,7 @@ function rpost_content(&$a) {
 	$o = '';
 
 	if(! local_channel()) {
-		if(remote_user()) {
+		if(remote_channel()) {
 			// redirect to your own site.
 			// We can only do this with a GET request so you'll need to keep the text short or risk getting truncated
 			// by the wretched beast called 'suhosin'. All the browsers now allow long GET requests, but suhosin

@@ -51,7 +51,7 @@ function profile_init(&$a) {
 
 function profile_content(&$a, $update = 0) {
 
-	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
+	if(get_config('system','block_public') && (! get_account_id()) && (! remote_channel())) {
 			return login();
 	}
 
@@ -68,7 +68,7 @@ function profile_content(&$a, $update = 0) {
 
 	$is_owner = ((local_channel()) && (local_channel() == $a->profile['profile_uid']) ? true : false);
 
-	if($a->profile['hidewall'] && (! $is_owner) && (! remote_user())) {
+	if($a->profile['hidewall'] && (! $is_owner) && (! remote_channel())) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}

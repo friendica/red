@@ -263,7 +263,7 @@ function navbar_complete(&$a) {
 
 //	logger('navbar_complete');
 
-	if((get_config('system','block_public')) && (! local_channel()) && (! remote_user())) {
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 		return;
 	}
 

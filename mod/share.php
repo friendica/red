@@ -10,7 +10,7 @@ function share_init(&$a) {
 	if(! $post_id)
 		killme();
 
-	if(! (local_channel() || remote_user()))
+	if(! (local_channel() || remote_channel()))
 		killme();
 
 

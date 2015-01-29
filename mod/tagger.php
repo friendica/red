@@ -7,7 +7,7 @@ require_once('include/items.php');
 
 function tagger_content(&$a) {
 
-	if(! local_channel() && ! remote_user()) {
+	if(! local_channel() && ! remote_channel()) {
 		return;
 	}
 

@@ -18,7 +18,7 @@ function directory_init(&$a) {
 
 function directory_content(&$a) {
 
-	if((get_config('system','block_public')) && (! local_channel()) && (! remote_user())) {
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}
