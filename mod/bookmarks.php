@@ -1,7 +1,7 @@
 <?php
 
 function bookmarks_init(&$a) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 	$item_id = intval($_REQUEST['item']);
 	if(! $item_id)
@@ -11,7 +11,7 @@ function bookmarks_init(&$a) {
 
 	$i = q("select * from item where id = %d and uid = %d limit 1",
 		intval($item_id),
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	if(! $i)
@@ -42,7 +42,7 @@ function bookmarks_init(&$a) {
 }
 
 function bookmarks_content(&$a) {
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -59,11 +59,11 @@ function bookmarks_content(&$a) {
 
 	$o .= '<h3>' . t('My Bookmarks') . '</h3>';
 
-	$x = menu_list(local_user(),'',MENU_BOOKMARK);
+	$x = menu_list(local_channel(),'',MENU_BOOKMARK);
 
 	if($x) {
 		foreach($x as $xx) {
-			$y = menu_fetch($xx['menu_name'],local_user(),get_observer_hash());
+			$y = menu_fetch($xx['menu_name'],local_channel(),get_observer_hash());
 			$o .= menu_render($y,'',true);
 		}
 	}
@@ -71,11 +71,11 @@ function bookmarks_content(&$a) {
 	$o .= '<h3>' . t('My Connections Bookmarks') . '</h3>';
 
 
-	$x = menu_list(local_user(),'',MENU_SYSTEM|MENU_BOOKMARK);
+	$x = menu_list(local_channel(),'',MENU_SYSTEM|MENU_BOOKMARK);
 
 	if($x) {
 		foreach($x as $xx) {
-			$y = menu_fetch($xx['menu_name'],local_user(),get_observer_hash());
+			$y = menu_fetch($xx['menu_name'],local_channel(),get_observer_hash());
 			$o .= menu_render($y,'',true);
 		}
 	}

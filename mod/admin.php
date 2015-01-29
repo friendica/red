@@ -289,7 +289,7 @@ function admin_page_site_post(&$a){
 	}
 	else {
 		require_once('include/text.php');
-		linkify_tags($a, $admininfo, local_user());
+		linkify_tags($a, $admininfo, local_channel());
 		set_config('system','admininfo', $admininfo);
 	}
 	set_config('system','language', $language);

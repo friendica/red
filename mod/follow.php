@@ -5,11 +5,11 @@ require_once('include/follow.php');
 
 function follow_init(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		return;
 	}
 
-	$uid = local_user();
+	$uid = local_channel();
 	$url = notags(trim($_REQUEST['url']));
 	$return_url = $_SESSION['return_url'];
 	$confirm = intval($_REQUEST['confirm']);
@@ -35,7 +35,7 @@ function follow_init(&$a) {
 
 function follow_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		return login();
 	}
 }

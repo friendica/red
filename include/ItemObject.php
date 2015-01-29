@@ -84,11 +84,11 @@ class Item extends BaseObject {
 		$conv = $this->get_conversation();
 		$observer = $conv->get_observer();
 
-		$lock = ((($item['item_private'] == 1) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
+		$lock = ((($item['item_private'] == 1) || (($item['uid'] == local_channel()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 			|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
 			? t('Private Message')
 			: false);
-		$shareable = ((($conv->get_profile_owner() == local_user() && local_user()) && ($item['item_private'] != 1)) ? true : false);
+		$shareable = ((($conv->get_profile_owner() == local_channel() && local_channel()) && ($item['item_private'] != 1)) ? true : false);
 
 		// allow an exemption for sharing stuff from your private feeds
 		if($item['author']['xchan_network'] === 'rss')
@@ -96,7 +96,7 @@ class Item extends BaseObject {
 
 		$mode = $conv->get_mode();
 
-		if(local_user() && $observer['xchan_hash'] === $item['author_xchan'])
+		if(local_channel() && $observer['xchan_hash'] === $item['author_xchan'])
 			$edpost = array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"));
 		else
 			$edpost = false;
@@ -104,7 +104,7 @@ class Item extends BaseObject {
 
 		if($observer['xchan_hash'] == $this->get_data_value('author_xchan') 
 			|| $observer['xchan_hash'] == $this->get_data_value('owner_xchan') 
-			|| $this->get_data_value('uid') == local_user())
+			|| $this->get_data_value('uid') == local_channel())
 			$dropping = true;
 
 
@@ -127,7 +127,7 @@ class Item extends BaseObject {
 			);
 		}
 
-		$filer = ((($conv->get_profile_owner() == local_user()) && (! array_key_exists('real_uid',$item))) ? t("Save to Folder") : false);
+		$filer = ((($conv->get_profile_owner() == local_channel()) && (! array_key_exists('real_uid',$item))) ? t("Save to Folder") : false);
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
 		$profile_link   = chanlink_url($item['author']['xchan_url']);
@@ -171,7 +171,7 @@ class Item extends BaseObject {
 		
 		if($this->is_toplevel()) {
 			// FIXME check this permission
-			if(($conv->get_profile_owner() == local_user()) && (! array_key_exists('real_uid',$item))) {
+			if(($conv->get_profile_owner() == local_channel()) && (! array_key_exists('real_uid',$item))) {
 
 // FIXME we don't need all this stuff, some can be done in the template
 
@@ -198,7 +198,7 @@ class Item extends BaseObject {
 
 
 		// FIXME - check this permission
-		if($conv->get_profile_owner() == local_user()) {
+		if($conv->get_profile_owner() == local_channel()) {
 			$tagger = array(
 				'tagit' => t("Add Tag"),
 				'classtagger' => "",
@@ -214,7 +214,7 @@ class Item extends BaseObject {
 		}
 
 		$has_event = false;
-		if(($item['obj_type'] === ACTIVITY_OBJ_EVENT) && $conv->get_profile_owner() == local_user())
+		if(($item['obj_type'] === ACTIVITY_OBJ_EVENT) && $conv->get_profile_owner() == local_channel())
 			$has_event = true;
 
 		if($this->is_commentable()) {
@@ -296,7 +296,7 @@ class Item extends BaseObject {
 			'star'      => ((feature_enabled($conv->get_profile_owner(),'star_posts')) ? $star : ''),
 			'tagger'    => ((feature_enabled($conv->get_profile_owner(),'commtag')) ? $tagger : ''),
 			'filer'     => ((feature_enabled($conv->get_profile_owner(),'filing')) ? $filer : ''),
-			'bookmark'  => (($conv->get_profile_owner() == local_user() && local_user() && $has_bookmarks) ? t('Save Bookmarks') : ''),
+			'bookmark'  => (($conv->get_profile_owner() == local_channel() && local_channel() && $has_bookmarks) ? t('Save Bookmarks') : ''),
 			'addtocal'  => (($has_event) ? t('Add to Calendar') : ''),
 			'drop'      => $drop,
 			'multidrop' => ((feature_enabled($conv->get_profile_owner(),'multi_delete')) ? $multidrop : ''),
@@ -610,7 +610,7 @@ class Item extends BaseObject {
 		$a = $this->get_app();
 		$observer = $conv->get_observer();
 
-		$qc = ((local_user()) ? get_pconfig(local_user(),'system','qcomment') : null);
+		$qc = ((local_channel()) ? get_pconfig(local_channel(),'system','qcomment') : null);
 		$qcomment = (($qc) ? explode("\n",$qc) : null);
 
 		$comment_box = replace_macros($template,array(

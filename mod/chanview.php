@@ -20,11 +20,11 @@ function chanview_content(&$a) {
 			dbesc($_REQUEST['address'])
 		);
 	}
-	elseif(local_user() && intval($_REQUEST['cid'])) {
+	elseif(local_channel() && intval($_REQUEST['cid'])) {
 		$r = q("SELECT abook.*, xchan.* 
 			FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d and abook_id = %d LIMIT 1",
-			intval(local_user()),
+			intval(local_channel()),
 			intval($_REQUEST['cid'])
 		);
 	}	
@@ -90,7 +90,7 @@ function chanview_content(&$a) {
 	// let somebody over-ride the iframed viewport presentation
 	// or let's just declare this a failed experiment.
 
-//	if((! local_user()) || (get_pconfig(local_user(),'system','chanview_full')))
+//	if((! local_channel()) || (get_pconfig(local_channel(),'system','chanview_full')))
 	
 	goaway($url);
 

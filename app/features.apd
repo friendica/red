@@ -1,4 +1,4 @@
 url: $baseurl/settings/features
-requires: local_user
+requires: local_channel
 name: Features
 photo: $baseurl/app/features.png

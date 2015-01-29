@@ -223,7 +223,7 @@ function menu_add_item($menu_id, $uid, $arr) {
 	$mitem_order = intval($arr['mitem_order']);	
 	$mitem_flags = intval($arr['mitem_flags']);
 
-	if(local_user() == $uid) {
+	if(local_channel() == $uid) {
 		$channel = get_app()->get_channel();	
 	}
 
@@ -279,7 +279,7 @@ function menu_edit_item($menu_id, $uid, $arr) {
 	$mitem_flags = intval($arr['mitem_flags']);
 
 
-	if(local_user() == $uid) {
+	if(local_channel() == $uid) {
 		$channel = get_app()->get_channel();	
 	}
 

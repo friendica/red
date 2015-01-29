@@ -2,7 +2,7 @@
 
 function notifications_post(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		goaway(z_root());
 	}
 	
@@ -15,7 +15,7 @@ function notifications_post(&$a) {
 
 		$r = q("SELECT * FROM `intro` WHERE `id` = %d  AND `uid` = %d LIMIT 1",
 			intval($request_id),
-			intval(local_user())
+			intval(local_channel())
 		);
 	
 		if(count($r)) {
@@ -43,7 +43,7 @@ function notifications_post(&$a) {
 
 				$r = q("DELETE FROM `contact` WHERE `id` = %d AND `uid` = %d AND `self` = 0 AND `blocked` = 1 AND `pending` = 1", 
 					intval($contact_id),
-					intval(local_user())
+					intval(local_channel())
 				);
 			}
 			goaway($a->get_baseurl(true) . '/notifications/intros');
@@ -62,7 +62,7 @@ function notifications_post(&$a) {
 
 function notifications_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -77,7 +77,7 @@ function notifications_content(&$a) {
 		require_once('include/bbcode.php');
 
 		$r = q("SELECT * from notify where uid = %d and seen = 0 order by date desc",
-			intval(local_user())
+			intval(local_channel())
 		);
 		
 		if (count($r) > 0) {

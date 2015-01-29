@@ -9,7 +9,7 @@
 
 function invite_post(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -20,7 +20,7 @@ function invite_post(&$a) {
 	if(! $max_invites)
 		$max_invites = 50;
 
-	$current_invites = intval(get_pconfig(local_user(),'system','sent_invites'));
+	$current_invites = intval(get_pconfig(local_channel(),'system','sent_invites'));
 	if($current_invites > $max_invites) {
 		notice( t('Total invitation limit exceeded.') . EOL);
 		return;
@@ -34,7 +34,7 @@ function invite_post(&$a) {
 
 	if(get_config('system','invitation_only')) {
 		$invonly = true;
-		$x = get_pconfig(local_user(),'system','invites_remaining');
+		$x = get_pconfig(local_channel(),'system','invites_remaining');
 		if((! $x) && (! is_site_admin()))
 			return;
 	}
@@ -62,7 +62,7 @@ function invite_post(&$a) {
 			if(! is_site_admin()) {
 				$x --;
 				if($x >= 0)
-					set_pconfig(local_user(),'system','invites_remaining',$x);
+					set_pconfig(local_channel(),'system','invites_remaining',$x);
 				else
 					return;
 			}
@@ -82,7 +82,7 @@ function invite_post(&$a) {
 		if($res) {
 			$total ++;
 			$current_invites ++;
-			set_pconfig(local_user(),'system','sent_invites',$current_invites);
+			set_pconfig(local_channel(),'system','sent_invites',$current_invites);
 			if($current_invites > $max_invites) {
 				notice( t('Invitation limit exceeded. Please contact your site administrator.') . EOL);
 				return;
@@ -100,7 +100,7 @@ function invite_post(&$a) {
 
 function invite_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -110,7 +110,7 @@ function invite_content(&$a) {
 
 	if(get_config('system','invitation_only')) {
 		$invonly = true;
-		$x = get_pconfig(local_user(),'system','invites_remaining');
+		$x = get_pconfig(local_channel(),'system','invites_remaining');
 		if((! $x) && (! is_site_admin())) {
 			notice( t('You have no more invitations available') . EOL);
 			return '';

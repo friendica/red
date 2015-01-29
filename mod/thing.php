@@ -6,7 +6,7 @@ require_once('include/contact_selectors.php');
 
 function thing_init(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 
@@ -90,7 +90,7 @@ function thing_init(&$a) {
 			dbesc(($url) ? $url : z_root() . '/thing/' . $term_hash),
 			dbesc($local_photo),
 			dbesc($term_hash),
-			intval(local_user())
+			intval(local_channel())
 		);
 
 		info( t('Thing updated') . EOL);
@@ -99,7 +99,7 @@ function thing_init(&$a) {
 
 	$sql = (($profile_guid) ? " and profile_guid = '" . dbesc($profile_guid) . "' " : " and is_default = 1 ");
 	$p = q("select profile_guid, is_default from profile where uid = %d $sql limit 1",
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	if($p)
@@ -117,7 +117,7 @@ function thing_init(&$a) {
 
 
 	$r = q("select * from term where uid = %d and otype = %d and type = %d and term = '%s' limit 1",
-		intval(local_user()),
+		intval(local_channel()),
 		intval(TERM_OBJ_THING),
 		intval(TERM_THING),
 		dbesc($name)
@@ -126,7 +126,7 @@ function thing_init(&$a) {
 		$r = q("insert into term ( aid, uid, oid, otype, type, term, url, imgurl, term_hash )
 			values( %d, %d, %d, %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval($account_id),
-			intval(local_user()),
+			intval(local_channel()),
 			0,
 			intval(TERM_OBJ_THING),
 			intval(TERM_THING),
@@ -136,7 +136,7 @@ function thing_init(&$a) {
 			dbesc($hash)
 		);
 		$r = q("select * from term where uid = %d and otype = %d and type = %d and term = '%s' limit 1",
-			intval(local_user()),
+			intval(local_channel()),
 			intval(TERM_OBJ_THING),
 			intval(TERM_THING),
 			dbesc($name)
@@ -148,7 +148,7 @@ function thing_init(&$a) {
 		dbesc($profile['profile_guid']),
 		dbesc($verb),
 		intval(TERM_OBJ_THING),
-		intval(local_user()),
+		intval(local_channel()),
 		dbesc($term['term_hash'])
 	);
 
@@ -201,7 +201,7 @@ function thing_init(&$a) {
 			$arr['item_private'] = true;
 			$str = '';
 			$r = q("select abook_xchan from abook where abook_channel = %d and abook_profile = '%s'",
-				intval(local_user()),
+				intval(local_channel()),
 				dbesc($profile_guid)
 			);
 			if($r) {
@@ -232,7 +232,7 @@ function thing_content(&$a) {
 				'$header' => t('Show Thing'),
 				'$edit' => t('Edit'),
 				'$delete' => t('Delete'),
-				'$canedit' => ((local_user() && local_user() == $r[0]['obj_channel']) ? true : false), 
+				'$canedit' => ((local_channel() && local_channel() == $r[0]['obj_channel']) ? true : false), 
 				'$thing' => $r[0] ));
 		}
 		else {
@@ -243,7 +243,7 @@ function thing_content(&$a) {
 
 	$channel = $a->get_channel();
 
-	if(! (local_user() && $channel)) {
+	if(! (local_channel() && $channel)) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -260,7 +260,7 @@ function thing_content(&$a) {
 			dbesc($thing_hash)
 		);
 
-		if((! $r) || ($r[0]['obj_channel'] != local_user())) {
+		if((! $r) || ($r[0]['obj_channel'] != local_channel())) {
 			notice( t('Permission denied.') . EOL);
 			return '';
 		}
@@ -268,7 +268,7 @@ function thing_content(&$a) {
 
 		$o .= replace_macros(get_markup_template('thing_edit.tpl'),array(
 			'$thing_hdr' => t('Edit Thing'),
-			'$multiprof' => feature_enabled(local_user(),'multi_profiles'),
+			'$multiprof' => feature_enabled(local_channel(),'multi_profiles'),
 			'$profile_lbl' => t('Select a profile'),
 			'$profile_select' => contact_profile_assign($r[0]['obj_page']),
 			'$verb_lbl' => $channel['channel_name'],
@@ -295,7 +295,7 @@ function thing_content(&$a) {
 			dbesc($thing_hash)
 		);
 
-		if((! $r) || ($r[0]['obj_channel'] != local_user())) {
+		if((! $r) || ($r[0]['obj_channel'] != local_channel())) {
 			notice( t('Permission denied.') . EOL);
 			return '';
 		}
@@ -304,18 +304,18 @@ function thing_content(&$a) {
 		$x = q("delete from obj where obj_obj = '%s' and obj_type = %d and obj_channel = %d",
 			dbesc($thing_hash),
 			intval(TERM_OBJ_THING),
-			intval(local_user())
+			intval(local_channel())
 		);
 		$x = q("delete from term where term_hash = '%s' and uid = %d",
 			dbesc($thing_hash),
-			intval(local_user())
+			intval(local_channel())
 		);
 		return $o;
 	}
 
 	$o .= replace_macros(get_markup_template('thing_input.tpl'),array(
 		'$thing_hdr' => t('Add Thing to your Profile'),
-		'$multiprof' => feature_enabled(local_user(),'multi_profiles'),
+		'$multiprof' => feature_enabled(local_channel(),'multi_profiles'),
 		'$profile_lbl' => t('Select a profile'),
 		'$profile_select' => contact_profile_assign(''),
 		'$verb_lbl' => $channel['channel_name'],

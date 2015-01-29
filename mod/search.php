@@ -9,7 +9,7 @@ function search_init(&$a) {
 function search_content(&$a,$update = 0, $load = false) {
 
 	if((get_config('system','block_public')) || (get_config('system','block_public_search'))) {
-		if ((! local_user()) && (! remote_user())) {
+		if ((! local_channel()) && (! remote_channel())) {
 			notice( t('Public access denied.') . EOL);
 		return;
 		}
@@ -44,8 +44,8 @@ function search_content(&$a,$update = 0, $load = false) {
 		$search = ((x($_GET,'tag')) ? trim(rawurldecode($_GET['tag'])) : '');
 	}
 
-	if((! local_user()) || (! feature_enabled(local_user(),'savedsearch')))
-		$o .= search($search,'search-box','/search',((local_user()) ? true : false));
+	if((! local_channel()) || (! feature_enabled(local_channel(),'savedsearch')))
+		$o .= search($search,'search-box','/search',((local_channel()) ? true : false));
 
 	if(strpos($search,'#') === 0) {
 		$tag = true;
@@ -87,7 +87,7 @@ function search_content(&$a,$update = 0, $load = false) {
 		// because browser prefetching might change it on us. We have to deliver it with the page.
 
 		$o .= '<div id="live-search"></div>' . "\r\n";
-		$o .= "<script> var profile_uid = " . ((intval(local_user())) ? local_user() : (-1))
+		$o .= "<script> var profile_uid = " . ((intval(local_channel())) ? local_channel() : (-1))
 			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
@@ -128,7 +128,7 @@ function search_content(&$a,$update = 0, $load = false) {
 	$sys = get_sys_channel();
 
 	if(($update) && ($load)) {
-		$itemspage = get_pconfig(local_user(),'system','itemspage');
+		$itemspage = get_pconfig(local_channel(),'system','itemspage');
 		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']), intval($a->pager['start']));
 
@@ -147,14 +147,14 @@ function search_content(&$a,$update = 0, $load = false) {
 				$prefix = 'distinct';
 				$suffix = 'group by mid ORDER BY created DESC';
 			}
-			if(local_user()) {
+			if(local_channel()) {
 				$r = q("SELECT $prefix mid, item.id as item_id, item.* from item
 					WHERE item_restrict = 0
 					AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
 					OR ( `item`.`uid` = %d )) OR item.owner_xchan = '%s' )
 					$sql_extra
 					$suffix $pager_sql ",
-					intval(local_user()),
+					intval(local_channel()),
 					dbesc($sys['xchan_hash'])
 				);
 			}

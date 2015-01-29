@@ -7,7 +7,7 @@ require_once('include/items.php');
 
 function subthread_content(&$a) {
 
-	if((! local_user()) && (! remote_user())) {
+	if((! local_channel()) && (! remote_channel())) {
 		return;
 	}
 

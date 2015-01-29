@@ -11,7 +11,7 @@ function zotfeed_init(&$a) {
 	if(! $mindate)
 		$mindate = datetime_convert('UTC','UTC', 'now - 1 month');
 
-	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
+	if(get_config('system','block_public') && (! get_account_id()) && (! remote_channel())) {
 		$result['message'] = 'Public access denied';
 		json_return_and_die($result);
 	}

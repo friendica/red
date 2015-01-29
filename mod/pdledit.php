@@ -1,15 +1,15 @@
 <?php
 
 function pdledit_post(&$a) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 	if(! $_REQUEST['module'])
 		return;
 	if(! trim($_REQUEST['content'])) {
-		del_pconfig(local_user(),'system','mod_' . $_REQUEST['module'] . '.pdl');
+		del_pconfig(local_channel(),'system','mod_' . $_REQUEST['module'] . '.pdl');
 		goaway(z_root() . '/pdledit/' . $_REQUEST['module']);
 	}
-	set_pconfig(local_user(),'system','mod_' . $_REQUEST['module'] . '.pdl',escape_tags($_REQUEST['content']));
+	set_pconfig(local_channel(),'system','mod_' . $_REQUEST['module'] . '.pdl',escape_tags($_REQUEST['content']));
 	info( t('Layout updated.') . EOL);
 	goaway(z_root() . '/pdledit/' . $_REQUEST['module']);
 }
@@ -17,7 +17,7 @@ function pdledit_post(&$a) {
 
 function pdledit_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -41,7 +41,7 @@ function pdledit_content(&$a) {
 		return $o;
 	}
 
-	$t = get_pconfig(local_user(),'system',$module);
+	$t = get_pconfig(local_channel(),'system',$module);
 	if(! $t)
 		$t = file_get_contents(theme_include($module));
 	if(! $t) {

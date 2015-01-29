@@ -16,10 +16,10 @@ function get_theme_config_file($theme){
 }
 
 function settings_init(&$a) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 
-	$a->profile_uid = local_user();
+	$a->profile_uid = local_channel();
 
 	// default is channel settings in the absence of other arguments
 
@@ -36,7 +36,7 @@ function settings_init(&$a) {
 
 function settings_post(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	$channel = $a->get_channel();
@@ -53,7 +53,7 @@ function settings_post(&$a) {
 		$key = $_POST['remove'];
 		q("DELETE FROM tokens WHERE id='%s' AND uid=%d",
 			dbesc($key),
-			local_user());
+			local_channel());
 		goaway($a->get_baseurl(true)."/settings/oauth/");
 		return;			
 	}
@@ -92,7 +92,7 @@ function settings_post(&$a) {
 						dbesc($name),
 						dbesc($redirect),
 						dbesc($icon),
-						local_user(),
+						local_channel(),
 						dbesc($key));
 			} else {
 				$r = q("INSERT INTO clients
@@ -103,7 +103,7 @@ function settings_post(&$a) {
 						dbesc($name),
 						dbesc($redirect),
 						dbesc($icon),
-						local_user());
+						local_channel());
 			}
 		}
 		goaway($a->get_baseurl(true)."/settings/oauth/");
@@ -132,9 +132,9 @@ function settings_post(&$a) {
 		}
 		foreach($all_features as $k) {
 			if(x($_POST,"feature_$k"))
-				set_pconfig(local_user(),'feature',$k, 1);
+				set_pconfig(local_channel(),'feature',$k, 1);
 			else
-				set_pconfig(local_user(),'feature',$k, 0);
+				set_pconfig(local_channel(),'feature',$k, 0);
 		}
 		build_sync_packet();
 		return;
@@ -170,20 +170,20 @@ function settings_post(&$a) {
 
 
 		if ($mobile_theme == "---") 
-			del_pconfig(local_user(),'system','mobile_theme');
+			del_pconfig(local_channel(),'system','mobile_theme');
 		else {
-			set_pconfig(local_user(),'system','mobile_theme',$mobile_theme);
+			set_pconfig(local_channel(),'system','mobile_theme',$mobile_theme);
 		}
 
-		set_pconfig(local_user(),'system','user_scalable',$user_scalable);
-		set_pconfig(local_user(),'system','update_interval', $browser_update);
-		set_pconfig(local_user(),'system','itemspage', $itemspage);
-		set_pconfig(local_user(),'system','no_smilies',$nosmile);
-		set_pconfig(local_user(),'system','title_tosource',$title_tosource);
-		set_pconfig(local_user(),'system','channel_list_mode', $channel_list_mode);
-		set_pconfig(local_user(),'system','network_list_mode', $network_list_mode);
-		set_pconfig(local_user(),'system','channel_divmore_height', $channel_divmore_height);
-		set_pconfig(local_user(),'system','network_divmore_height', $network_divmore_height);
+		set_pconfig(local_channel(),'system','user_scalable',$user_scalable);
+		set_pconfig(local_channel(),'system','update_interval', $browser_update);
+		set_pconfig(local_channel(),'system','itemspage', $itemspage);
+		set_pconfig(local_channel(),'system','no_smilies',$nosmile);
+		set_pconfig(local_channel(),'system','title_tosource',$title_tosource);
+		set_pconfig(local_channel(),'system','channel_list_mode', $channel_list_mode);
+		set_pconfig(local_channel(),'system','network_list_mode', $network_list_mode);
+		set_pconfig(local_channel(),'system','channel_divmore_height', $channel_divmore_height);
+		set_pconfig(local_channel(),'system','network_divmore_height', $network_divmore_height);
 
 		if ($theme == $a->channel['channel_theme']){
 			// call theme_post only if theme has not been changed
@@ -195,7 +195,7 @@ function settings_post(&$a) {
 
 		$r = q("UPDATE channel SET channel_theme = '%s' WHERE channel_id = %d",
 				dbesc($theme),
-				intval(local_user())
+				intval(local_channel())
 		);
 	
 		call_hooks('display_settings_post', $_POST);
@@ -284,7 +284,7 @@ function settings_post(&$a) {
 	$set_perms = '';
 
 	$role = ((x($_POST,'permissions_role')) ? notags(trim($_POST['permissions_role'])) : '');
-	$oldrole = get_pconfig(local_user(),'system','permissions_role');
+	$oldrole = get_pconfig(local_channel(),'system','permissions_role');
 
 	if(($role != $oldrole) || ($role === 'custom')) {
 
@@ -294,7 +294,7 @@ function settings_post(&$a) {
 			$def_group        = ((x($_POST,'group-selection')) ? notags(trim($_POST['group-selection'])) : '');
 			$r = q("update channel set channel_default_group = '%s' where channel_id = %d",
 				dbesc($def_group),
-				intval(local_user())
+				intval(local_channel())
 			);	
 
 			$global_perms = get_perms();
@@ -313,7 +313,7 @@ function settings_post(&$a) {
 				dbesc($str_group_allow),
 				dbesc($str_contact_deny),
 				dbesc($str_group_deny),
-				intval(local_user())
+				intval(local_channel())
 			);
 		}
 	    else {
@@ -325,15 +325,15 @@ function settings_post(&$a) {
 			$hide_presence    = 1 - (intval($role_permissions['online']));
 			if($role_permissions['default_collection']) {
 				$r = q("select hash from groups where uid = %d and name = '%s' limit 1",
-					intval(local_user()),
+					intval(local_channel()),
 					dbesc( t('Friends') )
 				);
 				if(! $r) {
 					require_once('include/group.php');
-					group_add(local_user(), t('Friends'));
-					group_add_member(local_user(),t('Friends'),$channel['channel_hash']);
+					group_add(local_channel(), t('Friends'));
+					group_add_member(local_channel(),t('Friends'),$channel['channel_hash']);
 					$r = q("select hash from groups where uid = %d and name = '%s' limit 1",
-						intval(local_user()),
+						intval(local_channel()),
 						dbesc( t('Friends') )
 					);
 				}
@@ -341,7 +341,7 @@ function settings_post(&$a) {
 					q("update channel set channel_default_group = '%s', channel_allow_gid = '%s', channel_allow_cid = '', channel_deny_gid = '', channel_deny_cid = '' where channel_id = %d",
 						dbesc($r[0]['hash']),
 						dbesc('<' . $r[0]['hash'] . '>'),
-						intval(local_user())
+						intval(local_channel())
 					);
 				}
 				else {
@@ -353,16 +353,16 @@ function settings_post(&$a) {
 			else {
 				q("update channel set channel_default_group = '', channel_allow_gid = '', channel_allow_cid = '', channel_deny_gid = '', 
 					channel_deny_cid = '' where channel_id = %d",
-						intval(local_user())
+						intval(local_channel())
 				);
 			}
 
 			$r = q("update abook set abook_my_perms  = %d where abook_channel = %d and (abook_flags & %d)>0",
 				intval(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0),
-				intval(local_user()),
+				intval(local_channel()),
 				intval(ABOOK_FLAG_SELF)
 			);
-			set_pconfig(local_user(),'system','autoperms',(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0));
+			set_pconfig(local_channel(),'system','autoperms',(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0));
 
 			foreach($role_permissions as $p => $v) {
 				if(strpos($p,'channel_') !== false) {
@@ -374,8 +374,8 @@ function settings_post(&$a) {
 			}
 		}
 
-		set_pconfig(local_user(),'system','hide_online_status',$hide_presence);
-		set_pconfig(local_user(),'system','permissions_role',$role);
+		set_pconfig(local_channel(),'system','hide_online_status',$hide_presence);
+		set_pconfig(local_channel(),'system','permissions_role',$role);
 	}
 
 	$username         = ((x($_POST,'username'))   ? notags(trim($_POST['username']))     : '');
@@ -481,16 +481,16 @@ function settings_post(&$a) {
 			date_default_timezone_set($timezone);
 	}
 
-	set_pconfig(local_user(),'system','use_browser_location',$allow_location);
-	set_pconfig(local_user(),'system','suggestme', $suggestme);
-	set_pconfig(local_user(),'system','post_newfriend', $post_newfriend);
-	set_pconfig(local_user(),'system','post_joingroup', $post_joingroup);
-	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
-	set_pconfig(local_user(),'system','blocktags',$blocktags);
-	set_pconfig(local_user(),'system','channel_menu',$channel_menu);
-	set_pconfig(local_user(),'system','vnotify',$vnotify);
-	set_pconfig(local_user(),'system','always_show_in_notices',$always_show_in_notices);
-	set_pconfig(local_user(),'system','evdays',$evdays);
+	set_pconfig(local_channel(),'system','use_browser_location',$allow_location);
+	set_pconfig(local_channel(),'system','suggestme', $suggestme);
+	set_pconfig(local_channel(),'system','post_newfriend', $post_newfriend);
+	set_pconfig(local_channel(),'system','post_joingroup', $post_joingroup);
+	set_pconfig(local_channel(),'system','post_profilechange', $post_profilechange);
+	set_pconfig(local_channel(),'system','blocktags',$blocktags);
+	set_pconfig(local_channel(),'system','channel_menu',$channel_menu);
+	set_pconfig(local_channel(),'system','vnotify',$vnotify);
+	set_pconfig(local_channel(),'system','always_show_in_notices',$always_show_in_notices);
+	set_pconfig(local_channel(),'system','evdays',$evdays);
 
 	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d $set_perms where channel_id = %d",
 		dbesc($username),
@@ -501,7 +501,7 @@ function settings_post(&$a) {
 		intval($unkmail),
 		intval($maxreq),
 		intval($expire),
-		intval(local_user())
+		intval(local_channel())
 	);   
 	if($r)
 		info( t('Settings updated.') . EOL);
@@ -509,7 +509,7 @@ function settings_post(&$a) {
 	if(! is_null($publish)) {
 		$r = q("UPDATE profile SET publish = %d WHERE is_default = 1 AND uid = %d",
 			intval($publish),
-			intval(local_user())
+			intval(local_channel())
 		);
 	}
 
@@ -525,7 +525,7 @@ function settings_post(&$a) {
 		);
 	}
 
-	proc_run('php','include/directory.php',local_user());
+	proc_run('php','include/directory.php',local_channel());
 
 	build_sync_packet();
 
@@ -550,7 +550,7 @@ function settings_content(&$a) {
 	nav_set_selected('settings');
 
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL );
 		return login();
 	}
@@ -588,7 +588,7 @@ function settings_content(&$a) {
 		if((argc() > 3) && (argv(2) === 'edit')) {
 			$r = q("SELECT * FROM clients WHERE client_id='%s' AND uid=%d",
 					dbesc(argv(3)),
-					local_user());
+					local_channel());
 			
 			if (!count($r)){
 				notice(t("You can't edit this application."));
@@ -616,7 +616,7 @@ function settings_content(&$a) {
 		
 			$r = q("DELETE FROM clients WHERE client_id='%s' AND uid=%d",
 					dbesc(argv(3)),
-					local_user());
+					local_channel());
 			goaway($a->get_baseurl(true)."/settings/oauth/");
 			return;			
 		}
@@ -626,8 +626,8 @@ function settings_content(&$a) {
 				FROM clients
 				LEFT JOIN tokens ON clients.client_id=tokens.client_id
 				WHERE clients.uid IN (%d,0)",
-				local_user(),
-				local_user());
+				local_channel(),
+				local_channel());
 		
 		
 		$tpl = get_markup_template("settings_oauth.tpl");
@@ -706,7 +706,7 @@ function settings_content(&$a) {
 			$arr[$fname] = array();
 			$arr[$fname][0] = $fdata[0];
 			foreach(array_slice($fdata,1) as $f) {
-				$arr[$fname][1][] = array('feature_' .$f[0],$f[1],((intval(feature_enabled(local_user(),$f[0]))) ? "1" : ''),$f[2],array(t('Off'),t('On')));
+				$arr[$fname][1][] = array('feature_' .$f[0],$f[1],((intval(feature_enabled(local_channel(),$f[0]))) ? "1" : ''),$f[2],array(t('Off'),t('On')));
 			}
 		}
 		
@@ -795,19 +795,19 @@ function settings_content(&$a) {
 		$theme_selected = (!x($_SESSION,'theme')? $default_theme : $_SESSION['theme']);
 		$mobile_theme_selected = (!x($_SESSION,'mobile_theme')? $default_mobile_theme : $_SESSION['mobile_theme']);
 
-		$user_scalable = get_pconfig(local_user(),'system','user_scalable');
+		$user_scalable = get_pconfig(local_channel(),'system','user_scalable');
 		$user_scalable = (($user_scalable===false)? '1': $user_scalable); // default if not set: 1
 		
-		$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
+		$browser_update = intval(get_pconfig(local_channel(), 'system','update_interval'));
 		$browser_update = (($browser_update == 0) ? 80 : $browser_update / 1000); // default if not set: 40 seconds
 
-		$itemspage = intval(get_pconfig(local_user(), 'system','itemspage'));
+		$itemspage = intval(get_pconfig(local_channel(), 'system','itemspage'));
 		$itemspage = (($itemspage > 0 && $itemspage < 101) ? $itemspage : 20); // default if not set: 20 items
 		
-		$nosmile = get_pconfig(local_user(),'system','no_smilies');
+		$nosmile = get_pconfig(local_channel(),'system','no_smilies');
 		$nosmile = (($nosmile===false)? '0': $nosmile); // default if not set: 0
 
-		$title_tosource = get_pconfig(local_user(),'system','title_tosource');
+		$title_tosource = get_pconfig(local_channel(),'system','title_tosource');
 		$title_tosource = (($title_tosource===false)? '0': $title_tosource); // default if not set: 0
 
 		$theme_config = "";
@@ -822,7 +822,7 @@ function settings_content(&$a) {
 			'$form_security_token' => get_form_security_token("settings_display"),
 			'$submit' 	=> t('Submit'),
 			'$baseurl' => $a->get_baseurl(true),
-			'$uid' => local_user(),
+			'$uid' => local_channel(),
 		
 			'$theme'	=> array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview'),
 			'$mobile_theme'	=> array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, ''),
@@ -833,11 +833,11 @@ function settings_content(&$a) {
 			'$title_tosource'	=> array('title_tosource', t("Link post titles to source"), $title_tosource, ''),		
 			'$layout_editor' => t('System Page Layout Editor - (advanced)'),
 			'$theme_config' => $theme_config,
-			'$expert' => feature_enabled(local_user(),'expert'),
-			'$channel_list_mode' => array('channel_list_mode', t('Use blog/list mode on channel page'), get_pconfig(local_user(),'system','channel_list_mode'), t('(comments displayed separately)')),
-			'$network_list_mode' => array('network_list_mode', t('Use blog/list mode on matrix page'), get_pconfig(local_user(),'system','network_list_mode'), t('(comments displayed separately)')),
-			'$channel_divmore_height' => array('channel_divmore_height', t('Channel page max height of content (in pixels)'), ((get_pconfig(local_user(),'system','channel_divmore_height')) ? get_pconfig(local_user(),'system','channel_divmore_height') : 400), t('click to expand content exceeding this height')),
-			'$network_divmore_height' => array('network_divmore_height', t('Matrix page max height of content (in pixels)'), ((get_pconfig(local_user(),'system','network_divmore_height')) ? get_pconfig(local_user(),'system','network_divmore_height') : 400) , t('click to expand content exceeding this height')),
+			'$expert' => feature_enabled(local_channel(),'expert'),
+			'$channel_list_mode' => array('channel_list_mode', t('Use blog/list mode on channel page'), get_pconfig(local_channel(),'system','channel_list_mode'), t('(comments displayed separately)')),
+			'$network_list_mode' => array('network_list_mode', t('Use blog/list mode on matrix page'), get_pconfig(local_channel(),'system','network_list_mode'), t('(comments displayed separately)')),
+			'$channel_divmore_height' => array('channel_divmore_height', t('Channel page max height of content (in pixels)'), ((get_pconfig(local_channel(),'system','channel_divmore_height')) ? get_pconfig(local_channel(),'system','channel_divmore_height') : 400), t('click to expand content exceeding this height')),
+			'$network_divmore_height' => array('network_divmore_height', t('Matrix page max height of content (in pixels)'), ((get_pconfig(local_channel(),'system','network_divmore_height')) ? get_pconfig(local_channel(),'system','network_divmore_height') : 400) , t('click to expand content exceeding this height')),
 
 
 		));
@@ -856,12 +856,12 @@ function settings_content(&$a) {
 
 
 		$p = q("SELECT * FROM `profile` WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(count($p))
 			$profile = $p[0];
 
-		load_pconfig(local_user(),'expire');
+		load_pconfig(local_channel(),'expire');
 
 		$channel = $a->get_channel();
 
@@ -910,38 +910,38 @@ function settings_content(&$a) {
 //		$unkmail    = $a->user['unkmail'];
 //		$cntunkmail = $a->user['cntunkmail'];
 
-		$hide_presence = intval(get_pconfig(local_user(), 'system','hide_online_status'));
+		$hide_presence = intval(get_pconfig(local_channel(), 'system','hide_online_status'));
 
 
-		$expire_items = get_pconfig(local_user(), 'expire','items');
+		$expire_items = get_pconfig(local_channel(), 'expire','items');
 		$expire_items = (($expire_items===false)? '1' : $expire_items); // default if not set: 1
 	
-		$expire_notes = get_pconfig(local_user(), 'expire','notes');
+		$expire_notes = get_pconfig(local_channel(), 'expire','notes');
 		$expire_notes = (($expire_notes===false)? '1' : $expire_notes); // default if not set: 1
 
-		$expire_starred = get_pconfig(local_user(), 'expire','starred');
+		$expire_starred = get_pconfig(local_channel(), 'expire','starred');
 		$expire_starred = (($expire_starred===false)? '1' : $expire_starred); // default if not set: 1
 	
-		$expire_photos = get_pconfig(local_user(), 'expire','photos');
+		$expire_photos = get_pconfig(local_channel(), 'expire','photos');
 		$expire_photos = (($expire_photos===false)? '0' : $expire_photos); // default if not set: 0
 
-		$expire_network_only = get_pconfig(local_user(), 'expire','network_only');
+		$expire_network_only = get_pconfig(local_channel(), 'expire','network_only');
 		$expire_network_only = (($expire_network_only===false)? '0' : $expire_network_only); // default if not set: 0
 
 
-		$suggestme = get_pconfig(local_user(), 'system','suggestme');
+		$suggestme = get_pconfig(local_channel(), 'system','suggestme');
 		$suggestme = (($suggestme===false)? '0': $suggestme); // default if not set: 0
 
-		$post_newfriend = get_pconfig(local_user(), 'system','post_newfriend');
+		$post_newfriend = get_pconfig(local_channel(), 'system','post_newfriend');
 		$post_newfriend = (($post_newfriend===false)? '0': $post_newfriend); // default if not set: 0
 
-		$post_joingroup = get_pconfig(local_user(), 'system','post_joingroup');
+		$post_joingroup = get_pconfig(local_channel(), 'system','post_joingroup');
 		$post_joingroup = (($post_joingroup===false)? '0': $post_joingroup); // default if not set: 0
 
-		$post_profilechange = get_pconfig(local_user(), 'system','post_profilechange');
+		$post_profilechange = get_pconfig(local_channel(), 'system','post_profilechange');
 		$post_profilechange = (($post_profilechange===false)? '0': $post_profilechange); // default if not set: 0
 
-		$blocktags  = get_pconfig(local_user(),'system','blocktags');
+		$blocktags  = get_pconfig(local_channel(),'system','blocktags');
 		$blocktags = (($blocktags===false) ? '0' : $blocktags);
 	
 		$timezone = date_default_timezone_get();
@@ -985,31 +985,31 @@ function settings_content(&$a) {
 
 
 		require_once('include/group.php');
-		$group_select = mini_group_select(local_user(),$channel['channel_default_group']);
+		$group_select = mini_group_select(local_channel(),$channel['channel_default_group']);
 
 		require_once('include/menu.php');
-		$m1 = menu_list(local_user());
+		$m1 = menu_list(local_channel());
 		$menu = false;
 		if($m1) {
 			$menu = array();
-			$current = get_pconfig(local_user(),'system','channel_menu');
+			$current = get_pconfig(local_channel(),'system','channel_menu');
 			$menu[] = array('name' => '', 'selected' => ((! $current) ? true : false));
 			foreach($m1 as $m) {
 				$menu[] = array('name' => htmlspecialchars($m['menu_name'],ENT_COMPAT,'UTF-8'), 'selected' => (($m['menu_name'] === $current) ? ' selected="selected" ' : false));
 			}
 		}
 
-		$evdays = get_pconfig(local_user(),'system','evdays');
+		$evdays = get_pconfig(local_channel(),'system','evdays');
 		if(! $evdays)
 			$evdays = 3;
 
-		$permissions_role = get_pconfig(local_user(),'system','permissions_role');
+		$permissions_role = get_pconfig(local_channel(),'system','permissions_role');
 		if(! $permissions_role)
 			$permissions_role = 'custom';
 
 		$permissions_set = (($permissions_role != 'custom') ? true : false);
-		$vnotify = get_pconfig(local_user(),'system','vnotify');
-		$always_show_in_notices = get_pconfig(local_user(),'system','always_show_in_notices');
+		$vnotify = get_pconfig(local_channel(),'system','vnotify');
+		$always_show_in_notices = get_pconfig(local_channel(),'system','always_show_in_notices');
 		if($vnotify === false)
 			$vnotify = (-1);
 
@@ -1018,7 +1018,7 @@ function settings_content(&$a) {
 
 			'$submit' 	=> t('Submit'),
 			'$baseurl' => $a->get_baseurl(true),
-			'$uid' => local_user(),
+			'$uid' => local_channel(),
 			'$form_security_token' => get_form_security_token("settings"),
 			'$nickname_block' => $prof_addr,
 			'$h_basic' 	=> t('Basic Settings'),
@@ -1026,7 +1026,7 @@ function settings_content(&$a) {
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
 			'$timezone' => array('timezone_select' , t('Your Timezone:'), $timezone, '', get_timezones()),
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, t('Geographical location to display on your posts')),
-			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_user(),'system','use_browser_location')) ? 1 : ''), ''),
+			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_channel(),'system','use_browser_location')) ? 1 : ''), ''),
 		
 			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel frequently or regularly publishes adult content. (Please tag any adult material and/or nudity with #NSFW)')),
 
@@ -1098,7 +1098,7 @@ function settings_content(&$a) {
 			'$h_advn' => t('Advanced Account/Page Type Settings'),
 			'$h_descadvn' => t('Change the behaviour of this account for special situations'),
 			'$pagetype' => $pagetype,
-			'$expert' => feature_enabled(local_user(),'expert'),
+			'$expert' => feature_enabled(local_channel(),'expert'),
 			'$hint' => t('Please enable expert mode (in <a href="settings/features">Settings > Additional features</a>) to adjust!'),
 			'$lbl_misc' => t('Miscellaneous Settings'),
 			'$menus' => $menu,

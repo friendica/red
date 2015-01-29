@@ -1,79 +1,79 @@
 <?php
 
 function theme_content(&$a) {
-	if(!local_user()) { return;}
+	if(!local_channel()) { return;}
 
 	$arr = array();
 
-	$arr['schema'] = get_pconfig(local_user(),'redbasic', 'schema' );
-	$arr['narrow_navbar'] = get_pconfig(local_user(),'redbasic', 'narrow_navbar' );
-	$arr['nav_bg'] = get_pconfig(local_user(),'redbasic', 'nav_bg' );
-	$arr['nav_gradient_top'] = get_pconfig(local_user(),'redbasic', 'nav_gradient_top' );
-	$arr['nav_gradient_bottom'] = get_pconfig(local_user(),'redbasic', 'nav_gradient_bottom' );
-	$arr['nav_active_gradient_top'] = get_pconfig(local_user(),'redbasic', 'nav_active_gradient_top' );
-	$arr['nav_active_gradient_bottom'] = get_pconfig(local_user(),'redbasic', 'nav_active_gradient_bottom' );
-	$arr['nav_bd'] = get_pconfig(local_user(),'redbasic', 'nav_bd' );
-	$arr['nav_icon_colour'] = get_pconfig(local_user(),'redbasic', 'nav_icon_colour' );
-	$arr['nav_active_icon_colour'] = get_pconfig(local_user(),'redbasic', 'nav_active_icon_colour' );
-	$arr['link_colour'] = get_pconfig(local_user(),'redbasic', 'link_colour' );
-	$arr['banner_colour'] = get_pconfig(local_user(),'redbasic', 'banner_colour' );
-	$arr['bgcolour'] = get_pconfig(local_user(),'redbasic', 'background_colour' );
-	$arr['background_image'] = get_pconfig(local_user(),'redbasic', 'background_image' );
-	$arr['item_colour'] = get_pconfig(local_user(),'redbasic', 'item_colour' );
-	$arr['comment_item_colour'] = get_pconfig(local_user(),'redbasic', 'comment_item_colour' );
-	$arr['comment_border_colour'] = get_pconfig(local_user(),'redbasic', 'comment_border_colour' );
-	$arr['comment_indent'] = get_pconfig(local_user(),'redbasic', 'comment_indent' );
-	$arr['toolicon_colour'] = get_pconfig(local_user(),'redbasic','toolicon_colour');
-	$arr['toolicon_activecolour'] = get_pconfig(local_user(),'redbasic','toolicon_activecolour');
-	$arr['font_size'] = get_pconfig(local_user(),'redbasic', 'font_size' );
-	$arr['body_font_size'] = get_pconfig(local_user(),'redbasic', 'body_font_size' );
-	$arr['font_colour'] = get_pconfig(local_user(),'redbasic', 'font_colour' );
-	$arr['radius'] = get_pconfig(local_user(),'redbasic', 'radius' );
-	$arr['shadow'] = get_pconfig(local_user(),'redbasic', 'photo_shadow' );
-	$arr['converse_width']=get_pconfig(local_user(),"redbasic","converse_width");
-	$arr['converse_center']=get_pconfig(local_user(),"redbasic","converse_center");
-	$arr['nav_min_opacity']=get_pconfig(local_user(),"redbasic","nav_min_opacity");
-	$arr['top_photo']=get_pconfig(local_user(),"redbasic","top_photo");
-	$arr['reply_photo']=get_pconfig(local_user(),"redbasic","reply_photo");
-	$arr['sloppy_photos']=get_pconfig(local_user(),"redbasic","sloppy_photos");
+	$arr['schema'] = get_pconfig(local_channel(),'redbasic', 'schema' );
+	$arr['narrow_navbar'] = get_pconfig(local_channel(),'redbasic', 'narrow_navbar' );
+	$arr['nav_bg'] = get_pconfig(local_channel(),'redbasic', 'nav_bg' );
+	$arr['nav_gradient_top'] = get_pconfig(local_channel(),'redbasic', 'nav_gradient_top' );
+	$arr['nav_gradient_bottom'] = get_pconfig(local_channel(),'redbasic', 'nav_gradient_bottom' );
+	$arr['nav_active_gradient_top'] = get_pconfig(local_channel(),'redbasic', 'nav_active_gradient_top' );
+	$arr['nav_active_gradient_bottom'] = get_pconfig(local_channel(),'redbasic', 'nav_active_gradient_bottom' );
+	$arr['nav_bd'] = get_pconfig(local_channel(),'redbasic', 'nav_bd' );
+	$arr['nav_icon_colour'] = get_pconfig(local_channel(),'redbasic', 'nav_icon_colour' );
+	$arr['nav_active_icon_colour'] = get_pconfig(local_channel(),'redbasic', 'nav_active_icon_colour' );
+	$arr['link_colour'] = get_pconfig(local_channel(),'redbasic', 'link_colour' );
+	$arr['banner_colour'] = get_pconfig(local_channel(),'redbasic', 'banner_colour' );
+	$arr['bgcolour'] = get_pconfig(local_channel(),'redbasic', 'background_colour' );
+	$arr['background_image'] = get_pconfig(local_channel(),'redbasic', 'background_image' );
+	$arr['item_colour'] = get_pconfig(local_channel(),'redbasic', 'item_colour' );
+	$arr['comment_item_colour'] = get_pconfig(local_channel(),'redbasic', 'comment_item_colour' );
+	$arr['comment_border_colour'] = get_pconfig(local_channel(),'redbasic', 'comment_border_colour' );
+	$arr['comment_indent'] = get_pconfig(local_channel(),'redbasic', 'comment_indent' );
+	$arr['toolicon_colour'] = get_pconfig(local_channel(),'redbasic','toolicon_colour');
+	$arr['toolicon_activecolour'] = get_pconfig(local_channel(),'redbasic','toolicon_activecolour');
+	$arr['font_size'] = get_pconfig(local_channel(),'redbasic', 'font_size' );
+	$arr['body_font_size'] = get_pconfig(local_channel(),'redbasic', 'body_font_size' );
+	$arr['font_colour'] = get_pconfig(local_channel(),'redbasic', 'font_colour' );
+	$arr['radius'] = get_pconfig(local_channel(),'redbasic', 'radius' );
+	$arr['shadow'] = get_pconfig(local_channel(),'redbasic', 'photo_shadow' );
+	$arr['converse_width']=get_pconfig(local_channel(),"redbasic","converse_width");
+	$arr['converse_center']=get_pconfig(local_channel(),"redbasic","converse_center");
+	$arr['nav_min_opacity']=get_pconfig(local_channel(),"redbasic","nav_min_opacity");
+	$arr['top_photo']=get_pconfig(local_channel(),"redbasic","top_photo");
+	$arr['reply_photo']=get_pconfig(local_channel(),"redbasic","reply_photo");
+	$arr['sloppy_photos']=get_pconfig(local_channel(),"redbasic","sloppy_photos");
 	return redbasic_form($a, $arr);
 }
 
 function theme_post(&$a) {
-	if(!local_user()) { return;}
+	if(!local_channel()) { return;}
 
 	if (isset($_POST['redbasic-settings-submit'])) {
-		set_pconfig(local_user(), 'redbasic', 'schema', $_POST['redbasic_schema']);
-		set_pconfig(local_user(), 'redbasic', 'narrow_navbar', $_POST['redbasic_narrow_navbar']);
-		set_pconfig(local_user(), 'redbasic', 'nav_bg', $_POST['redbasic_nav_bg']);
-		set_pconfig(local_user(), 'redbasic', 'nav_gradient_top', $_POST['redbasic_nav_gradient_top']);
-		set_pconfig(local_user(), 'redbasic', 'nav_gradient_bottom', $_POST['redbasic_nav_gradient_bottom']);
-		set_pconfig(local_user(), 'redbasic', 'nav_active_gradient_top', $_POST['redbasic_nav_active_gradient_top']);
-		set_pconfig(local_user(), 'redbasic', 'nav_active_gradient_bottom', $_POST['redbasic_nav_active_gradient_bottom']);
-		set_pconfig(local_user(), 'redbasic', 'nav_bd', $_POST['redbasic_nav_bd']);
-		set_pconfig(local_user(), 'redbasic', 'nav_icon_colour', $_POST['redbasic_nav_icon_colour']);
-		set_pconfig(local_user(), 'redbasic', 'nav_active_icon_colour', $_POST['redbasic_nav_active_icon_colour']);
-		set_pconfig(local_user(), 'redbasic', 'link_colour', $_POST['redbasic_link_colour']);
-		set_pconfig(local_user(), 'redbasic', 'background_colour', $_POST['redbasic_background_colour']);
-		set_pconfig(local_user(), 'redbasic', 'banner_colour', $_POST['redbasic_banner_colour']);
-		set_pconfig(local_user(), 'redbasic', 'background_image', $_POST['redbasic_background_image']);
-		set_pconfig(local_user(), 'redbasic', 'item_colour', $_POST['redbasic_item_colour']);
-		set_pconfig(local_user(), 'redbasic', 'comment_item_colour', $_POST['redbasic_comment_item_colour']);
-		set_pconfig(local_user(), 'redbasic', 'comment_border_colour', $_POST['redbasic_comment_border_colour']);
-		set_pconfig(local_user(), 'redbasic', 'comment_indent', $_POST['redbasic_comment_indent']);
-		set_pconfig(local_user(), 'redbasic', 'toolicon_colour', $_POST['redbasic_toolicon_colour']);
-		set_pconfig(local_user(), 'redbasic', 'toolicon_activecolour', $_POST['redbasic_toolicon_activecolour']);
-		set_pconfig(local_user(), 'redbasic', 'font_size', $_POST['redbasic_font_size']);
-		set_pconfig(local_user(), 'redbasic', 'body_font_size', $_POST['redbasic_body_font_size']);
-		set_pconfig(local_user(), 'redbasic', 'font_colour', $_POST['redbasic_font_colour']);
-		set_pconfig(local_user(), 'redbasic', 'radius', $_POST['redbasic_radius']);
-		set_pconfig(local_user(), 'redbasic', 'photo_shadow', $_POST['redbasic_shadow']);
-		set_pconfig(local_user(), 'redbasic', 'converse_width', $_POST['redbasic_converse_width']);
-		set_pconfig(local_user(), 'redbasic', 'converse_center', $_POST['redbasic_converse_center']);
-		set_pconfig(local_user(), 'redbasic', 'nav_min_opacity', $_POST['redbasic_nav_min_opacity']);
-		set_pconfig(local_user(), 'redbasic', 'top_photo', $_POST['redbasic_top_photo']);
-		set_pconfig(local_user(), 'redbasic', 'reply_photo', $_POST['redbasic_reply_photo']);
-		set_pconfig(local_user(), 'redbasic', 'sloppy_photos', $_POST['redbasic_sloppy_photos']);
+		set_pconfig(local_channel(), 'redbasic', 'schema', $_POST['redbasic_schema']);
+		set_pconfig(local_channel(), 'redbasic', 'narrow_navbar', $_POST['redbasic_narrow_navbar']);
+		set_pconfig(local_channel(), 'redbasic', 'nav_bg', $_POST['redbasic_nav_bg']);
+		set_pconfig(local_channel(), 'redbasic', 'nav_gradient_top', $_POST['redbasic_nav_gradient_top']);
+		set_pconfig(local_channel(), 'redbasic', 'nav_gradient_bottom', $_POST['redbasic_nav_gradient_bottom']);
+		set_pconfig(local_channel(), 'redbasic', 'nav_active_gradient_top', $_POST['redbasic_nav_active_gradient_top']);
+		set_pconfig(local_channel(), 'redbasic', 'nav_active_gradient_bottom', $_POST['redbasic_nav_active_gradient_bottom']);
+		set_pconfig(local_channel(), 'redbasic', 'nav_bd', $_POST['redbasic_nav_bd']);
+		set_pconfig(local_channel(), 'redbasic', 'nav_icon_colour', $_POST['redbasic_nav_icon_colour']);
+		set_pconfig(local_channel(), 'redbasic', 'nav_active_icon_colour', $_POST['redbasic_nav_active_icon_colour']);
+		set_pconfig(local_channel(), 'redbasic', 'link_colour', $_POST['redbasic_link_colour']);
+		set_pconfig(local_channel(), 'redbasic', 'background_colour', $_POST['redbasic_background_colour']);
+		set_pconfig(local_channel(), 'redbasic', 'banner_colour', $_POST['redbasic_banner_colour']);
+		set_pconfig(local_channel(), 'redbasic', 'background_image', $_POST['redbasic_background_image']);
+		set_pconfig(local_channel(), 'redbasic', 'item_colour', $_POST['redbasic_item_colour']);
+		set_pconfig(local_channel(), 'redbasic', 'comment_item_colour', $_POST['redbasic_comment_item_colour']);
+		set_pconfig(local_channel(), 'redbasic', 'comment_border_colour', $_POST['redbasic_comment_border_colour']);
+		set_pconfig(local_channel(), 'redbasic', 'comment_indent', $_POST['redbasic_comment_indent']);
+		set_pconfig(local_channel(), 'redbasic', 'toolicon_colour', $_POST['redbasic_toolicon_colour']);
+		set_pconfig(local_channel(), 'redbasic', 'toolicon_activecolour', $_POST['redbasic_toolicon_activecolour']);
+		set_pconfig(local_channel(), 'redbasic', 'font_size', $_POST['redbasic_font_size']);
+		set_pconfig(local_channel(), 'redbasic', 'body_font_size', $_POST['redbasic_body_font_size']);
+		set_pconfig(local_channel(), 'redbasic', 'font_colour', $_POST['redbasic_font_colour']);
+		set_pconfig(local_channel(), 'redbasic', 'radius', $_POST['redbasic_radius']);
+		set_pconfig(local_channel(), 'redbasic', 'photo_shadow', $_POST['redbasic_shadow']);
+		set_pconfig(local_channel(), 'redbasic', 'converse_width', $_POST['redbasic_converse_width']);
+		set_pconfig(local_channel(), 'redbasic', 'converse_center', $_POST['redbasic_converse_center']);
+		set_pconfig(local_channel(), 'redbasic', 'nav_min_opacity', $_POST['redbasic_nav_min_opacity']);
+		set_pconfig(local_channel(), 'redbasic', 'top_photo', $_POST['redbasic_top_photo']);
+		set_pconfig(local_channel(), 'redbasic', 'reply_photo', $_POST['redbasic_reply_photo']);
+		set_pconfig(local_channel(), 'redbasic', 'sloppy_photos', $_POST['redbasic_sloppy_photos']);
 	}
 }
 
@@ -91,7 +91,7 @@ function redbasic_form(&$a, $arr) {
 		}
 	}
 
-if(feature_enabled(local_user(),'expert')) 
+if(feature_enabled(local_channel(),'expert')) 
 				$expert = 1;
 					
 	  $t = get_markup_template('theme_settings.tpl');

@@ -2,7 +2,7 @@
 
 function removeaccount_post(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
@@ -44,7 +44,7 @@ function removeaccount_post(&$a) {
 
 function removeaccount_content(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		goaway(z_root());
 
 	$hash = random_string();

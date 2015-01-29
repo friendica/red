@@ -4,7 +4,7 @@ require_once('include/Contact.php');
 
 function viewconnections_init(&$a) {
 
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 		return;
 	}
 	if(argc() > 1)
@@ -13,7 +13,7 @@ function viewconnections_init(&$a) {
 
 function viewconnections_content(&$a) {
 
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}
@@ -28,7 +28,7 @@ function viewconnections_content(&$a) {
 		return;
 	} 
 
-	$is_owner = ((local_user() && local_user() == $a->profile['uid']) ? true : false);
+	$is_owner = ((local_channel() && local_channel() == $a->profile['uid']) ? true : false);
 
 	$abook_flags = ABOOK_FLAG_PENDING|ABOOK_FLAG_SELF;
 	$xchan_flags = XCHAN_FLAGS_ORPHAN|XCHAN_FLAGS_DELETED;

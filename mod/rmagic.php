@@ -3,7 +3,7 @@
 
 function rmagic_init(&$a) {
 
-	if(local_user())
+	if(local_channel())
 		goaway(z_root());
 
 	$me = get_my_address();

@@ -96,7 +96,7 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 		intval($channel_id)
 	);
 	if($r && (($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
-		if(local_user() && (get_account_id() == $r[0]['account_id'])) {
+		if(local_channel() && (get_account_id() == $r[0]['account_id'])) {
 			return $s;
 		}
 	}
@@ -727,7 +727,7 @@ function contact_block() {
 	if($shown == 0)
 		return;
 
-	$is_owner = ((local_user() && local_user() == $a->profile['uid']) ? true : false);
+	$is_owner = ((local_channel() && local_channel() == $a->profile['uid']) ? true : false);
 
 	$abook_flags = ABOOK_FLAG_PENDING|ABOOK_FLAG_SELF;
 	$xchan_flags = XCHAN_FLAGS_ORPHAN|XCHAN_FLAGS_DELETED;
@@ -835,7 +835,7 @@ function search($s,$id='search-box',$url='/search',$save = false) {
 		'$action_url' => $a->get_baseurl((stristr($url,'network')) ? true : false) . $url,
 		'$search_label' => t('Search'),
 		'$save_label' => t('Save'),
-		'$savedsearch' => feature_enabled(local_user(),'savedsearch')
+		'$savedsearch' => feature_enabled(local_channel(),'savedsearch')
 	));
 }
 
@@ -847,7 +847,7 @@ function searchbox($s,$id='search-box',$url='/search',$save = false) {
 		'$action_url' => z_root() . '/' . $url,
 		'$search_label' => t('Search'),
 		'$save_label' => t('Save'),
-		'$savedsearch' => feature_enabled(local_user(),'savedsearch')
+		'$savedsearch' => feature_enabled(local_channel(),'savedsearch')
 	));
 }
 
@@ -1063,7 +1063,7 @@ function smilies($s, $sample = false) {
 	$a = get_app();
 
 	if(intval(get_config('system','no_smilies')) 
-		|| (local_user() && intval(get_pconfig(local_user(),'system','no_smilies'))))
+		|| (local_channel() && intval(get_pconfig(local_channel(),'system','no_smilies'))))
 		return $s;
 
 	$s = preg_replace_callback('{<(pre|code)>.*?</\1>}ism','smile_shield',$s);
@@ -1359,7 +1359,7 @@ function prepare_body(&$item,$attach = false) {
 
 	$s .= format_categories($item,$writeable);
 
-	if(local_user() == $item['uid'])
+	if(local_channel() == $item['uid'])
 		$s .= format_filer($item);
 
 	$s = sslify($s);
@@ -1466,14 +1466,14 @@ function prepare_text($text,$content_type = 'text/bbcode') {
 
 
 function zidify_callback($match) {
-	$is_zid = ((feature_enabled(local_user(),'sendzid')) || (strpos($match[1],'zrl')) ? true : false);
+	$is_zid = ((feature_enabled(local_channel(),'sendzid')) || (strpos($match[1],'zrl')) ? true : false);
 	$replace = '<a' . $match[1] . ' href="' . (($is_zid) ? zid($match[2]) : $match[2]) . '"';			
 	$x = str_replace($match[0],$replace,$match[0]);
 	return $x;
 }
 
 function zidify_img_callback($match) {
-	$is_zid = ((feature_enabled(local_user(),'sendzid')) || (strpos($match[1],'zrl')) ? true : false);
+	$is_zid = ((feature_enabled(local_channel(),'sendzid')) || (strpos($match[1],'zrl')) ? true : false);
 	$replace = '<img' . $match[1] . ' src="' . (($is_zid) ? zid($match[2]) : $match[2]) . '"';
 
 	$x = str_replace($match[0],$replace,$match[0]);
@@ -1586,7 +1586,7 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 
 	if($r) {
 		if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
-			if(local_user() && get_account_id() == $r[0]['account_id'])
+			if(local_channel() && get_account_id() == $r[0]['account_id'])
 				$x[] = 'application/x-php';
 		}
 	}
@@ -2304,7 +2304,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			// access control. The link points to out own channel just so it doesn't look
 			// weird - as all the other tags are linked to something. 
 
-			if(local_user() && local_user() == $profile_uid) {
+			if(local_channel() && local_channel() == $profile_uid) {
 				require_once('include/group.php');
 				$grp = group_byname($profile_uid,$name);
 

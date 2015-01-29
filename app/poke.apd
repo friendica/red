@@ -1,4 +1,4 @@
 url: $baseurl/poke
-requires: local_user
+requires: local_channel
 name: Poke
 photo: $baseurl/app/poke.png

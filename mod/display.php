@@ -5,7 +5,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 //	logger("mod-display: update = $update load = $load");
 
-	if(intval(get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+	if(intval(get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}
@@ -36,7 +36,7 @@ function display_content(&$a, $update = 0, $load = false) {
 	$observer_is_owner = false;
 
 
-	if(local_user() && (! $update)) {
+	if(local_channel() && (! $update)) {
 
 		$channel = $a->get_channel();
 
@@ -58,7 +58,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'acl' => populate_acl($channel_acl),
 			'bang' => '',
 			'visitor' => true,
-			'profile_uid' => local_user(),
+			'profile_uid' => local_channel(),
 			'return_path' => 'channel/' . $channel['channel_address']
 		);
 
@@ -109,7 +109,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 
 		$o .= '<div id="live-display"></div>' . "\r\n";
-		$o .= "<script> var profile_uid = " . ((intval(local_user())) ? local_user() : (-1))
+		$o .= "<script> var profile_uid = " . ((intval(local_channel())) ? local_channel() : (-1))
 			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
@@ -160,13 +160,13 @@ function display_content(&$a, $update = 0, $load = false) {
 			$sys = get_sys_channel();
 			$sysid = $sys['channel_id'];
 
-			if(local_user()) {
+			if(local_channel()) {
 				$r = q("SELECT * from item
 					WHERE item_restrict = 0
 					and uid = %d
 					and mid = '%s'
 					limit 1",
-					intval(local_user()),
+					intval(local_channel()),
 					dbesc($target_item['parent_mid'])
 				);
 				if($r) {
@@ -235,7 +235,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			WHERE (item_flags & %d)>0 AND uid = %d and parent = %d ",
 			intval(ITEM_UNSEEN),
 			intval(ITEM_UNSEEN),
-			intval(local_user()),
+			intval(local_channel()),
 			intval($r[0]['parent'])
 		);
 	}

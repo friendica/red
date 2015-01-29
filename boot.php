@@ -1004,11 +1004,11 @@ class App {
 
 	function build_pagehead() {
 
-		$user_scalable = ((local_user()) ? get_pconfig(local_user(),'system','user_scalable') : 1);
+		$user_scalable = ((local_channel()) ? get_pconfig(local_channel(),'system','user_scalable') : 1);
 		if ($user_scalable === false)
 			$user_scalable = 1;
 
-		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 80000);
+		$interval = ((local_channel()) ? get_pconfig(local_channel(),'system','update_interval') : 80000);
 		if($interval < 10000)
 			$interval = 80000;
 
@@ -1023,7 +1023,7 @@ class App {
 		$this->page['htmlhead'] = replace_macros($tpl, array(
 			'$user_scalable' => $user_scalable,
 			'$baseurl' => $this->get_baseurl(),
-			'$local_user' => local_user(),
+			'$local_channel' => local_channel(),
 			'$generator' => RED_PLATFORM . ' ' . RED_VERSION,
 			'$update_interval' => $interval,
 			'$icon' => head_get_icon(),
@@ -1529,7 +1529,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 
 	$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
 
-	if(local_user()) {
+	if(local_channel()) {
 		$tpl = get_markup_template("logout.tpl");
 	}
 	else {
@@ -1603,24 +1603,36 @@ function get_account_id() {
  *
  * @return int|bool channel_id or false
  */
-function local_user() {
+function local_channel() {
 	if((x($_SESSION, 'authenticated')) && (x($_SESSION, 'uid')))
 		return intval($_SESSION['uid']);
 
 	return false;
 }
 
+function local_user() {
+	// DEPRECATED
+	return local_channel();
+}
+
+
 /**
  * @brief Returns contact id (visitor_id) of authenticated site visitor or false.
  *
  * @return int|bool visitor_id or false
  */
-function remote_user() {
+function remote_channel() {
 	if((x($_SESSION, 'authenticated')) && (x($_SESSION, 'visitor_id')))
 		return $_SESSION['visitor_id'];
 
 	return false;
 }
+
+function remote_user() {
+	// DEPRECATED
+	return remote_channel();
+}
+
 
 /**
  * Contents of $s are displayed prominently on the page the next time
@@ -1744,7 +1756,7 @@ function current_theme(){
 
 	// Find the theme that belongs to the channel whose stuff we are looking at
 
-	if($a->profile_uid && $a->profile_uid != local_user()) {
+	if($a->profile_uid && $a->profile_uid != local_channel()) {
 		$r = q("select channel_theme from channel where channel_id = %d limit 1",
 			intval($a->profile_uid)
 		);
@@ -1759,8 +1771,8 @@ function current_theme(){
 	// The default is for channel themes to take precedence over your own on pages belonging
 	// to that channel.
 
-	if($page_theme && local_user() && local_user() != $a->profile_url) {
-		if(get_pconfig(local_user(),'system','always_my_theme'))
+	if($page_theme && local_channel() && local_channel() != $a->profile_url) {
+		if(get_pconfig(local_channel(),'system','always_my_theme'))
 			$page_theme = null;
 	}
 

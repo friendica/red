@@ -1,4 +1,4 @@
 url: $baseurl/connections
-requires: local_user
+requires: local_channel
 name: Connections
 photo: $baseurl/app/connections.png

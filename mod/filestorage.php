@@ -14,7 +14,7 @@ function filestorage_post(&$a) {
 
 	$channel_id = ((x($_POST, 'uid')) ? intval($_POST['uid']) : 0);
 
-	if((! $channel_id) || (! local_user()) || ($channel_id != local_user())) {
+	if((! $channel_id) || (! local_channel()) || ($channel_id != local_channel())) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -76,7 +76,7 @@ function filestorage_content(&$a) {
 	// Since we have ACL'd files in the wild, but don't have ACL here yet, we
 	// need to return for anyone other than the owner, despite the perms check for now.
 
-	$is_owner = (((local_user()) && ($owner  == local_user())) ? true : false);
+	$is_owner = (((local_channel()) && ($owner  == local_channel())) ? true : false);
 	if(! $is_owner) {
 		info( t('Permission Denied.') . EOL );
 		return;

@@ -1,4 +1,4 @@
 url: $baseurl/events
-requires: local_user
+requires: local_channel
 name: Events
 photo: $baseurl/app/events.png

@@ -10,7 +10,7 @@ function viewsrc_content(&$a) {
 	$item_id = ((argc() > 1) ? intval(argv(1)) : 0);
 	$json    = ((argc() > 2 && argv(2) === 'json') ? true : false);
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 	}
 
@@ -20,9 +20,9 @@ function viewsrc_content(&$a) {
 		notice( t('Item not found.') . EOL);
 	}
 
-	if(local_user() && $item_id) {
+	if(local_channel() && $item_id) {
 		$r = q("select item_flags, body from item where item_restrict = 0 and uid in (%d , %d) and id = %d limit 1",
-			intval(local_user()),
+			intval(local_channel()),
 			intval($sys['channel_id']),
 			intval($item_id)
 		);

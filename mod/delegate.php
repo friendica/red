@@ -2,7 +2,7 @@
 
 function delegate_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -22,13 +22,13 @@ function delegate_content(&$a) {
 		);
 		if(count($r)) {
 			$r = q("select id from contact where uid = %d and nurl = '%s' limit 1",
-				intval(local_user()),
+				intval(local_channel()),
 				dbesc(normalise_link($a->get_baseurl() . '/channel/' . $r[0]['nickname']))
 			);
 			if(count($r)) {
 				q("insert into manage ( uid, mid ) values ( %d , %d ) ",
 					intval($a->argv[2]),
-					intval(local_user())
+					intval(local_channel())
 				);
 			}
 		}
@@ -44,7 +44,7 @@ function delegate_content(&$a) {
 
 		q("delete from manage where uid = %d and mid = %d",
 			intval($a->argv[2]),
-			intval(local_user())
+			intval(local_channel())
 		);
 		goaway($a->get_baseurl() . '/delegate');
 
@@ -66,7 +66,7 @@ function delegate_content(&$a) {
 	// find everybody that currently has delegated management to this account/page
 
 	$r = q("select * from user where uid in ( select uid from manage where mid = %d ) ",
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	if(count($r))
@@ -87,7 +87,7 @@ function delegate_content(&$a) {
 	$r = q("select nurl from contact where substring_index(contact.nurl,'/',3) = '%s' 
 		and contact.uid = %d and contact.self = 0 and network = '%s' ",
 		dbesc(normalise_link($a->get_baseurl())),
-		intval(local_user()),
+		intval(local_channel()),
 		dbesc(NETWORK_DFRN)
 	); 
 

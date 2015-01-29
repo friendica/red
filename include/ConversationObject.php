@@ -33,7 +33,7 @@ class Conversation extends BaseObject {
 		$this->set_mode($mode);
 		$this->preview = $preview;
 		$this->prepared_item = $prepared_item;
-		$c = ((local_user()) ? get_pconfig(local_user(),'system','default_cipher') : '');
+		$c = ((local_channel()) ? get_pconfig(local_channel(),'system','default_cipher') : '');
 		if($c)
 			$this->cipher = $c;
 	}
@@ -57,7 +57,7 @@ class Conversation extends BaseObject {
 //					$this->writable = false;
 //				}
 //				else {
-					$this->profile_owner = local_user();
+					$this->profile_owner = local_channel();
 					$this->writable = true;
 //				}
 				break;

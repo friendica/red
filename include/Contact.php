@@ -98,10 +98,10 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 
 // FIXME - show connect button to observer if appropriate
 	$connect = false;
-	if(local_user()) {
+	if(local_channel()) {
 		$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
 			dbesc($xchan['xchan_hash']),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if(! $r)
 			$connect = t('Connect');
@@ -351,7 +351,7 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 
 	proc_run('php','include/directory.php',$channel_id);
 
-	if($channel_id == local_user() && $unset_session) {
+	if($channel_id == local_channel() && $unset_session) {
 		unset($_SESSION['authenticated']);
 		unset($_SESSION['uid']);
 		goaway($a->get_baseurl());

@@ -22,8 +22,8 @@ function profile_photo_set_profile_perms($profileid = '') {
 
 	} else {
 
-		logger('Resetting permissions on default-profile-photo for user'.local_user());
-		$r = q("SELECT photo, profile_guid, id, is_default, uid  FROM profile WHERE profile.uid = %d AND is_default = 1 LIMIT 1", intval(local_user()) ); //If no profile is given, we update the default profile
+		logger('Resetting permissions on default-profile-photo for user'.local_channel());
+		$r = q("SELECT photo, profile_guid, id, is_default, uid  FROM profile WHERE profile.uid = %d AND is_default = 1 LIMIT 1", intval(local_channel()) ); //If no profile is given, we update the default profile
 	}
 
 	$profile = $r[0];
@@ -32,7 +32,7 @@ function profile_photo_set_profile_perms($profileid = '') {
 	       	$resource_id = $resource_id[0];
 
 		if (intval($profile['is_default']) != 1) {
-			$r0 = q("SELECT channel_hash FROM channel WHERE channel_id = %d LIMIT 1", intval(local_user()) );
+			$r0 = q("SELECT channel_hash FROM channel WHERE channel_id = %d LIMIT 1", intval(local_channel()) );
 			$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%d' ", intval($profile['id'])); //Should not be needed in future. Catches old int-profile-ids.
 			$r2 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%s'", dbesc($profile['profile_guid']));
 			$allowcid = "<" . $r0[0]['channel_hash'] . ">";
@@ -62,7 +62,7 @@ function profile_photo_set_profile_perms($profileid = '') {
 
 function profile_photo_init(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		return;
 	}
 
@@ -80,7 +80,7 @@ function profile_photo_init(&$a) {
 
 function profile_photo_post(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		return;
 	}
 	
@@ -94,7 +94,7 @@ function profile_photo_post(&$a) {
 		if($_REQUEST['profile']) {
 			$r = q("select id, is_default from profile where id = %d and uid = %d limit 1",
 				intval($_REQUEST['profile']),
-				intval(local_user())
+				intval(local_channel())
 			);
 			if(($r) && (! intval($r[0]['is_default'])))
 				$is_default_profile = 0;
@@ -124,7 +124,7 @@ function profile_photo_post(&$a) {
 
 		$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND uid = %d AND scale = %d LIMIT 1",
 			dbesc($image_id),
-			dbesc(local_user()),
+			dbesc(local_channel()),
 			intval($scale));
 
 		if($r) {
@@ -139,7 +139,7 @@ function profile_photo_post(&$a) {
 
 				$aid = get_account_id();
 
-				$p = array('aid' => $aid, 'uid' => local_user(), 'resource_id' => $base_image['resource_id'],
+				$p = array('aid' => $aid, 'uid' => local_channel(), 'resource_id' => $base_image['resource_id'],
 					'filename' => $base_image['filename'], 'album' => t('Profile Photos'));
 
 				$p['scale'] = 4;
@@ -162,7 +162,7 @@ function profile_photo_post(&$a) {
 					notice( t('Image resize failed.') . EOL );
 					$x = q("delete from photo where resource_id = '%s' and uid = %d and scale >= 4 ",
 						dbesc($base_image['resource_id']),
-						local_user()
+						local_channel()
 					);
 					return;
 				}
@@ -172,14 +172,14 @@ function profile_photo_post(&$a) {
 				if($is_default_profile) {
 					$r = q("UPDATE photo SET profile = 0 WHERE profile = 1 AND resource_id != '%s' AND `uid` = %d",
 						dbesc($base_image['resource_id']),
-						intval(local_user())
+						intval(local_channel())
 					);
 					$r = q("UPDATE photo SET photo_flags = ( photo_flags & ~%d ) WHERE ( photo_flags & %d )>0 
 						AND resource_id != '%s' AND `uid` = %d",
 						intval(PHOTO_PROFILE),
 						intval(PHOTO_PROFILE),
 						dbesc($base_image['resource_id']),
-						intval(local_user())
+						intval(local_channel())
 					);
 				}
 				else {
@@ -187,7 +187,7 @@ function profile_photo_post(&$a) {
 						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource_id'] . '-4'),
 						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource_id'] . '-5'),
 						intval($_REQUEST['profile']),
-						intval(local_user())
+						intval(local_channel())
 					);
 				}
 
@@ -260,7 +260,7 @@ function profile_photo_post(&$a) {
 if(! function_exists('profile_photo_content')) {
 function profile_photo_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL );
 		return;
 	}
@@ -284,7 +284,7 @@ function profile_photo_content(&$a) {
 
 
 		$r = q("SELECT id, album, scale FROM photo WHERE uid = %d AND resource_id = '%s' ORDER BY scale ASC",
-			intval(local_user()),
+			intval(local_channel()),
 			dbesc($resource_id)
 		);
 		if(! $r) {
@@ -302,21 +302,21 @@ function profile_photo_content(&$a) {
 		if(($r[0]['album'] == t('Profile Photos')) && ($havescale)) {
 			// unset any existing profile photos
 			$r = q("UPDATE photo SET profile = 0 WHERE profile = 1 AND uid = %d",
-				intval(local_user()));
+				intval(local_channel()));
 			$r = q("UPDATE photo SET photo_flags = (photo_flags & ~%d ) WHERE (photo_flags & %d )>0 AND uid = %d",
 				intval(PHOTO_PROFILE),
 				intval(PHOTO_PROFILE),
-				intval(local_user()));
+				intval(local_channel()));
 
 			// set all sizes of this one as profile photos
 			$r = q("UPDATE photo SET profile = 1 WHERE uid = %d AND resource_id = '%s'",
-				intval(local_user()),
+				intval(local_channel()),
 				dbesc($resource_id)
 				);
 
 			$r = q("UPDATE photo SET photo_flags = ( photo_flags | %d ) WHERE uid = %d AND resource_id = '%s'",
 				intval(PHOTO_PROFILE),
-				intval(local_user()),
+				intval(local_channel()),
 				dbesc($resource_id)
 				);
 
@@ -327,13 +327,13 @@ function profile_photo_content(&$a) {
 			);
 
 			profile_photo_set_profile_perms(); //Reset default photo permissions to public
-			proc_run('php','include/directory.php',local_user());
+			proc_run('php','include/directory.php',local_channel());
 			goaway($a->get_baseurl() . '/profiles');
 		}
 
 		$r = q("SELECT `data`, `type` FROM photo WHERE id = %d and uid = %d limit 1",
 			intval($r[0]['id']),
-			intval(local_user())
+			intval(local_channel())
 
 		);
 		if(! $r) {
@@ -347,7 +347,7 @@ function profile_photo_content(&$a) {
 	}
 
 	$profiles = q("select id, profile_name as name, is_default from profile where uid = %d",
-		intval(local_user())
+		intval(local_channel())
 	);
 
 	if(! x($a->data,'imagecrop')) {
@@ -420,7 +420,7 @@ function profile_photo_crop_ui_head(&$a, $ph){
 	$hash = photo_new_resource();
 	$smallest = 0;
 
-	$p = array('aid' => get_account_id(), 'uid' => local_user(), 'resource_id' => $hash,
+	$p = array('aid' => get_account_id(), 'uid' => local_channel(), 'resource_id' => $hash,
 		'filename' => $filename, 'album' => t('Profile Photos'), 'scale' => 0);
 	$r = $ph->save($p);
 

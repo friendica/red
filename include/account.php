@@ -561,7 +561,7 @@ function downgrade_accounts() {
 
 function service_class_allows($uid,$property,$usage = false) {
 	$a = get_app();
-	if($uid == local_user()) {
+	if($uid == local_channel()) {
 		$service_class = $a->account['account_service_class'];
 	}
 	else {
@@ -619,7 +619,7 @@ function account_service_class_allows($aid,$property,$usage = false) {
 
 function service_class_fetch($uid,$property) {
 	$a = get_app();
-	if($uid == local_user()) {
+	if($uid == local_channel()) {
 		$service_class = $a->account['account_service_class'];
 	}
 	else {

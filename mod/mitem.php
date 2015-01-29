@@ -5,7 +5,7 @@ require_once('include/acl_selectors.php');
 
 function mitem_init(&$a) {
 
-	$uid = local_user();
+	$uid = local_channel();
 
 	if(array_key_exists('sys',$_REQUEST) && $_REQUEST['sys'] && is_site_admin()) {
 		$sys = get_sys_channel();
@@ -30,7 +30,7 @@ function mitem_init(&$a) {
 
 function mitem_post(&$a) {
 
-	$uid = local_user();
+	$uid = local_channel();
 
 	if($a->is_sys && is_site_admin()) {
 		$sys = get_sys_channel();
@@ -89,7 +89,7 @@ function mitem_post(&$a) {
 
 function mitem_content(&$a) {
 
-	$uid = local_user();
+	$uid = local_channel();
 	$channel = $a->get_channel();
 	$observer = $a->get_observer();
 

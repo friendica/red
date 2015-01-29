@@ -5,7 +5,7 @@ function starred_init(&$a) {
 
 	$starred = 0;
 
-	if(! local_user())
+	if(! local_channel())
 		killme();
 	if(argc() > 1)
 		$message_id = intval(argv(1));
@@ -13,7 +13,7 @@ function starred_init(&$a) {
 		killme();
 
 	$r = q("SELECT item_flags FROM item WHERE uid = %d AND id = %d LIMIT 1",
-		intval(local_user()),
+		intval(local_channel()),
 		intval($message_id)
 	);
 	if(! count($r))
@@ -23,7 +23,7 @@ function starred_init(&$a) {
 
 	$r = q("UPDATE item SET item_flags = %d WHERE uid = %d and id = %d",
 		intval($item_flags),
-		intval(local_user()),
+		intval(local_channel()),
 		intval($message_id)
 	);
 

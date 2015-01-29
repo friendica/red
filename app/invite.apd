@@ -1,4 +1,4 @@
 url: $baseurl/invite
-requires: local_user
+requires: local_channel
 name: Invite
 photo: $baseurl/app/invite.png

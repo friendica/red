@@ -15,7 +15,7 @@ function channel_init(&$a) {
 	if(argc() > 1)
 		$which = argv(1);
 	if(! $which) {
-		if(local_user()) {
+		if(local_channel()) {
 			$channel = $a->get_channel();
 			if($channel && $channel['channel_address'])
 			$which = $channel['channel_address'];
@@ -29,7 +29,7 @@ function channel_init(&$a) {
 	$profile = 0;
 	$channel = $a->get_channel();
 
-	if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
+	if((local_channel()) && (argc() > 2) && (argv(2) === 'view')) {
 		$which = $channel['channel_address'];
 		$profile = argv(1);		
 	}
@@ -52,7 +52,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 	$datequery = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
 	$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
 
-	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
+	if(get_config('system','block_public') && (! get_account_id()) && (! remote_channel())) {
 			return login();
 	}
 
@@ -68,12 +68,12 @@ function channel_content(&$a, $update = 0, $load = false) {
 		$a->profile['profile_uid'] = $a->profile_uid = $update;
 	}
 	else {
-		if($a->profile['profile_uid'] == local_user()) {
+		if($a->profile['profile_uid'] == local_channel()) {
 			nav_set_selected('home');
 		}
 	}
 
-	$is_owner = (((local_user()) && ($a->profile['profile_uid'] == local_user())) ? true : false);
+	$is_owner = (((local_channel()) && ($a->profile['profile_uid'] == local_channel())) ? true : false);
 
 	$channel = $a->get_channel();
 	$observer = $a->get_observer();
@@ -185,7 +185,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			$sql_extra2 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$datequery2))));
 		}
 
-		$itemspage = get_pconfig(local_user(),'system','itemspage');
+		$itemspage = get_pconfig(local_channel(),'system','itemspage');
 		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']), intval($a->pager['start']));
 
@@ -322,7 +322,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			intval(ITEM_UNSEEN),
 			intval(ITEM_UNSEEN),
 			intval(ITEM_WALL),
-			intval(local_user())
+			intval(local_channel())
 		);
 	}
 

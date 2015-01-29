@@ -10,7 +10,7 @@ function directory_init(&$a) {
 
 	if(x($_GET,'ignore')) {
 		q("insert into xign ( uid, xchan ) values ( %d, '%s' ) ",
-			intval(local_user()),
+			intval(local_channel()),
 			dbesc($_GET['ignore'])
 		);
 	}
@@ -18,7 +18,7 @@ function directory_init(&$a) {
 
 function directory_content(&$a) {
 
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}
@@ -51,17 +51,17 @@ function directory_content(&$a) {
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
 
-	if(strpos($search,'=') && local_user() && get_pconfig(local_user(),'feature','expert'))
+	if(strpos($search,'=') && local_channel() && get_pconfig(local_channel(),'feature','expert'))
 		$advanced = $search;
 
 
 	$keywords = (($_GET['keywords']) ? $_GET['keywords'] : '');
 
 	// Suggest channels if no search terms or keywords are given
-	$suggest = (local_user() && x($_REQUEST,'suggest')) ? $_REQUEST['suggest'] : '';
+	$suggest = (local_channel() && x($_REQUEST,'suggest')) ? $_REQUEST['suggest'] : '';
 
 	if($suggest) {
-		$r = suggestion_query(local_user(),get_observer_hash());
+		$r = suggestion_query(local_channel(),get_observer_hash());
 
 		// Remember in which order the suggestions were
 		$addresses = array();
@@ -96,9 +96,9 @@ function directory_content(&$a) {
 
 	$contacts = array();
 
-	if(local_user()) {
+	if(local_channel()) {
 		$x = q("select abook_xchan from abook where abook_channel = %d",
-			intval(local_user())
+			intval(local_channel())
 		);
 		if($x) {
 			foreach($x as $xx)
@@ -161,7 +161,7 @@ function directory_content(&$a) {
 						$profile_link = chanlink_url($rr['url']);
 		
 						$pdesc = (($rr['description']) ? $rr['description'] . '<br />' : '');
-						$connect_link = ((local_user()) ? z_root() . '/follow?f=&url=' . urlencode($rr['address']) : ''); 		
+						$connect_link = ((local_channel()) ? z_root() . '/follow?f=&url=' . urlencode($rr['address']) : ''); 		
 
 						// Checking status is disabled ATM until someone checks the performance impact more carefully
 						//$online = remote_online_status($rr['address']);
@@ -219,9 +219,9 @@ function directory_content(&$a) {
 							$karr = explode(' ', $keywords);
 
 							if($karr) {
-								if(local_user()) {
+								if(local_channel()) {
 									$r = q("select keywords from profile where uid = %d and is_default = 1 limit 1",
-										intval(local_user())
+										intval(local_channel())
 									);
 									if($r) {
 										$keywords = str_replace(',',' ', $r[0]['keywords']);

@@ -5,7 +5,7 @@ require_once('include/identity.php');
 
 function menu_post(&$a) {
 
-	$uid = local_user();
+	$uid = local_channel();
 
 	if(array_key_exists('sys',$_REQUEST) && $_REQUEST['sys'] && is_site_admin()) {
 		$sys = get_sys_channel();
@@ -50,7 +50,7 @@ function menu_post(&$a) {
 
 function menu_content(&$a) {
 
-	$uid = local_user();
+	$uid = local_channel();
 
 	if($a->is_sys && is_site_admin()) {
 		$sys = get_sys_channel();

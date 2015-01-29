@@ -185,7 +185,7 @@ function chatroom_list($uid) {
 	require_once('include/security.php');
 	$sql_extra = permissions_sql($uid);
 
-	$r = q("select cr_name, cr_id, count(cp_id) as cr_inroom from chatroom left join chatpresence on cr_id = cp_room where cr_uid = %d $sql_extra group by cr_name order by cr_name",
+	$r = q("select cr_name, cr_id, count(cp_id) as cr_inroom from chatroom left join chatpresence on cr_id = cp_room where cr_uid = %d $sql_extra group by cr_name, cr_id order by cr_name",
 		intval($uid)
 	);
 

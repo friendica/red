@@ -202,8 +202,8 @@ function group_get_members($gid) {
 			LEFT JOIN abook ON abook_xchan = `group_member`.`xchan` left join xchan on xchan_hash = abook_xchan
 			WHERE `gid` = %d AND abook_channel = %d and `group_member`.`uid` = %d and not ( xchan_flags & %d )>0 and not ( abook_flags & %d )>0 and not ( abook_flags & %d )>0 ORDER BY xchan_name ASC ",
 			intval($gid),
-			intval(local_user()),
-			intval(local_user()),
+			intval(local_channel()),
+			intval(local_channel()),
 			intval(XCHAN_FLAGS_DELETED),
 			intval(ABOOK_FLAG_BLOCKED),
 			intval(ABOOK_FLAG_PENDING)
@@ -245,7 +245,7 @@ function group_side($every="connections",$each="group",$edit = false, $group_id 
 
 	$o = '';
 
-	if(! local_user())
+	if(! local_channel())
 		return '';
 
 	$groups = array();
@@ -263,7 +263,7 @@ function group_side($every="connections",$each="group",$edit = false, $group_id 
 	);
 	$member_of = array();
 	if($cid) {
-		$member_of = groups_containing(local_user(),$cid);
+		$member_of = groups_containing(local_channel(),$cid);
 	} 
 
 	if(count($r)) {

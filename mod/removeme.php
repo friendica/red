@@ -2,7 +2,7 @@
 
 function removeme_post(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
@@ -35,7 +35,7 @@ function removeme_post(&$a) {
 
 	$global_remove = intval($_POST['global']);
 
-	channel_remove(local_user(),1 - $global_remove,true);
+	channel_remove(local_channel(),1 - $global_remove,true);
 
 }
 
@@ -43,7 +43,7 @@ function removeme_post(&$a) {
 
 function removeme_content(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		goaway(z_root());
 
 	$hash = random_string();

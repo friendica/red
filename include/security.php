@@ -118,7 +118,7 @@ function change_channel($change_channel) {
 			$_SESSION['uid'] = intval($r[0]['channel_id']);
 			get_app()->set_channel($r[0]);
 			$_SESSION['theme'] = $r[0]['channel_theme'];
-			$_SESSION['mobile_theme'] = get_pconfig(local_user(),'system', 'mobile_theme');
+			$_SESSION['mobile_theme'] = get_pconfig(local_channel(),'system', 'mobile_theme');
 			date_default_timezone_set($r[0]['channel_timezone']);
 			$ret = $r[0];
 		}
@@ -130,7 +130,7 @@ function change_channel($change_channel) {
 			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . substr(get_app()->get_baseurl(), strpos(get_app()->get_baseurl(), '://') + 3);
 
 			get_app()->set_observer($x[0]);
-			get_app()->set_perms(get_all_perms(local_user(), $hash));
+			get_app()->set_perms(get_all_perms(local_channel(), $hash));
 		}
 		if(! is_dir('store/' . $r[0]['channel_address']))
 			@os_mkdir('store/' . $r[0]['channel_address'], STORAGE_DEFAULT_PERMISSIONS,true);
@@ -153,8 +153,8 @@ function permissions_sql($owner_id, $remote_verified = false, $groups = null) {
 	if(defined('STATUSNET_PRIVACY_COMPATIBILITY'))
 		return '';
 
-	$local_user = local_user();
-	$remote_user = remote_user();
+	$local_channel = local_channel();
+	$remote_channel = remote_channel();
 
 	/**
 	 * Construct permissions
@@ -172,7 +172,7 @@ function permissions_sql($owner_id, $remote_verified = false, $groups = null) {
 	 * Profile owner - everything is visible
 	 */
 
-	if(($local_user) && ($local_user == $owner_id)) {
+	if(($local_channel) && ($local_channel == $owner_id)) {
 		$sql = ''; 
 	}
 
@@ -226,8 +226,8 @@ function item_permissions_sql($owner_id, $remote_verified = false, $groups = nul
 	if(defined('STATUSNET_PRIVACY_COMPATIBILITY'))
 		return '';
 
-	$local_user = local_user();
-	$remote_user = remote_user();
+	$local_channel = local_channel();
+	$remote_channel = remote_channel();
 
 	/**
 	 * Construct permissions
@@ -241,7 +241,7 @@ function item_permissions_sql($owner_id, $remote_verified = false, $groups = nul
 	 * Profile owner - everything is visible
 	 */
 
-	if(($local_user) && ($local_user == $owner_id)) {
+	if(($local_channel) && ($local_channel == $owner_id)) {
 		$sql = ''; 
 	}
 
@@ -408,8 +408,8 @@ function stream_perms_api_uids($perms = NULL ) {
 	$perms = is_null($perms) ? (PERMS_SITE|PERMS_NETWORK|PERMS_PUBLIC) : $perms;
 
 	$ret = array();
-	if(local_user())
-		$ret[] = local_user();
+	if(local_channel())
+		$ret[] = local_channel();
 	$r = q("select channel_id from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0",
 		intval($perms),
 		intval(PAGE_ADULT|PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
@@ -437,7 +437,7 @@ function stream_perms_xchans($perms = NULL ) {
 	$perms = is_null($perms) ? (PERMS_SITE|PERMS_NETWORK|PERMS_PUBLIC) : $perms;
 
 	$ret = array();
-	if(local_user())
+	if(local_channel())
 		$ret[] = get_observer_hash();
 
 	$r = q("select channel_hash from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0",

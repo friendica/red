@@ -7,7 +7,7 @@ function regmod_content(&$a) {
 
 	$_SESSION['return_url'] = $a->cmd;
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		info( t('Please login.') . EOL);
 		$o .= '<br /><br />' . login(($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
 		return $o;

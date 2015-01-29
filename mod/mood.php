@@ -7,10 +7,10 @@ require_once('include/items.php');
 
 function mood_init(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
-	$uid = local_user();
+	$uid = local_channel();
 	$channel = $a->get_channel();
 	$verb = notags(trim($_GET['verb']));
 	
@@ -108,7 +108,7 @@ function mood_init(&$a) {
 
 function mood_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}

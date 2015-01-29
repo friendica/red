@@ -81,7 +81,7 @@ var searchData=
   ['reload_5fplugins',['reload_plugins',['../plugin_8php.html#af9ac19004dca49adae1ac7a0d9f3b025',1,'plugin.php']]],
   ['reltoabs',['reltoabs',['../text_8php.html#ad855a32bee22c3f3b9734e3a334b96f2',1,'text.php']]],
   ['remote_5fonline_5fstatus',['remote_online_status',['../identity_8php.html#a47d6f53216f23a3484061793bef29854',1,'identity.php']]],
-  ['remote_5fuser',['remote_user',['../boot_8php.html#a5542c5c2806ab8bca04bad53d47b5209',1,'boot.php']]],
+  ['remote_5fuser',['remote_channel',['../boot_8php.html#a5542c5c2806ab8bca04bad53d47b5209',1,'boot.php']]],
   ['remove_5fall_5fxchan_5fresources',['remove_all_xchan_resources',['../Contact_8php.html#acc12cda999c88c4d6185cca967c15125',1,'Contact.php']]],
   ['remove_5fchild',['remove_child',['../classItem.html#a2ce70ef63f9f4d86a09c351678806925',1,'Item']]],
   ['remove_5fcommunity_5ftag',['remove_community_tag',['../zot_8php.html#aad25a3fe0e1566121d6fb8222979bc10',1,'zot.php']]],

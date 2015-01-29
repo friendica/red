@@ -10,7 +10,7 @@ Worth Repeating: Don't use non-standard SQL. This goes for addons as well. If yo
 To be written
 [code]// Example
 $r = q("SELECT * FROM profile WHERE uid = %d",
-	local_user()
+	local_channel()
 );
 [/code][/li]
 

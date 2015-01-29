@@ -11,7 +11,7 @@ require_once('include/contact_widgets.php');
 
 function widget_profile($args) {
 	$a = get_app();
-	$block = (((get_config('system', 'block_public')) && (! local_user()) && (! remote_user())) ? true : false);
+	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
 	return profile_sidebar($a->profile, $block, true);
 }
 
@@ -90,7 +90,7 @@ function widget_appselect($arr) {
 	return replace_macros(get_markup_template('app_select.tpl'),array(
 		'$title' => t('Apps'),
 		'$system' => t('System'),
-		'$authed' => ((local_user()) ? true : false),
+		'$authed' => ((local_channel()) ? true : false),
 		'$personal' => t('Personal'),
 		'$new' => t('Create Personal App'),
 		'$edit' => t('Edit Personal App')
@@ -100,12 +100,12 @@ function widget_appselect($arr) {
 
 function widget_suggestions($arr) {
 
-	if((! local_user()) || (! feature_enabled(local_user(),'suggest')))
+	if((! local_channel()) || (! feature_enabled(local_channel(),'suggest')))
 		return '';
 
 	require_once('include/socgraph.php');
 
-	$r = suggestion_query(local_user(),get_observer_hash(),0,20);
+	$r = suggestion_query(local_channel(),get_observer_hash(),0,20);
 
 	if(! $r) {
 		return;
@@ -150,7 +150,7 @@ function widget_suggestions($arr) {
 
 
 function widget_follow($args) {
-	if(! local_user())
+	if(! local_channel())
 		return '';
 
 	$a = get_app();
@@ -179,12 +179,12 @@ function widget_follow($args) {
 
 
 function widget_notes($arr) {
-	if(! local_user())
+	if(! local_channel())
 		return '';
-	if(! feature_enabled(local_user(),'private_notes'))
+	if(! feature_enabled(local_channel(),'private_notes'))
 		return '';
 
-	$text = get_pconfig(local_user(),'notes','text');
+	$text = get_pconfig(local_channel(),'notes','text');
 
 	$o = replace_macros(get_markup_template('notes.tpl'), array(
 		'$banner' => t('Notes'),
@@ -197,7 +197,7 @@ function widget_notes($arr) {
 
 
 function widget_savedsearch($arr) {
-	if((! local_user()) || (! feature_enabled(local_user(),'savedsearch')))
+	if((! local_channel()) || (! feature_enabled(local_channel(),'savedsearch')))
 		return '';
 
 	$a = get_app();
@@ -206,13 +206,13 @@ function widget_savedsearch($arr) {
 	
 	if(x($_GET,'searchsave') && $search) {
 		$r = q("select * from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
-			intval(local_user()),
+			intval(local_channel()),
 			intval(TERM_SAVEDSEARCH),
 			dbesc($search)
 		);
 		if(! $r) {
 			q("insert into `term` ( `uid`,`type`,`term` ) values ( %d, %d, '%s') ",
-				intval(local_user()),
+				intval(local_channel()),
 				intval(TERM_SAVEDSEARCH),
 				dbesc($search)
 			);
@@ -221,7 +221,7 @@ function widget_savedsearch($arr) {
 
 	if(x($_GET,'searchremove') && $search) {
 		q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s'",
-			intval(local_user()),
+			intval(local_channel()),
 			intval(TERM_SAVEDSEARCH),
 			dbesc($search)
 		);
@@ -246,7 +246,7 @@ function widget_savedsearch($arr) {
 	$o = '';
 
 	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and `type` = %d ",
-		intval(local_user()),
+		intval(local_channel()),
 		intval(TERM_SAVEDSEARCH)
 	);
 
@@ -280,7 +280,7 @@ function widget_savedsearch($arr) {
 
 
 function widget_filer($arr) {
-	if(! local_user())
+	if(! local_channel())
 		return '';
 
 	$a = get_app();
@@ -289,7 +289,7 @@ function widget_filer($arr) {
 
 	$terms = array();
 	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
-		intval(local_user()),
+		intval(local_channel()),
 		intval(TERM_FILE)
 	);
 	if(! $r)
@@ -362,7 +362,7 @@ function widget_fullprofile($arr) {
 	if(! $a->profile['profile_uid'])
 		return;
 
-	$block = (((get_config('system', 'block_public')) && (! local_user()) && (! remote_user())) ? true : false);
+	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
 
 	return profile_sidebar($a->profile, $block);
 }
@@ -412,13 +412,13 @@ function widget_catcloud_wall($arr) {
 
 function widget_affinity($arr) {
 
-	if(! local_user())
+	if(! local_channel())
 		return '';
 
 	$cmin = ((x($_REQUEST,'cmin')) ? intval($_REQUEST['cmin']) : 0);
 	$cmax = ((x($_REQUEST,'cmax')) ? intval($_REQUEST['cmax']) : 99);
 
-	if(feature_enabled(local_user(),'affinity')) {
+	if(feature_enabled(local_channel(),'affinity')) {
 		$tpl = get_markup_template('main_slider.tpl');
 		$x = replace_macros($tpl,array(
 			'$val' => $cmin . ',' . $cmax,
@@ -442,7 +442,7 @@ function widget_affinity($arr) {
 
 function widget_settings_menu($arr) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	$a = get_app();
@@ -452,10 +452,10 @@ function widget_settings_menu($arr) {
 
 	// Retrieve the 'self' address book entry for use in the auto-permissions link
 
-	$role = get_pconfig(local_user(),'system','permissions_role');
+	$role = get_pconfig(local_channel(),'system','permissions_role');
 
 	$abk = q("select abook_id from abook where abook_channel = %d and ( abook_flags & %d )>0 limit 1",
-		intval(local_user()),
+		intval(local_channel()),
 		intval(ABOOK_FLAG_SELF)
 	);
 	if($abk)
@@ -514,7 +514,7 @@ function widget_settings_menu($arr) {
 		);
 	}
 
-	if(feature_enabled(local_user(),'premium_channel')) {
+	if(feature_enabled(local_channel(),'premium_channel')) {
 		$tabs[] = array(
 			'label' => t('Premium Channel Settings'),
 			'url' => $a->get_baseurl(true) . '/connect/' . $channel['channel_address'],
@@ -522,7 +522,7 @@ function widget_settings_menu($arr) {
 		);
 	}
 
-	if(feature_enabled(local_user(),'channel_sources')) {
+	if(feature_enabled(local_channel(),'channel_sources')) {
 		$tabs[] = array(
 			'label' => t('Channel Sources'),
 			'url' => $a->get_baseurl(true) . '/sources',
@@ -540,7 +540,7 @@ function widget_settings_menu($arr) {
 
 
 function widget_mailmenu($arr) {
-	if (! local_user())
+	if (! local_channel())
 		return;
 
 	$a = get_app();
@@ -564,13 +564,13 @@ function widget_design_tools($arr) {
 	$a = get_app();
 
 	// mod menu doesn't load a profile. For any modules which load a profile, check it.
-	// otherwise local_user() is sufficient for permissions.
+	// otherwise local_channel() is sufficient for permissions.
 
 	if($a->profile['profile_uid']) 
-		if(($a->profile['profile_uid'] != local_user()) && (! $a->is_sys))
+		if(($a->profile['profile_uid'] != local_channel()) && (! $a->is_sys))
 			return '';
  
-	if(! local_user())
+	if(! local_channel())
 		return '';
 
 	return design_tools();
@@ -642,7 +642,7 @@ function widget_bookmarkedchats($arr) {
 	$h = get_observer_hash();
 	if(! $h)
 		return;
-	$r = q("select * from xchat where xchat_xchan = '%s' group by xchat_url order by xchat_desc",
+	$r = q("select xchat_url, xchat_desc from xchat where xchat_xchan = '%s' order by xchat_desc",
 		dbesc($h)
 	);
 	if($r) {
@@ -664,7 +664,7 @@ function widget_suggestedchats($arr) {
 	$h = get_observer_hash();
 	if(! $h)
 		return;
-	$r = q("select *, count(xchat_url) as total from xchat group by xchat_url order by total desc, xchat_desc limit 24");
+	$r = q("select xchat_url, xchat_desc, count(xchat_xchan) as total from xchat group by xchat_url, xchat_desc order by total desc, xchat_desc limit 24");
 	if($r) {
 		for($x = 0; $x < count($r); $x ++) {
 			$r[$x]['xchat_url'] = zid($r[$x]['xchat_url']);

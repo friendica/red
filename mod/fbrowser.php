@@ -12,7 +12,7 @@ require_once('include/photo/photo_driver.php');
  */
 function fbrowser_content($a){
 	
-	if (!local_user())
+	if (!local_channel())
 		killme();
 
 	if ($a->argc==1)
@@ -29,7 +29,7 @@ function fbrowser_content($a){
 			
 			if ($a->argc==2){
 				$albums = q("SELECT distinct(`album`) AS `album` FROM `photo` WHERE `uid` = %d ",
-					intval(local_user())
+					intval(local_channel())
 				);
 				// anon functions only from 5.3.0... meglio tardi che mai..
 				function folder1($el){return array(bin2hex($el['album']),$el['album']);}	
@@ -48,7 +48,7 @@ function fbrowser_content($a){
 			$r = q("SELECT `resource_id`, `id`, `filename`, type, min(`scale`) AS `hiq`,max(`scale`) AS `loq`, `description`  
 					FROM `photo` WHERE `uid` = %d $sql_extra
 					GROUP BY `resource_id` $sql_extra2",
-				intval(local_user())					
+				intval(local_channel())					
 			);
 			
 			function files1($rr){ 
@@ -87,7 +87,7 @@ function fbrowser_content($a){
 		case "file":
 			if ($a->argc==2){
 				$files = q("SELECT id, filename, filetype FROM `attach` WHERE `uid` = %d ",
-					intval(local_user())
+					intval(local_channel())
 				);
 				
 				function files2($rr){ global $a; 

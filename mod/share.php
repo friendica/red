@@ -10,7 +10,7 @@ function share_init(&$a) {
 	if(! $post_id)
 		killme();
 
-	if(! (local_user() || remote_user()))
+	if(! (local_channel() || remote_channel()))
 		killme();
 
 
@@ -39,7 +39,7 @@ function share_init(&$a) {
 	// on your home site.
 	// When that works remove this next bit:
 
-	if(! local_user())
+	if(! local_channel())
 		killme();
 
 	xchan_query($r);
@@ -60,7 +60,7 @@ function share_init(&$a) {
 		$o.= "[/share]";
 	}
 
-	if(local_user()) {
+	if(local_channel()) {
 		echo $o;
 		killme();
 	}

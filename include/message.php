@@ -51,7 +51,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	if(strlen($replyto)) {
 		$r = q("select convid from mail where channel_id = %d and ( mid = '%s' or parent_mid = '%s' ) limit 1",
-			intval(local_user()),
+			intval(local_channel()),
 			dbesc($replyto),
 			dbesc($replyto)
 		);
@@ -76,7 +76,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		$handles = $recip_handle . ';' . $sender_handle;
 
 		$r = q("insert into conv (uid,guid,creator,created,updated,subject,recips) values(%d, '%s', '%s', '%s', '%s', '%s', '%s') ",
-			intval(local_user()),
+			intval(local_channel()),
 			dbesc($conv_guid),
 			dbesc($sender_handle),
 			dbesc(datetime_convert()),
@@ -87,7 +87,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 		$r = q("select * from conv where guid = '%s' and uid = %d limit 1",
 			dbesc($conv_guid),
-			intval(local_user())
+			intval(local_channel())
 		);
 		if($r)
 			$convid = $r[0]['id'];
@@ -261,7 +261,7 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 	// inside this function or having some preset sorts, but don't wish to limit app developers. 
 		
 	$r = q("SELECT * from mail WHERE channel_id = %d $where order by created desc $limit",
-		intval(local_user())
+		intval(local_channel())
 	);
 	if(! $r) {
 		return array();

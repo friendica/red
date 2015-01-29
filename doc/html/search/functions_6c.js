@@ -27,7 +27,7 @@ var searchData=
   ['load_5ftranslation_5ftable',['load_translation_table',['../language_8php.html#a7e9904c730bb24ddcb0ff50fc96f6b05',1,'language.php']]],
   ['load_5fxconfig',['load_xconfig',['../include_2config_8php.html#aee4b619839cf4b64220f34edf5c67b52',1,'config.php']]],
   ['local_5fdir_5fupdate',['local_dir_update',['../dir__fns_8php.html#acd37b17dce3bdec6d5a6344a20598c1e',1,'dir_fns.php']]],
-  ['local_5fuser',['local_user',['../boot_8php.html#ad4c9dc2c8a82e8f52b7404c1655eab44',1,'boot.php']]],
+  ['local_5fuser',['local_channel',['../boot_8php.html#ad4c9dc2c8a82e8f52b7404c1655eab44',1,'boot.php']]],
   ['localize_5fitem',['localize_item',['../conversation_8php.html#a9bd7f9fb6678736c581bcba3b17f471c',1,'conversation.php']]],
   ['lockview_5fcontent',['lockview_content',['../lockview_8php.html#a851e26ab9a1008df5c5ebebea31e9b44',1,'lockview.php']]],
   ['locs_5fcontent',['locs_content',['../locs_8php.html#a6c900f53970c0d0e738d2fe06d27ca44',1,'locs.php']]],
