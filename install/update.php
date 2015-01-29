@@ -1540,7 +1540,9 @@ function update_r1133() {
 
 function update_r1134() {
 	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) { 
-		$r = q("ALTER TABLE xlink ADD xlink_static numeric(1) NOT NULL DEFAULT '0', create index xlink_static on xlink ( \"xlink_static\" ) ");
+		$r1 = q("ALTER TABLE xlink ADD xlink_static numeric(1) NOT NULL DEFAULT '0' ");
+		$r2 = q("create index xlink_static on xlink ( xlink_static ) ");
+		$r = $r1 && $r2;
 	}
 	else
 		$r = q("ALTER TABLE xlink ADD xlink_static TINYINT( 1 ) NOT NULL DEFAULT '0', ADD INDEX ( xlink_static ) ");
