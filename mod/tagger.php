@@ -12,11 +12,9 @@ function tagger_content(&$a) {
 	}
 
 	$observer_hash = get_observer_hash();
-
+	//strip html-tags
 	$term = notags(trim($_GET['term']));
-	// no commas allowed
-	$term = str_replace(array(',',' '),array('','_'),$term);
-
+	//check if empty
 	if(! $term)
 		return;
 
