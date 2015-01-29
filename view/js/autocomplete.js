@@ -77,7 +77,7 @@ function editor_replace(item) {
 	// 16 chars is also the minimum length in the backend (otherwise it's interpreted as a local id).
 	if(id.length > 16) 
 		id = item.id.substring(0,16);
-	return '$1$2'+item.nick.replace(' ','') + '+' + id;
+	return '$1$2'+item.nick.replace(' ','') + '+' + id + ' ';
 }
 
 function basic_replace(item) {

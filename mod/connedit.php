@@ -564,6 +564,7 @@ function connedit_content(&$a) {
 		}
 
 		$poco_rating = get_config('system','poco_rating_enable');
+		$poco_rating = 0; // leave disabled until we're ready for it. 
 		// if unset default to enabled
 		if($poco_rating === false)
 			$poco_rating = true;
