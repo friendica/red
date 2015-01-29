@@ -1610,6 +1610,12 @@ function local_channel() {
 	return false;
 }
 
+function local_user() {
+	// DEPRECATED
+	return local_channel();
+}
+
+
 /**
  * @brief Returns contact id (visitor_id) of authenticated site visitor or false.
  *
@@ -1621,6 +1627,12 @@ function remote_channel() {
 
 	return false;
 }
+
+function remote_user() {
+	// DEPRECATED
+	return remote_channel();
+}
+
 
 /**
  * Contents of $s are displayed prominently on the page the next time
