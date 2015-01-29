@@ -55,7 +55,8 @@
 	{{include file="field_input.tpl" field=$register_text}}
 	{{include file="field_select.tpl" field=$register_policy}}
 	{{include file="field_select.tpl" field=$access_policy}}
-	
+	{{include file="field_textarea.tpl" field=$allowed_email}}
+	{{include file="field_textarea.tpl" field=$not_allowed_email}}	
 	<div class="submit"><input type="submit" name="page_site" value="{{$submit}}" /></div>
 
 	<h3>{{$upload}}</h3>
