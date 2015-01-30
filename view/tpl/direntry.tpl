@@ -15,7 +15,7 @@
 <div class='contact-info'>
 <div class="contact-name" id="directory-name-{{$entry.id}}"  ><a href='{{$entry.profile_link}}' >{{$entry.name}}</a>{{if $entry.online}} <i class="icon-asterisk online-now" title="{{$entry.online}}"></i>{{/if}}</div>
 
-{{*if $entry.rateme*}}
+{{if $entry.rateme}}
 <div id="dir-rating-wrapper-{{$entry.id}}" style="float:right; width: 20%;">
 62 ratings<br />
 <div id="dir-rating-slider-{{$entry.id}}" class="dir-slider" style="height: 32px; margin-right:10px;">
@@ -26,7 +26,7 @@
 <script>
 $("#dir-rating-range-{{$entry.id}}").jRange({ from: -10, to: 10, step: 1, width:'100%', showLabels: false, showScale: true, scale : [ '-10','-5','0','5','10' ], onstatechange: function(v) { $("#contact-rating-mirror").val(v); } });
 </script>
-{{*/if*}}
+{{/if}}
 {{if $entry.public_forum}}
 <div class="contact-forum">
 {{$entry.forum_label}} @{{$entry.nickname}}+
