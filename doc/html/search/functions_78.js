@@ -9,6 +9,7 @@ var searchData=
   ['xml2array',['xml2array',['../include_2network_8php.html#a99353baabbc3e0584b85eb79ee802cff',1,'network.php']]],
   ['xml_5fstatus',['xml_status',['../include_2network_8php.html#a9e9da2aafb806c98ecdc318604e60dc6',1,'network.php']]],
   ['xmlify',['xmlify',['../text_8php.html#aaed4413ed8918838b517e3b2fafaea0d',1,'text.php']]],
+  ['xpoco_5finit',['xpoco_init',['../xpoco_8php.html#a715e5b14ad5bd4a6f9c12ddfdcac07c2',1,'xpoco.php']]],
   ['xrd_5finit',['xrd_init',['../xrd_8php.html#aee3cf087968e4a0ff3a87de16eb23270',1,'xrd.php']]],
   ['xref_5finit',['xref_init',['../xref_8php.html#a9bee399213b8de8226b0d60834307473',1,'xref.php']]]
 ];

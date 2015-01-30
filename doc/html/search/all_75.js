@@ -48,7 +48,7 @@ var searchData=
   ['user_5fapprove',['user_approve',['../account_8php.html#ad07be417ac7eda939768804106ddea3d',1,'account.php']]],
   ['user_5fdeny',['user_deny',['../account_8php.html#ac1653efba62493b9d87513e1b6c04c83',1,'account.php']]],
   ['user_5fremove',['user_remove',['../Contact_8php.html#a2fc191067dd571a79603c66b04b1ca15',1,'Contact.php']]],
-  ['userreadablesize',['userReadableSize',['../classRedMatrix_1_1RedDAV_1_1RedBrowser.html#a242ce69a2fe5a5fdf9c2b8d3954accfd',1,'RedMatrix::RedDAV::RedBrowser']]],
+  ['userreadablesize',['userReadableSize',['../text_8php.html#afb1ae3e1f6985d4b78dd1d00473e39fb',1,'text.php']]],
   ['utc_5fnow',['UTC_NOW',['../classdba__driver.html#aa3325d982d4ee5d1114fd7e02a4356e8',1,'dba_driver\UTC_NOW()'],['../classdba__postgres.html#ace80a204e34b20b9907650399cce02a3',1,'dba_postgres\UTC_NOW()']]],
   ['utcnow',['utcnow',['../classdba__driver.html#ad700712879719bee23752b8f424d97d0',1,'dba_driver']]],
   ['util',['util',['../namespaceutil.html',1,'']]]

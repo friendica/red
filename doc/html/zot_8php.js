@@ -15,6 +15,7 @@ var zot_8php =
     [ "process_location_delivery", "zot_8php.html#a8eeefdb0dad4c436bea9d1c06c0a7988", null ],
     [ "process_mail_delivery", "zot_8php.html#aa6ae96db8cbbdbb10e6876d206bbf7cc", null ],
     [ "process_profile_delivery", "zot_8php.html#a9a57b40669351c9791126b925cb7ef3b", null ],
+    [ "process_rating_delivery", "zot_8php.html#ab718f7ab0df9c4153037d1a3f2613181", null ],
     [ "public_recips", "zot_8php.html#a083aec6c900d244e1bfc1406f9461465", null ],
     [ "remove_community_tag", "zot_8php.html#aad25a3fe0e1566121d6fb8222979bc10", null ],
     [ "sync_locations", "zot_8php.html#ab15c04e7e5f44edf45ec50dd7d183254", null ],

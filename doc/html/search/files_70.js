@@ -25,6 +25,7 @@ var searchData=
   ['poll_2ephp',['poll.php',['../poll_8php.html',1,'']]],
   ['poller_2ephp',['poller.php',['../poller_8php.html',1,'']]],
   ['post_2ephp',['post.php',['../post_8php.html',1,'']]],
+  ['prate_2ephp',['prate.php',['../prate_8php.html',1,'']]],
   ['prep_2ephp',['prep.php',['../prep_8php.html',1,'']]],
   ['pretheme_2ephp',['pretheme.php',['../pretheme_8php.html',1,'']]],
   ['probe_2ephp',['probe.php',['../include_2probe_8php.html',1,'']]],

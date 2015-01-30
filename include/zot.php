@@ -298,15 +298,24 @@ function zot_refresh($them,$channel = null, $force = false) {
 	if($channel)
 		logger('zot_refresh: channel: ' . print_r($channel,true), LOGGER_DATA);
 
+	$url = null;
+
 	if($them['hubloc_url'])
 		$url = $them['hubloc_url'];
 	else {
-		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d ) > 0 limit 1",
-			dbesc($them['xchan_hash']),
-			intval(HUBLOC_FLAGS_PRIMARY)
+		$r = q("select hubloc_url, hubloc_flags from hubloc where hubloc_hash = '%s'",
+			dbesc($them['xchan_hash'])
 		);
-		if($r)
-			$url = $r[0]['hubloc_url'];
+		if($r) {
+			foreach($r as $rr) {
+				if($rr['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) {
+					$url = $rr['hubloc_url'];
+					break;
+				}
+			}
+			if(! $url)			
+				$url = $r[0]['hubloc_url'];
+		}
 	}
 	if(! $url) {
 		logger('zot_refresh: no url');

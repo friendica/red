@@ -157,8 +157,10 @@ Functions</h2></td></tr>
 <tr class="separator:a4dbfd7e1cef52aa9ef52f4b88929fa86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d484de2d19a93071571d6499a50ae34"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a5d484de2d19a93071571d6499a50ae34">pipe_streams</a> ($in, $out)</td></tr>
 <tr class="separator:a5d484de2d19a93071571d6499a50ae34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3502fd6e55160e0ccdeab88c02723b9f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a3502fd6e55160e0ccdeab88c02723b9f">file_activity</a> ($channel_id, $hash, $cloudpath, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $verb, $no_activity)</td></tr>
-<tr class="separator:a3502fd6e55160e0ccdeab88c02723b9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa23ba65e5bb732be71fdd27ccff7d46e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#aa23ba65e5bb732be71fdd27ccff7d46e">file_activity</a> ($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $verb, $no_activity)</td></tr>
+<tr class="separator:aa23ba65e5bb732be71fdd27ccff7d46e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa784c064ae323710f4ef68771a4a38db"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#aa784c064ae323710f4ef68771a4a38db">get_file_activity_object</a> ($channel_id, $hash, $cloudpath)</td></tr>
+<tr class="separator:aa784c064ae323710f4ef68771a4a38db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>File/attach API with the potential for revision control. </p>
@@ -582,7 +584,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3502fd6e55160e0ccdeab88c02723b9f"></a>
+<a class="anchor" id="aa23ba65e5bb732be71fdd27ccff7d46e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -596,13 +598,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$hash</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$cloudpath</em>, </td>
+          <td class="paramname"><em>$object</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -755,6 +751,40 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aa784c064ae323710f4ef68771a4a38db"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">get_file_activity_object </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$channel_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$hash</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$cloudpath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="include_2attach_8php.html#a70bd666e080c2af5a91f5d14c297b8cd">attach_delete()</a>, and <a class="el" href="filestorage_8php.html#ad3b64e3ece9831f9d3a9f00c0ae983cd">filestorage_post()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a1d72ef7cb940f6868e3e2a841cadfe8f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -796,7 +826,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string with the full folder path </dd></dl>
 
-<p>Referenced by <a class="el" href="filestorage_8php.html#a61bb1be78472555df4ce619f51014040">filestorage_content()</a>, and <a class="el" href="filestorage_8php.html#ad3b64e3ece9831f9d3a9f00c0ae983cd">filestorage_post()</a>.</p>
+<p>Referenced by <a class="el" href="include_2attach_8php.html#a70bd666e080c2af5a91f5d14c297b8cd">attach_delete()</a>, <a class="el" href="filestorage_8php.html#a61bb1be78472555df4ce619f51014040">filestorage_content()</a>, and <a class="el" href="filestorage_8php.html#ad3b64e3ece9831f9d3a9f00c0ae983cd">filestorage_post()</a>.</p>
 
 </div>
 </div>
