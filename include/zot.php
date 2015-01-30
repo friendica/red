@@ -1988,9 +1988,19 @@ function sync_locations($sender,$arr,$absolute = false) {
 					}
 				}
 
-				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
-					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
+				if(($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary'])) {
 					$m = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
+						intval(HUBLOC_FLAGS_PRIMARY),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+					$r[0]['hubloc_flags'] = $r[0]['hubloc_flags'] ^ HUBLOC_FLAGS_PRIMARY;
+					hubloc_change_primary($r[0]);
+					$what .= 'primary_hub ';
+					$changed = true;
+				}
+				elseif((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary'])) {
+					$m = q("update hubloc set hubloc_flags = (hubloc_flags | %d), hubloc_updated = '%s' where hubloc_id = %d",
 						intval(HUBLOC_FLAGS_PRIMARY),
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
@@ -2009,9 +2019,17 @@ function sync_locations($sender,$arr,$absolute = false) {
 						$changed = true;
 					}
 				}
-				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted']))
-					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && ($location['deleted']))) {
+				if(($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted'])) {
 					$n = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
+						intval(HUBLOC_FLAGS_DELETED),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+					$what .= 'delete_hub ';
+					$changed = true;
+				}
+				elseif((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && ($location['deleted'])) {
+					$n = q("update hubloc set hubloc_flags = (hubloc_flags | %d), hubloc_updated = '%s' where hubloc_id = %d",
 						intval(HUBLOC_FLAGS_DELETED),
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
