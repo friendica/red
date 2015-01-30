@@ -57,7 +57,7 @@ function bb_unspacefy_and_trim($st) {
   return $unspacefied;
 }
 
-if(! function_exists('bb_extract_images')) {
+
 function bb_extract_images($body) {
 
 	$saved_image = array();
@@ -97,24 +97,27 @@ function bb_extract_images($body) {
 	$new_body = $new_body . $orig_body;
 
 	return array('body' => $new_body, 'images' => $saved_image);
-}}
+}
 
-if(! function_exists('bb_replace_images')) {
+
 function bb_replace_images($body, $images) {
 
 	$newbody = $body;
 
 	$cnt = 0;
+	if(! $images)
+		return $newbody;
+
 	foreach($images as $image) {
 		// We're depending on the property of 'foreach' (specified on the PHP website) that
 		// it loops over the array starting from the first element and going sequentially
 		// to the last element
-		$newbody = str_replace('[$#saved_image' . $cnt . '#$]', '<img class="zrl" src="' . $image .'" alt="' . t('Image/photo') . '" />', $newbody);
+		$newbody = str_replace('[$#saved_image' . $cnt . '#$]', '<img src="' . $image .'" alt="' . t('Image/photo') . '" />', $newbody);
 		$cnt++;
 	}
-
+//	logger('replace_images: ' . $newbody);
 	return $newbody;
-}}
+}
 
 
 
@@ -403,6 +406,10 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		}
     }
 
+
+	$x = bb_extract_images($Text);
+	$Text = $x['body'];
+	$saved_images = $x['images'];
 
 	$Text = str_replace(array('[baseurl]','[sitename]'),array(z_root(),get_config('system','sitename')),$Text);
 
@@ -852,6 +859,8 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 
 	$Text = preg_replace("/\<(.*?)(src|href)=\"[^hfm#](.*?)\>/ism",'<$1$2="">',$Text);
+
+	$Text = bb_replace_images($Text,$saved_images);
 
 	call_hooks('bbcode',$Text);
 
