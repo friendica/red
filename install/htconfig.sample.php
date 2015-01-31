@@ -64,10 +64,10 @@ $a->config['system']['php_path'] = 'php';
 
 
 // Configure how we communicate with directory servers.
-// DIRECTORY_MODE_NORMAL     = directory client, we will find a directory
-// DIRECTORY_MODE_SECONDARY  = caching directory or mirror
-// DIRECTORY_MODE_PRIMARY    = main directory server
-// DIRECTORY_MODE_STANDALONE = "off the grid" or private directory services
+// DIRECTORY_MODE_NORMAL     = directory client, we will find a directory (all of your member's queries will be directed elsewhere)
+// DIRECTORY_MODE_SECONDARY  = caching directory or mirror (keeps in sync with realm primary [adds significant cron execution time])
+// DIRECTORY_MODE_PRIMARY    = main directory server (you do not want this unless you are operating your own realm. one per realm.)
+// DIRECTORY_MODE_STANDALONE = "off the grid" or private directory services (only local site members in directory)
 
 $a->config['system']['directory_mode']  = DIRECTORY_MODE_NORMAL;
 
