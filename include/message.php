@@ -185,7 +185,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		dbesc($mid),
 		dbesc($replyto),
 		dbesc(datetime_convert()),
-		dbesc($expires)
+		dbescdate($expires)
 	);
 
 	// verify the save
