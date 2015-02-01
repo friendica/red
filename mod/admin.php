@@ -562,7 +562,7 @@ function admin_page_dbsync(&$a) {
 	if(count($r)) {
 		foreach($r as $rr) {
 			$upd = intval(substr($rr['k'],8));
-			if($upd < 1139 || $rr['v'] === 'success')
+			if($rr['v'] === 'success')
 				continue;
 			$failed[] = $upd;
 		}
