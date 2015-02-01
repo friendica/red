@@ -99,13 +99,14 @@ function zfinger_init(&$a) {
 
 	$id = $e['channel_id'];
 
+	$sys_channel     = (($e['channel_pageflags'] & PAGE_SYSTEM)   ? true : false);
 	$special_channel = (($e['channel_pageflags'] & PAGE_PREMIUM)  ? true : false);
 	$adult_channel   = (($e['channel_pageflags'] & PAGE_ADULT)    ? true : false);
 	$censored        = (($e['channel_pageflags'] & PAGE_CENSORED) ? true : false);
 	$searchable      = (($e['channel_pageflags'] & PAGE_HIDDEN)   ? false : true);
 	$deleted         = (($e['xchan_flags'] & XCHAN_FLAGS_DELETED) ? true : false);
 
-	if($deleted || $censored)
+	if($deleted || $censored || $sys_channel)
 		$searchable = false;
 	 
 	$public_forum = false;
@@ -237,6 +238,12 @@ function zfinger_init(&$a) {
 	$dirmode = get_config('system','directory_mode');
 	if(($dirmode === false) || ($dirmode == DIRECTORY_MODE_NORMAL))
 		$ret['site']['directory_mode'] = 'normal';
+
+	// downgrade mis-configured primaries
+
+	if($dirmode == DIRECTORY_MODE_PRIMARY && z_root() != get_directory_primary())
+		$dirmode = DIRECTORY_MODE_SECONDARY;
+
 	if($dirmode == DIRECTORY_MODE_PRIMARY)
 		$ret['site']['directory_mode'] = 'primary';
 	elseif($dirmode == DIRECTORY_MODE_SECONDARY)

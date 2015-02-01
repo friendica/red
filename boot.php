@@ -49,7 +49,7 @@ define ( 'RED_PLATFORM',            'redmatrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1135  );
+define ( 'DB_UPDATE_VERSION',       1136  );
 
 /**
  * Constant with a HTML line break.
@@ -2193,6 +2193,19 @@ function get_directory_realm() {
 
 	return DIRECTORY_REALM;
 }
+
+/**
+ * @brief Return the primary directory server.
+ *
+ * @return string
+ */
+function get_directory_primary() {
+	if($x = get_config('system', 'directory_primary'))
+		return $x;
+
+	return DIRECTORY_FALLBACK_MASTER;
+}
+
 
 
 /**

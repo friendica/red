@@ -164,6 +164,10 @@ function poller_run($argv, $argc){
 				db_utcnow(), db_quoteinterval('14 DAY')
 			);
 
+			$dirmode = intval(get_config('system','directory_mode'));
+			if($dirmode == DIRECTORY_MODE_SECONDARY) {
+				logger('regdir: ' . print_r(z_fetch_url(get_directory_primary() . '/regdir?f=&url=' . z_root() . '&realm=' . get_directory_realm()),true));
+			}
 
 			/**
 			 * End Cron Weekly

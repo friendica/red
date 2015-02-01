@@ -1146,6 +1146,7 @@ CREATE TABLE "xlink" (
   "xlink_rating_text" TEXT NOT NULL DEFAULT '',
   "xlink_updated" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "xlink_static" numeric(1) NOT NULL DEFAULT '0',
+  "xlink_sig" text NOT NULL DEFAULT '',
   PRIMARY KEY ("xlink_id")
 );
 create index "xlink_xchan" on xlink ("xlink_xchan");
