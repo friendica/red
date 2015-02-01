@@ -2388,6 +2388,7 @@ function getIconFromType($type) {
 	$iconMap = array(
 		//Folder
 		t('Collection') => 'icon-folder-close',
+		'multipart/mixed' => 'icon-folder-close', //dirs in attach use this mime type
 		//Common file
 		'application/octet-stream' => 'icon-file-alt',
 		//Text
