@@ -987,13 +987,13 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		$allow_gid = $r_perms['allow_gid'];
 		$deny_cid = $r_perms['deny_cid'];
 		$deny_gid = $r_perms['deny_gid'];
-
+/*
 		if(!$allow_gid && !$allow_cid) {
 			notice( t('Allowed permissions for this file are not recursive. None of your allowed contacts will have access to this file.') . EOL);
 			$verb = 'update';
 			$update = true;
 		}
-
+*/
 	}
 
 	require_once('include/items.php');
