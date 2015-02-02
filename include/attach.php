@@ -1162,7 +1162,7 @@ function check_recursive_perms($allow_cid, $allow_gid, $deny_cid, $deny_gid, $fo
 	$arr_deny_gid = expand_acl($deny_gid);
 
 	while($folder_hash) {
-		$x = q("SELECT allow_cid, allow_gid, deny_cid, deny_gid FROM attach WHERE hash = '%s'",
+		$x = q("SELECT allow_cid, allow_gid, deny_cid, deny_gid, folder FROM attach WHERE hash = '%s'",
 			dbesc($folder_hash)
 		);
 
