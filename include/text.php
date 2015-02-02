@@ -2297,6 +2297,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			}
 		}
 		else {
+
 			// check for a group/collection exclusion tag			
 
 			// note that we aren't setting $replaced even though we're replacing text.
@@ -2357,6 +2358,8 @@ function linkify_tags($a, &$body, $uid) {
 	$tags = get_tags($body);
 	if(count($tags)) {
 		foreach($tags as $tag) {
+			$access_tag = '';
+
 			// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
 			// Robert Johnson should be first in the $tags array
 
