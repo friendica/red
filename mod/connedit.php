@@ -117,7 +117,7 @@ function connedit_post(&$a) {
 	if($rating > 10)
 		$rating = 10;
 
-	$rating_text = escape_tags($_REQUEST['rating_text']);
+	$rating_text = trim(escape_tags($_REQUEST['rating_text']));
 
 	$abook_my_perms = 0;
 
@@ -132,7 +132,7 @@ function connedit_post(&$a) {
 
 	if(! $is_self) {
 
-		$signed = $target . '.' . $rating . '.' . $rating_text;
+		$signed = $orig_record[0]['abook_xchan'] . '.' . $rating . '.' . $rating_text;
 
 		$sig = base64url_encode(rsa_sign($signed,$channel['channel_prvkey']));
 
@@ -170,7 +170,7 @@ function connedit_post(&$a) {
 				$record = $z[0]['xlink_id'];
 		}
 		if($record) {
-			proc_run('php','include/notifier.php','rating',$record);
+			proc_run('php','include/ratenotif.php','rating',$record);
 		}	
 	}
 

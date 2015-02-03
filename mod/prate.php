@@ -60,7 +60,7 @@ function prate_post(&$a) {
 			$record = $z[0]['xlink_id'];
 	}
 	if($record) {
-		proc_run('php','include/notifier.php','rating',$record);
+		proc_run('php','include/ratenotif.php','rating',$record);
 	}
 
 	$x = q("select abook_id from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
