@@ -2,12 +2,13 @@
 
 
 function prate_post(&$a) {
+
 	if(! local_channel())
 		return;
 
 	$channel = $a->get_channel();
 
-	$target = $_REQUEST['target'];
+	$target = trim($_REQUEST['target']);
 	if(! $target)
 		return;
 
@@ -20,7 +21,12 @@ function prate_post(&$a) {
 	if($rating > 10)
 		$rating = 10;
 
-	$rating_text = escape_tags($_REQUEST['rating_text']);
+	$rating_text = trim(escape_tags($_REQUEST['rating_text']));
+
+	$signed = $target . '.' . $rating . '.' . $rating_text;
+
+	$sig = base64url_encode(rsa_sign($signed,$channel['channel_prvkey']));
+
 
 	$z = q("select * from xlink where xlink_xchan = '%s' and xlink_xlink = '%s' and xlink_static = 1 limit 1",
 		dbesc($channel['channel_hash']),
@@ -28,20 +34,22 @@ function prate_post(&$a) {
 	);
 	if($z) {
 		$record = $z[0]['xlink_id'];
-		$w = q("update xlink set xlink_rating = '%d', xlink_rating_text = '%s', xlink_updated = '%s'
+		$w = q("update xlink set xlink_rating = '%d', xlink_rating_text = '%s', xlink_sig = '%s', xlink_updated = '%s'
 			where xlink_id = %d",
 			intval($rating),
 			dbesc($rating_text),
+			dbesc($sig),
 			dbesc(datetime_convert()),
 			intval($record)
 		);
 	}
 	else {
-		$w = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_updated, xlink_static ) values ( '%s', '%s', %d, '%s', '%s', 1 ) ",
+		$w = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_sig, xlink_updated, xlink_static ) values ( '%s', '%s', %d, '%s', '%s', '%s', 1 ) ",
 			dbesc($channel['channel_hash']),
 			dbesc($target),
 			intval($rating),
 			dbesc($rating_text),
+			dbesc($sig),
 			dbesc(datetime_convert())
 		);
 		$z = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1 limit 1",
