@@ -3,13 +3,12 @@
 	clear: both;
 }
 .directory-name {
-/*	text-align: center; */
 	float: left;
 	width: 250px;
 }
 .directory-rating {
 	float: right;
-	margin-right: 20px;
+	margin-right: 5px;
 }
 
 .directory-photo {
