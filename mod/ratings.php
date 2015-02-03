@@ -1,7 +1,14 @@
 <?php
 
+require_once('include/dir_fns.php');
 
-function prep_init(&$a) {
+function ratings_init(&$a) {
+
+	$dirmode = intval(get_config('system','directory_mode'));
+
+	$x = find_upstream_directory($dirmode);
+	if($x)
+		$url = $x['url'];
 
 	$poco_rating = get_config('system','poco_rating_enable');
 	// if unset default to enabled
@@ -19,29 +26,36 @@ function prep_init(&$a) {
 		return;
 	}
 
-	if(strpos($hash,'@')) {
-		$r = q("select * from hubloc where hubloc_addr = '%s' limit 1",
-			dbesc($hash)
-		);
-		if($r)
-			$hash = $r[0]['hubloc_hash'];
+	$results = false;
+
+	$x = z_fetch_url($url . '/ratingsearch/' . $hash);
+
+
+	if($x['success'])
+		$results = json_decode($x['body'],true);
+
+
+	if((! $results) || (! $results['success'])) {
+
+		notice('No results.');
+		return;
 	} 
 
-	$p = q("select * from xchan where xchan_hash like '%s'",
-		dbesc($hash . '%')
-	);
+	$a->poi = $results['target'];
+	$a->data = $results['ratings'];
 
-	if($p)
-		$a->poi = $p[0];
+	if(! $a->data) {
+		notice( t('No ratings') . EOL);
+	}
 
+	return;
 }
 
 
 
 
 
-function prep_content(&$a) {
-
+function ratings_content(&$a) {
 
 	$poco_rating = get_config('system','poco_rating_enable');
 	// if unset default to enabled
@@ -51,22 +65,11 @@ function prep_content(&$a) {
 	if(! $poco_rating)
 		return;
 
-	if(! $a->poi)
-		return;
-
-	$r = q("select * from xlink left join xchan on xlink_xchan = xchan_hash where xlink_link like '%s' and xlink_rating != 0 and xlink_static = 1",
-		dbesc(($a->poi) ? $a->poi['xchan_hash'] : argv(1))
-	);
-
-	if(! $r)
-		notice( t('No ratings available') . EOL);
-
-
 	$o = replace_macros(get_markup_template('prep.tpl'),array(
 		'$header' => t('Ratings'),
 		'$rating_lbl' => t('Rating: ' ),
 		'$rating_text_lbl' => t('Description: '),
-		'$raters' => $r
+		'$raters' => $a->data
 	));
 
 	return $o;
