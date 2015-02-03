@@ -12,7 +12,6 @@ function dirsearch_content(&$a) {
 
 	$ret = array('success' => false);
 
-	// If you've got a public directory server, you probably shouldn't block public access
 
 
 	$dirmode = intval(get_config('system','directory_mode'));
@@ -21,6 +20,15 @@ function dirsearch_content(&$a) {
 		$ret['message'] = t('This site is not a directory server');
 		json_return_and_die($ret);
 	}
+
+
+	// If you've got a public directory server, you probably shouldn't block public access
+
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		$ret['message'] = 'permission denied';
+		json_return_and_die($ret);
+	}
+
 
 	if(argc() > 1 && argv(1) === 'sites') {
 		$ret = list_public_sites();

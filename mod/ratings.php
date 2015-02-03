@@ -4,6 +4,10 @@ require_once('include/dir_fns.php');
 
 function ratings_init(&$a) {
 
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		return;
+	}
+
 	$dirmode = intval(get_config('system','directory_mode'));
 
 	$x = find_upstream_directory($dirmode);
@@ -56,6 +60,11 @@ function ratings_init(&$a) {
 
 
 function ratings_content(&$a) {
+
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		notice( t('Public access denied.') . EOL);
+		return;
+	}
 
 	$poco_rating = get_config('system','poco_rating_enable');
 	// if unset default to enabled

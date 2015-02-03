@@ -12,6 +12,12 @@ function ratingsearch_init(&$a) {
 		json_return_and_die($ret);
 	}
 
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		$ret['message'] = 'permission denied';
+		json_return_and_die($ret);
+	}
+
+
 	if(argc() > 1)
 		$hash = argv(1);
 
