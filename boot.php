@@ -2200,6 +2200,13 @@ function get_directory_realm() {
  * @return string
  */
 function get_directory_primary() {
+
+   $dirmode = intval(get_config('system','directory_mode'));
+
+    if($dirmode == DIRECTORY_MODE_STANDALONE || $dirmode == DIRECTORY_MODE_PRIMARY) {
+		return z_root();
+    }
+
 	if($x = get_config('system', 'directory_primary'))
 		return $x;
 

@@ -47,9 +47,14 @@ function regdir_init(&$a) {
 		json_return_and_die($result);
 	}
 	else {
-		$r = q("select site_url from site where site_flags in ( 1, 2 ) and site_realm = '%s'",
-			dbesc(get_directory_realm())
-		);
+		if($dirmode == DIRECTORY_MODE_STANDALONE) {
+			$r = array(array('site_url' => z_root()));
+		}
+		else {
+			$r = q("select site_url from site where site_flags in ( 1, 2 ) and site_realm = '%s'",
+				dbesc(get_directory_realm())
+			);
+		}
 		if($r) {
 			$result['success'] = true;
 			$result['directories'] = array();
