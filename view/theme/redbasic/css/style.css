@@ -2078,6 +2078,13 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	background-color: $item_colour;
 }
 
+nav ul li .undefined, 
+nav ul li .notify-seen,
+nav ul li .notify-unseen
+ {
+    max-height: 3rem;
+}
+
 /* bootstrap overrides */
 
 blockquote {
