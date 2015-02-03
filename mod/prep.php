@@ -54,7 +54,7 @@ function prep_content(&$a) {
 	if(! $a->poi)
 		return;
 
-	$r = q("select * from xlink left join xchan on xlink_xchan = xchan_hash where xlink_link like '%s' and xlink_rating != 0",
+	$r = q("select * from xlink left join xchan on xlink_xchan = xchan_hash where xlink_link like '%s' and xlink_rating != 0 and xlink_static = 1",
 		dbesc($a->poi['xchan_hash'])
 	);
 

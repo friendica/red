@@ -131,26 +131,35 @@ function connedit_post(&$a) {
 	$new_friend = false;
 
 	if(! $is_self) {
-		$z = q("select * from xlink where xlink_xchan = '%s' and xlink_xlink = '%s' and xlink_static = 1 limit 1",
+
+		$signed = $target . '.' . $rating . '.' . $rating_text;
+
+		$sig = base64url_encode(rsa_sign($signed,$channel['channel_prvkey']));
+
+		$z = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1 limit 1",
 			dbesc($channel['channel_hash']),
 			dbesc($orig_record[0]['abook_xchan'])
 		);
+
+
 		if($z) {
 			$record = $z[0]['xlink_id'];
-			$w = q("update xlink set xlink_rating = '%d', xlink_rating_text = '%s', xlink_updated = '%s' 
+			$w = q("update xlink set xlink_rating = '%d', xlink_rating_text = '%s', xlink_sig = '%s', xlink_updated = '%s' 
 				where xlink_id = %d",
 				intval($rating),
 				dbesc($rating_text),
+				dbesc($sig),
 				dbesc(datetime_convert()),
 				intval($record)
 			);
 		}
 		else {
-			$w = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_updated, xlink_static ) values ( '%s', '%s', %d, '%s', '%s', 1 ) ",
+			$w = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_sig, xlink_updated, xlink_static ) values ( '%s', '%s', %d, '%s', '%s', '%s', 1 ) ",
 				dbesc($channel['channel_hash']),
 				dbesc($orig_record[0]['abook_xchan']),
 				intval($rating),
 				dbesc($rating_text),
+				dbesc($sig),
 				dbesc(datetime_convert())
 			);
 			$z = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1 limit 1",
@@ -564,7 +573,7 @@ function connedit_content(&$a) {
 		}
 
 		$poco_rating = get_config('system','poco_rating_enable');
-		$poco_rating = 0;
+
 		// if unset default to enabled
 		if($poco_rating === false)
 			$poco_rating = true;

@@ -28,7 +28,7 @@ function prate_post(&$a) {
 	$sig = base64url_encode(rsa_sign($signed,$channel['channel_prvkey']));
 
 
-	$z = q("select * from xlink where xlink_xchan = '%s' and xlink_xlink = '%s' and xlink_static = 1 limit 1",
+	$z = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1 limit 1",
 		dbesc($channel['channel_hash']),
 		dbesc($target)
 	);
