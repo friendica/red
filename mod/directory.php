@@ -190,6 +190,9 @@ function directory_content(&$a) {
 
 						$page_type = '';
 
+						if($rr['total_ratings'])
+							$total_ratings = sprintf( tt("%d rating", "%d ratings", $rr['total_ratings']), $rr['total_ratings']);
+
 						$profile = $rr;
 
 						if ((x($profile,'locale') == 1)
@@ -255,6 +258,7 @@ function directory_content(&$a) {
 							'nickname' => substr($rr['address'],0,strpos($rr['address'],'@')),
 							'location' => $location,
 							'gender'   => $gender,
+							'total_ratings' => $total_ratings,
 							'pdesc'	=> $pdesc,
 							'marital'  => $marital,
 							'homepage' => $homepage,
