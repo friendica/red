@@ -21,15 +21,6 @@ function dirsearch_content(&$a) {
 		json_return_and_die($ret);
 	}
 
-
-	// If you've got a public directory server, you probably shouldn't block public access
-
-	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
-		$ret['message'] = 'permission denied';
-		json_return_and_die($ret);
-	}
-
-
 	if(argc() > 1 && argv(1) === 'sites') {
 		$ret = list_public_sites();
 		json_return_and_die($ret);

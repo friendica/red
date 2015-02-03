@@ -192,6 +192,8 @@ function directory_content(&$a) {
 
 						if($rr['total_ratings'])
 							$total_ratings = sprintf( tt("%d rating", "%d ratings", $rr['total_ratings']), $rr['total_ratings']);
+						else
+							$total_ratings = '';
 
 						$profile = $rr;
 
