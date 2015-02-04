@@ -252,7 +252,7 @@ function directory_content(&$a) {
 							'public_forum' => $rr['public_forum'],
 							'photo' => $rr['photo'],
 							'hash' => $rr['hash'],
-							'alttext' => $rr['name'] . ' ' . $rr['address'],
+							'alttext' => $rr['name'] . ((local_channel() || remote_channel()) ? ' ' . $rr['address'] : ''),
 							'name' => $rr['name'],
 							'details' => $pdesc . $details,
 							'profile' => $profile,
