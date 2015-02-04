@@ -575,6 +575,15 @@ footer {
 
 #cboxContent {
     color: $dirpopup_txtcol;
+	margin: 5px;
+}
+
+#cboxClose {
+	margin: 10px;
+}
+
+#colorbox {
+	margin: 5px;
 }
 
 #cboxContent a {

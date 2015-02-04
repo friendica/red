@@ -261,6 +261,8 @@ function directory_content(&$a) {
 							'location' => $location,
 							'gender'   => $gender,
 							'total_ratings' => $total_ratings,
+							'viewrate' => true,
+							'canrate' => ((local_channel()) ? true : false),
 							'pdesc'	=> $pdesc,
 							'marital'  => $marital,
 							'homepage' => $homepage,

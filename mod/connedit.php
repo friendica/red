@@ -180,13 +180,11 @@ function connedit_post(&$a) {
 
 	}
 
-	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_rating = %d, abook_rating_text = '%s', abook_flags = %d
+	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_flags = %d
 		where abook_id = %d AND abook_channel = %d",
 		dbesc($profile_id),
 		intval($abook_my_perms),
 		intval($closeness),
-		intval($rating),
-		dbesc($rating_text),
 		intval($abook_flags),
 		intval($contact_id),
 		intval(local_channel())
@@ -324,6 +322,7 @@ function connedit_content(&$a) {
 		return login();
 	}
 
+	$channel = $a->get_channel();
 	$my_perms = get_channel_default_perms(local_channel());
 	$role = get_pconfig(local_channel(),'system','permissions_role');
 	if($role) {
@@ -572,6 +571,21 @@ function connedit_content(&$a) {
 			));
 		}
 
+		$rating_val = 0;
+		$rating_text = '';
+
+dbg(1);
+		$xl = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1",
+			dbesc($channel['channel_hash']),
+			dbesc($contact['xchan_hash'])
+		);
+dbg(0);
+		if($xl) {
+			$rating_val = intval($xl[0]['xlink_rating']);
+			$rating_text = $xl[0]['xlink_rating_text'];
+		}
+
+
 		$poco_rating = get_config('system','poco_rating_enable');
 
 		// if unset default to enabled
@@ -581,7 +595,7 @@ function connedit_content(&$a) {
 		if($poco_rating) {
 			$rating = replace_macros(get_markup_template('rating_slider.tpl'),array(
 				'$min' => -10,
-				'$val' => (($contact['abook_rating']) ? $contact['abook_rating'] : 0),
+				'$val' => $rating_val
 			));
 		}
 		else {
@@ -621,11 +635,11 @@ function connedit_content(&$a) {
 			'$viewprof'       => t('View Profile'),
 			'$clickme'        => t('Click to open/close'),
 			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
-			'$lbl_rating'     => t('Rating (this information may be public)'),
-			'$lbl_rating_txt' => t('Optionally explain your rating (this information may be public)'),
-			'$rating_txt'     => $contact['abook_rating_text'],
+			'$lbl_rating'     => t('Rating (this information is public)'),
+			'$lbl_rating_txt' => t('Optionally explain your rating (this information is public)'),
+			'$rating_txt'     => $rating_text,
 			'$rating'         => $rating,
-			'$rating_val'     => $contact['abook_rating'],
+			'$rating_val'     => $rating_val,
 			'$slide'          => $slide,
 			'$tabs'           => $t,
 			'$tab_str'        => $tab_str,

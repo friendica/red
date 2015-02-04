@@ -15,11 +15,11 @@
 <div class='contact-info'>
 <div class="contact-name" id="directory-name-{{$entry.id}}"  ><a href='{{$entry.profile_link}}' >{{$entry.name}}</a>{{if $entry.online}} <i class="icon-asterisk online-now" title="{{$entry.online}}"></i>{{/if}}</div>
 
-{{*if $entry.rateme*}}
+{{if $entry.viewrate}}
 <div id="dir-rating-wrapper-{{$entry.id}}" class="directory-rating" >{{if $entry.total_ratings}}<a href="ratings/{{$entry.hash}}"><button class="btn btn-default">{{$entry.total_ratings}}</button></a>{{/if}}
-<button class="btn btn-default" onclick="doRatings('{{$entry.hash}}'); return false;" ><i class="icon-pencil"></i></button>
+{{if $entry.canrate}}<button class="btn btn-default" onclick="doRatings('{{$entry.hash}}'); return false;" ><i class="icon-pencil"></i></button>{{/if}}
 </div>
-{{*/if*}}
+{{/if}}
 {{if $entry.public_forum}}
 <div class="contact-forum">
 {{$entry.forum_label}} @{{$entry.nickname}}+

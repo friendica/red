@@ -3,11 +3,6 @@
 
 function prate_post(&$a) {
 
-logger('request: ' . print_r($_REQUEST,true));
-return;
-
-
-
 	if(! local_channel())
 		return;
 
@@ -68,28 +63,6 @@ return;
 		proc_run('php','include/ratenotif.php','rating',$record);
 	}
 
-	$x = q("select abook_id from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
-		dbesc($target),
-		intval($local_channel())
-	);
-	if($x) {
-		$w = q("update abook set abook_rating = %d, abook_rating_text = '%s' where abook_xchan = '%s' and abook_channel = %d",
-			intval($rating),
-			dbesc($rating_text),
-			dbesc($target),
-			intval(local_channel())
-		);
-		$x = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
-			dbesc($target),
-			intval($local_channel())
-		);
-		if($x) {
-			unset($x[0]['abook_id']);
-			unset($x[0]['abook_account']);
-			unset($x[0]['abook_channel']);
-			build_sync_packet(0, array('abook' => array($x[0])));
-		}
-	}
 	return;
 }
 			
