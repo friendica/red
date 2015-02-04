@@ -8,6 +8,9 @@ function ratings_init(&$a) {
 		return;
 	}
 
+	if(local_channel())
+		load_contact_links(local_channel());
+
 	$dirmode = intval(get_config('system','directory_mode'));
 
 	$x = find_upstream_directory($dirmode);
@@ -46,7 +49,20 @@ function ratings_init(&$a) {
 	} 
 
 	$a->poi = $results['target'];
-	$a->data = $results['ratings'];
+
+	$friends = array();
+	$others = array();
+
+	if($results['ratings']) {
+		foreach($results['ratings'] as $n) {
+			if(array_key_exists($n['xchan_hash'],$a->contacts))
+				$friends[] = $n;
+			else
+				$others[] = $n;
+		}
+	}
+
+	$a->data = array_merge($friends,$others);
 
 	if(! $a->data) {
 		notice( t('No ratings') . EOL);
