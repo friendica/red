@@ -277,6 +277,7 @@ function directory_content(&$a) {
 							'keywords' => $out,
 							'ignlink' => $suggest ? $a->get_baseurl() . '/directory?ignore=' . $rr['hash'] : '',
 							'ignore_label' => "Don't suggest",
+							'safe' => $safe_mode
 						);
 
 						$arr = array('contact' => $rr, 'entry' => $entry);

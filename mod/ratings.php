@@ -55,7 +55,7 @@ function ratings_init(&$a) {
 
 	if($results['ratings']) {
 		foreach($results['ratings'] as $n) {
-			if(array_key_exists($n['xchan_hash'],$a->contacts))
+			if(is_array($a->contacts) && array_key_exists($n['xchan_hash'],$a->contacts))
 				$friends[] = $n;
 			else
 				$others[] = $n;
