@@ -50,9 +50,10 @@
 {{if $connect}}
 <a href="{{$connect_url}}" class="rconnect"><i class="icon-plus connect-icon"></i> {{$connect}}</a>
 {{/if}}
-	
+
 </div>
 <div id="vcard-end"></div>
+
 
 {{$chanmenu}}
 

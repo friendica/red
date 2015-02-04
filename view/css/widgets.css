@@ -104,3 +104,27 @@ li:hover .group-edit-icon {
 .chatroomlist td {
 	padding: 0 5px 0;
 }
+
+/* ratings */
+
+.directory-rating {
+	float: right;
+	margin-right: 5px;
+}
+
+.slider-container {
+	padding: 15px;
+}
+
+.rating-text-label {
+	margin-top: 30px;
+}
+
+.directory-rating-text {
+	width: 90%;
+	margin-left: 5%;
+}
+
+.directory-rating-submit {
+	margin-top: 15px;
+}

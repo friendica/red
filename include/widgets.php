@@ -903,3 +903,30 @@ function widget_random_block($arr) {
 
 	return $o;
 }
+
+
+function widget_rating($arr) {
+	$a = get_app();
+	if(! local_channel())
+		return;
+
+	$channel = $a->get_channel();
+
+	if($arr['target'])
+		$hash = $arr['target'];
+	else
+		$hash = $a->poi['xchan_hash'];
+
+	if(! $hash)
+		return;
+
+	if($hash == $channel['channel_hash'])
+		return;
+
+	head_add_js('ratings.js');
+
+	$o = '<div class="widget rateme">';
+	$o .= '<div class="rateme fakelink" onclick="doRatings(\'' . $hash . '\'); return false;"><i class="icon-pencil"></i> ' . t('Rate Me') . '</div></div>';
+	return $o;
+
+}

@@ -771,6 +771,19 @@ footer {
 	clear: both;
 }
 
+div.rateme {
+	display: block;
+	color: $nav_active_icon_colour;
+	background-color: $nav_bg;
+	-webkit-border-radius: $radiuspx ;
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;
+	border: 1px solid $nav_bd;
+	padding: 5px;
+	font-weight: bold;
+	clear: both;
+}
+
 #pause {
   position: fixed;
   bottom: 5px;
@@ -1442,16 +1455,22 @@ div.jGrowl div.jGrowl-notification {
 	width: 90%;
 }
 
-a.rconnect {
+a.rconnect, div.rateme {
   color: $nav_active_icon_colour;
   text-decoration: none;
+  font-weight: normal;
   outline: none;
 }
 
-a.rconnect:hover {
+a.rconnect:hover, div.rateme:hover {
 	color: #0080FF;
+	text-decoration: none;
 }
 
+.widget.rateme {
+	margin-top: 15px;
+	padding: 0;
+}
 
 /* header */
 header {
