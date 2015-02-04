@@ -1084,6 +1084,11 @@ function zot_import($arr, $sender_url) {
 
 	if(is_array($incoming)) {
 		foreach($incoming as $i) {
+			if(! is_array($i)) {
+				logger('incoming is not an array');
+				continue;
+			}
+
 			$result = null;
 
 			if(array_key_exists('iv',$i['notify'])) {
