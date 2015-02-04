@@ -1185,8 +1185,11 @@ nav .acpopup {
 
 
 .required {
-	color: #FF0000;
+	color: #ff0000;
+	font-size: 1.8rem;
+	margin-left: 5px;
 }
+
 
 #event-start-text, #event-finish-text {
 	margin-top: 10px;

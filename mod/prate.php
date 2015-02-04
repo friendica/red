@@ -1,5 +1,26 @@
 <?php
 
+function prate_init(&$a) {
+	if($_SERVER['REQUEST_METHOD'] === 'post')
+		return;
+
+	if(! local_channel())
+		return;
+
+	$channel = $a->get_channel();
+
+	$target = argv(1);
+	if(! $target)
+		return;
+
+	$r = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1",
+		dbesc($channel['channel_hash']),
+		dbesc($target)
+	);
+	if($r)
+		json_return_and_die(array('rating' => $r[0]['xlink_rating'],'rating_text' => $r[0]['xlink_rating_text']));
+	killme();
+}
 
 function prate_post(&$a) {
 
@@ -63,9 +84,10 @@ function prate_post(&$a) {
 		proc_run('php','include/ratenotif.php','rating',$record);
 	}
 
-	return;
+	json_return_and_die(array('result' => true));;
 }
 			
+
 
 
 

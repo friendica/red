@@ -19,6 +19,7 @@
 		'rating_desc' : "{{$rating_desc}}",
 		'rating_val'  : "{{$rating_val}}",
 		'rating_text' : "{{$rating_text}}",
+		'submit'      : "{{$submit}}",
 
 		't01' : "{{$t01}}",
 		't02' : "{{$t02}}",
