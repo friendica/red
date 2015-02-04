@@ -213,11 +213,12 @@ function dirsearch_content(&$a) {
 			dbesc($sync)
 		);
 		if($r) {
-			$spkt['rating'] = array();
+			$spkt['ratings'] = array();
 			foreach($r as $rr) {
-				$spkt['rating'][] = array(
+				$spkt['ratings'][] = array(
 					'type' => 'rating', 
 					'encoding' => 'zot',
+					'channel' => $rr['xlink_xchan'],
 					'target' => $rr['xlink_link'],
 					'rating' => intval($rr['xlink_rating']),
 					'rating_text' => $rr['xlink_rating_text'],
