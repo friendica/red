@@ -574,12 +574,11 @@ function connedit_content(&$a) {
 		$rating_val = 0;
 		$rating_text = '';
 
-dbg(1);
 		$xl = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1",
 			dbesc($channel['channel_hash']),
 			dbesc($contact['xchan_hash'])
 		);
-dbg(0);
+
 		if($xl) {
 			$rating_val = intval($xl[0]['xlink_rating']);
 			$rating_text = $xl[0]['xlink_rating_text'];
