@@ -3,6 +3,11 @@
 
 function prate_post(&$a) {
 
+logger('request: ' . print_r($_REQUEST,true));
+return;
+
+
+
 	if(! local_channel())
 		return;
 

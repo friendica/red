@@ -17,7 +17,7 @@
 
 {{*if $entry.rateme*}}
 <div id="dir-rating-wrapper-{{$entry.id}}" class="directory-rating" >{{if $entry.total_ratings}}<a href="ratings/{{$entry.hash}}"><button class="btn btn-default">{{$entry.total_ratings}}</button></a>{{/if}}
-<button class="btn btn-default"><i class="icon-pencil"></i></button>
+<button class="btn btn-default" onclick="doRatings('{{$entry.hash}}'); return false;" ><i class="icon-pencil"></i></button>
 </div>
 {{*/if*}}
 {{if $entry.public_forum}}
