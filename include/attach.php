@@ -1244,7 +1244,7 @@ function recursive_activity_recipients($allow_cid, $allow_gid, $deny_cid, $deny_
 	$r_arr_deny_cid = array_unique($r_arr_deny_cid);
 
 	//if none is allowed restrict to self
-	if(($r_arr_allow_gid === false) && ($r_arr_allow_gid === false)) {
+	if(($r_arr_allow_gid === false) && ($r_arr_allow_cid === false)) {
 		$ret['allow_cid'] = $poster['xchan_hash'];
 	} else {
 		$ret['allow_gid'] = $r_arr_allow_gid;
