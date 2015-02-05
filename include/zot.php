@@ -420,7 +420,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 					where abook_xchan = '%s' and abook_channel = %d 
 					and not (abook_flags & %d) > 0 ",
 					intval($their_perms),
-					dbesc($next_birthday),
+					dbescdate($next_birthday),
 					dbesc($x['hash']),
 					intval($channel['channel_id']),
 					intval(ABOOK_FLAG_SELF)

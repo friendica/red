@@ -980,13 +980,12 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	if($is_dir)
 		return;
 
-/*
 	//check for recursive perms if we are in a folder
 	if($object['folder']) {
 
 		$folder_hash = $object['folder'];
 
-		$r_perms = check_recursive_perms($allow_cid, $allow_gid, $deny_cid, $deny_gid, $folder_hash);
+		$r_perms = recursive_activity_recipients($allow_cid, $allow_gid, $deny_cid, $deny_gid, $folder_hash);
 
 		$allow_cid = perms2str($r_perms['allow_cid']);
 		$allow_gid = perms2str($r_perms['allow_gid']);
@@ -994,8 +993,6 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		$deny_gid = perms2str($r_perms['deny_gid']);
 
 	}
-*/
-
 
 	$mid = item_message_id();
 
@@ -1147,12 +1144,13 @@ function get_file_activity_object($channel_id, $hash, $cloudpath) {
 		'created'	=> $x[0]['created'],
 		'edited'	=> $x[0]['edited']
 	);
-
 	return $object;
 
 }
 
-function check_recursive_perms($allow_cid, $allow_gid, $deny_cid, $deny_gid, $folder_hash) {
+function recursive_activity_recipients($allow_cid, $allow_gid, $deny_cid, $deny_gid, $folder_hash) {
+
+	$poster = get_app()->get_observer();
 
 	$arr_allow_cid = expand_acl($allow_cid);
 	$arr_allow_gid = expand_acl($allow_gid);
@@ -1170,10 +1168,18 @@ function check_recursive_perms($allow_cid, $allow_gid, $deny_cid, $deny_gid, $fo
 
 			$parent_arr['allow_cid'][] = expand_acl($x[0]['allow_cid']);
 			$parent_arr['allow_gid'][] = expand_acl($x[0]['allow_gid']);
+
+			//TODO: should find a much better solution for the allow_cid <-> allow_gid problem.
+			//Do not use allow_gid for now. Instead lookup the members of the group directly and add them to allow_cid.
+			if($parent_arr['allow_gid']) {
+				foreach($parent_arr['allow_gid'][$count] as $gid) {
+					$in_group = in_group($gid);
+					$parent_arr['allow_cid'][$count] = array_unique(array_merge($parent_arr['allow_cid'][$count], $in_group));
+				}
+			}
+
 			$parent_arr['deny_cid'][] = expand_acl($x[0]['deny_cid']);
 			$parent_arr['deny_gid'][] = expand_acl($x[0]['deny_gid']);
-
-			$parents_arr = $parent_arr;
 
 			$count++;
 
@@ -1181,6 +1187,16 @@ function check_recursive_perms($allow_cid, $allow_gid, $deny_cid, $deny_gid, $fo
 
 		$folder_hash = $x[0]['folder'];
 
+	}
+
+	//if none of the parent folders is private just return file perms
+	if(!$parent_arr['allow_cid'] && !$parent_arr['allow_gid'] && !$parent_arr['deny_cid'] && !$parent_arr['deny_gid']) {
+		$ret['allow_gid'] = $arr_allow_gid;
+		$ret['allow_cid'] = $arr_allow_cid;
+		$ret['deny_gid'] = $arr_deny_gid;
+		$ret['deny_cid'] = $arr_deny_cid;
+
+		return $ret;
 	}
 
 	//if there are no perms on the file we get them from the first parent folder
@@ -1192,42 +1208,68 @@ function check_recursive_perms($allow_cid, $allow_gid, $deny_cid, $deny_gid, $fo
 	}
 
 	//allow_cid
-	foreach ($parents_arr['allow_cid'] as $folder_arr_allow_cid) {
+	$r_arr_allow_cid = false;
+	foreach ($parent_arr['allow_cid'] as $folder_arr_allow_cid) {
 		foreach ($folder_arr_allow_cid as $ac_hash) {
 			$count_values[$ac_hash]++;
 		}
 	}
 	foreach ($arr_allow_cid as $fac_hash) {
-		if(($count_values[$fac_hash]) && ($count_values[$fac_hash] == $count))
+		if($count_values[$fac_hash] == $count)
 			$r_arr_allow_cid[] = $fac_hash;
 	}
 
-
 	//allow_gid
-	foreach ($parents_arr['allow_gid'] as $folder_arr_allow_gid) {
+	$r_arr_allow_gid = false;
+	foreach ($parent_arr['allow_gid'] as $folder_arr_allow_gid) {
 		foreach ($folder_arr_allow_gid as $ag_hash) {
 			$count_values[$ag_hash]++;
 		}
 	}
 	foreach ($arr_allow_gid as $fag_hash) {
-		if(($count_values[$fag_hash]) && ($count_values[$fag_hash] == $count))
+		if($count_values[$fag_hash] == $count)
 			$r_arr_allow_gid[] = $fag_hash;
 	}
 
 	//deny_gid
-	foreach($parents_arr['deny_gid'] as $folder_arr_deny_gid) {
-		$arr_deny_gid = array_merge($arr_deny_gid, $folder_arr_deny_gid);
+	foreach($parent_arr['deny_gid'] as $folder_arr_deny_gid) {
+		$r_arr_deny_gid = array_merge($arr_deny_gid, $folder_arr_deny_gid);
 	}
+	$r_arr_deny_gid = array_unique($r_arr_deny_gid);
 
 	//deny_cid
-	foreach($parents_arr['deny_cid'] as $folder_arr_deny_cid) {
-		$arr_deny_cid = array_merge($arr_deny_cid, $folder_arr_deny_cid);
+	foreach($parent_arr['deny_cid'] as $folder_arr_deny_cid) {
+		$r_arr_deny_cid = array_merge($arr_deny_cid, $folder_arr_deny_cid);
+	}
+	$r_arr_deny_cid = array_unique($r_arr_deny_cid);
+
+	//if none is allowed restrict to self
+	if(($r_arr_allow_gid === false) && ($r_arr_allow_cid === false)) {
+		$ret['allow_cid'] = $poster['xchan_hash'];
+	} else {
+		$ret['allow_gid'] = $r_arr_allow_gid;
+		$ret['allow_cid'] = $r_arr_allow_cid;
+		$ret['deny_gid'] = $r_arr_deny_gid;
+		$ret['deny_cid'] = $r_arr_deny_cid;
 	}
 
-	$ret['allow_gid'] = $r_arr_allow_gid;
-	$ret['allow_cid'] = $r_arr_allow_cid;
-	$ret['deny_gid'] = array_unique($r_arr_deny_gid);
-	$ret['deny_cid'] = array_unique($r_arr_deny_cid);
-
 	return $ret;
+
+}
+
+function in_group($group_id) {
+	//TODO: make these two queries one with a join.
+	$x = q("SELECT id FROM groups WHERE hash = '%s'",
+		dbesc($group_id)
+	);
+
+	$r = q("SELECT xchan FROM group_member WHERE gid = %d",
+		intval($x[0]['id'])
+	);
+
+	foreach($r as $ig) {
+		$group_members[] = $ig['xchan'];
+	}
+
+	return $group_members;
 }
