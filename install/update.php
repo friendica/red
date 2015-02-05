@@ -1515,10 +1515,11 @@ function update_r1133() {
 			xp_client varchar( 20 ) NOT NULL DEFAULT '',
 			xp_channel bigint NOT NULL DEFAULT '0',
 			xp_perm varchar( 64 ) NOT NULL DEFAULT '',
-			PRIMARY KEY (\"xp_id\") )");
-		$r2 = q("create index \"xp_client\" on xperm (\"xp_client\", 
-			create index \"xp_channel\" on xperm (\"xp_channel\"),
-			create index \"xp_perm\" on xperm (\"xp_perm\") ");
+			PRIMARY KEY (xp_id) )");
+		$r2 = 0;
+		foreach(array('xp_client', 'xp_channel', 'xp_perm') as $fld)
+			$r2 += (empty(q("create index $fld on xperm ($fld)")) ? 0 : 1);
+			
 		$r = (($r1 && $r2) ? true : false);
 	}
 	else {
