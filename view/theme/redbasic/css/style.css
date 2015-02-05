@@ -162,18 +162,6 @@ header {
 	filter:alpha(opacity=$nav_percent_min_opacity);
 }
 
-/* experimental - increase size of notification counts on hover
- * to make the notification dropdowns more accessible on portable devices.
- * Currently they are mostly inaccessible without using huge magnifications. 
- * The question is if you can actually hover on a portable touchscreen device.
-
-.badge.dropdown-toggle:hover {
-	width: 2rem;
-	height: 2rem;
-}
-
-*/
-
 #powered-by {
 	font-size: 0.5rem;
 	position: absolute;

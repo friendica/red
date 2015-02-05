@@ -14,3 +14,8 @@
 .rating-value {
 	margin-top: 10px;
 }
+
+.prep-rating-value {
+	margin-left: 10px;
+	font-size: 1.5rem;
+}
