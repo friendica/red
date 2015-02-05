@@ -987,8 +987,6 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 		$r_perms = recursive_activity_recipients($allow_cid, $allow_gid, $deny_cid, $deny_gid, $folder_hash);
 
-		print_r($r_perms); killme();
-
 		$allow_cid = perms2str($r_perms['allow_cid']);
 		$allow_gid = perms2str($r_perms['allow_gid']);
 		$deny_cid = perms2str($r_perms['deny_cid']);
