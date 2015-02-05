@@ -908,6 +908,11 @@ function widget_random_block($arr) {
 function widget_rating($arr) {
 	$a = get_app();
 
+	$poco_rating = get_config('system','poco_rating_enable');
+	if((! $poco_rating) && ($poco_rating !== false)) {
+		return;
+	}
+
 	if($arr['target'])
 		$hash = $arr['target'];
 	else
