@@ -946,16 +946,16 @@ function widget_rating($arr) {
 
 	}
 
-	if((! $remote) && (! local_channel()))
-		return;
+	if(($remote) || (local_channel())) {
+		$o = '<div class="widget rateme">';
+		if($remote)
+			$o .= '<a class="rateme" href="' . $url . '"><i class="icon-pencil"></i> ' . t('Rate Me') . '</a>';
+		else
+			$o .= '<div class="rateme fakelink" onclick="doRatings(\'' . $hash . '\'); return false;"><i class="icon-pencil"></i> ' . t('Rate Me') . '</div>';
+		$o .= '</div>';
+	}
 
-	$o = '<div class="widget rateme">';
-	if($remote)
-		$o .= '<a class="rateme" href="' . $url . '"><i class="icon-pencil"></i> ' . t('Rate Me') . '</a>';
-	else
-		$o .= '<div class="rateme fakelink" onclick="doRatings(\'' . $hash . '\'); return false;"><i class="icon-pencil"></i> ' . t('Rate Me') . '</div>';
-
-	$o .= '</div><div class="widget rateme"><a class="rateme" href="ratings/' . $hash . '"><i class="icon-eye-open"></i> ' . t('View Ratings') . '</a>';
+	$o .= '<div class="widget rateme"><a class="rateme" href="ratings/' . $hash . '"><i class="icon-eye-open"></i> ' . t('View Ratings') . '</a>';
 	$o .= '</div>';
 
 	return $o;
