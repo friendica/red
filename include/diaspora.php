@@ -35,11 +35,16 @@ function diaspora_dispatch_public($msg) {
 			logger('diaspora_public: delivering to: ' . $rr['channel_name'] . ' (' . $rr['channel_address'] . ') ');
 			diaspora_dispatch($rr,$msg);
 		}
-		if($sys)
-			diaspora_dispatch($sys,$msg);
 	}
-	else
-		logger('diaspora_public: no subscribers');
+	else {
+		if(! $sys)
+			logger('diaspora_public: no subscribers');
+	}
+
+	if($sys) {
+		logger('diaspora_public: delivering to sys.');
+		diaspora_dispatch($sys,$msg);
+	}
 }
 
 
