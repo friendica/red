@@ -216,7 +216,7 @@ function bb_ShareAttributes($match) {
 	$headline = '<div class="shared_container"> <div class="shared_header">';
 
 	if ($avatar != "")
-		$headline .= '<img src="' . $avatar . '" alt="' . $author . '" height="32" width="32" />';
+		$headline .= '<a href="' . zid($profile) . '" ><img src="' . $avatar . '" alt="' . $author . '" height="32" width="32" /></a>';
 
 	// Bob Smith wrote the following post 2 hours ago
 
