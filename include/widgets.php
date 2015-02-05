@@ -936,17 +936,19 @@ function widget_rating($arr) {
 		}
 	}
 
+	$self = false;
+
 	if(local_channel()) {
 		$channel = $a->get_channel();
 
 		if($hash == $channel['channel_hash'])
-			return;
+			$self = true;
 
 		head_add_js('ratings.js');
 
 	}
 
-	if(($remote) || (local_channel())) {
+	if((($remote) || (local_channel())) && (! $self)) {
 		$o = '<div class="widget rateme">';
 		if($remote)
 			$o .= '<a class="rateme" href="' . $url . '"><i class="icon-pencil"></i> ' . t('Rate Me') . '</a>';
