@@ -16,6 +16,10 @@ function js_strings() {
 		'$permschange' => t('Notice: Permissions have changed but have not yet been submitted.'),
 		'$closeAll'    => t('close all'),
 		'$nothingnew'  => t('Nothing new here'),
+		'$rating_desc' => t('Rate This Channel (this is public)'),
+		'$rating_val'  => t('Rating'),
+		'$rating_text' => t('Describe (optional)'),
+		'$submit'      => t('Submit'),
 
 		'$t01' => ((t('timeago.prefixAgo') != 'timeago.prefixAgo') ? t('timeago.prefixAgo') : ''),
 		'$t02' => ((t('timeago.prefixFromNow') != 'timeago.prefixFromNow') ? t('timeago.prefixFromNow') : ''),

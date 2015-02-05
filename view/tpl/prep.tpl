@@ -12,9 +12,10 @@
 </div>
 <div class="prep-details">
 <a href="{{$r.xchan_url}}" class="directory-profile-link" id="directory-profile-link-{{$r.xchan_hash}}" ><div class="contact-name">{{$r.xchan_name}}</div></a>
-{{$rating_lbl}} {{$r.xlink_rating}}
+<div class="rating-value">{{$rating_lbl}} {{$r.xlink_rating}}</div>
 {{if $r.xlink_rating_text}}
-{{$rating_text_label}} {{$r.xlink_rating_text}}
+<div class="rating-text">{{$rating_text_label}} {{$r.xlink_rating_text}}
+</div>
 {{/if}}
 </div>
 <div class="clear"></div>

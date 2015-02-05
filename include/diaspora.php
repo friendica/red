@@ -35,11 +35,16 @@ function diaspora_dispatch_public($msg) {
 			logger('diaspora_public: delivering to: ' . $rr['channel_name'] . ' (' . $rr['channel_address'] . ') ');
 			diaspora_dispatch($rr,$msg);
 		}
-		if($sys)
-			diaspora_dispatch($sys,$msg);
 	}
-	else
-		logger('diaspora_public: no subscribers');
+	else {
+		if(! $sys)
+			logger('diaspora_public: no subscribers');
+	}
+
+	if($sys) {
+		logger('diaspora_public: delivering to sys.');
+		diaspora_dispatch($sys,$msg);
+	}
 }
 
 
@@ -688,7 +693,7 @@ function diaspora_request($importer,$xml) {
 		$default_perms = $x['perms_accept'];
 	}
 	if(! $default_perms)
-		$default_perms = intval(get_pconfig($channel['channel_id'],'system','autoperms'));
+		$default_perms = intval(get_pconfig($importer['channel_id'],'system','autoperms'));
 				
 	$their_perms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT|PERMS_R_STORAGE|PERMS_R_PAGES;
 

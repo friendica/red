@@ -943,6 +943,9 @@ logger('online: ' . $profile['online']);
 
 	$tpl = get_markup_template('profile_vcard.tpl');
 
+	require_once('include/widgets.php');
+	$z = widget_rating(array('target' => $profile['channel_hash']));
+
 	$o .= replace_macros($tpl, array(
 		'$profile'       => $profile,
 		'$connect'       => $connect,
@@ -954,6 +957,7 @@ logger('online: ' . $profile['online']);
 		'$homepage'      => $homepage,
 		'$chanmenu'      => $channel_menu,
 		'$diaspora'      => $diaspora,
+		'$rating'        => $z,
 		'$contact_block' => $contact_block,
 	));
 

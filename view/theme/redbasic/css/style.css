@@ -575,6 +575,15 @@ footer {
 
 #cboxContent {
     color: $dirpopup_txtcol;
+	margin: 5px;
+}
+
+#cboxClose {
+	margin: 10px;
+}
+
+#colorbox {
+	margin: 5px;
 }
 
 #cboxContent a {
@@ -752,6 +761,19 @@ footer {
 	display: block;
 	color: $nav_active_icon_colour;
 	margin-top: 15px;
+	background-color: $nav_bg;
+	-webkit-border-radius: $radiuspx ;
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;
+	border: 1px solid $nav_bd;
+	padding: 5px;
+	font-weight: bold;
+	clear: both;
+}
+
+a.rateme, div.rateme {
+	display: block;
+	color: $nav_active_icon_colour;
 	background-color: $nav_bg;
 	-webkit-border-radius: $radiuspx ;
 	-moz-border-radius: $radiuspx;
@@ -1176,8 +1198,11 @@ nav .acpopup {
 
 
 .required {
-	color: #FF0000;
+	color: #ff0000;
+	font-size: 1.8rem;
+	margin-left: 5px;
 }
+
 
 #event-start-text, #event-finish-text {
 	margin-top: 10px;
@@ -1430,16 +1455,22 @@ div.jGrowl div.jGrowl-notification {
 	width: 90%;
 }
 
-a.rconnect {
+a.rconnect, a.rateme, div.rateme {
   color: $nav_active_icon_colour;
   text-decoration: none;
+  font-weight: normal;
   outline: none;
 }
 
-a.rconnect:hover {
+a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	color: #0080FF;
+	text-decoration: none;
 }
 
+.widget.rateme {
+	margin-top: 15px;
+	padding: 0;
+}
 
 /* header */
 header {
@@ -2076,6 +2107,13 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 [id^="cloud-index-"]:hover td,
 .cloud-index-active {
 	background-color: $item_colour;
+}
+
+nav ul li .undefined, 
+nav ul li .notify-seen,
+nav ul li .notify-unseen
+ {
+    max-height: 3rem;
 }
 
 /* bootstrap overrides */

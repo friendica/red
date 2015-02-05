@@ -3,8 +3,10 @@
 	clear: both;
 }
 .directory-name {
-	text-align: center;
+	float: left;
+	width: 250px;
 }
+
 .directory-photo {
 	margin-left: 25px;
 }

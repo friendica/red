@@ -22,11 +22,13 @@
 			</label>
 		</div>
 		{{/if}}
+		{{if !$isadir}}
 		<div id="attach-edit-activity" class="btn-group" data-toggle="buttons">
 			<label class="btn btn-default btn-xs" title="{{$activity_btn_title}}">
 				<input type="checkbox" autocomplete="off" name="no_activity" value="1"><i class="icon-ban-circle jot-icons"></i>
 			</label>
 		</div>
+		{{/if}}
 		<div id="attach-edit-perms" class="btn-group">
 			<button id="dbtn-acl" class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
 				<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>

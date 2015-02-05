@@ -1084,6 +1084,11 @@ function zot_import($arr, $sender_url) {
 
 	if(is_array($incoming)) {
 		foreach($incoming as $i) {
+			if(! is_array($i)) {
+				logger('incoming is not an array');
+				continue;
+			}
+
 			$result = null;
 
 			if(array_key_exists('iv',$i['notify'])) {
@@ -1108,7 +1113,8 @@ function zot_import($arr, $sender_url) {
 			if(array_key_exists('message',$i) && array_key_exists('type',$i['message']) && $i['message']['type'] === 'rating') {
 				// rating messages are processed only by directory servers
 				logger('Rating received: ' . print_r($arr,true), LOGGER_DATA);
-				$result = process_rating_delivery($i['notify']['sender'],$arr);
+				$result = process_rating_delivery($i['notify']['sender'],$i['message']);
+				continue;
 			}
 
 			if(array_key_exists('recipients',$i['notify']) && count($i['notify']['recipients'])) {
@@ -1813,34 +1819,52 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 
 function process_rating_delivery($sender,$arr) {
 
-	$dirmode = intval(get_config('system','directory_mode'));
-	if($dirmode == DIRECTORY_MODE_NORMAL)
-		return;
+	logger('process_rating_delivery: ' . print_r($arr,true));
 
 	if(! $arr['target'])
 		return;
 
-	$r = q("select * from xlink where xlink_xchan = '%s' and xlink_target = '%s' limit 1",
+	$z = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
+		dbesc($sender['hash'])
+	);
+
+
+	if((! $z) || (! rsa_verify($arr['target'] . '.' . $arr['rating'] . '.' . $arr['rating_text'], base64url_decode($arr['signature']),$z[0]['xchan_pubkey']))) {
+		logger('failed to verify rating');
+		return;
+	}
+
+	$r = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1 limit 1",
 		dbesc($sender['hash']),
 		dbesc($arr['target'])
-	);		
+	);	
+	
 	if($r) {
-		$x = q("update xlink set xlink_rating = %d, xlink_rating_text = '%s', xlink_updated = '%s' where xlink_id = %d",
+		if($r[0]['xlink_updated'] >= $arr['edited']) {
+			logger('rating message duplicate');
+			return;
+		}
+
+		$x = q("update xlink set xlink_rating = %d, xlink_rating_text = '%s', xlink_sig = '%s', xlink_updated = '%s' where xlink_id = %d",
 			intval($arr['rating']),
-			intval($arr['rating_text']),
+			dbesc($arr['rating_text']),
+			dbesc($arr['signature']),
 			dbesc(datetime_convert()),
 			intval($r[0]['xlink_id'])
 		);
+		logger('rating updated');
 	}
 	else {
-		$x = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_updated, xlink_static )
+		$x = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_sig, xlink_updated, xlink_static )
 			values( '%s', '%s', %d, '%s', '%s', 1 ) ",
 			dbesc($sender['hash']),
 			dbesc($arr['target']),
 			intval($arr['rating']),
-			intval($arr['rating_text']),
+			dbesc($arr['rating_text']),
+			dbesc($arr['signature']),
 			dbesc(datetime_convert())
 		);
+		logger('rating created');
 	}
 	return;
 }

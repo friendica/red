@@ -11,9 +11,9 @@ bezoeken en een nieuwe wachtwoord aanvragen. Je kan daarna inloggen, een kanaal 
 meteen via 'instellingen > account' (linksboven)  het account verwijderen (onderaan).  
 Excuses voor het eventuele ongemak. 
 
-Wanneer dit account wel door jou is aangemaakt: Dank je en welkom op de {{sitename}}.
+Wanneer dit account wel door jou is aangemaakt: Dank je en welkom op de {{$sitename}}.
 
 Vriendelijke groet,
-	Beheerder {{sitename}} ({{$siteurl}})
+	Beheerder {{$sitename}} ({{$siteurl}})
 
  

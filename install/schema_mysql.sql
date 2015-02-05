@@ -1533,6 +1533,7 @@ CREATE TABLE IF NOT EXISTS `xlink` (
   `xlink_rating_text` TEXT NOT NULL DEFAULT '',
   `xlink_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `xlink_static` tinyint(1) NOT NULL DEFAULT '0',
+  `xlink_sig` text NOT NULL DEFAULT '',
   PRIMARY KEY (`xlink_id`),
   KEY `xlink_xchan` (`xlink_xchan`),
   KEY `xlink_link` (`xlink_link`),

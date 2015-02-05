@@ -190,6 +190,11 @@ function directory_content(&$a) {
 
 						$page_type = '';
 
+						if($rr['total_ratings'])
+							$total_ratings = sprintf( tt("%d rating", "%d ratings", $rr['total_ratings']), $rr['total_ratings']);
+						else
+							$total_ratings = '';
+
 						$profile = $rr;
 
 						if ((x($profile,'locale') == 1)
@@ -247,7 +252,7 @@ function directory_content(&$a) {
 							'public_forum' => $rr['public_forum'],
 							'photo' => $rr['photo'],
 							'hash' => $rr['hash'],
-							'alttext' => $rr['name'] . ' ' . $rr['address'],
+							'alttext' => $rr['name'] . ((local_channel() || remote_channel()) ? ' ' . $rr['address'] : ''),
 							'name' => $rr['name'],
 							'details' => $pdesc . $details,
 							'profile' => $profile,
@@ -255,6 +260,9 @@ function directory_content(&$a) {
 							'nickname' => substr($rr['address'],0,strpos($rr['address'],'@')),
 							'location' => $location,
 							'gender'   => $gender,
+							'total_ratings' => $total_ratings,
+							'viewrate' => true,
+							'canrate' => ((local_channel()) ? true : false),
 							'pdesc'	=> $pdesc,
 							'marital'  => $marital,
 							'homepage' => $homepage,
@@ -269,6 +277,7 @@ function directory_content(&$a) {
 							'keywords' => $out,
 							'ignlink' => $suggest ? $a->get_baseurl() . '/directory?ignore=' . $rr['hash'] : '',
 							'ignore_label' => "Don't suggest",
+							'safe' => $safe_mode
 						);
 
 						$arr = array('contact' => $rr, 'entry' => $entry);

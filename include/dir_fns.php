@@ -216,6 +216,49 @@ function sync_directories($dirmode) {
 				);
 			}
 		}
+		if(count($j['ratings'])) {
+			foreach($j['ratings'] as $rr) {		
+				$x = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1",
+					dbesc($rr['channel']),
+					dbesc($rr['target'])
+				);
+				if($x && $x[0]['xlink_updated'] >= $rr['edited'])
+					continue;
+				$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
+					dbesc($rr['channel'])
+				);
+				if(! $y) {
+					logger('key unavailable on this site for ' . $rr['channel']);
+					continue;
+				}
+				if(! rsa_verify($rr['target'] . '.' . $rr['rating'] . '.' . $rr['rating_text'], base64url_decode($rr['signature']),$y[0]['xchan_pubkey'])) {
+			        logger('failed to verify rating');
+					continue;
+				}
+
+				if($x) {
+					$z = q("update xlink set xlink_rating = %d, xlink_rating_text = '%s', xlink_sig = '%s', xlink_updated = '%s' where xlink_id = %d",
+						intval($rr['rating']),
+						dbesc($rr['rating_text']),
+						dbesc($rr['signature']),
+						dbesc(datetime_convert()),
+						intval($x[0]['xlink_id'])
+	        		);
+			        logger('rating updated');
+    			}
+    			else {
+        			$z = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_sig, xlink_updated, xlink_static ) values( '%s', '%s', %d, '%s', '%s', 1 ) ",
+						dbesc($rr['channel']),
+						dbesc($rr['target']),
+						intval($rr['rating']),
+						dbesc($rr['rating_text']),
+						dbesc($rr['signature']),
+						dbesc(datetime_convert())
+					);
+					logger('rating created');
+				}
+			}
+		}
 	}
 }
 

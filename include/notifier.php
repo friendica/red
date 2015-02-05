@@ -297,15 +297,6 @@ function notifier_run($argv, $argc){
 		$private = false;
 		$packet_type = 'purge';
 	}
-	elseif($cmd === 'rating') {
-		$r = q("select * from xlink where xlink_id = %d and xlink_static = 1 limit 1",
-			intval($item_id)
-		);
-		if($r) {
-			logger('rating message: ' . print_r($r[0],true));
-			return;
-		}
-	}
 	else {
 
 		// Normal items
@@ -482,11 +473,6 @@ function notifier_run($argv, $argc){
 
 	// Now we have collected recipients (except for external mentions, FIXME)
 	// Let's reduce this to a set of hubs.
-
-	
-	// for public posts always include our own hub
-// this shouldn't be needed any more. collect_recipients should take care of it.
-//	$sql_extra = (($private) ? "" : " or hubloc_url = '" . dbesc(z_root()) . "' ");
 
 	logger('notifier: hub choice: ' . intval($relay_to_owner) . ' ' . intval($private) . ' ' . $cmd, LOGGER_DEBUG);
 

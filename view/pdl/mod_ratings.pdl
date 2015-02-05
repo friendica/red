@@ -1,5 +1,6 @@
 [region=aside]
 [widget=vcard][/widget]
+[widget=rating][/widget]
 [widget=suggestions][/widget]
 [widget=findpeople][/widget]
 [/region]

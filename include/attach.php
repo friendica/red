@@ -970,6 +970,33 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	$poster = get_app()->get_observer();
 
+	//if we got no object something went wrong
+	if(!$object)
+		return;
+
+	$is_dir = (($object['flags'] & ATTACH_FLAG_DIR) ? true : false);
+
+	//do not send activity for folders for now
+	if($is_dir)
+		return;
+
+/*
+	//check for recursive perms if we are in a folder
+	if($object['folder']) {
+
+		$folder_hash = $object['folder'];
+
+		$r_perms = check_recursive_perms($allow_cid, $allow_gid, $deny_cid, $deny_gid, $folder_hash);
+
+		$allow_cid = perms2str($r_perms['allow_cid']);
+		$allow_gid = perms2str($r_perms['allow_gid']);
+		$deny_cid = perms2str($r_perms['deny_cid']);
+		$deny_gid = perms2str($r_perms['deny_gid']);
+
+	}
+*/
+
+
 	$mid = item_message_id();
 
 	$objtype = ACTIVITY_OBJ_FILE;
@@ -1123,4 +1150,84 @@ function get_file_activity_object($channel_id, $hash, $cloudpath) {
 
 	return $object;
 
+}
+
+function check_recursive_perms($allow_cid, $allow_gid, $deny_cid, $deny_gid, $folder_hash) {
+
+	$arr_allow_cid = expand_acl($allow_cid);
+	$arr_allow_gid = expand_acl($allow_gid);
+	$arr_deny_cid = expand_acl($deny_cid);
+	$arr_deny_gid = expand_acl($deny_gid);
+
+	$count = 0;
+	while($folder_hash) {
+		$x = q("SELECT allow_cid, allow_gid, deny_cid, deny_gid, folder FROM attach WHERE hash = '%s' LIMIT 1",
+			dbesc($folder_hash)
+		);
+
+		//only process private folders
+		if($x[0]['allow_cid'] || $x[0]['allow_gid'] || $x[0]['deny_cid'] || $x[0]['deny_gid']) {
+
+			$parent_arr['allow_cid'][] = expand_acl($x[0]['allow_cid']);
+			$parent_arr['allow_gid'][] = expand_acl($x[0]['allow_gid']);
+			$parent_arr['deny_cid'][] = expand_acl($x[0]['deny_cid']);
+			$parent_arr['deny_gid'][] = expand_acl($x[0]['deny_gid']);
+
+			$parents_arr = $parent_arr;
+
+			$count++;
+
+		}
+
+		$folder_hash = $x[0]['folder'];
+
+	}
+
+	//if there are no perms on the file we get them from the first parent folder
+	if(!$arr_allow_cid && !$arr_allow_gid && !$arr_deny_cid && !$arr_deny_gid) {
+		$arr_allow_cid = $parent_arr['allow_cid'][0];
+		$arr_allow_gid = $parent_arr['allow_gid'][0];
+		$arr_deny_cid = $parent_arr['deny_cid'][0];
+		$arr_deny_gid = $parent_arr['deny_gid'][0];
+	}
+
+	//allow_cid
+	foreach ($parents_arr['allow_cid'] as $folder_arr_allow_cid) {
+		foreach ($folder_arr_allow_cid as $ac_hash) {
+			$count_values[$ac_hash]++;
+		}
+	}
+	foreach ($arr_allow_cid as $fac_hash) {
+		if(($count_values[$fac_hash]) && ($count_values[$fac_hash] == $count))
+			$r_arr_allow_cid[] = $fac_hash;
+	}
+
+
+	//allow_gid
+	foreach ($parents_arr['allow_gid'] as $folder_arr_allow_gid) {
+		foreach ($folder_arr_allow_gid as $ag_hash) {
+			$count_values[$ag_hash]++;
+		}
+	}
+	foreach ($arr_allow_gid as $fag_hash) {
+		if(($count_values[$fag_hash]) && ($count_values[$fag_hash] == $count))
+			$r_arr_allow_gid[] = $fag_hash;
+	}
+
+	//deny_gid
+	foreach($parents_arr['deny_gid'] as $folder_arr_deny_gid) {
+		$arr_deny_gid = array_merge($arr_deny_gid, $folder_arr_deny_gid);
+	}
+
+	//deny_cid
+	foreach($parents_arr['deny_cid'] as $folder_arr_deny_cid) {
+		$arr_deny_cid = array_merge($arr_deny_cid, $folder_arr_deny_cid);
+	}
+
+	$ret['allow_gid'] = $r_arr_allow_gid;
+	$ret['allow_cid'] = $r_arr_allow_cid;
+	$ret['deny_gid'] = array_unique($r_arr_deny_gid);
+	$ret['deny_cid'] = array_unique($r_arr_deny_cid);
+
+	return $ret;
 }

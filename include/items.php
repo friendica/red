@@ -4751,6 +4751,7 @@ function item_remove_cid($xchan_hash,$mid,$uid) {
 // Set item permissions based on results obtained from linkify_tags()
 function set_linkified_perms($linkified, &$str_contact_allow, &$str_group_allow, $profile_uid, $parent_item = false) {
 	$first_access_tag = true;
+
 	foreach($linkified as $x) {
 		$access_tag = $x['access_tag'];
 		if(($access_tag) && (! $parent_item)) {
