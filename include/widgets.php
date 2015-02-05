@@ -907,10 +907,6 @@ function widget_random_block($arr) {
 
 function widget_rating($arr) {
 	$a = get_app();
-	if(! local_channel())
-		return;
-
-	$channel = $a->get_channel();
 
 	if($arr['target'])
 		$hash = $arr['target'];
@@ -920,13 +916,39 @@ function widget_rating($arr) {
 	if(! $hash)
 		return;
 
-	if($hash == $channel['channel_hash'])
+	$url = '';
+	$remote = false;
+
+	if(remote_channel() && ! local_channel()) {
+		$ob = $a->get_observer();
+		if($ob && $ob['xchan_url']) {
+			$p = parse_url($ob['xchan_url']);
+			if($p) {
+				$url = $p['scheme'] . '://' . $p['host'] . (($p['port']) ? ':' . $p['port'] : '');
+				$url .= '/rate?f=&target=' . urlencode($hash);
+			}
+			$remote = true;
+		}
+	}
+
+	if(local_channel()) {
+		$channel = $a->get_channel();
+
+		if($hash == $channel['channel_hash'])
+			return;
+
+		head_add_js('ratings.js');
+
+	}
+
+	if((! $remote) && (! local_channel()))
 		return;
 
-	head_add_js('ratings.js');
-
 	$o = '<div class="widget rateme">';
-	$o .= '<div class="rateme fakelink" onclick="doRatings(\'' . $hash . '\'); return false;"><i class="icon-pencil"></i> ' . t('Rate Me') . '</div></div>';
+	if($remote)
+		$o .= '<a class="rateme" href="' . $url . '"><i class="icon-pencil"></i> ' . t('Rate Me') . '</a></div>';
+	else
+		$o .= '<div class="rateme fakelink" onclick="doRatings(\'' . $hash . '\'); return false;"><i class="icon-pencil"></i> ' . t('Rate Me') . '</div></div>';
 	return $o;
 
 }

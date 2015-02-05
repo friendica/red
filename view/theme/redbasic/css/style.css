@@ -771,7 +771,7 @@ footer {
 	clear: both;
 }
 
-div.rateme {
+a.rateme, div.rateme {
 	display: block;
 	color: $nav_active_icon_colour;
 	background-color: $nav_bg;
@@ -1455,14 +1455,14 @@ div.jGrowl div.jGrowl-notification {
 	width: 90%;
 }
 
-a.rconnect, div.rateme {
+a.rconnect, a.rateme, div.rateme {
   color: $nav_active_icon_colour;
   text-decoration: none;
   font-weight: normal;
   outline: none;
 }
 
-a.rconnect:hover, div.rateme:hover {
+a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	color: #0080FF;
 	text-decoration: none;
 }

@@ -943,10 +943,8 @@ logger('online: ' . $profile['online']);
 
 	$tpl = get_markup_template('profile_vcard.tpl');
 
-// This isn't ideal here because it requires local_channel(). 
-// We need the rating widget to recognise and take you home if you're remote.
-//	require_once('include/widgets.php');
-//	$z = widget_rating(array('target' => $profile['channel_hash']));
+	require_once('include/widgets.php');
+	$z = widget_rating(array('target' => $profile['channel_hash']));
 
 	$o .= replace_macros($tpl, array(
 		'$profile'       => $profile,
