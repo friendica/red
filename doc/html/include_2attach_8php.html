@@ -161,6 +161,10 @@ Functions</h2></td></tr>
 <tr class="separator:aa23ba65e5bb732be71fdd27ccff7d46e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa784c064ae323710f4ef68771a4a38db"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#aa784c064ae323710f4ef68771a4a38db">get_file_activity_object</a> ($channel_id, $hash, $cloudpath)</td></tr>
 <tr class="separator:aa784c064ae323710f4ef68771a4a38db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabd15487fa0e5d2dc5c480f72d23b886"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#aabd15487fa0e5d2dc5c480f72d23b886">recursive_activity_recipients</a> ($allow_cid, $allow_gid, $deny_cid, $deny_gid, $folder_hash)</td></tr>
+<tr class="separator:aabd15487fa0e5d2dc5c480f72d23b886"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa166e1b48ac829a2366362e74fbcf355"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#aa166e1b48ac829a2366362e74fbcf355">in_group</a> ($group_id)</td></tr>
+<tr class="separator:aa166e1b48ac829a2366362e74fbcf355"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>File/attach API with the potential for revision control. </p>
@@ -830,6 +834,24 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aa166e1b48ac829a2366362e74fbcf355"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">in_group </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$group_id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="include_2attach_8php.html#aabd15487fa0e5d2dc5c480f72d23b886">recursive_activity_recipients()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a5d484de2d19a93071571d6499a50ae34"></a>
 <div class="memitem">
 <div class="memproto">
@@ -862,6 +884,52 @@ Functions</h2></td></tr>
 </dl>
 
 <p>Referenced by <a class="el" href="mod_2attach_8php.html#aa88eb5ad87aa1036a30e70339cc6c1b1">attach_init()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aabd15487fa0e5d2dc5c480f72d23b886"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">recursive_activity_recipients </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$allow_cid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$allow_gid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$deny_cid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$deny_gid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$folder_hash</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="include_2attach_8php.html#aa23ba65e5bb732be71fdd27ccff7d46e">file_activity()</a>.</p>
 
 </div>
 </div>

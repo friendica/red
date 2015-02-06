@@ -17,6 +17,7 @@ var boot_8php =
     [ "get_account_id", "boot_8php.html#afe88b920aa285982edb817a0dd44eb37", null ],
     [ "get_app", "boot_8php.html#a0e6db7e365f2b041a828b93786f694bc", null ],
     [ "get_custom_nav", "boot_8php.html#a899d24fd074594ceebbf72e1feff335f", null ],
+    [ "get_directory_primary", "boot_8php.html#a07a9d3910794df1c98ad2017e6a8e4b9", null ],
     [ "get_directory_realm", "boot_8php.html#a329400dcb29897cdaae3020109272285", null ],
     [ "get_max_import_size", "boot_8php.html#a97769915c9f14adc4f8ab1ea2cecfd90", null ],
     [ "get_observer_hash", "boot_8php.html#a623e49c79943f3e7bdb770d021683cf7", null ],

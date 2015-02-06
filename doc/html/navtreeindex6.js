@@ -1,20 +1,23 @@
 var NAVTREEINDEX6 =
 {
+"include_2attach_8php.html#a0d07c5b83d3d54e186f752e571847b36":[6,0,0,9,0],
 "include_2attach_8php.html#a1d72ef7cb940f6868e3e2a841cadfe8f":[6,0,0,9,13],
 "include_2attach_8php.html#a3634af95f11a023dd8e882c3c7a3600d":[6,0,0,9,5],
 "include_2attach_8php.html#a4dbfd7e1cef52aa9ef52f4b88929fa86":[6,0,0,9,9],
 "include_2attach_8php.html#a5c0875eafb8c0f8a0620ff7a875a2221":[6,0,0,9,2],
-"include_2attach_8php.html#a5d484de2d19a93071571d6499a50ae34":[6,0,0,9,14],
+"include_2attach_8php.html#a5d484de2d19a93071571d6499a50ae34":[6,0,0,9,15],
 "include_2attach_8php.html#a6aa00ea010ea030110faefb75eafc1ce":[6,0,0,9,11],
-"include_2attach_8php.html#a6fdd92775f31c07d2863e16e0026018a":[6,0,0,9,15],
+"include_2attach_8php.html#a6fdd92775f31c07d2863e16e0026018a":[6,0,0,9,17],
 "include_2attach_8php.html#a70bd666e080c2af5a91f5d14c297b8cd":[6,0,0,9,4],
 "include_2attach_8php.html#a84a8a64c4805e1525b42d4add464833f":[6,0,0,9,7],
 "include_2attach_8php.html#a887d2d44a3ef18dcb6624e7fb58dc8e3":[6,0,0,9,3],
+"include_2attach_8php.html#aa166e1b48ac829a2366362e74fbcf355":[6,0,0,9,14],
 "include_2attach_8php.html#aa23ba65e5bb732be71fdd27ccff7d46e":[6,0,0,9,8],
 "include_2attach_8php.html#aa784c064ae323710f4ef68771a4a38db":[6,0,0,9,12],
+"include_2attach_8php.html#aabd15487fa0e5d2dc5c480f72d23b886":[6,0,0,9,16],
 "include_2attach_8php.html#ab6830b3ab74a5d284876141ac80f6cbc":[6,0,0,9,6],
 "include_2attach_8php.html#ad991208ce939387e2f93a3bce7d09932":[6,0,0,9,1],
-"include_2attach_8php.html#aeb07968990e66a88c95483ca09a7f909":[6,0,0,9,16],
+"include_2attach_8php.html#aeb07968990e66a88c95483ca09a7f909":[6,0,0,9,18],
 "include_2bookmarks_8php.html":[6,0,0,14],
 "include_2bookmarks_8php.html#a743763b0ce83af0bbc8a2f7ac16033aa":[6,0,0,14,1],
 "include_2bookmarks_8php.html#aef1cb2968c41c759f2d106e1088ca323":[6,0,0,14,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX6 =
 "locs_8php.html#a6c900f53970c0d0e738d2fe06d27ca44":[6,0,1,52,0],
 "login_8php.html":[6,0,1,53],
 "login_8php.html#a1d69ca88eb9005a7026e128b9a645904":[6,0,1,53,0],
-"lostpass_8php.html":[6,0,1,54],
-"lostpass_8php.html#a0314d94e48c789b1b3a201d740c9eab3":[6,0,1,54,0],
-"lostpass_8php.html#a8ed35ba71a4404eaf4903da61d0321cc":[6,0,1,54,1],
-"magic_8php.html":[6,0,1,55]
+"lostpass_8php.html":[6,0,1,54]
 };

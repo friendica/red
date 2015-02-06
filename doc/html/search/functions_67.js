@@ -41,6 +41,7 @@ var searchData=
   ['get_5fdiaspora_5fkey',['get_diaspora_key',['../diaspora_8php.html#a9bf7ef4094e0e14f6e2b7fe76ab7ad2e',1,'diaspora.php']]],
   ['get_5fdiaspora_5freshare_5fxml',['get_diaspora_reshare_xml',['../diaspora_8php.html#ac9e41e46626dc608204bf4b5e16e62d7',1,'diaspora.php']]],
   ['get_5fdim',['get_dim',['../datetime_8php.html#a7df24d72ea05922d3127363e2295174c',1,'datetime.php']]],
+  ['get_5fdirectory_5fprimary',['get_directory_primary',['../boot_8php.html#a07a9d3910794df1c98ad2017e6a8e4b9',1,'boot.php']]],
   ['get_5fdirectory_5frealm',['get_directory_realm',['../boot_8php.html#a329400dcb29897cdaae3020109272285',1,'boot.php']]],
   ['get_5fdisplay_5fmode',['get_display_mode',['../classItem.html#a23d4057883f8ed888c0c2ff12d8aa5d0',1,'Item']]],
   ['get_5fevents',['get_events',['../identity_8php.html#ae381db3d43f8e7c1da8b15d14ecf5312',1,'identity.php']]],

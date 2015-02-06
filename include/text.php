@@ -1948,7 +1948,7 @@ function find_xchan_in_array($xchan,$arr) {
 function get_rel_link($j,$rel) {
 	if(is_array($j) && ($j))
 		foreach($j as $l)
-			if(array_key_exists('rel',$j) && $l['rel'] === $rel && array_key_exists('href',$l))
+			if(array_key_exists('rel',$l) && $l['rel'] === $rel && array_key_exists('href',$l))
 				return $l['href'];
 
 	return '';

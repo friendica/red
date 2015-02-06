@@ -14,7 +14,9 @@ var include_2attach_8php =
     [ "get_cloudpath", "include_2attach_8php.html#a6aa00ea010ea030110faefb75eafc1ce", null ],
     [ "get_file_activity_object", "include_2attach_8php.html#aa784c064ae323710f4ef68771a4a38db", null ],
     [ "get_parent_cloudpath", "include_2attach_8php.html#a1d72ef7cb940f6868e3e2a841cadfe8f", null ],
+    [ "in_group", "include_2attach_8php.html#aa166e1b48ac829a2366362e74fbcf355", null ],
     [ "pipe_streams", "include_2attach_8php.html#a5d484de2d19a93071571d6499a50ae34", null ],
+    [ "recursive_activity_recipients", "include_2attach_8php.html#aabd15487fa0e5d2dc5c480f72d23b886", null ],
     [ "z_mime_content_type", "include_2attach_8php.html#a6fdd92775f31c07d2863e16e0026018a", null ],
     [ "z_readdir", "include_2attach_8php.html#aeb07968990e66a88c95483ca09a7f909", null ]
 ];
