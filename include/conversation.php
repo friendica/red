@@ -1134,6 +1134,9 @@ function status_editor($a,$x,$popup=false) {
 	if(x($x,'nopreview'))
 		$preview = '';
 
+	$defexpire = ((($z = get_pconfig($x['profile_uid'],'system','default_post_expire')) && (! $webpage)) ? $z : '');
+
+
 	$cipher = get_pconfig($x['profile_uid'],'system','default_cipher');
 	if(! $cipher)
 		$cipher = 'aes256';
@@ -1191,7 +1194,7 @@ function status_editor($a,$x,$popup=false) {
 		'$preview' => $preview,
 		'$source' => ((x($x,'source')) ? $x['source'] : ''),
 		'$jotplugins' => $jotplugins,
-		'$defexpire' => '',
+		'$defexpire' => $defexpire,
 		'$feature_expire' => ((feature_enabled($x['profile_uid'],'content_expire') && (! $webpage)) ? true : false),
 		'$expires' => t('Set expiration date'),
 		'$feature_encrypt' => ((feature_enabled($x['profile_uid'],'content_encrypt') && (! $webpage)) ? true : false),
