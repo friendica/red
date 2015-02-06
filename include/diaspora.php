@@ -42,6 +42,7 @@ function diaspora_dispatch_public($msg) {
 	}
 
 	if($sys) {
+		$sys['system'] = true;
 		logger('diaspora_public: delivering to sys.');
 		diaspora_dispatch($sys,$msg);
 	}
@@ -49,9 +50,12 @@ function diaspora_dispatch_public($msg) {
 
 
 
-function diaspora_dispatch($importer,$msg,$attempt=1) {
+function diaspora_dispatch($importer,$msg) {
 
 	$ret = 0;
+
+	if(! array_key_exists('system',$importer))
+		$importer['system'] = false;
 
 	$enabled = intval(get_config('system','diaspora_enabled'));
 	if(! $enabled) {
@@ -105,7 +109,7 @@ function diaspora_dispatch($importer,$msg,$attempt=1) {
 		$ret = diaspora_signed_retraction($importer,$xmlbase->relayable_retraction,$msg);
 	}
 	elseif($xmlbase->photo) {
-		$ret = diaspora_photo($importer,$xmlbase->photo,$msg,$attempt);
+		$ret = diaspora_photo($importer,$xmlbase->photo,$msg);
 	}
 	elseif($xmlbase->conversation) {
 		$ret = diaspora_conversation($importer,$xmlbase->conversation,$msg);
@@ -796,7 +800,7 @@ function diaspora_post($importer,$xml,$msg) {
 	}
 
 
-	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) {
+	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream'))) {
 		logger('diaspora_post: Ignoring this author.');
 		return 202;
 	}
@@ -983,7 +987,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 	if(! $contact)
 		return;
 
-	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) {
+	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream'))) {
 		logger('diaspora_reshare: Ignoring this author: ' . $diaspora_handle . ' ' . print_r($xml,true));
 		return 202;
 	}
@@ -1150,7 +1154,7 @@ function diaspora_asphoto($importer,$xml,$msg) {
 	if(! $contact)
 		return;
 
-	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) {
+	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream'))) {
 		logger('diaspora_asphoto: Ignoring this author.');
 		return 202;
 	}
@@ -1255,7 +1259,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		return;
 	}
 
-	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments')) {
+	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments'))) {
 		logger('diaspora_comment: Ignoring this author.');
 		return 202;
 	}
@@ -1732,7 +1736,7 @@ function diaspora_message($importer,$xml,$msg) {
 }
 
 
-function diaspora_photo($importer,$xml,$msg,$attempt=1) {
+function diaspora_photo($importer,$xml,$msg) {
 
 	$a = get_app();
 
@@ -1760,7 +1764,7 @@ function diaspora_photo($importer,$xml,$msg,$attempt=1) {
 		return;
 	}
 
-	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) {
+	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream'))) {
 		logger('diaspora_photo: Ignoring this author.');
 		return 202;
 	}
@@ -1819,7 +1823,7 @@ function diaspora_like($importer,$xml,$msg) {
 	}
 
 
-	if(! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments')) {
+	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments'))) {
 		logger('diaspora_like: Ignoring this author.');
 		return 202;
 	}
