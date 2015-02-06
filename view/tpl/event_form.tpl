@@ -14,9 +14,12 @@
 <input type="hidden" name="mid" value="{{$mid}}" />
 
 <div id="event-summary-text">{{$t_text}}</div>
-<input type="text" id="event-summary" name="summary" value="{{$t_orig}}" />
+<input type="text" id="event-summary" name="summary" value="{{$t_orig}}" />{{$required}}
+
+<div class="clear"></div>
 
 <div id="event-start-text">{{$s_text}}</div>
+
 {{$s_dsel}}
 
 <div class="clear"></div><br />
