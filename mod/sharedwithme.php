@@ -83,7 +83,7 @@ function sharedwithme_content(&$a) {
 			$item['id'] = $rr['id'];
 			$item['objfiletype'] = $object['filetype'];
 			$item['objfiletypeclass'] = getIconFromType($object['filetype']);
-			$item['objurl'] = rawurldecode(get_rel_link($object['link'],'alternate')) . '?f=&zid=' . $channel['xchan_addr'];
+			$item['objurl'] = rawurldecode($object['link'][0]['href']) . '?f=&zid=' . $channel['xchan_addr'];
 			$item['objfilename'] = $object['filename'];
 			$item['objfilesize'] = userReadableSize($object['filesize']);
 			$item['objedited'] = $object['edited'];
