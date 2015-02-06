@@ -272,8 +272,6 @@ function diaspora_process_outbound($arr) {
 }
 
 
-
-
 function diaspora_handle_from_contact($contact_hash) {
 
 	logger("diaspora_handle_from_contact: contact id is " . $contact_hash, LOGGER_DEBUG);
@@ -291,11 +289,21 @@ function diaspora_get_contact_by_handle($uid,$handle) {
 
 	if(diaspora_is_blacklisted($handle))
 		return false;
+	require_once('include/identity.php');
 
-	$r = q("SELECT * FROM abook left join xchan on xchan_hash = abook_xchan where xchan_addr = '%s' and abook_channel = %d limit 1",
-		dbesc($handle),
-		intval($uid)
-	);
+	$sys = get_sys_channel();
+	if(($sys) && ($sys['channel_id'] == $uid)) {
+		$r = q("SELECT * FROM xchan where xchan_addr = '%s' limit 1",
+			dbesc($handle)
+		);
+	}
+	else {
+		$r = q("SELECT * FROM abook left join xchan on xchan_hash = abook_xchan where xchan_addr = '%s' and abook_channel = %d limit 1",
+			dbesc($handle),
+			intval($uid)
+		);
+	}
+
 	return (($r) ? $r[0] : false);
 }
 
