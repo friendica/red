@@ -24,7 +24,12 @@
 
 <div class="clear"></div><br />
 
-<input type="checkbox" name="nofinish" value="1" id="event-nofinish-checkbox" {{$n_checked}} onclick="showHideFinishDate(); return true;" /> <div id="event-nofinish-text">{{$n_text}}</div>
+   <div class='field checkbox'>
+   <label class="mainlabel" for='id_nofinish'>{{$n_text}}</label>
+   <div><input type="checkbox" name='nofinish' id='id_nofinish' value="1" {{$n_checked}} onclick="showHideFinishDate(); return true;" >
+	<label class="switchlabel" for='id_nofinish'> <span class="onoffswitch-inner" data-on='' data-off='' ></span>
+	<span class="onoffswitch-switch"></span> </label></div><span class='field_help'></span>
+    </div>
 
 <div id="event-nofinish-break"></div>
 
@@ -35,8 +40,7 @@
 
 <div id="event-datetime-break"></div>
 
-
-<input type="checkbox" name="adjust" value="1" id="event-adjust-checkbox" {{$a_checked}} /> <div id="event-adjust-text">{{$a_text}}</div>
+{{include file="field_checkbox.tpl" field=$adjust}}
 
 <div id="event-adjust-break"></div>
 

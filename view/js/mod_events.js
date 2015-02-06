@@ -2,7 +2,7 @@
 $(document).ready( function() { showHideFinishDate(); });
 
 function showHideFinishDate() {
-	if( $('#event-nofinish-checkbox').is(':checked'))
+	if( $('#id_nofinish').is(':checked'))
 		$('#event-finish-wrapper').hide();
 	else
 		$('#event-finish-wrapper').show();
