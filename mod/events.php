@@ -242,7 +242,7 @@ function events_content(&$a) {
 	$mode = 'view';
 	$y = 0;
 	$m = 0;
-	$ignored = ((x($_REQUEST,'ignored')) ? intval($_REQUEST['ignored']) : 0);
+	$ignored = ((x($_REQUEST,'ignored')) ? " and ignored = " . intval($_REQUEST['ignored']) . " "  : '');
 
 	if(argc() > 1) {
 		if(argc() > 2 && argv(1) == 'event') {
@@ -338,11 +338,10 @@ function events_content(&$a) {
 
 			$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
                               from event left join item on event_hash = resource_id 
-				where resource_type = 'event' and event.uid = %d and event.ignore = %d 
+				where resource_type = 'event' and event.uid = %d $ignored
 				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' ) 
 				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' )) ",
 				intval(local_channel()),
-				intval($ignored),
 				dbesc($start),
 				dbesc($finish),
 				dbesc($adjust_start),
