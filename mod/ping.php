@@ -173,8 +173,10 @@ function ping_init(&$a) {
 				);
 				break;
 			case 'all_events':
-				$r = q("update event set `ignore` = 1 where `ignore` = 0 and uid = %d", 
-					intval(local_channel())
+				$r = q("update event set `ignore` = 1 where `ignore` = 0 and uid = %d AND start < '%s' AND start > '%s' ",
+					intval(local_channel()),
+					dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + ' . intval($evdays) . ' days')),
+					dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
 				);
 				break;
 			case 'notify':
