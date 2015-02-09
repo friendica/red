@@ -1,14 +1,12 @@
 
 $(document).ready( function() { showHideFinishDate(); });
 
-function showHideFinishDate() {
-	if( $('#id_nofinish').is(':checked'))
-		$('#event-finish-wrapper').hide();
-	else
-		$('#event-finish-wrapper').show();
-}
-
-
+	function showHideFinishDate() {
+		if( $('#id_nofinish').is(':checked'))
+			$('#event-finish-wrapper').hide();
+		else
+			$('#event-finish-wrapper').show();
+	}
 
 	function eventGetStart() {
 		//reply = prompt("{{$expirewhen}}", $('#jot-expire').val());
