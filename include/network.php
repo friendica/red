@@ -1531,7 +1531,7 @@ function service_plink($contact, $guid) {
 
 	$m = parse_url($contact['xchan_url']);
 	if($m) {
-		$url = $scheme . '://' . $m['host'] . (($m['port']) ? ':' . $m['port'] : '');
+		$url = $m['scheme'] . '://' . $m['host'] . (($m['port']) ? ':' . $m['port'] : '');
 	}
 	else
 		$url = 'https://' . substr($contact['xchan_addr'],strpos($contact['xchan_addr'],'@')+1);
