@@ -37,3 +37,7 @@
 #event-desc-text, #event-location-text, .event-form-location-end {
 	margin-top: 15px;
 }
+
+#event-edit-preview-btn {
+	margin-right: 15px;
+}

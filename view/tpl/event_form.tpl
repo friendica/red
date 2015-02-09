@@ -6,12 +6,13 @@
 {{$desc}}
 </p>
 
-<form action="{{$post}}" method="post" >
+<form id="event-edit-form" action="{{$post}}" method="post" >
 
 <input type="hidden" name="event_id" value="{{$eid}}" />
 <input type="hidden" name="event_hash" value="{{$event_hash}}" />
 <input type="hidden" name="xchan" value="{{$xchan}}" />
 <input type="hidden" name="mid" value="{{$mid}}" />
+<input type="hidden" name="preview" id="event-edit-preview" value="0" />
 
 <div id="event-summary-text">{{$t_text}}</div>
 <input type="text" id="event-summary" name="summary" value="{{$t_orig}}" />{{$required}}
@@ -138,17 +139,14 @@
 		<button class="btn btn-default btn-xs" title="{{$edvideo}}" onclick="insertbbcomment('{{$comment}}','video', 'loc'); return false;">
 			<i class="icon-facetime-video comment-icon"></i>
 		</button>
+		<button class="btn btn-default btn-xs" title="{{$mapper}}" onclick="insertbbcomment('{{$comment}}','map','loc'); return false;">
+			<i class="icon-globe comment-icon"></i>
+		</button>
 	</div>
 	
 	</div>
 					
-<!--	<div class="btn-group pull-right" id="comment-edit-submit-wrapper-loc">
-	{{if $preview}}
-	<button id="comment-edit-submit-loc" class="btn btn-default btn-xs" onclick="preview_comment(loc); return false;" title="{{$preview}}">
-		<i class="icon-eye-open comment-icon" ></i>
-	</button>
-	{{/if}}
--->
+
 </div>
 
 
@@ -168,10 +166,14 @@
 <div id="event-share-break"></div>
 
 
+
 <button id="event-permissions-button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
 {{$acl}}
 
 <div class="clear"></div>
+
+<button id="event-edit-preview-btn" class="btn btn-default btn-xs" title="{{$preview}}" onclick="doEventPreview(); return false;"><i class="icon-eye-open" ></i></button>
+
 <input id="event-submit" type="submit" name="submit" value="{{$submit}}" />
 </form>
 

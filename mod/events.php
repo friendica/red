@@ -8,6 +8,8 @@ require_once('include/items.php');
 
 function events_post(&$a) {
 
+	logger('post: ' . print_r($_REQUEST,true));
+
 	if(! local_channel())
 		return;
 
@@ -177,6 +179,12 @@ function events_post(&$a) {
 	$datarray['id'] = $event_id;
 	$datarray['created'] = $created;
 	$datarray['edited'] = $edited;
+
+	if(intval($_REQUEST['preview'])) {
+		$html = format_event_html($datarray);
+		echo $html;
+		killme();
+	}
 
 	$event = event_store_event($datarray);
 
@@ -597,6 +605,7 @@ function events_content(&$a) {
 			'$t_orig' => $t_orig,
 			'$sh_text' => t('Share this event'),
 			'$sh_checked' => $sh_checked,
+			'$preview' => t('Preview'),
 			'$permissions' => t('Permissions'),
 			'$acl' => (($orig_event['event_xchan']) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $perm_defaults),false)),
 			'$submit' => t('Submit')

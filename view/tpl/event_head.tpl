@@ -12,6 +12,14 @@
 		);			
 	}
 	
+	function doEventPreview() {
+		$('#event-edit-preview').val(1);
+		$.post('events',$('#event-edit-form').serialize(), function(data) {
+			$.colorbox({ html: data });
+		});
+	}
+
+
 	$(document).ready(function() {
 		$('#events-calendar').fullCalendar({
 			events: '{{$baseurl}}/events/json/',
