@@ -1523,3 +1523,27 @@ function scrape_feed($url) {
 	return $ret;
 }
 
+
+
+function service_plink($contact, $guid) {
+
+	$plink = '';
+
+	$m = parse_url($contact['xchan_url']);
+	if($m) {
+		$url = $scheme . '://' . $m['host'] . (($m['port']) ? ':' . $m['port'] : '');
+	}
+	else
+		$url = 'https://' . substr($contact['xchan_addr'],strpos($contact['xchan_addr'],'@')+1);
+
+	$handle = substr($contact['xchan_addr'], 0, strpos($contact['xchan_addr'],'@'));
+
+	if($contact['xchan_network'] === 'diaspora')
+		$plink = $url . '/posts/' . $guid;
+	if($contact['xchan_network'] === 'friendica-over-diaspora')
+		$plink = $url . '/display/' . $handle . '/' . $guid;
+	if($contact['xchan_network'] === 'zot')
+		$plink = $url . '/channel/' . $handle . '?f=&mid=' . $guid;
+
+	return $plink;
+}

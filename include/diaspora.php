@@ -772,7 +772,6 @@ function diaspora_request($importer,$xml) {
 
 
 
-
 function diaspora_post($importer,$xml,$msg) {
 
 	$a = get_app();
@@ -898,8 +897,8 @@ function diaspora_post($importer,$xml,$msg) {
 	}
 
 
-	// this won't work for Friendica or Redmatrix but it's probably the best we can do.
-	$plink = 'https://'.substr($diaspora_handle,strpos($diaspora_handle,'@')+1).'/posts/'.$guid;
+	$plink = service_plink($contact,$guid);
+
 
 	$datarray['uid'] = $importer['channel_id'];
 
@@ -1116,8 +1115,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 		}
 	}
 
-	// This won't work on redmatrix
-	$plink = 'https://'.substr($diaspora_handle,strpos($diaspora_handle,'@')+1).'/posts/'.$guid;
+	$plink = service_plink($contact,$guid);
 
 	$datarray['uid'] = $importer['channel_id'];
 	$datarray['mid'] = $datarray['parent_mid'] = $guid;
@@ -1198,7 +1196,7 @@ function diaspora_asphoto($importer,$xml,$msg) {
 		return;
 	}
 
-	$plink = 'https://'.substr($diaspora_handle,strpos($diaspora_handle,'@')+1).'/posts/'.$guid;
+	$plink = service_plink($contact,$guid);
 
 	$datarray = array();
 
