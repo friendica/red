@@ -587,7 +587,7 @@ function events_content(&$a) {
 			'$n_checked' => $n_checked,
 			'$f_text' => t('Event Finishes:'),
 			'$f_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$fyear+5),DateTime::createFromFormat('Y-m-d H:i',"$fyear-$fmonth-$fday $fhour:$fminute"),'finish_text',true,true,'start_text'),
-			'$adjust' => array('adjust', t('Adjust for viewer timezone'), $a_checked),
+			'$adjust' => array('adjust', t('Adjust for viewer timezone'), $a_checked, t('Important for events that happen in a particular place. Not practical for global holidays.'),),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$d_text' => t('Description:'), 
 			'$d_orig' => $d_orig,
