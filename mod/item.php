@@ -516,6 +516,7 @@ function item_post(&$a) {
 		 * First protect any url inside certain bbcode tags so we don't double link it.
 		 */
 
+
 		$body = preg_replace_callback('/\[code(.*?)\[\/(code)\]/ism','red_escape_codeblock',$body);
 		$body = preg_replace_callback('/\[url(.*?)\[\/(url)\]/ism','red_escape_codeblock',$body);
 		$body = preg_replace_callback('/\[zrl(.*?)\[\/(zrl)\]/ism','red_escape_codeblock',$body);
