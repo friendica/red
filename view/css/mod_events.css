@@ -33,3 +33,7 @@
 #event-nofinish-break {
     margin-bottom: 10px;
 }
+
+#event-desc-text, #event-location-text, .event-form-location-end {
+	margin-top: 15px;
+}
