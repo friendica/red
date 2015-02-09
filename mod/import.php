@@ -250,7 +250,7 @@ function import_post(&$a) {
 
 	if($seize) {
 
-		// replace our existing xchan if we're seizing control
+		// replace any existing xchan we may have on this site if we're seizing control
 
 		$r = q("delete from xchan where xchan_hash = '%s'",
 			dbesc($channel['channel_hash'])

@@ -271,22 +271,6 @@ function bb2diaspora_itemwallwall(&$item) {
 			. $item['body'];
 	}
 
-	// We have to do something similar for wall-to-wall comments. ITEM_WALL|ITEM_ORIGIN indicates that it was posted on this site. 
-	// Regular matrix comments may have one of these bits set, but not both.
-
-	// Update: this is getting triggered way too often and unnecessarily. Commenting out until we find a better solution.
-	// It's not an easy problem. For now we'll live with the mis-attributions, as wall to wall comments are much less frequent
-	// than wall-to-wall posts. 
-
-//	if(($item['mid'] != $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (($item['item_flags'] & (ITEM_WALL|ITEM_ORIGIN)) == (ITEM_WALL|ITEM_ORIGIN)) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_m']) {
-//		logger('bb2diaspora_itemwallwall: wall to wall comment',LOGGER_DEBUG);
-		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
-//		$item['body'] = "\n\n" 
-//			. '[img]' . $item['author']['xchan_photo_m'] . '[/img]' 
-//			. '[url=' . $item['author']['xchan_url'] . ']' . $item['author']['xchan_name'] . '[/url]' . "\n\n" 
-//			. $item['body'];
-//	}
-
 	// $item['author'] might cause a surprise further down the line if it wasn't expected to be here.
  
 	if(! $author_exists)
@@ -311,8 +295,6 @@ function bb2diaspora_itembody($item,$force_update = false) {
 				logger('bb2diaspora_itembody: cached ');
 				$newitem = $item;
 				$newitem['body'] = $meta['body'];
-// this won't work - the post is now in markdown
-//				bb2diaspora_itemwallwall($newitem);
 				return $newitem['body'];
 			}
 		}
@@ -333,7 +315,8 @@ function bb2diaspora_itembody($item,$force_update = false) {
 
 	bb2diaspora_itemwallwall($newitem);
 
-	$body = preg_replace('/\#\^http/i', 'http', $newitem['body']);
+	$title = $newitem['title'];
+	$body  = preg_replace('/\#\^http/i', 'http', $newitem['body']);
 
 	// protect tags and mentions from hijacking
 
