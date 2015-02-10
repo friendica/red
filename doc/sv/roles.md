@@ -1,4 +1,4 @@
-Behörighetsförval för kanaler
+Kanaltyper och deras behörighetsförval
 ========================
 
 

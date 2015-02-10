@@ -1258,13 +1258,8 @@ function recursive_activity_recipients($allow_cid, $allow_gid, $deny_cid, $deny_
 }
 
 function in_group($group_id) {
-	//TODO: make these two queries one with a join.
-	$x = q("SELECT id FROM groups WHERE hash = '%s'",
+	$r = q("SELECT xchan FROM group_member left join groups on group_member.gid = group.id WHERE hash = '%s' ",
 		dbesc($group_id)
-	);
-
-	$r = q("SELECT xchan FROM group_member WHERE gid = %d",
-		intval($x[0]['id'])
 	);
 
 	foreach($r as $ig) {
