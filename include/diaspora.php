@@ -827,6 +827,12 @@ function diaspora_post($importer,$xml,$msg) {
 		$body = scale_external_images($body);
 	}
 
+	$maxlen = get_max_import_size();
+
+	if($maxlen && mb_strlen($body) > $maxlen) {
+		$body = mb_substr($body,0,$maxlen,'UTF-8');
+		logger('message length exceeds max_import_size: truncated');
+	}
 
 //WTF? FIXME
 	// Add OEmbed and other information to the body
@@ -1039,6 +1045,14 @@ function diaspora_reshare($importer,$xml,$msg) {
 		$body = "";
 		//return;
 	}
+
+	$maxlen = get_max_import_size();
+
+	if($maxlen && mb_strlen($body) > $maxlen) {
+		$body = mb_substr($body,0,$maxlen,'UTF-8');
+		logger('message length exceeds max_import_size: truncated');
+	}
+
 
 	//if(! $body) {
 	//	logger('diaspora_reshare: empty body: source= ' . $x);
@@ -1354,6 +1368,15 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	$body = diaspora2bb($text);
 
+
+	$maxlen = get_max_import_size();
+
+	if($maxlen && mb_strlen($body) > $maxlen) {
+		$body = mb_substr($body,0,$maxlen,'UTF-8');
+		logger('message length exceeds max_import_size: truncated');
+	}
+
+
 	$datarray = array();
 
 	$tags = get_tags($body);
@@ -1540,6 +1563,15 @@ function diaspora_conversation($importer,$xml,$msg) {
 
 		$body = diaspora2bb($msg_text);
 
+
+		$maxlen = get_max_import_size();
+
+		if($maxlen && mb_strlen($body) > $maxlen) {
+			$body = mb_substr($body,0,$maxlen,'UTF-8');
+			logger('message length exceeds max_import_size: truncated');
+		}
+
+
 		$author_signed_data = $msg_guid . ';' . $msg_parent_guid . ';' . $msg_text . ';' . unxmlify($mesg->created_at) . ';' . $msg_diaspora_handle . ';' . $msg_conversation_guid;
 
 		$author_signature = base64_decode($msg_author_signature);
@@ -1677,6 +1709,17 @@ function diaspora_message($importer,$xml,$msg) {
 
 	$subject = $conversation['subject']; 
 	$body = diaspora2bb($msg_text);
+
+
+	$maxlen = get_max_import_size();
+
+	if($maxlen && mb_strlen($body) > $maxlen) {
+		$body = mb_substr($body,0,$maxlen,'UTF-8');
+		logger('message length exceeds max_import_size: truncated');
+	}
+
+
+
 	$message_id = $msg_diaspora_handle . ':' . $msg_guid;
 
 	$author_signed_data = $msg_guid . ';' . $msg_parent_guid . ';' . $msg_text . ';' . unxmlify($xml->created_at) . ';' . $msg_diaspora_handle . ';' . $msg_conversation_guid;
