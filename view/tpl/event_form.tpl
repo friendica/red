@@ -172,7 +172,7 @@
 
 <div class="clear"></div>
 
-<button id="event-edit-preview-btn" class="btn btn-default btn-xs" title="{{$preview}}" onclick="doEventPreview(); return false;"><i class="icon-eye-open" ></i></button>
+<button id="event-edit-preview-btn" class="btn btn-default" title="{{$preview}}" onclick="doEventPreview(); return false;"><i class="icon-eye-open" ></i></button>
 
 <input id="event-submit" type="submit" name="submit" value="{{$submit}}" />
 </form>
