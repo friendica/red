@@ -143,7 +143,7 @@
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title">{{$response.modal_title}}</h4>
+										<h4 class="modal-title">{{$response.title}}</h4>
 									</div>
 									<div class="modal-body">
 									<ul>{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
@@ -158,7 +158,7 @@
 					{{/foreach}}
 					</div>
 					{{/if}}
-
+				</div>
 				</div>
 				<div class="clear"></div>
 			</div>

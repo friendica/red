@@ -552,7 +552,12 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 	$items = $cb['items'];
 
-	$conv_responses = array(array('like'),array('dislike'),array('agree'),array('disagree'),array('abstain'),array('attendyes'),array('attendno'),array('attendmaybe'));
+	$conv_responses = array(
+		'like' => array('title' => t('Likes','title')),'dislike' => array('title' => t('Dislikes','title')),
+		'agree' => array('title' => t('Agree','title')),'disagree' => array('title' => t('Disagree','title')), 'abstain' => array('title' => t('Abstain','title')), 
+		'attendyes' => array('title' => t('Attending','title')), 'attendno' => array('title' => t('Not attending','title')), 'attendmaybe' => array('title' => t('Might attend','title'))
+	);
+
 
 	// array with html for each thread (parent+comments)
 	$threads = array();
@@ -779,18 +784,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					}
 				}
 
-				like_puller($a, $item, $conv_responses, 'like');
-
-				if(feature_enabled($profile_owner, 'dislike'))
-					like_puller($a, $item, $conv_responses, 'dislike');
-
-				like_puller($a, $item, $conv_responses, 'attendyes');
-				like_puller($a, $item, $conv_responses, 'attendno');
-				like_puller($a, $item, $conv_responses, 'attendmaybe');
-				like_puller($a, $item, $conv_responses, 'agree');
-				like_puller($a, $item, $conv_responses, 'disagree');
-				like_puller($a, $item, $conv_responses, 'abstain');
-
+				builtin_activity_puller($item, $conv_responses);
 
 				if(! visible_activity($item)) {
 					continue;
@@ -968,81 +962,82 @@ function item_photo_menu($item){
 }
 
 /**
- * @brief Returns a like/dislike entry.
- * It gives back a HTML link to the channel that liked/disliked.
+ * @brief Checks item to see if it is one of the builtin activities (like/dislike, event attendance, consensus items, etc.)
+ * Increments the count of each matching activity and adds a link to the author as needed.
  *
  * @param array $a (not used)
  * @param array $item
- * @param array &$arr
- * @param string $mode like/dislike
+ * @param array &$conv_responses (already created with builtin activity structure)
  * @return void
  */
-function like_puller($a, $item, &$arr, $mode) {
+function builtin_activity_puller($item, &$conv_responses) {
 
-	$url = '';
 
-	switch($mode) {
-		case 'like':
-		case 'unlike':
-			$verb = ACTIVITY_LIKE;
-			break;
-		case 'dislike':
-		case 'undislike':
-			$verb = ACTIVITY_DISLIKE;
-			break;
-		case 'agree':
-		case 'unagree':
-			$verb = ACTIVITY_AGREE;
-			break;
-		case 'disagree':
-		case 'undisagree':
-			$verb = ACTIVITY_DISAGREE;
-			break;
-		case 'abstain':
-		case 'unabstain':
-			$verb = ACTIVITY_ABSTAIN;
-			break;
-		case 'attendyes':
-		case 'unattendyes':
-			$verb = ACTIVITY_ATTEND;
-			break;
-		case 'attendno':
-		case 'unattendno':
-			$verb = ACTIVITY_ATTENDNO;
-			break;
-		case 'attendmaybe':
-		case 'unattendmaybe':
-			$verb = ACTIVITY_ATTENDMAYBE;
-			break;
-		default:
-			return;
-			break;
+
+	foreach($conv_responses as $mode => $v) {
+
+		$url = '';
+
+		switch($mode) {
+			case 'like':
+				$verb = ACTIVITY_LIKE;
+				break;
+			case 'dislike':
+				$verb = ACTIVITY_DISLIKE;
+				break;
+			case 'agree':
+				$verb = ACTIVITY_AGREE;
+				break;
+			case 'disagree':
+				$verb = ACTIVITY_DISAGREE;
+				break;
+			case 'abstain':
+				$verb = ACTIVITY_ABSTAIN;
+				break;
+			case 'attendyes':
+				$verb = ACTIVITY_ATTEND;
+				break;
+			case 'attendno':
+				$verb = ACTIVITY_ATTENDNO;
+				break;
+			case 'attendmaybe':
+				$verb = ACTIVITY_ATTENDMAYBE;
+				break;
+			default:
+				return;
+				break;
+		}
+
+
+
+		if((activity_match($item['verb'], $verb)) && ($item['id'] != $item['parent'])) {
+
+
+			$name = (($item['author']['xchan_name']) ? $item['author']['xchan_name'] : t('Unknown'));
+			$url = (($item['author']['xchan_url']) 
+				? '<a href="' . chanlink_url($item['author']['xchan_url']) . '">' . $name . '</a>' 
+				: '<a href="#" class="disabled">' . $name . '</a>'
+			);
+
+			if(! $item['thr_parent'])
+				$item['thr_parent'] = $item['parent_mid'];
+
+			if(! ((isset($conv_responses[$mode][$item['thr_parent'] . '-l'])) 
+				&& (is_array($conv_responses[$mode][$item['thr_parent'] . '-l']))))
+				$conv_responses[$mode][$item['thr_parent'] . '-l'] = array();
+
+			// only list each unique author once
+			if(in_array($url,$conv_responses[$mode][$item['thr_parent'] . '-l']))
+				continue;
+
+			if(! isset($conv_responses[$mode][$item['thr_parent']]))
+				$conv_responses[$mode][$item['thr_parent']] = 1;
+			else
+				$conv_responses[$mode][$item['thr_parent']] ++;
+
+			$conv_responses[$mode][$item['thr_parent'] . '-l'][] = $url;
+		}
 	}
-
-	if((activity_match($item['verb'], $verb)) && ($item['id'] != $item['parent'])) {
-
-		if($item['author']['xchan_url'])
-			$url = chanlink_url($item['author']['xchan_url']);
-
-		if(! $item['thr_parent'])
-			$item['thr_parent'] = $item['parent_mid'];
-
-		if(! ((isset($arr[$mode][$item['thr_parent'] . '-l'])) && (is_array($arr[$mode][$item['thr_parent'] . '-l']))))
-			$arr[$mode][$item['thr_parent'] . '-l'] = array();
-
-		if(! isset($arr[$mode][$item['thr_parent']]))
-			$arr[$mode][$item['thr_parent']] = 1;
-		else
-			$arr[$mode][$item['thr_parent']] ++;
-
-		$name = (($item['author']['xchan_name']) ? $item['author']['xchan_name'] : t('Unknown'));
-
-		if($url)
-			$arr[$mode][$item['thr_parent'] . '-l'][] = '<a href="'. $url . '">' . $name . '</a>';
-		else
-			$arr[$mode][$item['thr_parent'] . '-l'][] = '<a href="#" class="disabled">' . $name . '</a>';
-	}
-	return;
 }
 
 // Format the like/dislike text for a profile item
@@ -1662,6 +1657,7 @@ function get_responses($conv_responses,$response_verbs,$ob,$item) {
 			$ret[$v]['list_part'] = '';
 		}
 		$ret[$v]['button'] = get_response_button_text($v,$ret[$v]['count']);
+		$ret[$v]['title'] = $conv_responses[$v]['title'];
 	}
 	$ret['count'] = count($ret);
 	return $ret;
