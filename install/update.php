@@ -1518,7 +1518,7 @@ function update_r1133() {
 			PRIMARY KEY (xp_id) )");
 		$r2 = 0;
 		foreach(array('xp_client', 'xp_channel', 'xp_perm') as $fld)
-			$r2 += (empty(q("create index $fld on xperm ($fld)")) ? 0 : 1);
+			$r2 += ((q("create index $fld on xperm ($fld)") == false) ? 0 : 1);
 			
 		$r = (($r1 && $r2) ? true : false);
 	}
