@@ -312,7 +312,7 @@ function like_content(&$a) {
 	}
 	else {
 		$post_type = (($item['resource_type'] === 'photo') ? t('photo') : t('status'));
-		if($item['resource_type'] === 'event')
+		if($item['obj_type'] === ACTIVITY_OBJ_EVENT)
 			$post_type = t('event');
 
 		$links = array(array('rel' => 'alternate','type' => 'text/html', 'href' => $item['plink']));
