@@ -1629,3 +1629,56 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
 }
+
+
+function get_responses($conv_responses,$response_verbs,$ob,$item) {
+	$ret = array();
+	foreach($response_verbs as $v) {
+		$ret[$v] = array();
+		$ret[$v]['count'] = ((x($conv_responses[$v],$item['mid'])) ? $conv_responses[$v][$item['mid']] : '');
+		$ret[$v]['list']  = ((x($conv_responses[$v],$item['mid'])) ? $conv_responses[$v][$item['mid'] . '-l'] : '');
+		if(count($ret[$v]['list']) > MAX_LIKERS) {
+			$ret[$v]['list_part'] = array_slice($ret[$v]['list'], 0, MAX_LIKERS);
+			array_push($ret[$v]['list_part'], '<a href="#" data-toggle="modal" data-target="#' . $v . 'Modal-' 
+				. $ob->get_id() . '"><b>' . t('View all') . '</b></a>');
+		} 
+		else {
+			$ret[$v]['list_part'] = '';
+		}
+		$ret[$v]['button'] = get_response_button_text($v,$ret[$v]['count']);
+	}
+	$ret['count'] = count($ret);
+	return $ret;
+}
+
+function get_response_button_text($v,$count) {
+	switch($v) {
+		case 'like':
+			return tt('Like','Likes',$count,'noun');
+			break;
+		case 'dislike':
+			return tt('Dislike','Dislikes',$count,'noun');
+			break;
+		case 'attendyes':
+			return tt('Attending','Attending',$count,'noun');
+			break;
+		case 'attendno':
+			return tt('Not Attending','Not Attending',$count,'noun');
+			break;
+		case 'attendmaybe':
+			return tt('Undecided','Undecided',$count,'noun');
+			break;
+		case 'agree':
+			return tt('Agree','Agrees',$count,'noun');
+			break;
+		case 'agree':
+			return tt('Disagree','Disagrees',$count,'noun');
+			break;
+		case 'abstain':
+			return tt('Abstain','Abstains',$count,'noun');
+			break;
+		default:
+			return '';
+			break;
+	}
+}

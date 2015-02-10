@@ -135,6 +135,28 @@ class Item extends BaseObject {
 
 		$location = format_location($item);
 
+
+		// process action responses - e.g. like/dislike/attend/agree/whatever
+		$response_verbs = array('like');
+		if(feature_enabled($conv->get_profile_owner(),'dislike'))
+			$response_verbs[] = 'dislike';
+		if($item['resource_type'] === 'event') {
+			$response_verbs[] = 'attendyes';
+			$response_verbs[] = 'attendno';
+			$response_verbs[] = 'attendmaybe';
+		}
+		$consensus = (($item['item_flags'] & ITEM_CONSENSUS)? true : false);
+		if($consensus) {
+			$response_verbs[] = 'agree';
+			$response_verbs[] = 'disagree';
+			$response_verbs[] = 'abstain';
+		}
+
+		$responses = get_responses($conv_responses,$response_verbs,$this,$item);
+
+
+		$like_button_label = tt('Like','Likes',$like_count,'noun');
+
 		$like_count = ((x($conv_responses['like'],$item['mid'])) ? $conv_responses['like'][$item['mid']] : '');
 		$like_list = ((x($conv_responses['like'],$item['mid'])) ? $conv_responses['like'][$item['mid'] . '-l'] : '');
 		if (count($like_list) > MAX_LIKERS) {
@@ -307,6 +329,7 @@ class Item extends BaseObject {
 			'comment_count_txt' => $comment_count_txt,
 			'list_unseen_txt' => $list_unseen_txt,
 			'markseen' => t('Mark all seen'),
+			'responses' => $responses,
 			'like_count' => $like_count,
 			'like_list' => $like_list,
 			'like_list_part' => $like_list_part,
