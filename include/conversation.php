@@ -784,15 +784,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				if(feature_enabled($profile_owner, 'dislike'))
 					like_puller($a, $item, $conv_responses, 'dislike');
 
-				if($item['obj_type'] === ACTIVITY_OBJ_EVENT) {
-					like_puller($a, $item, $conv_responses, 'attendyes');
-					like_puller($a, $item, $conv_responses, 'attendno');
-					like_puller($a, $item, $conv_responses, 'attendmaybe');
-
-logger('responses: ' . print_r($conv_responses,true));
-
-				}
-
+				like_puller($a, $item, $conv_responses, 'attendyes');
+				like_puller($a, $item, $conv_responses, 'attendno');
+				like_puller($a, $item, $conv_responses, 'attendmaybe');
 				like_puller($a, $item, $conv_responses, 'agree');
 				like_puller($a, $item, $conv_responses, 'disagree');
 				like_puller($a, $item, $conv_responses, 'abstain');
@@ -1024,12 +1018,9 @@ function like_puller($a, $item, &$arr, $mode) {
 			return;
 			break;
 	}
-logger('verb: ' . $verb);
-if($verb === ACTIVITY_ATTENDNO)
-	logger('item: ' . $item['verb']);
 
 	if((activity_match($item['verb'], $verb)) && ($item['id'] != $item['parent'])) {
-logger('match:' . $verb);
+
 		if($item['author']['xchan_url'])
 			$url = chanlink_url($item['author']['xchan_url']);
 

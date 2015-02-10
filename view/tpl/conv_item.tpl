@@ -66,13 +66,13 @@
 						</button>
 						{{/if}}
 						{{if $item.isevent}}
-						<button type="button" title="{{$item.attend.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'attendyes'); return false;">
+						<button type="button" title="{{$item.attend.0}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendyes'); return false;">
 							<i class="icon-plus" ></i>
 						</button>
-						<button type="button" title="{{$item.attend.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'attendno'); return false;">
+						<button type="button" title="{{$item.attend.1}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendno'); return false;">
 							<i class="icon-minus" ></i>
 						</button>
-						<button type="button" title="{{$item.attend.2}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'attendmaybe'); return false;">
+						<button type="button" title="{{$item.attend.2}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendmaybe'); return false;">
 							<i class="icon-question" ></i>
 						</button>
 						{{/if}}
