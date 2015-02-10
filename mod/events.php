@@ -85,11 +85,19 @@ function events_post(&$a) {
 	$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish";
 	if(strcmp($finish,$start) < 0 && !$nofinish) {
 		notice( t('Event can not end before it has started.') . EOL);
+		if(intval($_REQUEST['preview'])) {
+			echo( t('Unable to generate preview.'));
+			killme();
+		}
 		goaway($onerror_url);
 	}
 
 	if((! $summary) || (! $start)) {
 		notice( t('Event title and start time are required.') . EOL);
+		if(intval($_REQUEST['preview'])) {
+			echo( t('Unable to generate preview.'));
+			killme();
+		}
 		goaway($onerror_url);
 	}
 
@@ -104,6 +112,10 @@ function events_post(&$a) {
 		);
 		if(! $x) {
 			notice( t('Event not found.') . EOL);
+			if(intval($_REQUEST['preview'])) {
+				echo( t('Unable to generate preview.'));
+				killme();
+			}
 			return;
 		}
 		if($x[0]['allow_cid'] === '<' . $channel['channel_hash'] . '>' 

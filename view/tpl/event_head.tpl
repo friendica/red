@@ -7,7 +7,7 @@
 		$.get(
 			'{{$baseurl}}/events/?id='+eventid,
 			function(data){
-				$.colorbox({ html: data });
+				$.colorbox({ scrolling: false, html: data, onComplete: function() { $.colorbox.resize(); }});
 			}
 		);			
 	}
@@ -17,6 +17,7 @@
 		$.post('events',$('#event-edit-form').serialize(), function(data) {
 			$.colorbox({ html: data });
 		});
+		$('#event-edit-preview').val(0);
 	}
 
 

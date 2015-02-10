@@ -575,15 +575,10 @@ footer {
 
 #cboxContent {
     color: $dirpopup_txtcol;
-	margin: 5px;
-}
-
-#cboxClose {
-	margin: 10px;
 }
 
 #colorbox {
-	margin: 5px;
+	padding: 5px;
 }
 
 #cboxContent a {
@@ -974,14 +969,13 @@ nav .acpopup {
 
 .vevent {
 	max-width: 100%; 
-	margin-left: 10px;
-	margin-right: 10px;
+	margin: 10px;
+	padding: 10px;
 	border: 1px solid #CCCCCC;
 }
 
 .vevent .event-summary {
-	margin-left: 10px;
-	margin-right: 10px;
+	margin: 10px;
 	font-weight: bold;
 }
 
@@ -1027,6 +1021,7 @@ nav .acpopup {
 
 .event-start .dtstart, .event-end .dtend {
 	float: right;
+	margin-right: 10px;
 }
 
 .event-list-date {

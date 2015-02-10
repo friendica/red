@@ -1,7 +1,7 @@
 function dirdetails(hash) {
 
 	$.get('dirprofile' + '?f=&hash=' + hash, function( data ) {
-		$.colorbox({ maxWidth: "50%", maxHeight: "75%", html: data });
+		$.colorbox({ maxWidth: "80%", maxHeight: "75%", scrolling: false, html: data });
 	});
 }
 
@@ -28,7 +28,7 @@ function doRatings(hash) {
 function buildRatingForm(hash) {
 	var html = '<form id="ratings_form" action="prate" method="post"><input type="hidden" name="target" value="'+hash+'" /><div class="rating-desc">'+aStr['rating_desc']+'</div><input id="dir-rating-range" class="directory-slider" type="text" value="'+ratingVal+'" name="rating" style="display: none;" /><div class="rating-text-label">'+aStr['rating_text']+'<input type="text" name="rating_text" class="directory-rating-text" value="'+ratingText+'" /><br /><input name="submit" class="directory-rating-submit" type="submit" value="'+aStr['submit']+'" onclick="postRatings(); return false;"></form><div class="clear"></div><script>$("#dir-rating-range").jRange({ from: -10, to: 10, step: 1, showLabels: false, showScale: true, scale : [ "-10","-5","0","5","10" ], onstatechange: function(v) { $("#dir-rating-range").val(v); } });</script>';
 
-	$.colorbox({maxwidth: "50%", maxHeight: "50%", html: html, close: 'X' });
+	$.colorbox({maxwidth: "50%", maxHeight: "50%", scrolling: false, html: html, close: 'X' });
 	currentHash = hash;
 }
 
