@@ -402,7 +402,7 @@ function visible_activity($item) {
 	// likes (etc.) can apply to other things besides posts. Check if they are post children, 
 	// in which case we handle them specially
 
-	$hidden_activities = array(ACTIVITY_LIKE, ACTIVITY_DISLIKE, ACTIVITY_AGREE, ACTIVITY_DISAGREE, ACTIVITY_ABSTAIN);
+	$hidden_activities = array(ACTIVITY_LIKE, ACTIVITY_DISLIKE, ACTIVITY_AGREE, ACTIVITY_DISAGREE, ACTIVITY_ABSTAIN, ACTIVITY_ATTEND, ACTIVITY_ATTENDNO, ACTIVITY_ATTENDMAYBE);
 	foreach($hidden_activities as $act) {
 		if((activity_match($item['verb'],$act)) && ($item['mid'] != $item['parent_mid'])) {
 			return false;
@@ -552,7 +552,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 	$items = $cb['items'];
 
-	$conv_responses = array(array('like'),array('dislike'),array('agree'),array('disagree'),array('abstain'));
+	$conv_responses = array(array('like'),array('dislike'),array('agree'),array('disagree'),array('abstain'),array('attendyes'),array('attendno'),array('attendmaybe'));
 
 	// array with html for each thread (parent+comments)
 	$threads = array();
@@ -784,9 +784,19 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				if(feature_enabled($profile_owner, 'dislike'))
 					like_puller($a, $item, $conv_responses, 'dislike');
 
+				if($item['obj_type'] === ACTIVITY_OBJ_EVENT) {
+					like_puller($a, $item, $conv_responses, 'attendyes');
+					like_puller($a, $item, $conv_responses, 'attendno');
+					like_puller($a, $item, $conv_responses, 'attendmaybe');
+
+logger('responses: ' . print_r($conv_responses,true));
+
+				}
+
 				like_puller($a, $item, $conv_responses, 'agree');
 				like_puller($a, $item, $conv_responses, 'disagree');
 				like_puller($a, $item, $conv_responses, 'abstain');
+
 
 				if(! visible_activity($item)) {
 					continue;
@@ -998,13 +1008,28 @@ function like_puller($a, $item, &$arr, $mode) {
 		case 'unabstain':
 			$verb = ACTIVITY_ABSTAIN;
 			break;
+		case 'attendyes':
+		case 'unattendyes':
+			$verb = ACTIVITY_ATTEND;
+			break;
+		case 'attendno':
+		case 'unattendno':
+			$verb = ACTIVITY_ATTENDNO;
+			break;
+		case 'attendmaybe':
+		case 'unattendmaybe':
+			$verb = ACTIVITY_ATTENDMAYBE;
+			break;
 		default:
 			return;
 			break;
 	}
+logger('verb: ' . $verb);
+if($verb === ACTIVITY_ATTENDNO)
+	logger('item: ' . $item['verb']);
 
 	if((activity_match($item['verb'], $verb)) && ($item['id'] != $item['parent'])) {
-
+logger('match:' . $verb);
 		if($item['author']['xchan_url'])
 			$url = chanlink_url($item['author']['xchan_url']);
 

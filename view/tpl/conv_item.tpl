@@ -56,13 +56,24 @@
 				<div class="wall-item-tools">
 					<div class="wall-item-tools-right btn-group pull-right">
 						{{if $item.like}}
-						<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'like'); return false">
-							<i class="icon-thumbs-up-alt" title="{{$item.like.0}}"></i>
+						<button type="button" title="{{$item.like.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'like'); return false">
+							<i class="icon-thumbs-up-alt" ></i>
 						</button>
 						{{/if}}
 						{{if $item.dislike}}
-						<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'dislike'); return false">
-							<i class="icon-thumbs-down-alt" title="{{$item.dislike.0}}"></i>
+						<button type="button" title="{{$item.dislike.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'dislike'); return false">
+							<i class="icon-thumbs-down-alt" ></i>
+						</button>
+						{{/if}}
+						{{if $item.isevent}}
+						<button type="button" title="{{$item.attend.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'attendyes'); return false;">
+							<i class="icon-plus" ></i>
+						</button>
+						<button type="button" title="{{$item.attend.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'attendno'); return false;">
+							<i class="icon-minus" ></i>
+						</button>
+						<button type="button" title="{{$item.attend.2}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'attendmaybe'); return false;">
+							<i class="icon-question" ></i>
 						</button>
 						{{/if}}
 						<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">
@@ -138,12 +149,12 @@
 						</div><!-- /.modal -->
 						{{/if}}
 					{{/foreach}}
-</div>
+					</div>
 					{{/if}}
 
-</div>
+				</div>
 				<div class="clear"></div>
-
+			</div>
 			<div class="wall-item-wrapper-end"></div>
 			<div class="wall-item-outside-wrapper-end {{$item.indent}}" ></div>
 		</div>

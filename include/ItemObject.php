@@ -134,16 +134,19 @@ class Item extends BaseObject {
 		$profile_name   = $item['author']['xchan_name'];
 
 		$location = format_location($item);
-
+		$isevent = false;
+		$attend = null;
 
 		// process action responses - e.g. like/dislike/attend/agree/whatever
 		$response_verbs = array('like');
 		if(feature_enabled($conv->get_profile_owner(),'dislike'))
 			$response_verbs[] = 'dislike';
-		if($item['resource_type'] === 'event') {
+		if($item['obj_type'] === ACTIVITY_OBJ_EVENT) {
 			$response_verbs[] = 'attendyes';
 			$response_verbs[] = 'attendno';
 			$response_verbs[] = 'attendmaybe';
+			$isevent = true;
+			$attend = array( t('I will attend'), t('I will not attend'), t('I might attend'));
 		}
 		$consensus = (($item['item_flags'] & ITEM_CONSENSUS)? true : false);
 		if($consensus) {
@@ -275,6 +278,8 @@ class Item extends BaseObject {
 			'body' => $body,
 			'text' => strip_tags($body),
 			'id' => $this->get_id(),
+			'isevent' => $isevent,
+			'attend' => $attend,
 			'linktitle' => sprintf( t('View %s\'s profile - %s'), $profile_name, $item['author']['xchan_addr']),
 			'olinktitle' => sprintf( t('View %s\'s profile - %s'), $this->get_owner_name(), $item['owner']['xchan_addr']),
 			'llink' => $item['llink'],

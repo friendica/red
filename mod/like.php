@@ -49,6 +49,18 @@ function like_content(&$a) {
 		case 'unabstain':
 			$activity = ACTIVITY_ABSTAIN;
 			break;
+		case 'attendyes':
+		case 'unattendyes':
+			$activity = ACTIVITY_ATTEND;
+			break;
+		case 'attendno':
+		case 'unattendno':
+			$activity = ACTIVITY_ATTENDNO;
+			break;
+		case 'attendmaybe':
+		case 'unattendmaybe':
+			$activity = ACTIVITY_ATTENDMAYBE;
+			break;
 		default:
 			return;
 			break;
@@ -300,6 +312,8 @@ function like_content(&$a) {
 	}
 	else {
 		$post_type = (($item['resource_type'] === 'photo') ? t('photo') : t('status'));
+		if($item['resource_type'] === 'event')
+			$post_type = t('event');
 
 		$links = array(array('rel' => 'alternate','type' => 'text/html', 'href' => $item['plink']));
 		$objtype = (($item['resource_type'] === 'photo') ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
@@ -354,8 +368,12 @@ function like_content(&$a) {
 		$bodyverb = t('%1$s doesn\'t agree with %2$s\'s %3$s');
 	if($verb === 'abstain')
 		$bodyverb = t('%1$s abstains from a decision on %2$s\'s %3$s');
-
-
+	if($verb === 'attendyes')
+		$bodyverb = t('%1$s is attending %2$s\'s %3$s');
+	if($verb === 'attendno')
+		$bodyverb = t('%1$s is not attending %2$s\'s %3$s');
+	if($verb === 'attendmaybe')
+		$bodyverb = t('%1$s may attend %2$s\'s %3$s');
 
 	if(! isset($bodyverb))
 			killme(); 
