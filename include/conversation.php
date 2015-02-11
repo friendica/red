@@ -1038,6 +1038,7 @@ function builtin_activity_puller($item, &$conv_responses) {
 			$conv_responses[$mode][$item['thr_parent'] . '-l'][] = $url;
 		}
 	}
+
 }
 
 // Format the like/dislike text for a profile item
@@ -1648,6 +1649,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 
 function get_responses($conv_responses,$response_verbs,$ob,$item) {
+
 	$ret = array();
 	foreach($response_verbs as $v) {
 		$ret[$v] = array();
@@ -1665,6 +1667,7 @@ function get_responses($conv_responses,$response_verbs,$ob,$item) {
 		$ret[$v]['title'] = $conv_responses[$v]['title'];
 	}
 	$ret['count'] = count($ret);
+//logger('ret: ' . print_r($ret,true));
 	return $ret;
 }
 

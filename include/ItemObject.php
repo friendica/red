@@ -136,28 +136,38 @@ class Item extends BaseObject {
 		$location = format_location($item);
 		$isevent = false;
 		$attend = null;
+		$canvote = false;
 
 		// process action responses - e.g. like/dislike/attend/agree/whatever
 		$response_verbs = array('like');
 		if(feature_enabled($conv->get_profile_owner(),'dislike'))
 			$response_verbs[] = 'dislike';
-		if($item['obj_type'] === ACTIVITY_OBJ_EVENT && $this->is_commentable()) {
+		if($item['obj_type'] === ACTIVITY_OBJ_EVENT) {
 			$response_verbs[] = 'attendyes';
 			$response_verbs[] = 'attendno';
 			$response_verbs[] = 'attendmaybe';
-			$isevent = true;
-			$attend = array( t('I will attend'), t('I will not attend'), t('I might attend'));
+			if($this->is_commentable()) {
+				$isevent = true;
+				$attend = array( t('I will attend'), t('I will not attend'), t('I might attend'));
+			}
 		}
 
-		$consensus = ((($item['item_flags'] & ITEM_CONSENSUS) && $this->is_commentable()) ? true : false);
+		$consensus = (($item['item_flags'] & ITEM_CONSENSUS) ? true : false);
 		if($consensus) {
 			$response_verbs[] = 'agree';
 			$response_verbs[] = 'disagree';
 			$response_verbs[] = 'abstain';
-			$conlabels = array( t('I agree'), t('I disagree'), t('I abstain'));
+			if($this->is_commentable()) {
+				$conlabels = array( t('I agree'), t('I disagree'), t('I abstain'));
+				$canvote = true;
+			}
 		}
 
+		if(! feature_enabled($conv->get_profile_owner(),'dislike'))
+			unset($conv_responses['dislike']);
+  
 		$responses = get_responses($conv_responses,$response_verbs,$this,$item);
+
 
 
 		$like_button_label = tt('Like','Likes',$like_count,'noun');
@@ -284,6 +294,7 @@ class Item extends BaseObject {
 			'attend' => $attend,
 			'consensus' => $consensus,
 			'conlabels' => $conlabels,
+			'canvote' => $canvote,
 			'linktitle' => sprintf( t('View %s\'s profile - %s'), $profile_name, $item['author']['xchan_addr']),
 			'olinktitle' => sprintf( t('View %s\'s profile - %s'), $this->get_owner_name(), $item['owner']['xchan_addr']),
 			'llink' => $item['llink'],

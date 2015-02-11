@@ -77,7 +77,7 @@
 						</button>
 						{{/if}}
 
-						{{if $item.consensus}}
+						{{if $item.canvote}}
 						<button type="button" title="{{$item.conlabels.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'agree'); return false;">
 							<i class="icon-check" ></i>
 						</button>
