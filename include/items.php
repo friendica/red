@@ -843,9 +843,9 @@ function get_item_elements($x) {
 
 
 	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
-		$arr['item_restrict'] = ITEM_DELETED;
+		$arr['item_restrict'] |= ITEM_DELETED;
 	if(array_key_exists('flags',$x) && in_array('hidden',$x['flags']))
-		$arr['item_restrict'] = ITEM_HIDDEN;
+		$arr['item_restrict'] |= ITEM_HIDDEN;
 
 	// Here's the deal - the site might be down or whatever but if there's a new person you've never
 	// seen before sending stuff to your stream, we MUST be able to look them up and import their data from their

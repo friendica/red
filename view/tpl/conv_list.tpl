@@ -78,6 +78,18 @@
 						</button>
 						{{/if}}
 
+						{{if $item.consensus}}
+						<button type="button" title="{{$item.conlabels.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'agree'); return false;">
+							<i class="icon-plus" ></i>
+						</button>
+						<button type="button" title="{{$item.conlabels.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'disagree'); return false;">
+							<i class="icon-minus" ></i>
+						</button>
+						<button type="button" title="{{$item.conlabels.2}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'abstain'); return false;">
+							<i class="icon-question" ></i>
+						</button>
+						{{/if}}
+
 						<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">
 							<i class="icon-caret-down"></i>
 						</button>

@@ -11,6 +11,7 @@
 		<input type="hidden" name="post_id" value="{{$post_id}}" />
 		<input type="hidden" name="webpage" value="{{$webpage}}" />
 		<input type="hidden" name="preview" id="jot-preview" value="0" />
+		<input type="hidden" id="jot-consensus" name="consensus" value="{{if $consensus}}{{$consensus}}{{else}}0{{/if}}" />
 		{{if $showacl}}{{$acl}}{{/if}}
 		{{$mimeselect}}
 		{{$layoutselect}}
@@ -75,6 +76,11 @@
 				{{if $feature_encrypt}}
 					<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
 						<i id="profile-encrypt" class="icon-key jot-icons"></i>
+					</button>
+				{{/if}}
+				{{if $feature_voting}}
+					<button id="profile-voting-wrapper" class="btn btn-default btn-sm" title="{{$voting}}" onclick="toggleVoting();return false;">
+						<i id="profile-voting" class="icon-check-empty jot-icons"></i>
 					</button>
 				{{/if}}
 				</div>

@@ -74,7 +74,8 @@ function editpost_content(&$a) {
 	$channel = $a->get_channel();
 
 	//$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
-	
+
+	$voting = feature_enabled(local_channel(),'consensus_tools');	
 
 	$category = '';
 	$catsenabled = ((feature_enabled(local_channel(),'categories')) ? 'categories' : '');
@@ -118,6 +119,9 @@ function editpost_content(&$a) {
 		'$audio' => t('Insert Vorbis [.ogg] audio'),
 		'$setloc' => t('Set your location'),
 		'$noloc' => t('Clear browser location'),
+		'$voting' => t('Toggle voting'),
+		'$feature_voting' => $voting,
+		'$consensus' => (($itm[0]['item_flags'] & ITEM_CONSENSUS) ? 1 : 0),
 		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
 		'$ptyp' => $itm[0]['type'],

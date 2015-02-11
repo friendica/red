@@ -1085,6 +1085,8 @@ function status_editor($a,$x,$popup=false) {
 //	if(feature_enabled(local_channel(),'richtext'))
 //		$plaintext = false;
 
+	$voting = feature_enabled(local_channel(),'consensus_tools');
+
 	$mimeselect = '';
 	if(array_key_exists('mimetype',$x) && $x['mimetype']) {
 		if($x['mimetype'] != 'text/bbcode')
@@ -1176,6 +1178,9 @@ function status_editor($a,$x,$popup=false) {
 		'$shortaudio' => t('audio link'),
 		'$setloc' => t('Set your location'),
 		'$shortsetloc' => t('set location'),
+		'$voting' => t('Toggle voting'),
+		'$feature_voting' => $voting,
+		'$consensus' => 0,
 		'$noloc' => ((get_pconfig($x['profile_uid'],'system','use_browser_location')) ? t('Clear browser location') : ''),
 		'$shortnoloc' => t('clear location'),
 		'$title' => ((x($x,'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),

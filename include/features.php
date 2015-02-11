@@ -60,6 +60,7 @@ function get_features() {
 			array('large_photos',   t('Large Photos'),              t('Include large (640px) photo thumbnails in posts. If not enabled, use small (320px) photo thumbnails'),false),
 			array('channel_sources', t('Channel Sources'),          t('Automatically import channel content from other channels or feeds'),false),
 			array('content_encrypt', t('Even More Encryption'),          t('Allow optional encryption of content end-to-end with a shared secret key'),false),
+			array('consensus_tools', t('Enable voting tools'),      t('Provide a class of post which others can vote on'),false),
 			array('adult_photo_flagging', t('Flag Adult Photos'),   t('Provide photo edit option to hide adult photos from default album view'),false), 
 		),
 

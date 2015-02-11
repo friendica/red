@@ -148,11 +148,13 @@ class Item extends BaseObject {
 			$isevent = true;
 			$attend = array( t('I will attend'), t('I will not attend'), t('I might attend'));
 		}
+
 		$consensus = (($item['item_flags'] & ITEM_CONSENSUS)? true : false);
 		if($consensus) {
 			$response_verbs[] = 'agree';
 			$response_verbs[] = 'disagree';
 			$response_verbs[] = 'abstain';
+			$conlabels = array( t('I agree'), t('I disagree'), t('I abstain'));
 		}
 
 		$responses = get_responses($conv_responses,$response_verbs,$this,$item);
@@ -280,6 +282,8 @@ class Item extends BaseObject {
 			'id' => $this->get_id(),
 			'isevent' => $isevent,
 			'attend' => $attend,
+			'consensus' => $consensus,
+			'conlabels' => $conlabels,
 			'linktitle' => sprintf( t('View %s\'s profile - %s'), $profile_name, $item['author']['xchan_addr']),
 			'olinktitle' => sprintf( t('View %s\'s profile - %s'), $this->get_owner_name(), $item['owner']['xchan_addr']),
 			'llink' => $item['llink'],
