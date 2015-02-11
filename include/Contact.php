@@ -374,7 +374,7 @@ function mark_orphan_hubsxchans() {
 	if($dirmode == DIRECTORY_MODE_NORMAL)
 		return;
 
-    $r = q("update hubloc set hubloc_status = (hubloc_status | %d) where not (hubloc_status & %d)>0 
+    $r = q("update hubloc set hubloc_status = (hubloc_status | %d) where (hubloc_status & %d) = 0 
 		and hubloc_network = 'zot' and hubloc_connected < %s - interval %s",
         intval(HUBLOC_OFFLINE),
         intval(HUBLOC_OFFLINE),

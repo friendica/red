@@ -287,21 +287,42 @@ function like_content(&$a) {
 		else
 			killme();
 
-		$r = q("SELECT id FROM item WHERE verb = '%s' AND item_restrict = 0 
-			AND author_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') LIMIT 1",
-			dbesc($activity),
+		
+		$verbs = " '".dbesc($activity)."' ";
+		$multi_undo = 0;		
+
+		// event participation and consensus items are essentially radio toggles. If you make a subsequent choice,
+		// we need to eradicate your first choice. 
+
+		if($activity === ACTIVITY_ATTEND || $activity === ACTIVITY_ATTENDNO || $activity === ACTIVITY_ATTENDMAYBE) {
+			$verbs = " '" . dbesc(ACTIVITY_ATTEND) . "','" . dbesc(ACTIVITY_ATTENDNO) . "','" . dbesc(ACTIVITY_ATTENDMAYBE) . "' ";
+			$multi_undo = 1;
+		}
+		if($activity === ACTIVITY_AGREE || $activity === ACTIVITY_DISAGREE || $activity === ACTIVITY_ABSTAIN) {
+			$verbs = " '" . dbesc(ACTIVITY_AGREE) . "','" . dbesc(ACTIVITY_DISAGREE) . "','" . dbesc(ACTIVITY_ABSTAIN) . "' ";
+			$multi_undo = 1;
+		}
+
+
+		$r = q("SELECT id FROM item WHERE verb in ( $verbs ) AND item_restrict = 0 
+			AND author_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') and uid = %d ",
 			dbesc($observer['xchan_hash']),
 			intval($item_id),
-			dbesc($item['mid'])
+			dbesc($item['mid']),
+			intval($owner_uid)
 		);
 
 		if($r) {
 			// already liked it. Drop that item.
 			require_once('include/items.php');
-			drop_item($r[0]['id'],false,DROPITEM_PHASE1);
-			return;
+			foreach($r as $rr) {
+				drop_item($rr['id'],false,DROPITEM_PHASE1);
+			}
+			if($interactive)
+				return;
+			if(! $multi_undo)
+				killme();
 		}
-
 	}
 
 	$mid = item_message_id();
