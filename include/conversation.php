@@ -972,7 +972,10 @@ function item_photo_menu($item){
  */
 function builtin_activity_puller($item, &$conv_responses) {
 
+	// if this item is a post or comment there's nothing for us to do here, just return.
 
+	if(activity_match($item['verb'],ACTIVITY_POST))
+		return;
 
 	foreach($conv_responses as $mode => $v) {
 
@@ -1036,6 +1039,9 @@ function builtin_activity_puller($item, &$conv_responses) {
 				$conv_responses[$mode][$item['thr_parent']] ++;
 
 			$conv_responses[$mode][$item['thr_parent'] . '-l'][] = $url;
+
+			// there can only be one activity verb per item so if we found anything, we can stop looking
+			$return;
 		}
 	}
 

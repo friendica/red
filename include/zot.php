@@ -1576,6 +1576,12 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 			// remove_community_tag is a no-op if this isn't a community tag activity
 			remove_community_tag($sender,$arr,$channel['channel_id']);
 
+			// set these just in case we need to store a fresh copy of the deleted post.
+			// This could happen if the delete got here before the original post did.
+
+			$arr['aid'] = $channel['channel_account_id'];
+			$arr['uid'] = $channel['channel_id'];
+
 			$item_id = delete_imported_item($sender,$arr,$channel['channel_id']);
 			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 
@@ -1725,35 +1731,56 @@ function delete_imported_item($sender,$item,$uid) {
 
 	logger('delete_imported_item invoked',LOGGER_DEBUG);
 
-	$r = q("select id, item_restrict from item where ( author_xchan = '%s' or owner_xchan = '%s' or source_xchan = '%s' )
-		and mid = '%s' and uid = %d limit 1",
-		dbesc($sender['hash']),
-		dbesc($sender['hash']),
-		dbesc($sender['hash']),
+	$ownership_valid = false;
+	$item_found = false;
+	$post_id = 0;
+
+	$r = q("select id, item_restrict, author_xchan, owner_xchan, source_xchan from item where mid = '%s' and uid = %d limit 1",
 		dbesc($item['mid']),
 		intval($uid)
 	);
+	if($r) {
+		if($r[0]['author_xchan'] === $sender['hash'] || $r[0]['owner_xchan'] === $sender['hash'] || $r[0]['source_xchan'] === $sender['hash'])
+			$ownership_valid = true;
+		$post_id = $r[0]['id'];
+		$item_found = true;
+	}
+	else {
 
-	if(! $r) {
+		// perhaps the item is still in transit and the delete notification got here before the actual item did. Store it with the deleted flag set.
+		// item_store() won't try to deliver any notifications or start delivery chains if this flag is set. 
+		// This means we won't end up with potentially even more delivery threads trying to push this delete notification.
+		// But this will ensure that if the (undeleted) original post comes in at a later date, we'll reject it because it will have an older timestamp.  
+
+		logger('delete received for non-existent item - storing item data.');
+		if($arr['author_xchan'] === $sender['hash'] || $arr['owner_xchan'] === $sender['hash'] || $arr['source_xchan'] === $sender['hash']) {
+			$ownership_valid = true;
+			$item_result = item_store($arr);
+			$post_id = $item_result['item_id'];
+		}
+	}
+
+	if($ownership_valid == false) {
 		logger('delete_imported_item: failed: ownership issue');
 		return false;
 	}
 
-	if($r[0]['item_restrict'] & ITEM_DELETED) {
-		logger('delete_imported_item: item was already deleted');
-		return false;
-	} 
+	if($item_found) {
+		if($r[0]['item_restrict'] & ITEM_DELETED) {
+			logger('delete_imported_item: item was already deleted');
+			return false;
+		} 
 		
-	require_once('include/items.php');
+		require_once('include/items.php');
 
-	// Use phased deletion to set the deleted flag, call both tag_deliver and the notifier to notify downstream channels
-	// and then clean up after ourselves with a cron job after several days to do the delete_item_lowlevel() (DROPITEM_PHASE2).
+		// Use phased deletion to set the deleted flag, call both tag_deliver and the notifier to notify downstream channels
+		// and then clean up after ourselves with a cron job after several days to do the delete_item_lowlevel() (DROPITEM_PHASE2).
 
-	drop_item($r[0]['id'],false, DROPITEM_PHASE1);
+		drop_item($post_id,false, DROPITEM_PHASE1);
+		tag_deliver($uid,$post_id);
+	}
 
-	tag_deliver($uid,$r[0]['id']);
-
-	return $r[0]['id'];
+	return $post_id;
 }
 
 function process_mail_delivery($sender,$arr,$deliveries) {

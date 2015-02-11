@@ -2280,9 +2280,16 @@ function item_store($arr,$allow_exec = false) {
 	);
 
 
-	send_status_notifications($current_post,$arr);
+	// If _creating_ a deleted item, don't propagate it further or send out notifications.
+	// We need to store the item details just in case the delete came in before the original post,
+	// so that we have an item in the DB that's marked deleted and won't store a fresh post 
+	// that isn't aware that we were already told to delete it.
 
-	tag_deliver($arr['uid'],$current_post);
+	if(! ($arr['item_restrict'] & ITEM_DELETED)) {
+		send_status_notifications($current_post,$arr);
+		tag_deliver($arr['uid'],$current_post);
+	}
+
 	$ret['success'] = true;
 	$ret['item_id'] = $current_post;
 
