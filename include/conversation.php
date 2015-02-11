@@ -1691,7 +1691,7 @@ function get_response_button_text($v,$count) {
 		case 'agree':
 			return tt('Agree','Agrees',$count,'noun');
 			break;
-		case 'agree':
+		case 'disagree':
 			return tt('Disagree','Disagrees',$count,'noun');
 			break;
 		case 'abstain':
