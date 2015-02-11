@@ -36,7 +36,7 @@ Lists
 	Create a list object to contain arbitrary things for personal use
 
 Events
-	Recurring events and participation (RSVP)
+	Recurring events
 
 Zot
 	Provide a way to sync web resources. This could be built on DAV except for preserving resource naming (guids) instead of filenames. 

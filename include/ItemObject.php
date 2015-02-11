@@ -141,7 +141,7 @@ class Item extends BaseObject {
 		$response_verbs = array('like');
 		if(feature_enabled($conv->get_profile_owner(),'dislike'))
 			$response_verbs[] = 'dislike';
-		if($item['obj_type'] === ACTIVITY_OBJ_EVENT) {
+		if($item['obj_type'] === ACTIVITY_OBJ_EVENT && $this->is_commentable) {
 			$response_verbs[] = 'attendyes';
 			$response_verbs[] = 'attendno';
 			$response_verbs[] = 'attendmaybe';
@@ -149,7 +149,7 @@ class Item extends BaseObject {
 			$attend = array( t('I will attend'), t('I will not attend'), t('I might attend'));
 		}
 
-		$consensus = (($item['item_flags'] & ITEM_CONSENSUS)? true : false);
+		$consensus = ((($item['item_flags'] & ITEM_CONSENSUS) && $this->is_commentable) ? true : false);
 		if($consensus) {
 			$response_verbs[] = 'agree';
 			$response_verbs[] = 'disagree';
