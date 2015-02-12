@@ -65,10 +65,10 @@ function z_mime_content_type($filename) {
 	'mov' => 'video/quicktime',
 	'ogg' => 'application/ogg',
 	'opus' => 'audio/ogg',
-	'webm' => 'audio/webm',
 	'webm' => 'video/webm',
-	'mp4' => 'audio/mp4',
+//	'webm' => 'audio/webm',
 	'mp4' => 'video/mp4',
+//	'mp4' => 'audio/mp4',
 
 	// adobe
 	'pdf' => 'application/pdf',

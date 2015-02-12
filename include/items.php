@@ -2720,6 +2720,9 @@ function tag_deliver($uid,$item_id) {
 			if($obj['id'] !== $u[0]['channel_hash'])
 				$poke_notify = false;
 		}
+		if($item['item_restrict'] & ITEM_DELETED)
+			$poke_notify = false;
+
 
 		$verb = urldecode(substr($item['verb'],strpos($item['verb'],'#')+1));
 		if($poke_notify) {
