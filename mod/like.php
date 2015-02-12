@@ -316,7 +316,7 @@ function like_content(&$a) {
 			// already liked it. Drop that item.
 			require_once('include/items.php');
 			foreach($r as $rr) {
-				drop_item($rr['id'],false,DROPITEM_PHASE1);
+				drop_item($rr['id'],true,DROPITEM_PHASE1);
 			}
 			if($interactive)
 				return;

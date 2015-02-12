@@ -1582,7 +1582,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 			$arr['aid'] = $channel['channel_account_id'];
 			$arr['uid'] = $channel['channel_id'];
 
-			$item_id = delete_imported_item($sender,$arr,$channel['channel_id']);
+			$item_id = delete_imported_item($sender,$arr,$channel['channel_id'],$relay);
 			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 
 			if($relay && $item_id) {
@@ -1727,7 +1727,7 @@ function update_imported_item($sender,$item,$uid) {
 
 }
 
-function delete_imported_item($sender,$item,$uid) {
+function delete_imported_item($sender,$item,$uid,$relay) {
 
 	logger('delete_imported_item invoked',LOGGER_DEBUG);
 
@@ -1768,7 +1768,8 @@ function delete_imported_item($sender,$item,$uid) {
 	if($item_found) {
 		if($r[0]['item_restrict'] & ITEM_DELETED) {
 			logger('delete_imported_item: item was already deleted');
-			return false;
+			if(! $relay)
+				return false;
 		} 
 		
 		require_once('include/items.php');
