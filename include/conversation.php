@@ -1672,8 +1672,17 @@ function get_responses($conv_responses,$response_verbs,$ob,$item) {
 		$ret[$v]['button'] = get_response_button_text($v,$ret[$v]['count']);
 		$ret[$v]['title'] = $conv_responses[$v]['title'];
 	}
-	$ret['count'] = count($ret);
+
+	$count = 0;
+	foreach($ret as $key) {
+	    if ($key['count'] == true)
+		$count++;
+	}
+
+	$ret['count'] = $count;
+
 //logger('ret: ' . print_r($ret,true));
+
 	return $ret;
 }
 
