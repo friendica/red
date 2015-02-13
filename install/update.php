@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1136 );
+define( 'UPDATE_VERSION' , 1137 );
 
 /**
  *
@@ -1555,6 +1555,16 @@ function update_r1134() {
 function update_r1135() {
 	$r = q("ALTER TABLE xlink ADD xlink_sig TEXT NOT NULL DEFAULT ''");
 	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1136() {
+	$r1 = q("alter table item add item_unseen smallint(1) not null default '0' ");
+	$r2 = q("create index item_unseen on item ( item_unseen ) ");
+	$r3 = q("update item set item_unseen = 1 where ( item_flags & 2 ) > 0 ");
+
+	if($r1 && $r2 && $r3)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }

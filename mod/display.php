@@ -231,10 +231,7 @@ function display_content(&$a, $update = 0, $load = false) {
 	}
 
 	if($updateable) {
-		$x = q("UPDATE item SET item_flags = ( item_flags & ~%d )
-			WHERE (item_flags & %d)>0 AND uid = %d and parent = %d ",
-			intval(ITEM_UNSEEN),
-			intval(ITEM_UNSEEN),
+		$x = q("UPDATE item SET item_unseen = 0 WHERE item_unseen = 1 AND uid = %d and parent = %d ",
 			intval(local_channel()),
 			intval($r[0]['parent'])
 		);

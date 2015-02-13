@@ -32,7 +32,7 @@ function format_notification($item) {
 		'url' => $item['author']['xchan_url'],
 		'photo' => $item['author']['xchan_photo_s'],
 		'when' => relative_date($item['created']), 
-		'class' => (($item['item_flags'] & ITEM_UNSEEN) ? 'notify-unseen' : 'notify-seen'), 
+		'class' => (intval($item['item_unseen']) ? 'notify-unseen' : 'notify-seen'), 
 		'message' => strip_tags(bbcode($itemem_text))
 	);
 

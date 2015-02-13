@@ -528,6 +528,7 @@ CREATE TABLE "item" (
   "item_restrict" bigint NOT NULL DEFAULT '0',
   "item_flags" bigint NOT NULL DEFAULT '0',
   "item_private" numeric(4) NOT NULL DEFAULT '0',
+  "item_unseen" smallint(1) NOT NULL DEFAULT '0',
   "item_search_vector" tsvector,
   PRIMARY KEY ("id")
 );
@@ -559,6 +560,7 @@ create index "item_uid_mid" on item ("mid","uid");
 create index "item_public_policy" on item ("public_policy");
 create index "item_comment_policy" on item ("comment_policy");
 create index "item_layout_mid" on item ("layout_mid");
+create index "item_unseen" on item ("item_unseen");
 
 -- fulltext indexes
 create index "item_search_idx" on  item USING gist("item_search_vector");

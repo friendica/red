@@ -151,16 +151,12 @@ function ping_init(&$a) {
 	if(x($_REQUEST, 'markRead') && local_channel()) {
 		switch($_REQUEST['markRead']) {
 			case 'network':
-				$r = q("update item set item_flags = ( item_flags & ~%d ) where (item_flags & %d) > 0 and uid = %d", 
-					intval(ITEM_UNSEEN),
-					intval(ITEM_UNSEEN),
+				$r = q("update item set item_unseen = 0 where item_unseen = 1 and uid = %d", 
 					intval(local_channel())
 				);
 				break;
 			case 'home':
-				$r = q("update item set item_flags = ( item_flags & ~%d ) where (item_flags & %d) > 0 and (item_flags & %d) > 0  and uid = %d", 
-					intval(ITEM_UNSEEN),
-					intval(ITEM_UNSEEN),
+				$r = q("update item set item_unseen = 0 where item_unseen = 1 and (item_flags & %d) > 0  and uid = %d", 
 					intval(ITEM_WALL),
 					intval(local_channel())
 				);
@@ -190,8 +186,7 @@ function ping_init(&$a) {
 	}
 
 	if(x($_REQUEST, 'markItemRead') && local_channel()) {
-		$r = q("update item set item_flags = ( item_flags & ~%d ) where parent = %d and uid = %d", 
-			intval(ITEM_UNSEEN),
+		$r = q("update item set item_unseen = 0 where parent = %d and uid = %d", 
 			intval($_REQUEST['markItemRead']),
 			intval(local_channel())
 		);
@@ -278,10 +273,8 @@ function ping_init(&$a) {
 		$result = array();
 
 		$r = q("SELECT * FROM item
-			WHERE item_restrict = %d and ( item_flags & %d ) > 0 and uid = %d
+			WHERE item_restrict = 0 and item_unseen = 1 and uid = %d
 			and author_xchan != '%s' ORDER BY created DESC",
-			intval(ITEM_VISIBLE),
-			intval(ITEM_UNSEEN),
 			intval(local_channel()),
 			dbesc($ob_hash)
 		);
@@ -386,10 +379,8 @@ function ping_init(&$a) {
 
 	if($vnotify & (VNOTIFY_NETWORK|VNOTIFY_CHANNEL)) {
 		$r = q("SELECT id, item_restrict, item_flags FROM item
-			WHERE (item_restrict = %d) and ( item_flags & %d ) > 0 and uid = %d
+			WHERE item_restrict = 0 and item_unseen = 1 and uid = %d
 			and author_xchan != '%s'",
-			intval(ITEM_VISIBLE),
-			intval(ITEM_UNSEEN),
 			intval(local_channel()),
 			dbesc($ob_hash)
 		);

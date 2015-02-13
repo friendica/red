@@ -2043,11 +2043,10 @@ function item_store($arr,$allow_exec = false) {
 
 	$arr['comment_policy'] = ((x($arr,'comment_policy')) ? notags(trim($arr['comment_policy']))  : 'contacts' );
 	
-	$arr['item_flags'] = $arr['item_flags'] | ITEM_UNSEEN;
+	$arr['item_unseen'] = ((array_key_exists('item_unseen',$arr)) ? intval($arr['item_unseen']) : 1);
 
 	if($arr['comment_policy'] == 'none')
 		$arr['item_flags'] = $arr['item_flags'] | ITEM_NOCOMMENT;
-
 
 
 	// handle time travelers
@@ -2332,8 +2331,8 @@ function item_store_update($arr,$allow_exec = false) {
 
 	// override the unseen flag with the original
 
-	if($arr['item_flags'] & ITEM_UNSEEN)
-		$arr['item_flags'] = $arr['item_flags'] ^ ITEM_UNSEEN;
+	if(intval($arr['item_flags']))
+		$arr['item_unseen'] = 0;
 
 	if($orig[0]['item_flags'] & ITEM_VERIFIED)
 		$orig[0]['item_flags'] = $orig[0]['item_flags'] ^ ITEM_VERIFIED;
@@ -4562,7 +4561,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
     	}
 	}
 
-    $simple_update = (($client_mode & CLIENT_MODE_UPDATE) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " )>0 " : '');
+    $simple_update = (($client_mode & CLIENT_MODE_UPDATE) ? " and ( item.item_unseen = 1 ) " : '');
     if($client_mode & CLIENT_MODE_LOAD)
         $simple_update = '';
 

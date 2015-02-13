@@ -170,7 +170,7 @@ function home_content(&$a, $update = 0, $load = false) {
 
 			$page_mode = 'list';
 
-			$simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) > 0 " : '');
+			$simple_update = (($update) ? " and item.item_unseen = 1 " : '');
 
 			if($update && $_SESSION['loadtime'])
 				$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ";

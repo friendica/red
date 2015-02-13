@@ -61,10 +61,9 @@ function mood_init(&$a) {
 	$mid = item_message_id();
 
 	$action = sprintf( t('%1$s is %2$s','mood'), '[zrl=' . $poster['xchan_url'] . ']' . $poster['xchan_name'] . '[/zrl]' , $verbs[$verb]); 
-	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_UNSEEN;
+	$item_flags = ITEM_WALL|ITEM_ORIGIN;
 	if(! $parent_mid)
 		$item_flags |= ITEM_THREAD_TOP;
-
 
 	$arr = array();
 

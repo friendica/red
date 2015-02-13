@@ -346,7 +346,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	else
 		$page_mode = 'client';
 
-	$simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) > 0 " : '');
+	$simple_update = (($update) ? " and item.unseen = 1 " : '');
 
 	// This fixes a very subtle bug so I'd better explain it. You wake up in the morning or return after a day
 	// or three and look at your matrix page - after opening up your browser. The first page loads just as it
@@ -465,10 +465,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 	if(($update_unseen) && (! $firehose))
-		$r = q("UPDATE item SET item_flags = ( item_flags & ~%d)
-			WHERE (item_flags & %d) > 0 AND uid = %d $update_unseen ",
-			intval(ITEM_UNSEEN),
-			intval(ITEM_UNSEEN),
+		$r = q("UPDATE item SET item_unseen = 0 where item_unseen = 1 AND uid = %d $update_unseen ",
 			intval(local_channel())
 		);
 

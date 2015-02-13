@@ -998,7 +998,8 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	$objtype = ACTIVITY_OBJ_FILE;
 
-	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_UNSEEN;
+	$item_flags = ITEM_WALL|ITEM_ORIGIN;
+;
 
 	$private = (($allow_cid || $allow_gid || $deny_cid || $deny_gid) ? 1 : 0);
 
@@ -1038,6 +1039,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		$arr['mid']           = $u_mid;
 		$arr['parent_mid']    = $u_mid;
 		$arr['item_flags']    = $item_flags;
+		$arr['item_unseen']   = 1;
 		$arr['author_xchan']  = $poster['xchan_hash'];
 		$arr['owner_xchan']   = $poster['xchan_hash'];
 		$arr['title']         = '';

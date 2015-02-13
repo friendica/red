@@ -147,23 +147,21 @@ function channel_content(&$a, $update = 0, $load = false) {
 	if(($update) && (! $load)) {
 		if ($mid) {
 			$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d AND item_restrict = 0
-				AND (item_flags &  %d) > 0 AND (item_flags & %d) > 0 $sql_extra limit 1",
+				AND (item_flags &  %d) > 0 AND item_unseen = 1 $sql_extra limit 1",
 				dbesc($mid),
 				intval($a->profile['profile_uid']),
-				intval(ITEM_WALL),
-				intval(ITEM_UNSEEN)
+				intval(ITEM_WALL)
 			);
 		} else {
 			$r = q("SELECT distinct parent AS `item_id`, created from item
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE uid = %d AND item_restrict = 0
-				AND (item_flags &  %d) > 0 AND ( item_flags & %d ) > 0
+				AND (item_flags &  %d) > 0 AND item_unseen = 1
 				AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra
 				ORDER BY created DESC",
 				intval($a->profile['profile_uid']),
 				intval(ITEM_WALL),
-				intval(ITEM_UNSEEN),
 				intval(ABOOK_FLAG_BLOCKED)
 			);
 		}
@@ -317,10 +315,8 @@ function channel_content(&$a, $update = 0, $load = false) {
 	}
 
 	if($is_owner && $update_unseen) {
-		$r = q("UPDATE item SET item_flags = (item_flags & ~%d)
-			WHERE (item_flags & %d) > 0 AND (item_flags & %d) > 0 AND uid = %d $update_unseen",
-			intval(ITEM_UNSEEN),
-			intval(ITEM_UNSEEN),
+		$r = q("UPDATE item SET item_unseen = 0 WHERE item_unseen = 1
+			AND (item_flags & %d) > 0 AND uid = %d $update_unseen",
 			intval(ITEM_WALL),
 			intval(local_channel())
 		);

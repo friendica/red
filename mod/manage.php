@@ -57,9 +57,7 @@ function manage_content(&$a) {
 
 
 				$c = q("SELECT id, item_restrict, item_flags FROM item
-					WHERE (item_restrict = %d) and ( item_flags & %d )>0 and uid = %d",
-					intval(ITEM_VISIBLE),
-					intval(ITEM_UNSEEN),
+					WHERE item_restrict = 0 and item_unseen = 1 and uid = %d",
 					intval($channels[$x]['channel_id'])
 				);
 

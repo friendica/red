@@ -923,8 +923,8 @@ function diaspora_post($importer,$xml,$msg) {
 
 	$datarray['app']  = $app;
 
-	$datarray['item_flags'] = ITEM_UNSEEN|ITEM_THREAD_TOP;
-
+	$datarray['item_flags'] = ITEM_THREAD_TOP;
+	$datarray['item_unseen'] = 1;
 
 	$result = item_store($datarray);
 	return;

@@ -643,8 +643,7 @@ function item_post(&$a) {
 		}
 	}
 
-	if(local_channel() != $profile_uid)
-		$item_flags |= ITEM_UNSEEN;
+	$item_unseen =  ((local_channel() != $profile_uid) ? 1 : 0);
 	
 	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$item_flags = $item_flags | ITEM_WALL;
@@ -694,7 +693,7 @@ function item_post(&$a) {
 	
 	$datarray['aid']            = $channel['channel_account_id'];
 	$datarray['uid']            = $profile_uid;
-
+	
 	$datarray['owner_xchan']    = (($owner_hash) ? $owner_hash : $owner_xchan['xchan_hash']);
 	$datarray['author_xchan']   = $observer['xchan_hash'];
 	$datarray['created']        = $created;
@@ -729,6 +728,7 @@ function item_post(&$a) {
 	$datarray['term']           = $post_tags;
 	$datarray['plink']          = $plink;
 	$datarray['route']          = $route;
+	$datarray['item_unseen']    = $item_unseen;
 
 	// preview mode - prepare the body for display and send it via json
 

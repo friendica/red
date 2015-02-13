@@ -612,7 +612,7 @@ class Item extends BaseObject {
 				if((! visible_activity($child->data)) || array_key_exists('author_blocked',$child->data)) {
 					continue;
 				}
-				if($child->data['item_flags'] & ITEM_UNSEEN)
+				if(intval($child->data['item_unseen']))
 					$total ++;
 			}
 		}

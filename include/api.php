@@ -1004,10 +1004,7 @@ require_once('include/items.php');
 		// at the network timeline just mark everything seen. 
 	
 		if (api_user() == $user_info['uid']) {
-			$r = q("UPDATE `item` SET item_flags = ( item_flags & ~%d )
-				WHERE (item_flags & %d)>0 and uid = %d",
-				intval(ITEM_UNSEEN),
-				intval(ITEM_UNSEEN),
+			$r = q("UPDATE `item` SET item_unseen = 0 where item_unseen = 1 and uid = %d",
 				intval($user_info['uid'])
 			);
 		}
