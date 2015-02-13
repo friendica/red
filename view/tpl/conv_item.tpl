@@ -140,31 +140,29 @@
 							{{else}}
 							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-{{$verb}}-{{$item.id}}">{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
 							{{/if}}
+							{{if $response.list_part}}
+							<div class="modal" id="{{$verb}}Modal-{{$item.id}}">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h4 class="modal-title">{{$response.title}}</h4>
+										</div>
+										<div class="modal-body">
+										<ul>{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+										</div>
+										<div class="modal-footer clear">
+											<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
+										</div>
+									</div><!-- /.modal-content -->
+								</div><!-- /.modal-dialog -->
+							</div><!-- /.modal -->
+							{{/if}}
 						</div>
-						{{/if}}
-
-						{{if $response.list_part}}
-						<div class="modal" id="{{$verb}}Modal-{{$item.id}}">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title">{{$response.title}}</h4>
-									</div>
-									<div class="modal-body">
-									<ul>{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
-									</div>
-									<div class="modal-footer clear">
-										<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
-									</div>
-								</div><!-- /.modal-content -->
-							</div><!-- /.modal-dialog -->
-						</div><!-- /.modal -->
 						{{/if}}
 					{{/foreach}}
 					</div>
 					{{/if}}
-
 				</div>
 				<div class="clear"></div>
 			</div>

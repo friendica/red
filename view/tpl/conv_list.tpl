@@ -130,14 +130,21 @@
 					</div>
 					<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
 					<div class="wall-item-tools-left{{if $item.unseen_comments || $item.like_count || $item.dislike_count}} btn-group{{/if}}">
+						<div class="wall-item-list-comments btn-group">
+							<button class="btn btn-default btn-sm" onclick="window.location.href='{{$item.viewthread}}'; return false;">
+								{{$item.comment_count_txt}}{{if $item.unseen_comments}}<span class="unseen-wall-indicator-{{$item.id}}">, {{$item.list_unseen_txt}}</span>{{/if}}
+							</button>
+						</div>
+						{{if $item.unseen_comments}}
+						<div class="unseen-wall-indicator-{{$item.id}} btn-group">
+							<button class="btn btn-default btn-sm" title="{{$item.markseen}}" onclick="markItemRead({{$item.id}}); return false;">
+								<i class="icon-check"></i>
+							</button>
+						</div>
+						{{/if}}
 
-
-				<div class="wall-item-list-comments btn-group"><button class="btn btn-default btn-sm" onclick="window.location.href='{{$item.viewthread}}'; return false;">{{$item.comment_count_txt}}{{if $item.unseen_comments}}
-<span class="unseen-wall-indicator-{{$item.id}}">, {{$item.list_unseen_txt}}{{/if}}</span></button></div>{{if $item.unseen_comments}}<div class="unseen-wall-indicator-{{$item.id}} btn-group"><button class="btn btn-default btn-sm" title="{{$item.markseen}}" onclick="markItemRead({{$item.id}}); return false;"><i class="icon-check"></i></div>{{/if}}
-
-					{{if $item.responses }}
-					<div class="wall-item-tools-left{{if $item.responses.count > 1}} btn-group{{/if}}">
-					{{foreach $item.responses as $verb=>$response}}
+						{{if $item.responses }}
+						{{foreach $item.responses as $verb=>$response}}
 						{{if $response.count}}
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="wall-item-{{$verb}}-{{$item.id}}">{{$response.count}} {{$response.button}}</button>
@@ -146,31 +153,29 @@
 							{{else}}
 							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-{{$verb}}-{{$item.id}}">{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
 							{{/if}}
+							{{if $response.list_part}}
+							<div class="modal" id="{{$verb}}Modal-{{$item.id}}">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h4 class="modal-title">{{$response.title}}</h4>
+										</div>
+										<div class="modal-body">
+										<ul>{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+										</div>
+										<div class="modal-footer clear">
+											<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
+										</div>
+									</div><!-- /.modal-content -->
+								</div><!-- /.modal-dialog -->
+							</div><!-- /.modal -->
+							{{/if}}
 						</div>
 						{{/if}}
-
-						{{if $response.list_part}}
-						<div class="modal" id="{{$verb}}Modal-{{$item.id}}">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title">{{$response.title}}</h4>
-									</div>
-									<div class="modal-body">
-									<ul>{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
-									</div>
-									<div class="modal-footer clear">
-										<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
-									</div>
-								</div><!-- /.modal-content -->
-							</div><!-- /.modal-dialog -->
-						</div><!-- /.modal -->
+						{{/foreach}}
 						{{/if}}
-					{{/foreach}}
 					</div>
-					{{/if}}
-				</div>
 				</div>
 				<div class="clear"></div>
 			</div>
