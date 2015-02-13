@@ -625,7 +625,8 @@ function get_tags($s) {
 	// The lookbehind is used to prevent a match in the middle of a word
 	// '=' needs to be avoided because when the replacement is made (in handle_tag()) it has to be ignored there
 	// Feel free to allow '=' if the issue with '=' is solved in handle_tag()
-	if(preg_match_all('/(?<![a-zA-Z0-9=])(@[^ \x0D\x0A,:?\[]+ [^ \x0D\x0A@,:?\[]+)/',$s,$match)) {
+	// added / ? and [ to avoid issues with hashchars in url paths
+	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?])(@[^ \x0D\x0A,:?\[]+ [^ \x0D\x0A@,:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
 				$ret[] = substr($mtch,0,-1);
@@ -637,7 +638,7 @@ function get_tags($s) {
 	// Otherwise pull out single word tags. These can be @nickname, @first_last
 	// and #hash tags.
 
-	if(preg_match_all('/(?<![a-zA-Z0-9=])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
+	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);
@@ -2356,6 +2357,7 @@ function linkify_tags($a, &$body, $uid) {
 	$result = array();
 
 	$tags = get_tags($body);
+
 	if(count($tags)) {
 		foreach($tags as $tag) {
 			$access_tag = '';

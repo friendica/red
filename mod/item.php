@@ -740,7 +740,7 @@ function item_post(&$a) {
 		$datarray['author'] = $observer;
 		$datarray['attach'] = json_encode($datarray['attach']);
 		$o = conversation($a,array($datarray),'search',false,'preview');
-		logger('preview: ' . $o, LOGGER_DEBUG);
+//		logger('preview: ' . $o, LOGGER_DEBUG);
 		echo json_encode(array('preview' => $o));
 		killme();
 	}
