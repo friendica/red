@@ -1082,6 +1082,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	$arr['mid']           = $mid;
 	$arr['parent_mid']    = $mid;
 	$arr['item_flags']    = $item_flags;
+	$arr['item_unseen']   = 1;
 	$arr['author_xchan']  = $poster['xchan_hash'];
 	$arr['owner_xchan']   = $poster['xchan_hash'];
 	$arr['title']         = '';

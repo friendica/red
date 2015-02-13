@@ -28,7 +28,7 @@
 					<a href="{{$item.profile_url}}" title="{{$item.linktitle}}" class="wall-item-name-link"><span class="wall-item-name{{$item.sparkle}}" id="wall-item-name-{{$item.id}}" >{{$item.name}}</span></a>{{if $item.owner_url}}&nbsp;{{$item.via}}&nbsp;<a href="{{$item.owner_url}}" title="{{$item.olinktitle}}" class="wall-item-name-link"><span class="wall-item-name{{$item.osparkle}}" id="wall-item-ownername-{{$item.id}}">{{$item.owner_name}}</span></a>{{/if}}
 				</div>
 				<div class="wall-item-ago"  id="wall-item-ago-{{$item.id}}">
-					{{if $item.verified}}<i class="icon-ok item-verified" title="{{$item.verified}}"></i>&nbsp;{{elseif $item.forged}}<i class="icon-remove item-forged" title="{{$item.forged}}"></i>&nbsp;{{/if}}{{if $item.location}}<span class="wall-item-location" id="wall-item-location-{{$item.id}}">{{$item.location}},&nbsp;</span>{{/if}}<span class="autotime" title="{{$item.isotime}}">{{$item.localtime}}{{if $item.editedtime}}&nbsp;{{$item.editedtime}}{{/if}}{{if $item.expiretime}}&nbsp;{{$item.expiretime}}{{/if}}</span>{{if $item.editedtime}}&nbsp;<i class="icon-pencil"></i>{{/if}}&nbsp;{{if $item.app}}<span class="item.app">{{$item.str_app}}</span>{{/if}}
+					{{if $item.verified}}<i class="icon-ok item-verified" title="{{$item.verified}}"></i>&nbsp;{{elseif $item.forged}}<i class="icon-exclamation item-forged" title="{{$item.forged}}"></i>&nbsp;{{/if}}{{if $item.location}}<span class="wall-item-location" id="wall-item-location-{{$item.id}}">{{$item.location}},&nbsp;</span>{{/if}}<span class="autotime" title="{{$item.isotime}}">{{$item.localtime}}{{if $item.editedtime}}&nbsp;{{$item.editedtime}}{{/if}}{{if $item.expiretime}}&nbsp;{{$item.expiretime}}{{/if}}</span>{{if $item.editedtime}}&nbsp;<i class="icon-pencil"></i>{{/if}}&nbsp;{{if $item.app}}<span class="item.app">{{$item.str_app}}</span>{{/if}}
 				</div>
 				<div class="wall-item-content" id="wall-item-content-{{$item.id}}">
 					<div class="wall-item-title-end"></div>
@@ -67,10 +67,10 @@
 						{{/if}}
 						{{if $item.isevent}}
 						<button type="button" title="{{$item.attend.0}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendyes'); return false;">
-							<i class="icon-ok-circle" ></i>
+							<i class="icon-ok" ></i>
 						</button>
 						<button type="button" title="{{$item.attend.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'attendno'); return false;">
-							<i class="icon-remove-circle" ></i>
+							<i class="icon-remove" ></i>
 						</button>
 						<button type="button" title="{{$item.attend.2}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendmaybe'); return false;">
 							<i class="icon-question" ></i>
@@ -79,10 +79,10 @@
 
 						{{if $item.canvote}}
 						<button type="button" title="{{$item.conlabels.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'agree'); return false;">
-							<i class="icon-ok-circle" ></i>
+							<i class="icon-ok" ></i>
 						</button>
 						<button type="button" title="{{$item.conlabels.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'disagree'); return false;">
-							<i class="icon-remove-circle" ></i>
+							<i class="icon-remove" ></i>
 						</button>
 						<button type="button" title="{{$item.conlabels.2}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'abstain'); return false;">
 							<i class="icon-question" ></i>
@@ -123,7 +123,7 @@
 							{{/if}}
 							{{if $item.drop.dropping}}
 							<li role="presentation" class="divider"></li>
-							<li role="presentation"><a role="menuitem" href="item/drop/{{$item.id}}" onclick="return confirmDelete();" title="{{$item.drop.delete}}" ><i class="icon-remove"></i> {{$item.drop.delete}}</a></li>
+							<li role="presentation"><a role="menuitem" href="item/drop/{{$item.id}}" onclick="return confirmDelete();" title="{{$item.drop.delete}}" ><i class="icon-trash"></i> {{$item.drop.delete}}</a></li>
 							{{/if}}
 						</ul>
 					</div>
@@ -140,31 +140,29 @@
 							{{else}}
 							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-{{$verb}}-{{$item.id}}">{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
 							{{/if}}
+							{{if $response.list_part}}
+							<div class="modal" id="{{$verb}}Modal-{{$item.id}}">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h4 class="modal-title">{{$response.title}}</h4>
+										</div>
+										<div class="modal-body">
+										<ul>{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+										</div>
+										<div class="modal-footer clear">
+											<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
+										</div>
+									</div><!-- /.modal-content -->
+								</div><!-- /.modal-dialog -->
+							</div><!-- /.modal -->
+							{{/if}}
 						</div>
-						{{/if}}
-
-						{{if $response.list_part}}
-						<div class="modal" id="{{$verb}}Modal-{{$item.id}}">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title">{{$response.title}}</h4>
-									</div>
-									<div class="modal-body">
-									<ul>{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
-									</div>
-									<div class="modal-footer clear">
-										<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
-									</div>
-								</div><!-- /.modal-content -->
-							</div><!-- /.modal-dialog -->
-						</div><!-- /.modal -->
 						{{/if}}
 					{{/foreach}}
 					</div>
 					{{/if}}
-
 				</div>
 				<div class="clear"></div>
 			</div>

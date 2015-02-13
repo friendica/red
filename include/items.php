@@ -2861,7 +2861,7 @@ function tag_deliver($uid,$item_id) {
 		if(preg_match($pattern,$body,$matches)) 
 			$tagged = true;
 
-		$pattern = '/@\!?\[zrl\=(.*?)\](.*?)\+\[\/zrl\]/';
+		$pattern = '/@\!?\[zrl\=([^\]]*?)\]((?:.(?!\[zrl\=))*?)\+\[\/zrl\]/';
 
 		if(preg_match_all($pattern,$body,$matches,PREG_SET_ORDER)) {
 			$max_forums = get_config('system','max_tagged_forums');
@@ -3022,7 +3022,7 @@ function tgroup_check($uid,$item) {
 	
 //	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
 
-	$pattern = '/@\!?\[zrl\=(.*?)\](.*?)\+\[\/zrl\]/';
+	$pattern = '/@\!?\[zrl\=([^\]]*?)\]((?:.(?!\[zrl\=))*?)\+\[\/zrl\]/';
 
 	$found = false;
 

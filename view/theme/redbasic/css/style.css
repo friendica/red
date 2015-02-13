@@ -1907,10 +1907,6 @@ img.mail-list-sender-photo {
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
-.wall-item-ago .icon-ok {
-	color: darkgreen;
-}
-
 .wall-item-ago {
 	color: #777;
 	font-size: 0.833em;
