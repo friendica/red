@@ -346,7 +346,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	else
 		$page_mode = 'client';
 
-	$simple_update = (($update) ? " and item.unseen = 1 " : '');
+	$simple_update = (($update) ? " and item_unseen = 1 " : '');
 
 	// This fixes a very subtle bug so I'd better explain it. You wake up in the morning or return after a day
 	// or three and look at your matrix page - after opening up your browser. The first page loads just as it
