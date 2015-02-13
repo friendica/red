@@ -1560,7 +1560,7 @@ function update_r1135() {
 }
 
 function update_r1136() {
-	$r1 = q("alter table item add item_unseen smallint(1) not null default '0' ");
+	$r1 = q("alter table item add item_unseen smallint not null default '0' ");
 	$r2 = q("create index item_unseen on item ( item_unseen ) ");
 	$r3 = q("update item set item_unseen = 1 where ( item_flags & 2 ) > 0 ");
 
