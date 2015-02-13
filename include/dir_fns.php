@@ -247,7 +247,7 @@ function sync_directories($dirmode) {
 			        logger('rating updated');
     			}
     			else {
-        			$z = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_sig, xlink_updated, xlink_static ) values( '%s', '%s', %d, '%s', '%s', 1 ) ",
+        			$z = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_sig, xlink_updated, xlink_static ) values( '%s', '%s', %d, '%s', '%s', '%s', 1 ) ",
 						dbesc($rr['channel']),
 						dbesc($rr['target']),
 						intval($rr['rating']),
