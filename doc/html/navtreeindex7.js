@@ -1,5 +1,11 @@
 var NAVTREEINDEX7 =
 {
+"locs_8php.html":[6,0,1,52],
+"locs_8php.html#a6b43654592919ac863d67a1f787a69b9":[6,0,1,52,1],
+"locs_8php.html#a6c900f53970c0d0e738d2fe06d27ca44":[6,0,1,52,0],
+"login_8php.html":[6,0,1,53],
+"login_8php.html#a1d69ca88eb9005a7026e128b9a645904":[6,0,1,53,0],
+"lostpass_8php.html":[6,0,1,54],
 "lostpass_8php.html#a0314d94e48c789b1b3a201d740c9eab3":[6,0,1,54,0],
 "lostpass_8php.html#a8ed35ba71a4404eaf4903da61d0321cc":[6,0,1,54,1],
 "magic_8php.html":[6,0,1,55],
@@ -84,10 +90,10 @@ var NAVTREEINDEX7 =
 "namespaceFriendica.html":[4,0,1],
 "namespaceRedMatrix.html":[4,0,3],
 "namespaceRedMatrix.html":[5,0,3],
-"namespaceRedMatrix_1_1Import.html":[4,0,3,0],
 "namespaceRedMatrix_1_1Import.html":[5,0,3,0],
-"namespaceRedMatrix_1_1RedDAV.html":[5,0,3,1],
+"namespaceRedMatrix_1_1Import.html":[4,0,3,0],
 "namespaceRedMatrix_1_1RedDAV.html":[4,0,3,1],
+"namespaceRedMatrix_1_1RedDAV.html":[5,0,3,1],
 "namespaceacl__selectors.html":[5,0,0],
 "namespaceacl__selectors.html":[4,0,0],
 "namespacefriendica-to-smarty-tpl.html":[4,0,2],
@@ -243,11 +249,5 @@ var NAVTREEINDEX7 =
 "profile_8php.html#a3775cf6eef6587e5143133356a7b76c0":[6,0,1,90,0],
 "profile_8php.html#ab5d0246be0552e2182a585c1206d22a5":[6,0,1,90,1],
 "profile__photo_8php.html":[6,0,1,91],
-"profile__photo_8php.html#a140631c56438fbfacb61a1eb43067d02":[6,0,1,91,0],
-"profile__photo_8php.html#a4b80234074bd603221aa5364f330e479":[6,0,1,91,1],
-"profile__photo_8php.html#a561103564199da56e58061a4196eb102":[6,0,1,91,2],
-"profile__selectors_8php.html":[6,0,0,67],
-"profile__selectors_8php.html#a3b50b3ea4ea4bdbebebfffc5d1b157c7":[6,0,0,67,4],
-"profile__selectors_8php.html#a7473dd095987e1cdcc79d4f0bb5e6798":[6,0,0,67,2],
-"profile__selectors_8php.html#a8bfa1ca2d1598a3d65f1f9bb803ca816":[6,0,0,67,1]
+"profile__photo_8php.html#a140631c56438fbfacb61a1eb43067d02":[6,0,1,91,0]
 };

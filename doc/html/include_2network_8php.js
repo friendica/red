@@ -18,6 +18,7 @@ var include_2network_8php =
     [ "scale_external_images", "include_2network_8php.html#ae8d9c41a11000fb8667039fc71b4f73f", null ],
     [ "scrape_feed", "include_2network_8php.html#a316f318167a039c89719afbd129a8f3c", null ],
     [ "scrape_vcard", "include_2network_8php.html#acb0bd7f5fe38ff1eaebeae3284525070", null ],
+    [ "service_plink", "include_2network_8php.html#adf741da85aa82493f2084eca63092dd5", null ],
     [ "validate_email", "include_2network_8php.html#a897e7112d86eb95526cbd0bff9375f02", null ],
     [ "validate_url", "include_2network_8php.html#a5caa264fab6d2b2344e6bd5b298b08f2", null ],
     [ "webfinger_rfc7033", "include_2network_8php.html#a3e6c751a51de33ad3563f0938296e78a", null ],

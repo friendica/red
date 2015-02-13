@@ -95,6 +95,8 @@ var searchData=
   ['get_5fpublic_5ffeed',['get_public_feed',['../items_8php.html#a079e099e15d88d47aeb6ca6d60da7107',1,'items.php']]],
   ['get_5fredirect_5furl',['get_redirect_url',['../classItem.html#a428f448f89a8629055ea3294eb942aea',1,'Item']]],
   ['get_5frel_5flink',['get_rel_link',['../text_8php.html#a3972701c5c83624ec4e2d06242f614e7',1,'text.php']]],
+  ['get_5fresponse_5fbutton_5ftext',['get_response_button_text',['../conversation_8php.html#afb16b867934dbc5f7e68f21925f9e71e',1,'conversation.php']]],
+  ['get_5fresponses',['get_responses',['../conversation_8php.html#afb69613cf71dc5a21c23f3430ce3c229',1,'conversation.php']]],
   ['get_5frole_5fperms',['get_role_perms',['../permissions_8php.html#a9b5f5120566a3699a98efc5ccb0c59fe',1,'permissions.php']]],
   ['get_5froles',['get_roles',['../permissions_8php.html#a6b239a0d494b92a89ce7bf9c7e588991',1,'permissions.php']]],
   ['get_5frpost_5fpath',['get_rpost_path',['../zot_8php.html#a8e22dbc6f884be3644a892a876cbd972',1,'zot.php']]],

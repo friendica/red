@@ -14,7 +14,6 @@ var searchData=
   ['legal_5fwebbie',['legal_webbie',['../text_8php.html#a2690ad67bb6fb97ef69de3e8d23f2728',1,'text.php']]],
   ['like_2ephp',['like.php',['../like_8php.html',1,'']]],
   ['like_5fcontent',['like_content',['../like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538',1,'like.php']]],
-  ['like_5fpuller',['like_puller',['../conversation_8php.html#afe5b2f38d8b803edb0d7ec5fa2868db0',1,'conversation.php']]],
   ['limit_5fbody_5fsize',['limit_body_size',['../items_8php.html#af94c281016c6c912d06e064113336c5c',1,'items.php']]],
   ['link_5fcompare',['link_compare',['../text_8php.html#a47c1e4a5f3f53027daacd8a9db24f285',1,'text.php']]],
   ['linkify',['linkify',['../text_8php.html#a11255c8c4e5245b6c24f97684826aa54',1,'text.php']]],

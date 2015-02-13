@@ -27,7 +27,7 @@ var searchData=
   ['del_5fxconfig',['del_xconfig',['../include_2config_8php.html#a9c171def547deee16738dc58fdeb4b72',1,'config.php']]],
   ['delegate_5fcontent',['delegate_content',['../delegate_8php.html#a943eea8996ef348eb845c498f9f354dd',1,'delegate.php']]],
   ['delete',['delete',['../classRedMatrix_1_1RedDAV_1_1RedFile.html#ab7ab7ba81fab28eb02382cfdfd80ecfe',1,'RedMatrix::RedDAV::RedFile']]],
-  ['delete_5fimported_5fitem',['delete_imported_item',['../zot_8php.html#adfeb9400ae6b726beec89f8f1e8fde72',1,'zot.php']]],
+  ['delete_5fimported_5fitem',['delete_imported_item',['../zot_8php.html#a2bcda2dd23975087f3627eb72fb6792b',1,'zot.php']]],
   ['delete_5fitem_5flowlevel',['delete_item_lowlevel',['../items_8php.html#a6b448675b71b00ee5ef798468dde4d22',1,'items.php']]],
   ['deletenode',['deletenode',['../html2bbcode_8php.html#a71a07f135d196ec5943b13f7b2e6a9b2',1,'html2bbcode.php']]],
   ['deliver',['deliver',['../classProtoDriver.html#a85e9063f6d0c304410cd246f7900ea1b',1,'ProtoDriver\deliver()'],['../classZotDriver.html#a876e3e0e4cad83c0b58c8696b344be6f',1,'ZotDriver\deliver()']]],

@@ -1884,7 +1884,7 @@ function process_rating_delivery($sender,$arr) {
 	}
 	else {
 		$x = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_sig, xlink_updated, xlink_static )
-			values( '%s', '%s', %d, '%s', '%s', 1 ) ",
+			values( '%s', '%s', %d, '%s', '%s', '%s', 1 ) ",
 			dbesc($sender['hash']),
 			dbesc($arr['target']),
 			intval($arr['rating']),

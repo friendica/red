@@ -2,7 +2,7 @@ var zot_8php =
 [
     [ "allowed_public_recips", "zot_8php.html#a703f528ade8382cf374e4119bd6f7859", null ],
     [ "build_sync_packet", "zot_8php.html#aa97b33b619dd7132a9274f852af6ceb5", null ],
-    [ "delete_imported_item", "zot_8php.html#adfeb9400ae6b726beec89f8f1e8fde72", null ],
+    [ "delete_imported_item", "zot_8php.html#a2bcda2dd23975087f3627eb72fb6792b", null ],
     [ "get_rpost_path", "zot_8php.html#a8e22dbc6f884be3644a892a876cbd972", null ],
     [ "import_author_zot", "zot_8php.html#ad149f1e98c0c5b88ff9147e6ee3f330d", null ],
     [ "import_directory_keywords", "zot_8php.html#a3bf11286c2619b4ca28e49d5b5ab374a", null ],
