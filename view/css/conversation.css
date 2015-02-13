@@ -261,7 +261,12 @@ a.wall-item-name-link {
 	cursor: default;
 }
 
+.item-verified {
+	color: darkgreen;
+	font-size: 1em !important;
+}
+
 .item-forged {
 	color: #FF0000;
-	font-size: 1.5em !important;
+	font-size: 1em !important;
 }
