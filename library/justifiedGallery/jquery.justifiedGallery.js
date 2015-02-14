@@ -1,7 +1,7 @@
-/*
- * Justified Gallery - v3.4.0
- * http://miromannino.com/projects/justified-gallery/
- * Copyright (c) 2014 Miro Mannino
+/*!
+ * Justified Gallery - v3.5.4
+ * http://miromannino.github.io/Justified-Gallery/
+ * Copyright (c) 2015 Miro Mannino
  * Licensed under the MIT license.
  */
 (function($) {
@@ -16,34 +16,37 @@
     // Default options
     var defaults = {
       sizeRangeSuffixes : {
-        'lt100': '_t', 
-        'lt240': '_m', 
-        'lt320': '_n', 
-        'lt500': '', 
-        'lt640': '_z', 
-        'lt1024': '_b'
+        'lt100': '',  // e.g. Flickr uses '_t'
+        'lt240': '',  // e.g. Flickr uses '_m' 
+        'lt320': '',  // e.g. Flickr uses '_n' 
+        'lt500': '',  // e.g. Flickr uses '' 
+        'lt640': '',  // e.g. Flickr uses '_z'
+        'lt1024': '', // e.g. Flickr uses '_b'
       },
       rowHeight : 120,
-      maxRowHeight : 0, //negative value = no limits, 0 = 1.5 * rowHeight
+      maxRowHeight : 0, // negative value = no limits, 0 = 1.5 * rowHeight
       margins : 1,
+      border: -1, // negative value = same as margins, 0 = disabled
+
       lastRow : 'nojustify', // or can be 'justify' or 'hide'
       justifyThreshold: 0.75, /* if row width / available space > 0.75 it will be always justified 
-                    (i.e. lastRow setting is not considered) */
+                                  (i.e. lastRow setting is not considered) */
       fixedHeight : false,
       waitThumbnailsLoad : true,
       captions : true,
       cssAnimation: false,
-      imagesAnimationDuration : 500, //ignored with css animations
-      captionSettings : { //ignored with css animations
+      imagesAnimationDuration : 500, // ignored with css animations
+      captionSettings : { // ignored with css animations
         animationDuration : 500,
         visibleOpacity : 0.7, 
         nonVisibleOpacity : 0.0 
       },
-      rel : null, //rewrite the rel of each analyzed links
-      target : null, //rewrite the target of all links
+      rel : null, // rewrite the rel of each analyzed links
+      target : null, // rewrite the target of all links
       extension : /\.[^.\\/]+$/,
       refreshTime : 100,
-      randomize : false
+      randomize : false,
+      ignoreElement: null // a comma seperated list of div element selectors to be ignored e.g.: '.someClass, #someId'
     };
 
     function getSuffix(width, height, context) {
@@ -136,12 +139,20 @@
       }
     }
 
+    function imgFromEntry($entry) {
+      var $img = $entry.find('> img');
+      if ($img.length === 0) $img = $entry.find('> a > img');    
+      return $img;
+    }
+
     function displayEntry($entry, x, y, imgWidth, imgHeight, rowHeight, context) {
-      var $image = $entry.find('img');
+      var $image = imgFromEntry($entry);
       $image.css('width', imgWidth);
       $image.css('height', imgHeight);
-      $image.css('margin-left', - imgWidth / 2);
-      $image.css('margin-top', - imgHeight / 2);
+      //if ($entry.get(0) === $image.parent().get(0)) { // this creates an error in link_around_img test
+        $image.css('margin-left', - imgWidth / 2);
+        $image.css('margin-top', - imgHeight / 2);
+      //}
       $entry.width(imgWidth);
       $entry.height(rowHeight);
       $entry.css('top', y);
@@ -165,9 +176,9 @@
       }
 
       if ($image.data('jg.loaded') === 'skipped') {
-        $image.one('load', function() {
+        onImageEvent(imageSrc, function() {
           showImg($entry, loadNewImage, context);
-          $image.data('jg.loaded', 'loaded');
+          $image.data('jg.loaded', true);
         });
       } else {
         showImg($entry, loadNewImage, context);
@@ -216,8 +227,8 @@
       var settings = context.settings;
       var i, $entry, $image, imgAspectRatio, newImgW, newImgH, justify = true;
       var minHeight = 0;
-      var availableWidth = context.galleryWidth - (
-                          (context.buildingRow.entriesBuff.length - 1) * settings.margins);
+      var availableWidth = context.galleryWidth - 2 * context.border - (
+                            (context.buildingRow.entriesBuff.length - 1) * settings.margins);
       var rowHeight = availableWidth / context.buildingRow.aspectRatio;
       var justificable = context.buildingRow.width / availableWidth > settings.justifyThreshold;
 
@@ -237,11 +248,12 @@
       if (isLastRow && !justificable && settings.lastRow === 'nojustify') justify = false;
 
       for (i = 0; i < context.buildingRow.entriesBuff.length; i++) {
-        $image = context.buildingRow.entriesBuff[i].find('img');
+        $image = imgFromEntry(context.buildingRow.entriesBuff[i]);
         imgAspectRatio = $image.data('jg.imgw') / $image.data('jg.imgh');
 
         if (justify) {
-          newImgW = rowHeight * imgAspectRatio;
+          newImgW = (i === context.buildingRow.entriesBuff.length - 1) ? availableWidth 
+                      : rowHeight * imgAspectRatio;
           newImgH = rowHeight;
 
           /* With fixedHeight the newImgH must be greater than rowHeight. 
@@ -252,13 +264,15 @@
             newImgW = settings.rowHeight * imgAspectRatio;
             newImgH = settings.rowHeight;
           }*/
+
         } else {
           newImgW = settings.rowHeight * imgAspectRatio;
           newImgH = settings.rowHeight;
         }
 
-        $image.data('jg.imgw', Math.ceil(newImgW));
-        $image.data('jg.imgh', Math.ceil(newImgH));
+        availableWidth -= Math.round(newImgW);
+        $image.data('jg.jimgw', Math.round(newImgW));
+        $image.data('jg.jimgh', Math.ceil(newImgH));
         if (i === 0 || minHeight > newImgH) minHeight = newImgH;
       }
 
@@ -273,12 +287,12 @@
       context.buildingRow.entriesBuff = [];
       context.buildingRow.aspectRatio = 0;
       context.buildingRow.width = 0;
-      context.offY = 0;
+      context.offY = context.border;
     }
 
     function flushRow(context, isLastRow) {
       var settings = context.settings;
-      var $entry, $image, minHeight, buildingRowRes, offX = 0;
+      var $entry, $image, minHeight, buildingRowRes, offX = context.border;
 
       //DEBUG// console.log('flush (isLastRow: ' + isLastRow + ')');
 
@@ -298,14 +312,14 @@
 
       for (var i = 0; i < context.buildingRow.entriesBuff.length; i++) {
         $entry = context.buildingRow.entriesBuff[i];
-        $image = $entry.find('img');
-        displayEntry($entry, offX, context.offY, $image.data('jg.imgw'), 
-                     $image.data('jg.imgh'), minHeight, context);
-        offX += $image.data('jg.imgw') + settings.margins;
+        $image = imgFromEntry($entry);
+        displayEntry($entry, offX, context.offY, $image.data('jg.jimgw'), 
+                     $image.data('jg.jimgh'), minHeight, context);
+        offX += $image.data('jg.jimgw') + settings.margins;
       }
 
       //Gallery Height
-      context.$gallery.height(context.offY + minHeight +
+      context.$gallery.height(context.offY + minHeight + context.border + 
         (context.spinner.active ? context.spinner.$el.innerHeight() : 0)
       );
 
@@ -375,7 +389,7 @@
       console.log('images status: ');
       for (var i = 0; i < context.entries.length; i++) {
         var $entry = $(context.entries[i]);
-        var $image = $entry.find('img');
+        var $image = imgFromEntry($entry);
         console.log(i + ' (alt: ' + $image.attr('alt') + 'loaded: ' + $image.data('jg.loaded') + ')');
       }*/
 
@@ -385,12 +399,12 @@
       
       for (var i = context.lastAnalyzedIndex + 1; i < context.entries.length; i++) {
         var $entry = $(context.entries[i]);
-        var $image = $entry.find('img');
+        var $image = imgFromEntry($entry);
 
         if ($image.data('jg.loaded') === true || $image.data('jg.loaded') === 'skipped') {
           isLastRow = i >= context.entries.length - 1;
 
-          var availableWidth = context.galleryWidth - (
+          var availableWidth = context.galleryWidth - 2 * context.border - (
                                (context.buildingRow.entriesBuff.length - 1) * settings.margins);
           var imgAspectRatio = $image.data('jg.imgw') / $image.data('jg.imgh');
           if (availableWidth / (context.buildingRow.aspectRatio + imgAspectRatio) < settings.rowHeight) {
@@ -475,6 +489,7 @@
       }
       
       checkOrConvertNumber(settings, 'margins');
+      checkOrConvertNumber(settings, 'border');
 
       if (settings.lastRow !== 'nojustify' &&
           settings.lastRow !== 'justify' &&
@@ -516,6 +531,30 @@
 
     }
 
+    function onImageEvent(imageSrc, onLoad, onError) {
+      if (!onLoad && !onError) {
+        return;
+      }
+      /* Check if the image is loaded or not using another image object.
+       We cannot use the 'complete' image property, because some browsers,
+       with a 404 set complete = true */
+      var memImage = new Image();
+      var $memImage = $(memImage);
+      if (onLoad) {
+        $memImage.one('load', function () {
+          $memImage.off('load error');
+          onLoad(memImage);
+        });
+      }
+      if (onError) {
+        $memImage.one('error', function() {
+          $memImage.off('load error');
+          onError(memImage);
+        });
+      }
+      memImage.src = imageSrc;
+    }
+
     return this.each(function (index, gallery) {
 
       var $gallery = $(gallery);
@@ -529,10 +568,15 @@
 
         // Spinner init
         var $spinner = $('<div class="spinner"><span></span><span></span><span></span></div>');
+        var extendedSettings = $.extend({}, defaults, arg);
 
+        var border = extendedSettings.border >= 0 ? extendedSettings.border : extendedSettings.margins;
+
+	var ignoreElement = extendedSettings.ignoreElement;
+	
         //Context init
         context = {
-          settings : $.extend({}, defaults, arg),
+          settings : extendedSettings,
           imgAnalyzerTimeout : null,
           entries : null,
           buildingRow : {
@@ -546,7 +590,8 @@
                   * must be greater than 1, else the analyzeImages will loop */
             flushed : 0 //flushed rows without a yield
           },
-          offY : 0,
+          border : border,
+          offY : border,
           spinner : {
             active : false,
             phase : 0,
@@ -556,7 +601,7 @@
             intervalId : null
           },
           checkWidthIntervalId : null,
-          galleryWidth : $gallery.width(),
+          galleryWidth :  $gallery.width(),
           $gallery : $gallery
         };
 
@@ -571,12 +616,13 @@
         // In this case we don't rewind, and analyze all the images
       } else {
         context.settings = $.extend({}, context.settings, arg);
+        context.border = context.settings.border >= 0 ? context.settings.border : context.settings.margins;
         rewind(context);
       }
       
       checkSettings(context);
 
-      context.entries = $gallery.find('> a, > div:not(.spinner, #page-end)').toArray();
+      context.entries = $gallery.find('> a, > div:not(.spinner, ' + ignoreElement + ')').toArray();
       if (context.entries.length === 0) return;
 
       // Randomize
@@ -588,9 +634,12 @@
       }
 
       var imagesToLoad = false;
+      var skippedImages = false;
       $.each(context.entries, function (index, entry) {
         var $entry = $(entry);
-        var $image = $entry.find('img');
+        var $image = imgFromEntry($entry);
+
+        $entry.addClass('jg-entry');
 
         if ($image.data('jg.loaded') !== true && $image.data('jg.loaded') !== 'skipped') {
 
@@ -612,6 +661,7 @@
             $image.data('jg.imgw', width);
             $image.data('jg.imgh', height);
             $image.data('jg.loaded', 'skipped');
+            skippedImages = true;
             startImgAnalyzer(context, false);
             return true;
           }
@@ -627,32 +677,23 @@
             startLoadingSpinnerAnimation(context.spinner);
           }
 
-          /* Check if the image is loaded or not using another image object.
-            We cannot use the 'complete' image property, because some browsers, 
-            with a 404 set complete = true */
-          var loadImg = new Image();
-          var $loadImg = $(loadImg);
-          $loadImg.one('load', function imgLoaded () {
+          onImageEvent(imageSrc, function imgLoaded (loadImg) {
             //DEBUG// console.log('img load (alt: ' + $image.attr('alt') + ')');
-            $image.off('load error');
             $image.data('jg.imgw', loadImg.width);
             $image.data('jg.imgh', loadImg.height);
             $image.data('jg.loaded', true);
             startImgAnalyzer(context, false);
-          });
-          $loadImg.one('error', function imgLoadError () {
+          }, function imgLoadError () {
             //DEBUG// console.log('img error (alt: ' + $image.attr('alt') + ')');
-            $image.off('load error');
             $image.data('jg.loaded', 'error');
             startImgAnalyzer(context, false);
           });
-          loadImg.src = imageSrc;
 
         }
 
       });
 
-      if (!imagesToLoad) startImgAnalyzer(context, false);
+      if (!imagesToLoad && !skippedImages) startImgAnalyzer(context, false);
       checkWidth(context);
     });
 
