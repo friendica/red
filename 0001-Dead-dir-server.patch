@@ -1,0 +1,24 @@
+From 4bb329caa45633526d9915796fe268500a08af23 Mon Sep 17 00:00:00 2001
+From: Thomas Willingham <beardyunixer@beardyunixer.com>
+Date: Sat, 14 Feb 2015 16:07:45 +0000
+Subject: [PATCH] Dead dir server
+
+---
+ boot.php | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/boot.php b/boot.php
+index f632931..952832d 100755
+--- a/boot.php
++++ b/boot.php
+@@ -84,7 +84,6 @@ $DIRECTORY_FALLBACK_SERVERS = array(
+ 	'https://red.zottel.red',
+ 	'https://red.pixelbits.de',
+ 	'https://my.federated.social',
+-	'https://whogotzot.com',
+ 	'https://redmatrix.nl'
+ );
+ 
+-- 
+1.9.1
+
