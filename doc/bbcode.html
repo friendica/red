@@ -49,26 +49,31 @@
 
 <p>Red Matrix specific codes</p>
 <ul class="listbullet" style="list-style-type: circle;">
-<li>[&amp;copy;] &copy;  This works for many HTML entities<br />
-<li>[zrl]https://redmatrix.me[/zrl] Magic-auth version of [url] tag<br />
-<li>[zmg]https://redmatrix.me/some/photo.jpg[/zmg] Magic-auth version of [img] tag<br />
-<br />
-<li>[observer=1]Text to display if observer is authenticated in the matrix[/observer]
-<li>[observer=0]Text to display if observer is <strong>not</strong> authenticated in the matrix[/observer]<br />
-<li>[observer.baseurl] website of observer <br />
-<li>[observer.url] channel URL of observer <br />
-<li>[observer.name] name of observer <br />
-<li>[observer.address] address (zot-id) of observer <br />
-<li>[observer.photo] profile photo of observer <br />
-<br />
-<li>[spoiler] for hiding spoilers<br /><br />
+<li>[&amp;copy;] &copy;  This works for many HTML entities</li>
+<li>[zrl]https://redmatrix.me[/zrl] Magic-auth version of [url] tag</li>
+<li>[zmg]https://redmatrix.me/some/photo.jpg[/zmg] Magic-auth version of [img] tag<br /></li>
 
-<li>[rpost=title]Text to post[/rpost] The observer will be returned to their home hub to enter a post with the specified title and body. Both are optional <br />
-<li>[qr]text to post[/qr] - create a QR code.<br />
-<li>[toc] - create a table of content in a webpage (level h1,...,h4).<br />
-<br /><br />
+<li>[observer=1]Text to display if observer is authenticated in the matrix[/observer]</li>
+<li>[observer=0]Text to display if observer is <strong>not</strong> authenticated in the matrix[/observer]</li>
+<li>[observer.baseurl] website of observer</li>
+<li>[observer.url] channel URL of observer</li>
+<li>[observer.name] name of observer</li>
+<li>[observer.address] address (zot-id) of observer</li>
+<li>[observer.photo] profile photo of observer<br /></li>
+
+<li>[spoiler] for hiding spoilers<br /><br /></li>
+
+<li>[rpost=title]Text to post[/rpost] The observer will be returned to their home hub to enter a post with the specified title and body. Both are optional</li>
+<li>[qr]text to post[/qr] - create a QR code.</li>
+<li>[toc] - create a table of content in a webpage. Please refer to the <a href="http://ndabas.github.io/toc/" target="_blank">original jquery toc</a> to get more explanations.
+	<ul>
+		<li>Optional param: 'data-toc'. If ommited the default is 'body'</li>
+		<li>Optional param: 'data-toc-headings'. If ommited the default is 'h1,h2,h3'</li>
+		<li>Full example: [toc data-toc='div.page-body' data-toc-headings='h1,h2']</li>
+	</ul>
+</li>
 </ul>
-
+<br />
 <p>These require a suitable map plugin/addon such as openstreetmap or else the result will be blank</p>
 <ul>
 <li>[map] Generate an inline map using the current browser coordinates of the poster, if browser location is enabled<br />
