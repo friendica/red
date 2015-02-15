@@ -9,11 +9,11 @@ head_add_css('library/jRange/jquery.range.css');
 head_add_css('view/css/conversation.css');
 head_add_css('view/css/widgets.css');
 head_add_css('view/css/colorbox.css');
-head_add_css('library/justifiedGallery/dist/css/justifiedGallery.css');
+head_add_css('library/justifiedGallery/justifiedGallery.css');
 head_add_css('library/bootstrap-tagsinput/bootstrap-tagsinput.css');
 head_add_js('jquery.js');
 head_add_js('jquery-migrate-1.1.1.js');
-head_add_js('library/justifiedGallery/dist/js/jquery.justifiedGallery.js');
+head_add_js('library/justifiedGallery/jquery.justifiedGallery.js');
 
 //head_add_js('jquery-compat.js');
 head_add_js('spin.js');
