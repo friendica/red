@@ -119,12 +119,15 @@ function rate_content(&$a) {
 		dbesc($channel['channel_hash']),
 		dbesc($a->data['target'])
 	);
-	if($r)
+	if($r) {
 		$a->data['xlink'] = $r[0];				
-
-	$rating_val = $r[0]['xlink_rating'];
-	$rating_text = $r[0]['xlink_rating_text'];
-
+		$rating_val = $r[0]['xlink_rating'];
+		$rating_text = $r[0]['xlink_rating_text'];
+	}
+	else {
+		$rating_val = 0;
+		$rating_text = '';
+	}
 
 	// if unset default to enabled
 	if($poco_rating === false)

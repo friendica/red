@@ -644,7 +644,7 @@ function item_post(&$a) {
 		}
 	}
 
-	$item_unseen =  ((local_channel() != $profile_uid) ? 1 : 0);
+	$item_unseen =  1;
 	
 	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$item_flags = $item_flags | ITEM_WALL;
