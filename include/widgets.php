@@ -963,3 +963,10 @@ function widget_rating($arr) {
 	return $o;
 
 }
+
+// used by site ratings pages to provide a return link
+function widget_pubsites() {
+	if(get_app()->poi)
+		return;
+	return '<div class="widget"><ul class="nav nav-pills"><li><a href="pubsites">' . t('Public Hubs') . '</a></li></ul></div>';
+}
