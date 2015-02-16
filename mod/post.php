@@ -467,7 +467,7 @@ function post_post(&$a) {
 	 * tells us we need to unencapsulate the AES-256-CBC content using the site private key
 	 */
 
-	if(array_key_exists('iv',$data)) {
+	if($data && array_key_exists('iv',$data)) {
 		$encrypted_packet = true;
 		$data = crypto_unencapsulate($data,get_config('system','prvkey'));
 		logger('mod_zot: decrypt1: ' . $data, LOGGER_DATA);
