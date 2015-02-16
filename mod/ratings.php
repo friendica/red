@@ -92,7 +92,8 @@ function ratings_content(&$a) {
 		return;
 
 	$site_target = ((array_key_exists('target',$a->data) && array_key_exists('site_url',$a->data['target'])) ?
-			$a->data['target']['site_url'] : '');
+		'<a href="' . $a->data['target']['site_url'] . '" >' . $a->data['target']['site_url'] . '</a>' : '');
+
 
 	$o = replace_macros(get_markup_template('prep.tpl'),array(
 		'$header' => t('Ratings'),

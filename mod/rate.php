@@ -21,6 +21,13 @@ function rate_init(&$a) {
 		if($r) {
 			$a->poi = $r[0];
 		}
+		else {
+			$r = q("select * from site where site_url like '%s' ",
+				dbesc('%' . $target)
+			);
+			if($r)
+				$a->data['site'] = strtolower($r[0]);
+		}
 	}
 
 
@@ -145,6 +152,8 @@ function rate_content(&$a) {
 
 	$o = replace_macros(get_markup_template('rating_form.tpl'),array(
 		'$header' => t('Rating'),
+		'$website' => t('Website:'),
+		'$site' => (($a->data['site']) ? '<a href="' . $a->data['site']['site_url'] . '" >' . $a->data['site']['site_url'] . '</a>' : ''),
 		'target' => $a->data['target'],
 		'$tgt_name' => (($a->poi && $a->poi['xchan_name']) ? $a->poi['xchan_name'] : sprintf( t('Remote Channel [%s] (not yet known on this site)'), substr($a->data['target'],0,16))),
 		'$lbl_rating'     => t('Rating (this information is public)'),
