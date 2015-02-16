@@ -977,10 +977,10 @@ function photos_content(&$a) {
 
 			if($r) {
 
-				foreach($r as $item) {
-					like_puller($a,$item,$alike,'like');
-					like_puller($a,$item,$dlike,'dislike');
-				}
+//				foreach($r as $item) {
+//					like_puller($a,$item,$alike,'like');
+//					like_puller($a,$item,$dlike,'dislike');
+//				}
 
 				$like_count = ((x($alike,$link_item['mid'])) ? $alike[$link_item['mid']] : '');
 				$like_list = ((x($alike,$link_item['mid'])) ? $alike[$link_item['mid'] . '-l'] : '');
