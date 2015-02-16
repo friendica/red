@@ -25,8 +25,10 @@ function rate_init(&$a) {
 			$r = q("select * from site where site_url like '%s' ",
 				dbesc('%' . $target)
 			);
-			if($r)
-				$a->data['site'] = strtolower($r[0]);
+			if($r) {
+				$a->data['site'] = $r[0];
+				$a->data['site']['site_url'] = strtolower($r[0]['site_url']);
+			}
 		}
 	}
 
