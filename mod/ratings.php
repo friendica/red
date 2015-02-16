@@ -35,7 +35,7 @@ function ratings_init(&$a) {
 
 	$results = false;
 
-	$x = z_fetch_url($url . '/ratingsearch/' . $hash);
+	$x = z_fetch_url($url . '/ratingsearch/' . urlencode($hash));
 
 
 	if($x['success'])
@@ -48,8 +48,9 @@ function ratings_init(&$a) {
 		return;
 	} 
 
-	$a->poi = $results['target'];
-
+	if(array_key_exists('xchan_hash',$results['target']))
+		$a->poi = $results['target'];
+	
 	$friends = array();
 	$others = array();
 
@@ -62,9 +63,9 @@ function ratings_init(&$a) {
 		}
 	}
 
-	$a->data = array_merge($friends,$others);
+	$a->data = array('target' => $results['target'], 'results' => array_merge($friends,$others));
 
-	if(! $a->data) {
+	if(! $a->data['results']) {
 		notice( t('No ratings') . EOL);
 	}
 
@@ -90,11 +91,17 @@ function ratings_content(&$a) {
 	if(! $poco_rating)
 		return;
 
+	$site_target = ((array_key_exists('target',$a->data) && array_key_exists('site_url',$a->data['target'])) ?
+		'<a href="' . $a->data['target']['site_url'] . '" >' . $a->data['target']['site_url'] . '</a>' : '');
+
+
 	$o = replace_macros(get_markup_template('prep.tpl'),array(
 		'$header' => t('Ratings'),
 		'$rating_lbl' => t('Rating: ' ),
+		'$website' => t('Website: '),
+		'$site' => $site_target,
 		'$rating_text_lbl' => t('Description: '),
-		'$raters' => $a->data
+		'$raters' => $a->data['results']
 	));
 
 	return $o;

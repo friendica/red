@@ -33,17 +33,28 @@ function ratingsearch_init(&$a) {
 	);
 
 	if($p)
-		$ret['target']  = $p[0];
+		$target = $p[0]['xchan_hash'];
 	else {
-		$ret['message'] = 'channel not found';
-		json_return_and_die($ret);
+		$p = q("select * from site where site_url like '%s' ",
+			dbesc('%' . $hash)
+		);
+		if($p) {
+			$target = strtolower($hash);
+		}
+		else {
+			$ret['message'] = 'Rating target not found';
+			json_return_and_die($ret);
+		}
 	}
+
+	if($p)
+		$ret['target']  = $p[0];
 
 	$ret['success'] = true;
 
 	$r = q("select * from xlink left join xchan on xlink_xchan = xchan_hash 
 		where xlink_link = '%s' and xlink_rating != 0 and xlink_static = 1 order by xchan_name asc",
-		dbesc($p[0]['xchan_hash'])
+		dbesc($target)
 	);
 
 	if($r) {

@@ -164,9 +164,16 @@ function home_content(&$a, $update = 0, $load = false) {
 			}
 
 			require_once('include/identity.php');
-			$sys = get_sys_channel();
-			$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";
-			$a->data['firehose'] = intval($sys['channel_id']);
+
+			if(get_config('system','site_firehose')) {
+				require_once('include/security.php');
+				$uids = " and item.uid in ( " . stream_perms_api_uids(PERMS_PUBLIC) . " ) and item_private = 0  and (item_flags & " . intval(ITEM_WALL) . " ) > 0 ";
+			}
+			else {
+				$sys = get_sys_channel();
+				$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";
+				$a->data['firehose'] = intval($sys['channel_id']);
+			}
 
 			$page_mode = 'list';
 
@@ -198,6 +205,7 @@ function home_content(&$a, $update = 0, $load = false) {
 						ORDER BY $ordering DESC $pager_sql ",
 						intval(ABOOK_FLAG_BLOCKED)
 					);
+
 
 				}
 

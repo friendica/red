@@ -21,6 +21,15 @@ function rate_init(&$a) {
 		if($r) {
 			$a->poi = $r[0];
 		}
+		else {
+			$r = q("select * from site where site_url like '%s' ",
+				dbesc('%' . $target)
+			);
+			if($r) {
+				$a->data['site'] = $r[0];
+				$a->data['site']['site_url'] = strtolower($r[0]['site_url']);
+			}
+		}
 	}
 
 
@@ -119,12 +128,15 @@ function rate_content(&$a) {
 		dbesc($channel['channel_hash']),
 		dbesc($a->data['target'])
 	);
-	if($r)
+	if($r) {
 		$a->data['xlink'] = $r[0];				
-
-	$rating_val = $r[0]['xlink_rating'];
-	$rating_text = $r[0]['xlink_rating_text'];
-
+		$rating_val = $r[0]['xlink_rating'];
+		$rating_text = $r[0]['xlink_rating_text'];
+	}
+	else {
+		$rating_val = 0;
+		$rating_text = '';
+	}
 
 	// if unset default to enabled
 	if($poco_rating === false)
@@ -142,6 +154,8 @@ function rate_content(&$a) {
 
 	$o = replace_macros(get_markup_template('rating_form.tpl'),array(
 		'$header' => t('Rating'),
+		'$website' => t('Website:'),
+		'$site' => (($a->data['site']) ? '<a href="' . $a->data['site']['site_url'] . '" >' . $a->data['site']['site_url'] . '</a>' : ''),
 		'target' => $a->data['target'],
 		'$tgt_name' => (($a->poi && $a->poi['xchan_name']) ? $a->poi['xchan_name'] : sprintf( t('Remote Channel [%s] (not yet known on this site)'), substr($a->data['target'],0,16))),
 		'$lbl_rating'     => t('Rating (this information is public)'),

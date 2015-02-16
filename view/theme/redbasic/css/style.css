@@ -992,7 +992,7 @@ nav .acpopup {
 	margin-bottom: 10px;
 }
 
-.edit-event-link, .plink-event-link {
+.edit-event-link, .plink-event-link, .drop-event-link {
 	float: left;
 	margin-top: 4px;
 	margin-right: 4px;

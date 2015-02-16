@@ -1,6 +1,6 @@
 <h3>{{$header}}</h3>
 
-<div class="rating-target-name">{{$tgt_name}}</div>
+<div class="rating-target-name">{{if $site}}{{$website}} {{$site}}{{else}}{{$tgt_name}}{{/if}}</div>
 
 <h3>{{$lbl_rating}}</h3>
 

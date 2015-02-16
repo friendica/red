@@ -185,29 +185,6 @@ function poco_load($xchan = '',$url = null) {
 	
 		$total ++;
 
-
-		$r = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 0 limit 1",
-			dbesc($xchan),
-			dbesc($hash)
-		);
-
-		if(! $r) {
-			q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_updated, xlink_static ) values ( '%s', '%s', %d, '%s', '%s', 0 ) ",
-				dbesc($xchan),
-				dbesc($hash),
-				intval($rating),
-				dbesc($rating_text),
-				dbesc(datetime_convert())
-			);
-		}
-		else {
-			q("update xlink set xlink_updated = '%s', xlink_rating = %d, xlink_rating_text = '%s' where xlink_id = %d",
-				dbesc(datetime_convert()),
-				intval($rating),
-				dbesc($rating_text),
-				intval($r[0]['xlink_id'])
-			);
-		}
 	}
 	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 

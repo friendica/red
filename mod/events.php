@@ -273,6 +273,10 @@ function events_content(&$a) {
 			$mode = 'add';
 			$item_id = intval(argv(2));
 		}
+		if(argc() > 2 && argv(1) === 'drop') {
+			$mode = 'drop';
+			$event_id = argv(2);
+		}
 		if(argv(1) === 'new') {
 			$mode = 'new';
 			$event_id = '';
@@ -412,6 +416,8 @@ function events_content(&$a) {
 				$last_date = $d;
 // FIXME
 				$edit = (($rr['item_flags'] & ITEM_WALL) ? array($a->get_baseurl().'/events/event/'.$rr['event_hash'],t('Edit event'),'','') : null);
+				$drop = array($a->get_baseurl().'/events/drop/'.$rr['event_hash'],t('Delete event'),'','');
+
 				$title = strip_tags(html_entity_decode(bbcode($rr['summary']),ENT_QUOTES,'UTF-8'));
 				if(! $title) {
 					list($title, $_trash) = explode("<br",bbcode($rr['desc']),2);
@@ -425,6 +431,7 @@ function events_content(&$a) {
 					'hash' => $rr['event_hash'],
 					'start'=> $start,
 					'end' => $end,
+					'drop' => $drop,
 					'allDay' => false,
 					'title' => $title,
 					
@@ -477,6 +484,30 @@ function events_content(&$a) {
 		
 		return $o;
 		
+	}
+
+	if($mode === 'drop' && $event_id) {
+		$r = q("SELECT * FROM `event` WHERE event_hash = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($event_id),
+			intval(local_channel())
+		);
+		if($r) {
+			$r = q("delete from event where event_hash = '%s' and uid = %d limit 1",
+				dbesc($event_id),
+				intval(local_channel())
+			);
+			if($r) {
+				$r = q("update item set resource_type = '', resource_id = '' where resource_type = 'event' and resource_id = '%s' and uid = %d",
+					dbesc($event_id),
+					intval(local_channel())
+				);
+				info( t('Event removed') . EOL);
+			}
+			else {
+				notice( t('Failed to remove event' ) . EOL);
+			}
+			goaway(z_root() . '/events');
+		}
 	}
 
 	if($mode === 'edit' && $event_id) {

@@ -2447,7 +2447,7 @@ function import_site($arr,$pubkey) {
 	}
 	
 	$directory_url = htmlspecialchars($arr['directory_url'],ENT_COMPAT,'UTF-8',false);
-	$url = htmlspecialchars($arr['url'],ENT_COMPAT,'UTF-8',false);
+	$url = htmlspecialchars(strtolower($arr['url']),ENT_COMPAT,'UTF-8',false);
 	$sellpage = htmlspecialchars($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
 	$site_location = htmlspecialchars($arr['location'],ENT_COMPAT,'UTF-8',false);
 	$site_realm = htmlspecialchars($arr['realm'],ENT_COMPAT,'UTF-8',false);
