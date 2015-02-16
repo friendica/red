@@ -32,12 +32,19 @@ function ratingsearch_init(&$a) {
 		dbesc($hash . '%')
 	);
 
+	if(! $p) {
+		$p = q("select * from site where site_url like '%s' ",
+			dbesc('%' . $hash)
+		);
+		
+		if(! $p) {
+			$ret['message'] = 'channel not found';
+			json_return_and_die($ret);
+		}
+	}
+
 	if($p)
 		$ret['target']  = $p[0];
-	else {
-		$ret['message'] = 'channel not found';
-		json_return_and_die($ret);
-	}
 
 	$ret['success'] = true;
 
