@@ -625,6 +625,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = preg_replace("/\[table border=1\](.*?)\[\/table\]/sm", '<table border="1" >$1</table>' ,$Text);
 		$Text = preg_replace("/\[table border=0\](.*?)\[\/table\]/sm", '<table border="0" >$1</table>' ,$Text);
 	}
+	$Text = str_replace('</tr><br /><tr>',"</tr>\n<tr>",$Text);
 	$Text = str_replace('[hr]','<hr />', $Text);
 
 	// This is actually executed in prepare_body()
