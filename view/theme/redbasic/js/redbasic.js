@@ -1,6 +1,10 @@
 
 $(document).ready(function() {
 
+if($(window).width() < 767) {
+	$('main').css('width', $(window).width() + 231 );
+}
+
 $('#expand-aside').click(function() {
 	$('#expand-aside-icon').toggleClass('icon-circle-arrow-right').toggleClass('icon-circle-arrow-left');
 	$('main').toggleClass('region_1-on');
