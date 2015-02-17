@@ -1,9 +1,18 @@
 
 $(document).ready(function() {
 
-if($(window).width() < 767) {
-	$('main').css('width', $(window).width() + 231 );
+// CSS3 calc() fallback (for unsupported browsers)
+$('body').append('<div id="css3-calc" style="width: 10px; width: calc(10px + 10px); display: none;"></div>');
+if( $('#css3-calc').width() == 10) {
+	$(window).resize(function() {
+		if($(window).width() < 767) {
+			$('main').css('width', $(window).width() + 231 );
+		} else {
+			$('main').css('width', '100%' );
+		}
+	});
 }
+$('#css3-calc').remove(); // Remove the test element
 
 $('#expand-aside').click(function() {
 	$('#expand-aside-icon').toggleClass('icon-circle-arrow-right').toggleClass('icon-circle-arrow-left');

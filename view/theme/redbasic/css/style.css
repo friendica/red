@@ -1395,14 +1395,6 @@ div.jGrowl div.jGrowl-notification {
 	border-top: none;
 }
 
-#search-text-ac .autocomplete {
-	margin-top: 2px;
-	margin-left: $radiuspx;
-	border: 1px solid #ccc;
-	border-top: none;
-	width: calc(197px - $radiuspx * 2) !important;
-}
-
 #recip-ac .autocomplete,
 #poke-recip-ac .autocomplete,
 #id-name-ac .autocomplete,
@@ -1560,6 +1552,7 @@ header {
 }
 
 .acl-list-item {
+	width: 48%; /* fallback if browser does not support calc() */
 	width: calc(50% - 10px);
 	border: 1px solid $acl_bordercolour;
 	margin: 0px 0px 10px 10px;
@@ -2353,6 +2346,7 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 	}
 
 	.acl-list-item {
+		width: 98%; /* fallback if browser does not support calc() */
 		width: calc(100% - 10px);
 	}
 
