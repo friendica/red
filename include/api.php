@@ -808,8 +808,8 @@ require_once('include/items.php');
 
 		require_once('include/security.php');
 
-		$lastwall = q("SELECT * from item where 1
-			and item_private = 0 and item_restrict = 0
+		$lastwall = q("SELECT * from item where
+			item_private = 0 and item_restrict = 0
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'

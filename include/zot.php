@@ -2243,6 +2243,11 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 	$r = q("select * from xprof where xprof_hash = '%s' limit 1",
 		dbesc($hash)
 	);
+	
+	$age = intval($arr['xprof_age']);
+	if($age > 150) 
+		$age = 150;
+		
 	if($r) {
 		$update = false;
 		foreach($r[0] as $k => $v) {
@@ -2271,7 +2276,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 				where xprof_hash = '%s'",
 				dbesc($arr['xprof_desc']),
 				dbesc($arr['xprof_dob']),
-				intval($arr['xprof_age']),
+				$age,
 				dbesc($arr['xprof_gender']),
 				dbesc($arr['xprof_marital']),
 				dbesc($arr['xprof_sexual']),
@@ -2294,7 +2299,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 			dbesc($arr['xprof_hash']),
 			dbesc($arr['xprof_desc']),
 			dbesc($arr['xprof_dob']),
-			intval($arr['xprof_age']),
+			$age,
 			dbesc($arr['xprof_gender']),
 			dbesc($arr['xprof_marital']),
 			dbesc($arr['xprof_sexual']),
