@@ -1664,7 +1664,7 @@ function get_responses($conv_responses,$response_verbs,$ob,$item) {
 		if(count($ret[$v]['list']) > MAX_LIKERS) {
 			$ret[$v]['list_part'] = array_slice($ret[$v]['list'], 0, MAX_LIKERS);
 			array_push($ret[$v]['list_part'], '<a href="#" data-toggle="modal" data-target="#' . $v . 'Modal-' 
-				. $ob->get_id() . '"><b>' . t('View all') . '</b></a>');
+				. (($ob) ? $ob->get_id() : $item['id']) . '"><b>' . t('View all') . '</b></a>');
 		} 
 		else {
 			$ret[$v]['list_part'] = '';

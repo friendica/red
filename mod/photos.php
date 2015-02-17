@@ -974,13 +974,21 @@ function photos_content(&$a) {
 			$like = '';
 			$dislike = '';
 
+			$conv_responses = array(
+				'like' => array('title' => t('Likes','title')),'dislike' => array('title' => t('Dislikes','title')),
+				'agree' => array('title' => t('Agree','title')),'disagree' => array('title' => t('Disagree','title')), 'abstain' => array('title' => t('Abstain','title')), 
+				'attendyes' => array('title' => t('Attending','title')), 'attendno' => array('title' => t('Not attending','title')), 'attendmaybe' => array('title' => t('Might attend','title'))
+			);
+
+
+
 
 			if($r) {
 
-//				foreach($r as $item) {
-//					like_puller($a,$item,$alike,'like');
-//					like_puller($a,$item,$dlike,'dislike');
-//				}
+				foreach($r as $item) {
+					builtin_activity_puller($item, $conv_responses);
+				}
+
 
 				$like_count = ((x($alike,$link_item['mid'])) ? $alike[$link_item['mid']] : '');
 				$like_list = ((x($alike,$link_item['mid'])) ? $alike[$link_item['mid'] . '-l'] : '');
@@ -1084,6 +1092,13 @@ function photos_content(&$a) {
 		$dislike_e = $dislike;
 
 
+		$response_verbs = array('like');
+		if(feature_enabled($owner_uid,'dislike'))
+			$response_verbs[] = 'dislike';
+
+
+		$responses = get_responses($conv_responses,$response_verbs,'',$link_item);
+
 		$photo_tpl = get_markup_template('photo_view.tpl');
 		$o .= replace_macros($photo_tpl, array(
 			'$id' => $link_item['id'], //$ph[0]['id'],
@@ -1098,6 +1113,7 @@ function photos_content(&$a) {
 			'$unknown' => t('Unknown'),
 			'$tag_hdr' => t('In This Photo:'),
 			'$tags' => $tags,
+			'responses' => $responses,
 			'$edit' => $edit,	
 			'$likebuttons' => $likebuttons,
 			'$like' => $like_e,
