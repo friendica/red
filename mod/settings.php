@@ -114,6 +114,12 @@ function settings_post(&$a) {
 		check_form_security_token_redirectOnErr('/settings/featured', 'settings_featured');
 
 		call_hooks('feature_settings_post', $_POST);
+
+		if($_POST['dspr-submit']) {
+			set_pconfig(local_channel(),'system','diaspora_public_comments',intval($_POST['dspr_pubcomment']));
+			info( t('Diaspora Policy Settings updated.') . EOL);
+		}
+
 		build_sync_packet();
 		return;
 	}
@@ -648,18 +654,31 @@ function settings_content(&$a) {
 	}
 	if((argc() > 1) && (argv(1) === 'featured')) {
 		$settings_addons = "";
+
+		$o = '';
+		$diaspora_enabled = get_config('system','diaspora_enabled');
 		
 		$r = q("SELECT * FROM `hook` WHERE `hook` = 'feature_settings' ");
-		if(! count($r))
+		if((! $r) && (! $diaspora_enabled))
 			$settings_addons = t('No feature settings configured');
 
+		if($diaspora_enabled) {
+			$pubcomments = get_pconfig(local_channel(),'system','diaspora_public_comments');
+			if($pubcomments === false)
+				$pubcomments = 1;
+		}
+
 		call_hooks('feature_settings', $settings_addons);
-		
-		
+				
 		$tpl = get_markup_template("settings_addons.tpl");
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_featured"),
 			'$title'	=> t('Feature Settings'),
+			'$diaspora_enabled' => $diaspora_enabled,
+			'$pubcomments' => $pubcomments,
+			'$dsprtitle' => t('Diaspora Policy Settings'),
+			'$dsprhelp' => t('Allow any Diaspora member to comment on your public posts.'),
+			'$dsprsubmit' => t('Submit Diaspora Policy Settings'),
 			'$settings_addons' => $settings_addons
 		));
 		return $o;

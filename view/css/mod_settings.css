@@ -64,3 +64,17 @@ ul#settings-privacy-macros {
 	clear: both;
 	margin-bottom: 15px;
 }
+
+#dspr-pubcomment-label {
+    float: left;
+    width: 200px;
+    margin-bottom: 25px;
+}
+
+#dspr-pubcomment-checkbox {
+    float: left;
+}
+
+#settings-dspr-wrapper {
+    margin-top: 15px;
+}

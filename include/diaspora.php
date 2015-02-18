@@ -1271,16 +1271,48 @@ function diaspora_comment($importer,$xml,$msg) {
 		return;
 	}
 
-	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments'))) {
+
+	
+	$pubcomment = get_pconfig($importer['channel_id'],'system','diaspora_public_comments');
+
+	// by default comments on public posts are allowed from anybody on Diaspora. That is their policy.
+	// Once this setting is set to something we'll track your preference and it will over-ride the default. 
+
+	if($pubcomment === false)
+		$pubcomment = 1;
+
+	// Friendica is currently truncating guids at 64 chars
+	$search_guid = $parent_guid;
+	if(strlen($parent_guid) == 64)
+		$search_guid = $parent_guid . '%';
+
+	$r = q("SELECT * FROM item WHERE uid = %d AND mid LIKE '%s' LIMIT 1",
+		intval($importer['channel_id']),
+		dbesc($search_guid)
+	);
+	if(! $r) {
+		logger('diaspora_comment: parent item not found: parent: ' . $parent_guid . ' item: ' . $guid);
+		return;
+	}
+
+	$parent_item = $r[0];
+
+	if(intval($parent_item['item_private']))
+		$pubcomment = 0;	
+
+	// So basically if something arrives at the sys channel it's by definition public and we allow it.
+	// If $pubcomment and the parent was public, we allow it.
+	// In all other cases, honour the permissions for this Diaspora connection
+
+	if((! $importer['system']) && (! $pubcomment) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments'))) {
 		logger('diaspora_comment: Ignoring this author.');
 		return 202;
 	}
 
-	// Friendica is currently truncating guids at 64 chars
-
 	$search_guid = $guid;
 	if(strlen($guid) == 64)
 		$search_guid = $guid . '%';
+
 
 	$r = q("SELECT * FROM item WHERE uid = %d AND mid like '%s' LIMIT 1",
 		intval($importer['channel_id']),
@@ -1291,20 +1323,6 @@ function diaspora_comment($importer,$xml,$msg) {
 		return;
 	}
 
-	$search_guid = $parent_guid;
-	if(strlen($parent_guid) == 64)
-		$search_guid = $parent_guid . '%';
-
-
-	$r = q("SELECT * FROM item WHERE uid = %d AND mid LIKE '%s' LIMIT 1",
-		intval($importer['channel_id']),
-		dbesc($search_guid)
-	);
-	if(! $r) {
-		logger('diaspora_comment: parent item not found: parent: ' . $parent_guid . ' item: ' . $guid);
-		return;
-	}
-	$parent_item = $r[0];
 
 
 	/* How Diaspora performs comment signature checking:
