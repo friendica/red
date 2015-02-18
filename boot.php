@@ -1598,11 +1598,14 @@ function get_account_id() {
 }
 
 /**
- * @brief Returns the entity id (channel_id) of locally logged in user or false.
+ * @brief Returns the entity id (channel_id) of locally logged in channel or false.
  *
  * Returns authenticated numeric channel_id if authenticated and connected to
  * a channel or 0. Sometimes referred to as $uid in the code.
  *
+ * Before 2.1 this function was called local_user().
+ *
+ * @since 2.1
  * @return int|bool channel_id or false
  */
 function local_channel() {
@@ -1612,16 +1615,29 @@ function local_channel() {
 	return false;
 }
 
+/**
+ * local_user() got deprecated and replaced by local_channel().
+ *
+ * @deprecated since v2.1, use local_channel()
+ * @see local_channel()
+ */
 function local_user() {
-	// DEPRECATED
+	logger('local_user() is DEPRECATED, use local_channel()');
 	return local_channel();
 }
 
 
 /**
- * @brief Returns contact id (visitor_id) of authenticated site visitor or false.
+ * @brief Returns a xchan_hash (visitor_id) of remote authenticated visitor
+ * or false.
  *
- * @return int|bool visitor_id or false
+ * Returns authenticated string hash of Red global identifier (xchan_hash), if
+ * authenticated via remote auth, or an empty string.
+ *
+ * Before 2.1 this function was called remote_user().
+ *
+ * @since 2.1
+ * @return string|bool visitor_id or false
  */
 function remote_channel() {
 	if((x($_SESSION, 'authenticated')) && (x($_SESSION, 'visitor_id')))
@@ -1630,8 +1646,14 @@ function remote_channel() {
 	return false;
 }
 
+/**
+ * remote_user() got deprecated and replaced by remote_channel().
+ *
+ * @deprecated since v2.1, use remote_channel()
+ * @see remote_channel()
+ */
 function remote_user() {
-	// DEPRECATED
+	logger('remote_user() is DEPRECATED, use remote_channel()');
 	return remote_channel();
 }
 
