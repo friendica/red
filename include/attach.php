@@ -974,6 +974,11 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	if(!$object)
 		return;
 
+	//filter out receivers which do not have permission to view filestorage
+	$arr_allow_cid = expand_acl($allow_cid);
+	$arr_allow_cid = check_list_permissions($channel_id, $arr_allow_cid, 'view_storage');
+	$allow_cid = perms2str($arr_allow_cid);
+
 	$is_dir = (($object['flags'] & ATTACH_FLAG_DIR) ? true : false);
 
 	//do not send activity for folders for now
@@ -987,6 +992,9 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 		$r_perms = recursive_activity_recipients($allow_cid, $allow_gid, $deny_cid, $deny_gid, $folder_hash);
 
+		//filter out receivers which do not have permission to view filestorage
+		$r_perms['allow_cid'] = check_list_permissions($channel_id, $r_perms['allow_cid'], 'view_storage');
+
 		$allow_cid = perms2str($r_perms['allow_cid']);
 		$allow_gid = perms2str($r_perms['allow_gid']);
 		$deny_cid = perms2str($r_perms['deny_cid']);
@@ -999,7 +1007,6 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	$objtype = ACTIVITY_OBJ_FILE;
 
 	$item_flags = ITEM_WALL|ITEM_ORIGIN;
-;
 
 	$private = (($allow_cid || $allow_gid || $deny_cid || $deny_gid) ? 1 : 0);
 
@@ -1157,6 +1164,13 @@ function recursive_activity_recipients($allow_cid, $allow_gid, $deny_cid, $deny_
 
 	$arr_allow_cid = expand_acl($allow_cid);
 	$arr_allow_gid = expand_acl($allow_gid);
+
+	//turn allow_gid into allow_cid's
+	foreach($arr_allow_gid as $gid) {
+		$in_group = in_group($gid);
+		$arr_allow_cid = array_unique(array_merge($arr_allow_cid, $in_group));
+	}
+
 	$arr_deny_cid = expand_acl($deny_cid);
 	$arr_deny_gid = expand_acl($deny_gid);
 
@@ -1261,8 +1275,13 @@ function recursive_activity_recipients($allow_cid, $allow_gid, $deny_cid, $deny_
 }
 
 function in_group($group_id) {
-	$r = q("SELECT xchan FROM group_member left join groups on group_member.gid = group.id WHERE hash = '%s' ",
+	//TODO: make these two queries one with a join.
+	$x = q("SELECT id FROM groups WHERE hash = '%s'",
 		dbesc($group_id)
+	);
+
+	$r = q("SELECT xchan FROM group_member WHERE gid = %d",
+		intval($x[0]['id'])
 	);
 
 	foreach($r as $ig) {
