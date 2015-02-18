@@ -1315,9 +1315,9 @@ function public_recips($msg) {
 
 	
 	if($msg['notify']['sender']['url'] === z_root())
-		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )>0  or ( " . $col . " & " . PERMS_SITE . " )>0 or ( " . $col . " & " . PERMS_PUBLIC . ")>0) or ( " . $col . " & " . PERMS_AUTHED . ")>0) ";
+		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )>0  or ( " . $col . " & " . PERMS_SITE . " )>0 or ( " . $col . " & " . PERMS_PUBLIC . ")>0 or ( " . $col . " & " . PERMS_AUTHED . ")>0) ";
 	else
-		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )>0  or ( "  . $col . " & " . PERMS_PUBLIC . ")>0) or ( "  . $col . " & " . PERMS_AUTHED . ")>0) ";
+		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )>0  or ( "  . $col . " & " . PERMS_PUBLIC . ")>0 or ( "  . $col . " & " . PERMS_AUTHED . ")>0) ";
 
 
 	$r = q("select channel_hash as hash from channel $sql or channel_hash = '%s' ",
