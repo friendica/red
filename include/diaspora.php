@@ -1067,24 +1067,13 @@ function diaspora_reshare($importer,$xml,$msg) {
 		$orig_author_photo = $person['xchan_photo_m'];
 	}
 
-	$newbody = "[share author='" . urlencode($orig_author_name) 
-		. "' profile='" . $orig_author_link 
-		. "' avatar='" . $orig_author_photo 
-		. "' link='" . $orig_url
-		. "' posted='" . datetime_convert('UTC','UTC',unxmlify($source_xml->post->status_message->created_at))
-		. "' message_id='" . unxmlify($source_xml->post->status_message->guid)
- 		. "']" . $body . "[/share]";
-
 
 	$created = unxmlify($xml->created_at);
 	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
 
 	$datarray = array();
 
-	$str_tags = '';
-
-	$tags = get_tags($newbody);
-
+	$tags = get_tags($body);
 
 	if(count($tags)) {
 
@@ -1116,7 +1105,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 		}
 	}
 
-	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$newbody,$matches,PREG_SET_ORDER);
+	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
 			$datarray['term'][] = array(
@@ -1128,6 +1117,16 @@ function diaspora_reshare($importer,$xml,$msg) {
 			);
 		}
 	}
+
+
+	$newbody = "[share author='" . urlencode($orig_author_name) 
+		. "' profile='" . $orig_author_link 
+		. "' avatar='" . $orig_author_photo 
+		. "' link='" . $orig_url
+		. "' posted='" . datetime_convert('UTC','UTC',unxmlify($source_xml->post->status_message->created_at))
+		. "' message_id='" . unxmlify($source_xml->post->status_message->guid)
+ 		. "']" . $body . "[/share]";
+
 
 	$plink = service_plink($contact,$guid);
 
