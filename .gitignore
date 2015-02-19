@@ -21,6 +21,11 @@ apps/
 *.orig
 *.rej
 
+# themes except for redbasic
+view/theme/*
+! view/theme/redbasic
+
+
 # composer files (for fetching sabre)
 composer.*
 
