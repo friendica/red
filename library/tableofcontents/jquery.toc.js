@@ -15,8 +15,6 @@
  * 
  * The original script was modified to work within the red#martrix
  * - added var pathname
- * - added var textHeading: Accept heading with text only
- *     Why? At the moment webpages can contain empty title using h3
  */
 
 (function ($) {
@@ -55,36 +53,31 @@
                 // What level is the current heading?
                 var elem = $(this), level = $.map(headingSelectors, function (selector, index) {
                     return elem.is(selector) ? index : undefined;
-                })[0];
-                
-                // Accept heading with text only
-                var textHeading = elem.text();
-                if(textHeading != '') {
-                    if (level > currentLevel) {
-                        // If the heading is at a deeper level than where we are, start a new nested
-                        // list, but only if we already have some list items in the parent. If we do
-                        // not, that means that we're skipping levels, so we can just add new list items
-                        // at the current level.
-                        // In the upside-down stack, unshift = push, and stack[0] = the top.
-                        var parentItem = stack[0].children("li:last")[0];
-                        if (parentItem) {
-                            stack.unshift($("<" + listTag + "/>").appendTo(parentItem));
-                        }
-                    } else {
-                        // Truncate the stack to the current level by chopping off the 'top' of the
-                        // stack. We also need to preserve at least one element in the stack - that is
-                        // the containing element.
-                        stack.splice(0, Math.min(currentLevel - level, Math.max(stack.length - 1, 0)));
+                })[0];                
+                if (level > currentLevel) {
+                    // If the heading is at a deeper level than where we are, start a new nested
+                    // list, but only if we already have some list items in the parent. If we do
+                    // not, that means that we're skipping levels, so we can just add new list items
+                    // at the current level.
+                    // In the upside-down stack, unshift = push, and stack[0] = the top.
+                    var parentItem = stack[0].children("li:last")[0];
+                    if (parentItem) {
+                        stack.unshift($("<" + listTag + "/>").appendTo(parentItem));
                     }
-                    // the variable pathname was added to the original script.
-                	var pathname = window.location.pathname;
-                    // Add the list item
-                    $("<li/>").appendTo(stack[0]).append(
-                        $("<a/>").text(elem.text()).attr("href", pathname + "#" + elem.attr("id"))
-                    );
-
-                    currentLevel = level;
+                } else {
+                    // Truncate the stack to the current level by chopping off the 'top' of the
+                    // stack. We also need to preserve at least one element in the stack - that is
+                    // the containing element.
+                    stack.splice(0, Math.min(currentLevel - level, Math.max(stack.length - 1, 0)));
                 }
+                // the variable pathname was added to the original script.
+            	var pathname = window.location.pathname;
+                // Add the list item
+                $("<li/>").appendTo(stack[0]).append(
+                    $("<a/>").text(elem.text()).attr("href", pathname + "#" + elem.attr("id"))
+                );
+
+                currentLevel = level;
             });
         });
     }, old = $.fn.toc;
