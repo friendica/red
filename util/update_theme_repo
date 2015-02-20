@@ -1,0 +1,10 @@
+#!/bin/sh -f
+
+if [ $# -eq '2' ]; then
+	echo usage: $0 nickname
+	exit 1
+fi
+
+cd extend/theme/$1
+git pull
+
