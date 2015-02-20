@@ -6,6 +6,7 @@
 [*][url=https://github.com/omigeot/redstrap3]Redstrap[/url]
 [*][url=https://bitbucket.org/tobiasd/red-clean]Clean[/url]
 [*][url=https://github.com/tonybaldwin/redmatrixthemes/]nubasic[/url]
+[*][url=https://github.com/deadsuperhero/redmatrix-themes]Sean Tilley's Redmatrix themes[/url]
 
 [b]Third-Party Addons[/b]
 [*][url=https://abcentric.net/git/abcjsplugin.git]ABCjs integration - display scores in posts (WIP)[/url]
