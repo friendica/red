@@ -563,10 +563,19 @@ function updateConvItems(mode,data) {
 			}
 			prev = ident;
 		});
-
+		
 		if(loadingPage) {
 			loadingPage = false;
 		}
+
+		if (window.location.search.indexOf("mid=") != -1 || window.location.pathname.indexOf("display") != -1) {
+			var title = $(".wall-item-title").text();
+			title.replace(/^\s+/, '');
+			title.replace(/\s+$/, '');
+			if (title)
+				document.title = title + " - " + document.title;
+		}
+
 	}
 
 	$('.like-rotator').spin(false);

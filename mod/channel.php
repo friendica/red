@@ -329,8 +329,11 @@ function channel_content(&$a, $update = 0, $load = false) {
 		$o .= conversation($a,$items,'channel',$update,'traditional');
 	}
 
-	if((! $update) || ($_COOKIE['jsAvailable'] != 1))
+	if((! $update) || ($_COOKIE['jsAvailable'] != 1)) {
 		$o .= alt_pager($a,count($items));
+		if ($mid && $items[0]['title'])
+			$a->page['title'] = $items[0]['title'] . " - " . $a->page['title'];
+	}
 
 	if($mid) 
 		$o .= '<div id="content-complete"></div>';

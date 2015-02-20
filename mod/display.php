@@ -228,6 +228,9 @@ function display_content(&$a, $update = 0, $load = false) {
 		$o .= conversation($a, $items, 'display', $update, 'client');
 	} else {
 		$o .= conversation($a, $items, 'display', $update, 'traditional');
+		if ($items[0]['title'])
+			$a->page['title'] = $items[0]['title'] . " - " . $a->page['title'];
+
 	}
 
 	if($updateable) {
