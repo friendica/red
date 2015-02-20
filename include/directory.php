@@ -38,7 +38,9 @@ function directory_run($argv, $argc){
 	$channel = $x[0];
 
 
-	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
+	if($dirmode != DIRECTORY_MODE_NORMAL) {
+
+		// this is an in-memory update and we don't need to send a network packet.
 
 		local_dir_update($argv[1],$force);
 
@@ -53,6 +55,8 @@ function directory_run($argv, $argc){
 
 		return;
 	}
+
+	// otherwise send the changes upstream
 
 	$directory = find_upstream_directory($dirmode);
 	$url = $directory['url'] . '/post';

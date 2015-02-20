@@ -64,8 +64,16 @@ function check_upstream_directory() {
 		set_config('system','directory_server','');
 	return;
 }
+
+/**
+ * @function dir_sort_links()
+ * Called by the directory_sort widget
+ */
+
+
 	
 function dir_sort_links() {
+
 	// Build urls without order and pubforums so it's easy to tack on the changed value
 	// Probably there's an easier way to do this
 
@@ -118,6 +126,20 @@ function dir_safe_mode() {
 
 	return $o;
 }
+
+/**
+ * @function sync_directories($mode)
+ * 
+ * @param int $mode;
+ *
+ * Checks the directory mode of this hub to see if it is some form of directory server. If it is,
+ * get the directory realm of this hub. Fetch a list of all other directory servers in this realm and request
+ * a directory sync packet. This will contain both directory updates and new ratings. Store these all in the DB. 
+ * In the case of updates, we will query each of them asynchronously from a poller task. Ratings are stored 
+ * directly if the rater's signature matches.  
+ *
+ */
+
 
 function sync_directories($dirmode) {
 
@@ -175,15 +197,18 @@ function sync_directories($dirmode) {
 
 		logger('sync directories: ' . $rr['site_directory']);
 
-		// for brand new directory servers, only load the last couple of days. Everything before that will be repeats.
+		// for brand new directory servers, only load the last couple of days.
+		// It will take about a month for a new directory to obtain the full current repertoire of channels.
+		// FIXME - go back and pick up earlier ratings if this is a new directory server. These do not get refreshed.
 
 		$syncdate = (($rr['site_sync'] === NULL_DATE) ? datetime_convert('UTC','UTC','now - 2 days') : $rr['site_sync']);
 		$x = z_fetch_url($rr['site_directory'] . '?f=&sync=' . urlencode($syncdate));
 
 		if(! $x['success'])
 			continue;
+
 		$j = json_decode($x['body'],true);
-		if((! $j['transactions']) || (! is_array($j['transactions'])))
+		if(!($j['transactions']) || ($j['ratings']))
 			continue;
 
 		q("update site set site_sync = '%s' where site_url = '%s'",
@@ -193,7 +218,7 @@ function sync_directories($dirmode) {
 
 		logger('sync_directories: ' . $rr['site_url'] . ': ' . print_r($j,true), LOGGER_DATA);
 
-		if(count($j['transactions'])) {
+		if(is_array($j['transactions']) && count($j['transactions'])) {
 			foreach($j['transactions'] as $t) {
 				$r = q("select * from updates where ud_guid = '%s' limit 1",
 					dbesc($t['transaction_id'])
@@ -216,7 +241,7 @@ function sync_directories($dirmode) {
 				);
 			}
 		}
-		if(count($j['ratings'])) {
+		if(is_array($j['ratings']) && count($j['ratings'])) {
 			foreach($j['ratings'] as $rr) {		
 				$x = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1",
 					dbesc($rr['channel']),
@@ -224,6 +249,10 @@ function sync_directories($dirmode) {
 				);
 				if($x && $x[0]['xlink_updated'] >= $rr['edited'])
 					continue;
+
+				// Ratings are signed by the rater. We need to verify before we can accept it.
+				// TODO - queue or defer if the xchan is not yet present on our site
+
 				$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
 					dbesc($rr['channel'])
 				);
@@ -263,6 +292,18 @@ function sync_directories($dirmode) {
 }
 
 
+/**
+ * $function update_directory_entry($ud)
+ *
+ * @param array $ud; // Entry from update table
+ * Given an update record, probe the channel, grab a zot-info packet and refresh/sync the data  
+ *
+ * Ignore updating records marked as deleted
+ *
+ * If successful, 
+ *   sets ud_last in the DB to the current datetime for this reddress/webbie
+ */
+
 function update_directory_entry($ud) {
 
 	logger('update_directory_entry: ' . print_r($ud,true), LOGGER_DATA);
@@ -289,7 +330,9 @@ function update_directory_entry($ud) {
 
 /**
  * @function local_dir_update($uid,$force)
- *     push local channel updates to a local directory server 
+ *     push local channel updates to a local directory server
+ *  This is called from include/directory.php if a profile is to be pushed
+ *  to the directory and the local hub in this case is any kind of directory server. 
  *
  */
 
