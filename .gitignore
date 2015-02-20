@@ -25,6 +25,8 @@ apps/
 view/theme/*
 ! view/theme/redbasic
 
+# external repositories for themes/addons
+extend/
 
 # composer files (for fetching sabre)
 composer.*
