@@ -50,6 +50,18 @@ function siteinfo_init(&$a) {
 
 		$site_info = get_config('system','info');
 		$site_name = get_config('system','sitename');
+		if(! get_config('system','hidden_version_siteinfo')) {
+			$version = RED_VERSION;
+			if(@is_dir('.git') && function_exists('shell_exec')) {
+				$commit = trim( @shell_exec('git log -1 --format="%h"'));
+				$tag = trim( @shell_exec('git describe --tags --abbrev=0'));
+			}
+			if(! isset($commit) || strlen($commit) > 16)
+				$commit = '';
+		}
+		else {
+				$version = $commit = '';
+		}
 		
 		//Statistics
 		$channels_total_stat = intval(get_config('system','channels_total_stat'));
@@ -59,7 +71,8 @@ function siteinfo_init(&$a) {
 		$hide_in_statistics = intval(get_config('system','hide_in_statistics'));
 		
 		$data = Array(
-			'version' => RED_VERSION,
+			'version' => $version,
+			'version_tag' => $tag,
 			'commit' => $commit,
 			'url' => z_root(),
 			'plugins' => $visible_plugins,
