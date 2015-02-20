@@ -30,6 +30,7 @@ var searchData=
   ['openid_5fcontent',['openid_content',['../openid_8php.html#a9a13827dbcf61ae4e45f0b6b33a88f43',1,'openid.php']]],
   ['opensearch_2ephp',['opensearch.php',['../opensearch_8php.html',1,'']]],
   ['opensearch_5finit',['opensearch_init',['../opensearch_8php.html#ad13034877a496565ac7d99e9fc6f55e9',1,'opensearch.php']]],
+  ['operationfailed',['OperationFailed',['../classeasywebdav_1_1client_1_1OperationFailed.html',1,'easywebdav::client']]],
   ['optimize_5ftable',['optimize_table',['../classdba__driver.html#a77e59dcbeab30ca6000131d2e9ad4092',1,'dba_driver\optimize_table()'],['../classdba__postgres.html#a3de1ac375e98886dfc38fd0066e88f90',1,'dba_postgres\optimize_table()']]],
   ['orient',['orient',['../classphoto__driver.html#a4de5bac8daea8f291a33c80788019d0d',1,'photo_driver']]],
   ['os_5fmkdir',['os_mkdir',['../boot_8php.html#a5fbebdf7a1c0ea8f904dbd9d78c2c06c',1,'boot.php']]],

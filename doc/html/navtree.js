@@ -5,6 +5,7 @@ var NAVTREE =
     [ "Fresh - The Freaking REd Shell", "md_fresh.html", null ],
     [ "apw", "md_README.html", null ],
     [ "Todo List", "todo.html", null ],
+    [ "Deprecated List", "deprecated.html", null ],
     [ "Namespaces", null, [
       [ "Namespace List", "namespaces.html", "namespaces" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -37,16 +38,16 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BS-Default_8php.html",
-"boot_8php.html#a4c02d88e66852a01bd5a1feecb7c3ce3",
-"classApp.html#a0ce85be198e46570366cb3344f3c55b8",
-"classRedMatrix_1_1RedDAV_1_1RedFile.html#a21b6e9d420c352f25610a33f57858215",
-"dark_8php.html",
-"functions_8php.html",
-"include_2apps_8php.html#ad6ba3f254003f69f8f3f94ca5bda0680",
-"locs_8php.html",
-"profile__photo_8php.html#a4b80234074bd603221aa5364f330e479",
-"text_8php.html#a1557112a774ec00fa06ed6b6f6495506",
-"zot_8php.html#aeea071f17e306fe3d0c488551906bfab"
+"boot_8php.html#a56fd673eaa7014150297ce1162502db5",
+"classApp.html#a230e975296cf164da2fee35ef720964f",
+"classTemplate.html",
+"contact__widgets_8php.html#a552f8544528cec0c995cea7287ea9d65",
+"extend_2theme_2deadsuperhero_2sporadic_2php_2theme_8php.html#a76ef724ca35812c083088fe573507ef6",
+"identity_8php.html#aaff86ee3b5984821e7a256c2da5f1a51",
+"items_8php.html#a1e75047cf175aaee8dd16aa761913ff9",
+"pdledit_8php.html#a81da3c955d0e3db55d148a31483104c7",
+"smarty_8php.html",
+"vote_8php.html#a6aa67489bf458ca5e3206e46dac68596"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

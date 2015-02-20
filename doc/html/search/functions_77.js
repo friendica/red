@@ -33,6 +33,7 @@ var searchData=
   ['widget_5fphoto_5falbums',['widget_photo_albums',['../widgets_8php.html#a702e2fc0adc9b615999eca18b7311b5e',1,'widgets.php']]],
   ['widget_5fphoto_5frand',['widget_photo_rand',['../widgets_8php.html#af8eb466ef91d9e96e13335ead5eba380',1,'widgets.php']]],
   ['widget_5fprofile',['widget_profile',['../widgets_8php.html#abd2e508a2a0b911c4a838e3cb7599923',1,'widgets.php']]],
+  ['widget_5fpubsites',['widget_pubsites',['../widgets_8php.html#afc7a579877414f4eb6f59698d3f69492',1,'widgets.php']]],
   ['widget_5frandom_5fblock',['widget_random_block',['../widgets_8php.html#a829c5a5c7448129266fc1df3ae1a3c2e',1,'widgets.php']]],
   ['widget_5frating',['widget_rating',['../widgets_8php.html#a7d0724165067077ff46484e4610e4323',1,'widgets.php']]],
   ['widget_5fsavedsearch',['widget_savedsearch',['../widgets_8php.html#a94203eb9bcd63cbdecbbcb15163598d8',1,'widgets.php']]],

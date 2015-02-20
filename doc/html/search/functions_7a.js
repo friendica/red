@@ -32,5 +32,6 @@ var searchData=
   ['zot_5fregister_5fhub',['zot_register_hub',['../zot_8php.html#a5bcdfef419b16075a0eca990956223dc',1,'zot.php']]],
   ['zot_5fzot',['zot_zot',['../zot_8php.html#ab3e9b99ddb11353f37f265a05bb42142',1,'zot.php']]],
   ['zotfeed_5finit',['zotfeed_init',['../zotfeed_8php.html#a24dfc23d366e7f840cf2847d0c1c8eac',1,'zotfeed.php']]],
+  ['zotsh',['zotsh',['../namespacezotsh.html#a0004a83d69a4b175b6829d8377305df2',1,'zotsh']]],
   ['zping_5fcontent',['zping_content',['../zping_8php.html#a4d3a6b0b8b04ed6469015823e615ee75',1,'zping.php']]]
 ];

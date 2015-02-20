@@ -116,7 +116,7 @@ var searchData=
   ['appman_5fpost',['appman_post',['../appman_8php.html#a2979acbe47ffaecfa19b9eabfbfbde39',1,'appman.php']]],
   ['apps_5fcontent',['apps_content',['../mod_2apps_8php.html#a546016cb960d0b110ee8e489dfa6c27c',1,'apps.php']]],
   ['apw_5fform',['apw_form',['../view_2theme_2apw_2php_2config_8php.html#ad59fc09da66b66267f9753c8b2dd68d0',1,'config.php']]],
-  ['apw_5finit',['apw_init',['../apw_2php_2theme_8php.html#a42167c539043a39a6b83c252d05f1e89',1,'theme.php']]],
+  ['apw_5finit',['apw_init',['../view_2theme_2apw_2php_2theme_8php.html#a42167c539043a39a6b83c252d05f1e89',1,'theme.php']]],
   ['argc',['argc',['../boot_8php.html#abc0a90a1a77f5b668aa7e4b57d1776a7',1,'boot.php']]],
   ['argv',['argv',['../boot_8php.html#a768f00b7d66be0daf7ef4eea2e862006',1,'boot.php']]],
   ['arr_5fadd_5fhashes',['arr_add_hashes',['../parse__url_8php.html#aa7dd8f961bea042d62726ed909e4a868',1,'parse_url.php']]],

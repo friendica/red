@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['verify_5fssl',['VERIFY_SSL',['../namespacezotsh.html#a9b17c9ddf6c3b49c00d74ba46f54398e',1,'zotsh']]],
   ['vnotify_5falert',['VNOTIFY_ALERT',['../boot_8php.html#a9f8a2938ddd9ee2867e6f8ce77b61b2f',1,'boot.php']]],
   ['vnotify_5fbirthday',['VNOTIFY_BIRTHDAY',['../boot_8php.html#ac89396b9144391acd08d6d0f9b332220',1,'boot.php']]],
   ['vnotify_5fchannel',['VNOTIFY_CHANNEL',['../boot_8php.html#a7b511bd93202c43405adbe3b5bcebbfe',1,'boot.php']]],

@@ -8,6 +8,7 @@ var searchData=
   ['var_5freplace',['var_replace',['../classTemplate.html#abbc484016ddf5d818f55b823cae6feb0',1,'Template']]],
   ['vcard_5ffrom_5fxchan',['vcard_from_xchan',['../Contact_8php.html#a6348a532c9d26cd1c9afbc9aa6aa8960',1,'Contact.php']]],
   ['verify_5femail_5faddress',['verify_email_address',['../account_8php.html#acd6b8d2124ba5ea4f4794d2c58ae8bf5',1,'account.php']]],
+  ['verify_5fssl',['VERIFY_SSL',['../namespacezotsh.html#a9b17c9ddf6c3b49c00d74ba46f54398e',1,'zotsh']]],
   ['view_2ephp',['view.php',['../view_8php.html',1,'']]],
   ['view_5finit',['view_init',['../view_8php.html#ac168f6c61a91ba2063f13b441c0ae96e',1,'view.php']]],
   ['viewconnections_2ephp',['viewconnections.php',['../viewconnections_8php.html',1,'']]],

@@ -15,6 +15,13 @@ var hierarchy =
       [ "dba_postgres", "classdba__postgres.html", null ]
     ] ],
     [ "enotify", "classenotify.html", null ],
+    [ "Exception", null, [
+      [ "easywebdav.client.WebdavException", "classeasywebdav_1_1client_1_1WebdavException.html", [
+        [ "easywebdav.client.ConnectionFailed", "classeasywebdav_1_1client_1_1ConnectionFailed.html", null ],
+        [ "easywebdav.client.OperationFailed", "classeasywebdav_1_1client_1_1OperationFailed.html", null ]
+      ] ],
+      [ "zotsh.CommandNotFound", "classzotsh_1_1CommandNotFound.html", null ]
+    ] ],
     [ "ICollection", null, [
       [ "RedMatrix\\RedDAV\\RedDirectory", "classRedMatrix_1_1RedDAV_1_1RedDirectory.html", null ]
     ] ],
@@ -38,6 +45,10 @@ var hierarchy =
     ] ],
     [ "OAuthServer", null, [
       [ "FKOAuth1", "classFKOAuth1.html", null ]
+    ] ],
+    [ "object", null, [
+      [ "easywebdav.client.Client", "classeasywebdav_1_1client_1_1Client.html", null ],
+      [ "zotsh.ZotSH", "classzotsh_1_1ZotSH.html", null ]
     ] ],
     [ "photo_driver", "classphoto__driver.html", [
       [ "photo_gd", "classphoto__gd.html", null ],

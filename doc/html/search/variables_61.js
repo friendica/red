@@ -57,6 +57,7 @@ var searchData=
   ['activity_5funfollow',['ACTIVITY_UNFOLLOW',['../boot_8php.html#a53e4bdb6f225da55115acb9277f75e53',1,'boot.php']]],
   ['activity_5funfriend',['ACTIVITY_UNFRIEND',['../boot_8php.html#a29528a2544373cc19a378f350040c6a1',1,'boot.php']]],
   ['activity_5fupdate',['ACTIVITY_UPDATE',['../boot_8php.html#a7f4264232dbb6c3b41f2617deecb1866',1,'boot.php']]],
+  ['actual_5fcode',['actual_code',['../classeasywebdav_1_1client_1_1OperationFailed.html#a3c42e9edf259eca30ac7fbcb7e181eac',1,'easywebdav::client::OperationFailed']]],
   ['atom_5ftime',['ATOM_TIME',['../boot_8php.html#ad34c1547020a305915bcc39707744690',1,'boot.php']]],
   ['attach_5fflag_5fdir',['ATTACH_FLAG_DIR',['../boot_8php.html#aa74438cf71e48e37bf7b440b94243985',1,'boot.php']]],
   ['attach_5fflag_5fos',['ATTACH_FLAG_OS',['../boot_8php.html#a781916f83fcc8ff1035649afa45f0292',1,'boot.php']]]

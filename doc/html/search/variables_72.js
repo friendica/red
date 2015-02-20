@@ -3,6 +3,7 @@ var searchData=
   ['random_5fstring_5fhex',['RANDOM_STRING_HEX',['../text_8php.html#aad557c054cf2ed915633701018fc7e3f',1,'text.php']]],
   ['random_5fstring_5ftext',['RANDOM_STRING_TEXT',['../text_8php.html#a2ffd79c60cc87cec24ef76447b905187',1,'text.php']]],
   ['rdelim',['rdelim',['../namespacefriendica-to-smarty-tpl.html#a8540514fb7c4aa18ad2dffa2a975036b',1,'friendica-to-smarty-tpl']]],
+  ['reason',['reason',['../classeasywebdav_1_1client_1_1OperationFailed.html#ad1026cc529cf839da18542f6907df022',1,'easywebdav::client::OperationFailed']]],
   ['red_5fplatform',['RED_PLATFORM',['../boot_8php.html#a96ad56755a21e1361dbd7bf93c9e7ff4',1,'boot.php']]],
   ['red_5fversion',['RED_VERSION',['../boot_8php.html#a21cc29e0025943e7c28ff58cb4856ac3',1,'boot.php']]],
   ['redmatrix_5fimportchannel',['REDMATRIX_IMPORTCHANNEL',['../refimport_8php.html#a54003135d7c8994a76e831fb6faa2fe6',1,'refimport.php']]],

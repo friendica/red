@@ -26,7 +26,7 @@ var searchData=
   ['del_5fpconfig',['del_pconfig',['../include_2config_8php.html#a7ad2081c5f812ac4387fd76f3762d941',1,'config.php']]],
   ['del_5fxconfig',['del_xconfig',['../include_2config_8php.html#a9c171def547deee16738dc58fdeb4b72',1,'config.php']]],
   ['delegate_5fcontent',['delegate_content',['../delegate_8php.html#a943eea8996ef348eb845c498f9f354dd',1,'delegate.php']]],
-  ['delete',['delete',['../classRedMatrix_1_1RedDAV_1_1RedFile.html#ab7ab7ba81fab28eb02382cfdfd80ecfe',1,'RedMatrix::RedDAV::RedFile']]],
+  ['delete',['delete',['../classRedMatrix_1_1RedDAV_1_1RedFile.html#ab7ab7ba81fab28eb02382cfdfd80ecfe',1,'RedMatrix\RedDAV\RedFile\delete()'],['../classeasywebdav_1_1client_1_1Client.html#a1bcdcd91226e9c014556bb3eb2a37a55',1,'easywebdav.client.Client.delete()']]],
   ['delete_5fimported_5fitem',['delete_imported_item',['../zot_8php.html#a2bcda2dd23975087f3627eb72fb6792b',1,'zot.php']]],
   ['delete_5fitem_5flowlevel',['delete_item_lowlevel',['../items_8php.html#a6b448675b71b00ee5ef798468dde4d22',1,'items.php']]],
   ['deletenode',['deletenode',['../html2bbcode_8php.html#a71a07f135d196ec5943b13f7b2e6a9b2',1,'html2bbcode.php']]],
@@ -90,9 +90,11 @@ var searchData=
   ['discover_5fby_5fwebbie',['discover_by_webbie',['../include_2network_8php.html#a63e62946e194928eb17c5a9f2bbef0fe',1,'network.php']]],
   ['display_5fcontent',['display_content',['../display_8php.html#a37137c98d47bf3306f4c2bb9f5b60de0',1,'display.php']]],
   ['dlogger',['dlogger',['../text_8php.html#a0a1f7c0e97f9ecbebf3e5834582b014c',1,'text.php']]],
+  ['do',['do',['../classzotsh_1_1ZotSH.html#a42e3d635a25a65cd4a0fd7586473a9d1',1,'zotsh::ZotSH']]],
   ['dob',['dob',['../datetime_8php.html#a3f2897db32e745fe2f3e70a6b46578f8',1,'datetime.php']]],
   ['doscaleimage',['doScaleImage',['../classphoto__driver.html#ae18716018afcf362c7c24586b53e9e2f',1,'photo_driver\doScaleImage()'],['../classphoto__gd.html#a2f2e5900e6d8b1667892ac631b1d4754',1,'photo_gd\doScaleImage()'],['../classphoto__imagick.html#a3047c68bb4de7f66c2893fe451db2b66',1,'photo_imagick\doScaleImage()']]],
   ['downgrade_5faccounts',['downgrade_accounts',['../account_8php.html#a0d183a3cb4c67a0f5e906811df7a1fc9',1,'account.php']]],
+  ['download',['download',['../classeasywebdav_1_1client_1_1Client.html#adc879105d0991fe6bc4e97888e547356',1,'easywebdav::client::Client']]],
   ['drop_5fitem',['drop_item',['../items_8php.html#ad65e3d4d8c537e560286b735a285e33e',1,'items.php']]],
   ['drop_5fitems',['drop_items',['../items_8php.html#a668ece2c37f05cc3abe538eb0dabfe55',1,'items.php']]]
 ];
