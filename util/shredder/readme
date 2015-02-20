@@ -1,0 +1,11 @@
+http://kmkeen.com/jshon/
+
+
+
+Jshon was made to be part of the usual text processing pipeline. However, every single -u is printed out to its own line. Most shell tools expect fields to be tab separated, and newlines between sets of fields. The paste tool does this. However, paste breaks down on blank lines so use sed to pad out the empty lines.
+
+jshon ... | sed 's/^$/-/' |  paste -s -d "\t\t\n" | ....
+
+The arguments need a little explaining.
+-s is mysteriously needed for paste to correctly handle input.
+-d is less obvious from the manpage, because it can take multiple characters which are looped through. The above example concatenates every three lines together.
