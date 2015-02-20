@@ -51,10 +51,10 @@ function siteinfo_init(&$a) {
 		$site_info = get_config('system','info');
 		$site_name = get_config('system','sitename');
 		if(! get_config('system','hidden_version_siteinfo')) {
-			$version = sprintf( t('Version %s'), RED_VERSION );
+			$version = RED_VERSION;
 			if(@is_dir('.git') && function_exists('shell_exec')) {
-				$commit = @shell_exec('git log -1 --format="%h"');
-				$tag = @shell_exec('git describe --tags --abbrev=0');
+				$commit = trim( @shell_exec('git log -1 --format="%h"'));
+				$tag = trim( @shell_exec('git describe --tags --abbrev=0'));
 			}
 			if(! isset($commit) || strlen($commit) > 16)
 				$commit = '';
