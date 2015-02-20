@@ -1,6 +1,6 @@
 #!/bin/sh -f
 
-if [ $# -eq '3' ]; then
+if [ $# -ne 2 ]; then
 	echo usage: $0 repo_url nickname
 	exit 1
 fi
@@ -8,7 +8,7 @@ fi
 mkdir -p extend/addon/$2
 mkdir addon > /dev/null 2>&1
 git clone $1 extend/addon/$2
-if [ $? -eq '0' ]; then
+if [ $? -eq 0 ]; then
 	exit $?
 fi
 

@@ -1,7 +1,7 @@
 #!/bin/sh -f
 
 
-if [ $# -eq '3' ]; then
+if [ $# -ne 2 ]; then
 	echo usage: $0 repo_url nickname
 	exit 1
 fi
