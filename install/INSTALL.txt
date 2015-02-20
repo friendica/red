@@ -115,14 +115,16 @@ use SSL, your webserver must not listen on port 443 at all.
 
             cd mywebsite
 
-    - Then you should clone the addon repository (separately)
+    - Then you should clone the addon repository (separately). We'll give this repository
+         a nickname of 'matrix'. You can pull in other redmatrix addon repositories by 
+         giving them different nicknames.
 
-        git clone https://github.com/friendica/red-addons.git addon
+            util/add_addon_repo https://github.com/friendica/red-addons.git matrix
 
-    - For keeping the addon tree updated, you should be on you addon tree and 
+    - For keeping the addon tree updated, you should be on your addon tree and 
     issue a git pull
 
-            cd mywebsite/addon
+            cd mywebsite/extend/addon/matrix
             git pull
 
 
