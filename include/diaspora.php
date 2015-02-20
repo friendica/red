@@ -841,67 +841,24 @@ function diaspora_post($importer,$xml,$msg) {
 	$datarray = array();
 
 	
-	$tags = get_tags($body);
+	// Look for tags and linkify them
+	$results = linkify_tags(get_app(), $body, $importer['channel_id']);
 
-
-	if(count($tags)) {
-
+	if($results) {
 		$datarray['term'] = array();
-
-		foreach($tags as $tag) {
-			if(strpos($tag,'#') === 0) {
-				if((strpos($tag,'[url=')) || (strpos($tag,'[zrl')))
-					continue;
-
-				// don't link tags that are already embedded in links
-
-				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$body))
-					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$body))
-					continue;
-
-				$basetag = str_replace('_',' ',substr($tag,1));
-				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
-
+		foreach($results as $result) {
+			$success = $result['success'];
+			if($success['replaced']) {
 				$datarray['term'][] = array(
 					'uid'   => $importer['channel_id'],
-					'type'  => TERM_HASHTAG,
+					'type'  => $success['termtype'],
 					'otype' => TERM_OBJ_POST,
-					'term'  => $basetag,
-					'url'   => z_root() . '/search?tag=' . rawurlencode($basetag)
+					'term'  => $success['term'],
+					'url'   => $success['url']
 				);
 			}
 		}
 	}
-
-	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
-	if($cnt) {
-		foreach($matches as $mtch) {
-			$datarray['term'][] = array(
-				'uid'   => $importer['channel_id'],
-				'type'  => TERM_MENTION,
-				'otype' => TERM_OBJ_POST,
-				'term'  => $mtch[2],
-				'url'   => $mtch[1]
-			);
-		}
-	}
-
-	$cnt = preg_match_all('/@\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
-	if($cnt) {
-		foreach($matches as $mtch) {
-			// don't include plustags in the term
-			$term = ((substr($mtch[2],-1,1) === '+') ? substr($mtch[2],0,-1) : $mtch[2]);
-			$datarray['term'][] = array(
-				'uid'   => $importer['channel_id'],
-				'type'  => TERM_MENTION,
-				'otype' => TERM_OBJ_POST,
-				'term'  => $term,
-				'url'   => $mtch[1]
-			);
-		}
-	}
-
 
 	$plink = service_plink($contact,$guid);
 
@@ -1053,12 +1010,6 @@ function diaspora_reshare($importer,$xml,$msg) {
 		logger('message length exceeds max_import_size: truncated');
 	}
 
-
-	//if(! $body) {
-	//	logger('diaspora_reshare: empty body: source= ' . $x);
-	//	return;
-	//}
-
 	$person = find_diaspora_person_by_handle($orig_author);
 
 	if($person) {
@@ -1073,51 +1024,24 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 	$datarray = array();
 
-	$tags = get_tags($body);
+	// Look for tags and linkify them
+	$results = linkify_tags(get_app(), $body, $importer['channel_id']);
 
-	if(count($tags)) {
-
+	if($results) {
 		$datarray['term'] = array();
-
-		foreach($tags as $tag) {
-			if(strpos($tag,'#') === 0) {
-				if((strpos($tag,'[url=')) || (strpos($tag,'[zrl')))
-					continue;
-
-				// don't link tags that are already embedded in links
-
-				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$newbody))
-					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$newbody))
-					continue;
-
-				$basetag = str_replace('_',' ',substr($tag,1));
-				$newbody = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$newbody);
-
+		foreach($results as $result) {
+			$success = $result['success'];
+			if($success['replaced']) {
 				$datarray['term'][] = array(
 					'uid'   => $importer['channel_id'],
-					'type'  => TERM_HASHTAG,
+					'type'  => $success['termtype'],
 					'otype' => TERM_OBJ_POST,
-					'term'  => $basetag,
-					'url'   => z_root() . '/search?tag=' . rawurlencode($basetag)
+					'term'  => $success['term'],
+					'url'   => $success['url']
 				);
 			}
 		}
 	}
-
-	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
-	if($cnt) {
-		foreach($matches as $mtch) {
-			$datarray['term'][] = array(
-				'uid'   => $importer['channel_id'],
-				'type'  => TERM_MENTION,
-				'otype' => TERM_OBJ_POST,
-				'term'  => $mtch[2],
-				'url'   => $mtch[1]
-			);
-		}
-	}
-
 
 	$newbody = "[share author='" . urlencode($orig_author_name) 
 		. "' profile='" . $orig_author_link 
@@ -1396,48 +1320,22 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	$datarray = array();
 
-	$tags = get_tags($body);
+	// Look for tags and linkify them
+	$results = linkify_tags(get_app(), $body, $importer['channel_id']);
 
-	if(count($tags)) {
-
+	if($results) {
 		$datarray['term'] = array();
-
-		foreach($tags as $tag) {
-			if(strpos($tag,'#') === 0) {
-				if((strpos($tag,'[url=')) || (strpos($tag,'[zrl')))
-					continue;
-
-				// don't link tags that are already embedded in links
-
-				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$body))
-					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$body))
-					continue;
-
-				$basetag = str_replace('_',' ',substr($tag,1));
-				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
-
+		foreach($results as $result) {
+			$success = $result['success'];
+			if($success['replaced']) {
 				$datarray['term'][] = array(
 					'uid'   => $importer['channel_id'],
-					'type'  => TERM_HASHTAG,
+					'type'  => $success['termtype'],
 					'otype' => TERM_OBJ_POST,
-					'term'  => $basetag,
-					'url'   => z_root() . '/search?tag=' . rawurlencode($basetag)
+					'term'  => $success['term'],
+					'url'   => $success['url']
 				);
 			}
-		}
-	}
-
-	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
-	if($cnt) {
-		foreach($matches as $mtch) {
-			$datarray['term'][] = array(
-				'uid'   => $importer['channel_id'],
-				'type'  => TERM_MENTION,
-				'otype' => TERM_OBJ_POST,
-				'term'  => $mtch[2],
-				'url'   => $mtch[1]
-			);
 		}
 	}
 
