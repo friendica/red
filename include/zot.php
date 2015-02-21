@@ -2244,10 +2244,11 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 		dbesc($hash)
 	);
 	
-	$age = intval($arr['xprof_age']);
-	if($age > 150) 
-		$age = 150;
-		
+	if($arr['xprof_age'] > 150) 
+		$arr['xprof_age'] = 150;
+	if($arr['xprof_age'] < 0)
+		$arr['xprof_age'] = 0;
+	
 	if($r) {
 		$update = false;
 		foreach($r[0] as $k => $v) {
@@ -2276,7 +2277,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 				where xprof_hash = '%s'",
 				dbesc($arr['xprof_desc']),
 				dbesc($arr['xprof_dob']),
-				$age,
+				intval($arr['xprof_age']),
 				dbesc($arr['xprof_gender']),
 				dbesc($arr['xprof_marital']),
 				dbesc($arr['xprof_sexual']),
@@ -2299,7 +2300,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 			dbesc($arr['xprof_hash']),
 			dbesc($arr['xprof_desc']),
 			dbesc($arr['xprof_dob']),
-			$age,
+			intval($arr['xprof_age']),
 			dbesc($arr['xprof_gender']),
 			dbesc($arr['xprof_marital']),
 			dbesc($arr['xprof_sexual']),
