@@ -24,7 +24,7 @@
 					$.post(url, data, function(data) {
 						if(timer) clearTimeout(timer);
 						NavUpdate();
-						$.fancybox.close();
+						$.colorbox.close();
 					})
 					
 					return false;
