@@ -25,7 +25,7 @@ function red_session_get($var) {
 
 function red_session_put($var,$val) {
 	session_start();
-	$_SESSION[$var'] = $val;
+	$_SESSION[$var] = $val;
 	$session_mirror = $_SESSION;
 	session_write_close();
 }
