@@ -109,7 +109,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		$url_parsed = @parse_url($newurl);
 		if (isset($url_parsed)) {
 			@curl_close($ch);
-			return z_fetch_url($newurl,$binary,$redirects++,$opts);
+			return z_fetch_url($newurl,$binary,++$redirects,$opts);
 		}
 	}
 
