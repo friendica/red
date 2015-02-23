@@ -6,6 +6,7 @@
 $session_exists = 0;
 $session_expire = 180000;
 
+/*
 $session_mirror = null;
 
 function red_session_start() {
@@ -36,7 +37,7 @@ function red_session_destroy() {
 	unset($session_mirror);
 	session_write_close();
 }
-
+*/
 
 function new_cookie($time) {
     $old_sid = session_id();
