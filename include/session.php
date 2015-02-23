@@ -6,39 +6,6 @@
 $session_exists = 0;
 $session_expire = 180000;
 
-/*
-$session_mirror = null;
-
-function red_session_start() {
-	global $session_mirror;
-	
-	session_start();
-	$session_mirror = $_SESSION;
-	session_write_close();
-}
-
-function red_session_get($var) {
-	global $session_mirror;
-	if(is_null($session_mirror))
-		red_session_start();
-	return $session_mirror[$var];
-}
-
-function red_session_put($var,$val) {
-	session_start();
-	$_SESSION[$var] = $val;
-	$session_mirror = $_SESSION;
-	session_write_close();
-}
-
-function red_session_destroy() {
-	session_start();
-	unset($_SESSION);
-	unset($session_mirror);
-	session_write_close();
-}
-*/
-
 function new_cookie($time) {
     $old_sid = session_id();
 
