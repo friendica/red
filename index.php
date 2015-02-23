@@ -240,6 +240,9 @@ if(strlen($a->module)) {
 		$a->page['content'] = replace_macros($tpl, array(
 			'$message' =>  t('Page not found.' )
 		));
+		// pretend this is a module so it will initialise the theme. 
+		$a->module = '404';
+		$a->module_loaded = true;
 	}
 }
 
