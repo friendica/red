@@ -1,6 +1,18 @@
 <?php
 
 
+/**
+ * With args, register a directory server for this realm
+ * With no args, return a JSON array of directory servers for this realm
+
+ * FIXME: Not yet implemented: Some realms may require authentication to join their realm.
+ * The RED_GLOBAL realm does not require authentication.  
+ * We would then need a flag in the site table to indicate that they've been
+ * validated by the PRIMARY directory for that realm. Sites claiming to be PRIMARY
+ * but are not the realm PRIMARY will be marked invalid. 
+ */
+
+
 function regdir_init(&$a) {
 
 	$result = array('success' => false);
@@ -32,7 +44,7 @@ function regdir_init(&$a) {
 			json_return_and_die($result);
 		}
 
-		$f = zot_finger('sys@' . $m['host']);
+		$f = zot_finger('[system]@' . $m['host']);
 		if($f['success']) {
 			$j = json_decode($f['body'],true);
 			if($j['success'] && $j['guid']) {

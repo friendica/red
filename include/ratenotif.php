@@ -76,8 +76,8 @@ function ratenotif_run($argv, $argc){
 		if($j && $j['success'] && is_array($j['directories'])) {
 
 			foreach($j['directories'] as $h) {
-//				if($h == z_root())
-//					continue;
+				if($h == z_root())
+					continue;
 
 				$hash = random_string();
 				$n = zot_build_packet($channel,'notify',null,null,$hash);
