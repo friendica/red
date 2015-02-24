@@ -1270,12 +1270,13 @@ function zot_import($arr, $sender_url) {
 
 
 // A public message with no listed recipients can be delivered to anybody who
-// has PERMS_NETWORK for that type of post, or PERMS_SITE and is one the same
+// has PERMS_NETWORK for that type of post, PERMS_AUTHED (in-network senders are 
+// by definition authenticated) or PERMS_SITE and is one the same
 // site, or PERMS_SPECIFIC and the sender is a contact who is granted 
 // permissions via their connection permissions in the address book.
 // Here we take a given message and construct a list of hashes of everybody
-// on the site that we should deliver to.  
-
+// on the site that we should try and deliver to.  
+// Some of these will be rejected, but this gives us a place to start.
 
 function public_recips($msg) {
 
@@ -1294,15 +1295,9 @@ function public_recips($msg) {
 			$check_mentions = true;
 		}
 		else {
-			// if this is a comment and it wasn't sent by the post owner, check to see who is allowing them to comment.
-			// We should have one specific recipient and this step shouldn't be needed unless somebody stuffed up their software.
-			// We may need this step to protect us from bad guys intentionally stuffing up their software.  
-			// If it is sent by the post owner, we don't need to do this. We only need to see who is receiving the 
-			// owner's stream (which was already set above) - as they control the comment permissions
-			if($msg['notify']['sender']['guid_sig'] != $msg['message']['owner']['guid_sig']) {
-				$col = 'channel_w_comment';
-				$field = PERMS_W_COMMENT;
-			}
+			$col = 'channel_w_comment';
+			$field = PERMS_W_COMMENT;
+
 		}
 	}
 	elseif($msg['message']['type'] === 'mail') {
@@ -1313,21 +1308,38 @@ function public_recips($msg) {
 	if(! $col)
 		return NULL;
 
-	
+	$col = dbesc($col);
+
+	// First find those channels who are accepting posts from anybody, or at least
+	// something greater than just their connections.
+
 	if($msg['notify']['sender']['url'] === z_root())
-		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )>0  or ( " . $col . " & " . PERMS_SITE . " )>0 or ( " . $col . " & " . PERMS_PUBLIC . ")>0 or ( " . $col . " & " . PERMS_AUTHED . ")>0) ";
+		$sql = " where (( " . $col . " & " . intval(PERMS_NETWORK) . " ) > 0  
+					or (  " . $col . " & " . intval(PERMS_SITE) . " ) > 0 
+					or (  " . $col . " & " . intval(PERMS_PUBLIC) . ") > 0 
+					or (  " . $col . " & " . intval(PERMS_AUTHED)  . ") > 0 ) ";
 	else
-		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )>0  or ( "  . $col . " & " . PERMS_PUBLIC . ")>0 or ( "  . $col . " & " . PERMS_AUTHED . ")>0) ";
+		$sql = " where (( " . $col . " & " . intval(PERMS_NETWORK) . " ) > 0  
+					or (  " . $col . " & " . intval(PERMS_PUBLIC) . ") > 0 
+					or (  " . $col . " & " . intval(PERMS_AUTHED) . ") > 0 ) ";
 
 
-	$r = q("select channel_hash as hash from channel $sql or channel_hash = '%s' ",
+	$r = q("select channel_hash as hash from channel $sql or channel_hash = '%s' 
+		and ( channel_pageflags & " . intval(PAGE_REMOVED) . " ) = 0 ",
 		dbesc($msg['notify']['sender']['hash'])
 	);
 
 	if(! $r)
 		$r = array();
 
-	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & " . PAGE_REMOVED . " )>0 and (( " . $col . " & " . PERMS_SPECIFIC . " )>0  and ( abook_my_perms & " . $field . " )>0) OR ( " . $col . " & " . PERMS_PENDING . " )>0 OR (( " . $col . " & " . PERMS_CONTACTS . " )>0 and not ( abook_flags & " . ABOOK_FLAG_PENDING . " )>0) ",
+	// Now we have to get a bit dirty. Find every channel that has the sender in their connections (abook)
+	// and is allowing this sender at least at a high level.
+
+	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id 
+		where abook_xchan = '%s' and ( channel_pageflags & " . intval(PAGE_REMOVED) . " ) = 0 
+		and (( " . $col . " & " . intval(PERMS_SPECIFIC) . " ) > 0  and ( abook_my_perms & " . intval($field) . " ) > 0 ) 
+		OR   ( " . $col . " & " . intval(PERMS_PENDING) . " ) > 0 
+		OR  (( " . $col . " & " . intval(PERMS_CONTACTS) . " ) > 0 and ( abook_flags & " . intval(ABOOK_FLAG_PENDING) . " ) = 0 ) ",
 		dbesc($msg['notify']['sender']['hash'])
 	); 
 
@@ -1411,7 +1423,7 @@ function allowed_public_recips($msg) {
 			$condensed_recips[] = $rr['hash'];
 
 		$results = array();
-		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & %d )>0 ",
+		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & %d ) > 0 ",
 			dbesc($hash),
 			intval(PAGE_REMOVED)
 		);
