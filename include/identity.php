@@ -893,7 +893,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 		|| (x($profile,'country_name') == 1))
 		$location = t('Location:');
 
-	$profile['homepage'] = linkify($profile['homepage']);
+	$profile['homepage'] = linkify($profile['homepage'],true);
 
 	$gender   = ((x($profile,'gender')   == 1) ? t('Gender:')   : False);
 	$marital  = ((x($profile,'marital')  == 1) ? t('Status:')   : False);

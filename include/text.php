@@ -873,8 +873,8 @@ function valid_email($x){
  */
 
 
-function linkify($s) {
-	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\@\~\#\'\%\$\!\+]*)/", ' <a href="$1" >$1</a>', $s);
+function linkify($s,$me = false) {
+	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\@\~\#\'\%\$\!\+]*)/", (($me) ? ' <a href="$1" rel="me" >$1</a>' : ' <a href="$1" >$1</a>'), $s);
 	$s = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$s);
 	return($s);
 }
