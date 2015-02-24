@@ -13,3 +13,27 @@ if [ -d .git ] ; then
 	git pull
 fi
 
+cd ../../..
+
+filelist=(`ls extend/addon/$1`)
+
+cd addon
+
+for a in "${filelist[@]}" ; do
+	base=`basename $a`
+	if [ $base = '.git' ]; then
+#		echo 'ignoring git'
+		continue;
+	fi
+	if [ ! -d ../extend/theme/$1/$base ]; then
+#		echo $a 'not a directory'
+		continue;
+	fi
+	if [ -x $base ]; then
+#		echo $base 'file exists'
+		continue;
+	fi
+
+	echo linking $base 
+	ln -s ../extend/theme/$1/$base $base
+done

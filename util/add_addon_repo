@@ -18,18 +18,19 @@ cd addon
 for a in "${filelist[@]}" ; do
 	base=`basename $a`
 	if [ $base = '.git' ]; then
-		echo 'ignoring git'
+#		echo 'ignoring git'
 		continue;
 	fi
 	if [ ! -d ../extend/addon/$2/$base ]; then
-		echo $a 'not a directory'
+#		echo $a 'not a directory'
 		continue;
 	fi
-	echo linking $base 
 	if [ -x $base ]; then
-		echo $base 'file exists'
+#		echo $base 'file exists'
 		continue;
 	fi
+
+	echo linking $base 
 
 	ln -s ../extend/addon/$2/$base $base
 done
