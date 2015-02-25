@@ -92,6 +92,9 @@ function directory_content(&$a) {
 		$url = $directory['url'] . '/dirsearch';
 	}
 
+	$token = get_config('system','realm_token');
+
+
 	logger('mod_directory: URL = ' . $url, LOGGER_DEBUG);
 
 	$contacts = array();
@@ -106,8 +109,6 @@ function directory_content(&$a) {
 		}
 	}
 
-
-
 	if($url) {
 		// We might want to make the tagadelic count (&kw=) configurable or turn it off completely.
 
@@ -115,6 +116,9 @@ function directory_content(&$a) {
 
 		$kw = ((intval($numtags)) ? $numtags : 24);
 		$query = $url . '?f=&kw=' . $kw . (($safe_mode != 1) ? '&safe=' . $safe_mode : '');
+
+		if($token)
+			$query .= '&t=' . $token;
 
 		if($search)
 			$query .= '&name=' . urlencode($search) . '&keywords=' . urlencode($search);

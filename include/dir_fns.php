@@ -48,7 +48,7 @@ function check_upstream_directory() {
 	if($directory) {
 		$h = parse_url($directory);
 		if($h) {
-			$x = zot_finger('sys@' . $h['host']);
+			$x = zot_finger('[system]@' . $h['host']);
 			if($x['success']) {
 				$j = json_decode($x['body'],true);
 				if(array_key_exists('site',$j) && array_key_exists('directory_mode',$j['site'])) {
@@ -166,20 +166,23 @@ function sync_directories($dirmode) {
 	// FIXME - what to do if we're in a different realm?
 
 	if((! $r) && (z_root() != DIRECTORY_FALLBACK_MASTER)) {
-		$r = array(
+		$r = array();
+		$r[] = array(
 			'site_url' => DIRECTORY_FALLBACK_MASTER,
 			'site_flags' => DIRECTORY_MODE_PRIMARY,
 			'site_update' => NULL_DATE, 
 			'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch',
-			'site_realm' => DIRECTORY_REALM
+			'site_realm' => DIRECTORY_REALM,
+			'site_valid' => 1
 		);
-		$x = q("insert into site ( site_url, site_flags, site_update, site_directory, site_realm )
+		$x = q("insert into site ( site_url, site_flags, site_update, site_directory, site_realm, site_valid )
 			values ( '%s', %d', '%s', '%s', '%s' ) ",
 			dbesc($r[0]['site_url']),
 			intval($r[0]['site_flags']),
 			dbesc($r[0]['site_update']),
 			dbesc($r[0]['site_directory']),
-			dbesc($r[0]['site_realm'])
+			dbesc($r[0]['site_realm']),
+			intval($r[0]['site_valid'])
 		);
 
 		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s'",
@@ -201,8 +204,11 @@ function sync_directories($dirmode) {
 		// It will take about a month for a new directory to obtain the full current repertoire of channels.
 		// FIXME - go back and pick up earlier ratings if this is a new directory server. These do not get refreshed.
 
+		$token = get_config('system','realm_token');
+
+
 		$syncdate = (($rr['site_sync'] === NULL_DATE) ? datetime_convert('UTC','UTC','now - 2 days') : $rr['site_sync']);
-		$x = z_fetch_url($rr['site_directory'] . '?f=&sync=' . urlencode($syncdate));
+		$x = z_fetch_url($rr['site_directory'] . '?f=&sync=' . urlencode($syncdate) . (($token) ? '&t=' . $token : ''));
 
 		if(! $x['success'])
 			continue;

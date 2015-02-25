@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1137 );
+define( 'UPDATE_VERSION' , 1138 );
 
 /**
  *
@@ -1565,6 +1565,14 @@ function update_r1136() {
 	$r3 = q("update item set item_unseen = 1 where ( item_flags & 2 ) > 0 ");
 
 	if($r1 && $r2 && $r3)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1137() {
+	$r1 = q("alter table site add site_valid smallint not null default '0' ");
+	$r2 = q("create index site_valid on site ( site_valid ) ");
+	if($r1 && $r2)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }

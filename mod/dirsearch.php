@@ -13,13 +13,21 @@ function dirsearch_content(&$a) {
 	$ret = array('success' => false);
 
 
-
 	$dirmode = intval(get_config('system','directory_mode'));
 
 	if($dirmode == DIRECTORY_MODE_NORMAL) {
 		$ret['message'] = t('This site is not a directory server');
 		json_return_and_die($ret);
 	}
+
+	$access_token = $_REQUEST['t'];
+
+	$token = get_config('system','realm_token');
+	if($token && $access_token != $token) {
+		$result['message'] = t('This directory server requires an access token');
+		return;
+	}
+
 
 	if(argc() > 1 && argv(1) === 'sites') {
 		$ret = list_public_sites();

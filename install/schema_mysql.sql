@@ -1256,6 +1256,7 @@ CREATE TABLE IF NOT EXISTS `site` (
   `site_sellpage` char(255) NOT NULL DEFAULT '',
   `site_location` char(255) NOT NULL DEFAULT '',
   `site_realm` char(255) NOT NULL DEFAULT '',
+  `site_valid` smallint NOT NULL DEFAULT '0',
   PRIMARY KEY (`site_url`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),
@@ -1264,7 +1265,8 @@ CREATE TABLE IF NOT EXISTS `site` (
   KEY `site_access` (`site_access`),
   KEY `site_sellpage` (`site_sellpage`),
   KEY `site_pull` (`site_pull`),
-  KEY `site_realm` (`site_realm`)
+  KEY `site_realm` (`site_realm`),
+  KEY `site_valid` (`site_valid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
