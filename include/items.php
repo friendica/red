@@ -3073,7 +3073,16 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 	if((! $private) && $new_public_policy)
 		$private = 1;
 
-	$flag_bits = $item['item_flags'] | ITEM_WALL|ITEM_ORIGIN;
+	$flag_bits = $item['item_flags'] | ITEM_WALL;
+
+	// The message didn't necessarily originate on this site, (we'll honour it if it did),
+	// but the parent post of this thread will be reset as a local post, as it is the top of 
+	// this delivery chain and is coming from this site, regardless of where the original
+	// originated.
+
+	if(! $parent)
+		$flag_bits = $flag_bits | ITEM_ORIGIN;
+
 
 	// unset the nocomment bit if it's there. 
 

@@ -1297,7 +1297,9 @@ function public_recips($msg) {
 		else {
 
 			// This doesn't look like it works so I have to explain what happened. These are my
-			// notes (below) from when I got this section of code working. 
+			// notes (below) from when I got this section of code working. You would think that
+			// we only have to find those with the requisite stream or comment permissions,
+			// depending on whether this is a top-level post or a comment - but you would be wrong.
  
 			// ... so public_recips and allowed_public_recips is working so much better
 			// than before, but was still not quite right. We seem to be getting all the right 
@@ -1403,9 +1405,12 @@ function public_recips($msg) {
 		}
 	}
 	else {
-		// this is a comment. Find any parent with ITEM_UPLINK set.
+		// This is a comment. We need to find any parent with ITEM_UPLINK set. But in fact, let's just return
+		// everybody that stored a copy of the parent. This way we know we're covered. We'll check the 
+		// comment permissions when we deliver them.
+
 		if($msg['message']['message_top']) {
-			$z = q("select owner_xchan as hash from item where parent_mid = '%s' and ( item_flags & %d ) > 0 ",
+			$z = q("select owner_xchan as hash from item where parent_mid = '%s' ",
 				dbesc($msg['message']['message_top']),
 				intval(ITEM_UPLINK)
 			);
@@ -1414,9 +1419,21 @@ function public_recips($msg) {
 		}
 	}
 
-	// FIXME
-	// There are probably a lot of duplicates in $r at this point. We really need to filter those out.
+	// There are probably a lot of duplicates in $r at this point. We need to filter those out.
 	// It's a bit of work since it's a multi-dimensional array
+
+	if($r) {
+		$uniq = array();
+		
+		foreach($r as $rr) {
+			if(! in_array($rr['hash'],$uniq))
+				$uniq[] = $rr['hash'];
+		}
+		$r = array();
+		foreach($uniq as $rr) {
+			$r[] = array('hash' => $rr);
+		}
+	}
 
 	logger('public_recips: ' . print_r($r,true), LOGGER_DATA);
 	return $r;
@@ -1427,8 +1444,15 @@ function public_recips($msg) {
 
 function allowed_public_recips($msg) {
 
-
 	logger('allowed_public_recips: ' . print_r($msg,true),LOGGER_DATA);
+
+	if(array_key_exists('public_scope',$msg['message']))
+		$scope = $msg['message']['public_scope'];
+
+	// Mail won't have a public scope.
+	// in fact, it's doubtful mail will ever get here since it almost universally
+	// has a recipient, but in fact we don't require this, so it's technically 
+	// possible to send mail to anybody that's listening.  
 
 	$recips = public_recips($msg);
 
@@ -1437,11 +1461,6 @@ function allowed_public_recips($msg) {
 
 	if($msg['message']['type'] === 'mail')
 		return $recips;
-
-	if(array_key_exists('public_scope',$msg['message']))
-		$scope = $msg['message']['public_scope'];
-
-	$hash = make_xchan_hash($msg['notify']['sender']['guid'],$msg['notify']['sender']['guid_sig']);
 
 	if($scope === 'public' || $scope === 'network: red' || $scope === 'authenticated')
 		return $recips;
@@ -1454,12 +1473,17 @@ function allowed_public_recips($msg) {
 	}
 
 	if($scope === 'self') {
+
+		$hash = make_xchan_hash($msg['notify']['sender']['guid'],$msg['notify']['sender']['guid_sig']);
+
 		foreach($recips as $r)
 			if($r['hash'] === $hash)
 				return array('hash' => $hash);
 	}
 
-	if($scope === 'contacts') {
+	// note: we shouldn't ever see $scope === 'specific' in this function, but handle it anyway
+
+	if($scope === 'contacts' || $scope === 'any connections' || $scope === 'specific') {
 		$condensed_recips = array();
 		foreach($recips as $rr)
 			$condensed_recips[] = $rr['hash'];
@@ -1476,6 +1500,7 @@ function allowed_public_recips($msg) {
 		}
 		return $results;
 	}
+
 
 	return array();
 }

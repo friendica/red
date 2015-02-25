@@ -366,6 +366,11 @@ function notifier_run($argv, $argc){
 
 		$encoded_item = encode_item($target_item);
 		
+		// Send comments to the owner to re-deliver to everybody in the conversation
+		// We only do this if the item in question originated on this site. This prevents looping.
+		// To clarify, a site accepting a new comment is responsible for sending it to the owner for relay.
+		// Relaying should never be initiated on a post that arrived from elsewhere.  
+
 		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN)) ? true : false);
 
 		$uplink = false;
@@ -379,7 +384,7 @@ function notifier_run($argv, $argc){
 
 		// tag_deliver'd post which needs to be sent back to the original author
 
-		if(($cmd === 'uplink') && ($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post) && (! $deleted_item)) {
+		if(($cmd === 'uplink') && ($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post)) {
 			logger('notifier: uplink');			
 			$uplink = true;
 		} 
@@ -400,7 +405,7 @@ function notifier_run($argv, $argc){
 			// if our parent is a tag_delivery recipient, uplink to the original author causing
 			// a delivery fork. 
 
-			if(($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post) && ($cmd !== 'uplink') && (! $deleted_item)) {
+			if(($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post) && ($cmd !== 'uplink')) {
 				logger('notifier: uplinking this item');
 				proc_run('php','include/notifier.php','uplink',$item_id);
 			}
