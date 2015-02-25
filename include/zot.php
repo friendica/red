@@ -1295,9 +1295,33 @@ function public_recips($msg) {
 			$check_mentions = true;
 		}
 		else {
-			$col = 'channel_w_comment';
-			$field = PERMS_W_COMMENT;
 
+			// This doesn't look like it works so I have to explain what happened. These are my
+			// notes (below) from when I got this section of code working. 
+ 
+			// ... so public_recips and allowed_public_recips is working so much better
+			// than before, but was still not quite right. We seem to be getting all the right 
+			// results for top-level posts now, but comments aren't getting through on channels 
+			// for which we've allowed them to send us their stream, but not comment on our posts.
+			// The reason is we were seeing if they could comment - and we only need to do that if 
+			// we own the post. If they own the post, we only need to check if they can send us their stream.
+
+			// if this is a comment and it wasn't sent by the post owner, check to see who is allowing them to comment.
+			// We should have one specific recipient and this step shouldn't be needed unless somebody stuffed up 
+			// their software. We may need this step to protect us from bad guys intentionally stuffing up their software.
+			// If it is sent by the post owner, we don't need to do this. We only need to see who is receiving the
+			// owner's stream (which was already set above) - as they control the comment permissions, not us.
+
+			// Note that by doing this we introduce another bug because some public forums have channel_w_stream 
+			// permissions set to themselves only. We also need in this function to add these public forums to the
+			// public recipient list based on if they are tagged or not and have tag permissions. This is complicated 
+			// by the fact that this activity doesn't have the public forum tag. It's the parent activity that 
+			// contains the tag. we'll solve that further below.
+
+			if($msg['notify']['sender']['guid_sig'] != $msg['message']['owner']['guid_sig']) {
+				$col = 'channel_w_comment';
+				$field = PERMS_W_COMMENT;
+			}
 		}
 	}
 	elseif($msg['message']['type'] === 'mail') {
@@ -1359,22 +1383,40 @@ function public_recips($msg) {
 	// look for any public mentions on this site
 	// They will get filtered by tgroup_check() so we don't need to check permissions now
 
-	if($check_mentions && $msg['message']['tags']) {
-		if(is_array($msg['message']['tags']) && $msg['message']['tags']) {
-			foreach($msg['message']['tags'] as $tag) {
-				if(($tag['type'] === 'mention') && (strpos($tag['url'],z_root()) !== false)) {
-					$address = basename($tag['url']);
-					if($address) {
-						$z = q("select channel_hash as hash from channel where channel_address = '%s' limit 1",
-							dbesc($address)
-						);
-						if($z)
-							$r = array_merge($r,$z);
+	if($check_mentions) {
+		// It's a top level post. Look at the tags. See if any of them are mentions and are on this hub.
+		if($msg['message']['tags']) {
+			if(is_array($msg['message']['tags']) && $msg['message']['tags']) {
+				foreach($msg['message']['tags'] as $tag) {
+					if(($tag['type'] === 'mention') && (strpos($tag['url'],z_root()) !== false)) {
+						$address = basename($tag['url']);
+						if($address) {
+							$z = q("select channel_hash as hash from channel where channel_address = '%s' limit 1",
+								dbesc($address)
+							);
+							if($z)
+								$r = array_merge($r,$z);
+						}
 					}
 				}
 			}
 		}
 	}
+	else {
+		// this is a comment. Find any parent with ITEM_UPLINK set.
+		if($msg['message']['message_top']) {
+			$z = q("select owner_xchan as hash from item where parent_mid = '%s' and ( item_flags & %d ) > 0 ",
+				dbesc($msg['message']['message_top']),
+				intval(ITEM_UPLINK)
+			);
+			if($z)
+				$r = array_merge($r,$z); 
+		}
+	}
+
+	// FIXME
+	// There are probably a lot of duplicates in $r at this point. We really need to filter those out.
+	// It's a bit of work since it's a multi-dimensional array
 
 	logger('public_recips: ' . print_r($r,true), LOGGER_DATA);
 	return $r;

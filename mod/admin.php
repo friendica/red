@@ -546,7 +546,7 @@ function admin_page_dbsync(&$a) {
 				$o .= sprintf( t('Executing %s failed. Check system logs.'), $func); 
 			}
 			elseif($retval === UPDATE_SUCCESS) {
-				$o .= sprintf( t('Update %s was successfully applied.', $func));
+				$o .= sprintf( t('Update %s was successfully applied.'), $func);
 				set_config('database',$func, 'success');
 			}
 			else
