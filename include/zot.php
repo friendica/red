@@ -1680,6 +1680,13 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 		else {
 			$arr['aid'] = $channel['channel_account_id'];
 			$arr['uid'] = $channel['channel_id'];
+
+			// if it's a sourced post, call the post_local hooks as if it were
+			// posted locally so that crosspost connectors will be triggered.
+
+			if(check_item_source($arr['uid'],$arr))
+				call_hooks('post_local',$arr);
+
 			$item_result = item_store($arr);
 			$item_id = 0;
 			if($item_result['success']) {

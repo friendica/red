@@ -3136,6 +3136,8 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 		intval($item_id)
 	);
 
+
+
 	if($r)
 		proc_run('php','include/notifier.php','tgroup',$item_id);
 	else
