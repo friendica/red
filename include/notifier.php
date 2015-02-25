@@ -315,9 +315,12 @@ function notifier_run($argv, $argc){
 		$r = fetch_post_tags($r);
 		
 		$target_item = $r[0];
+		$deleted_item = false;
 
-		if($target_item['item_restrict'] & ITEM_DELETED)
+		if($target_item['item_restrict'] & ITEM_DELETED) {
 			logger('notifier: target item ITEM_DELETED', LOGGER_DEBUG);
+			$deleted_item = true;
+		}
 
 		$unforwardable = ITEM_UNPUBLISHED|ITEM_DELAYED_PUBLISH|ITEM_WEBPAGE|ITEM_BUILDBLOCK|ITEM_PDL;
 		if($target_item['item_restrict'] & $unforwardable) {
@@ -376,7 +379,7 @@ function notifier_run($argv, $argc){
 
 		// tag_deliver'd post which needs to be sent back to the original author
 
-		if(($cmd === 'uplink') && ($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post)) {
+		if(($cmd === 'uplink') && ($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post) && (! $deleted_item)) {
 			logger('notifier: uplink');			
 			$uplink = true;
 		} 
@@ -397,7 +400,7 @@ function notifier_run($argv, $argc){
 			// if our parent is a tag_delivery recipient, uplink to the original author causing
 			// a delivery fork. 
 
-			if(($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post) && ($cmd !== 'uplink')) {
+			if(($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post) && ($cmd !== 'uplink') && (! $deleted_item)) {
 				logger('notifier: uplinking this item');
 				proc_run('php','include/notifier.php','uplink',$item_id);
 			}
