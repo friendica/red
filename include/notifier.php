@@ -371,7 +371,14 @@ function notifier_run($argv, $argc){
 		// To clarify, a site accepting a new comment is responsible for sending it to the owner for relay.
 		// Relaying should never be initiated on a post that arrived from elsewhere.  
 
-		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN)) ? true : false);
+		// We should normally be able to rely on ITEM_ORIGIN, but start_delivery_chain() incorrectly set this
+		// flag on comments for an extended period. So we'll also call comment_local_origin() which looks at
+		// the hostname in the message_id and provides a second (fallback) opinion. 
+
+		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN) && comment_local_origin()) 
+			? true 
+			: false
+		);
 
 		$uplink = false;
 

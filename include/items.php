@@ -4799,3 +4799,18 @@ function set_linkified_perms($linkified, &$str_contact_allow, &$str_group_allow,
 		}
 	}
 }
+
+
+/*
+ * We can't trust ITEM_ORIGIN to tell us if this is a local comment 
+ * which needs to be relayed, because it was misconfigured at one point for several
+ * months and set for some remote items (in alternate delivery chains). This could
+ * cause looping, so use this hackish but accurate method. 
+ */
+
+
+function comment_local_origin($item) {
+	if(stripos($item['mid'],get_app()->get_hostname()) && ($item['parent'] != $item['id']))
+		return true;
+	return false;		
+}
