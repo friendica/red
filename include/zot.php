@@ -2896,6 +2896,9 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
+						if($k == 'abook_dob')
+							$v = dbescdate($v);
+							
 						$r = dbq("UPDATE abook set " . dbesc($k) . " = '" . dbesc($v) 
 						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']));
 					}
