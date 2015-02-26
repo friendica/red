@@ -528,7 +528,7 @@ CREATE TABLE "item" (
   "item_restrict" bigint NOT NULL DEFAULT '0',
   "item_flags" bigint NOT NULL DEFAULT '0',
   "item_private" numeric(4) NOT NULL DEFAULT '0',
-  "item_unseen" smallint(1) NOT NULL DEFAULT '0',
+  "item_unseen" smallint NOT NULL DEFAULT '0',
   "item_search_vector" tsvector,
   PRIMARY KEY ("id")
 );
@@ -1163,7 +1163,7 @@ CREATE TABLE "xperm" (
   "xp_client" varchar( 20 ) NOT NULL DEFAULT '',
   "xp_channel" bigint NOT NULL DEFAULT '0',
   "xp_perm" varchar( 64 ) NOT NULL DEFAULT '',
-  PRIMARY_KEY ("xp_id")
+  PRIMARY KEY ("xp_id")
 );
 create index "xp_client" on xperm ("xp_client");
 create index "xp_channel" on xperm ("xp_channel");
