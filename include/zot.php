@@ -1295,9 +1295,35 @@ function public_recips($msg) {
 			$check_mentions = true;
 		}
 		else {
-			$col = 'channel_w_comment';
-			$field = PERMS_W_COMMENT;
 
+			// This doesn't look like it works so I have to explain what happened. These are my
+			// notes (below) from when I got this section of code working. You would think that
+			// we only have to find those with the requisite stream or comment permissions,
+			// depending on whether this is a top-level post or a comment - but you would be wrong.
+ 
+			// ... so public_recips and allowed_public_recips is working so much better
+			// than before, but was still not quite right. We seem to be getting all the right 
+			// results for top-level posts now, but comments aren't getting through on channels 
+			// for which we've allowed them to send us their stream, but not comment on our posts.
+			// The reason is we were seeing if they could comment - and we only need to do that if 
+			// we own the post. If they own the post, we only need to check if they can send us their stream.
+
+			// if this is a comment and it wasn't sent by the post owner, check to see who is allowing them to comment.
+			// We should have one specific recipient and this step shouldn't be needed unless somebody stuffed up 
+			// their software. We may need this step to protect us from bad guys intentionally stuffing up their software.
+			// If it is sent by the post owner, we don't need to do this. We only need to see who is receiving the
+			// owner's stream (which was already set above) - as they control the comment permissions, not us.
+
+			// Note that by doing this we introduce another bug because some public forums have channel_w_stream 
+			// permissions set to themselves only. We also need in this function to add these public forums to the
+			// public recipient list based on if they are tagged or not and have tag permissions. This is complicated 
+			// by the fact that this activity doesn't have the public forum tag. It's the parent activity that 
+			// contains the tag. we'll solve that further below.
+
+			if($msg['notify']['sender']['guid_sig'] != $msg['message']['owner']['guid_sig']) {
+				$col = 'channel_w_comment';
+				$field = PERMS_W_COMMENT;
+			}
 		}
 	}
 	elseif($msg['message']['type'] === 'mail') {
@@ -1359,20 +1385,53 @@ function public_recips($msg) {
 	// look for any public mentions on this site
 	// They will get filtered by tgroup_check() so we don't need to check permissions now
 
-	if($check_mentions && $msg['message']['tags']) {
-		if(is_array($msg['message']['tags']) && $msg['message']['tags']) {
-			foreach($msg['message']['tags'] as $tag) {
-				if(($tag['type'] === 'mention') && (strpos($tag['url'],z_root()) !== false)) {
-					$address = basename($tag['url']);
-					if($address) {
-						$z = q("select channel_hash as hash from channel where channel_address = '%s' limit 1",
-							dbesc($address)
-						);
-						if($z)
-							$r = array_merge($r,$z);
+	if($check_mentions) {
+		// It's a top level post. Look at the tags. See if any of them are mentions and are on this hub.
+		if($msg['message']['tags']) {
+			if(is_array($msg['message']['tags']) && $msg['message']['tags']) {
+				foreach($msg['message']['tags'] as $tag) {
+					if(($tag['type'] === 'mention') && (strpos($tag['url'],z_root()) !== false)) {
+						$address = basename($tag['url']);
+						if($address) {
+							$z = q("select channel_hash as hash from channel where channel_address = '%s' limit 1",
+								dbesc($address)
+							);
+							if($z)
+								$r = array_merge($r,$z);
+						}
 					}
 				}
 			}
+		}
+	}
+	else {
+		// This is a comment. We need to find any parent with ITEM_UPLINK set. But in fact, let's just return
+		// everybody that stored a copy of the parent. This way we know we're covered. We'll check the 
+		// comment permissions when we deliver them.
+
+		if($msg['message']['message_top']) {
+			$z = q("select owner_xchan as hash from item where parent_mid = '%s' ",
+				dbesc($msg['message']['message_top']),
+				intval(ITEM_UPLINK)
+			);
+			if($z)
+				$r = array_merge($r,$z); 
+		}
+	}
+
+	// There are probably a lot of duplicates in $r at this point. We need to filter those out.
+	// It's a bit of work since it's a multi-dimensional array
+
+	if($r) {
+		$uniq = array();
+		
+		foreach($r as $rr) {
+			if(! in_array($rr['hash'],$uniq))
+				$uniq[] = $rr['hash'];
+		}
+		$r = array();
+		foreach($uniq as $rr) {
+			$r[] = array('hash' => $rr);
 		}
 	}
 
@@ -1385,8 +1444,15 @@ function public_recips($msg) {
 
 function allowed_public_recips($msg) {
 
-
 	logger('allowed_public_recips: ' . print_r($msg,true),LOGGER_DATA);
+
+	if(array_key_exists('public_scope',$msg['message']))
+		$scope = $msg['message']['public_scope'];
+
+	// Mail won't have a public scope.
+	// in fact, it's doubtful mail will ever get here since it almost universally
+	// has a recipient, but in fact we don't require this, so it's technically 
+	// possible to send mail to anybody that's listening.  
 
 	$recips = public_recips($msg);
 
@@ -1395,11 +1461,6 @@ function allowed_public_recips($msg) {
 
 	if($msg['message']['type'] === 'mail')
 		return $recips;
-
-	if(array_key_exists('public_scope',$msg['message']))
-		$scope = $msg['message']['public_scope'];
-
-	$hash = make_xchan_hash($msg['notify']['sender']['guid'],$msg['notify']['sender']['guid_sig']);
 
 	if($scope === 'public' || $scope === 'network: red' || $scope === 'authenticated')
 		return $recips;
@@ -1412,12 +1473,17 @@ function allowed_public_recips($msg) {
 	}
 
 	if($scope === 'self') {
+
+		$hash = make_xchan_hash($msg['notify']['sender']['guid'],$msg['notify']['sender']['guid_sig']);
+
 		foreach($recips as $r)
 			if($r['hash'] === $hash)
 				return array('hash' => $hash);
 	}
 
-	if($scope === 'contacts') {
+	// note: we shouldn't ever see $scope === 'specific' in this function, but handle it anyway
+
+	if($scope === 'contacts' || $scope === 'any connections' || $scope === 'specific') {
 		$condensed_recips = array();
 		foreach($recips as $rr)
 			$condensed_recips[] = $rr['hash'];
@@ -1434,6 +1500,7 @@ function allowed_public_recips($msg) {
 		}
 		return $results;
 	}
+
 
 	return array();
 }
@@ -1638,6 +1705,13 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 		else {
 			$arr['aid'] = $channel['channel_account_id'];
 			$arr['uid'] = $channel['channel_id'];
+
+			// if it's a sourced post, call the post_local hooks as if it were
+			// posted locally so that crosspost connectors will be triggered.
+
+			if(check_item_source($arr['uid'],$arr))
+				call_hooks('post_local',$arr);
+
 			$item_result = item_store($arr);
 			$item_id = 0;
 			if($item_result['success']) {
@@ -2806,9 +2880,6 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
-						if($k == 'abook_dob')
-							$v = dbescdate($v);
-							
 						$r = dbq("UPDATE abook set " . dbesc($k) . " = '" . dbesc($v) 
 						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']));
 					}
