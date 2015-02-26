@@ -1856,7 +1856,23 @@ function delete_imported_item($sender,$item,$uid,$relay) {
 			logger('delete_imported_item: item was already deleted');
 			if(! $relay)
 				return false;
+
+			// This is a bit hackish, but may have to suffice until the notification/delivery loop is optimised
+			// a bit further. We're going to strip the ITEM_ORIGIN on this item if it's a comment, because
+			// it was already deleted, and we're already relaying, and this ensures that no other process or 
+			// code path downstream can relay it again (causing a loop). Since it's already gone it's not coming
+			// back, and we aren't going to (or shouldn't at any rate) delete it again in the future - so losing
+			// this information from the metadata should have no other discernible impact. 
+			
+			if(($r[0]['id'] != $r[0]['parent']) && ($r[0]['item_flags'] & ITEM_ORIGIN)) {
+				$x = q("update item set item_flags = %d where id = %d and uid = %d",
+					intval($r[0]['item_flags'] ^ ITEM_ORIGIN),
+					intval($r[0]['id']),
+					intval($r[0]['uid'])
+				);
+			}
 		} 
+
 		
 		require_once('include/items.php');
 
