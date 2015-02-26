@@ -375,7 +375,7 @@ function notifier_run($argv, $argc){
 		// flag on comments for an extended period. So we'll also call comment_local_origin() which looks at
 		// the hostname in the message_id and provides a second (fallback) opinion. 
 
-		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN) && comment_local_origin()) 
+		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN) && comment_local_origin($target_item)) 
 			? true 
 			: false
 		);
