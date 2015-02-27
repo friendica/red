@@ -8,6 +8,7 @@ var items_8php =
     [ "can_comment_on_post", "items_8php.html#a1e75047cf175aaee8dd16aa761913ff9", null ],
     [ "check_item_source", "items_8php.html#a87ac9e359591721a824ecd23bbb56296", null ],
     [ "collect_recipients", "items_8php.html#a772f0ae77ad77c8ab68ed918a3870946", null ],
+    [ "comment_local_origin", "items_8php.html#ada03c12bfd247c9972844e2daa270b52", null ],
     [ "comments_are_now_closed", "items_8php.html#abeb7886cde44d9a83dbaf2bc4ab18723", null ],
     [ "compare_permissions", "items_8php.html#a0790a4550b829e85504af548623002ca", null ],
     [ "construct_activity_object", "items_8php.html#aa9e99613d38a97b39c8cf5449699c2ee", null ],

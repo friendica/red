@@ -11,6 +11,7 @@ var admin_8php =
     [ "admin_page_plugins", "admin_8php.html#a54128076986ba80c4a103de3fc3e19a8", null ],
     [ "admin_page_profs", "admin_8php.html#a3deba594ca1e11694eac1de0b724ef0a", null ],
     [ "admin_page_profs_post", "admin_8php.html#a278289bc6d45f6f2a272a7ab6a1d1057", null ],
+    [ "admin_page_queue", "admin_8php.html#a35ffa5d643e6a98fa844d6d02b408f89", null ],
     [ "admin_page_site", "admin_8php.html#ac0f3bd12431c056aad77bac9d09fa30e", null ],
     [ "admin_page_site_post", "admin_8php.html#add865f4ae806ecbf716f423fc3e50e4f", null ],
     [ "admin_page_summary", "admin_8php.html#ac6e95b920b5abd030cc522964987087a", null ],

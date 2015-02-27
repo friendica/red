@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"classRedMatrix_1_1RedDAV_1_1RedFile.html#af5c88b75d0c1f590af03755534cb167e":[6,0,4,1,3,3],
 "classTemplate.html":[6,0,27],
 "classTemplate.html#a07737733f6949bdedea1e3d301b2ab7b":[6,0,27,13],
 "classTemplate.html#a285b5b2007dbbf733476273df3fed4ef":[6,0,27,12],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "contact__selectors_8php.html#a9839e8fdaac7ffb37bf1420493f5c28f":[7,0,1,22,0],
 "contact__selectors_8php.html#ad472e4716426dd1a9dd77b62962454be":[7,0,1,22,2],
 "contact__widgets_8php.html":[7,0,1,23],
-"contact__widgets_8php.html#a165eb021e61c4dcab2a552f28628d353":[7,0,1,23,0],
-"contact__widgets_8php.html#a1eda66319d170f60a8d07c7ece95533b":[7,0,1,23,2]
+"contact__widgets_8php.html#a165eb021e61c4dcab2a552f28628d353":[7,0,1,23,0]
 };

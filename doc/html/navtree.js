@@ -38,16 +38,16 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BS-Default_8php.html",
-"boot_8php.html#a56fd673eaa7014150297ce1162502db5",
-"classApp.html#a230e975296cf164da2fee35ef720964f",
-"classTemplate.html",
-"contact__widgets_8php.html#a552f8544528cec0c995cea7287ea9d65",
-"extend_2theme_2deadsuperhero_2sporadic_2php_2theme_8php.html#a76ef724ca35812c083088fe573507ef6",
-"identity_8php.html#aaff86ee3b5984821e7a256c2da5f1a51",
-"items_8php.html#a1e75047cf175aaee8dd16aa761913ff9",
-"pdledit_8php.html#a81da3c955d0e3db55d148a31483104c7",
-"smarty_8php.html",
-"vote_8php.html#a6aa67489bf458ca5e3206e46dac68596"
+"boot_8php.html#a5542c5c2806ab8bca04bad53d47b5209",
+"classApp.html#a20d1890cc16b22ba79eeb0cbf2f719f7",
+"classRedMatrix_1_1RedDAV_1_1RedFile.html#af5c88b75d0c1f590af03755534cb167e",
+"contact__widgets_8php.html#a1eda66319d170f60a8d07c7ece95533b",
+"extend_2theme_2deadsuperhero_2minded_2php_2theme_8php.html#a7e81433bad392d56c3020e71b3d7530a",
+"identity_8php.html#aaeb666872995e3ab8da8f7bc5f3b2bd3",
+"items_8php.html#a1cf89557f32d5dfbe8bd90448dc1aa92",
+"pdledit_8php.html",
+"sitelist_8php.html",
+"vote_8php.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

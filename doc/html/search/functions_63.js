@@ -90,6 +90,7 @@ var searchData=
   ['comanche_5freplace_5fregion',['comanche_replace_region',['../comanche_8php.html#a028f004d5b8c23d6367816d899e17cfe',1,'comanche.php']]],
   ['comanche_5fwebpage',['comanche_webpage',['../comanche_8php.html#ae9fe1ce574db3dd0931eada80234f82a',1,'comanche.php']]],
   ['comanche_5fwidget',['comanche_widget',['../comanche_8php.html#a6b0191c1a63db1696a2eb139d90d9e7f',1,'comanche.php']]],
+  ['comment_5flocal_5forigin',['comment_local_origin',['../items_8php.html#ada03c12bfd247c9972844e2daa270b52',1,'items.php']]],
   ['comments_5fare_5fnow_5fclosed',['comments_are_now_closed',['../items_8php.html#abeb7886cde44d9a83dbaf2bc4ab18723',1,'items.php']]],
   ['common_5fcontent',['common_content',['../common_8php.html#ab63408f39abef7a6915186e8dabc5a96',1,'common.php']]],
   ['common_5ffriends',['common_friends',['../socgraph_8php.html#a7d34cd58025bcd9e575282f44db75918',1,'socgraph.php']]],
