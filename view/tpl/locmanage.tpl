@@ -19,7 +19,7 @@ function drophub(id) {
 
 {{if $hub.primary}}<i class="icon-check"></i>{{else}}<button class="btn btn-std" onclick="primehub({{$hub.hubloc_id}}); return false;" ><i class="icon-check-empty"  ></i></button>{{/if}}
 </td>
-<td>{{if $hub.primary}}{{else}}{{if ! $hub.deleted}}<button class="btn btn-std" onclick="drophub({{$hub.hubloc_id}}); return false;"><i class="icon-remove"></i></button>{{/if}}{{/if}}</td>
+<td>{{if $hub.primary}}{{else}}{{if ! $hub.deleted}}<button class="btn btn-std" onclick="drophub({{$hub.hubloc_id}}); return false;"><i class="icon-trash"></i></button>{{/if}}{{/if}}</td>
 </tr>
 {{/foreach}}
 </table>

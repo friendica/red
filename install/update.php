@@ -26,10 +26,14 @@ define( 'UPDATE_VERSION' , 1138 );
  * The DB_UPDATE_VERSION will always be one greater than the last numbered script in this file. 
  *
  * If you change the database schema, the following are required:
- *    1. Update the file database.sql to match the new schema.
+ *    1. Update the files schema_mysql.sql and schema_postgres.sql to match the new schema.
+ *       Be sure to read doc/sql_conventions.bb ($yoururl/help/sql_conventions) use only standard
+ *		 SQL data types where possible to keep differences in the files to a minimum
  *    2. Update this file by adding a new function at the end with the number of the current DB_UPDATE_VERSION.
  *       This function should modify the current database schema and perform any other steps necessary
- *       to ensure that upgrade is silent and free from requiring interaction.
+ *       to ensure that upgrade is silent and free from requiring interaction. Review to ensure that it
+ *		 will run correctly on both postgres and MySQL/Mariadb. It is very difficult and messy to fix DB update
+ *		 errors. Once pushed, it requires a new update which undoes any damage and performs the corrected updated.
  *    3. Increment the DB_UPDATE_VERSION in boot.php *AND* the UPDATE_VERSION in this file to match it
  *    4. TEST the upgrade prior to checkin and filing a pull request.
  *

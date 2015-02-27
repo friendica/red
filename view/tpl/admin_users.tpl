@@ -76,7 +76,7 @@
 						<td class="checkbox"><input type="checkbox" class="users_ckbx" id="id_user_{{$u.account_id}}" name="user[]" value="{{$u.account_id}}"/></td>
 						<td class="tools">
 							<a href="{{$baseurl}}/admin/users/block/{{$u.account_id}}?t={{$form_security_token}}" title='{{if ($u.blocked)}}{{$unblock}}{{else}}{{$block}}{{/if}}'><i class='icon-ban-circle admin-icons {{if ($u.blocked)}}dim{{/if}}'></i></a>
-							<a href="{{$baseurl}}/admin/users/delete/{{$u.account_id}}?t={{$form_security_token}}" title='{{$delete}}' onclick="return confirm_delete('{{$u.name}}')"><i class='icon-remove admin-icons'></i></a>
+							<a href="{{$baseurl}}/admin/users/delete/{{$u.account_id}}?t={{$form_security_token}}" title='{{$delete}}' onclick="return confirm_delete('{{$u.name}}')"><i class='icon-trash admin-icons'></i></a>
 						</td>
 					</tr>
 				{{/foreach}}

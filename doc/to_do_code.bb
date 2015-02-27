@@ -5,6 +5,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]Documentation - see Red Documentation Project To-Do List[/li]
 [li]Include TOS link in registration/verification email[/li]
 [li]Create bug tracker module[/li]
+[li]Infinite scroll improvements (i.e. embedded page links) see http://scrollsample.appspot.com/items 
 [li]Finish the anti-spam bayesian engine[/li]
 [li]implement an email permission denied bounce message from the sys channel[/li]
 [li]finish Wordpress connector - import wordpress comments back to redmatrix[/li]
@@ -23,7 +24,6 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]service classes - provide a pluggable subscription payment gateway for premium accounts[/li]
 [li]service classes - account overview page showing resources consumed by channel. With special consideration this page can also be accessed at a meta level by the site admin to drill down on problematic accounts/channels.[/li]
 [li]Events module - fix permissions on events, and provide JS translation support for the calendar overview; integrate with calDAV[/li]
-[li]Events module - event followups[/li]
 [li]Uploads - integrate #^[url=https://github.com/blueimp/jQuery-File-Upload]https://github.com/blueimp/jQuery-File-Upload[/url][/li]
 [li]Import/export - include events, things, etc.[/li]
 [li]Import channel from Diaspora/Friendica[/li]
