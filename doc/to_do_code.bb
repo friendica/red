@@ -17,6 +17,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]implement openid server interface[/li]
 [li]Write more webpage layouts[/li]
 [li]Write more webpage widgets[/li]
+[li]restricted access OAuth clients[/li]
 [li](Advanced) create a UI for building Comanche pages[/li]
 [li]Extend WebDAV to provide desktop access to photo albums[/li]
 [li]External post connectors - create standard interface[/li]

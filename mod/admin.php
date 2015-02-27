@@ -99,7 +99,8 @@ function admin_content(&$a) {
 		'channels'	 =>	Array($a->get_baseurl(true)."/admin/channels/", t("Channels") , "channels"),
 		'plugins'    =>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
 		'themes'     =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
-		'hubloc'     =>	Array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
+		'queue'      => array(z_root() . '/admin/queue', t('Inspect queue'), 'queue'),
+//		'hubloc'     =>	Array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
 		'profs'      => array(z_root() . '/admin/profs', t('Profile Config'), 'profs'),
 		'dbsync'     => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
 	);
@@ -163,6 +164,9 @@ function admin_content(&$a) {
 				break;
 			case 'profs':
 				$o = admin_page_profs($a);
+				break;
+			case 'queue':
+				$o = admin_page_queue($a);
 				break;
 			default:
 				notice( t("Item not found.") );
@@ -578,6 +582,26 @@ function admin_page_dbsync(&$a) {
 		'$apply' => t('Attempt to execute this update step automatically'),
 		'$failed' => $failed
 	));	
+
+	return $o;
+
+}
+
+function admin_page_queue($a) {
+	$o = '';
+
+	$r = q("select count(outq_posturl) as total, outq_posturl from outq 
+		where outq_delivered = 0 group by outq_posturl order by total desc");
+
+	$o .= '<h3>' . t('Queue Statistics') . '</h3>';
+
+	if($r) {
+		$o .= '<table><tr><td>' . t('Total Entries') . '&nbsp;&nbsp;</td><td>' . t('Destination URL') . '</td></tr>';
+		foreach($r as $rr) {
+			$o .= '<tr><td>' . $rr['total'] . '</td><td>' . $rr['outq_posturl'] . '</td></tr>';
+		}
+		$o .= '</table>';
+	}
 
 	return $o;
 
