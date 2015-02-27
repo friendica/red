@@ -14,8 +14,6 @@ Trotzdem: Wenn Du willst, dass Freunde Dich finden können, macht es Sinn, folge
 [*] Ein Foto, das auch wirklich Dich zeigt
 [*] Deinen Wohnort, oder zumindest Land oder Bundesland[/ul]
 
-Ohne diese Informationen könnte es passieren, dass Du hier sehr einsam bist. Die meisten Leute verbinden sich nicht mit jemandem, von dem sie nur einen Fake-Namen und ein Foto sehen, das noch nicht einmal einen Menschen zeigt.
-
 Wenn Du Leute kennenlernen möchtest, die ähnliche Interessen haben wie Du, nimm Dir einen Moment Zeit und füge einige Schlüsselwörter hinzu. Zum Beispiel „Musik, Linux, Fotografie“ oder was auch immer. Danach können andere dann im Verzeichnis suchen. Du kannst so viele Schlüsselwörter eingeben wie Du möchtest.
 
 Um alternative Profile zu erstellen, besuche zunächst die Seite [zrl=[baseurl]/settings/features]Einstellungen > Zusätzliche Funktionen[/zrl] und aktiviere dort „Mehrfachprofile“. Ohne diese Aktivierung hast Du nur ein Profil, nämlich Dein Standard-Profil.
@@ -34,6 +32,9 @@ Wenn Du nicht möchtest, dass andere Dich finden können, ohne dass Du ihnen Dei
 
 Im Verzeichnis (Kanal-Anzeiger) kannst Du nach Leuten suchen, die ihre Profile veröffentlichen. Zum Beispiel, indem Du Namen oder Spitznamen eingibst. Aktuell werden nur das Namensfeld und die Schlüsselwörter durchsucht. Wenn Du Schlüsselwörter in Dein Standard-Profil einträgst, können Dich Leute mit ähnlichen Interessen finden. Sie werden außerdem bei den Kanal-Vorschlägen benutzt. Sie sind im Verzeichnis nicht direkt sichtbar, wohl aber auf Deiner Profil-Seite.
 
-Auf Deiner „Verbindungen“-Seite und im Verzeichnis (Kanal-Anzeiger) gibt es einen Link „Vorschläge“ bzw. „Kanal-Vorschläge“. Dort findest Du Kanäle, die gleiche oder ähnliche Schlüsselwörter im Profil haben wie Du. Je mehr Schlüsselwörter Du in Dein Standard-Profil einträgst, desto besser werden die Suchergebnisse. Sie sind nach relevanz sortiert.
+Auf Deiner „Verbindungen“-Seite und im Verzeichnis (Kanal-Anzeiger) gibt es einen Link „Vorschläge“ bzw. „Kanal-Vorschläge“. Dort findest Du Kanäle, die gleiche oder ähnliche Schlüsselwörter im Profil haben wie Du. Je mehr Schlüsselwörter Du in Dein Standard-Profil einträgst, desto besser werden die Suchergebnisse. Sie sind nach Relevanz sortiert.
 
+Siehe auch:
+
+[zrl=[baseurl]/help/AdvancedSearch]Fortgeschrittene Suche[/zrl]
 #include doc/macros/main_footer.bb;
