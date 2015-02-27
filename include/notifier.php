@@ -100,10 +100,14 @@ function notifier_run($argv, $argc){
 		// Get the recipient	
 		$r = q("select abook.*, hubloc.* from abook 
 			left join hubloc on hubloc_hash = abook_xchan
-			where abook_id = %d and not ( abook_flags & %d )>0 limit 1",
+			where abook_id = %d and not ( abook_flags & %d ) > 0 
+			and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0 limit 1",
 			intval($item_id),
-			intval(ABOOK_FLAG_SELF)
+			intval(ABOOK_FLAG_SELF),
+			intval(HUBLOC_FLAGS_DELETED),
+			intval(HUBLOC_OFFLINE)
 		);
+
 		if($r) {
 			// Get the sender
 			$s = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_id = %d limit 1",
@@ -116,8 +120,11 @@ function notifier_run($argv, $argc){
 				}
 				else {
 					// send a refresh message to each hub they have registered here	
-					$h = q("select * from hubloc where hubloc_hash = '%s'",
-						dbesc($r[0]['hubloc_hash'])
+					$h = q("select * from hubloc where hubloc_hash = '%s' 
+						and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0",
+						dbesc($r[0]['hubloc_hash']),
+						intval(HUBLOC_FLAGS_DELETED),
+						intval(HUBLOC_OFFLINE)
 					);
 					if($h) {
 						foreach($h as $hh) {
@@ -138,7 +145,6 @@ function notifier_run($argv, $argc){
 				}
 			}
 		}
-
 		return;
 	}	
 
@@ -490,6 +496,9 @@ function notifier_run($argv, $argc){
 	// Let's reduce this to a set of hubs.
 
 	logger('notifier: hub choice: ' . intval($relay_to_owner) . ' ' . intval($private) . ' ' . $cmd, LOGGER_DEBUG);
+
+	// FIXME: I think we need to remove the private bit or this clause will never execute. Needs more coffee to think it through.
+	// We may in fact have to send it to clones in case the one we pick recently died. 
 
 	if($relay_to_owner && (! $private) && ($cmd !== 'relay')) {
 
