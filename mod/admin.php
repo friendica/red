@@ -202,7 +202,7 @@ function admin_page_summary(&$a) {
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
 
-	$r = q("select count(*) as total from outq");
+	$r = q("select count(*) as total from outq where outq_delivered = 0");
 	$queue = (($r) ? $r[0]['total'] : 0);
 
 	// We can do better, but this is a quick queue status
