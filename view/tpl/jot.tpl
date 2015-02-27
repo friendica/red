@@ -21,7 +21,7 @@
 			</div>
 		{{/if}}
 		<div id="jot-title-wrap"  class="jothidden" style="display:none">
-			<input name="title" id="jot-title" type="text" placeholder="{{$placeholdertitle}}" value="{{$title}}">
+			<input name="title" id="jot-title" type="text" placeholder="{{$placeholdertitle}}" tabindex=1 value="{{$title}}">
 		</div>
 		{{if $catsenabled}}
 		<div id="jot-category-wrap"  class="jothidden" style="display:none">
@@ -34,7 +34,7 @@
 		</div>
 		{{/if}}
 		<div id="jot-text-wrap">
-			<textarea class="profile-jot-text" id="profile-jot-text" name="body" placeholder="{{$share}}">{{$content}}</textarea>
+			<textarea class="profile-jot-text" id="profile-jot-text" name="body" tabindex=2 placeholder="{{$share}}">{{$content}}</textarea>
 		</div>
 		<div id="profile-jot-submit-wrapper" class="jothidden">
 			<div id="profile-jot-submit-left" class="btn-toolbar pull-left">
@@ -99,7 +99,7 @@
 					<i class="icon-eye-open jot-icons" ></i>
 				</button>
 				{{/if}}
-				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="button-submit" >{{$share}}</button>
+				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" tabindex=3 name="button-submit" >{{$share}}</button>
 			</div>
 			<div id="profile-jot-perms-end"></div>
 			<div id="profile-jot-plugin-wrapper">

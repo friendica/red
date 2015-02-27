@@ -9,6 +9,10 @@
 			if(obj.value == aStr['comment']) {
 				obj.value = '';
 				$("#comment-edit-text-" + id).addClass("comment-edit-text-full").removeClass("comment-edit-text-empty");
+				// Choose an arbitrary tab index that's greater than what we're using in jot (3 of them)
+				// The submit button gets tabindex + 1
+				$("#comment-edit-text-" + id).attr('tabindex','9');
+				$("#comment-edit-submit-" + id).attr('tabindex','10');
 				$("#comment-tools-" + id).show();
 			}
 		};
@@ -25,6 +29,8 @@
 			if(obj.value == '') {
 			obj.value = aStr['comment'];
 				$("#comment-edit-text-" + id).removeClass("comment-edit-text-full").addClass("comment-edit-text-empty");
+				$("#comment-edit-text-" + id).removeAttr('tabindex');
+				$("#comment-edit-submit-" + id).removeAttr('tabindex');
 				$("#comment-tools-" + id).hide();
 			}
 		};
