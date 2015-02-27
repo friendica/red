@@ -85,4 +85,4 @@ Zot is the great new communicaton protocol invented especially for the RedMatrix
 [size=large][b]About This RedMatrix Hub[/b][/size]
 [zrl=[baseurl]/help/TermsOfService]Terms of Service For This Hub[/zrl]
 [zrl=[baseurl]/siteinfo]Hub Information (/siteinfo)[/zrl]
-[zrl=[baseurl]/siteinfo_json]Detailed Technical Hub Information (/siteinfo_json)[/zrl]
+[zrl=[baseurl]/siteinfo/json]Detailed Technical Hub Information in JSON format(/siteinfo/json)[/zrl]
