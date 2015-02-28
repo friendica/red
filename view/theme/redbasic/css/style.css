@@ -1270,7 +1270,7 @@ nav .acpopup {
 
 .field > label {
 	float: left;
-	width: 350px;
+	width: 40%;
 }
 
 .field input,
@@ -1280,7 +1280,7 @@ nav .acpopup {
 .field textarea { height: 100px; }
 .field_help {
 	display: block;
-	margin-left: 350px;
+	margin-left: 40%;
 	color: #666666;
 	
 }
@@ -1322,7 +1322,7 @@ nav .acpopup {
 .hidden { display: none!important; }
 
 .field.radio .field_help { margin-left: 0px; }
-.field.checkbox .field_help { display: inline; margin-left: 10px; }
+.field.checkbox .field_help { display: block; margin-left: 40%; }
 
 
 /**

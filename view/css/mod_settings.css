@@ -29,7 +29,7 @@ ul#settings-privacy-macros {
 }
 
 #settings-permissions-wrapper .field > label {
-	width: 350px;
+	width: 40%;
 }
 
 .settings-submit-wrapper {
@@ -42,8 +42,7 @@ ul#settings-privacy-macros {
 }
 
 #settings-notifications .field > label {
-	margin-left: 20px;
-	width: 330px;
+	width: 40%;
 }
 #settings-notify-desc, #settings-activity-desc, #settings-vnotify-desc {
 	font-weight: bold;
