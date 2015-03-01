@@ -1,5 +1,5 @@
-	<div class='field custom'>
-		<label class="mainlabel" for='{{$field.0}}'>{{$field.1}}</label>
+	<div class='form-group field custom'>
+		<label for='{{$field.0}}'>{{$field.1}}</label>
 		{{$field.2}}
-		<span class='field_help'>{{$field.3}}</span>
+		<span class='help-block'>{{$field.3}}</span>
 	</div>

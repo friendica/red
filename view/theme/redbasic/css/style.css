@@ -183,17 +183,6 @@ header {
 	padding: 10px;
 }
 
-.info-message {
-	font-size: 1.1em;
-	border: 1px solid #444;
-	background-color: $infomess_bgcolour;
-	padding: 10px;
-	-moz-border-radius: $radiuspx;
-	border-radius: $radiuspx;	
-
-}
-
-
 nav #banner #logo-text a {
 	font-size: 40px;
 	font-weight: bold;
@@ -370,18 +359,6 @@ footer {
 #page-profile .title {
 	font-weight: bold;
 }
-
-#profile-edit-wrapper .field {
-	margin-top: 20px;
-}
-#profile-edit-wrapper .field > label {
-	width: 175px;
-}
-
-#profile-edit-wrapper .field input[type="text"] {
-	width: 220px;
-}
-
 
 #profile-edit-links {
 	max-width: $converse_width;
@@ -1258,71 +1235,6 @@ nav .acpopup {
 }
  
 
-/**
- * Form fields
- */
-.field {
-	margin-bottom: 10px;
-/*	padding-bottom: 10px; */
-	overflow: auto;
-	width: 100%
-}
-
-.field > label {
-	float: left;
-	width: 40%;
-}
-
-.field input,
-.field textarea {
-	width: 400px;
-}
-.field textarea { height: 100px; }
-.field_help {
-	display: block;
-	margin-left: 40%;
-	color: #666666;
-	
-}
-
-.field input[type="checkbox"] {
-	width: 16px;
-}
-
-.field .onoff {
-	float: left;
-	width: 80px;
-	margin-right: 15px;
-}
-.field .onoff a {
-	display: block;
-	border:1px solid #666666;
-	background-image:url("../../../../images/onoff.jpg");
-	background-repeat: no-repeat;
-	padding: 4px 2px 2px 2px;
-	height: 24px;
-	text-decoration: none;
-}
-.field .onoff .off {
-	border-color:#666666;
-	padding-left: 40px;
-	background-position: left center;
-	background-color: #cccccc;
-	color: #666666;
-	text-align: right;
-}
-.field .onoff .on {
-	border-color:#204A87;
-	padding-right: 40px;
-	background-position: right center;
-	background-color: #D7E3F1;
-	color: #204A87;
-	text-align: left;
-}
-.hidden { display: none!important; }
-
-.field.radio .field_help { margin-left: 0px; }
-.field.checkbox .field_help { display: block; margin-left: 40%; }
 
 
 /**
@@ -2402,9 +2314,8 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 
 /* Turn checkboxes into switches */
-.field.checkbox .fieldhelp { vertical-align:top; }
 .field.checkbox > div {
-    position: relative; width: 70px;
+    position: relative; width: 50px;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
     display:inline-block;
 }
@@ -2415,8 +2326,8 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 .field.checkbox > div label {
     display: block; overflow: hidden; cursor: pointer;
-    border: 2px solid #999999;
-    border-radius: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     margin:0px;
 }
 
@@ -2433,31 +2344,32 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 .onoffswitch-inner:before {
     content: attr(data-on);
-    padding-left: 10px;
+    padding-right: 21px;
     background-color: #EEEEEE;
+    text-align: right;
 }
 
 .onoffswitch-inner:after {
     content: attr(data-off);
-    padding-right: 10px;
+    padding-left: 21px;
     background-color: #EEEEEE; color: #999999;
-    text-align: right;
+    text-align: left;
 }
 
 .onoffswitch-switch {
-    display: block; width: 25px; margin-left: 6px; margin-right: 6px; margin-top:5%; margin-bottom:5%;
+    display: block; width: 15px; margin:4px;
     background: #A1A1A1;
-    border: 2px solid #999999; border-radius: 20px;
-    position: absolute; top: 0; bottom: 0; right: 36px;
+    border-radius: 10px;
+    position: absolute; top: 0; bottom: 0; right: 26px;
     -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
     -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s;
 }
 
 .field.checkbox > div > input:checked + label .onoffswitch-inner {
-    margin-left: 0;
+    margin-left: 0px;
 }
 
 .field.checkbox > div > input:checked + label .onoffswitch-switch {
-    right: -2px;
-    background-color: #27A1CA;
+    right: 0px;
+    background-color: $link_colour;
 }

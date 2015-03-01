@@ -1,5 +1,8 @@
-<div class="generic-content-wrapper-styled">
-<h1>{{$ptitle}}</h1>
+<div class="generic-content-wrapper">
+<div class="section-title-wrapper">
+<h2>{{$ptitle}}</h2>
+</div>
+<div class="section-content-wrapper">
 
 {{$nickname_block}}
 
@@ -78,10 +81,12 @@
 <div id="settings-notifications">
 
 <div id="settings-activity-desc">{{$activity_options}}</div>
+<div class="group">
 {{*not yet implemented *}}
 {{*include file="field_checkbox.tpl" field=$post_joingroup*}}
 {{include file="field_checkbox.tpl" field=$post_newfriend}}
 {{include file="field_checkbox.tpl" field=$post_profilechange}}
+</div>
 
 
 <div id="settings-notify-desc">{{$lbl_not}}</div>
@@ -149,4 +154,5 @@
 <button title="{{$permanent}}" class="btn btn-danger" type="submit" formaction="removeme">{{$removeme}}</button>
 </div>
 
+</div>
 </div>

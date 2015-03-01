@@ -24,14 +24,6 @@ ul#settings-privacy-macros {
 	margin-top: 15px;
 }
 
-#settings-permissions-wrapper .field {
-	margin-bottom: 10px;
-}
-
-#settings-permissions-wrapper .field > label {
-	width: 40%;
-}
-
 .settings-submit-wrapper {
 	margin-bottom: 10px;
 }
@@ -41,9 +33,6 @@ ul#settings-privacy-macros {
 	margin-bottom: 45px;
 }
 
-#settings-notifications .field > label {
-	width: 40%;
-}
 #settings-notify-desc, #settings-activity-desc, #settings-vnotify-desc {
 	font-weight: bold;
 	margin-bottom: 15px;
@@ -76,4 +65,8 @@ ul#settings-privacy-macros {
 
 #settings-dspr-wrapper {
     margin-top: 15px;
+}
+
+.group {
+	margin-left: 20px;
 }
