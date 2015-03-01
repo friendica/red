@@ -183,17 +183,6 @@ header {
 	padding: 10px;
 }
 
-.info-message {
-	font-size: 1.1em;
-	border: 1px solid #444;
-	background-color: $infomess_bgcolour;
-	padding: 10px;
-	-moz-border-radius: $radiuspx;
-	border-radius: $radiuspx;	
-
-}
-
-
 nav #banner #logo-text a {
 	font-size: 40px;
 	font-weight: bold;
@@ -288,74 +277,10 @@ footer {
 	margin-bottom: 10px;
 }
 
-#main-login {
+#login-main {
+	max-width: 300px;
 	margin-top: 50px;
 }
-
-#main-login #id_username, #main-login #id_password {
-	width: 200px;
-	padding: 10px;
-	float: left;
-}
-
-#main-login #id_remember {
-	float: left;
-	padding: 0;
-	margin-bottom: 0;
-	margin-left: 0;
-	width: 20px;
-}
-
-#main-login .field.checkbox > label {
-	margin-bottom: 0;
-	float: left;
-	width: 100px;
-	padding-left: 0;
-}
-
-#main-login .field_end {
-	clear: both;
-}
-
-#main-login .field.input label, #main-login .field.password label {
-	float: left;
-	width: 100px;
-}
-
-#login_standard {
-	width: 350px;
-	float: left;
-}
-
-
-#login_standard input,
-#login_openid input {
-	width: 180px;
-}
-
-#login-extra-links {
-	clear: both;
-	width: 300px;
-}
-
-#register-link {
-	float: left;
-	margin-left: 100px;
-}
-#lost-password-link {
-	float: right;
-}
-
-#login-standard-end {
-	clear: both;
-}
-
-#login-submit-button {
-
-	margin-left: 100px;
-	margin-top: 10px;
-}
-
 
 #cropimage-wrapper, #cropimage-preview-wrapper {
 	float: left;
@@ -370,18 +295,6 @@ footer {
 #page-profile .title {
 	font-weight: bold;
 }
-
-#profile-edit-wrapper .field {
-	margin-top: 20px;
-}
-#profile-edit-wrapper .field > label {
-	width: 175px;
-}
-
-#profile-edit-wrapper .field input[type="text"] {
-	width: 220px;
-}
-
 
 #profile-edit-links {
 	max-width: $converse_width;
@@ -1258,71 +1171,6 @@ nav .acpopup {
 }
  
 
-/**
- * Form fields
- */
-.field {
-	margin-bottom: 10px;
-/*	padding-bottom: 10px; */
-	overflow: auto;
-	width: 100%
-}
-
-.field > label {
-	float: left;
-	width: 350px;
-}
-
-.field input,
-.field textarea {
-	width: 400px;
-}
-.field textarea { height: 100px; }
-.field_help {
-	display: block;
-	margin-left: 350px;
-	color: #666666;
-	
-}
-
-.field input[type="checkbox"] {
-	width: 16px;
-}
-
-.field .onoff {
-	float: left;
-	width: 80px;
-	margin-right: 15px;
-}
-.field .onoff a {
-	display: block;
-	border:1px solid #666666;
-	background-image:url("../../../../images/onoff.jpg");
-	background-repeat: no-repeat;
-	padding: 4px 2px 2px 2px;
-	height: 24px;
-	text-decoration: none;
-}
-.field .onoff .off {
-	border-color:#666666;
-	padding-left: 40px;
-	background-position: left center;
-	background-color: #cccccc;
-	color: #666666;
-	text-align: right;
-}
-.field .onoff .on {
-	border-color:#204A87;
-	padding-right: 40px;
-	background-position: right center;
-	background-color: #D7E3F1;
-	color: #204A87;
-	text-align: left;
-}
-.hidden { display: none!important; }
-
-.field.radio .field_help { margin-left: 0px; }
-.field.checkbox .field_help { display: inline; margin-left: 10px; }
 
 
 /**
@@ -2064,17 +1912,30 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	margin-bottom: 3px;
 }
 
-.section-title-wrapper h2 {
+.section-title-wrapper h2,
+.section-subtitle-wrapper h3 {
 	margin-top: 0px;
 	margin-bottom: 0px;
+}
+
+.section-subtitle-wrapper {
+	padding: 7px 10px;
+	background-color: $item_colour;
+	margin-bottom: 3px;
 }
 
 .section-content-tools-wrapper {
 	padding: 7px 10px;
 	background-color: $comment_item_colour;
-	margin-bottom: 3px;
+	margin-bottom: 3px
 }
 
+.section-content-info-wrapper {
+	padding: 21px 10px;
+	color: #31708f;
+	background-color: #d9edf7;
+	margin-bottom: 3px;
+}
 .section-content-wrapper {
 	padding: 7px 10px;
 	background-color: $comment_item_colour;
@@ -2101,6 +1962,18 @@ nav ul li .notify-unseen
 }
 
 /* bootstrap overrides */
+
+.panel {
+  background-color: transparent;
+  border: 0px solid transparent;
+  border-radius: 0px;
+  -webkit-box-shadow: 0 0px 0px rgba(0, 0, 0, .0);
+          box-shadow: 0 0px 0px rgba(0, 0, 0, .0);
+}
+
+.panel-group .panel + .panel {
+	margin-top: 0px;
+}
 
 blockquote {
 	font-size: $font_size;
@@ -2402,9 +2275,8 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 
 /* Turn checkboxes into switches */
-.field.checkbox .fieldhelp { vertical-align:top; }
 .field.checkbox > div {
-    position: relative; width: 70px;
+    position: relative; width: 60px;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
     display:inline-block;
 }
@@ -2415,8 +2287,8 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 .field.checkbox > div label {
     display: block; overflow: hidden; cursor: pointer;
-    border: 2px solid #999999;
-    border-radius: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     margin:0px;
 }
 
@@ -2433,31 +2305,32 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 .onoffswitch-inner:before {
     content: attr(data-on);
-    padding-left: 10px;
+    padding-right: 21px;
     background-color: #EEEEEE;
+    text-align: right;
 }
 
 .onoffswitch-inner:after {
     content: attr(data-off);
-    padding-right: 10px;
+    padding-left: 21px;
     background-color: #EEEEEE; color: #999999;
-    text-align: right;
+    text-align: left;
 }
 
 .onoffswitch-switch {
-    display: block; width: 25px; margin-left: 6px; margin-right: 6px; margin-top:5%; margin-bottom:5%;
+    display: block; width: 15px; margin:4px;
     background: #A1A1A1;
-    border: 2px solid #999999; border-radius: 20px;
+    border-radius: 10px;
     position: absolute; top: 0; bottom: 0; right: 36px;
     -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
     -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s;
 }
 
 .field.checkbox > div > input:checked + label .onoffswitch-inner {
-    margin-left: 0;
+    margin-left: 0px;
 }
 
 .field.checkbox > div > input:checked + label .onoffswitch-switch {
-    right: -2px;
-    background-color: #27A1CA;
+    right: 0px;
+    background-color: $link_colour;
 }

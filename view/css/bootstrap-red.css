@@ -68,6 +68,10 @@ code {
 	white-space: normal;
 }
 
+.form-control {
+	font-size: unset;
+}
+
 /* Bootstrap assumes that checkboxes are on the left of labels, while it's usually the opposite in Red */
 .field.checkbox input[type="checkbox"] { margin-left: 0px; }
 .field.checkbox label { padding-left: 0px; font-weight: 700}
