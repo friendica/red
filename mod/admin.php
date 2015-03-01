@@ -590,18 +590,41 @@ function admin_page_dbsync(&$a) {
 function admin_page_queue($a) {
 	$o = '';
 
+	$r = q("select count(outq_posturl) as total, outq_posturl, max(hubloc_connected) as connected from outq 
+		where outq_delivered = 0 group by outq_posturl order by total desc");
+
+	if($_REQUEST['drophub']) {
+		require_once('hubloc.php');
+		hubloc_mark_as_down($_REQUEST['drophub']);
+	}
+
+	if($_REQUEST['emptyhub']) {
+		$r = q("delete from outq where outq_posturl = '%s' ",
+			dbesc($_REQUEST['emptyhub'])
+		);
+	}
+
+
+
 	$r = q("select count(outq_posturl) as total, outq_posturl from outq 
 		where outq_delivered = 0 group by outq_posturl order by total desc");
 
-	$o .= '<h3>' . t('Queue Statistics') . '</h3>';
-
-	if($r) {
-		$o .= '<table><tr><td>' . t('Total Entries') . '&nbsp;&nbsp;</td><td>' . t('Destination URL') . '</td></tr>';
-		foreach($r as $rr) {
-			$o .= '<tr><td>' . $rr['total'] . '</td><td>' . $rr['outq_posturl'] . '</td></tr>';
-		}
-		$o .= '</table>';
+	for($x = 0; $x < count($r); $x ++) {
+		$r[$x]['eurl'] = urlencode($r[$x]['outq_posturl']);
+		$r[$x]['connected'] = datetime_convert('UTC',date_default_timezone_get(),$r[$x]['connected'],'Y-m-d');
 	}
+
+
+	$o = replace_macros(get_markup_template('admin_queue.tpl'), array(
+		'$banner' => t('Queue Statistics'),
+		'$numentries' => t('Total Entries'),
+		'$desturl' => t('Destination URL'),
+		'$nukehub' => t('Mark hub permanently offline'),
+		'$empty' => t('Empty queue for this hub'),
+		'$lastconn' => t('Last known contact'),
+		'$hasentries' => ((count($r)) ? true : false),
+		'$entries' => $r
+	));
 
 	return $o;
 

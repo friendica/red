@@ -175,8 +175,9 @@ function hubloc_change_primary($hubloc) {
 // The https might be alive, and the http dead.
 
 function hubloc_mark_as_down($posturl) {
-	$r = q("update hubloc set hubloc_status = ( hubloc_status | %d ) where hubloc_posturl = '%s'",
-		intval(HUBLOC_OFFLINE)
+	$r = q("update hubloc set hubloc_status = ( hubloc_status | %d ) where hubloc_callback = '%s'",
+		intval(HUBLOC_OFFLINE),
+		dbesc($posturl)
 	);
 }
 
