@@ -277,74 +277,10 @@ footer {
 	margin-bottom: 10px;
 }
 
-#main-login {
+#login-main {
+	max-width: 300px;
 	margin-top: 50px;
 }
-
-#main-login #id_username, #main-login #id_password {
-	width: 200px;
-	padding: 10px;
-	float: left;
-}
-
-#main-login #id_remember {
-	float: left;
-	padding: 0;
-	margin-bottom: 0;
-	margin-left: 0;
-	width: 20px;
-}
-
-#main-login .field.checkbox > label {
-	margin-bottom: 0;
-	float: left;
-	width: 100px;
-	padding-left: 0;
-}
-
-#main-login .field_end {
-	clear: both;
-}
-
-#main-login .field.input label, #main-login .field.password label {
-	float: left;
-	width: 100px;
-}
-
-#login_standard {
-	width: 350px;
-	float: left;
-}
-
-
-#login_standard input,
-#login_openid input {
-	width: 180px;
-}
-
-#login-extra-links {
-	clear: both;
-	width: 300px;
-}
-
-#register-link {
-	float: left;
-	margin-left: 100px;
-}
-#lost-password-link {
-	float: right;
-}
-
-#login-standard-end {
-	clear: both;
-}
-
-#login-submit-button {
-
-	margin-left: 100px;
-	margin-top: 10px;
-}
-
 
 #cropimage-wrapper, #cropimage-preview-wrapper {
 	float: left;
