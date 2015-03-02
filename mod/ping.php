@@ -287,7 +287,7 @@ function ping_init(&$a) {
 				$result[] = format_notification($item);
 			}
 		}
-		logger('ping (network||home): ' . print_r($result, true), LOGGER_DATA);
+//		logger('ping (network||home): ' . print_r($result, true), LOGGER_DATA);
 		echo json_encode(array('notify' => $result));
 		killme();
 	}

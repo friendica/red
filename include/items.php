@@ -2087,6 +2087,16 @@ function item_store($arr,$allow_exec = false) {
 
 		if($r) {
 
+			// in case item_store was killed before the parent's parent attribute got set,
+			// set it now. This happens with some regularity on Dreamhost. This will keep
+			// us from getting notifications for threads that exist but which we can't see.
+
+			if(($r[0]['mid'] === $r[0]['parent_mid']) && (! intval($r[0]['parent']))) {
+				q("update item set parent = id where id = %d",
+					intval($r[0]['id'])
+				);
+			}
+
 			if(comments_are_now_closed($r[0])) {
 				logger('item_store: comments closed');
 				$ret['message'] = 'Comments closed.';
