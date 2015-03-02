@@ -2263,3 +2263,37 @@ function z_get_temp_dir() {
 		$temp_dir = sys_get_temp_dir();
 	return $upload_dir;
 }
+
+function z_check_cert() {
+	$a = get_app();
+	if(strpos(z_root(),'https://') !== false) {
+		$x = z_fetch_url(z_root() . '/siteinfo/json');
+		if(! $x['success']) {
+			$recurse = 0;
+			$y = z_fetch_url(z_root() . '/siteinfo/json',false,$recurse,array('novalidate' => true));
+			if($y['success'])
+				cert_bad_email();
+		}
+	}
+} 
+
+
+
+function cert_bad_email() {
+
+	$a = get_app();
+
+	$email_tpl = get_intltext_template("cert_bad_eml.tpl");
+	$email_msg = replace_macros($email_tpl, array(
+		'$sitename' => $a->config['system']['sitename'],
+		'$siteurl' =>  $a->get_baseurl(),
+		'$error' => t('Website SSL certificate is not valid. Please correct.')
+	));
+
+	$subject = email_header_encode(sprintf(t('[red] Website SSL error for %s'), $a->get_hostname()));
+	mail($a->config['system']['admin_email'], $subject, $email_msg,
+		'From: Administrator' . '@' . $a->get_hostname() . "\n"
+		. 'Content-type: text/plain; charset=UTF-8' . "\n"
+		. 'Content-transfer-encoding: 8bit' );
+
+}

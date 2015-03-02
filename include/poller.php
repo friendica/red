@@ -150,6 +150,7 @@ function poller_run($argv, $argc){
 			call_hooks('cron_weekly',datetime_convert());
 
 
+			z_check_cert();
 
 			require_once('include/hubloc.php');
 			prune_hub_reinstalls();
