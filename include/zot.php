@@ -1472,10 +1472,9 @@ function allowed_public_recips($msg) {
 			return array();
 	}
 
+	$hash = make_xchan_hash($msg['notify']['sender']['guid'],$msg['notify']['sender']['guid_sig']);
+
 	if($scope === 'self') {
-
-		$hash = make_xchan_hash($msg['notify']['sender']['guid'],$msg['notify']['sender']['guid_sig']);
-
 		foreach($recips as $r)
 			if($r['hash'] === $hash)
 				return array('hash' => $hash);
