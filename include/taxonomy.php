@@ -152,7 +152,7 @@ function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $restrict = 0, $
 	$range = max(.01, $max - $min) * 1.0001;
 
 	for($x = 0; $x < count($tags); $x ++) {
-		$tags[$x][2] = 1 + floor(7 * ($tags[$x][1] - $min) / $range);
+		$tags[$x][2] = 1 + floor(9 * ($tags[$x][1] - $min) / $range);
 	}
 
 	return $tags;
@@ -199,7 +199,7 @@ function dir_tagadelic($count = 0) {
 	$range = max(.01, $max - $min) * 1.0001;
 
 	for($x = 0; $x < count($tags); $x ++) {
-		$tags[$x][2] = 1 + floor(5 * ($tags[$x][1] - $min) / $range);
+		$tags[$x][2] = 1 + floor(9 * ($tags[$x][1] - $min) / $range);
 	}
 
 	return $tags;
