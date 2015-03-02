@@ -51,7 +51,7 @@ $a->config['system']['max_import_size'] = 200000;
 
 // taille maximale pour le téléversement de photos
 
-$a->config['system']['maximagesize'] = 800000;
+$a->config['system']['maximagesize'] = 8000000;
 
 // Lien absolu vers le compilateur PHP
 

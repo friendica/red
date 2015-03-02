@@ -50,7 +50,7 @@ $a->config['system']['max_import_size'] = 200000;
 
 // maximum size of uploaded photos
 
-$a->config['system']['maximagesize'] = 800000;
+$a->config['system']['maximagesize'] = 8000000;
 
 // Location of PHP command line processor
 
