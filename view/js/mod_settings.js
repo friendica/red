@@ -4,11 +4,6 @@ var ispublic = aStr['everybody'] ;
 $(document).ready(function() {
 	$('form').areYouSure(); // Warn user about unsaved settings
 
-	$("a#settings-default-perms-menu").colorbox({ 
-		'inline' : true, 
-		'transition' : 'elastic' 
-	});
-
 	$("#id_permissions_role").change(function() {
 		var role = $("#id_permissions_role").val();
 		if(role == 'custom')

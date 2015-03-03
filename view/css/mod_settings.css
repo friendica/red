@@ -1,58 +1,3 @@
-
-ul#settings-privacy-macros {
-	list-style-type: none;
-	margin: 0 0 10px 0;
-	padding: 0;
-}
-#settings-privacy-macros li {
-	margin-top: 5px;
-}
-
-#settings-permissions-wrapper {
-	margin-top: 15px;
-}
-
-#settings-default-perms {
-	margin-top: 15px;
-}
-
-#settings-perm-advanced {
-	margin-top: 15px;
-}
-
-.settings-common-perms {
-	margin-top: 15px;
-}
-
-.settings-submit-wrapper {
-	margin-bottom: 10px;
-}
-
-#settings-remove-account-link {
-	margin-top: 15px;
-	margin-bottom: 45px;
-}
-
-#settings-notify-desc, #settings-activity-desc, #settings-vnotify-desc {
-	font-weight: bold;
-	margin-bottom: 15px;
-}
-
-#settings-menu-desc {
-	font-weight: bold;
-	float: left;
-	width: 350px;
-}
-
-#settings-channel-menu-div select {
-	float: left;
-}
-
-#settings-channel-menu-end {
-	clear: both;
-	margin-bottom: 15px;
-}
-
 #dspr-pubcomment-label {
     float: left;
     width: 350px;
@@ -68,5 +13,5 @@ ul#settings-privacy-macros {
 }
 
 .group {
-	margin-left: 20px;
+	margin-left: 10px;
 }
