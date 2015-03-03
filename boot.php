@@ -1553,7 +1553,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		'$form_id'      => $form_id,
 		'$lname'        => array('username', t('Email') , '', ''),
 		'$lpassword'    => array('password', t('Password'), '', ''),
-		'$remember'     => array('remember', t('Remember me'), '', ''),
+		'$remember'     => array('remember', t('Remember me'), '', '',array(t('No'),t('Yes'))),
 		'$hiddens'      => $hiddens,
 		'$register'     => $reg,
 		'$lostpass'     => t('Forgot your password?'),

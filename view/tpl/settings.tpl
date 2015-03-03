@@ -1,6 +1,6 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
-		<button title="{{$permanent}}" class="btn btn-danger btn-xs pull-right" type="submit" formaction="removeme"><i class="icon-trash"></i>&nbsp;{{$removeme}}</button>
+		<a title="{{$permanent}}" class="btn btn-danger btn-xs pull-right" href="removeme"><i class="icon-trash"></i>&nbsp;{{$removeme}}</a>
 		<h2>{{$ptitle}}</h2>
 		<div class="clear"></div>
 	</div>
