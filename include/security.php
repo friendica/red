@@ -22,7 +22,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		$a->account = $user_record;
 		$_SESSION['account_id'] = $user_record['account_id'];
 		$_SESSION['authenticated'] = 1;
-		
+
 		if($login_initial || $update_lastlog) {
 			q("update account set account_lastlog = '%s' where account_id = %d",
 				dbesc(datetime_convert()),
@@ -150,11 +150,7 @@ function change_channel($change_channel) {
  */
 function permissions_sql($owner_id, $remote_verified = false, $groups = null) {
 
-	if(defined('STATUSNET_PRIVACY_COMPATIBILITY'))
-		return '';
-
 	$local_channel = local_channel();
-	$remote_channel = remote_channel();
 
 	/**
 	 * Construct permissions
@@ -173,7 +169,7 @@ function permissions_sql($owner_id, $remote_verified = false, $groups = null) {
 	 */
 
 	if(($local_channel) && ($local_channel == $owner_id)) {
-		$sql = ''; 
+		$sql = '';
 	}
 
 	/**
@@ -194,7 +190,7 @@ function permissions_sql($owner_id, $remote_verified = false, $groups = null) {
 			if(is_array($groups) && count($groups)) {
 				foreach($groups as $g)
 					$gs .= '|<' . $g . '>';
-			} 
+			}
 			$regexop = db_getfunc('REGEXP');
 			$sql = sprintf(
 				" AND ( NOT (deny_cid like '%s' OR deny_gid $regexop '%s')
@@ -223,11 +219,7 @@ function permissions_sql($owner_id, $remote_verified = false, $groups = null) {
  */
 function item_permissions_sql($owner_id, $remote_verified = false, $groups = null) {
 
-	if(defined('STATUSNET_PRIVACY_COMPATIBILITY'))
-		return '';
-
 	$local_channel = local_channel();
-	$remote_channel = remote_channel();
 
 	/**
 	 * Construct permissions
@@ -246,7 +238,7 @@ function item_permissions_sql($owner_id, $remote_verified = false, $groups = nul
 	}
 
 	/**
-	 * Authenticated visitor. Unless pre-verified, 
+	 * Authenticated visitor. Unless pre-verified,
 	 * check that the contact belongs to this $owner_id
 	 * and load the groups the visitor belongs to.
 	 * If pre-verified, the caller is expected to have already
@@ -330,7 +322,7 @@ function public_permissions_sql($observer_hash) {
  */ 
 function get_form_security_token($typename = '') {
 	$a = get_app();
-	
+
 	$timestamp = time();
 	$sec_hash = hash('whirlpool', $a->user['guid'] . $a->user['prvkey'] . session_id() . $timestamp . $typename);
 
@@ -340,16 +332,16 @@ function get_form_security_token($typename = '') {
 function check_form_security_token($typename = '', $formname = 'form_security_token') {
 	if (!x($_REQUEST, $formname)) return false;
 	$hash = $_REQUEST[$formname];
-	
+
 	$max_livetime = 10800; // 3 hours
-	
+
 	$a = get_app();
-	
+
 	$x = explode('.', $hash);
 	if (time() > (IntVal($x[0]) + $max_livetime)) return false;
-	
+
 	$sec_hash = hash('whirlpool', $a->user['guid'] . $a->user['prvkey'] . session_id() . $x[0] . $typename);
-	
+
 	return ($sec_hash == $x[1]);
 }
 
@@ -417,7 +409,7 @@ function stream_perms_api_uids($perms = NULL ) {
 	if($r) {
 		foreach($r as $rr)
 			if(! in_array($rr['channel_id'], $ret))
-				$ret[] = $rr['channel_id']; 
+				$ret[] = $rr['channel_id'];
 	}
 
 	$str = '';
@@ -425,7 +417,7 @@ function stream_perms_api_uids($perms = NULL ) {
 		foreach($ret as $rr) {
 			if($str)
 				$str .= ',';
-			$str .= intval($rr); 
+			$str .= intval($rr);
 		}
 	}
 	logger('stream_perms_api_uids: ' . $str, LOGGER_DEBUG);
@@ -447,7 +439,7 @@ function stream_perms_xchans($perms = NULL ) {
 	if($r) {
 		foreach($r as $rr)
 			if(! in_array($rr['channel_hash'], $ret))
-				$ret[] = $rr['channel_hash']; 
+				$ret[] = $rr['channel_hash'];
 	}
 
 	$str = '';
@@ -455,7 +447,7 @@ function stream_perms_xchans($perms = NULL ) {
 		foreach($ret as $rr) {
 			if($str)
 				$str .= ',';
-			$str .= "'" . dbesc($rr) . "'"; 
+			$str .= "'" . dbesc($rr) . "'";
 		}
 	}
 	logger('stream_perms_xchans: ' . $str, LOGGER_DEBUG);
