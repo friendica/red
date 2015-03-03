@@ -3,7 +3,7 @@
 require_once('include/dir_fns.php');
 require_once('include/zot.php');
 
-/*
+/**
  * poco_load
  *
  * xchan is your connection
@@ -21,13 +21,10 @@ require_once('include/zot.php');
  * the given uid, cid to the global contact entry. There can be many uid/cid combinations
  * pointing to the same global contact id. 
  *
+ * @param string $xchan
+ * @param string $url
  */
- 
-
-
-
-function poco_load($xchan = '',$url = null) {
-	$a = get_app();
+function poco_load($xchan = '', $url = null) {
 
 	if($xchan && ! $url) {
 		$r = q("select xchan_connurl from xchan where xchan_hash = '%s' limit 1",
@@ -42,7 +39,6 @@ function poco_load($xchan = '',$url = null) {
 		logger('poco_load: no url');
 		return;
 	}
-
 
 	$url = $url . '?f=&fields=displayName,hash,urls,photos,rating' ;
 
@@ -148,7 +144,7 @@ function poco_load($xchan = '',$url = null) {
 			logger('poco_load: missing data');
 			continue; 
 		}
-		 
+
 		$x = q("select xchan_hash from xchan where xchan_hash = '%s' limit 1",
 			dbesc($hash)
 		);
@@ -182,9 +178,8 @@ function poco_load($xchan = '',$url = null) {
 				continue;
 			}
 		}
-	
-		$total ++;
 
+		$total ++;
 	}
 	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 
@@ -192,7 +187,6 @@ function poco_load($xchan = '',$url = null) {
 		dbesc($xchan),
 		db_utcnow(), db_quoteinterval('2 DAY')
 	);
-
 
 }
 
@@ -230,7 +224,6 @@ function common_friends($uid,$xchan,$start = 0,$limit=100000000,$shuffle = false
 	);
 
 	return $r;
-
 }
 
 
@@ -246,8 +239,8 @@ function count_common_friends_zcid($uid,$zcid) {
 
 	if(count($r))
 		return $r[0]['total'];
-	return 0;
 
+	return 0;
 }
 
 function common_friends_zcid($uid,$zcid,$start = 0, $limit = 9999,$shuffle = false) {
@@ -269,7 +262,6 @@ function common_friends_zcid($uid,$zcid,$start = 0, $limit = 9999,$shuffle = fal
 	);
 
 	return $r;
-
 }
 
 
@@ -284,8 +276,8 @@ function count_all_friends($uid,$cid) {
 
 	if(count($r))
 		return $r[0]['total'];
-	return 0;
 
+	return 0;
 }
 
 
@@ -358,9 +350,7 @@ function suggestion_query($uid, $myxchan, $start = 0, $limit = 80) {
 
 function update_suggestions() {
 
-	$a = get_app();
-
-	$dirmode = get_config('system','directory_mode');
+	$dirmode = get_config('system', 'directory_mode');
 	if($dirmode === false)
 		$dirmode = DIRECTORY_MODE_NORMAL;
 
@@ -374,8 +364,6 @@ function update_suggestions() {
 	if(! $url)
 		return;
 
-
-
 	$ret = z_fetch_url($url);
 
 	if($ret['success']) {
@@ -387,7 +375,6 @@ function update_suggestions() {
 		$r = q("delete from xlink where xlink_xchan = '' and xlink_updated < %s - INTERVAL %s and xlink_static = 0",
 			db_utcnow(), db_quoteinterval('7 DAY')
 		);
-
 
 		$j = json_decode($ret['body'],true);
 		if($j && $j['success']) {
@@ -422,7 +409,6 @@ function poco($a,$extended = false) {
 		$system_mode = true;
 	}
 
-
 	$format = (($_REQUEST['format']) ? $_REQUEST['format'] : 'json');
 
 	$justme = false;
@@ -437,7 +423,7 @@ function poco($a,$extended = false) {
 	}
 	if(argc() > 4 && intval(argv(4)) && $justme == false)
 		$cid = intval(argv(4));
- 		
+
 	if(! $system_mode) {
 
 		$r = q("SELECT channel_id from channel where channel_address = '%s' limit 1",
@@ -487,8 +473,8 @@ function poco($a,$extended = false) {
 	$startIndex = intval($_GET['startIndex']);
 	if(! $startIndex)
 		$startIndex = 0;
-	$itemsPerPage = ((x($_GET,'count') && intval($_GET['count'])) ? intval($_GET['count']) : $totalResults);
 
+	$itemsPerPage = ((x($_GET,'count') && intval($_GET['count'])) ? intval($_GET['count']) : $totalResults);
 
 	if($system_mode) {
 		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where ( abook_flags & " . ABOOK_FLAG_SELF . 
@@ -496,8 +482,7 @@ function poco($a,$extended = false) {
 			intval($itemsPerPage),
 			intval($startIndex)
 		);
-	}
-	else {
+	} else {
 		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d 
 			$sql_extra LIMIT %d OFFSET %d",
 			intval($channel_id),
@@ -525,8 +510,7 @@ function poco($a,$extended = false) {
 		}
 	}
 
-	$ret['entry']        = array();
-
+	$ret['entry'] = array();
 
 	$fields_ret = array(
 		'id' => false,
@@ -540,10 +524,10 @@ function poco($a,$extended = false) {
 		'rating' => false
 	);
 
-	if((! x($_GET,'fields')) || ($_GET['fields'] === '@all'))
+	if((! x($_GET,'fields')) || ($_GET['fields'] === '@all')) {
 		foreach($fields_ret as $k => $v)
 			$fields_ret[$k] = true;
-	else {
+	} else {
 		$fields_req = explode(',',$_GET['fields']);
 		foreach($fields_req as $f)
 			$fields_ret[trim($f)] = true;
