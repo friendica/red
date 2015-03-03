@@ -984,6 +984,14 @@ function zot_process_response($hub,$arr,$outq) {
 		logger('zot_process_response: headers: ' . print_r($arr['header'],true), LOGGER_DATA);
 	}
 
+	// update the timestamp for this site
+
+	$r = q("update site set site_update = '%s' where site_url = '%s'",
+		dbesc(datetime_convert()),
+		dbesc(dirname($hub))
+	);
+
+
 	// synchronous message types are handled immediately
 	// async messages remain in the queue until processed.
 
@@ -2584,6 +2592,13 @@ function import_site($arr,$pubkey) {
 			if(! $r) {
 				logger('import_site: update failed. ' . print_r($arr,true));
 			}
+		}
+		else {
+			// update the timestamp to indicate we communicated with this site
+			q("update site set site_update = '%s' where site_url = '%s'",
+				dbesc(datetime_convert()),
+				dbesc($url)
+			);
 		}
 	}
 	else {
