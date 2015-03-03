@@ -2297,3 +2297,46 @@ function cert_bad_email() {
 		. 'Content-transfer-encoding: 8bit' );
 
 }
+
+
+// send warnings every 3-5 days if cron is not running.
+
+
+function check_cron_broken() {
+
+	$t = get_config('system','lastpollcheck');
+	if(! $t) {
+		// never checked before. Start the timer.
+		set_config('system','lastpollcheck',datetime_convert());
+		return;
+	}
+	if($t > datetime_convert('UTC','UTC','now - 3 days')) {
+		// Wait for 3 days before we do anything so as not to swamp the admin with messages
+		return;
+	}
+
+	$d = get_config('system','lastpoll');
+	if(($d) && ($d > datetime_convert('UTC','UTC','now - 3 days'))) {
+		// Scheduled tasks have run successfully in the last 3 days.
+		set_config('system','lastpollcheck',datetime_convert());
+		return;
+	}
+
+	$a = get_app();
+
+	$email_tpl = get_intltext_template("cron_bad_eml.tpl");
+	$email_msg = replace_macros($email_tpl, array(
+		'$sitename' => $a->config['system']['sitename'],
+		'$siteurl' =>  $a->get_baseurl(),
+		'$error' => t('Cron/Scheduled tasks not running.'),
+		'$lastdate' => (($d)? $d : t('never'))
+	));
+
+	$subject = email_header_encode(sprintf(t('[red] Cron tasks not running on %s'), $a->get_hostname()));
+	mail($a->config['system']['admin_email'], $subject, $email_msg,
+		'From: Administrator' . '@' . $a->get_hostname() . "\n"
+		. 'Content-type: text/plain; charset=UTF-8' . "\n"
+		. 'Content-transfer-encoding: 8bit' );
+	set_config('system','lastpollcheck',datetime_convert());
+	return;
+}

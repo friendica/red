@@ -396,6 +396,9 @@ if(stristr( implode("",$_SESSION['sysmsg']), t('Permission denied'))) {
 
 call_hooks('page_end', $a->page['content']);
 
+if(! $a->install)
+	check_cron_broken();
+
 construct_page($a);
 
 session_write_close();
