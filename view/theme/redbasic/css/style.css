@@ -2336,5 +2336,5 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 .field.checkbox > div > input:checked + label .onoffswitch-switch {
     right: 0px;
-    background-color: $link_colour;
+    background-color: #337AB7;
 }
