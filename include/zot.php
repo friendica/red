@@ -2036,7 +2036,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 	$ret = array();
 
 	if($arr['locations']) {
-
+		
 		$xisting = q("select hubloc_id, hubloc_url, hubloc_sitekey from hubloc where hubloc_hash = '%s'",
 			dbesc($sender['hash'])
 		);
@@ -2100,19 +2100,21 @@ function sync_locations($sender,$arr,$absolute = false) {
 				// update connection timestamp if this is the site we're talking to
 				// This only happens when called from import_xchan
 
+				$current_site = false;
+
 				if(array_key_exists('site',$arr) && $location['url'] == $arr['site']['url']) {
 					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
+					$current_site = true;
 				}
 				
-				// if it's marked offline/dead, bring it back
-				// Should we do this? It's basically saying that the channel knows better than
-				// the directory server if the site is alive.
+				// If it is the site we're currently talking to, and it's marked offline,
+				// either we have some bad information - or the thing came back to life.
 
-				if($r[0]['hubloc_status'] & HUBLOC_OFFLINE) {
+				if(($current_site) && ($r[0]['hubloc_status'] & HUBLOC_OFFLINE)) {
 					q("update hubloc set hubloc_status = (hubloc_status & ~%d) where hubloc_id = %d",
 						intval(HUBLOC_OFFLINE),
 						intval($r[0]['hubloc_id'])
