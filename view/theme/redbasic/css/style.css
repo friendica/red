@@ -81,7 +81,11 @@ a.btn-default {
 	color: #333;
 }
 
-a.btn-success {
+a.btn-success,
+a.btn-danger,
+a.btn-info,
+a.btn-warning
+a.btn-primary {
 	color: #fff;
 }
 
@@ -111,8 +115,8 @@ input[type="submit"] {
 	padding: 6px 12px;
 }
 
-button, input, optgroup, select, textarea {
-	color: #000;
+input, optgroup, select, textarea {
+	color: #333;
 }
 
 pre code {
