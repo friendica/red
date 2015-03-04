@@ -19,6 +19,7 @@ function get_capath() {
  *    'timeout' => int seconds, default system config value or 60 seconds
  *    'http_auth' => username:password
  *    'novalidate' => do not validate SSL certs, default is to validate using our CA list
+ *    'nobody' => only return the header
  *    
  * @returns array
  *    'return_code' => HTTP return code or 0 if timeout or failure
@@ -50,6 +51,9 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 	if(x($opts,'headers'))
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
+
+	if(x($opts,'nobody'))
+		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
@@ -181,6 +185,9 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
 	if(x($opts,'headers'))
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
+
+	if(x($opts,'nobody'))
+		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
