@@ -1,10 +1,10 @@
-#dspr-pubcomment-label {
+#dspr-pubcomment-label, #dspr-hijack-label {
     float: left;
     width: 350px;
     margin-bottom: 25px;
 }
 
-#dspr-pubcomment-checkbox {
+#dspr-pubcomment-checkbox, #dspr-hijack-checkbox {
     float: left;
 }
 

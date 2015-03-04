@@ -11,7 +11,14 @@
 <div id="dspr-settings-wrapper">
 <label id="dspr-pubcomment-label" for="dspr-pubcomment-checkbox">{{$dsprhelp}}</label>
 <input id="dspr-pubcomment-checkbox" type="checkbox" name="dspr_pubcomment" value="1" ' . {{if $pubcomments}} checked="checked" {{/if}} />
-</div><div class="clear"></div>
+<div class="clear"></div>
+<label id="dspr-hijack-label" for="dspr-hijack-checkbox">{{$dsprhijack}}</label>
+<input id="dspr-hijack-checkbox" type="checkbox" name="dspr_hijack" value="1" ' . {{if $hijacking}} checked="checked" {{/if}} />
+<div class="clear"></div>
+</div>
+
+
+
 <div class="settings-submit-wrapper" ><input type="submit" name="dspr-submit" class="settings-submit" value="{{$dsprsubmit}}" /></div></div></div>
 {{/if}}
 {{$settings_addons}}

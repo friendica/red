@@ -117,6 +117,7 @@ function settings_post(&$a) {
 
 		if($_POST['dspr-submit']) {
 			set_pconfig(local_channel(),'system','diaspora_public_comments',intval($_POST['dspr_pubcomment']));
+			set_pconfig(local_channel(),'system','prevent_tag_hijacking',intval($_POST['dspr_hijack']));
 			info( t('Diaspora Policy Settings updated.') . EOL);
 		}
 
@@ -666,6 +667,9 @@ function settings_content(&$a) {
 			$pubcomments = get_pconfig(local_channel(),'system','diaspora_public_comments');
 			if($pubcomments === false)
 				$pubcomments = 1;
+			$hijacking = get_pconfig(local_channel(),'system','prevent_tag_hijacking');
+
+
 		}
 
 		call_hooks('feature_settings', $settings_addons);
@@ -673,11 +677,13 @@ function settings_content(&$a) {
 		$tpl = get_markup_template("settings_addons.tpl");
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_featured"),
-			'$title'	=> t('Feature Settings'),
+			'$title'	=> t('Feature/Addon Settings'),
 			'$diaspora_enabled' => $diaspora_enabled,
 			'$pubcomments' => $pubcomments,
 			'$dsprtitle' => t('Diaspora Policy Settings'),
 			'$dsprhelp' => t('Allow any Diaspora member to comment on your public posts.'),
+			'$dsprhijack' => t('Prevent hashtags from being redirected to other sites'),
+			'$hijacking' => $hijacking,
 			'$dsprsubmit' => t('Submit Diaspora Policy Settings'),
 			'$settings_addons' => $settings_addons
 		));
