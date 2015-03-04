@@ -2321,14 +2321,14 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 .onoffswitch-inner:before {
     content: attr(data-on);
     padding-right: 21px;
-    background-color: #EEEEEE;
+    background-color: $item_colour;
     text-align: right;
 }
 
 .onoffswitch-inner:after {
     content: attr(data-off);
     padding-left: 21px;
-    background-color: #EEEEEE; color: #999999;
+    background-color: $item_colour; color: #ccc;
     text-align: left;
 }
 
