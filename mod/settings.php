@@ -713,8 +713,7 @@ function settings_content(&$a) {
 			'$submit' 	=> t('Submit'),
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
 			'$removeme' => t('Remove Account'),
-			'$removeaccount' => t('Remove this account from this server including all its channels'),
-			'$permanent' => t('Warning: This action is permanent and cannot be reversed.'),
+			'$removeaccount' => t('Remove this account including all its channels'),
 			'$account_settings' => $account_settings
 		));
 		return $o;
@@ -1129,8 +1128,8 @@ function settings_content(&$a) {
 			'$lbl_misc' => t('Miscellaneous Settings'),
 			'$menus' => $menu,
 			'$menu_desc' => t('Personal menu to display in your channel pages'),
-			'$removeme' => t('Remove this channel'),
-			'$permanent' => t('Warning: This action is permanent and cannot be reversed.'),		
+			'$removeme' => t('Remove Channel'),
+			'$removechannel' => t('Remove this channel.'),
 		));
 
 		call_hooks('settings_form',$o);
