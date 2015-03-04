@@ -2334,7 +2334,7 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 .onoffswitch-switch {
     display: block; width: 15px; margin:4px;
-    background: #A1A1A1;
+    background: #ccc;
     border-radius: 10px;
     position: absolute; top: 0; bottom: 0; right: 36px;
     -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
