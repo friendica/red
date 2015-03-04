@@ -708,9 +708,8 @@ function settings_content(&$a) {
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_account"),
 			'$title'	=> t('Account Settings'),
-			'$h_pass' 	=> t('Password Settings'),
-			'$password1'=> array('npassword', t('New Password:'), '', ''),
-			'$password2'=> array('confirm', t('Confirm:'), '', t('Leave password fields blank unless changing')),
+			'$password1'=> array('npassword', t('Enter New Password:'), '', ''),
+			'$password2'=> array('confirm', t('Confirm New Password:'), '', t('Leave password fields blank unless changing')),
 			'$submit' 	=> t('Submit'),
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
 			'$removeme' => t('Remove Account'),
