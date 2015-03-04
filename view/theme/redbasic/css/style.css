@@ -1941,6 +1941,16 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	border-radius: $radiuspx;
 	text-align: center;
 }
+
+.section-content-danger-wrapper {
+	padding: 21px 10px;
+	color: #a94442;
+	background-color: #f2dede;
+	margin-bottom: 3px;
+	border-radius: $radiuspx;
+	text-align: center;
+}
+
 .section-content-wrapper {
 	padding: 7px 10px;
 	background-color: $comment_item_colour;
