@@ -20,6 +20,8 @@
 [*] ijpost - crosspost to Insanejournal
 [*] irc - connect to IRC chatrooms
 [*] jappixmini - XMPP chat
+[*] jsupload - (recommended) upload multiple photos to photo albums at once.
+[*] ldapauth - login via account on LDAP or Windows Active Directory domain 
 [*] libertree - crosspost to Libertree
 [*] likebanner - create a "like us on red#matrix" banner image
 [*] ljpost - crosspost to LiveJournal
