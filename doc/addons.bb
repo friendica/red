@@ -14,6 +14,7 @@
 [*] embedly - use the embedly (formerly ooehmbed) service to embed media from many providers
 [*] extcron - use an external cron service to run your hub's scheduled tasks
 [*] flattr - provides a "Flattr Us" button
+[*] flip - create upside down text
 [*] fortunate - displays random quote (fortune cookie). Requires setting up a fortune server.
 [*] frphotos - import photo albums from Friendica
 [*] hexit - headecimal conversion tool
@@ -57,6 +58,14 @@
 [*] webRTC - use an external server (mayfirst.org) to negotiate webRTC hookups
 [*] wppost - crosspost to WordPress (or other wordpress XMLRPC service)
 [/list]
+
+[h3]Addon Repositories[/h3]
+
+[url=https://github.com/friendica/red-addons]https://github.com/friendica/red-addons[/url] Main project addon repository
+
+[url=https://github.com/23n/red-addons]https://github.com/23n/red-addons[/url] Oliver's repository (mayan_places and flip)
+
+
 
 #include doc/macros/main_footer.bb;
 
