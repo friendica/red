@@ -39,6 +39,14 @@ function queue_run($argv, $argc){
 		// so that we don't start off a thousand deliveries for a couple of dead hubs.
 		// The zot driver will deliver everything destined for a single hub once contact is made (*if* contact is made).
 		// Other drivers will have to do something different here and may need their own query.
+
+		// Note: this requires some tweaking as new posts to long dead hubs once a day will keep them in the 
+		// "every 15 minutes" category. We probably need to prioritise them when inserted into the queue
+		// or just prior to this query based on recent and long-term delivery history. If we have good reason to believe
+		// the site is permanently down, there's no reason to attempt delivery at all, or at most not more than once 
+		// or twice a day. 
+
+
 		if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
 			$prefix = 'DISTINCT ON (outq_posturl)';
 			$suffix = 'ORDER BY outq_posturl';
