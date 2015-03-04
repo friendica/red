@@ -45,8 +45,6 @@ img.mail-list-sender-photo {
 #prvmail-rotator-wrapper {
 	float: left;
 	margin-top: 10px;
-/*	margin-right: 10px;
-	width: 24px; */
 	cursor: pointer;
 }
 
@@ -79,16 +77,14 @@ img.mail-list-sender-photo {
 	float: right;
 	margin-right: 30px;
 	margin-top: 15px;
-}
-
-.mail-conv-delete-icon {
-	border: none;
+	margin-bottom: 5px;
 }
 
 .mail-conv-recall-wrapper {
 	float: right;
 	margin-right: 10px;
 	margin-top: 15px;
+	margin-bottom: 5px;
 }
 
 .mail-conv-outside-wrapper-end {
