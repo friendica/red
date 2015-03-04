@@ -590,9 +590,6 @@ function admin_page_dbsync(&$a) {
 function admin_page_queue($a) {
 	$o = '';
 
-	$r = q("select count(outq_posturl) as total, outq_posturl, max(hubloc_connected) as connected from outq 
-		where outq_delivered = 0 group by outq_posturl order by total desc");
-
 	if($_REQUEST['drophub']) {
 		require_once('hubloc.php');
 		hubloc_mark_as_down($_REQUEST['drophub']);
