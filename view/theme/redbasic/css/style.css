@@ -1938,6 +1938,8 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	color: #31708f;
 	background-color: #d9edf7;
 	margin-bottom: 3px;
+	border-radius: $radiuspx;
+	text-align: center;
 }
 .section-content-wrapper {
 	padding: 7px 10px;
