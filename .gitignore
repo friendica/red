@@ -1,62 +1,66 @@
-favicon.*
-.htconfig.php
-\#*
-include/jquery-1.4.2.min.js
-*.gz
-*.log
-*.out
-*.version*
-home.html
-addon
+## Ignore tmp, backup, logs and other junk files
 *~
-.*.swp
-compiled/
-custom/
-/store/
-
-# site apps
-apps/
-
+*.gz
+*.out
+*.bak
+*.swp
+*.log
+*.lock
+*.kate-swp
+#Ignore emacs tempfiles
+.#*
 # patch attempts
 *.orig
 *.rej
+# OSX .DS_Store files
+.DS_Store
+Thumbs.db
 
+
+## Ignore RedMatrix site specific files and folders
+.htconfig.php
+favicon.*
+addon/
+custom/
+/store/
+# site apps
+apps/
+# default startpage
+home.html
+# Ignore site TOS
+doc/SiteTOS.md
 # themes except for redbasic
 view/theme/*
 ! view/theme/redbasic
-
+# site theme schemas
+view/theme/redbasic/schema/default.php
+# Doxygen API documentation, run 'doxygen util/Doxyfile' to generate it
+doc/html/
+# zotsh configuration files
+.zotshrc
 # external repositories for themes/addons
 extend/
 
-# composer files (for fetching sabre)
-composer.*
 
-#ignore documentation, it should be newly built 
-doc/api
-
-#ignore reports, should be generted with every build
-report/
-
-#ignore config files from eclipse, we don't want IDE files in our repository
+## exclude IDE files
+# config files and folders from Eclipse
 .project
 .buildpath
 .externalToolBuilders
-.settings
-
-#ignore OSX .DS_Store files 
-.DS_Store
-
-#netbeans project folder
-nbproject
-
-#Kdevelop project files
+.settings/
+# NetBeans project folder
+nbproject/
+# Kdevelop project files
 *.kdev4
+# PHPStorm
+.idea/
 
-# Ignore site TOS
-doc/SiteTOS.md
 
-#Ingore site theme schemas
-view/theme/redbasic/schema/default.php
+# composer files (at the moment composer is not officially supported and only used to add SabreDAV, we should add these)
+composer.* 
 
-#Ignore emacs tempfiles
-.#*
+# When we include composer we should exclude vendor/
+#vendor/
+# Exclude at least some vendor test files, examples, etc.
+vendor/sabre/*/tests/
+vendor/sabre/*/examples/
