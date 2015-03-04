@@ -18,9 +18,9 @@ require_once('include/widgets.php');
 function pdl_selector($uid, $current="") {
 	$o = '';
 
-	//$sql_extra = item_permissions_sql($uid);
+	$sql_extra = item_permissions_sql($uid);
 
-	$r = q("select item_id.*, mid from item_id left join item on iid = item.id where item_id.uid = %d and item_id.uid = item.uid and service = 'PDL' order by sid asc",
+	$r = q("select item_id.*, mid from item_id left join item on iid = item.id where item_id.uid = %d and item_id.uid = item.uid and service = 'PDL' $sql_extra order by sid asc",
 		intval($uid)
 	);
 
