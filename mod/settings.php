@@ -572,7 +572,7 @@ function settings_content(&$a) {
 //		return;
 //	}
 	
-
+	$yes_no = array(t('No'),t('Yes'));
 		
 	if((argc() > 1) && (argv(1) === 'oauth')) {
 		
@@ -850,16 +850,16 @@ function settings_content(&$a) {
 		
 			'$theme'	=> array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview'),
 			'$mobile_theme'	=> array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, ''),
-			'$user_scalable' => array('user_scalable', t("Enable user zoom on mobile devices"), $user_scalable, ''),
+			'$user_scalable' => array('user_scalable', t("Enable user zoom on mobile devices"), $user_scalable, '', $yes_no),
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
-			'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, ''),
-			'$title_tosource'	=> array('title_tosource', t("Link post titles to source"), $title_tosource, ''),		
+			'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, '', $yes_no),
+			'$title_tosource'	=> array('title_tosource', t("Link post titles to source"), $title_tosource, '', $yes_no),
 			'$layout_editor' => t('System Page Layout Editor - (advanced)'),
 			'$theme_config' => $theme_config,
 			'$expert' => feature_enabled(local_channel(),'expert'),
-			'$channel_list_mode' => array('channel_list_mode', t('Use blog/list mode on channel page'), get_pconfig(local_channel(),'system','channel_list_mode'), t('(comments displayed separately)')),
-			'$network_list_mode' => array('network_list_mode', t('Use blog/list mode on matrix page'), get_pconfig(local_channel(),'system','network_list_mode'), t('(comments displayed separately)')),
+			'$channel_list_mode' => array('channel_list_mode', t('Use blog/list mode on channel page'), get_pconfig(local_channel(),'system','channel_list_mode'), t('(comments displayed separately)'), $yes_no),
+			'$network_list_mode' => array('network_list_mode', t('Use blog/list mode on matrix page'), get_pconfig(local_channel(),'system','network_list_mode'), t('(comments displayed separately)'), $yes_no),
 			'$channel_divmore_height' => array('channel_divmore_height', t('Channel page max height of content (in pixels)'), ((get_pconfig(local_channel(),'system','channel_divmore_height')) ? get_pconfig(local_channel(),'system','channel_divmore_height') : 400), t('click to expand content exceeding this height')),
 			'$network_divmore_height' => array('network_divmore_height', t('Matrix page max height of content (in pixels)'), ((get_pconfig(local_channel(),'system','network_divmore_height')) ? get_pconfig(local_channel(),'system','network_divmore_height') : 400) , t('click to expand content exceeding this height')),
 
@@ -969,8 +969,6 @@ function settings_content(&$a) {
 		$blocktags = (($blocktags===false) ? '0' : $blocktags);
 	
 		$timezone = date_default_timezone_get();
-
-		$yes_no = array(t('No'),t('Yes'));
 
 		$opt_tpl = get_markup_template("field_checkbox.tpl");
 		if(get_config('system','publish_all')) {

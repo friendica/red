@@ -101,7 +101,7 @@ if(feature_enabled(local_channel(),'expert'))
 		'$expert' => $expert,
 		'$title' => t("Theme settings"),
 		'$schema' => array('redbasic_schema', t('Set scheme'), $arr['schema'], '', $scheme_choices),
-		'$narrow_navbar' => array('redbasic_narrow_navbar',t('Narrow navbar'),$arr['narrow_navbar']),		
+		'$narrow_navbar' => array('redbasic_narrow_navbar',t('Narrow navbar'),$arr['narrow_navbar'], '', array(t('No'),t('Yes'))),
 		'$nav_bg' => array('redbasic_nav_bg', t('Navigation bar background color'), $arr['nav_bg']),
 		'$nav_gradient_top' => array('redbasic_nav_gradient_top', t('Navigation bar gradient top color'), $arr['nav_gradient_top']),
 		'$nav_gradient_bottom' => array('redbasic_nav_gradient_bottom', t('Navigation bar gradient bottom color'), $arr['nav_gradient_bottom']),
@@ -126,11 +126,10 @@ if(feature_enabled(local_channel(),'expert'))
 		'$radius' => array('redbasic_radius', t('Set radius of corners'), $arr['radius']),
 		'$shadow' => array('redbasic_shadow', t('Set shadow depth of photos'), $arr['shadow']),
 		'$converse_width' => array('redbasic_converse_width',t('Set maximum width of conversation regions'),$arr['converse_width']),
-		'$converse_center' => array('redbasic_converse_center',t('Center conversation regions'),$arr['converse_center']),
+		'$converse_center' => array('redbasic_converse_center',t('Center conversation regions'),$arr['converse_center'], '', array(t('No'),t('Yes'))),
 		'$nav_min_opacity' => array('redbasic_nav_min_opacity',t('Set minimum opacity of nav bar - to hide it'),$arr['nav_min_opacity']),
 		'$top_photo' => array('redbasic_top_photo', t('Set size of conversation author photo'), $arr['top_photo']),
 		'$reply_photo' => array('redbasic_reply_photo', t('Set size of followup author photos'), $arr['reply_photo']),
-		'$sloppy_photos' => array('redbasic_sloppy_photos',t('Sloppy photo albums'),$arr['sloppy_photos'],t('Are you a clean desk or a messy desk person?')),
 		));
 
 	return $o;

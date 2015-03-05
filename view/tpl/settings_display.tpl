@@ -21,11 +21,11 @@
 <div class="settings-submit-wrapper" >
 <input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
 </div>
-
+{{if $expert}}
 <br />
 <a href="pdledit">{{$layout_editor}}</a>
 <br />
-
+{{/if}}
 {{if $theme_config}}
 <h2>Theme settings</h2>
 {{$theme_config}}
