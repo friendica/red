@@ -590,6 +590,8 @@ function admin_page_dbsync(&$a) {
 function admin_page_queue($a) {
 	$o = '';
 
+	$expert = ((array_key_exists('expert',$_REQUEST)) ? intval($_REQUEST['expert']) : 0);
+
 	if($_REQUEST['drophub']) {
 		require_once('hubloc.php');
 		hubloc_mark_as_down($_REQUEST['drophub']);
@@ -620,7 +622,8 @@ function admin_page_queue($a) {
 		'$empty' => t('Empty queue for this hub'),
 		'$lastconn' => t('Last known contact'),
 		'$hasentries' => ((count($r)) ? true : false),
-		'$entries' => $r
+		'$entries' => $r,
+		'$expert' => $expert
 	));
 
 	return $o;
