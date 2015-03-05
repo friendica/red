@@ -8,11 +8,12 @@ fi
 mkdir -p extend/addon/$2
 mkdir addon > /dev/null 2>&1
 git clone $1 extend/addon/$2
-if [ $? -eq 0 ]; then
+if [ $? -ne 0 ]; then
 	exit $?
 fi
 
 filelist=(`ls extend/addon/$2`)
+
 
 cd addon
 for a in "${filelist[@]}" ; do

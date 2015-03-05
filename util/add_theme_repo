@@ -8,7 +8,7 @@ fi
 
 mkdir -p extend/theme/$2
 git clone $1 extend/theme/$2
-if [ $? -eq '0' ]; then
+if [ $? -ne 0 ]; then
 	exit $?
 fi
 
