@@ -29,7 +29,7 @@ function deliver_run($argv, $argc) {
 					);
 					if($y && $y[0]['site_update'] < datetime_convert('UTC','UTC','now - 1 month')) {
 						q("update outq set outq_priority = %d where outq_hash = '%s'",
-							intval($r[0]['outq_priority'] + 10)
+							intval($r[0]['outq_priority'] + 10),
 							dbesc($r[0]['outq_hash'])
 						);
 						logger('immediate delivery deferred for site ' . $base);
