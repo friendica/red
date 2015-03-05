@@ -3,9 +3,12 @@
 
 <form action="settings/display" id="settings-form" method="post" autocomplete="off" >
 <input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
-
+{{if $theme}}
 {{include file="field_themeselect.tpl" field=$theme}}
+{{/if}}
+{{if $mobile_theme}}
 {{include file="field_themeselect.tpl" field=$mobile_theme}}
+{{/if}}
 {{if $expert}}
 {{include file="field_checkbox.tpl" field=$user_scalable}}
 {{/if}}
