@@ -118,6 +118,34 @@
 		return true;
 	}
 
+	function insertCommentURL(comment,id) {
+
+		reply = prompt(aStr['linkurl']);
+        if(reply && reply.length) {
+            reply = bin2hex(reply);
+			$('body').css('cursor', 'wait');
+            $.get('parse_url?binurl=' + reply, function(data) {
+				var tmpStr = $("#comment-edit-text-" + id).val();
+				if(tmpStr == comment) {
+					tmpStr = "";
+					$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
+					$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+					openMenu("comment-tools-" + id);
+					$("#comment-edit-text-" + id).val(tmpStr);
+				}
+
+				textarea = document.getElementById("comment-edit-text-" +id);
+				textarea.value = textarea.value + data;
+				$('body').css('cursor', 'auto');
+
+            });
+        }
+		return true;
+	}
+
+
+
+
 	function viewsrc(id) {
 		$.colorbox({href: 'viewsrc/' + id, maxWidth: '80%', maxHeight: '80%' });
 	}
@@ -1229,6 +1257,13 @@ function chanviewFull() {
 		data = h2b(data);
 		addeditortext(data);
 	}
+
+
+	function loadText(textRegion,data) {
+		var currentText = $(textRegion).val();
+		$(textRegion).val(currentText + data);
+	}
+
 
 	function addeditortext(data) {
 		if(plaintext == 'none') {
