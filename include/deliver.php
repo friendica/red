@@ -20,6 +20,24 @@ function deliver_run($argv, $argc) {
 			dbesc($argv[$x])
 		);
 		if($r) {
+			$h = parse_url($r[0]['outq_posturl']);
+			if($h) {
+				$base = $h['scheme'] . '://' . $h['host'] . (($h['port']) ? ':' . $h['port'] : '');
+				if($base !== z_root()) {
+					$x = q("select site_update from site where site_url = '%s' ",
+						dbesc($base)
+					);
+					if($x && $x[0]['site_update'] < datetime_convert('UTC','UTC','now - 1 month')) {
+						q("update outq set outq_priority = %d where outq_hash = '%s'",
+							intval($r[0]['outq_priority'] + 10)
+							dbesc($r[0]['outq_hash'])
+						);
+						logger('immediate delivery deferred for site ' . $base);
+						continue;
+					}
+				}
+			} 
+
 			if($r[0]['outq_driver'] === 'post') {
 				$result = z_post_url($r[0]['outq_posturl'],$r[0]['outq_msg']); 
 				if($result['success'] && $result['return_code'] < 300) {

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1138 );
+define( 'UPDATE_VERSION' , 1139 );
 
 /**
  *
@@ -1576,6 +1576,15 @@ function update_r1136() {
 function update_r1137() {
 	$r1 = q("alter table site add site_valid smallint not null default '0' ");
 	$r2 = q("create index site_valid on site ( site_valid ) ");
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1138() {
+	$r1 = q("alter table outq add outq_priority smallint not null default '0' ");
+	$r2 = q("create index outq_priority on outq ( outq_priority ) ");
 	if($r1 && $r2)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
