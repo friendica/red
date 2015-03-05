@@ -5,5 +5,5 @@
 			{{foreach $field.4 as $opt=>$val}}<option value="{{$opt}}" {{if $opt==$field.2}}selected="selected"{{/if}}>{{$val}}</option>{{/foreach}}
 		</select>
 		<span class='field_help'>{{$field.3}}</span>
-		<div id="theme-preview"></div>
+		{{if $field.5=='preview'}}<div id="theme-preview"></div>{{/if}}
 	</div>
