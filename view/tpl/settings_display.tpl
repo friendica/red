@@ -6,6 +6,7 @@
 		<input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
 
 		<div class="panel-group" id="settings" role="tablist" aria-multiselectable="true">
+			{{if $theme || $mobile_theme}}
 			<div class="panel">
 				<div class="section-subtitle-wrapper" role="tab" id="theme-settings-title">
 					<h3>
@@ -28,6 +29,7 @@
 					</div>
 				</div>
 			</div>
+			{{/if}}
 			{{if $theme_config}}
 				{{$theme_config}}
 			{{/if}}
