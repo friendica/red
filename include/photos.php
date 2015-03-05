@@ -31,7 +31,7 @@ function photo_upload($channel, $observer, $args) {
 		if($newalbum)
 			$album = $newalbum;
 		else
-			$album = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y');
+			$album = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y-m');
 	}
 
 	/**
