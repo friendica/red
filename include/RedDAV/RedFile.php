@@ -80,7 +80,8 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		$newName = str_replace('/', '%2F', $newName);
 
 		$r = q("UPDATE attach SET filename = '%s' WHERE hash = '%s' AND id = %d",
-			dbesc($this->data['filename']),
+			dbesc($newName),
+			dbesc($this->data['hash']),
 			intval($this->data['id'])
 		);
 	}
