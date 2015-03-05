@@ -24,10 +24,10 @@ function deliver_run($argv, $argc) {
 			if($h) {
 				$base = $h['scheme'] . '://' . $h['host'] . (($h['port']) ? ':' . $h['port'] : '');
 				if($base !== z_root()) {
-					$x = q("select site_update from site where site_url = '%s' ",
+					$y = q("select site_update from site where site_url = '%s' ",
 						dbesc($base)
 					);
-					if($x && $x[0]['site_update'] < datetime_convert('UTC','UTC','now - 1 month')) {
+					if($y && $y[0]['site_update'] < datetime_convert('UTC','UTC','now - 1 month')) {
 						q("update outq set outq_priority = %d where outq_hash = '%s'",
 							intval($r[0]['outq_priority'] + 10)
 							dbesc($r[0]['outq_hash'])
