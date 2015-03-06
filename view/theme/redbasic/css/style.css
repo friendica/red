@@ -339,7 +339,7 @@ footer {
 	margin-bottom: 10px;
 	padding: 10px;
 	background-color: $comment_item_colour;
-	border-bottom: 1px solid $widget_brdrcolour;
+	border-bottom: 1px solid rgba(238,238,238,0.8);
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
 	border-radius: $radiuspx;
@@ -709,7 +709,7 @@ a.rateme, div.rateme {
 	width: 100%;
 	float: left;
 	background-color: $comment_item_colour;
-	border-bottom: 1px solid $widget_brdrcolour;
+	border-bottom: 1px solid rgba(238,238,238,0.8);
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
 	border-radius: $radiuspx;
@@ -1816,7 +1816,7 @@ img.mail-list-sender-photo {
 
 .widget {
 	background-color: $comment_item_colour;
-	border-bottom: 1px solid $widget_brdrcolour;
+	border-bottom: 1px solid rgba(238,238,238,0.8);
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
 	border-radius: $radiuspx;

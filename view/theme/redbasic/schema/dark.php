@@ -64,8 +64,6 @@
 		$toolicon_activecolour = '#fff';
 	if (! $font_colour)
 		$font_colour = "#ccc";
-	if (! $widget_brdrcolour)
-		$widget_brdrcolour = "#333";
 	if (! $blockquote_colour)
 		$blockquote_colour = "#ccc";
 	if (! $blockquote_bgcolour)
