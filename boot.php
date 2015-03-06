@@ -654,7 +654,7 @@ class App {
 	public  $profile_uid = 0;              // If applicable, the channel_id of the "page owner"
 	public  $poi        = null;            // "person of interest", generally a referenced connection
 	public  $layout     = array();         // Comanche parsed template
-
+	public  $pdl        = null;
 	private $perms      = null;            // observer permissions
 	private $widgets    = array();         // widgets for this page
 	//private $widgetlist = null;            // widget ordering and inclusion directives
@@ -2047,10 +2047,23 @@ function load_pdl(&$a) {
 		if((! $s) && (($p = theme_include($n)) != ''))
 			$s = @file_get_contents($p);
 
-		if($s)
+		if($s) {
 			comanche_parser($a, $s);
+			$a->pdl = $s;
+		}
 	}
 }
+
+
+function exec_pdl(&$a) {
+	require_once('include/comanche.php');
+
+	if($a->pdl) {
+		comanche_parser($a, $a->pdl,1);
+	}
+}
+
+
 
 /**
  * @brief build the page.
@@ -2060,6 +2073,9 @@ function load_pdl(&$a) {
  * @param App &$a global application object
  */
 function construct_page(&$a) {
+
+
+	exec_pdl($a);
 
 	$comanche = ((count($a->layout)) ? true : false);
 
@@ -2074,6 +2090,7 @@ function construct_page(&$a) {
 	}
 
 	if($comanche) {
+
 		if($a->layout['nav']) {
 			$a->page['nav'] = get_custom_nav($a, $a->layout['nav']);
 		}
@@ -2123,6 +2140,7 @@ function construct_page(&$a) {
 		$arr = array('module' => $a->module, 'layout' => $a->layout);
 		call_hooks('construct_page', $arr);
 		$a->layout = $arr['layout'];
+
 
 		foreach($a->layout as $k => $v) {
 			if((strpos($k, 'region_') === 0) && strlen($v)) {

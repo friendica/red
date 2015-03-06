@@ -14,6 +14,20 @@ function directory_init(&$a) {
 			dbesc($_GET['ignore'])
 		);
 	}
+
+	$observer = get_observer_hash();
+	$global_changed = false;
+
+	if(array_key_exists('global',$_REQUEST)) {
+		$globaldir = intval($_REQUEST['global']);
+		$global_changed = true;
+	}
+	if($global_changed) {
+		$_SESSION['globaldir'] = $globaldir;
+		if($observer)
+			set_xconfig($observer,'directory','globaldir',$globaldir);
+	} 		
+
 }
 
 function directory_content(&$a) {
@@ -26,6 +40,11 @@ function directory_content(&$a) {
 	$safe_mode = 1;
 
 	$observer = get_observer_hash();
+
+	if($observer)
+		$globaldir = get_xconfig($observer,'directory','globaldir');
+	else
+		$globaldir = ((array_key_exists('globaldir',$_SESSION)) ? intval($_SESSION['globaldir']) : false);
 	
 	if($observer) {
 		$safe_mode = get_xconfig($observer,'directory','safe_mode');
@@ -119,6 +138,9 @@ function directory_content(&$a) {
 
 		if($token)
 			$query .= '&t=' . $token;
+
+		if(! $globaldir)
+			$query .= '&hub=' . get_app()->get_hostname();
 
 		if($search)
 			$query .= '&name=' . urlencode($search) . '&keywords=' . urlencode($search);

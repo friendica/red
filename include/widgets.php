@@ -605,9 +605,6 @@ function widget_vcard($arr) {
  * The following directory widgets are only useful on the directory page
  */
 
-function widget_dirsafemode($arr) {
-	return dir_safe_mode();
-}
 
 function widget_dirsort($arr) {
 	return dir_sort_links();

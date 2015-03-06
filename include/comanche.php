@@ -43,7 +43,7 @@ function pdl_selector($uid, $current="") {
 
 
 
-function comanche_parser(&$a, $s) {
+function comanche_parser(&$a, $s, $pass = 0) {
 	$matches = array();
 
 	$cnt = preg_match_all("/\[comment\](.*?)\[\/comment\]/ism", $s, $matches, PREG_SET_ORDER);
@@ -53,43 +53,47 @@ function comanche_parser(&$a, $s) {
 		}
 	}
 
-	$cnt = preg_match("/\[layout\](.*?)\[\/layout\]/ism", $s, $matches);
-	if($cnt)
-		$a->page['template'] = trim($matches[1]);
+	if($pass == 0) {
+		$cnt = preg_match("/\[layout\](.*?)\[\/layout\]/ism", $s, $matches);
+		if($cnt)
+			$a->page['template'] = trim($matches[1]);
 
-	$cnt = preg_match("/\[template=(.*?)\](.*?)\[\/template\]/ism", $s, $matches);
-	if($cnt) {
-		$a->page['template'] = trim($matches[2]);
-		$a->page['template_style'] = trim($matches[2]) . '_' . $matches[1]; 
-	}
-
-	$cnt = preg_match("/\[template\](.*?)\[\/template\]/ism", $s, $matches);
-	if($cnt) {
-		$a->page['template'] = trim($matches[1]);
-	}
-
-	$cnt = preg_match("/\[theme=(.*?)\](.*?)\[\/theme\]/ism", $s, $matches);
-	if($cnt) {
-		$a->layout['schema'] = trim($matches[1]);
-		$a->layout['theme'] = trim($matches[2]);
-	}
-
-	$cnt = preg_match("/\[theme\](.*?)\[\/theme\]/ism", $s, $matches);
-	if($cnt)
-		$a->layout['theme'] = trim($matches[1]);
-
-	$cnt = preg_match_all("/\[region=(.*?)\](.*?)\[\/region\]/ism", $s, $matches, PREG_SET_ORDER);
-	if($cnt) {
-		foreach($matches as $mtch) {
-			$a->layout['region_' . $mtch[1]] = comanche_region($a,$mtch[2]);
+		$cnt = preg_match("/\[template=(.*?)\](.*?)\[\/template\]/ism", $s, $matches);
+		if($cnt) {
+			$a->page['template'] = trim($matches[2]);
+			$a->page['template_style'] = trim($matches[2]) . '_' . $matches[1]; 
 		}
-	}
 
-	$cnt = preg_match_all("/\[webpage\](.*?)\[\/webpage\]/ism", $s, $matches, PREG_SET_ORDER);
-	if($cnt) {
-		// only the last webpage definition is used if there is more than one
-		foreach($matches as $mtch) {
-			$a->layout['webpage'] = comanche_webpage($a,$mtch[1]);
+		$cnt = preg_match("/\[template\](.*?)\[\/template\]/ism", $s, $matches);
+		if($cnt) {
+			$a->page['template'] = trim($matches[1]);
+		}
+
+		$cnt = preg_match("/\[theme=(.*?)\](.*?)\[\/theme\]/ism", $s, $matches);
+		if($cnt) {
+			$a->layout['schema'] = trim($matches[1]);
+			$a->layout['theme'] = trim($matches[2]);
+		}
+
+		$cnt = preg_match("/\[theme\](.*?)\[\/theme\]/ism", $s, $matches);
+		if($cnt)
+			$a->layout['theme'] = trim($matches[1]);
+
+	}
+	else {
+		$cnt = preg_match_all("/\[region=(.*?)\](.*?)\[\/region\]/ism", $s, $matches, PREG_SET_ORDER);
+		if($cnt) {
+			foreach($matches as $mtch) {
+				$a->layout['region_' . $mtch[1]] = comanche_region($a,$mtch[2]);
+			}
+		}
+
+		$cnt = preg_match_all("/\[webpage\](.*?)\[\/webpage\]/ism", $s, $matches, PREG_SET_ORDER);
+		if($cnt) {
+			// only the last webpage definition is used if there is more than one
+			foreach($matches as $mtch) {
+				$a->layout['webpage'] = comanche_webpage($a,$mtch[1]);
+			}
 		}
 	}
 
