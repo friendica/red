@@ -1,29 +1,60 @@
 @media screen and (min-width: 760px) {
-.navbar-nav > li > a {padding-top:5px !important; padding-bottom:5px !important;}
-.navbar {min-height:25px !important;}
-nav img {
-height: 30px;
-width: 30px;
-margin: 2px 0px 1px 10px;
-border-radius: 0px;
-}
-.navbar-left{height: 30px;}
-.container-fluid {min-height:30px;}
-.collapse .navbar-collapse {min-height:30px;}
-#nav-search-text {margin:5px;}
-header #banner {margin-top:5px;}
-nav .dropdown-menu {
-top: 33px;}
-nav .badge {
-    position: relative;
-    top: -30px;
-    float: right;
-    font-size: 10px;
-    padding: 2px 6px;
-    cursor: pointer;
-}
-#jGrowl.top-right {
-	top: 30px;
-	right: 15px;
-}
+	.navbar-nav > li > a {
+		padding-top:7px !important;
+		padding-bottom:3px !important;
+	}
+
+	.navbar {
+		min-height:25px !important;
+	}
+
+	nav img {
+		height: 30px;
+		width: 30px;
+		margin-top: 1px;
+		border-radius: 4px;
+	}
+
+	.navbar-left {
+		height: 30px;
+	}
+
+	.container-fluid {
+		min-height:30px;
+	}
+
+	.collapse .navbar-collapse {
+		min-height:30px;
+	}
+
+	#nav-search-text {
+		margin:6px 15px 4px 15px;
+	}
+
+	#nav-search-spinner {
+		margin: 16px 0px 0px 25px;
+	}
+
+	header #banner {
+		margin-top:5px;
+	}
+
+	nav .dropdown-menu,
+	nav .acpopup {
+		top: 31px !important;
+	}
+
+	nav .badge {
+		position: relative;
+		top: -31px;
+		float: right;
+		font-size: 10px;
+		padding: 2px 6px;
+		cursor: pointer;
+	}
+
+	#jGrowl.top-right {
+		top: 30px;
+		right: 15px;
+	}
 }
