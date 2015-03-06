@@ -186,8 +186,10 @@ function dirsearch_content(&$a) {
 	}
 
 
-	if($sort_order == 'normal')
+	if($sort_order == 'normal') {
 		$order = " order by xchan_name asc ";
+		$safesql .= " and ascii(substr(xchan_name FROM 1 FOR 1)) > 64 ";
+	}
 	elseif($sort_order == 'reverse')
 		$order = " order by xchan_name desc ";
 	elseif($sort_order == 'reversedate')
@@ -238,15 +240,44 @@ function dirsearch_content(&$a) {
 		json_return_and_die($spkt);
 	}
 	else {
-		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and xchan_network = 'zot' and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 $safesql $order $qlimit ",
+
+		// The query mangling is designed to make alphabetic searches start with 'A' and not precede real names
+		// with those containing a bunch of punctuation
+
+		if($sort_order == 'normal') {
+			$sql = $safesql .= " and ascii(substr(xchan_name FROM 1 FOR 1)) > 64 ";
+		}
+		else {
+			$sql = $safesql;
+		}
+
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and xchan_network = 'zot' and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 $sql $order $qlimit ",
 			intval(XCHAN_FLAGS_HIDDEN),
 			intval(XCHAN_FLAGS_ORPHAN),
 			intval(XCHAN_FLAGS_DELETED)
 		);
-	}
 
-	$ret['page'] = $page + 1;
-	$ret['records'] = count($r);		
+		$ret['page'] = $page + 1;
+		$ret['records'] = count($r);		
+
+
+		if(! $r) {
+
+			if($sort_order == 'normal') {
+				$sql = $safesql .= " and ascii(substr(xchan_name FROM 1 FOR 1)) <= 64 ";
+
+				$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and xchan_network = 'zot' and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 $sql $order $qlimit ",
+					intval(XCHAN_FLAGS_HIDDEN),
+					intval(XCHAN_FLAGS_ORPHAN),
+					intval(XCHAN_FLAGS_DELETED)
+				);
+
+				$ret['page'] = $page + 1;
+				$ret['records'] = count($r);		
+
+			}
+		}
+	}
 
 	if($r) {
 
