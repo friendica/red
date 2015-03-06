@@ -185,7 +185,7 @@ function settings_post(&$a) {
 		set_pconfig(local_channel(),'system','user_scalable',$user_scalable);
 		set_pconfig(local_channel(),'system','update_interval', $browser_update);
 		set_pconfig(local_channel(),'system','itemspage', $itemspage);
-		set_pconfig(local_channel(),'system','no_smilies',$nosmile);
+		set_pconfig(local_channel(),'system','no_smilies',1-intval($nosmile));
 		set_pconfig(local_channel(),'system','title_tosource',$title_tosource);
 		set_pconfig(local_channel(),'system','channel_list_mode', $channel_list_mode);
 		set_pconfig(local_channel(),'system','network_list_mode', $network_list_mode);
