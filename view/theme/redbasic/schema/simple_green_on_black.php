@@ -64,8 +64,6 @@ if (! $navaside_bghover)
 		$toolicon_activecolour = '#50f148';
 	if (! $font_colour)
 		$font_colour = "#46D43F";
-	if (! $widget_brdrcolour)
-		$widget_brdrcolour = "#000";
 	if (! $blockquote_colour)
 		$blockquote_colour = "#32962D";
 	if (! $blockquote_bgcolour)
