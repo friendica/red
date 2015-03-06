@@ -64,14 +64,18 @@ if(! $a->install) {
 		}
 
 	}
-		// If we haven't got a schema, load the default.  We shouldn't touch this - we
-		// should leave it for admins to define for themselves.
-			if (! $schema) {
-			      if(file_exists('view/theme/redbasic/schema/default.php')) {
-				    $schemefile = 'view/theme/redbasic/schema/default.php';
-				    require_once ($schemefile);
-				    }
-			}
+
+	// If we haven't got a schema, load the default.  We shouldn't touch this - we
+	// should leave it for admins to define for themselves.
+	if (! $schema) {
+		if(file_exists('view/theme/redbasic/schema/default.php')) {
+			$schemefile = 'view/theme/redbasic/schema/default.php';
+			require_once ($schemefile);
+		}
+		if(file_exists('view/theme/redbasic/schema/default.css')) {
+			$schemecss = file_get_contents('view/theme/redbasic/schema/default.css');
+		}
+	}
 		
 		
 //Set some defaults - we have to do this after pulling owner settings, and we have to check for each setting
