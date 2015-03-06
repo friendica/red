@@ -119,7 +119,7 @@ function dirsearch_content(&$a) {
 		$sql_extra .= dir_query_build($joiner,'xprof_keywords',$keywords);
 
 	if($forums)
-		$sql_extra .= dir_flag_build($joiner,'xprof_flags',XCHAN_FLAGS_PUBFORUM, $forums);
+		$sql_extra .= dir_flag_build(' AND ','xchan_flags',XCHAN_FLAGS_PUBFORUM, $forums);
 
 
 	// we only support an age range currently. You must set both agege 
@@ -188,6 +188,11 @@ function dirsearch_content(&$a) {
 
 	if($sort_order == 'normal') {
 		$order = " order by xchan_name asc ";
+
+		// Start the alphabetic search at 'A' 
+		// This will make a handful of channels whose names begin with
+		// punctuation un-searchable in this mode
+
 		$safesql .= " and ascii(substr(xchan_name FROM 1 FOR 1)) > 64 ";
 	}
 	elseif($sort_order == 'reverse')
@@ -241,48 +246,21 @@ function dirsearch_content(&$a) {
 	}
 	else {
 
-		// The query mangling is designed to make alphabetic searches start with 'A' and not precede real names
-		// with those containing a bunch of punctuation
-
-		if($sort_order == 'normal') {
-			$sql = $safesql .= " and ascii(substr(xchan_name FROM 1 FOR 1)) > 64 ";
-		}
-		else {
-			$sql = $safesql;
-		}
-
-		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and xchan_network = 'zot' and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 $sql $order $qlimit ",
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and xchan_network = 'zot' and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 $safesql $order $qlimit ",
 			intval(XCHAN_FLAGS_HIDDEN),
 			intval(XCHAN_FLAGS_ORPHAN),
 			intval(XCHAN_FLAGS_DELETED)
 		);
 
+
 		$ret['page'] = $page + 1;
 		$ret['records'] = count($r);		
-
-
-		if(! $r) {
-
-			if($sort_order == 'normal') {
-				$sql = $safesql .= " and ascii(substr(xchan_name FROM 1 FOR 1)) <= 64 ";
-
-				$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and xchan_network = 'zot' and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 $sql $order $qlimit ",
-					intval(XCHAN_FLAGS_HIDDEN),
-					intval(XCHAN_FLAGS_ORPHAN),
-					intval(XCHAN_FLAGS_DELETED)
-				);
-
-				$ret['page'] = $page + 1;
-				$ret['records'] = count($r);		
-
-			}
-		}
 	}
+
 
 	if($r) {
 
 		$entries = array();
-
 
 		foreach($r as $rr) {
 
@@ -348,7 +326,7 @@ function dir_query_build($joiner,$field,$s) {
 }
 
 function dir_flag_build($joiner,$field,$bit,$s) {
-	return dbesc($joiner) . " ( " . dbesc('xchan_flags') . " & " . intval($bit) . " ) " . ((intval($s)) ? '>' : '=' ) . " 0 ";
+	return dbesc($joiner) . " ( " . dbesc($field) . " & " . intval($bit) . " ) " . ((intval($s)) ? '>' : '=' ) . " 0 ";
 }
 
 

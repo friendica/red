@@ -17,6 +17,7 @@ function directory_init(&$a) {
 
 	$observer = get_observer_hash();
 	$global_changed = false;
+	$safe_changed = false;
 
 	if(array_key_exists('global',$_REQUEST)) {
 		$globaldir = intval($_REQUEST['global']);
@@ -26,6 +27,16 @@ function directory_init(&$a) {
 		$_SESSION['globaldir'] = $globaldir;
 		if($observer)
 			set_xconfig($observer,'directory','globaldir',$globaldir);
+	} 		
+
+	if(array_key_exists('safe',$_REQUEST)) {
+		$safemode = intval($_REQUEST['safe']);
+		$safe_changed = true;
+	}
+	if($safe_changed) {
+		$_SESSION['safemode'] = $safemode;
+		if($observer)
+			set_xconfig($observer,'directory','safe_mode',$safemode);
 	} 		
 
 }
@@ -46,20 +57,18 @@ function directory_content(&$a) {
 	else
 		$globaldir = ((array_key_exists('globaldir',$_SESSION)) ? intval($_SESSION['globaldir']) : false);
 	
-	if($observer) {
+	if($observer)
 		$safe_mode = get_xconfig($observer,'directory','safe_mode');
-	}
+	else
+		$safe_mode = ((array_key_exists('safemode',$_SESSION)) ? intval($_SESSION['safemode']) : false); 
 	if($safe_mode === false)
 		$safe_mode = 1;
-	else
-		$safe_mode = intval($safe_mode);
-
-	if(x($_REQUEST,'safe'))
-		$safe_mode = (intval($_REQUEST['safe']));
 
 	$pubforums = null;
 	if(array_key_exists('pubforums',$_REQUEST))
 		$pubforums = intval($_REQUEST['pubforums']);
+	if(! $pubforums)
+		$pubforums = null;
 
 	$o = '';
 	nav_set_selected('directory');
@@ -153,15 +162,10 @@ function directory_content(&$a) {
 		if(! is_null($pubforums))
 			$query .= '&pubforums=' . intval($pubforums);
 
-		if(! is_null($pubforums))
-			$query .= '&pubforums=' . intval($pubforums);
-
-		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : 'normal');
+		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : 'date');
 
 		if($sort_order)
 			$query .= '&order=' . urlencode($sort_order);
-
-
 			
 		if($a->pager['page'] != 1)
 			$query .= '&p=' . $a->pager['page'];
