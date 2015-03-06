@@ -59,6 +59,10 @@ if(! $a->install) {
 			$schemefile = 'view/theme/redbasic/schema/' . $schema . '.php';
 			require_once ($schemefile);
 		}
+		if(file_exists('view/theme/redbasic/schema/' . $schema . '.css')) {
+			$schemecss = file_get_contents('view/theme/redbasic/schema/' . $schema . '.css');
+		}
+
 	}
 		// If we haven't got a schema, load the default.  We shouldn't touch this - we
 		// should leave it for admins to define for themselves.
@@ -441,4 +445,8 @@ if($narrow_navbar && file_exists('view/theme/redbasic/css/narrow_navbar.css')) {
 if($converse_center && file_exists('view/theme/redbasic/css/converse_center.css')) {
 	$x = file_get_contents('view/theme/redbasic/css/converse_center.css');
 	echo str_replace(array_keys($options), array_values($options), $x);
-} 
+}
+
+if($schemecss) {
+	echo $schemecss;
+}
