@@ -9,7 +9,6 @@ function removeme_post(&$a) {
 		return;
 
 	if((! x($_POST,'qxz_password')) || (! strlen(trim($_POST['qxz_password']))))
-		notice( t('Password not correct.') . EOL);
 		return;
 
 	if((! x($_POST,'verify')) || (! strlen(trim($_POST['verify']))))
@@ -22,7 +21,6 @@ function removeme_post(&$a) {
 	$account = $a->get_account();
 
 	if(! account_verify_password($account['account_email'],$_POST['qxz_password']))
-		notice( t('Password not correct.') . EOL);
 		return;
 
 	if($account['account_password_changed'] != NULL_DATE) {
