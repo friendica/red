@@ -12,6 +12,8 @@ function dirsearch_content(&$a) {
 
 	$ret = array('success' => false);
 
+//	logger('request: ' . print_r($_REQUEST,true));
+
 
 	$dirmode = intval(get_config('system','directory_mode'));
 
@@ -119,7 +121,7 @@ function dirsearch_content(&$a) {
 		$sql_extra .= dir_query_build($joiner,'xprof_keywords',$keywords);
 
 	if($forums)
-		$sql_extra .= dir_flag_build(' AND ','xchan_flags',XCHAN_FLAGS_PUBFORUM, $forums);
+		$safesql .= dir_flag_build(' AND ','xchan_flags',XCHAN_FLAGS_PUBFORUM, $forums);
 
 
 	// we only support an age range currently. You must set both agege 
@@ -165,9 +167,9 @@ function dirsearch_content(&$a) {
 	}
 
 
-	$safesql = (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " )>0 " : '');
+	$safesql .= (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " )>0 " : '');
 	if($safe < 0)
-		$safesql = " and ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " )>0 ";
+		$safesql .= " and ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " )>0 ";
 
 	if($limit) 
 		$qlimit = " LIMIT $limit ";

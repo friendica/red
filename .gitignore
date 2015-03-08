@@ -8,7 +8,7 @@
 *.lock
 *.kate-swp
 #Ignore emacs tempfiles
-.#*
+\#*
 # patch attempts
 *.orig
 *.rej

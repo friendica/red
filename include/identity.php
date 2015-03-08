@@ -724,12 +724,13 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 	$p[0]['extra_fields'] = $extra_fields;
 
-	$z = q("select xchan_photo_date from xchan where xchan_hash = '%s' limit 1",
+	$z = q("select xchan_photo_date, xchan_addr from xchan where xchan_hash = '%s' limit 1",
 		dbesc($p[0]['channel_hash'])
 	);
-	if($z)
+	if($z) {
 		$p[0]['picdate'] = $z[0]['xchan_photo_date'];
-
+		$p[0]['reddress'] = str_replace('@','&#xff20;',$z[0]['xchan_addr']);
+	}
 	
 	// fetch user tags if this isn't the default profile
 
@@ -817,6 +818,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 	$location = false;
 	$address = false;
 	$pdesc = true;
+	$reddress = true;
 
 	if((! is_array($profile)) && (! count($profile)))
 		return $o;
@@ -906,7 +908,7 @@ logger('online: ' . $profile['online']);
 	}
 
 	if(($profile['hidewall'] && (! local_channel()) && (! remote_channel())) || $block ) {
-		$location = $pdesc = $gender = $marital = $homepage = $online = False;
+		$location = $reddress = $pdesc = $gender = $marital = $homepage = $online = False;
 	}
 
 	$firstname = ((strpos($profile['channel_name'],' '))
@@ -957,6 +959,7 @@ logger('online: ' . $profile['online']);
 		'$homepage'      => $homepage,
 		'$chanmenu'      => $channel_menu,
 		'$diaspora'      => $diaspora,
+		'$reddress'      => $reddress,
 		'$rating'        => $z,
 		'$contact_block' => $contact_block,
 	));
