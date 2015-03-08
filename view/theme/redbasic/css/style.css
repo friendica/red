@@ -2297,6 +2297,10 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
     display: none;
 }
 
+.field.checkbox:hover label {
+	color: $link_colour;
+}
+
 .field.checkbox > div label {
     display: block; overflow: hidden; cursor: pointer;
     border: 1px solid #ccc;
@@ -2319,6 +2323,7 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
     content: attr(data-on);
     padding-right: 21px;
     background-color: $item_colour;
+	color: $font_colour;
     text-align: right;
 }
 
