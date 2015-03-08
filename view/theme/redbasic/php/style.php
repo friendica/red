@@ -282,16 +282,6 @@ if(! $a->install) {
 		$chat_txtbgcol = "#EEE";
    if(! $fancybox_bgcolour)
       $fancybox_bgcolour = "#FFFFFF";
-	if (!$comment_padding)
-		$comment_padding="0px";	
-	if (!$comment_border_left)
-		$comment_border_left="3px solid";
-	if (!$comment_border_right)
-		$comment_border_right="0px solid";	
-	if (!$comment_border_top)
-		$comment_border_top="0px solid";		
-	if (!$comment_border_bottom)
-		$comment_border_bottom="0px solid";
 	if (!$admintable_hoverbgcol)
 		$admintable_hoverbgcol="#BBC7D7";
 	if (!$dirpopup_txtcol)

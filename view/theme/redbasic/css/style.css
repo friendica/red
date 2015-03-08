@@ -1688,25 +1688,22 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 }
 
-.comment .wall-item-body {
-	padding-left: $comment_padding;
-}
-
 .wall-item-content-wrapper.comment {
 	background-color: $comment_item_colour;
-	border-left: $comment_border_left $comment_border_colour;
-	border-right: $comment_border_right $comment_border_colour;
-	border-bottom: $comment_border_bottom $comment_border_colour;
+	border-color: $comment_border_colour;
+	border-style: solid;
+	border-width: 1px 0px 0px 3px;
 	border-radius: 0px;
 	padding: 7px 10px 7px 7px;
 }
 
 .hide-comments-outer {
 	background-color: $comment_item_colour;
-	border-left: $comment_border_left $comment_border_colour;
-	border-right: $comment_border_right $comment_border_colour;
-	border-bottom: $comment_border_bottom $comment_border_colour;
-	border-top: 1px dashed #ccc;
+	border-color: $comment_border_colour;
+	border-top-color: #ccc;
+	border-style: solid;
+	border-top-style: dashed;
+	border-width: 1px 0px 0px 3px;
 	text-align: center;
 	border-radius: 0px;
 }
