@@ -197,7 +197,7 @@ function admin_page_summary(&$a) {
 	);
 	if ($r) {
 		$accounts['total']    = array('label' => t('# Accounts'), 'val' => $r[0]['total']);
-		//@todo $accounts['blocked'] = array('label' => t('# blocked accounts'), 'val' => $r[0]['blocked']);
+		$accounts['blocked']  = array('label' => t('# blocked accounts'), 'val' => $r[0]['blocked']);
 		$accounts['expired']  = array('label' => t('# expired accounts'), 'val' => $r[0]['expired']);
 		$accounts['expiring'] = array('label' => t('# expiring accounts'), 'val' => $r[0]['expiring']);
 	}
@@ -639,48 +639,66 @@ function admin_page_queue($a) {
 }
 
 /**
- * Users admin page
+ * @brief Handle POST actions on users admin page.
+ *
+ * This function is called when on the admin user/account page the form was
+ * submitted to handle multiple operations at once. If one of the icons next
+ * to an entry are pressed the function admin_page_users() will handle this.
  *
  * @param App $a
  */
-function admin_page_users_post(&$a){
-	$pending = ( x($_POST, 'pending') ? $_POST['pending'] : Array() );
-	$users = ( x($_POST, 'user') ? $_POST['user'] : Array() );
+function admin_page_users_post($a) {
+	$pending = ( x($_POST, 'pending') ? $_POST['pending'] : array() );
+	$users   = ( x($_POST, 'user')    ? $_POST['user']    : array() );
+	$blocked = ( x($_POST, 'blocked') ? $_POST['blocked'] : array() );
 
 	check_form_security_token_redirectOnErr('/admin/users', 'admin_users');
 
-	if (x($_POST,'page_users_block')){
-		foreach($users as $uid){
-			q("UPDATE account SET account_flags = (account_flags & %d) where account_id = %d",
+	// change to switch structure?
+	// account block/unblock button was submitted
+	if (x($_POST, 'page_users_block')) {
+		for ($i = 0; $i < count($users); $i++) {
+			// if account is blocked remove blocked bit-flag, otherwise add blocked bit-flag
+			$op = ($blocked[$i]) ? '& ~' : '| ';
+			q("UPDATE account SET account_flags = (account_flags $op%d) WHERE account_id = %d",
 				intval(ACCOUNT_BLOCKED),
-				intval( $uid )
+				intval($users[$i])
 			);
 		}
 		notice( sprintf( tt("%s user blocked/unblocked", "%s users blocked/unblocked", count($users)), count($users)) );
 	}
-	if (x($_POST,'page_users_delete')){
-		require_once("include/Contact.php");
-		foreach($users as $uid){
-			account_remove($uid,true,false);
+	// account delete button was submitted
+	if (x($_POST, 'page_users_delete')) {
+		require_once('include/Contact.php');
+		foreach ($users as $uid){
+			account_remove($uid, true, false);
 		}
 		notice( sprintf( tt("%s user deleted", "%s users deleted", count($users)), count($users)) );
 	}
-
-	if (x($_POST,'page_users_approve')){
-		foreach($pending as $hash){
+	// registration approved button was submitted
+	if (x($_POST, 'page_users_approve')) {
+		foreach ($pending as $hash) {
 			user_allow($hash);
 		}
 	}
-	if (x($_POST,'page_users_deny')){
-		foreach($pending as $hash){
+	// registration deny button was submitted
+	if (x($_POST, 'page_users_deny')) {
+		foreach ($pending as $hash) {
 			user_deny($hash);
 		}
 	}
+
 	goaway($a->get_baseurl(true) . '/admin/users' );
 }
 
 /**
- * @param App $a
+ * @brief Generate users admin page and handle single item operations.
+ *
+ * This function generates the users/account admin page and handles the actions
+ * if an icon next to an entry was clicked. If several items were selected and
+ * the form was submitted it is handled by the function admin_page_users_post().
+ *
+ * @param App &$a
  * @return string
  */
 function admin_page_users(&$a){
@@ -695,25 +713,34 @@ function admin_page_users(&$a){
 			goaway($a->get_baseurl(true) . '/admin/users' );
 		}
 
-		switch(argv(2)){
-			case "delete":{
-				check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
+		check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
+
+		switch (argv(2)){
+			case 'delete':
 				// delete user
-				require_once("include/Contact.php");
+				require_once('include/Contact.php');
 				account_remove($uid,true,false);
-				
+
 				notice( sprintf(t("User '%s' deleted"), $account[0]['account_email']) . EOL);
-			}; break;
-			case "block":{
-				check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
-				q("UPDATE account SET account_flags = ( account_flags & ~%d ) where account_id = %d",
+				break;
+			case 'block':
+				q("UPDATE account SET account_flags = ( account_flags | %d ) WHERE account_id = %d",
 					intval(ACCOUNT_BLOCKED),
-					intval( $uid )
+					intval($uid)
 				);
 
-				notice( sprintf( (($account[0]['account_flags'] & ACCOUNT_BLOCKED) ? t("User '%s' unblocked"):t("User '%s' blocked")) , $account[0]['account_email']) . EOL);
-			}; break;
+				notice( sprintf( t("User '%s' blocked") , $account[0]['account_email']) . EOL);
+				break;
+			case 'unblock':
+				q("UPDATE account SET account_flags = ( account_flags & ~%d ) WHERE account_id = %d",
+						intval(ACCOUNT_BLOCKED),
+						intval($uid)
+				);
+
+				notice( sprintf( t("User '%s' unblocked"), $account[0]['account_email']) . EOL);
+				break;
 		}
+
 		goaway($a->get_baseurl(true) . '/admin/users' );
 	}
 
@@ -725,7 +752,7 @@ function admin_page_users(&$a){
 	/* get users */
 
 	$total = q("SELECT count(*) as total FROM account");
-	if(count($total)) {
+	if (count($total)) {
 		$a->set_pager_total($total[0]['total']);
 		$a->set_pager_itemspage(100);
 	}
@@ -772,7 +799,7 @@ function admin_page_users(&$a){
 //	$users = array_map("_setup_users", $users);
 
 
-	$t = get_markup_template("admin_users.tpl");
+	$t = get_markup_template('admin_users.tpl');
 	$o = replace_macros($t, array(
 		// strings //
 		'$title' => t('Administration'),
@@ -813,7 +840,7 @@ function admin_page_users(&$a){
  *
  * @param App $a
  */
-function admin_page_channels_post(&$a){
+function admin_page_channels_post(&$a) {
 	$channels = ( x($_POST, 'channel') ? $_POST['channel'] : Array() );
 
 	check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels');
