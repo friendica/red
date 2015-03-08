@@ -709,13 +709,19 @@ function diaspora_request($importer,$xml) {
 				
 	$their_perms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT|PERMS_R_STORAGE|PERMS_R_PAGES;
 
+
+	$closeness = get_pconfig($importer['channel_id'],'system','new_abook_closeness');
+	if($closeness === false)
+		$closeness = 80;
+
+
 	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_my_perms, abook_their_perms, abook_closeness, abook_rating, abook_created, abook_updated, abook_connected, abook_dob, abook_flags) values ( %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', %d )",
 		intval($importer['channel_account_id']),
 		intval($importer['channel_id']),
 		dbesc($ret['xchan_hash']),
 		intval($default_perms),
 		intval($their_perms),
-		intval(99),
+		intval($closeness),
 		intval(0),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),

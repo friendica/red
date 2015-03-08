@@ -464,9 +464,15 @@ function zot_refresh($them,$channel = null, $force = false) {
 				// Keep original perms to check if we need to notify them
 				$previous_perms = get_all_perms($channel['channel_id'],$x['hash']);
 
-				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_flags ) values ( %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
+
+				$closeness = get_pconfig($channel['channel_id'],'system','new_abook_closeness');
+				if($closeness === false)
+					$closeness = 80;
+
+				$y = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_flags ) values ( %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),
+					intval($closeness),
 					dbesc($x['hash']),
 					intval($their_perms),
 					intval($default_perms),
