@@ -1692,7 +1692,7 @@ img.mail-list-sender-photo {
 	background-color: $comment_item_colour;
 	border-color: $comment_border_colour;
 	border-style: solid;
-	border-width: 1px 0px 0px 3px;
+	border-width: 0px 0px 0px 3px;
 	border-radius: 0px;
 	padding: 7px 10px 7px 7px;
 }
