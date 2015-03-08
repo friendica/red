@@ -282,16 +282,6 @@ if(! $a->install) {
 		$chat_txtbgcol = "#EEE";
    if(! $fancybox_bgcolour)
       $fancybox_bgcolour = "#FFFFFF";
-	if (!$comment_padding)
-		$comment_padding="0px";	
-	if (!$comment_border_left)
-		$comment_border_left="3px solid";
-	if (!$comment_border_right)
-		$comment_border_right="0px solid";	
-	if (!$comment_border_top)
-		$comment_border_top="0px solid";		
-	if (!$comment_border_bottom)
-		$comment_border_bottom="0px solid";
 	if (!$admintable_hoverbgcol)
 		$admintable_hoverbgcol="#BBC7D7";
 	if (!$dirpopup_txtcol)
@@ -352,7 +342,6 @@ $options = array (
 '$selected_active_colour' => $selected_active_colour,
 '$selected_active_deco' => $selected_active_deco,
 '$body_font_size' => $body_font_size,
-'$widget_brdrcolour' => $widget_brdrcolour,
 '$blockquote_colour' => $blockquote_colour,
 '$blockquote_bgcolour' => $blockquote_bgcolour,
 '$blockquote_bordercolour' => $blockquote_bordercolour,
@@ -425,10 +414,6 @@ $options = array (
 '$comment_indent' => $comment_indent,
 '$body_width' => $body_width,
 '$comment_padding' => $comment_padding,
-'$comment_border_left' => $comment_border_left,
-'$comment_border_right' => $comment_border_right,
-'$comment_border_top' => $comment_border_top,
-'$comment_border_bottom' => $comment_border_bottom,
 '$admintable_hoverbgcol' => $admintable_hoverbgcol,
 '$dirpopup_txtcol' => $dirpopup_txtcol,
 '$dirpopup_linkcol' => $dirpopup_linkcol,

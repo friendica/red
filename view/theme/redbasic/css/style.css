@@ -1688,25 +1688,22 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 }
 
-.comment .wall-item-body {
-	padding-left: $comment_padding;
-}
-
 .wall-item-content-wrapper.comment {
 	background-color: $comment_item_colour;
-	border-left: $comment_border_left $comment_border_colour;
-	border-right: $comment_border_right $comment_border_colour;
-	border-bottom: $comment_border_bottom $comment_border_colour;
+	border-color: $comment_border_colour;
+	border-style: solid;
+	border-width: 0px 0px 0px 3px;
 	border-radius: 0px;
 	padding: 7px 10px 7px 7px;
 }
 
 .hide-comments-outer {
 	background-color: $comment_item_colour;
-	border-left: $comment_border_left $comment_border_colour;
-	border-right: $comment_border_right $comment_border_colour;
-	border-bottom: $comment_border_bottom $comment_border_colour;
-	border-top: 1px dashed #ccc;
+	border-color: $comment_border_colour;
+	border-top-color: #ccc;
+	border-style: solid;
+	border-top-style: dashed;
+	border-width: 1px 0px 0px 3px;
 	text-align: center;
 	border-radius: 0px;
 }
@@ -2300,6 +2297,10 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
     display: none;
 }
 
+.field.checkbox:hover label {
+	color: $link_colour;
+}
+
 .field.checkbox > div label {
     display: block; overflow: hidden; cursor: pointer;
     border: 1px solid #ccc;
@@ -2322,6 +2323,7 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
     content: attr(data-on);
     padding-right: 21px;
     background-color: $item_colour;
+	color: $font_colour;
     text-align: right;
 }
 
