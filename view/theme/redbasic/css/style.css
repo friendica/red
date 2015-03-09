@@ -2297,15 +2297,22 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
     display: none;
 }
 
+.field.checkbox > div label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin:0px;
+	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
 .field.checkbox:hover label {
 	color: $link_colour;
 }
 
-.field.checkbox > div label {
-    display: block; overflow: hidden; cursor: pointer;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin:0px;
+.field.checkbox:hover > div label {
+	border-color: $link_colour;
 }
 
 .onoffswitch-inner {
