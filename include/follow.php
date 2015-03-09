@@ -233,7 +233,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			$closeness = 80;
 
 		$r = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_flags, abook_their_perms, abook_my_perms, abook_created, abook_updated )
-			values( %d, %d, '%s', %d, %d, %d, '%s', '%s' ) ",
+			values( %d, %d, %d, '%s', %d, %d, %d, '%s', '%s' ) ",
 			intval($aid),
 			intval($uid),
 			intval($closeness),
