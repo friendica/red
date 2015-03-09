@@ -2297,15 +2297,19 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
     display: none;
 }
 
+.field.checkbox > div label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin:0px;
+}
+
 .field.checkbox:hover label {
 	color: $link_colour;
 }
 
-.field.checkbox > div label {
-    display: block; overflow: hidden; cursor: pointer;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin:0px;
+.field.checkbox:hover > div label {
+	border: 1px solid $link_colour;;
 }
 
 .onoffswitch-inner {
