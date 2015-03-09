@@ -176,9 +176,8 @@ EOT;
 
 	if(local_channel()) {
 
-		$network_options = get_pconfig(local_channel(),'system','network_page_default');
 	
-		$nav['network'] = array('network' . (($network_options) ? '?f=&' . $network_options : ''), 
+		$nav['network'] = array('network', 
 			t('Matrix'), "", t('Your matrix'),'network_nav_btn');
 		$nav['network']['mark'] = array('', t('Mark all matrix notifications seen'), '','');
 

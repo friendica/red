@@ -233,7 +233,6 @@ function widget_savedsearch($arr) {
 	$srchurl =  rtrim(preg_replace('/searchsave\=[^\&].*?(\&|$)/is','',$srchurl),'&');
 	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
 	$srchurl =  rtrim(preg_replace('/searchremove\=[^\&].*?(\&|$)/is','',$srchurl),'&');
-	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
 
 	$srchurl =  rtrim(preg_replace('/search\=[^\&].*?(\&|$)/is','',$srchurl),'&');
 	$srchurl =  rtrim(preg_replace('/submit\=[^\&].*?(\&|$)/is','',$srchurl),'&');
@@ -241,7 +240,10 @@ function widget_savedsearch($arr) {
 
 
 	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
+	$hasamp = ((strpos($srchurl,'&') !== false) ? true : false);
 
+	if(($hasamp) && (! $hasq))
+		$srchurl = substr($srchurl,0,strpos($srchurl,'&')) . '?f=&' . substr($srchurl,strpos($srchurl,'&')+1);		
 
 	$o = '';
 
@@ -257,8 +259,8 @@ function widget_savedsearch($arr) {
 			$saved[] = array(
 				'id'            => $rr['tid'],
 				'term'          => $rr['term'],
-				'dellink'       => z_root() . '/' . $srchurl . (($hasq) ? '' : '?f=') . '&amp;searchremove=1&amp;search=' . urlencode($rr['term']),
-				'srchlink'      => z_root() . '/' . $srchurl . (($hasq) ? '' : '?f=') . '&amp;search=' . urlencode($rr['term']),
+				'dellink'       => z_root() . '/' . $srchurl . (($hasq || $hasamp) ? '' : '?f=') . '&amp;searchremove=1&amp;search=' . urlencode($rr['term']),
+				'srchlink'      => z_root() . '/' . $srchurl . (($hasq || $hasamp) ? '' : '?f=') . '&amp;search=' . urlencode($rr['term']),
 				'displayterm'   => htmlspecialchars($rr['term'], ENT_COMPAT,'UTF-8'),
 				'encodedterm'   => urlencode($rr['term']),
 				'delete'        => t('Remove term'),

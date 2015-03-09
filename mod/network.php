@@ -13,6 +13,12 @@ function network_init(&$a) {
 		return;
 	}
 
+	if(count($_GET) < 2) {
+		$network_options = get_pconfig(local_channel(),'system','network_page_default');
+		if($network_options)
+			goaway('network' . '?f=&' . $network_options);
+	}
+
 	$channel = $a->get_channel();
 	$a->profile_uid = local_channel();
 	head_set_icon($channel['xchan_photo_s']);
@@ -369,10 +375,13 @@ function network_content(&$a, $update = 0, $load = false) {
 		// "New Item View" - show all items unthreaded in reverse created date order
 
 		$items = q("SELECT item.*, item.id AS item_id, received FROM item
+			left join abook on item.author_xchan = abook.abook_xchan
 			WHERE true $uids AND item_restrict = 0
+			and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 			$simple_update
 			$sql_extra $sql_nets
-			ORDER BY item.received DESC $pager_sql "
+			ORDER BY item.received DESC $pager_sql ",
+			intval(ABOOK_FLAG_BLOCKED)
 		);
 
 		require_once('include/items.php');
