@@ -65,6 +65,35 @@ function check_upstream_directory() {
 	return;
 }
 
+function get_globaldir_setting($observer) {
+
+	if($observer)
+		$globaldir = get_xconfig($observer,'directory','globaldir');
+	else
+		$globaldir = ((array_key_exists('globaldir',$_SESSION)) ? intval($_SESSION['globaldir']) : false);
+
+	if($globaldir === false)
+		$globaldir = get_config('directory','globaldir');
+
+	return $globaldir;
+}
+
+function get_safemode_setting($observer) {
+
+	if ($observer)
+		$safe_mode = get_xconfig($observer,'directory','safe_mode');
+	else
+		$safe_mode = ((array_key_exists('safemode',$_SESSION)) ? intval($_SESSION['safemode']) : false);
+
+	if($safe_mode === false)
+		$safe_mode = get_config('directory','safe_mode');
+
+	if($safe_mode === false)
+		$safe_mode = 1;
+
+	return $safe_mode;
+}
+
 /**
  * @function dir_sort_links()
  * Called by the directory_sort widget
@@ -78,22 +107,8 @@ function dir_sort_links() {
 
 	$observer = get_observer_hash();
 
-	if ($observer)
-		$safe_mode = get_xconfig($observer,'directory','safe_mode');
-	else
-		$safe_mode = ((array_key_exists('safemode',$_SESSION)) ? intval($_SESSION['safemode']) : false);
-	if($safe_mode === false)
-		$safe_mode = 1;
-		
-	if(! $safe_mode)
-		$toggle = t('Enable Safe Search');
-	else
-		$toggle = t('Disable Safe Search');
-
-	if($observer)
-		$globaldir = get_xconfig($observer,'directory','globaldir');
-	else
-		$globaldir = ((array_key_exists('globaldir',$_SESSION)) ? intval($_SESSION['globaldir']) : false);
+	$safe_mode = get_safemode_setting($observer);
+	$globaldir = get_globaldir_setting($observer);
 
  	// Build urls without order and pubforums so it's easy to tack on the changed value
 	// Probably there's an easier way to do this
@@ -121,40 +136,18 @@ function dir_sort_links() {
 		'$reverse' => t('Reverse Alphabetic'),
 		'$date' => t('Newest to Oldest'),
 		'$reversedate' => t('Oldest to Newest'),
-		'$pubforums' => t('Public Forums Only'),
-		'$pubforumsonly' => x($_REQUEST,'pubforums') ? $_REQUEST['pubforums'] : '',
 		'$sort' => t('Sort'),
 		'$selected_sort' => $current_order,
 		'$sorturl' => $sorturl,
 		'$forumsurl' => $forumsurl,
-		'$safemode' => t('Safe Mode'),
-		'$toggle' => $toggle,
 		'$safemode' => array('safemode', t('Safe Mode'),$safe_mode,'','',' onchange=\'window.location.href="' . $forumsurl . '&safe="+(this.checked ? 1 : 0)\''), 
 
 		'$pubforums' => array('pubforums', t('Public Forums Only'),(x($_REQUEST,'pubforums') ? $_REQUEST['pubforums'] : ''),'','',' onchange=\'window.location.href="' . $forumsurl . '&pubforums="+(this.checked ? 1 : 0)\''), 
 		'$globaldir' => array('globaldir', t('This Website Only'), 1-intval($globaldir),'','',' onchange=\'window.location.href="' . $forumsurl . '&global="+(this.checked ? 0 : 1)\''),
-		'$localdir' => t('This Website Only'),
 	));
 	return $o;
 }
 
-function dir_safe_mode() {
-	$observer = get_observer_hash();
-	if (! $observer)
-		return;
-	if ($observer)
-		$safe_mode = get_xconfig($observer,'directory','safe_mode');		
-	if($safe_mode === '0')
-		$toggle = t('Enable Safe Search');
-	else
-		$toggle = t('Disable Safe Search');
-	$o = replace_macros(get_markup_template('safesearch.tpl'), array(
-		'$safemode' => t('Safe Mode'),
-		'$toggle' => $toggle,
-	));
-
-	return $o;
-}
 
 /**
  * @function sync_directories($mode)
