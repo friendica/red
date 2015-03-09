@@ -2302,6 +2302,9 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
     border: 1px solid #ccc;
     border-radius: 4px;
     margin:0px;
+	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
 .field.checkbox:hover label {
@@ -2309,7 +2312,7 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 }
 
 .field.checkbox:hover > div label {
-	border: 1px solid $link_colour;;
+	border-color: $link_colour;
 }
 
 .onoffswitch-inner {
