@@ -131,7 +131,7 @@ function directory_content(&$a) {
 
 		$numtags = get_config('system','directorytags');
 
-		$kw = ((intval($numtags)) ? $numtags : 24);
+		$kw = ((intval($numtags)) ? $numtags : 50);
 		$query = $url . '?f=&kw=' . $kw . (($safe_mode != 1) ? '&safe=' . $safe_mode : '');
 
 		if($token)
