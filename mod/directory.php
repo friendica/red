@@ -48,21 +48,10 @@ function directory_content(&$a) {
 		return;
 	}
 
-	$safe_mode = 1;
-
 	$observer = get_observer_hash();
 
-	if($observer)
-		$globaldir = get_xconfig($observer,'directory','globaldir');
-	else
-		$globaldir = ((array_key_exists('globaldir',$_SESSION)) ? intval($_SESSION['globaldir']) : false);
-	
-	if($observer)
-		$safe_mode = get_xconfig($observer,'directory','safe_mode');
-	else
-		$safe_mode = ((array_key_exists('safemode',$_SESSION)) ? intval($_SESSION['safemode']) : false); 
-	if($safe_mode === false)
-		$safe_mode = 1;
+	$globaldir = get_globaldir_setting($observer);
+	$safe_mode = get_safemode_setting($observer);
 
 	$pubforums = null;
 	if(array_key_exists('pubforums',$_REQUEST))
