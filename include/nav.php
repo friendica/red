@@ -177,8 +177,7 @@ EOT;
 	if(local_channel()) {
 
 	
-		$nav['network'] = array('network', 
-			t('Matrix'), "", t('Your matrix'),'network_nav_btn');
+		$nav['network'] = array('network', t('Matrix'), "", t('Your matrix'),'network_nav_btn');
 		$nav['network']['mark'] = array('', t('Mark all matrix notifications seen'), '','');
 
 		$nav['home'] = array('channel/' . $channel['channel_address'], t('Channel Home'), "", t('Channel home'),'home_nav_btn');
