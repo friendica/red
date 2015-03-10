@@ -189,7 +189,7 @@ function admin_page_summary(&$a) {
 
 	// list total user accounts, expirations etc.
 	$accounts = array();
-	$r = q("SELECT COUNT(*) AS total, COUNT(IF(account_expires > %s, 1, NULL)) AS expiring, COUNT(IF(account_expires < %s AND account_expires != '%s', 1, NULL)) AS expired, COUNT(IF((account_flags & %d)>0, 1, NULL)) AS blocked FROM account",
+	$r = q("SELECT COUNT(*) AS total, COUNT(CASE WHEN account_expires > %s THEN 1 ELSE NULL END) AS expiring, COUNT(CASE WHEN account_expires < %s AND account_expires != '%s' THEN 1 ELSE NULL END) AS expired, COUNT(CASE WHEN (account_flags & %d)>0 THEN 1 ELSE NULL END) AS blocked FROM account",
 		db_utcnow(),
 		db_utcnow(),
 		dbesc(NULL_DATE),
@@ -208,7 +208,7 @@ function admin_page_summary(&$a) {
 
 	// available channels, primary and clones
 	$channels = array();
-	$r = q("SELECT COUNT(*) AS total, COUNT(IF(channel_primary = 1, 1, NULL)) AS main, COUNT(IF(channel_primary = 0, 1, NULL)) AS clones FROM channel WHERE NOT (channel_pageflags & %d)>0",
+	$r = q("SELECT COUNT(*) AS total, COUNT(CASE WHEN channel_primary = 1 THEN 1 ELSE NULL END) AS main, COUNT(CASE WHEN channel_primary = 0 THEN 1 ELSE NULL END) AS clones FROM channel WHERE NOT (channel_pageflags & %d)>0",
 		intval(PAGE_REMOVED)
 	);
 	if ($r) {
