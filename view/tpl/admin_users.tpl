@@ -33,8 +33,8 @@
 					<td class="email">{{$u.account_email}}</td>
 					<td class="checkbox"><input type="checkbox" class="pending_ckbx" id="id_pending_{{$u.hash}}" name="pending[]" value="{{$u.hash}}"></td>
 					<td class="tools">
-						<a href="{{$baseurl}}/regmod/allow/{{$u.hash}}" title="{{$approve}}"><i class="icon-thumbs-up-alt admin-icons"></i></a>
-						<a href="{{$baseurl}}/regmod/deny/{{$u.hash}}" title="{{$deny}}"><i class="icon-thumbs-down-alt admin-icons"></i></a>
+						<a href="{{$baseurl}}/regmod/allow/{{$u.hash}}" class="btn btn-default btn-xs" title="{{$approve}}"><i class="icon-thumbs-up-alt admin-icons"></i></a>
+						<a href="{{$baseurl}}/regmod/deny/{{$u.hash}}" class="btn btn-default btn-xs" title="{{$deny}}"><i class="icon-thumbs-down-alt admin-icons"></i></a>
 					</td>
 				</tr>
 			{{/foreach}}
@@ -73,8 +73,7 @@
 						<td class="service_class">{{$u.account_service_class}}</td>
 						<td class="checkbox"><input type="checkbox" class="users_ckbx" id="id_user_{{$u.account_id}}" name="user[]" value="{{$u.account_id}}"><input type="hidden" name="blocked[]" value="{{$u.blocked}}"></td>
 						<td class="tools">
-							<a href="{{$baseurl}}/admin/users/{{if ($u.blocked)}}un{{/if}}block/{{$u.account_id}}?t={{$form_security_token}}" title='{{if ($u.blocked)}}{{$unblock}}{{else}}{{$block}}{{/if}}'><i class="icon-ban-circle admin-icons{{if ($u.blocked)}} dim{{/if}}"></i></a>
-							<a href="{{$baseurl}}/admin/users/delete/{{$u.account_id}}?t={{$form_security_token}}" title='{{$delete}}' onclick="return confirm_delete('{{$u.name}}')"><i class="icon-trash admin-icons"></i></a>
+							<a href="{{$baseurl}}/admin/users/{{if ($u.blocked)}}un{{/if}}block/{{$u.account_id}}?t={{$form_security_token}}"  class="btn btn-default btn-xs" title='{{if ($u.blocked)}}{{$unblock}}{{else}}{{$block}}{{/if}}'><i class="icon-ban-circle admin-icons{{if ($u.blocked)}} dim{{/if}}"></i></a><a href="{{$baseurl}}/admin/users/delete/{{$u.account_id}}?t={{$form_security_token}}" class="btn btn-default btn-xs" title='{{$delete}}' onclick="return confirm_delete('{{$u.name}}')"><i class="icon-trash admin-icons"></i></a>
 						</td>
 					</tr>
 				{{/foreach}}

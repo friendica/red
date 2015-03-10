@@ -2,7 +2,7 @@
 
 {{if $hasentries}}
 
-<table cellpadding="5" id="admin-queue-table"><tr><td>{{$numentries}}&nbsp;&nbsp;</td><td>{{$desturl}}</td><td>{{$priority}}</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<table cellpadding="10" id="admin-queue-table"><tr><td>{{$numentries}}&nbsp;&nbsp;</td><td>{{$desturl}}</td><td>{{$priority}}</td><td>&nbsp;</td><td>&nbsp;</td></tr>
 
 {{foreach $entries as $e}}
 

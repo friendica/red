@@ -61,3 +61,7 @@
 #adminpage table tr:hover { background-color: #bbc7d7; }
 #adminpage .selectall { text-align: right; }
 
+
+.channels_ckbx, .pending_ckbx, .users_ckbx {
+	margin-top: -5px !important;
+}
