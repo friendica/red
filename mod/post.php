@@ -261,6 +261,7 @@ function post_init(&$a) {
 						$_SESSION['delegate_channel'] = $r[0]['channel_id'];
 						$_SESSION['delegate'] = $x[0]['xchan_hash'];
 						$_SESSION['account_id'] = intval($r[0]['channel_account_id']);
+						require_once('include/security.php');
 						change_channel($r[0]['channel_id']);
 						$delegation_success = true;
 					}
