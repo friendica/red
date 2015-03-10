@@ -127,6 +127,20 @@ function enableOnUser(){
 				}				 
 			}
 		);
+		var uploader_sub = new window.AjaxUpload(
+			'wall-image-upload-sub',
+			{ action: '{{$baseurl}}/wall_upload/{{$nickname}}',
+				name: 'userfile',
+				title: upload_title,
+				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
+				onComplete: function(file,response) {
+					addeditortext(response);
+					$('#jot-media').val($('#jot-media').val() + response);
+					$('#profile-rotator').spin(false);
+				}				 
+			}
+		);
+
 		var file_uploader = new window.AjaxUpload(
 			'wall-file-upload',
 			{ action: '{{$baseurl}}/wall_attach/{{$nickname}}',
@@ -137,7 +151,20 @@ function enableOnUser(){
 					addeditortext(response);
 					$('#jot-media').val($('#jot-media').val() + response);
 					$('#profile-rotator').spin(false);
-				}				 
+				}
+			}
+		);
+		var file_uploader_sub = new window.AjaxUpload(
+			'wall-file-upload-sub',
+			{ action: '{{$baseurl}}/wall_attach/{{$nickname}}',
+				name: 'userfile',
+				title: attach_title,
+				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
+				onComplete: function(file,response) {
+					addeditortext(response);
+					$('#jot-media').val($('#jot-media').val() + response);
+					$('#profile-rotator').spin(false);
+				}
 			}
 		);
 
@@ -312,11 +339,11 @@ function enableOnUser(){
 	function toggleVoting() {
 		if($('#jot-consensus').val() > 0) {
 			$('#jot-consensus').val(0);
-			$('#profile-voting').removeClass('icon-check').addClass('icon-check-empty');
+			$('#profile-voting, #profile-voting-sub').removeClass('icon-check').addClass('icon-check-empty');
 		}
 		else {
 			$('#jot-consensus').val(1);
-			$('#profile-voting').removeClass('icon-check-empty').addClass('icon-check');
+			$('#profile-voting, #profile-voting-sub').removeClass('icon-check-empty').addClass('icon-check');
 		}
 	}
 
