@@ -1880,6 +1880,9 @@ function current_theme_url($installing = false) {
 function is_site_admin() {
 	$a = get_app();
 
+	if($_SESSION['delegate'])
+		return false;
+
 	if((intval($_SESSION['authenticated']))
 		&& (is_array($a->account))
 		&& ($a->account['account_roles'] & ACCOUNT_ROLE_ADMIN))

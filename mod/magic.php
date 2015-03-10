@@ -10,11 +10,10 @@ function magic_init(&$a) {
 	logger('mod_magic: args: ' . print_r($_REQUEST,true),LOGGER_DATA);
 
 	$addr = ((x($_REQUEST,'addr')) ? $_REQUEST['addr'] : '');
-	$hash = ((x($_REQUEST,'hash')) ? $_REQUEST['hash'] : '');
 	$dest = ((x($_REQUEST,'dest')) ? $_REQUEST['dest'] : '');
 	$test = ((x($_REQUEST,'test')) ? intval($_REQUEST['test']) : 0);
 	$rev  = ((x($_REQUEST,'rev'))  ? intval($_REQUEST['rev'])  : 0);
-
+	$delegate = ((x($_REQUEST,'delegate')) ? $_REQUEST['delegate']  : '');
 
 	$parsed = parse_url($dest);
 	if(! $parsed) {
@@ -100,6 +99,29 @@ function magic_init(&$a) {
 			$ret['message'] .= 'Local site - you are already authenticated.' . EOL;
 			return $ret;
 		}
+
+		$delegation_success = false;
+		if($delegate) {
+			$r = q("select * from channel left join hubloc on channel_hash = hubloc_hash where hubloc_addr = '%s' limit 1",
+				dbesc($delegate)
+			);
+			if($r && intval($r[0]['channel_id'])) {
+				$allowed = perm_is_allowed($r[0]['channel_id'],get_observer_hash(),'delegate');
+				if($allowed) {
+					$_SESSION['delegate_channel'] = $r[0]['channel_id'];
+					$_SESSION['delegate'] = get_observer_hash();
+					$_SESSION['account_id'] = intval($r[0]['channel_account_id']);
+					change_channel($r[0]['channel_id']);
+					$delegation_success = true;
+				}
+			}
+		}
+			
+
+
+		// FIXME: check and honour local delegation
+
+
 		goaway($dest);
 	}
 
@@ -122,6 +144,9 @@ function magic_init(&$a) {
 
 		$target_url = $x[0]['hubloc_callback'] . '/?f=&auth=' . urlencode($channel['channel_address'] . '@' . $a->get_hostname())
 			. '&sec=' . $token . '&dest=' . urlencode($dest) . '&version=' . ZOT_REVISION;
+
+		if($delegate)
+			$target_url .= '&delegate=' . urlencode($delegate);
 
 		logger('mod_magic: redirecting to: ' . $target_url, LOGGER_DEBUG); 
 

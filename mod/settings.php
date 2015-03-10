@@ -19,6 +19,9 @@ function settings_init(&$a) {
 	if(! local_channel())
 		return;
 
+	if($_SESSION['delegate'])
+		return;
+
 	$a->profile_uid = local_channel();
 
 	// default is channel settings in the absence of other arguments
@@ -37,6 +40,9 @@ function settings_init(&$a) {
 function settings_post(&$a) {
 
 	if(! local_channel())
+		return;
+
+	if($_SESSION['delegate'])
 		return;
 
 	$channel = $a->get_channel();
@@ -550,14 +556,14 @@ function settings_post(&$a) {
 }
 		
 
-if(! function_exists('settings_content')) {
+
 function settings_content(&$a) {
 
 	$o = '';
 	nav_set_selected('settings');
 
 
-	if(! local_channel()) {
+	if((! local_channel()) || ($_SESSION['delegate'])) {
 		notice( t('Permission denied.') . EOL );
 		return login();
 	}
@@ -1137,5 +1143,5 @@ function settings_content(&$a) {
 
 		return $o;
 	}
-}}
+}
 

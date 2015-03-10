@@ -2,7 +2,7 @@
 
 function manage_content(&$a) {
 
-	if(! get_account_id()) {
+	if((! get_account_id()) || ($_SESSION['delegate'])) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -144,6 +144,22 @@ function manage_content(&$a) {
 		array( 'new_channel', t('Create a new channel'), t('Create a new channel'))
 	);
 
+	$delegates = q("select * from abook left join xchan on abook_xchan = xchan_hash where 
+		abook_channel = %d and (abook_their_perms & %d) > 0",
+		intval(local_channel()),
+		intval(PERMS_A_DELEGATE)
+	);
+	if(! $delegates)
+		$delegates = null;
+
+	if($delegates) {
+		for($x = 0; $x < count($delegates); $x ++) {
+				$delegates[$x]['link'] = 'magic?f=&dest=' . urlencode($delegates[$x]['xchan_url']) . '&delegate=' . urlencode($delegates[$x]['xchan_addr']);
+		}
+	}
+
+
+
 	$o = replace_macros(get_markup_template('channels.tpl'), array(
 		'$header'           => t('Channel Manager'),
 		'$msg_selected'     => t('Current Channel'),
@@ -153,9 +169,12 @@ function manage_content(&$a) {
 		'$msg_make_default' => t('Make Default'),
 		'$links'            => $links,
 		'$all_channels'     => $channels,
-		'$mail_format'        => t('%d new messages'),
-		'$intros_format'        => t('%d new introductions'),
+		'$mail_format'      => t('%d new messages'),
+		'$intros_format'    => t('%d new introductions'),
 		'$channel_usage_message' => $channel_usage_message,
+		'$delegate_header'  => t('Delegated Channels'),
+		'$delegates'        => $delegates,
+
 	));
 
 
