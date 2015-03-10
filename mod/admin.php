@@ -614,7 +614,7 @@ function admin_page_queue($a) {
 	}
 
 
-	$r = q("select count(outq_posturl) as total, outq_posturl from outq 
+	$r = q("select count(outq_posturl) as total, max(outq_priority) as priority, outq_posturl from outq 
 		where outq_delivered = 0 group by outq_posturl order by total desc");
 
 	for($x = 0; $x < count($r); $x ++) {
@@ -626,6 +626,7 @@ function admin_page_queue($a) {
 	$o = replace_macros(get_markup_template('admin_queue.tpl'), array(
 		'$banner' => t('Queue Statistics'),
 		'$numentries' => t('Total Entries'),
+		'$priority' => t('Priority'),
 		'$desturl' => t('Destination URL'),
 		'$nukehub' => t('Mark hub permanently offline'),
 		'$empty' => t('Empty queue for this hub'),

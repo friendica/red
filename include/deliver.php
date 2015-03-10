@@ -20,6 +20,12 @@ function deliver_run($argv, $argc) {
 			dbesc($argv[$x])
 		);
 		if($r) {
+
+			/**
+			 * Check to see if we have any recent communications with this hub (in the last month).
+			 * If not, reduce the outq_priority.
+			 */
+
 			$h = parse_url($r[0]['outq_posturl']);
 			if($h) {
 				$base = $h['scheme'] . '://' . $h['host'] . (($h['port']) ? ':' . $h['port'] : '');
@@ -37,6 +43,8 @@ function deliver_run($argv, $argc) {
 					}
 				}
 			} 
+
+			// "post" queue driver - used for diaspora and friendica-over-diaspora communications.
 
 			if($r[0]['outq_driver'] === 'post') {
 				$result = z_post_url($r[0]['outq_posturl'],$r[0]['outq_msg']); 
@@ -92,9 +100,11 @@ function deliver_run($argv, $argc) {
 				logger('deliver: dest: ' . $r[0]['outq_posturl'], LOGGER_DEBUG);
 				$result = zot_zot($r[0]['outq_posturl'],$r[0]['outq_notify']); 
 				if($result['success']) {
+					logger('deliver: remote zot delivery succeeded to ' . $r[0]['outq_posturl']);
 					zot_process_response($r[0]['outq_posturl'],$result, $r[0]);				
 				}
 				else {
+					logger('deliver: remote zot delivery failed to ' . $r[0]['outq_posturl']);
 					$y = q("update outq set outq_updated = '%s' where outq_hash = '%s'",
 						dbesc(datetime_convert()),
 						dbesc($argv[$x])
