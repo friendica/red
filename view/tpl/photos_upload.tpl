@@ -21,12 +21,8 @@
 			<div class="form-group">
 				<input id="photos-upload-choose" type="file" name="userfile" />
 			</div>
+			{{include file="field_checkbox.tpl" field=$visible}}
 			<div class="pull-right btn-group form-group">
-				<div class="btn-group" data-toggle="buttons">
-					<label class="btn btn-default btn-sm" title="{{$nosharetext}}">
-						<input class="checkbox-inline" id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" /><i class="icon-ban-circle"></i>
-					</label>
-				</div>
 				<div class="btn-group">
 					{{if $lockstate}}
 					<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
@@ -41,12 +37,9 @@
 			<div class="clear"></div>
 
 			{{if $uploader}}
+
+			{{include file="field_checkbox.tpl" field=$visible}}
 			<div id="photos-upload-perms" class="btn-group pull-right">
-				<div class="btn-group" data-toggle="buttons">
-					<label class="btn btn-default btn-sm" title="{{$nosharetext}}">
-						<input class="checkbox-inline" id="photos-upload-noshare" type="checkbox" name="not_visible" value="1" /><i class="icon-ban-circle"></i>
-					</label>
-				</div>
 				{{if $lockstate}}
 				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
 					<i id="jot-perms-icon" class="icon-{{$lockstate}}"></i>

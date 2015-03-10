@@ -54,8 +54,8 @@ function photo_upload($channel, $observer, $args) {
 	else
 		$visible = 0;
 
-	if(intval($args['not_visible']) || $args['not_visible'] === 'true')
-		$visible = 0;
+	if(intval($args['visible']) || $args['visible'] === 'true')
+		$visible = 1;
 
 	$str_group_allow   = perms2str(((is_array($args['group_allow']))   ? $args['group_allow']   : explode(',',$args['group_allow'])));
 	$str_contact_allow = perms2str(((is_array($args['contact_allow'])) ? $args['contact_allow'] : explode(',',$args['contact_allow'])));

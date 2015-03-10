@@ -553,7 +553,7 @@ function photos_content(&$a) {
 			'$nickname' => $a->data['channel']['channel_address'],
 			'$newalbum_label' => t('Enter a new album name'),
 			'$newalbum_placeholder' => t('or select an existing one (doubleclick)'),
-			'$nosharetext' => t('Do not show a status post for this upload'),
+			'$visible' => array('visible', t('Create a status post for this upload'),0,''), 
 			'$albums' => $albums['albums'],
 			'$selname' => $selname,
 			'$permissions' => t('Permissions'),

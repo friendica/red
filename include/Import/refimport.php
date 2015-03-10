@@ -174,7 +174,7 @@ function reflect_photo_callback($matches) {
 				'resource_id' => str_replace('-','',$hash),
 				'filename' => $hash . '.jpg',
 				'type' => 'image/jpeg',
-				'not_visible' => true
+				'visible' => false
 			)
 		);
 
