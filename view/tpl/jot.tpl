@@ -38,6 +38,23 @@
 		</div>
 		<div id="profile-jot-submit-wrapper" class="jothidden">
 			<div id="profile-jot-submit-left" class="btn-toolbar pull-left">
+				<div class='btn-group'>
+					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b'); return false;">
+						<i class="icon-bold jot-icons"></i>
+					</button>
+					<button id="main-editor-italic" class="btn btn-default btn-sm" title="{{$italic}}" onclick="inserteditortag('i'); return false;">
+						<i class="icon-italic jot-icons"></i>
+					</button>
+					<button id="main-editor-underline" class="btn btn-default btn-sm" title="{{$underline}}" onclick="inserteditortag('u'); return false;">
+						<i class="icon-underline jot-icons"></i>
+					</button>
+					<button id="main-editor-quote" class="btn btn-default btn-sm" title="{{$quote}}" onclick="inserteditortag('quote'); return false;">
+						<i class="icon-quote-left jot-icons"></i>
+					</button>
+					<button id="main-editor-code" class="btn btn-default btn-sm" title="{{$code}}" onclick="inserteditortag('code'); return false;">
+						<i class="icon-terminal jot-icons"></i>
+					</button>
+				</div>
 				{{if $visitor}}
 				<div class='btn-group'>
 					<button id="wall-image-upload" class="btn btn-default btn-sm" title="{{$upload}}" >
