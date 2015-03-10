@@ -1,5 +1,5 @@
-<div id="profile-jot-wrapper" >
-	<form id="profile-jot-form" action="{{$action}}" method="post" >
+<div id="profile-jot-wrapper">
+	<form id="profile-jot-form" action="{{$action}}" method="post">
 		<input type="hidden" name="type" value="{{$ptyp}}" />
 		<input type="hidden" name="profile_uid" value="{{$profile_uid}}" />
 		<input type="hidden" name="return" value="{{$return_path}}" />
@@ -16,21 +16,21 @@
 		{{$mimeselect}}
 		{{$layoutselect}}
 		{{if $id_select}}
-			<div class="channel-id-select-div">
+		<div class="channel-id-select-div">
 			<span class="channel-id-select-desc">{{$id_seltext}}</span> {{$id_select}}
-			</div>
+		</div>
 		{{/if}}
-		<div id="jot-title-wrap"  class="jothidden" style="display:none">
+		<div id="jot-title-wrap" class="jothidden" style="display:none">
 			<input name="title" id="jot-title" type="text" placeholder="{{$placeholdertitle}}" tabindex=1 value="{{$title}}">
 		</div>
 		{{if $catsenabled}}
-		<div id="jot-category-wrap"  class="jothidden" style="display:none">
-			<input name="category" id="jot-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" data-role="tagsinput"/>
+		<div id="jot-category-wrap" class="jothidden" style="display:none">
+			<input name="category" id="jot-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" data-role="tagsinput">
 		</div>
 		{{/if}}
 		{{if $webpage}}
 		<div id="jot-pagetitle-wrap" class="jothidden" style="display:none">
-			<input name="pagetitle" id="jot-pagetitle" type="text" placeholder="{{$placeholdpagetitle}}" value="{{$pagetitle}}"  />
+			<input name="pagetitle" id="jot-pagetitle" type="text" placeholder="{{$placeholdpagetitle}}" value="{{$pagetitle}}">
 		</div>
 		{{/if}}
 		<div id="jot-text-wrap">
@@ -57,9 +57,11 @@
 				</div>
 				{{if $visitor}}
 				<div class="btn-group hidden-xs">
+					{{if $writephoto}}
 					<button id="wall-image-upload" class="btn btn-default btn-sm" title="{{$upload}}" >
 						<i class="icon-camera jot-icons"></i>
 					</button>
+					{{/if}}
 					<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
 						<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
 					</button>
@@ -109,7 +111,7 @@
 						<li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li>
 						{{if $visitor}}
 						<li class="divider visible-xs"></li>
-						<li class="visible-xs"><a id="wall-image-upload-sub" href="#" ><i class="icon-camera"></i>&nbsp;{{$upload}}</a></li>
+						{{if $writephoto}}<li class="visible-xs"><a id="wall-image-upload-sub" href="#" ><i class="icon-camera"></i>&nbsp;{{$upload}}</a></li>{{/if}}
 						<li class="visible-xs"><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li>
 						<li class="visible-xs"><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>
 						<li class="visible-xs"><a href="#" onclick="jotVideoURL(); return false;"><i class="icon-facetime-video"></i>&nbsp;{{$video}}</a></li>
@@ -180,17 +182,17 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <script type="text/javascript">
-  $(function() {
-    $('#datetimepicker1').datetimepicker({
-      language: 'us',
-      icons: {
-					time: "icon-time",
-					date: "icon-calendar",
-					up: "icon-arrow-up",
-					down: "icon-arrow-down"
-				}
-    });
-  });
+	$(function() {
+		$('#datetimepicker1').datetimepicker({
+			language: 'us',
+			icons: {
+				time: "icon-time",
+				date: "icon-calendar",
+				up: "icon-arrow-up",
+				down: "icon-arrow-down"
+			}
+		});
+	});
 </script>
 
 {{if $content}}

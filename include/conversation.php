@@ -1081,7 +1081,7 @@ function format_like($cnt,$arr,$type,$id) {
 }
 
 
-function status_editor($a,$x,$popup=false) {
+function status_editor($a, $x, $popup = false) {
 
 	$o = '';
 
@@ -1092,28 +1092,28 @@ function status_editor($a,$x,$popup=false) {
 //	if(feature_enabled(local_channel(),'richtext'))
 //		$plaintext = false;
 
-	$voting = feature_enabled(local_channel(),'consensus_tools');
+	$voting = feature_enabled(local_channel(), 'consensus_tools');
 
 	$mimeselect = '';
-	if(array_key_exists('mimetype',$x) && $x['mimetype']) {
+	if(array_key_exists('mimetype', $x) && $x['mimetype']) {
 		if($x['mimetype'] != 'text/bbcode')
 			$plaintext = true;
  		if($x['mimetype'] === 'choose') {
 			$mimeselect = mimetype_select($x['profile_uid']);
 		}
 		else
-			$mimeselect = '<input type="hidden" name="mimetype" value="' . $x['mimetype'] . '" />'; 			
+			$mimeselect = '<input type="hidden" name="mimetype" value="' . $x['mimetype'] . '" />';
 	}
 
 	$layoutselect = '';
-	if(array_key_exists('layout',$x) && $x['layout']) {
+	if(array_key_exists('layout', $x) && $x['layout']) {
  		if($x['layout'] === 'choose') {
 			$layoutselect = layout_select($x['profile_uid']);
 		}
 		else
-			$layoutselect = '<input type="hidden" name="layout_mid" value="' . $x['layout'] . '" />'; 			
+			$layoutselect = '<input type="hidden" name="layout_mid" value="' . $x['layout'] . '" />';
 	}
-	
+
 
 	if(array_key_exists('channel_select',$x) && $x['channel_select']) {
 		require_once('include/identity.php');
@@ -1126,7 +1126,7 @@ function status_editor($a,$x,$popup=false) {
 	$webpage = ((x($x,'webpage')) ? $x['webpage'] : '');
 
 	$tpl = get_markup_template('jot-header.tpl');
-	
+
 	$a->page['htmlhead'] .= replace_macros($tpl, array(
 		'$newpost' => 'true',
 		'$baseurl' => $a->get_baseurl(true),
@@ -1135,8 +1135,8 @@ function status_editor($a,$x,$popup=false) {
 		'$nickname' => $x['nickname'],
 		'$ispublic' => t('Visible to <strong>everybody</strong>'),
 		'$linkurl' => t('Please enter a link URL:'),
-		'$vidurl' => t("Please enter a video link/URL:"),
-		'$audurl' => t("Please enter an audio link/URL:"),
+		'$vidurl' => t('Please enter a video link/URL:'),
+		'$audurl' => t('Please enter an audio link/URL:'),
 		'$term' => t('Tag term:'),
 		'$fileas' => t('Save to Folder:'),
 		'$whereareu' => t('Where are you right now?'),
@@ -1144,35 +1144,35 @@ function status_editor($a,$x,$popup=false) {
 	));
 
 
-	$tpl = get_markup_template("jot.tpl");
+	$tpl = get_markup_template('jot.tpl');
 
 	$jotplugins = '';
 	$jotnets = '';
 
 	$preview = t('Preview');
 //	$preview = ((feature_enabled($x['profile_uid'],'preview')) ? t('Preview') : '');
-	if(x($x,'nopreview'))
+	if(x($x, 'nopreview'))
 		$preview = '';
 
-	$defexpire = ((($z = get_pconfig($x['profile_uid'],'system','default_post_expire')) && (! $webpage)) ? $z : '');
+	$defexpire = ((($z = get_pconfig($x['profile_uid'], 'system', 'default_post_expire')) && (! $webpage)) ? $z : '');
 
-
-	$cipher = get_pconfig($x['profile_uid'],'system','default_cipher');
+	$cipher = get_pconfig($x['profile_uid'], 'system', 'default_cipher');
 	if(! $cipher)
 		$cipher = 'aes256';
 
 	call_hooks('jot_tool', $jotplugins);
 	call_hooks('jot_networks', $jotnets);
 
-	$o .= replace_macros($tpl,array(
-		'$return_path' => ((x($x,'return_path')) ? $x['return_path'] : $a->query_string),
+	$o .= replace_macros($tpl, array(
+		'$return_path' => ((x($x, 'return_path')) ? $x['return_path'] : $a->query_string),
 		'$action' =>  $a->get_baseurl(true) . '/item',
 		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
 		'$webpage' => $webpage,
 		'$placeholdpagetitle' => ((x($x,'ptlabel')) ? $x['ptlabel'] : t('Page link title')),
-		'$pagetitle' => (x($x,'pagetitle') ? $x['pagetitle'] : ''),		
+		'$pagetitle' => (x($x,'pagetitle') ? $x['pagetitle'] : ''),
 		'$id_select' => $id_select,
 		'$id_seltext' => t('Post as'),
+		'$writephoto' => perm_is_allowed($x['profile_uid'], get_observer_hash(), 'post_photos'),
 		'$upload' => t('Upload photo'),
 		'$shortupload' => t('upload photo'),
 		'$attach' => t('Attach file'),
@@ -1188,11 +1188,11 @@ function status_editor($a,$x,$popup=false) {
 		'$voting' => t('Toggle voting'),
 		'$feature_voting' => $voting,
 		'$consensus' => 0,
-		'$noloc' => ((get_pconfig($x['profile_uid'],'system','use_browser_location')) ? t('Clear browser location') : ''),
+		'$noloc' => ((get_pconfig($x['profile_uid'], 'system', 'use_browser_location')) ? t('Clear browser location') : ''),
 		'$shortnoloc' => t('clear location'),
-		'$title' => ((x($x,'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
+		'$title' => ((x($x, 'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
 		'$placeholdertitle' => t('Title (optional)'),
-		'$catsenabled' => ((feature_enabled($x['profile_uid'],'categories') && (! $webpage)) ? 'categories' : ''),
+		'$catsenabled' => ((feature_enabled($x['profile_uid'], 'categories') && (! $webpage)) ? 'categories' : ''),
 		'$category' => "",
 		'$placeholdercategory' => t('Categories (optional, comma-separated list)'),
 		'$wait' => t('Please wait'),
@@ -1211,26 +1211,24 @@ function status_editor($a,$x,$popup=false) {
 		'$acl' => $x['acl'],
 		'$mimeselect' => $mimeselect,
 		'$layoutselect' => $layoutselect,
-		'$showacl' => ((array_key_exists('showacl',$x)) ? $x['showacl'] : true),
+		'$showacl' => ((array_key_exists('showacl', $x)) ? $x['showacl'] : true),
 		'$bang' => $x['bang'],
 		'$profile_uid' => $x['profile_uid'],
 		'$preview' => $preview,
-		'$source' => ((x($x,'source')) ? $x['source'] : ''),
+		'$source' => ((x($x, 'source')) ? $x['source'] : ''),
 		'$jotplugins' => $jotplugins,
 		'$defexpire' => $defexpire,
-		'$feature_expire' => ((feature_enabled($x['profile_uid'],'content_expire') && (! $webpage)) ? true : false),
+		'$feature_expire' => ((feature_enabled($x['profile_uid'], 'content_expire') && (! $webpage)) ? true : false),
 		'$expires' => t('Set expiration date'),
-		'$feature_encrypt' => ((feature_enabled($x['profile_uid'],'content_encrypt') && (! $webpage)) ? true : false),
+		'$feature_encrypt' => ((feature_enabled($x['profile_uid'], 'content_encrypt') && (! $webpage)) ? true : false),
 		'$encrypt' => t('Encrypt text'),
 		'$cipher' => $cipher,
 		'$expiryModalOK' => t('OK'),
 		'$expiryModalCANCEL' => t('Cancel')
 	));
 
-
-	if ($popup==true){
-		$o = '<div id="jot-popup" style="display: none;">'.$o.'</div>';
-
+	if ($popup === true) {
+		$o = '<div id="jot-popup" style="display:none">' . $o . '</div>';
 	}
 
 	return $o;
@@ -1279,13 +1277,12 @@ function add_children_to_list($children, &$arr) {
 	}
 }
 
-function conv_sort($arr,$order) {
+function conv_sort($arr, $order) {
 
 	if((!(is_array($arr) && count($arr))))
 		return array();
 
 	$parents = array();
-	$children = array();
 
 	foreach($arr as $x)
 		if($x['id'] == $x['parent'])
@@ -1340,6 +1337,7 @@ function find_thread_parent_index($arr,$x) {
 	foreach($arr as $k => $v)
 		if($v['id'] == $x['parent'])
 			return $k;
+
 	return false;
 }
 
@@ -1368,6 +1366,7 @@ function render_location_default($item) {
 		else
 			$location = '<span class="smalltext">' . $coord . '</span>';
 	}
+
 	return $location;
 }
 
@@ -1389,14 +1388,15 @@ function prepare_page($item) {
 	// prepare_body calls unobscure() as a side effect. Do it here so that
 	// the template will get passed an unobscured title.
 
-	$body = prepare_body($item,true);
-    $tpl = get_pconfig($item['uid'],'system','pagetemplate');
-        if (! $tpl)
-            $tpl = 'page_display.tpl';
-    return replace_macros(get_markup_template($tpl),array(
+	$body = prepare_body($item, true);
+	$tpl = get_pconfig($item['uid'], 'system', 'pagetemplate');
+	if (! $tpl)
+		$tpl = 'page_display.tpl';
+
+	return replace_macros(get_markup_template($tpl), array(
 		'$author' => (($naked) ? '' : $item['author']['xchan_name']),
 		'$auth_url' => (($naked) ? '' : zid($item['author']['xchan_url'])),
-		'$date' => (($naked) ? '' : datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i')),
+		'$date' => (($naked) ? '' : datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'Y-m-d H:i')),
 		'$title' => smilies(bbcode($item['title'])),
 		'$body' => $body,
 		'$preview' => $preview,
@@ -1420,15 +1420,15 @@ function network_tabs() {
 	if(x($_GET,'new')) {
 		$new_active = 'active';
 	}
-	
+
 	if(x($_GET,'search')) {
 		$search_active = 'active';
 	}
-	
+
 	if(x($_GET,'star')) {
 		$starred_active = 'active';
 	}
-	
+
 	if(x($_GET,'conv')) {
 		$conv_active = 'active';
 	}
@@ -1441,8 +1441,7 @@ function network_tabs() {
 		$public_active = 'active';
 	}
 
-	
-	
+
 	if (($new_active == '') 
 		&& ($starred_active == '') 
 		&& ($conv_active == '')
@@ -1458,7 +1457,7 @@ function network_tabs() {
 		 case 'comment' : $all_active = 'active'; $no_active=''; break;
 		}
 	}
-	
+
 	if ($no_active=='active') $all_active='active';
 
 	$cmd = $a->cmd;
@@ -1469,22 +1468,22 @@ function network_tabs() {
 	if(! get_config('system','disable_discover_tab')) {
 		$tabs[] = array(
 			'label' => t('Discover'),
-			'url'=>z_root() . '/' . $cmd . '?f=&fh=1' ,
-			'sel'=> $public_active,
-			'title'=> t('Imported public streams'),
+			'url' => z_root() . '/' . $cmd . '?f=&fh=1' ,
+			'sel' => $public_active,
+			'title' => t('Imported public streams'),
 		);
 	}
 
 	$tabs[] = array(
 		'label' => t('Commented Order'),
-		'url'=>z_root() . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
+		'url'=>z_root() . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
 		'sel'=>$all_active,
 		'title'=> t('Sort by Comment Date'),
 	);
-	
+
 	$tabs[] = array(
 		'label' => t('Posted Order'),
-		'url'=>z_root() . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
+		'url'=>z_root() . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
 		'sel'=>$postord_active,
 		'title' => t('Sort by Post Date'),
 	);
@@ -1498,7 +1497,7 @@ function network_tabs() {
 		);
 	}
 
-	if(feature_enabled(local_channel(),'new_tab')) { 
+	if(feature_enabled(local_channel(),'new_tab')) {
 		$tabs[] = array(
 			'label' => t('New'),
 			'url' => z_root() . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&new=1' . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
@@ -1524,15 +1523,14 @@ function network_tabs() {
 			'sel'=> $spam_active,
 			'title' => t('Posts flagged as SPAM'),
 		);
-	}	
+	}
 
 	$arr = array('tabs' => $tabs);
 	call_hooks('network_tabs', $arr);
 
 	$tpl = get_markup_template('common_tabs.tpl');
 
-	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
-
+	return replace_macros($tpl, array('$tabs' => $arr['tabs']));
 }
 
 
@@ -1550,13 +1548,13 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		$nickname  = $channel['channel_address'];
 
 	$uid = (($a->profile['profile_uid']) ? $a->profile['profile_uid'] : local_channel());
-	
+
 	if (get_pconfig($uid,'system','noprofiletabs'))
 		return;
-	
+
 	if(x($_GET,'tab'))
 		$tab = notags(trim($_GET['tab']));
-	
+
 	$url = $a->get_baseurl() . '/channel/' . $nickname;
 	$pr  = $a->get_baseurl() . '/profile/' . $nickname;
 
@@ -1636,13 +1634,10 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 			'id'    => 'webpages-tab',
 		);
 	}
-
 	else {
 		// FIXME
 		// we probably need a listing of events that were created by 
 		// this channel and are visible to the observer
-
-
 	}
 
 	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
