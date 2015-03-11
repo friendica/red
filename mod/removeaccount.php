@@ -5,7 +5,7 @@ function removeaccount_post(&$a) {
 	if(! local_channel())
 		return;
 
-	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
+	if($_SESSION['delegate'])
 		return;
 
 	if((! x($_POST,'qxz_password')) || (! strlen(trim($_POST['qxz_password']))))

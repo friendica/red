@@ -13,7 +13,7 @@
 function admin_post(&$a){
 	logger('admin_post', LOGGER_DEBUG);
 
-	if((!is_site_admin()) || ($_SESSION['delegate'])) {
+	if(! is_site_admin()) {
 		return;
 	}
 
@@ -80,7 +80,7 @@ function admin_content(&$a) {
 
 	logger('admin_content', LOGGER_DEBUG);
 
-	if((!is_site_admin()) || ($_SESSION['delegate'])) {
+	if(! is_site_admin()) {
 		return login(false);
 	}
 
