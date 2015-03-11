@@ -49,9 +49,6 @@ function settings_post(&$a) {
 
 	 logger('mod_settings: ' . print_r($_REQUEST,true));
 
-	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
-		return;
-
 
 	if((argc() > 1) && (argv(1) === 'oauth') && x($_POST,'remove')){
 		check_form_security_token_redirectOnErr('/settings/oauth', 'settings_oauth');
@@ -573,11 +570,6 @@ function settings_content(&$a) {
 	if($channel)
 		head_set_icon($channel['xchan_photo_s']);
 
-//	if(x($_SESSION,'submanage') && intval($_SESSION['submanage'])) {
-//		notice( t('Permission denied.') . EOL );
-//		return;
-//	}
-	
 	$yes_no = array(t('No'),t('Yes'));
 		
 	if((argc() > 1) && (argv(1) === 'oauth')) {

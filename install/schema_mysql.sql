@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS `abook` (
   KEY `abook_profile` (`abook_profile`),
   KEY `abook_dob` (`abook_dob`),
   KEY `abook_connected` (`abook_connected`),
-  KEY `abook_rating` (`abook_rating`)
+  KEY `abook_rating` (`abook_rating`),
+  KEY `abook_channel_closeness` (`book_channel`,`abook_closeness`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

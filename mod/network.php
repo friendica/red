@@ -342,9 +342,11 @@ function network_content(&$a, $update = 0, $load = false) {
 		$sys = get_sys_channel();
 		$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";
 		$a->data['firehose'] = intval($sys['channel_id']);
+		$abook_uids = "";
 	}
 	else {
 		$uids = " and item.uid = " . local_channel() . " ";
+		$abook_uids = " and abook.abook_channel = " . local_channel() . " ";
 	}
 
 	if(get_pconfig(local_channel(),'system','network_list_mode'))
@@ -376,7 +378,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		$items = q("SELECT item.*, item.id AS item_id, received FROM item
 			left join abook on item.author_xchan = abook.abook_xchan
-			WHERE true $uids AND item_restrict = 0
+			WHERE true $uids $abook_uids AND item_restrict = 0
 			and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 			$simple_update
 			$sql_extra $sql_nets
@@ -407,7 +409,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
 				left join abook on item.author_xchan = abook.abook_xchan
-				WHERE true $uids AND item.item_restrict = 0
+				WHERE true $uids $abook_uids AND item.item_restrict = 0
 				AND item.parent = item.id
 				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra3 $sql_extra $sql_nets
@@ -421,7 +423,7 @@ function network_content(&$a, $update = 0, $load = false) {
 				// update
 				$r = q("SELECT item.parent AS item_id FROM item
 					left join abook on item.author_xchan = abook.abook_xchan
-					WHERE true $uids AND item.item_restrict = 0 $simple_update
+					WHERE true $uids $abook_uids AND item.item_restrict = 0 $simple_update
 					and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 					$sql_extra3 $sql_extra $sql_nets ",
 					intval(ABOOK_FLAG_BLOCKED)
