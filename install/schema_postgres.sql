@@ -29,6 +29,7 @@ CREATE TABLE "abook" (
   create index  "abook_dob" on abook  ("abook_dob");
   create index  "abook_connected" on abook  ("abook_connected");
   create index  "abook_rating" on abook  ("abook_rating");
+  create index  "abook_channel_closeness" on abook ("abook_channel", "abook_closeness");
 
 CREATE TABLE "account" (
   "account_id" serial  NOT NULL,
