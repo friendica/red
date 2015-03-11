@@ -34,28 +34,10 @@ function photo_upload($channel, $observer, $args) {
 			$album = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y-m');
 	}
 
-	/**
-	 *
-	 * We create a wall item for every photo, but we don't want to
-	 * overwhelm the data stream with a hundred newly uploaded photos.
-	 * So we will make the first photo uploaded to this album in the last several hours
-	 * visible by default, the rest will become visible over time when and if
-	 * they acquire comments, likes, dislikes, and/or tags 
-	 *
-	 */
-
-	$r = q("SELECT * FROM photo WHERE album = '%s' AND uid = %d AND created > %s - INTERVAL %s ",
-		dbesc($album),
-		intval($channel_id),
-		db_utcnow(), db_quoteinterval('3 HOUR')
-	);
-	if((! $r) || ($album == t('Profile Photos')))
+	if(intval($args['visible']) || $args['visible'] === 'true')
 		$visible = 1;
 	else
 		$visible = 0;
-
-	if(intval($args['visible']) || $args['visible'] === 'true')
-		$visible = 1;
 
 	$str_group_allow   = perms2str(((is_array($args['group_allow']))   ? $args['group_allow']   : explode(',',$args['group_allow'])));
 	$str_contact_allow = perms2str(((is_array($args['contact_allow'])) ? $args['contact_allow'] : explode(',',$args['contact_allow'])));
