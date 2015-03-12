@@ -13,7 +13,7 @@ function network_init(&$a) {
 		return;
 	}
 
-	if(count($_GET) < 2) {
+	if((count($_GET) < 2) || (count($_GET) < 3 && $_GET['JS'])) {
 		$network_options = get_pconfig(local_channel(),'system','network_page_default');
 		if($network_options)
 			goaway('network' . '?f=&' . $network_options);
