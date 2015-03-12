@@ -195,7 +195,7 @@ function dirsearch_content(&$a) {
 		// This will make a handful of channels whose names begin with
 		// punctuation un-searchable in this mode
 
-		$safesql .= " and ascii(substr(xchan_name FROM 1 FOR 1)) > 64 ";
+		$safesql .= " and ascii(substring(xchan_name FROM 1 FOR 1)) > 64 ";
 	}
 	elseif($sort_order == 'reverse')
 		$order = " order by xchan_name desc ";
