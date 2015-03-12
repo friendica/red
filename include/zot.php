@@ -469,7 +469,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 				if($closeness === false)
 					$closeness = 80;
 
-				$y = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_flags ) values ( %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
+				$y = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_flags ) values ( %d, %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),
 					intval($closeness),

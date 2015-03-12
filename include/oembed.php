@@ -8,13 +8,25 @@ function oembed_replacecb($matches){
 }
 
 
+// if the url is embeddable with oembed, return the bbcode link.
+
+function oembed_process($url) {
+	$j = oembed_fetch_url($url);
+	logger('oembed_process: ' . print_r($j,true));
+	if($j && $j->type !== 'error')
+		return '[embed]' . $url . '[/embed]';
+	return false;
+}
+
+
+
 function oembed_fetch_url($embedurl){
 
 	$a = get_app();
 
 	$txt = Cache::get($a->videowidth . $embedurl);
 
-	if(strstr($txt,'youtu')) {
+	if(strstr($txt,'youtu') && strstr(z_root(),'https:')) {
 		$txt = str_replace('http:','https:',$txt);
 	}
 
@@ -105,7 +117,7 @@ function oembed_format_object($j){
 				
 				$th=120; $tw = $th*$tr;
 				$tpl=get_markup_template('oembed_video.tpl');
-				if(strstr($embedurl,'youtu')) {
+				if(strstr($embedurl,'youtu') && strstr(z_root(),'https:')) {
 					$embedurl = str_replace('http:','https:',$embedurl);
 					$j->thumbnail_url = str_replace('http:','https:', $j->thumbnail_url);
 					$jhtml = str_replace('http:','https:', $jhtml);
@@ -142,7 +154,7 @@ function oembed_format_object($j){
 	// add link to source if not present in "rich" type
 	if (  $j->type!='rich' || !strpos($j->html,$embedurl) ){
 		$embedlink = (isset($j->title))?$j->title:$embedurl;
-		$ret .= "<a href='$embedurl' rel='oembed'>$embedlink</a>";
+		$ret .= '<span class="bookmark-identifier">#^</span>' . "<a href='$embedurl' rel='oembed'>$embedlink</a>";
 		$ret .= "<br>";
 		if (isset($j->author_name)) $ret.=" by ".$j->author_name;
 		if (isset($j->provider_name)) $ret.=" on ".$j->provider_name;

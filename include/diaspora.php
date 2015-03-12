@@ -1287,6 +1287,12 @@ function diaspora_comment($importer,$xml,$msg) {
 		// our post, so he/she must be a contact of ours and his/her public key
 		// should be in $msg['key']
 
+		if($importer['system']) {
+			// don't relay to the sys channel
+			logger('diaspora_comment: relay to sys channel blocked.');
+			return;
+		}
+
 		$author_signature = base64_decode($author_signature);
 
 		if(! rsa_verify($signed_data,$author_signature,$key,'sha256')) {

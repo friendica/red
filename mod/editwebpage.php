@@ -172,6 +172,11 @@ function editwebpage_content(&$a) {
 
 		'$action' => 'item',
 		'$share' => t('Edit'),
+		'$bold' => t('Bold'),
+		'$italic' => t('Italic'),
+		'$underline' => t('Underline'),
+		'$quote' => t('Quote'),
+		'$code' => t('Code'),
 		'$upload' => t('Upload photo'),
 		'$attach' => t('Attach file'),
 		'$weblink' => t('Insert web link'),
