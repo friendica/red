@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/oembed.php');
 
 /* To-Do
 https://developers.google.com/+/plugins/snippet/
@@ -250,6 +251,8 @@ function parse_url_content(&$a) {
 		}
 	}
 
+	logger('parse_url: ' . $url);
+
 	$result = z_fetch_url($url,false,0,array('novalidate' => true, 'nobody' => true));
 	if($result['success']) {
 		$hdrs=array();
@@ -261,24 +264,30 @@ function parse_url_content(&$a) {
 		if (array_key_exists('Content-Type', $hdrs))
 			$type = $hdrs['Content-Type'];
 		if($type) {
-			if(in_array($type,array('image/jpeg','image/gif','image/png'))) {
-				$s = $br . '[img]' . $url . '[/img]' . $br;
-				$s = preg_replace_callback('/\[img(.*?)\](.*?)\[\/img\]/ism','red_zrlify_img_callback',$s);
-				echo $s;
+			$zrl = is_matrix_url($url);
+			if(stripos($type,'image/') !== false) {
+				if($zrl)
+					echo $br . '[zmg]' . $url . '[/zmg]' . $br;
+				else
+					echo $br . '[img]' . $url . '[/img]' . $br;
 				killme();
 			}
 			if(stripos($type,'video/') !== false) {
-				echo $br . '[video]' . $url . '[/video]' . $br;
+				if($zrl)
+					echo $br . '[zvideo]' . $url . '[/zvideo]' . $br;
+				else
+					echo $br . '[video]' . $url . '[/video]' . $br;
 				killme();
 			}
 			if(stripos($type,'audio/') !== false) {
-				echo $br . '[audio]' . $url . '[/audio]' . $br;
+				if($zrl)
+					echo $br . '[zaudio]' . $url . '[/zaudio]' . $br;
+				else
+					echo $br . '[audio]' . $url . '[/audio]' . $br;
 				killme();
 			}
 		}
 	}
-
-	logger('parse_url: ' . $url);
 
 	$template = $br . '#^[url=%s]%s[/url]%s' . $br;
 
@@ -291,6 +300,11 @@ function parse_url_content(&$a) {
 		killme();
 	}
 
+	$x = oembed_process($url);
+	if($x) {
+		echo $x;
+		killme();
+	}
 
 	if($url && $title && $text) {
 
