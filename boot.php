@@ -1668,14 +1668,17 @@ function notice($s) {
 	$a = get_app();
 	if(! x($_SESSION, 'sysmsg')) $_SESSION['sysmsg'] = array();
 
+	// ignore duplicated error messages which haven't yet been displayed 
+	// - typically seen as multiple 'permission denied' messages 
+	// as a result of auto-reloading a protected page with &JS=1
+
+	if(in_array($s,$_SESSION['sysmsg']))
+		return;
+
 	if($a->interactive) {
-		// shameless plug, permission is denied and they have no identity.
-		// There's a fairly good chance that they've not got zot.
-		if((stristr($s, t('permission denied'))) && (! get_observer_hash())) {
-			$s .= '<br><a href="http://getzot.com">' . t('Got Zot?') . '</a>';
-		}
 		$_SESSION['sysmsg'][] = $s;
 	}
+
 }
 
 /**
