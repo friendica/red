@@ -1,17 +1,3 @@
-#dspr-pubcomment-label, #dspr-hijack-label {
-    float: left;
-    width: 350px;
-    margin-bottom: 25px;
-}
-
-#dspr-pubcomment-checkbox, #dspr-hijack-checkbox {
-    float: left;
-}
-
-#settings-dspr-wrapper {
-    margin-top: 15px;
-}
-
 .group {
 	margin-left: 10px;
 }

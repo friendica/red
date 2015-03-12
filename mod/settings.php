@@ -678,11 +678,9 @@ function settings_content(&$a) {
 			'$title'	=> t('Feature/Addon Settings'),
 			'$diaspora_enabled' => $diaspora_enabled,
 			'$dsprdesc' => t('Settings for the built-in Diaspora emulator'), 
-			'$pubcomments' => $pubcomments,
+			'$pubcomments' => array('dspr_pubcomment', t('Allow any Diaspora member to comment on your public posts'), $pubcomments, '', $yes_no),
 			'$dsprtitle' => t('Diaspora Policy Settings'),
-			'$dsprhelp' => t('Allow any Diaspora member to comment on your public posts.'),
-			'$dsprhijack' => t('Prevent your hashtags from being redirected to other sites'),
-			'$hijacking' => $hijacking,
+			'$hijacking' => array('dspr_hijack', t('Prevent your hashtags from being redirected to other sites'), $hijacking, '', $yes_no),
 			'$dsprsubmit' => t('Submit Diaspora Policy Settings'),
 			'$settings_addons' => $settings_addons
 		));

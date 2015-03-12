@@ -1,28 +1,33 @@
-<div class="generic-content-wrapper-styled">
-<h1>{{$title}}</h1>
+<div class="generic-content-wrapper">
+	<div class="section-title-wrapper">
+		<h2>{{$title}}</h2>
+	</div>
+	<form action="settings/featured" method="post" autocomplete="off">
+		<input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
+		<div class="panel-group" id="settings" role="tablist">
+			{{if $diaspora_enabled}}
+			<div class="panel">
+				<div class="section-subtitle-wrapper" role="tab" id="dspr-settings">
+					<h3>
+						<a title="{{$dsprdesc}}" data-toggle="collapse" data-parent="#settings" href="#dspr-settings-content" aria-controls="dspr-settings-content">
+							{{$dsprtitle}}
+						</a>
+					</h3>
+				</div>
+				<div id="dspr-settings-content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dspr-settings">
+					<div class="section-content-tools-wrapper">
 
-<form action="settings/featured" method="post" autocomplete="off">
-<input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
+						{{include file="field_checkbox.tpl" field=$pubcomments}}
+						{{include file="field_checkbox.tpl" field=$hijacking}}
 
-{{if $diaspora_enabled}}
-<div class="settings-block">
-<button class="btn btn-default" data-target="#settings-dspr-wrapper" data-toggle="collapse" type="button">{{$dsprtitle}}</button>
-<div id="settings-dspr-wrapper" class="collapse well">
-<div id="dspr-settings-wrapper">
-<label id="dspr-pubcomment-label" for="dspr-pubcomment-checkbox">{{$dsprhelp}}</label>
-<input id="dspr-pubcomment-checkbox" type="checkbox" name="dspr_pubcomment" value="1" ' . {{if $pubcomments}} checked="checked" {{/if}} />
-<div class="clear"></div>
-<label id="dspr-hijack-label" for="dspr-hijack-checkbox">{{$dsprhijack}}</label>
-<input id="dspr-hijack-checkbox" type="checkbox" name="dspr_hijack" value="1" ' . {{if $hijacking}} checked="checked" {{/if}} />
-<div class="clear"></div>
-</div>
-
-
-
-<div class="settings-submit-wrapper" ><input type="submit" name="dspr-submit" class="settings-submit" value="{{$dsprsubmit}}" /></div></div></div>
-{{/if}}
-{{$settings_addons}}
-
-</form>
-
+						<div class="settings-submit-wrapper" >
+							<button type="submit" name="dspr-submit" class="btn btn-primary" value="{{$dsprsubmit}}">{{$dsprsubmit}}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			{{/if}}
+		</div>
+		{{$settings_addons}}
+	</form>
 </div>
