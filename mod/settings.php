@@ -681,7 +681,7 @@ function settings_content(&$a) {
 			'$pubcomments' => array('dspr_pubcomment', t('Allow any Diaspora member to comment on your public posts'), $pubcomments, '', $yes_no),
 			'$dsprtitle' => t('Diaspora Policy Settings'),
 			'$hijacking' => array('dspr_hijack', t('Prevent your hashtags from being redirected to other sites'), $hijacking, '', $yes_no),
-			'$dsprsubmit' => t('Submit Diaspora Policy Settings'),
+			'$dsprsubmit' => t('Submit'),
 			'$settings_addons' => $settings_addons
 		));
 		return $o;

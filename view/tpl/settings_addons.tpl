@@ -27,7 +27,7 @@
 				</div>
 			</div>
 			{{/if}}
+			{{$settings_addons}}
 		</div>
-		{{$settings_addons}}
 	</form>
 </div>
