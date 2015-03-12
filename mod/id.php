@@ -51,9 +51,10 @@ function getUserData($handle=null)
 		get_app()->page['content'] =  login();
 	}
 
+	logger('handle: ' . $handle);
 
 	if($handle) {
-		$r = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_hash = '%s' limit 1",
+		$r = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_address = '%s' limit 1",
 			dbesc($handle)
 		);
 	}
@@ -63,7 +64,7 @@ function getUserData($handle=null)
 		);
 	}
 
-	return $r;
+	return $r[0];
 
 /*
     if(isset($_POST['login'],$_POST['password'])) {
@@ -108,6 +109,12 @@ class MysqlProvider extends LightOpenIDProvider
     
     function setup($identity, $realm, $assoc_handle, $attributes)
     {
+
+		logger('identity: ' . $identity);
+		logger('realm: ' . $realm);
+		logger('assoc_handle: ' . $assoc_handle);
+		logger('attributes: ' . print_r($attributes,true));
+
         $data = getUserData($assoc_handle);
         $o .= '<form action="" method="post">'
            . '<input type="hidden" name="openid.assoc_handle" value="' . $assoc_handle . '">'
@@ -141,34 +148,42 @@ class MysqlProvider extends LightOpenIDProvider
            . '<button name="cancel">cancel</button> '
            . '</form>';
 
-		get_app()->page['content'] = $o;
+		get_app()->page['content'] .= $o;
 
     }
     
     function checkid($realm, &$attributes)
     {
+
+		logger('checkid: ' . $realm);
+
+		logger('checkid attrs: ' . print_r($attributes,true));
+
+
         if(isset($_POST['cancel'])) {
             $this->cancel();
         }
         
         $data = getUserData();
-        if(!$data) {
+        if(! $data) {
             return false;
         }
-        $realm = mysql_real_escape_string($realm);
 
-		
-        $q = mysql_query("SELECT attributes FROM AllowedSites WHERE user = '{$data['id']}' AND realm = '$realm'");
-        
-        $attrs = array();
-        if($attrs = mysql_fetch_row($q)) {
-            $attrs = explode(',', $attributes[0]);
+
+		logger('checkid: checkpoint1');
+
+
+		$q = get_pconfig(local_channel(),'openid',$realm);
+
+		$attrs = array();
+		if($q) {
+			$attrs = $q;
         } elseif(isset($_POST['attributes'])) {
             $attrs = array_keys($_POST['attributes']);
         } elseif(!isset($_POST['once']) && !isset($_POST['always'])) {
             return false;
         }
-        
+
         $attributes = array();
         foreach($attrs as $attr) {
             if(isset($this->attrFieldMap[$attr])) {
@@ -177,46 +192,45 @@ class MysqlProvider extends LightOpenIDProvider
         }
         
         if(isset($_POST['always'])) {
-            $attrs = mysql_real_escape_string(implode(',', array_keys($attributes)));
-            mysql_query("REPLACE INTO AllowedSites VALUES('{$data['id']}', '$realm', '$attrs')");
+			set_pconfig(local_channel(),'openid',$realm,array_keys($attributes));
         }
-        
-        return $this->serverLocation . '?' . $data['login'];
+  
+		return z_root() . '/id/' . $data['channel_address'];      
     }
     
     function assoc_handle()
     {
-        # We generate an integer assoc handle, because it's just faster to look up an integer later.
-        $q = mysql_query("SELECT MAX(id) FROM Associations");
-        $result = mysql_fetch_row($q);
-        return $q[0]+1;
+		
+		$channel = get_app()->get_channel();
+		return z_root() . '/id/' . $channel['channel_address']; 
+
     }
     
     function setAssoc($handle, $data)
     {
-        $data = mysql_real_escape_string(serialize($data));
-        mysql_query("REPLACE INTO Associations VALUES('$handle', '$data')");
+		logger('setAssoc');
+		$channel = channelx_by_nick(basename($handle));
+		if($channel)
+			set_pconfig($channel['channel_id'],'openid','associate',$data);
+
     }
     
     function getAssoc($handle)
     {
-        if(!is_numeric($handle)) {
-            return false;
-        }
-        $q = mysql_query("SELECT data FROM Associations WHERE id = '$handle'");
-        $data = mysql_fetch_row($q);
-        if(!$data) {
-            return false;
-        }
-        return unserialize($data[0]);
+		logger('getAssoc: ' . $handle);
+
+		$channel = channelx_by_nick(basename($handle));
+		if($channel)
+			return get_pconfig($channel['channel_id'],'openid','associate');
+		return false;
     }
     
     function delAssoc($handle)
     {
-        if(!is_numeric($handle)) {
-            return false;
-        }
-        mysql_query("DELETE FROM Associations WHERE id = '$handle'");
+		logger('delAssoc');
+		$channel = channelx_by_nick(basename($handle));
+		if($channel)
+			return del_pconfig($channel['channel_id'],'openid','associate');
     }
     
 }

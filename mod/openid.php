@@ -85,7 +85,7 @@ function openid_content(&$a) {
 			$url = trim($_REQUEST['openid_identity'],'/');
 			if(strpos($url,'http') === false)
 				$url = 'https://' . $url;
-			$pphoto = get_default_profile_photo();
+			$pphoto = z_root() . '/' . get_default_profile_photo();
 			$parsed = @parse_url($url);
 			if($parsed) {
 				$host = $parsed['host'];
