@@ -805,11 +805,6 @@ function diaspora_post($importer,$xml,$msg) {
 	}
 
 
-	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream'))) {
-		logger('diaspora_post: Ignoring this author.');
-		return 202;
-	}
-
 	$search_guid = ((strlen($guid) == 64) ? $guid . '%' : $guid);
 
 	$r = q("SELECT id FROM item WHERE uid = %d AND mid like '%s' LIMIT 1",
@@ -889,6 +884,15 @@ function diaspora_post($importer,$xml,$msg) {
 	$datarray['item_flags'] = ITEM_THREAD_TOP;
 	$datarray['item_unseen'] = 1;
 
+
+	$tgroup = tgroup_check($importer['channel_id'],$datarray);
+
+	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) && (! $tgroup)) {
+		logger('diaspora_post: Ignoring this author.');
+		return 202;
+	}
+
+
 	$result = item_store($datarray);
 	return;
 
@@ -954,11 +958,6 @@ function diaspora_reshare($importer,$xml,$msg) {
 	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$diaspora_handle);
 	if(! $contact)
 		return;
-
-	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream'))) {
-		logger('diaspora_reshare: Ignoring this author: ' . $diaspora_handle . ' ' . print_r($xml,true));
-		return 202;
-	}
 
 	$search_guid = ((strlen($guid) == 64) ? $guid . '%' : $guid);
 	$r = q("SELECT id FROM item WHERE uid = %d AND mid like '%s' LIMIT 1",
@@ -1070,6 +1069,15 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 	$datarray['body'] = $newbody;
 	$datarray['app']  = 'Diaspora';
+
+
+
+	$tgroup = tgroup_check($importer['channel_id'],$datarray);
+
+	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) && (! $tgroup)) {
+		logger('diaspora_post: Ignoring this author.');
+		return 202;
+	}
 
 
 	$result = item_store($datarray);
@@ -1229,15 +1237,6 @@ function diaspora_comment($importer,$xml,$msg) {
 	if(intval($parent_item['item_private']))
 		$pubcomment = 0;	
 
-	// So basically if something arrives at the sys channel it's by definition public and we allow it.
-	// If $pubcomment and the parent was public, we allow it.
-	// In all other cases, honour the permissions for this Diaspora connection
-
-	if((! $importer['system']) && (! $pubcomment) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments'))) {
-		logger('diaspora_comment: Ignoring this author.');
-		return 202;
-	}
-
 	$search_guid = $guid;
 	if(strlen($guid) == 64)
 		$search_guid = $guid . '%';
@@ -1381,6 +1380,22 @@ function diaspora_comment($importer,$xml,$msg) {
 			'signed_text' => $signed_data, 'signature' => base64_encode($author_signature));
 		$datarray['diaspora_meta'] = json_encode(crypto_encapsulate(json_encode($x),$key));
 	}
+
+
+
+	// So basically if something arrives at the sys channel it's by definition public and we allow it.
+	// If $pubcomment and the parent was public, we allow it.
+	// In all other cases, honour the permissions for this Diaspora connection
+
+	$tgroup = tgroup_check($importer['channel_id'],$datarray);
+
+	if((! $importer['system']) && (! $pubcomment) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments')) && (! $tgroup)) {
+		logger('diaspora_comment: Ignoring this author.');
+		return 202;
+	}
+
+
+
 
 	$result = item_store($datarray);
 
