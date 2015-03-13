@@ -377,7 +377,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		// "New Item View" - show all items unthreaded in reverse created date order
 
 		$items = q("SELECT item.*, item.id AS item_id, received FROM item
-			left join abook on item.author_xchan = abook.abook_xchan
+			left join abook on item.owner_xchan = abook.abook_xchan
 			WHERE true $uids $abook_uids AND item_restrict = 0
 			and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 			$simple_update
@@ -408,7 +408,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			// Fetch a page full of parent items for this page
 
 			$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
-				left join abook on item.author_xchan = abook.abook_xchan
+				left join abook on item.owner_xchan = abook.abook_xchan
 				WHERE true $uids $abook_uids AND item.item_restrict = 0
 				AND item.parent = item.id
 				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
@@ -422,7 +422,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			if(! $firehose) {
 				// update
 				$r = q("SELECT item.parent AS item_id FROM item
-					left join abook on item.author_xchan = abook.abook_xchan
+					left join abook on item.owner_xchan = abook.abook_xchan
 					WHERE true $uids $abook_uids AND item.item_restrict = 0 $simple_update
 					and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 					$sql_extra3 $sql_extra $sql_nets ",
