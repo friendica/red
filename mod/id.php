@@ -78,6 +78,9 @@ function getUserData($handle=null)
 		intval($r[0]['channel_account_id'])
 	);
 
+
+
+
 	$gender = '';
 	if($p[0]['gender'] == t('Male'))
 		$gender = 'M';
@@ -132,34 +135,50 @@ function getUserData($handle=null)
 
 }
 
+
+function translate_regs() {
+
+	// This exists to get around scoping rules
+
+	$attrMap = array(
+        'namePerson/first'       => t('First Name'),
+        'namePerson/last'        => t('Last Name'),
+        'namePerson/friendly'    => t('Nickname'),
+		'namePerson'             => t('Full Name'),
+		'contact/internet/email' => t('Email'),
+		'contact/email'          => t('Email'),
+		'media/image/aspect11'   => t('Profile Photo'),
+		'media/image'            => t('Profile Photo'),
+		'media/image/default'    => t('Profile Photo'),
+		'media/image/16x16'      => t('Profile Photo 16px'),
+		'media/image/32x32'      => t('Profile Photo 32px'),
+		'media/image/48x48'      => t('Profile Photo 48px'),
+		'media/image/64x64'      => t('Profile Photo 64px'),
+		'media/image/80x80'      => t('Profile Photo 80px'),
+		'media/image/128x128'    => t('Profile Photo 128px'),
+		'timezone'               => t('Timezone'),
+		'contact/web/default'    => t('Homepage URL'),
+		'language/pref'          => t('Language'),
+		'birthDate/birthYear'    => t('Birth Year'),
+		'birthDate/birthMonth'   => t('Birth Month'),
+		'birthDate/birthday'     => t('Birth Day'),
+		'birthDate'              => t('Birthdate'),
+		'gender'                 => t('Gender'),
+	);
+   
+	return $attrMap;
+}
+
+
 class MysqlProvider extends LightOpenIDProvider
 {
-    private $attrMap = array(
-        'namePerson/first'       => 'First Name',
-        'namePerson/last'        => 'Last Name',
-        'namePerson/friendly'    => 'Nickname',
-		'namePerson'             => 'Full Name',
-		'contact/internet/email' => 'Email',
-		'contact/email'          => 'Email',
-		'media/image/aspect11'   => 'Profile Photo',
-		'media/image'            => 'Profile Photo',
-		'media/image/default'    => 'Profile Photo',
-		'media/image/16x16'      => 'Profile Photo 16px',
-		'media/image/32x32'      => 'Profile Photo 32px',
-		'media/image/48x48'      => 'Profile Photo 48px',
-		'media/image/64x64'      => 'Profile Photo 64px',
-		'media/image/80x80'      => 'Profile Photo 80px',
-		'media/image/128x128'    => 'Profile Photo 128px',
-		'timezone'               => 'Timezone',
-		'contact/web/default'    => 'Homepage URL',
-		'language/pref'          => 'Language',
-		'birthDate/birthYear'    => 'Birth Year',
-		'birthDate/birthMonth'   => 'Birth Month',
-		'birthDate/birthday'     => 'Birth Day',
-		'birthDate'              => 'Birthdate',
-		'gender'                 => 'Gender',
-        );
-    
+
+	// See http://openid.net/specs/openid-attribute-properties-list-1_0-01.html
+	// This list contains a few variations of these attributes to maintain 
+	// compatibility with legacy clients
+
+    private $attrMap;
+
     private $attrFieldMap = array(
         'namePerson/first'       => 'firstName',
         'namePerson/last'        => 'lastName',
@@ -181,11 +200,15 @@ class MysqlProvider extends LightOpenIDProvider
 		'language/pref'          => 'language',
 		'birthDate/birthYear'    => 'birthyear',
 		'birthDate/birthMonth'   => 'birthmonth',
-		'birthDate/birthday'      => 'birthday',
+		'birthDate/birthday'     => 'birthday',
 		'birthDate'              => 'birthdate',
 		'gender'                 => 'gender',
         );
-    
+  
+	function __construct() {
+		$this->attrMap = translate_regs();
+	}
+  
     function setup($identity, $realm, $assoc_handle, $attributes)
     {
 
@@ -209,7 +232,7 @@ class MysqlProvider extends LightOpenIDProvider
                 if(isset($this->attrMap[$attr])) {
                     $o .= '<li>'
                        . '<input type="checkbox" name="attributes[' . $attr . ']"> '
-                       . $this->attrMap[$attr] . '(*)</li>';
+                       . $this->attrMap[$attr] . ' <span class="required">*</span></li>';
                 }
             }
             
