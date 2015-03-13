@@ -337,16 +337,16 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	}
 
+	$abook_uids = " and abook.abook_channel = " . local_channel() . " ";
+
 	if($firehose && (! get_config('system','disable_discover_tab'))) {
 		require_once('include/identity.php');
 		$sys = get_sys_channel();
 		$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";
 		$a->data['firehose'] = intval($sys['channel_id']);
-		$abook_uids = "";
 	}
 	else {
 		$uids = " and item.uid = " . local_channel() . " ";
-		$abook_uids = " and abook.abook_channel = " . local_channel() . " ";
 	}
 
 	if(get_pconfig(local_channel(),'system','network_list_mode'))
