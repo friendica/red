@@ -1,7 +1,20 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/chat.php
+ * @brief Chat related functions.
+ */
 
 
-function chatroom_create($channel,$arr) {
+/**
+ * @brief Creates a chatroom.
+ *
+ * @param array $channel
+ * @param array $arr
+ * @return An associative array containing:
+ *  - success: A boolean
+ *  - message: (optional) A string
+ */
+function chatroom_create($channel, $arr) {
 
 	$ret = array('success' => false);
 
@@ -24,14 +37,14 @@ function chatroom_create($channel,$arr) {
 		intval($channel['channel_account_id'])
 	);
 	if($r)
-		 $limit = service_class_fetch($channel_id,'chatrooms');
+		$limit = service_class_fetch($channel['channel_id'], 'chatrooms');
 
-    if(($r) && ($limit !== false) && ($r[0]['total'] >= $limit)) {
-        $ret['message'] = upgrade_message();
-        return $ret;
-    }
+	if(($r) && ($limit !== false) && ($r[0]['total'] >= $limit)) {
+		$ret['message'] = upgrade_message();
+		return $ret;
+	}
 
-	if(! array_key_exists('expire',$arr))
+	if(! array_key_exists('expire', $arr))
 		$arr['expire'] = 120;  // minutes, e.g. 2 hours
 
 	$created = datetime_convert();
@@ -60,6 +73,7 @@ function chatroom_create($channel,$arr) {
 function chatroom_destroy($channel,$arr) {
 
 	$ret = array('success' => false);
+
 	if(intval($arr['cr_id']))
 		$sql_extra = " and cr_id = " . intval($arr['cr_id']) . " ";
 	elseif(trim($arr['cr_name']))
@@ -72,7 +86,7 @@ function chatroom_destroy($channel,$arr) {
 	$r = q("select * from chatroom where cr_uid = %d $sql_extra limit 1",
 		intval($channel['channel_id'])
 	);
-	if(! $r) {		
+	if(! $r) {
 		$ret['message'] = t('Invalid room specifier.');
 		return $ret;
 	}
@@ -88,12 +102,13 @@ function chatroom_destroy($channel,$arr) {
 			intval($r[0]['cr_id'])
 		);
 	}
+
 	$ret['success'] = true;
 	return $ret;
 }
 
 
-function chatroom_enter($observer_xchan,$room_id,$status,$client) {
+function chatroom_enter($observer_xchan, $room_id, $status, $client) {
 
 	if(! $room_id || ! $observer_xchan)
 		return;
@@ -117,7 +132,7 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 		return false;
 	}
 
-	$limit = service_class_fetch($r[0]['cr_uid'],'chatters_inroom');
+	$limit = service_class_fetch($r[0]['cr_uid'], 'chatters_inroom');
 	if($limit !== false) {
 		$y = q("select count(*) as total from chatpresence where cp_room = %d",
 				intval($room_id)
@@ -157,12 +172,12 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 		dbesc($status),
 		dbesc($client)
 	);
-	
+
 	return $r;
 }
 
 
-function chatroom_leave($observer_xchan,$room_id,$client) {
+function chatroom_leave($observer_xchan, $room_id, $client) {
 	if(! $room_id || ! $observer_xchan)
 		return;
 
@@ -208,7 +223,7 @@ function chatroom_list_count($uid) {
  * It is the caller's responsibility to enter the room.
  */
 
-function chat_message($uid,$room_id,$xchan,$text) {
+function chat_message($uid, $room_id, $xchan, $text) {
 
 	$ret = array('success' => false);
 
@@ -230,14 +245,14 @@ function chat_message($uid,$room_id,$xchan,$text) {
 		'chat_text' => $text
 	);
 
-	call_hooks('chat_message',$arr);
+	call_hooks('chat_message', $arr);
 
 	$x = q("insert into chat ( chat_room, chat_xchan, created, chat_text )
 		values( %d, '%s', '%s', '%s' )",
 		intval($room_id),
 		dbesc($xchan),
 		dbesc(datetime_convert()),
-		dbesc($arr['chat_text'])		
+		dbesc($arr['chat_text'])
 	);
 
 	$ret['success'] = true;

@@ -559,7 +559,7 @@ function downgrade_accounts() {
 // or what the subscriber is not allowed to do. 
 
 
-function service_class_allows($uid,$property,$usage = false) {
+function service_class_allows($uid, $property, $usage = false) {
 	$a = get_app();
 	if($uid == local_channel()) {
 		$service_class = $a->account['account_service_class'];
@@ -586,13 +586,26 @@ function service_class_allows($uid,$property,$usage = false) {
 	else {
 		if(! array_key_exists($property,$arr))
 			return true;
+
 		return (((intval($usage)) < intval($arr[$property])) ? true : false);
 	}
 }
 
-// like service_class_allows but queries by account rather than channel
-function account_service_class_allows($aid,$property,$usage = false) {
-	$a = get_app();
+/**
+ * @brief Checks service class restrictions by account_id.
+ *
+ * Like service_class_allows() but queries by account rather than channel.
+ *
+ * @see service_class_allows()
+ *
+ * @param int $aid account_id
+ * @param string $property
+ * @param int|boolean $usage, default false
+ * @return boolean
+ *
+ * @todo Can't we use here internally account_service_class_fetch() to reduce duplicate code?
+ */
+function account_service_class_allows($aid, $property, $usage = false) {
 	$r = q("select account_service_class as service_class from account where account_id = %d limit 1",
 		intval($aid)
 	);
@@ -603,21 +616,33 @@ function account_service_class_allows($aid,$property,$usage = false) {
 	if(! x($service_class))
 		return true; // everything is allowed
 
-	$arr = get_config('service_class',$service_class);
+	$arr = get_config('service_class', $service_class);
 	if(! is_array($arr) || (! count($arr)))
 		return true;
 
 	if($usage === false)
 		return ((x($arr[$property])) ? (bool) $arr[$property] : true);
 	else {
-		if(! array_key_exists($property,$arr))
+		if(! array_key_exists($property, $arr))
 			return true;
+
 		return (((intval($usage)) < intval($arr[$property])) ? true : false);
 	}
 }
 
-
-function service_class_fetch($uid,$property) {
+/**
+ * @brief Fetches a service class for a channel_id and property.
+ *
+ * This method not just checks if a service class is allowed like service_class_allows(),
+ * but also returns the service class value.
+ * If no service class is available it returns false and everything should be
+ * allowed.
+ *
+ * @param int $uid channel_id
+ * @param string $property
+ * @return boolean|int
+ */
+function service_class_fetch($uid, $property) {
 	$a = get_app();
 	if($uid == local_channel()) {
 		$service_class = $a->account['account_service_class'];
@@ -635,17 +660,17 @@ function service_class_fetch($uid,$property) {
 	if(! x($service_class))
 		return false; // everything is allowed
 
-	$arr = get_config('service_class',$service_class);
+	$arr = get_config('service_class', $service_class);
 
 	if(! is_array($arr) || (! count($arr)))
 		return false;
 
-	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
+	return((array_key_exists($property, $arr)) ? $arr[$property] : false);
 }
 
 // like service_class_fetch but queries by account rather than channel
 
-function account_service_class_fetch($aid,$property) {
+function account_service_class_fetch($aid, $property) {
 
 	$r = q("select account_service_class as service_class from account where account_id = %d limit 1",
 		intval($aid)
@@ -657,12 +682,12 @@ function account_service_class_fetch($aid,$property) {
 	if(! x($service_class))
 		return false; // everything is allowed
 
-	$arr = get_config('service_class',$service_class);
+	$arr = get_config('service_class', $service_class);
 
 	if(! is_array($arr) || (! count($arr)))
 		return false;
 
-	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
+	return((array_key_exists($property, $arr)) ? $arr[$property] : false);
 }
 
 
