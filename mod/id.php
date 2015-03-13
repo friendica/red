@@ -49,9 +49,10 @@ function getUserData($handle=null)
 	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		get_app()->page['content'] =  login();
+		return false;
 	}
 
-	logger('handle: ' . $handle);
+//	logger('handle: ' . $handle);
 
 	if($handle) {
 		$r = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_address = '%s' limit 1",
@@ -63,6 +64,19 @@ function getUserData($handle=null)
 			intval(local_channel())
 		);
 	}
+
+	if(! r)
+		return false;
+
+	$x = q("select * from account where account_id = %d limit 1", 
+		intval($r[0]['channel_account_id'])
+	);
+	if($x)
+		$r[0]['email'] = $x[0]['account_email'];
+		
+	$r[0]['firstName'] = ((strpos($r[0]['channel_name'],' ')) ? substr($r[0]['channel_name'],0,strpos($r[0]['channel_name'],' ')) : $r[0]['channel_name']);
+	$r[0]['lastName'] = ((strpos($r[0]['channel_name'],' ')) ? substr($r[0]['channel_name'],strpos($r[0]['channel_name'],' ')+1) : '');
+	
 
 	return $r[0];
 
@@ -96,26 +110,29 @@ function getUserData($handle=null)
 class MysqlProvider extends LightOpenIDProvider
 {
     private $attrMap = array(
-        'namePerson/first'    => 'First name',
-        'namePerson/last'     => 'Last name',
-        'namePerson/friendly' => 'Nickname (login)'
+        'namePerson/first'       => 'First name',
+        'namePerson/last'        => 'Last name',
+        'namePerson/friendly'    => 'Nickname',
+		'contact/internet/email' => 'Email'
         );
     
     private $attrFieldMap = array(
-        'namePerson/first'    => 'firstName',
-        'namePerson/last'     => 'lastName',
-        'namePerson/friendly' => 'login'
+        'namePerson/first'       => 'firstName',
+        'namePerson/last'        => 'lastName',
+        'namePerson/friendly'    => 'channel_address',
+		'contact/internet/email' => 'email'
         );
     
     function setup($identity, $realm, $assoc_handle, $attributes)
     {
 
-		logger('identity: ' . $identity);
-		logger('realm: ' . $realm);
-		logger('assoc_handle: ' . $assoc_handle);
-		logger('attributes: ' . print_r($attributes,true));
+//		logger('identity: ' . $identity);
+//		logger('realm: ' . $realm);
+//		logger('assoc_handle: ' . $assoc_handle);
+//		logger('attributes: ' . print_r($attributes,true));
 
         $data = getUserData($assoc_handle);
+
         $o .= '<form action="" method="post">'
            . '<input type="hidden" name="openid.assoc_handle" value="' . $assoc_handle . '">'
            . '<input type="hidden" name="login" value="' . $_POST['login'] .'">'
