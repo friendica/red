@@ -73,11 +73,36 @@ function getUserData($handle=null)
 	);
 	if($x)
 		$r[0]['email'] = $x[0]['account_email'];
+
+	$p = q("select * from profile where is_default = 1 and uid = %d limit 1",
+		intval($r[0]['channel_account_id'])
+	);
+
+	$gender = '';
+	if($p[0]['gender'] == t('Male'))
+		$gender = 'M';
+	if($p[0]['gender'] == t('Female'))
+		$gender = 'F';
 		
 	$r[0]['firstName'] = ((strpos($r[0]['channel_name'],' ')) ? substr($r[0]['channel_name'],0,strpos($r[0]['channel_name'],' ')) : $r[0]['channel_name']);
 	$r[0]['lastName'] = ((strpos($r[0]['channel_name'],' ')) ? substr($r[0]['channel_name'],strpos($r[0]['channel_name'],' ')+1) : '');
+	$r[0]['namePerson'] = $r[0]['channel_name'];
+	$r[0]['pphoto'] = $r[0]['xchan_photo_l'];
+	$r[0]['pphoto16'] = z_root() . '/photo/profile/16/' . $r[0]['channel_id'] . '.jpg';
+	$r[0]['pphoto32'] = z_root() . '/photo/profile/32/' . $r[0]['channel_id'] . '.jpg';
+	$r[0]['pphoto48'] = z_root() . '/photo/profile/48/' . $r[0]['channel_id'] . '.jpg';
+	$r[0]['pphoto64'] = z_root() . '/photo/profile/64/' . $r[0]['channel_id'] . '.jpg';
+	$r[0]['pphoto80'] = z_root() . '/photo/profile/80/' . $r[0]['channel_id'] . '.jpg';
+	$r[0]['pphoto128'] = z_root() . '/photo/profile/128/' . $r[0]['channel_id'] . '.jpg';
+	$r[0]['timezone'] = $r[0]['channel_timezone'];
+	$r[0]['url'] = $r[0]['xchan_url'];
+	$r[0]['language'] = (($x[0]['account_language']) ? $x[0]['account_language'] : 'en');
+	$r[0]['birthyear'] = ((intval(substr($p[0]['dob'],0,4))) ? intval(substr($p[0]['dob'],0,4)) : '');
+	$r[0]['birthmonth'] = ((intval(substr($p[0]['dob'],5,2))) ? intval(substr($p[0]['dob'],5,2)) : '');
+	$r[0]['birthday'] = ((intval(substr($p[0]['dob'],8,2))) ? intval(substr($p[0]['dob'],8,2)) : '');
+	$r[0]['birthdate'] = (($r[0]['birthyear'] && $r[0]['birthmonth'] && $r[0]['birthday']) ? $p[0]['dob'] : '');
+	$r[0]['gender'] = $gender;
 	
-
 	return $r[0];
 
 /*
@@ -110,17 +135,55 @@ function getUserData($handle=null)
 class MysqlProvider extends LightOpenIDProvider
 {
     private $attrMap = array(
-        'namePerson/first'       => 'First name',
-        'namePerson/last'        => 'Last name',
+        'namePerson/first'       => 'First Name',
+        'namePerson/last'        => 'Last Name',
         'namePerson/friendly'    => 'Nickname',
-		'contact/internet/email' => 'Email'
+		'namePerson'             => 'Full Name',
+		'contact/internet/email' => 'Email',
+		'contact/email'          => 'Email',
+		'media/image/aspect11'   => 'Profile Photo',
+		'media/image'            => 'Profile Photo',
+		'media/image/default'    => 'Profile Photo',
+		'media/image/16x16'      => 'Profile Photo 16px',
+		'media/image/32x32'      => 'Profile Photo 32px',
+		'media/image/48x48'      => 'Profile Photo 48px',
+		'media/image/64x64'      => 'Profile Photo 64px',
+		'media/image/80x80'      => 'Profile Photo 80px',
+		'media/image/128x128'    => 'Profile Photo 128px',
+		'timezone'               => 'Timezone',
+		'contact/web/default'    => 'Homepage URL',
+		'language/pref'          => 'Language',
+		'birthDate/birthYear'    => 'Birth Year',
+		'birthDate/birthMonth'   => 'Birth Month',
+		'birthDate/birthday'     => 'Birth Day',
+		'birthDate'              => 'Birthdate',
+		'gender'                 => 'Gender',
         );
     
     private $attrFieldMap = array(
         'namePerson/first'       => 'firstName',
         'namePerson/last'        => 'lastName',
         'namePerson/friendly'    => 'channel_address',
-		'contact/internet/email' => 'email'
+		'namePerson'             => 'namePerson',
+		'contact/internet/email' => 'email',
+		'contact/email'          => 'email',
+		'media/image/aspect11'   => 'pphoto',
+		'media/image'            => 'pphoto',
+		'media/image/default'    => 'pphoto',
+		'media/image/16x16'      => 'pphoto16',
+		'media/image/32x32'      => 'pphoto32',
+		'media/image/48x48'      => 'pphoto48',
+		'media/image/64x64'      => 'pphoto64',
+		'media/image/80x80'      => 'pphoto80',
+		'media/image/128x128'    => 'pphoto128',
+		'timezone'               => 'timezone',
+		'contact/web/default'    => 'url',
+		'language/pref'          => 'language',
+		'birthDate/birthYear'    => 'birthyear',
+		'birthDate/birthMonth'   => 'birthmonth',
+		'birthDate/birthday'      => 'birthday',
+		'birthDate'              => 'birthdate',
+		'gender'                 => 'gender',
         );
     
     function setup($identity, $realm, $assoc_handle, $attributes)
