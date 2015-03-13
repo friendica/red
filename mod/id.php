@@ -177,7 +177,31 @@ class MysqlProvider extends LightOpenIDProvider
 	// This list contains a few variations of these attributes to maintain 
 	// compatibility with legacy clients
 
-    private $attrMap;
+	private $attrMap = array(
+        'namePerson/first'       => 'First Name',
+        'namePerson/last'        => 'Last Name',
+        'namePerson/friendly'    => 'Nickname',
+		'namePerson'             => 'Full Name',
+		'contact/internet/email' => 'Email',
+		'contact/email'          => 'Email',
+		'media/image/aspect11'   => 'Profile Photo',
+		'media/image'            => 'Profile Photo',
+		'media/image/default'    => 'Profile Photo',
+		'media/image/16x16'      => 'Profile Photo 16px',
+		'media/image/32x32'      => 'Profile Photo 32px',
+		'media/image/48x48'      => 'Profile Photo 48px',
+		'media/image/64x64'      => 'Profile Photo 64px',
+		'media/image/80x80'      => 'Profile Photo 80px',
+		'media/image/128x128'    => 'Profile Photo 128px',
+		'timezone'               => 'Timezone',
+		'contact/web/default'    => 'Homepage URL',
+		'language/pref'          => 'Language',
+		'birthDate/birthYear'    => 'Birth Year',
+		'birthDate/birthMonth'   => 'Birth Month',
+		'birthDate/birthday'     => 'Birth Day',
+		'birthDate'              => 'Birthdate',
+		'gender'                 => 'Gender',
+	);
 
     private $attrFieldMap = array(
         'namePerson/first'       => 'firstName',
@@ -205,9 +229,6 @@ class MysqlProvider extends LightOpenIDProvider
 		'gender'                 => 'gender',
         );
   
-	function __construct() {
-		$this->attrMap = translate_regs();
-	}
   
     function setup($identity, $realm, $assoc_handle, $attributes)
     {
