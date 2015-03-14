@@ -4,11 +4,21 @@
 
 nav .badge {
 	position: relative;
-	top: -48px;
+	top: -49px;
 	float: left;
 	font-size: 10px;
-	padding: 2px 6px;
+	line-height: 20px;
+	padding: 0px 5px;
+	height: 20px;
+	min-width: 20px;
+	border-radius: 10px;
 	cursor: pointer;
+}
+
+@media screen and (max-width: 767px) {
+	nav .badge {
+		top: -46px;
+	}
 }
 
 nav i {

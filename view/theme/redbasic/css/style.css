@@ -2001,11 +2001,6 @@ blockquote {
 	border-radius: $radiuspx;
 }
 
-nav .badge {
-	padding: 5px 6px;
-	border-radius: 9px;
-}
-
 nav .badge:hover {
 	background-color: #999;
 }
