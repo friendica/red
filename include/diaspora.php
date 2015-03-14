@@ -845,8 +845,9 @@ function diaspora_post($importer,$xml,$msg) {
 	// Look for tags and linkify them
 	$results = linkify_tags(get_app(), $body, $importer['channel_id']);
 
+	$datarray['term'] = array();
+
 	if($results) {
-		$datarray['term'] = array();
 		foreach($results as $result) {
 			$success = $result['success'];
 			if($success['replaced']) {
@@ -860,6 +861,37 @@ function diaspora_post($importer,$xml,$msg) {
 			}
 		}
 	}
+
+	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $mtch[2],
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+	$cnt = preg_match_all('/@\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			// don't include plustags in the term
+			$term = ((substr($mtch[2],-1,1) === '+') ? substr($mtch[2],0,-1) : $mtch[2]);
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $term,
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+
+
 
 	$plink = service_plink($contact,$guid);
 
@@ -1032,8 +1064,9 @@ function diaspora_reshare($importer,$xml,$msg) {
 	// Look for tags and linkify them
 	$results = linkify_tags(get_app(), $body, $importer['channel_id']);
 
+	$datarray['term'] = array();
+
 	if($results) {
-		$datarray['term'] = array();
 		foreach($results as $result) {
 			$success = $result['success'];
 			if($success['replaced']) {
@@ -1047,6 +1080,38 @@ function diaspora_reshare($importer,$xml,$msg) {
 			}
 		}
 	}
+
+	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $mtch[2],
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+	$cnt = preg_match_all('/@\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			// don't include plustags in the term
+			$term = ((substr($mtch[2],-1,1) === '+') ? substr($mtch[2],0,-1) : $mtch[2]);
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $term,
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+
+
+
 
 	$newbody = "[share author='" . urlencode($orig_author_name) 
 		. "' profile='" . $orig_author_link 
@@ -1334,8 +1399,9 @@ function diaspora_comment($importer,$xml,$msg) {
 	// Look for tags and linkify them
 	$results = linkify_tags(get_app(), $body, $importer['channel_id']);
 
+	$datarray['term'] = array();
+
 	if($results) {
-		$datarray['term'] = array();
 		foreach($results as $result) {
 			$success = $result['success'];
 			if($success['replaced']) {
@@ -1347,6 +1413,34 @@ function diaspora_comment($importer,$xml,$msg) {
 					'url'   => $success['url']
 				);
 			}
+		}
+	}
+
+	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $mtch[2],
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+	$cnt = preg_match_all('/@\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			// don't include plustags in the term
+			$term = ((substr($mtch[2],-1,1) === '+') ? substr($mtch[2],0,-1) : $mtch[2]);
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $term,
+				'url'   => $mtch[1]
+			);
 		}
 	}
 
