@@ -233,9 +233,9 @@ function setup_content(&$a) {
 
 			check_htconfig($checks);
 
-			check_smarty3($checks);
-
 			check_store($checks);
+
+			check_smarty3($checks);
 
 			check_keys($checks);
 			

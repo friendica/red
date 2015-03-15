@@ -154,8 +154,8 @@ website.
         If not, edit htconfig.php and change system settings. Rename 
     to .htconfig.php
 	-  Database is populated.
-        If not, import the contents of "database.sql" with phpmyadmin 
-        or mysql command line
+        If not, import the contents of "install/schema_xxxxx.sql" with phpmyadmin 
+        or mysql command line (replace 'xxxxx' with your DB type).
 
 7. At this point visit your website again, and register your personal account. 
 Registration errors should all be recoverable automatically. 
