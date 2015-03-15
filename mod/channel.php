@@ -36,6 +36,11 @@ function channel_init(&$a) {
 
 	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
 
+
+// Not yet ready for prime time
+//	$a->page['htmlhead'] .= '<link rel="openid.server" href="' . $a->get_baseurl() . '/id/' . $which .'?f=" />' . "\r\n" ;
+//	$a->page['htmlhead'] .= '<link rel="openid.delegate" href="' . $a->get_baseurl() . '/id/' . $which .'" />' . "\r\n" ;
+
 	// Run profile_load() here to make sure the theme is set before
 	// we start loading content
 

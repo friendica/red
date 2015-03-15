@@ -2,45 +2,21 @@
 
 function id_init(&$a) {
 
-logger('id: ' . print_r($_REQUEST,true));
+	logger('id: ' . print_r($_REQUEST,true));
 
-/**
- * This example shows several things:
- * - How a setup interface should look like.
- * - How to use a mysql table for authentication
- * - How to store associations in mysql table, instead of php sessions.
- * - How to store realm authorizations.
- * - How to send AX/SREG parameters.
- * For the example to work, you need to create the necessary tables:
-CREATE TABLE Users (
-    id INT NOT NULL auto_increment PRIMARY KEY,
-    login VARCHAR(32) NOT NULL,
-    password CHAR(40) NOT NULL,
-    firstName VARCHAR(32) NOT NULL,
-    lastName VARCHAR(32) NOT NULL
-);
 
-CREATE TABLE AllowedSites (
-    user INT NOT NULL,
-    realm TEXT NOT NULL,
-    attributes TEXT NOT NULL,
-    INDEX(user)
-);
+	if(argc() > 1)
+		$which = argv(1);
+	else {
+		$a->error = 404;
+		return;
+	}
 
-CREATE TABLE Associations (
-    id INT NOT NULL PRIMARY KEY,
-    data TEXT NOT NULL
-);
- *
- * This is only an example. Don't use it in your code as-is.
- * It has several security flaws, which you shouldn't copy (like storing plaintext login and password in forms).
- *
- * This setup could be very easily flooded with many associations, 
- * since non-private ones aren't automatically deleted.
- * You could prevent this by storing a date of association and removing old ones,
- * or by setting $this->dh = false;
- * However, the latter one would disable stateful mode, unless connecting via HTTPS.
- */
+	$profile = '';
+	$channel = $a->get_channel();
+	profile_load($a,$which,$profile);
+
+
 require 'library/openid/provider/provider.php';
 
 
