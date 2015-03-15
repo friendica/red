@@ -1,12 +1,16 @@
+/**
+ * JavaScript used by mod/photos
+ */
 
-var ispublic = aStr['everybody'];
+// is this variable used anywhere?
+var ispublic = aStr.everybody;
 
 $(document).ready(function() {
-	$(document).ready(function() { 
+	$(document).ready(function() {
 		$("#photo-edit-newtag").contact_autocomplete(baseurl + '/acl', 'p', false, function(data) {
 			$("#photo-edit-newtag").val('@' + data.name);
 		});
-	}); 
+	});
 
 	$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
 		var selstr;
@@ -15,10 +19,9 @@ $(document).ready(function() {
 			$('#jot-perms-icon').removeClass('icon-unlock').addClass('icon-lock');
 			$('#jot-public').hide();
 		});
-		if(selstr == null) { 
+		if(selstr === null) {
 			$('#jot-perms-icon').removeClass('icon-lock').addClass('icon-unlock');
 			$('#jot-public').show();
 		}
-
 	}).trigger('change');
 });
