@@ -1590,6 +1590,15 @@ text-decoration: none;
     background-color: $admintable_hoverbgcol;
 }
 
+table {
+	border-spacing: 2px;
+	max-width: 100%;
+}
+
+th,td {
+	padding: 3px;
+}
+
 /* message */
 
 img.mail-list-sender-photo {
