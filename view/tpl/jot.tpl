@@ -57,23 +57,14 @@
 				</div>
 				{{if $visitor}}
 				<div class="btn-group hidden-xs">
-					{{if $writephoto}}
-					<button id="wall-image-upload" class="btn btn-default btn-sm" title="{{$upload}}" >
-						<i class="icon-camera jot-icons"></i>
-					</button>
-					{{/if}}
+					{{if $writefiles}}
 					<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
 						<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
 					</button>
+					{{/if}}
 					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
 						<i id="profile-link" class="icon-link jot-icons"></i>
 					</button>
-					<!--button id="profile-video-wrapper" class="btn btn-default btn-sm" title="{{$video}}" onclick="jotVideoURL();return false;">
-						<i id="profile-video" class="icon-facetime-video jot-icons"></i>
-					</button>
-					<button id="profile-audio-wrapper" class="btn btn-default btn-sm" title="{{$audio}}" onclick="jotAudioURL();return false;">
-						<i id="profile-audio" class="icon-volume-up jot-icons"></i>
-					</button -->
 				</div>
 				<div class="btn-group hidden-xs hidden-sm">
 					<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
@@ -111,8 +102,7 @@
 						<li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li>
 						{{if $visitor}}
 						<li class="divider visible-xs"></li>
-						{{if $writephoto}}<li class="visible-xs"><a id="wall-image-upload-sub" href="#" ><i class="icon-camera"></i>&nbsp;{{$upload}}</a></li>{{/if}}
-						<li class="visible-xs"><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li>
+						{{if $writefiles}}<li class="visible-xs"><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li>{{/if}}
 						<li class="visible-xs"><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>
 						<!--li class="visible-xs"><a href="#" onclick="jotVideoURL(); return false;"><i class="icon-facetime-video"></i>&nbsp;{{$video}}</a></li-->
 						<!--li class="visible-xs"><a href="#" onclick="jotAudioURL(); return false;"><i class="icon-volume-up"></i>&nbsp;{{$audio}}</a></li-->
