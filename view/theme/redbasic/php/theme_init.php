@@ -9,7 +9,7 @@ head_add_css('library/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.c
 require_once('view/php/theme_init.php');
 
 head_add_js('library/bootstrap/js/bootstrap.min.js');
-head_add_js('library/bootstrap/js/bootbox.min.js');
+head_add_js('library/bootbox/bootbox.min.js');
 head_add_js('library/datetimepicker/jquery.datetimepicker.js');
 //head_add_js('library/colorpicker/js/colorpicker.js');
 head_add_js('library/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js');
