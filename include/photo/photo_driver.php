@@ -241,9 +241,9 @@ abstract class photo_driver {
 		if((! function_exists('exif_read_data')) || ($this->getType() !== 'image/jpeg'))
 			return;
 
-		$exif = @exif_read_data($filename);
+		$exif = @exif_read_data($filename,null,true);
 		if($exif) {
-			$ort = $exif['Orientation'];
+			$ort = $exif['IFD0']['Orientation'];
 
 			switch($ort)
 			{
@@ -280,7 +280,14 @@ abstract class photo_driver {
 					$this->rotate(90);
 					break;
 			}
+
+			//			logger('exif: ' . print_r($exif,true));
+			return $exif;
+
 		}
+		
+		return false;
+
 	}
 
 
