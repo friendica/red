@@ -1,7 +1,6 @@
 <?php
 
 head_add_css('library/font_awesome/css/font-awesome.min.css');
-head_add_css('library/bootstrap/css/bootstrap-theme.min.css');
 head_add_css('library/bootstrap/css/bootstrap.min.css'); 
 head_add_css('view/css/bootstrap-red.css');
 head_add_css('library/datetimepicker/jquery.datetimepicker.css');
