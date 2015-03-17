@@ -7,10 +7,15 @@
 			{{if $tools}}
 			<a class="btn btn-default btn-xs" title="{{$tools.profile.1}}" href="{{$tools.profile.0}}"><i class="icon-user"></i></a>
 			{{/if}}
+			{{if $map}}
+			<div class="btn-group btn-group">
+				<i class="icon-globe btn btn-default btn-xs" title="{{$map_text}}" onclick="openClose('photo-map');"></i>
+			</div>
+			{{/if}}
 
 			<div class="btn-group btn-group dropdown">
 				{{if $edit}}
-				<i class="icon-pencil btn btn-default btn-xs" title="{{$edit.edit}}" onclick="openClose('photo-edit');"></i>
+				<i class="icon-pencil btn btn-default btn-xs" title="{{$edit.edit}}" onclick="openClose('photo-edit'); $('#map-frame').attr('src',function(i,val) { return val;});"></i>
 				{{/if}}
 				{{if $lock}}
 				<i id="lockview" class="icon-lock btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" title="{{$lock}}" onclick="lockview(event,{{$id}});" ></i><ul id="panel-{{$id}}" class="lockview-panel dropdown-menu"></ul>
@@ -30,6 +35,9 @@
 
 		<div class="clear"></div>
 
+	</div>
+	<div id="photo-map">
+	{{$map}}
 	</div>
 	<div id="photo-edit" class="section-content-tools-wrapper">
 		<form action="photos/{{$edit.nickname}}/{{$edit.resource_id}}" method="post" id="photo_edit_form">

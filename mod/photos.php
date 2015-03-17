@@ -843,6 +843,8 @@ function photos_content(&$a) {
 			dbesc($datum)
 		);
 
+		$map = null;
+
 		if($linked_items) {
 
 			xchan_query($linked_items);
@@ -881,6 +883,10 @@ function photos_content(&$a) {
 					intval($link_item['parent']),
 					intval(local_channel())
 				);
+			}
+
+			if($link_item['coord']) {
+				$map = generate_map($link_item['coord']);
 			}
 		}
 
@@ -1115,6 +1121,8 @@ function photos_content(&$a) {
 			'$tags' => $tags,
 			'responses' => $responses,
 			'$edit' => $edit,	
+			'$map' => $map,
+			'$map_text' => t('Map'),
 			'$likebuttons' => $likebuttons,
 			'$like' => $like_e,
 			'$dislike' => $dislike_e,
