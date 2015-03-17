@@ -1,5 +1,37 @@
 <?php
 
+	require 'library/openid/provider/provider.php';
+
+
+
+	$attrMap = array(
+        'namePerson/first'       => t('First Name'),
+        'namePerson/last'        => t('Last Name'),
+        'namePerson/friendly'    => t('Nickname'),
+		'namePerson'             => t('Full Name'),
+		'contact/internet/email' => t('Email'),
+		'contact/email'          => t('Email'),
+		'media/image/aspect11'   => t('Profile Photo'),
+		'media/image'            => t('Profile Photo'),
+		'media/image/default'    => t('Profile Photo'),
+		'media/image/16x16'      => t('Profile Photo 16px'),
+		'media/image/32x32'      => t('Profile Photo 32px'),
+		'media/image/48x48'      => t('Profile Photo 48px'),
+		'media/image/64x64'      => t('Profile Photo 64px'),
+		'media/image/80x80'      => t('Profile Photo 80px'),
+		'media/image/128x128'    => t('Profile Photo 128px'),
+		'timezone'               => t('Timezone'),
+		'contact/web/default'    => t('Homepage URL'),
+		'language/pref'          => t('Language'),
+		'birthDate/birthYear'    => t('Birth Year'),
+		'birthDate/birthMonth'   => t('Birth Month'),
+		'birthDate/birthday'     => t('Birth Day'),
+		'birthDate'              => t('Birthdate'),
+		'gender'                 => t('Gender'),
+	);
+
+
+
 function id_init(&$a) {
 
 	logger('id: ' . print_r($_REQUEST,true));
@@ -17,11 +49,14 @@ function id_init(&$a) {
 	profile_load($a,$which,$profile);
 
 
-require 'library/openid/provider/provider.php';
+
+	$op = new MysqlProvider;
+	$op->server();
+
+}
 
 
-function getUserData($handle=null)
-{
+function getUserData($handle=null) {
 	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		get_app()->page['content'] =  login();
@@ -54,9 +89,6 @@ function getUserData($handle=null)
 		intval($r[0]['channel_account_id'])
 	);
 
-
-
-
 	$gender = '';
 	if($p[0]['gender'] == t('Male'))
 		$gender = 'M';
@@ -85,99 +117,42 @@ function getUserData($handle=null)
 	return $r[0];
 
 /*
-    if(isset($_POST['login'],$_POST['password'])) {
-        $login = mysql_real_escape_string($_POST['login']);
-        $password = sha1($_POST['password']);
-        $q = mysql_query("SELECT * FROM Users WHERE login = '$login' AND password = '$password'");
-        if($data = mysql_fetch_assoc($q)) {
-            return $data;
-        }
-        if($handle) {
-            echo 'Wrong login/password.';
-        }
-    }
-    if($handle) {
-    ?>
-    <form action="" method="post">
-    <input type="hidden" name="openid.assoc_handle" value="<?php echo $handle?>">
-    Login: <input type="text" name="login"><br>
-    Password: <input type="password" name="password"><br>
-    <button>Submit</button>
-    </form>
-    <?php
-    die();
-    }
+*    if(isset($_POST['login'],$_POST['password'])) {
+*        $login = mysql_real_escape_string($_POST['login']);
+*        $password = sha1($_POST['password']);
+*        $q = mysql_query("SELECT * FROM Users WHERE login = '$login' AND password = '$password'");
+*        if($data = mysql_fetch_assoc($q)) {
+*            return $data;
+*        }
+*        if($handle) {
+*            echo 'Wrong login/password.';
+*        }
+*    }
+*    if($handle) {
+*    ?>
+*    <form action="" method="post">
+*    <input type="hidden" name="openid.assoc_handle" value="<?php echo $handle?>">
+*    Login: <input type="text" name="login"><br>
+*    Password: <input type="password" name="password"><br>
+*    <button>Submit</button>
+*    </form>
+*    <?php
+*    die();
+*    }
 */
 
 }
 
 
-function translate_regs() {
-
-	// This exists to get around scoping rules
-
-	$attrMap = array(
-        'namePerson/first'       => t('First Name'),
-        'namePerson/last'        => t('Last Name'),
-        'namePerson/friendly'    => t('Nickname'),
-		'namePerson'             => t('Full Name'),
-		'contact/internet/email' => t('Email'),
-		'contact/email'          => t('Email'),
-		'media/image/aspect11'   => t('Profile Photo'),
-		'media/image'            => t('Profile Photo'),
-		'media/image/default'    => t('Profile Photo'),
-		'media/image/16x16'      => t('Profile Photo 16px'),
-		'media/image/32x32'      => t('Profile Photo 32px'),
-		'media/image/48x48'      => t('Profile Photo 48px'),
-		'media/image/64x64'      => t('Profile Photo 64px'),
-		'media/image/80x80'      => t('Profile Photo 80px'),
-		'media/image/128x128'    => t('Profile Photo 128px'),
-		'timezone'               => t('Timezone'),
-		'contact/web/default'    => t('Homepage URL'),
-		'language/pref'          => t('Language'),
-		'birthDate/birthYear'    => t('Birth Year'),
-		'birthDate/birthMonth'   => t('Birth Month'),
-		'birthDate/birthday'     => t('Birth Day'),
-		'birthDate'              => t('Birthdate'),
-		'gender'                 => t('Gender'),
-	);
-   
-	return $attrMap;
-}
 
 
 class MysqlProvider extends LightOpenIDProvider
 {
 
+
 	// See http://openid.net/specs/openid-attribute-properties-list-1_0-01.html
 	// This list contains a few variations of these attributes to maintain 
 	// compatibility with legacy clients
-
-	private $attrMap = array(
-        'namePerson/first'       => 'First Name',
-        'namePerson/last'        => 'Last Name',
-        'namePerson/friendly'    => 'Nickname',
-		'namePerson'             => 'Full Name',
-		'contact/internet/email' => 'Email',
-		'contact/email'          => 'Email',
-		'media/image/aspect11'   => 'Profile Photo',
-		'media/image'            => 'Profile Photo',
-		'media/image/default'    => 'Profile Photo',
-		'media/image/16x16'      => 'Profile Photo 16px',
-		'media/image/32x32'      => 'Profile Photo 32px',
-		'media/image/48x48'      => 'Profile Photo 48px',
-		'media/image/64x64'      => 'Profile Photo 64px',
-		'media/image/80x80'      => 'Profile Photo 80px',
-		'media/image/128x128'    => 'Profile Photo 128px',
-		'timezone'               => 'Timezone',
-		'contact/web/default'    => 'Homepage URL',
-		'language/pref'          => 'Language',
-		'birthDate/birthYear'    => 'Birth Year',
-		'birthDate/birthMonth'   => 'Birth Month',
-		'birthDate/birthday'     => 'Birth Day',
-		'birthDate'              => 'Birthdate',
-		'gender'                 => 'Gender',
-	);
 
     private $attrFieldMap = array(
         'namePerson/first'       => 'firstName',
@@ -208,6 +183,7 @@ class MysqlProvider extends LightOpenIDProvider
   
     function setup($identity, $realm, $assoc_handle, $attributes)
     {
+		global $attrMap;
 
 //		logger('identity: ' . $identity);
 //		logger('realm: ' . $realm);
@@ -215,6 +191,9 @@ class MysqlProvider extends LightOpenIDProvider
 //		logger('attributes: ' . print_r($attributes,true));
 
         $data = getUserData($assoc_handle);
+
+
+// FIXME this needs to be a template with localised strings
 
         $o .= '<form action="" method="post">'
            . '<input type="hidden" name="openid.assoc_handle" value="' . $assoc_handle . '">'
@@ -269,10 +248,6 @@ class MysqlProvider extends LightOpenIDProvider
             return false;
         }
 
-
-		logger('checkid: checkpoint1');
-
-
 		$q = get_pconfig(local_channel(),'openid',$realm);
 
 		$attrs = array();
@@ -300,9 +275,9 @@ class MysqlProvider extends LightOpenIDProvider
     
     function assoc_handle()
     {
-		
+	logger('assoc_handle');
 		$channel = get_app()->get_channel();
-		return z_root() . '/id/' . $channel['channel_address']; 
+		return z_root() . '/channel/' . $channel['channel_address']; 
 
     }
     
@@ -312,7 +287,6 @@ class MysqlProvider extends LightOpenIDProvider
 		$channel = channelx_by_nick(basename($handle));
 		if($channel)
 			set_pconfig($channel['channel_id'],'openid','associate',$data);
-
     }
     
     function getAssoc($handle)
@@ -333,10 +307,6 @@ class MysqlProvider extends LightOpenIDProvider
 			return del_pconfig($channel['channel_id'],'openid','associate');
     }
     
-}
-$op = new MysqlProvider;
-$op->server();
-
 }
 
 
