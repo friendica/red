@@ -17,6 +17,8 @@
 
 	var slideTimer = null;
 	function networkRefresh() {
+		$("#profile-jot-text-loading").show();
+
 		if((document.readyState !== "complete") || (slideTimer !== null))
 			return;
 		if((bParam_cmin == old_cmin) && (bParam_cmax == old_cmax))
