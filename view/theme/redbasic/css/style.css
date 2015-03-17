@@ -1948,6 +1948,15 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	text-align: center;
 }
 
+.section-content-warning-wrapper {
+	padding: 21px 10px;
+	color: #8a6d3b;
+	background-color: #fcf8e3;
+	margin-bottom: 3px;
+	border-radius: $radiuspx;
+	text-align: center;
+}
+
 .section-content-danger-wrapper {
 	padding: 21px 10px;
 	color: #a94442;
