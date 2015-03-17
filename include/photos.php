@@ -208,7 +208,7 @@ function photo_upload($channel, $observer, $args) {
 	$lat = $lon = null;
 
 	if($exif && $exif['GPS']) {
-		if(get_pconfig($channel_id,'system','allow_photo_location')) {
+		if(feature_enabled($channel_id,'photo_location')) {
 			$lat = getGps($exif['GPS']['GPSLatitude'], $exif['GPSLatitudeRef']);
 			$lon = getGps($exif['GPS']['GPSLongitude'], $exif['GPSLongitudeRef']);
 		}
