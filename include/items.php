@@ -1945,7 +1945,7 @@ function item_store($arr,$allow_exec = false) {
 
 
 	$arr['title'] = ((array_key_exists('title',$arr) && strlen($arr['title']))  ? trim($arr['title']) : '');
-	$arr['body']  = ((array_key_exists('body',$arr) && strlen($arr['body']))    ? $arr['body']  : '');
+	$arr['body']  = ((array_key_exists('body',$arr) && strlen($arr['body']))    ? trim($arr['body'])  : '');
 
 	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : '');
 	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
@@ -2460,7 +2460,7 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['item_private']  = ((array_key_exists('item_private',$arr)) ? intval($arr['item_private']) : $orig[0]['item_private']);
 
 	$arr['title'] = ((array_key_exists('title',$arr) && strlen($arr['title']))  ? trim($arr['title']) : '');
-	$arr['body']  = ((array_key_exists('body',$arr) && strlen($arr['body']))    ? $arr['body']  : '');
+	$arr['body']  = ((array_key_exists('body',$arr) && strlen($arr['body']))    ? trim($arr['body'])  : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : $orig[0]['attach']);
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : $orig[0]['app']);
 //	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : $orig[0]['item_restrict'] );

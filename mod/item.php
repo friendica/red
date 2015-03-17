@@ -385,7 +385,7 @@ function item_post(&$a) {
 		$coord             = notags(trim($_REQUEST['coord']));
 		$verb              = notags(trim($_REQUEST['verb']));
 		$title             = escape_tags(trim($_REQUEST['title']));
-		$body              = $_REQUEST['body'];
+		$body              = trim($_REQUEST['body']);
 		$postopts          = '';
 
 		$private = ( 
