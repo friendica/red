@@ -304,7 +304,12 @@ if(! $a->install) {
 	if(file_exists('view/theme/redbasic/css/style.css')) {
 		$x = file_get_contents('view/theme/redbasic/css/style.css');
 
-$body_width = (231 + $converse_width) . 'px'; // aside is 231px + converse width; have to find a way for calculation with 'px', cannot handle '%'
+
+// left aside is 231px + converse width
+$main_width = (231 + $converse_width);
+
+// prevent main_width smaller than 768px
+$main_width = (($main_width < 768) ? 768 : $main_width) . 'px';
 
 $options = array (
 '$nav_bg' => $nav_bg,
@@ -412,7 +417,7 @@ $options = array (
 '$pmenu_reply' => $pmenu_reply,
 '$wwtop' => $wwtop,
 '$comment_indent' => $comment_indent,
-'$body_width' => $body_width,
+'$main_width' => $main_width,
 '$comment_padding' => $comment_padding,
 '$admintable_hoverbgcol' => $admintable_hoverbgcol,
 '$dirpopup_txtcol' => $dirpopup_txtcol,

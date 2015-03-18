@@ -28,9 +28,10 @@
 	{{include file="field_input.tpl" field=$shadow}}
 	{{include file="field_input.tpl" field=$top_photo}}
 	{{include file="field_input.tpl" field=$reply_photo}}
-	{{include file="field_input.tpl" field=$converse_width}}
-	{{include file="field_checkbox.tpl" field=$converse_center}}
+
 {{/if}}
+{{include file="field_input.tpl" field=$converse_width}}
+{{include file="field_checkbox.tpl" field=$converse_center}}
 {{include file="field_checkbox.tpl" field=$narrow_navbar}}
 {{if $expert}}
 <script>
