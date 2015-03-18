@@ -24,6 +24,10 @@ body {
 	height: 100%;
 }
 
+main {
+	max-width: $main_width;
+}
+
 h1, .h1, h2, .h2 {
 	font-size: 1.667em;
 }
@@ -301,7 +305,6 @@ footer {
 }
 
 #profile-edit-links {
-	max-width: $converse_width;
 	padding-top: 15px;
 	padding-bottom: 15px;
 }
@@ -1608,10 +1611,6 @@ img.mail-list-sender-photo {
 
 /* jot */
 
-#profile-jot-wrapper {
-	max-width: $converse_width;
-}
-
 .jothidden {
 	font-weight: bold;
 	border-radius: $radiuspx;
@@ -1678,10 +1677,6 @@ img.mail-list-sender-photo {
 .thread-wrapper .wall-item-comment-wrapper,
 .wall-item-content-wrapper.comment {
 	margin-left: $comment_indent;
-}
-
-.thread-wrapper.toplevel_item {
-	max-width: $converse_width;
 }
 
 .wall-item-content-wrapper {
