@@ -67,7 +67,7 @@ use SSL, your webserver must not listen on port 443 at all.
 	Example config scripts are available for these platforms in doc/install.
 	Apache and nginx have the most support. 
 
-    - PHP 5.3+. 5.4 or 5.5 is highly recommended. The later the better. 
+    - PHP 5.4 or later. The later the better. 
 
     - PHP *command line* access with register_argc_argv set to true in the 
     php.ini file - and with no hosting provider restrictions on the use of 
