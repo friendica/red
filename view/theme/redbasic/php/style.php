@@ -244,7 +244,7 @@ if(! $a->install) {
 	if(! $active_colour)
 		$active_colour = "#fff";
 	if (! $converse_width) {
-		$converse_width = "1024px";
+		$converse_width = "1024";
 	}
 	if (! $acl_bgcolour)
 		$acl_bgcolour = "#fff";
