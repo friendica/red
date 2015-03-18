@@ -125,7 +125,7 @@ if(feature_enabled(local_channel(),'expert'))
 		'$font_colour' => array('redbasic_font_colour', t('Set font-color for posts and comments'), $arr['font_colour']),
 		'$radius' => array('redbasic_radius', t('Set radius of corners'), $arr['radius']),
 		'$shadow' => array('redbasic_shadow', t('Set shadow depth of photos'), $arr['shadow']),
-		'$converse_width' => array('redbasic_converse_width',t('Set maximum width of content region'),$arr['converse_width'], t('Example: 800px')),
+		'$converse_width' => array('redbasic_converse_width',t('Set maximum width of content region in pixel'),$arr['converse_width'], t('Leave empty for default width')),
 		'$converse_center' => array('redbasic_converse_center',t('Center page content'),$arr['converse_center'], '', array(t('No'),t('Yes'))),
 		'$nav_min_opacity' => array('redbasic_nav_min_opacity',t('Set minimum opacity of nav bar - to hide it'),$arr['nav_min_opacity']),
 		'$top_photo' => array('redbasic_top_photo', t('Set size of conversation author photo'), $arr['top_photo']),

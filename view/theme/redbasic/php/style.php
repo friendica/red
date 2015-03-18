@@ -306,7 +306,7 @@ if(! $a->install) {
 
 
 // left aside is 231px + converse width
-$main_width = (231 + $converse_width);
+$main_width = (231 + intval($converse_width));
 
 // prevent main_width smaller than 768px
 $main_width = (($main_width < 768) ? 768 : $main_width) . 'px';
