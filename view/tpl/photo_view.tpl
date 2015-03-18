@@ -9,13 +9,13 @@
 			{{/if}}
 			{{if $map}}
 			<div class="btn-group btn-group">
-				<i class="icon-globe btn btn-default btn-xs" title="{{$map_text}}" onclick="openClose('photo-map');"></i>
+				<i class="icon-globe btn btn-default btn-xs" title="{{$map_text}}" onclick="var pos = $('#photo-map').css('position'); if(pos === 'absolute') { $('#photo-map').css( { position: 'relative', left: 'auto', top: 'auto' }); } else { $('#photo-map').css( { position: 'absolute', left: '-9999px', top: '-9999px' }); }" ></i>
 			</div>
 			{{/if}}
 
 			<div class="btn-group btn-group dropdown">
 				{{if $edit}}
-				<i class="icon-pencil btn btn-default btn-xs" title="{{$edit.edit}}" onclick="openClose('photo-edit'); $('#map-frame').attr('src',function(i,val) { return val;});"></i>
+				<i class="icon-pencil btn btn-default btn-xs" title="{{$edit.edit}}" onclick="openClose('photo-edit');"></i>
 				{{/if}}
 				{{if $lock}}
 				<i id="lockview" class="icon-lock btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" title="{{$lock}}" onclick="lockview(event,{{$id}});" ></i><ul id="panel-{{$id}}" class="lockview-panel dropdown-menu"></ul>

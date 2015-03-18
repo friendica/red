@@ -19,7 +19,6 @@
 }
 
 #photo-edit,
-#photo-map,
 #photo-album-edit-wrapper,
 #photo-upload-form {
 	display: none;
@@ -28,4 +27,10 @@
 #photos-upload-choose {
 	padding: 4px;
 	width: 100%;
+}
+
+#photo-map {
+	position: absolute;
+	left: -9999px;
+	top: -9999px;
 }
