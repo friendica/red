@@ -2536,6 +2536,9 @@ function import_site($arr,$pubkey) {
 	if($arr['directory_mode'] == 'standalone')
 		$site_directory = DIRECTORY_MODE_STANDALONE;
 
+
+
+
 	$register_policy = 0;
 	if($arr['register_policy'] == 'closed')
 		$register_policy = REGISTER_CLOSED;
@@ -2572,6 +2575,17 @@ function import_site($arr,$pubkey) {
 	$sellpage = htmlspecialchars($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
 	$site_location = htmlspecialchars($arr['location'],ENT_COMPAT,'UTF-8',false);
 	$site_realm = htmlspecialchars($arr['realm'],ENT_COMPAT,'UTF-8',false);
+
+	// You can have one and only one primary directory per realm. 
+	// Downgrade any others claiming to be primary. As they have
+	// flubbed up this badly already, don't let them be directory servers at all. 
+
+	if(($site_directory === DIRECTORY_MODE_PRIMARY) 
+		&& ($site_realm === get_directory_realm()) 
+		&& ($arr['url'] != get_directory_primary())) {
+		$site_directory = DIRECTORY_MODE_NORMAL;
+	} 
+
 
 	if($exists) {
 		if(($siterecord['site_flags'] != $site_directory)

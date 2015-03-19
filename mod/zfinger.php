@@ -239,11 +239,6 @@ function zfinger_init(&$a) {
 	if(($dirmode === false) || ($dirmode == DIRECTORY_MODE_NORMAL))
 		$ret['site']['directory_mode'] = 'normal';
 
-	// downgrade mis-configured primaries
-
-	if($dirmode == DIRECTORY_MODE_PRIMARY && z_root() != get_directory_primary())
-		$dirmode = DIRECTORY_MODE_SECONDARY;
-
 	if($dirmode == DIRECTORY_MODE_PRIMARY)
 		$ret['site']['directory_mode'] = 'primary';
 	elseif($dirmode == DIRECTORY_MODE_SECONDARY)

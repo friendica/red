@@ -78,11 +78,11 @@ function regdir_init(&$a) {
 	}
 	else {
 
-		// We can put this in the sql without the condition after 31 march 2015 assuming
+		// We can put this in the sql without the condition after 31 april 2015 assuming
 		// most directory servers will have updated by then
 		// This just makes sure it happens if I forget
 
-		$sql_extra = ((datetime_convert() > datetime_convert('UTC','UTC','2015-03-31')) ? ' and site_valid = 1 ' : '' );
+		$sql_extra = ((datetime_convert() > datetime_convert('UTC','UTC','2015-04-31')) ? ' and site_valid = 1 ' : '' );
 		if($dirmode == DIRECTORY_MODE_STANDALONE) {
 			$r = array(array('site_url' => z_root()));
 		}
