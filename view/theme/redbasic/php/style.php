@@ -36,7 +36,6 @@ if(! $a->install) {
 		$converse_width=get_pconfig($uid,"redbasic","converse_width");
 		$converse_center=get_pconfig($uid,"redbasic","converse_center");
 		$nav_min_opacity=get_pconfig($uid,'redbasic','nav_min_opacity');
-		$sloppy_photos=get_pconfig($uid,'redbasic','sloppy_photos');
 		$top_photo=get_pconfig($uid,'redbasic','top_photo');
 		$reply_photo=get_pconfig($uid,'redbasic','reply_photo');
 
@@ -262,34 +261,7 @@ if(! $a->install) {
 		$reply_photo = '32px';
 	if(! $infomess_bgcolour)
 		$infomess_bgcolour = "#F0F0F0";
-	if(! $alert_txtcolour)
-      $alert_txtcolour = "#31708F";	
-	if(! $alert_bgcolour)
-      $alert_bgcolour = "#D9EDF7";
-   if(! $alert_bordercol)
-      $alert_bordercol = "#BCE8F1";
-   if(! $alert_gradientcol)
-      $alert_gradientcol = "#B9DEF0";		
-	if(! $advperm_bgcolour)
-      $advperm_bgcolour = "#F5F5F5";
-   if(! $advperm_bordercol)
-      $advperm_bordercol = "#E3E3E3";
-   if(! $advperm_gradientcol)
-      $advperm_gradientcol = "#E8E8E8";
-   if(! $cal_bgcolour)
-		$cal_bgcolour = "#FCF8E3";
-   if(! $chat_txtbgcol)
-		$chat_txtbgcol = "#EEE";
-   if(! $fancybox_bgcolour)
-      $fancybox_bgcolour = "#FFFFFF";
-	if (!$admintable_hoverbgcol)
-		$admintable_hoverbgcol="#BBC7D7";
-	if (!$dirpopup_txtcol)
-		$dirpopup_txtcol="";
-	if (!$dirpopup_linkcol)
-		$dirpopup_linkcol="";
-	if (!$abook_changebg)
-		$abook_changebg="orange";
+
 
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
@@ -403,39 +375,19 @@ $options = array (
 '$top_photo' => $top_photo,
 '$reply_photo' => $reply_photo,
 '$infomess_bgcolour' => $infomess_bgcolour,
-'$alert_txtcolour' => $alert_txtcolour,
-'$alert_bgcolour' => $alert_bgcolour,
-'$alert_bordercol' => $alert_bordercol,
-'$alert_gradientcol' => $alert_gradientcol,
-'$advperm_bgcolour' => $advperm_bgcolour,
-'$advperm_bordercol' => $advperm_bordercol,
-'$advperm_gradientcol' => $advperm_gradientcol,
-'$cal_bgcolour' => $cal_bgcolour,
-'$chat_txtbgcol' => $chat_txtbgcol,
-'$fancybox_bgcolour' => $fancybox_bgcolour,
 '$pmenu_top' => $pmenu_top,
 '$pmenu_reply' => $pmenu_reply,
-'$wwtop' => $wwtop,
 '$comment_indent' => $comment_indent,
 '$main_width' => $main_width,
-'$comment_padding' => $comment_padding,
-'$admintable_hoverbgcol' => $admintable_hoverbgcol,
-'$dirpopup_txtcol' => $dirpopup_txtcol,
-'$dirpopup_linkcol' => $dirpopup_linkcol,
-'$abook_changebg' => $abook_changebg,
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    
 }
 
-if($sloppy_photos && file_exists('view/theme/redbasic/css/sloppy_photos.css')) {
-	echo file_get_contents('view/theme/redbasic/css/sloppy_photos.css');
-} 
 if($narrow_navbar && file_exists('view/theme/redbasic/css/narrow_navbar.css')) {
 	echo file_get_contents('view/theme/redbasic/css/narrow_navbar.css');
 } 
 if($converse_center && file_exists('view/theme/redbasic/css/converse_center.css')) {
-	$x = file_get_contents('view/theme/redbasic/css/converse_center.css');
 	echo str_replace(array_keys($options), array_values($options), $x);
 }
 

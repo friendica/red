@@ -493,16 +493,8 @@ footer {
 	font-size: 0.7em;
 }
 
-#cboxContent {
-    color: $dirpopup_txtcol;
-}
-
 #colorbox {
 	padding: 5px;
-}
-
-#cboxContent a {
-    color: $dirpopup_linkcol;
 }
 
 .app-name {
@@ -967,12 +959,12 @@ nav .acpopup {
 }
 
 .fc-state-highlight {
-    background: none repeat scroll 0% 0% $cal_bgcolour !important;
+	background: none repeat scroll 0% 0% #FCF8E3 !important;
 }
 
 #colorbox {
-	border: 0px solid $fancybox_bgcolour;
-	background-color: $fancybox_bgcolour;
+	border: 0px solid #fff;
+	background-color: #fff;
 	z-index: 9;
 }
 
@@ -1590,7 +1582,7 @@ text-decoration: none;
 }
 
 #adminpage table tr:hover {
-    background-color: $admintable_hoverbgcol;
+	background-color: #BBC7D7;
 }
 
 table {
@@ -1853,7 +1845,7 @@ img.mail-list-sender-photo {
 }
 
 .abook-pending-contact, .abook-permschange {
-	background: $abook_changebg;
+	background: orange;
 }
 
 .online-now {
@@ -1867,7 +1859,7 @@ img.mail-list-sender-photo {
 
 .chat-item-text {
 	border-radius: $radiuspx;
-	background-color: $chat_txtbgcol;
+	background-color: #eee;
 }
 
 /* nav bootstrap */
@@ -2192,19 +2184,6 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 .btn-default.btn-sm:hover, .btn-default.btn-sm:focus, .btn-default.btn-sm:active .btn-default.btn-sm.active {
     	text-decoration: none;
-}
-
-.alert-info {
-	color: $alert_txtcolour;
-	background-color:$alert_bgcolour;
-	border-color: $alert_bordercol;
-	background-image: linear-gradient(to bottom, $alert_bgcolour 0px, $alert_gradientcol 100%);
-}
-
-.well {
-	background-color: $advperm_bgcolour;
-	border: 1px solid $advperm_bordercol;
-	background-image: linear-gradient(to bottom, $advperm_gradientcol 0px, $advperm_bgcolour 100%);
 }
 
 @media screen and (max-width: 767px) {

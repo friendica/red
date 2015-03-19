@@ -2,7 +2,7 @@
 
 A schema, in a nutshell, is a collection of settings for a bunch of variables to define
 certain elements of a theme.  A schema is loaded as though it were part of config.php
-and has access to all the same information.  Importantly, this means it is identity aware,
+and has access to all the same information. Importantly, this means it is identity aware,
 and can be used to do some interesting things.  One could, for example, restrict options
 by service class, or present different options to different members.
 
@@ -25,8 +25,8 @@ is even simpler:
 Members will not thank you for this, however, so only use it when it is required.
 
 If no personal options are set, and no schema is selected, we will first try to load a schema
-with the file name &quot;default.php&quot;.  This file should never be included with a theme.  If it
-is, merge conflicts will occur as people update their code.  Rather, this should be defined
+with the file name &quot;default.php&quot;.  This file should never be included with a theme. If it
+is, merge conflicts will occur as people update their code. Rather, this should be defined
 by administrators on a site by site basis.
 
 You schema does not need to - and should not - contain all of these values.  Only the values
@@ -66,11 +66,12 @@ theme are as follows:
 	Set the size of shadows shown with inline images.  Accepts a numerical 
 	value.  Note shadows are not applied to smileys.[/li]
 [li] converse_width
-	Set the maximum width of conversations.  Accepts px, or %.[/li]
+	Set the maximum width of the content region in px.[/li]
 [li] nav_min_opacity[/li]
 [li] top_photo[/li]
 [li] reply_photo[/li]
-[li] sloppy_photos
-	Determins whether photos are &quot;sloppy&quot; or aligned.  Set or unset (1 or '')[/li]
+
+If a your_schema_name.css file is found, the content of this file will be attached to the end of style.css.
+This gives the schem developer the possiblity to override any style component.
 
 #include doc/macros/main_footer.bb;

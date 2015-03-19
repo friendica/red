@@ -10,4 +10,44 @@
 	border-bottom: 1px solid #333;
 }
 
+.abook-pending-contact, .abook-permschange {
+	background: #402900;
+}
 
+#cboxContent a {
+	color: #000;
+}
+
+#cboxContent {
+	color: #111;
+}
+
+#adminpage table tr:hover {
+    background-color: #222;
+}
+
+#colorbox {
+	border: 0px solid #1E1E1E;
+	background-color: #1E1E1E;
+}
+
+.chat-item-text {
+	background-color: #222;
+}
+
+.fc-state-highlight {
+    background: none repeat scroll 0% 0% #333 !important;
+}
+
+.well {
+	background-color: #1E1E1E;
+	border: 1px solid #222;
+	background-image: linear-gradient(to bottom, #1E1E1E 0px, #1E1E1E 100%);
+}
+
+.alert-info {
+	color: #CCC;
+	background-color:#333;
+	border-color: #444;
+	background-image: linear-gradient(to bottom, #333 0px, #333 100%);
+}
