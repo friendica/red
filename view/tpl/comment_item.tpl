@@ -49,9 +49,9 @@
 							<!--button class="btn btn-default btn-xs" title="{{$edvideo}}" onclick="insertbbcomment('{{$comment}}','video', {{$id}}); return false;">
 								<i class="icon-facetime-video comment-icon"></i>
 							</button-->
-						<!--/div-->
+						</div>
 						{{if $feature_encrypt}}
-						<!--div class='btn-group'-->
+						<div class='btn-group'>
 							<button class="btn btn-default btn-xs" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#comment-edit-text-' + '{{$id}}',''); return false;">
 								<i class="icon-key comment-icon"></i>
 							</button>
