@@ -184,5 +184,3 @@
 		$dirpopup_txtcol="#fff";
 	if (!$dirpopup_linkcol)
 		$dirpopup_linkcol="#fff";
-	if (!$abook_changebg)
-		$abook_changebg="#fff";

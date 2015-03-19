@@ -184,5 +184,3 @@ if (! $navaside_bghover)
 		$dirpopup_txtcol="#000";
 	if (!$dirpopup_linkcol)
 		$dirpopup_linkcol="#000";
-	if (!$abook_changebg)
-		$abook_changebg="#000";

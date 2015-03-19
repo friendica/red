@@ -10,4 +10,8 @@
 	border-bottom: 1px solid #000;
 }
 
+.abook-pending-contact, .abook-permschange {
+	background: #000;
+}
+
 

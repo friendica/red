@@ -1853,7 +1853,7 @@ img.mail-list-sender-photo {
 }
 
 .abook-pending-contact, .abook-permschange {
-	background: $abook_changebg;
+	background: orange;
 }
 
 .online-now {
