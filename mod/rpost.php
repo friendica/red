@@ -107,6 +107,11 @@ function rpost_content(&$a) {
 //	));
 
 
+	if($_REQUEST['url']) {
+		$x = z_fetch_url(z_root() . '/parse_url?f=&url=' . urlencode($_REQUEST['url']));
+		if($x['success'])
+			$_REQUEST['body'] = $_REQUEST['body'] . $x['body'];
+	}
 
 	$x = array(
 		'is_owner' => true,
