@@ -68,11 +68,13 @@ theme are as follows:
 	Set the size of shadows shown with inline images.  Accepts a numerical 
 	value.  Note shadows are not applied to smileys.
 * converse_width
-	Set the maximum width of conversations.  Accepts px, or %.
+	Set the maximum width of the content region in px.
 * nav_min_opacity
 * top_photo
 * reply_photo
-* sloppy_photos
-	Determins whether photos are "sloppy" or aligned.  Set or unset (1 or '')		
+
+If a your_schema_name.css file is found, the content of this file will be attached to the end of style.css.
+This gives the schem developer the possiblity to override any style component.
+
 
 #include doc/macros/main_footer.bb;
