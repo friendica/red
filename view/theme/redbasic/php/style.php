@@ -388,7 +388,6 @@ if($narrow_navbar && file_exists('view/theme/redbasic/css/narrow_navbar.css')) {
 	echo file_get_contents('view/theme/redbasic/css/narrow_navbar.css');
 } 
 if($converse_center && file_exists('view/theme/redbasic/css/converse_center.css')) {
-	$x = file_get_contents('view/theme/redbasic/css/converse_center.css');
 	echo str_replace(array_keys($options), array_values($options), $x);
 }
 
