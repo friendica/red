@@ -94,21 +94,21 @@ function ratenotif_run($argv, $argc){
 					dbesc($n),
 					dbesc(json_encode($encoded_item))
 				);
-			}
-			$deliver[] = $hash;
 
-			if(count($deliver) >= $deliveries_per_process) {
-				proc_run('php','include/deliver.php',$deliver);
-				$deliver = array();
-				if($interval)
-					@time_sleep_until(microtime(true) + (float) $interval);
-			}
+				$deliver[] = $hash;
 
+				if(count($deliver) >= $deliveries_per_process) {
+					proc_run('php','include/deliver.php',$deliver);
+					$deliver = array();
+					if($interval)
+						@time_sleep_until(microtime(true) + (float) $interval);
+				}
+			}
 
 			// catch any stragglers
 
 			if(count($deliver)) {
-			proc_run('php','include/deliver.php',$deliver);
+				proc_run('php','include/deliver.php',$deliver);
 			}
 		}
 	}
