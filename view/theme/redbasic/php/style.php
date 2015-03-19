@@ -262,32 +262,6 @@ if(! $a->install) {
 		$reply_photo = '32px';
 	if(! $infomess_bgcolour)
 		$infomess_bgcolour = "#F0F0F0";
-	if(! $alert_txtcolour)
-      $alert_txtcolour = "#31708F";	
-	if(! $alert_bgcolour)
-      $alert_bgcolour = "#D9EDF7";
-   if(! $alert_bordercol)
-      $alert_bordercol = "#BCE8F1";
-   if(! $alert_gradientcol)
-      $alert_gradientcol = "#B9DEF0";		
-	if(! $advperm_bgcolour)
-      $advperm_bgcolour = "#F5F5F5";
-   if(! $advperm_bordercol)
-      $advperm_bordercol = "#E3E3E3";
-   if(! $advperm_gradientcol)
-      $advperm_gradientcol = "#E8E8E8";
-   if(! $cal_bgcolour)
-		$cal_bgcolour = "#FCF8E3";
-   if(! $chat_txtbgcol)
-		$chat_txtbgcol = "#EEE";
-   if(! $fancybox_bgcolour)
-      $fancybox_bgcolour = "#FFFFFF";
-	if (!$admintable_hoverbgcol)
-		$admintable_hoverbgcol="#BBC7D7";
-	if (!$dirpopup_txtcol)
-		$dirpopup_txtcol="";
-	if (!$dirpopup_linkcol)
-		$dirpopup_linkcol="";
 
 
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
