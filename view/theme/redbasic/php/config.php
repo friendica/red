@@ -35,7 +35,6 @@ function theme_content(&$a) {
 	$arr['nav_min_opacity']=get_pconfig(local_channel(),"redbasic","nav_min_opacity");
 	$arr['top_photo']=get_pconfig(local_channel(),"redbasic","top_photo");
 	$arr['reply_photo']=get_pconfig(local_channel(),"redbasic","reply_photo");
-	$arr['sloppy_photos']=get_pconfig(local_channel(),"redbasic","sloppy_photos");
 	return redbasic_form($a, $arr);
 }
 
@@ -73,7 +72,6 @@ function theme_post(&$a) {
 		set_pconfig(local_channel(), 'redbasic', 'nav_min_opacity', $_POST['redbasic_nav_min_opacity']);
 		set_pconfig(local_channel(), 'redbasic', 'top_photo', $_POST['redbasic_top_photo']);
 		set_pconfig(local_channel(), 'redbasic', 'reply_photo', $_POST['redbasic_reply_photo']);
-		set_pconfig(local_channel(), 'redbasic', 'sloppy_photos', $_POST['redbasic_sloppy_photos']);
 	}
 }
 
