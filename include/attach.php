@@ -1043,15 +1043,10 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		//send update activity and create a new one
 
 		//updates should be sent to everybody with recursive perms and all eventual former allowed members ($object['allow_cid'] etc.).
-		$o_arr_allow_cid = expand_acl($object['allow_cid']);
-		$o_arr_allow_gid = expand_acl($object['allow_gid']);
-		$o_arr_deny_cid = expand_acl($object['deny_cid']);
-		$o_arr_deny_gid = expand_acl($object['deny_gid']);
-		//merge arrays and remove duplicates
-		$arr_allow_cid = array_unique(array_merge($arr_allow_cid, $o_arr_allow_cid));
-		$arr_allow_gid = array_unique(array_merge($arr_allow_gid, $o_arr_allow_gid));
-		$arr_deny_cid = array_unique(array_merge($arr_deny_cid, $o_arr_deny_cid));
-		$arr_deny_gid = array_unique(array_merge($arr_deny_gid, $o_arr_deny_gid));
+		$u_arr_allow_cid = array_unique(array_merge($arr_allow_cid, expand_acl($object['allow_cid'])));
+		$u_arr_allow_gid = array_unique(array_merge($arr_allow_gid, expand_acl($object['allow_gid'])));
+		$u_arr_deny_cid = array_unique(array_merge($arr_deny_cid, expand_acl($object['deny_cid'])));
+		$u_arr_deny_gid = array_unique(array_merge($arr_deny_gid, expand_acl($object['deny_gid'])));
 
 		$u_mid = item_message_id();
 
@@ -1066,10 +1061,10 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		$arr['author_xchan']  = $poster['xchan_hash'];
 		$arr['owner_xchan']   = $poster['xchan_hash'];
 		$arr['title']         = '';
-		$arr['allow_cid']     = perms2str($arr_allow_cid);
-		$arr['allow_gid']     = perms2str($arr_allow_gid);
-		$arr['deny_cid']      = perms2str($arr_deny_cid);
-		$arr['deny_gid']      = perms2str($arr_deny_gid);
+		$arr['allow_cid']     = perms2str($u_arr_allow_cid);
+		$arr['allow_gid']     = perms2str($u_arr_allow_gid);
+		$arr['deny_cid']      = perms2str($u_arr_deny_cid);
+		$arr['deny_gid']      = perms2str($u_arr_deny_gid);
 		$arr['item_restrict']  = ITEM_HIDDEN;
 		$arr['item_private']  = 0;
 		$arr['verb']          = ACTIVITY_UPDATE;
