@@ -827,7 +827,7 @@ function attach_delete($channel_id, $resource) {
 		intval($channel_id)
 	);
 
-	file_activity($channel_id, $object, $allow_cid='', $allow_gid='', $deny_cid='', $deny_gid='', 'update', $no_activity=false);
+	file_activity($channel_id, $object, $object['allow_cid'], $object['allow_gid'], $object['deny_cid'], $object['deny_gid'], 'update', $no_activity=false);
 
 }
 
@@ -974,10 +974,14 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	if(!$object)
 		return;
 
-	//filter out receivers which do not have permission to view filestorage
+	//turn strings into arrays
 	$arr_allow_cid = expand_acl($allow_cid);
+	$arr_allow_gid = expand_acl($allow_gid);
+	$arr_deny_cid = expand_acl($deny_cid);
+	$arr_deny_gid = expand_acl($deny_gid);
+
+	//filter out receivers which do not have permission to view filestorage
 	$arr_allow_cid = check_list_permissions($channel_id, $arr_allow_cid, 'view_storage');
-	$allow_cid = perms2str($arr_allow_cid);
 
 	$is_dir = (($object['flags'] & ATTACH_FLAG_DIR) ? true : false);
 
@@ -990,15 +994,16 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 		$folder_hash = $object['folder'];
 
-		$r_perms = recursive_activity_recipients($allow_cid, $allow_gid, $deny_cid, $deny_gid, $folder_hash);
+		$r_perms = recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny_cid, $arr_deny_gid, $folder_hash);
+
+		//split up returned perms
+		$arr_allow_cid = $r_perms['allow_cid'];
+		$arr_allow_gid = $r_perms['allow_gid'];
+		$arr_deny_cid = $r_perms['deny_cid'];
+		$arr_deny_gid = $r_perms['deny_gid'];
 
 		//filter out receivers which do not have permission to view filestorage
-		$r_perms['allow_cid'] = check_list_permissions($channel_id, $r_perms['allow_cid'], 'view_storage');
-
-		$allow_cid = perms2str($r_perms['allow_cid']);
-		$allow_gid = perms2str($r_perms['allow_gid']);
-		$deny_cid = perms2str($r_perms['deny_cid']);
-		$deny_gid = perms2str($r_perms['deny_gid']);
+		$arr_allow_cid = check_list_permissions($channel_id, $arr_allow_cid, 'view_storage');
 
 	}
 
@@ -1008,7 +1013,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	$item_flags = ITEM_WALL|ITEM_ORIGIN;
 
-	$private = (($allow_cid || $allow_gid || $deny_cid || $deny_gid) ? 1 : 0);
+	$private = (($arr_allow_cid[0] || $arr_allow_gid[0] || $arr_deny_cid[0] || $arr_deny_gid[0]) ? 1 : 0);
 
 	$jsonobject = json_encode($object);
 
@@ -1037,6 +1042,17 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	if($update && $verb == 'post' ) {
 		//send update activity and create a new one
 
+		//updates should be sent to everybody with recursive perms and all eventual former allowed members ($object['allow_cid'] etc.).
+		$o_arr_allow_cid = expand_acl($object['allow_cid']);
+		$o_arr_allow_gid = expand_acl($object['allow_gid']);
+		$o_arr_deny_cid = expand_acl($object['deny_cid']);
+		$o_arr_deny_gid = expand_acl($object['deny_gid']);
+		//merge arrays and remove duplicates
+		$arr_allow_cid = array_unique(array_merge($arr_allow_cid, $o_arr_allow_cid));
+		$arr_allow_gid = array_unique(array_merge($arr_allow_gid, $o_arr_allow_gid));
+		$arr_deny_cid = array_unique(array_merge($arr_deny_cid, $o_arr_deny_cid));
+		$arr_deny_gid = array_unique(array_merge($arr_deny_gid, $o_arr_deny_gid));
+
 		$u_mid = item_message_id();
 
 		$arr = array();
@@ -1050,11 +1066,10 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		$arr['author_xchan']  = $poster['xchan_hash'];
 		$arr['owner_xchan']   = $poster['xchan_hash'];
 		$arr['title']         = '';
-		//updates should be visible to everybody -> perms may have changed
-		$arr['allow_cid']     = '';
-		$arr['allow_gid']     = '';
-		$arr['deny_cid']      = '';
-		$arr['deny_gid']      = '';
+		$arr['allow_cid']     = perms2str($arr_allow_cid);
+		$arr['allow_gid']     = perms2str($arr_allow_gid);
+		$arr['deny_cid']      = perms2str($arr_deny_cid);
+		$arr['deny_gid']      = perms2str($arr_deny_gid);
 		$arr['item_restrict']  = ITEM_HIDDEN;
 		$arr['item_private']  = 0;
 		$arr['verb']          = ACTIVITY_UPDATE;
@@ -1093,10 +1108,10 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	$arr['author_xchan']  = $poster['xchan_hash'];
 	$arr['owner_xchan']   = $poster['xchan_hash'];
 	$arr['title']         = '';
-	$arr['allow_cid']     = $allow_cid;
-	$arr['allow_gid']     = $allow_gid;
-	$arr['deny_cid']      = $deny_cid;
-	$arr['deny_gid']      = $deny_gid;
+	$arr['allow_cid']     = perms2str($arr_allow_cid);
+	$arr['allow_gid']     = perms2str($arr_allow_gid);
+	$arr['deny_cid']      = perms2str($arr_deny_cid);
+	$arr['deny_gid']      = perms2str($arr_deny_gid);
 	$arr['item_restrict']  = ITEM_HIDDEN;
 	$arr['item_private']  = $private;
 	$arr['verb']          = (($update) ? ACTIVITY_UPDATE : ACTIVITY_POST);
@@ -1123,7 +1138,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 function get_file_activity_object($channel_id, $hash, $cloudpath) {
 
-	$x = q("SELECT creator, filename, filetype, filesize, revision, folder, flags, created, edited FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
+	$x = q("SELECT creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
 		intval($channel_id),
 		dbesc($hash)
 	);
@@ -1152,27 +1167,25 @@ function get_file_activity_object($channel_id, $hash, $cloudpath) {
 		'folder'	=> $x[0]['folder'],
 		'flags'		=> $x[0]['flags'],
 		'created'	=> $x[0]['created'],
-		'edited'	=> $x[0]['edited']
+		'edited'	=> $x[0]['edited'],
+		'allow_cid'	=> $x[0]['allow_cid'],
+		'allow_gid'	=> $x[0]['allow_gid'],
+		'deny_cid'	=> $x[0]['deny_cid'],
+		'deny_gid'	=> $x[0]['deny_gid']
 	);
 	return $object;
 
 }
 
-function recursive_activity_recipients($allow_cid, $allow_gid, $deny_cid, $deny_gid, $folder_hash) {
+function recursive_activity_recipients($arr_allow_cid, $arr_llow_gid, $arr_deny_cid, $arr_deny_gid, $folder_hash) {
 
 	$poster = get_app()->get_observer();
-
-	$arr_allow_cid = expand_acl($allow_cid);
-	$arr_allow_gid = expand_acl($allow_gid);
 
 	//turn allow_gid into allow_cid's
 	foreach($arr_allow_gid as $gid) {
 		$in_group = in_group($gid);
 		$arr_allow_cid = array_unique(array_merge($arr_allow_cid, $in_group));
 	}
-
-	$arr_deny_cid = expand_acl($deny_cid);
-	$arr_deny_gid = expand_acl($deny_gid);
 
 	$count = 0;
 	while($folder_hash) {
