@@ -32,13 +32,14 @@ function filestorage_post(&$a) {
 	$str_contact_allow = perms2str($_REQUEST['contact_allow']);
 	$str_group_deny    = perms2str($_REQUEST['group_deny']);
 	$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
- 
-	attach_change_permissions($channel_id, $resource, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny, $recurse);
 
-	//Build directory tree and redirect
 	$channel = $a->get_channel();
 	$cloudPath = get_parent_cloudpath($channel_id, $channel['channel_address'], $resource);
+
+	//get the object before permissions change so we can catch eventual former allowed members
 	$object = get_file_activity_object($channel_id, $resource, $cloudPath);
+
+	attach_change_permissions($channel_id, $resource, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny, $recurse);
 
 	file_activity($channel_id, $object, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny, 'post', $no_activity);
 

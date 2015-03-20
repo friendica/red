@@ -96,12 +96,6 @@
 		$acpopup_tgbl_bgcolour = "#333";
 	if (! $acpopup_hovercolour)
 		$acpopup_hovercolour = "#fff";
-	if (! $editbuttons_bgcolour)
-		$editbuttons_bgcolour = "#1e1e1e";
-	if (! $editbuttons_bordercolour)
-		$editbuttons_bordercolour = "#222";
-	if (! $editbuttons_colour)
-		$editbuttons_colour = "#ccc";
 	if (! $editbuttons_bghover)
 		$editbuttons_bghover = "#222";
 	if (! $dropdown_bgcolour)
@@ -138,23 +132,4 @@
 		$notifyseen_bghover = "#222";
 	if (! $notifyseen_linkhover)
 		$notifyseen_linkhover = "#CCC";
-	if (! $input_bgsubmit)
-		$input_bgsubmit = "#333";
-	if (! $input_linksubmit)
-		$input_linksubmit = "#fff";
-	if (! $input_border)
-		$input_border = "#222";
-	if (! $input_colourhover)
-		$input_colourhover = "#fff";
-	if (! $input_decohover)
-		$input_decohover = "underline";
-	if (! $acl_bgcolour)
-		$acl_bgcolour = "#111";
-	if (! $acl_bordercolour)
-		$acl_bordercolour = "#333";
-	if (! $aclbutton_linkcolour)
-		$aclbutton_linkcolour = "color: #fff;";
-	if (! $abookself_bgcolour)
-		$abookself_bgcolour = "#251111";
-	if(! $infomess_bgcolour)
-		$infomess_bgcolour = "#333";
+
