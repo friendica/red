@@ -17,6 +17,7 @@ require_once('include/zot.php');
  * f= placeholder, often required
  * title= Title of post
  * body= Body of post
+ * url= URL which will be parsed and the results appended to the body
  * source= Source application
  * remote_return= absolute URL to return after posting is finished
  * type= choices are 'html' or 'bbcode', default is 'bbcode'
@@ -97,16 +98,6 @@ function rpost_content(&$a) {
 		'$title' => t('Edit post')
 	));
 
-	
-//	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
-//		'$baseurl' => $a->get_baseurl(),
-//		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
-//		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
-//		'$geotag' => $geotag,
-//		'$nickname' => $channel['channel_address']
-//	));
-
-
 	if($_REQUEST['url']) {
 		$x = z_fetch_url(z_root() . '/parse_url?f=&url=' . urlencode($_REQUEST['url']));
 		if($x['success'])
@@ -122,7 +113,6 @@ function rpost_content(&$a) {
 			|| $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 		'acl' => populate_acl($channel),
 		'bang' => '',
-//		'channel_select' => true,
 		'visitor' => true,
 		'profile_uid' => local_channel(),
 		'title' => $_REQUEST['title'],
