@@ -51,3 +51,67 @@
 	border-color: #444;
 	background-image: linear-gradient(to bottom, #333 0px, #333 100%);
 }
+
+.abook-self {
+	background-color: #251111;
+}
+
+.acl-button-show,
+.acl-button-hide {
+	color: #fff;
+}
+
+#acl-showall {
+	color: #fff;
+}
+
+#acl-list {
+	border: 1px solid #333;
+}
+
+.acl-list-item {
+	border: 1px solid #333;
+}
+
+.modal-content {
+    background-color: #111;
+}
+
+.btn-default {
+	background-color: #1e1e1e;
+	border-color: #222;
+	color: #ccc;
+	text-shadow: none;
+	box-shadow: none;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
+	background-color: #222;
+	border-color: #222;
+	color: #fff;
+	text-decoration: underline;
+}
+
+.btn-default.btn-sm:hover, .btn-default.btn-sm:focus, .btn-default.btn-sm:active .btn-default.btn-sm.active {
+	text-decoration: none;
+}
+
+.pager_first,
+.pager_last,
+.pager_prev,
+.pager_next,
+.pager-prev,
+.pager-next,
+.pager_n {
+	border: 1px solid #222;
+	background: #1e1e1e;
+}
+
+input {
+	border: 1px solid #222;
+}
+
+input[type="submit"] {
+	background-color: #333;
+	color: #fff;
+}

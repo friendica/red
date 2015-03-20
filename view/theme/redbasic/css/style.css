@@ -106,15 +106,15 @@ textarea {
 input {
 	padding: 5px;
 	line-height: 1.5;
-	border: 1px solid $input_border;
+	border: 1px solid #ccc;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
 }
 
 input[type="submit"] {
-	background-color: $input_bgsubmit;
+	background-color: #F0F0F0;
 	font-weight: bold;
-	color: $input_linksubmit;
+	color: #0080FF;
 	text-decoration: none;
 	padding: 6px 12px;
 }
@@ -524,8 +524,8 @@ footer {
 .pager-prev,
 .pager-next,
 .pager_n { 
-	border: 1px solid $editbuttons_bordercolour;
-	background: $editbuttons_bgcolour;
+	border: 1px solid #ccc;
+	background: transparent;
 	padding: 4px;
 }
 
@@ -1365,10 +1365,6 @@ header {
 	clear: both;
 }
 
-.modal-content {
-    background-color: $acl_bgcolour;
-}
-
 #acl-search {
 	margin-top: 20px;
 	padding: 8px;
@@ -1386,7 +1382,7 @@ header {
 
 #acl-list {
 	display: block;
-	border: 1px solid $acl_bordercolour;
+	border: 1px solid #ccc;
 	overflow: auto;
 	clear: both;
 	min-height: 62px;
@@ -1400,7 +1396,7 @@ header {
 .acl-list-item {
 	width: 48%; /* fallback if browser does not support calc() */
 	width: calc(50% - 10px);
-	border: 1px solid $acl_bordercolour;
+	border: 1px solid #ccc;
 	margin: 0px 0px 10px 10px;
 	padding: 5px;
 	float: left;
@@ -1436,11 +1432,6 @@ header {
 .acl-button-hide {
 	float: right;
 	margin-left: 5px;
-	$aclbutton_linkcolour
-}
-
-#acl-showall {
-	$aclbutton_linkcolour
 }
 
 .contact-block-content {
@@ -1841,7 +1832,7 @@ img.mail-list-sender-photo {
 }
 
 .abook-self {
-	background-color: $abookself_bgcolour;
+	background-color: #ffdddd;
 }
 
 .abook-pending-contact, .abook-permschange {
@@ -2168,22 +2159,7 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 }
 
 .btn-default {
-    	background-color: $editbuttons_bgcolour;
-    	border-color: $editbuttons_bordercolour;
-	color: $editbuttons_colour;
-    	text-shadow: none;
-    	box-shadow: none;
-}
-
-.btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
-	background-color: $editbuttons_bghover;
-	border-color: $editbuttons_bordercolourhover;
-	color: $input_colourhover;
-	text-decoration: $input_decohover;
-}
-
-.btn-default.btn-sm:hover, .btn-default.btn-sm:focus, .btn-default.btn-sm:active .btn-default.btn-sm.active {
-    	text-decoration: none;
+	background-color: transparent;
 }
 
 @media screen and (max-width: 767px) {
