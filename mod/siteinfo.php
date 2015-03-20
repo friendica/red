@@ -56,6 +56,8 @@ function siteinfo_init(&$a) {
 				$commit = trim( @shell_exec('git log -1 --format="%h"'));
 				if(! get_config('system','hidden_tag_siteinfo'))
 					$tag = trim( @shell_exec('git describe --tags --abbrev=0'));
+				else 
+					$tag = '';
 			}
 			if(! isset($commit) || strlen($commit) > 16)
 				$commit = '';
