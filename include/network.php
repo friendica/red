@@ -32,8 +32,6 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
 
-	$a = get_app();
-
 	$ch = @curl_init($url);
 	if(($redirects > 8) || (! $ch)) 
 		return false;
@@ -70,7 +68,6 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
-
 
 	$prx = get_config('system','proxy');
 	if(strlen($prx)) {
@@ -518,6 +515,7 @@ function allowed_email($email) {
 
 function avatar_img($email) {
 
+	$avatar = array();
 	$a = get_app();
 
 	$avatar['size'] = 175;
@@ -527,10 +525,11 @@ function avatar_img($email) {
 
 	call_hooks('avatar_lookup', $avatar);
 
-	if(! $avatar['success'])
+	if (! $avatar['success'])
 		$avatar['url'] = $a->get_baseurl() . '/' . get_default_profile_photo();
 
 	logger('Avatar: ' . $avatar['email'] . ' ' . $avatar['url'], LOGGER_DEBUG);
+
 	return $avatar['url'];
 }
 
