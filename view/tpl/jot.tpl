@@ -130,7 +130,7 @@
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				{{if $showacl}}
 				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
-					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons">{{$bang}}</i>
+					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>{{if $bang}}&nbsp;<i class="icon-exclamation jot-icons"></i>{{/if}}
 				</button>
 				{{/if}}
 				{{if $preview}}
