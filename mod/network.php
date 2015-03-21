@@ -116,8 +116,21 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	if(x($_GET,'search') || x($_GET,'file'))
 		$nouveau = true;
-	if($cid)
-		$def_acl = array('allow_cid' => '<' . intval($cid) . '>');
+	if($cid) {
+		$r = q("SELECT abook_xchan FROM abook WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
+			intval($cid),
+			intval(local_channel())
+		);
+		if(! $r) {
+			if($update) {
+				killme();
+			}
+			notice( t('No such channel') . EOL );
+			goaway($a->get_baseurl(true) . '/network');
+			// NOTREACHED
+		}
+		$def_acl = array('allow_cid' => '<' . $r[0]['abook_xchan'] . '>');
+	}
 
 	if(! $update) {
 		$tabs = network_tabs();
