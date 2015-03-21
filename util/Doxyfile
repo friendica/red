@@ -16,4 +16,5 @@ USE_MDFILE_AS_MAINPAGE = README
 REFERENCED_BY_RELATION = YES
 GENERATE_TREEVIEW = YES
 HTML_FOOTER = util/Doxygen.footer
-
+ALIASES += "license=@par License:\n"
+ALIASES += "fixme=\xrefitem fixme \"Fixme\" \"Fixme List\""
