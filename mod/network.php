@@ -27,12 +27,13 @@ function network_init(&$a) {
 
 function network_content(&$a, $update = 0, $load = false) {
 
-
 	if(! local_channel()) {
 		$_SESSION['return_url'] = $a->query_string;
 		return login(false);
 	}
 
+	if($load)
+		$_SESSION['loadtime'] = datetime_convert();
 
 	$arr = array('query' => $a->query_string);
 
@@ -415,8 +416,6 @@ function network_content(&$a, $update = 0, $load = false) {
 				$ordering = "commented";
 
 		if($load) {
-
-			$_SESSION['loadtime'] = datetime_convert();
 
 			// Fetch a page full of parent items for this page
 

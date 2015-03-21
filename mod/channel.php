@@ -50,6 +50,11 @@ function channel_init(&$a) {
 
 function channel_content(&$a, $update = 0, $load = false) {
 
+
+	if($load)
+		$_SESSION['loadtime'] = datetime_convert();
+
+
 	$category = $datequery = $datequery2 = '';
 
 	$mid = ((x($_REQUEST,'mid')) ? $_REQUEST['mid'] : '');
@@ -151,10 +156,19 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	$abook_uids = " and abook.abook_channel = " . intval($a->profile['profile_uid']) . " ";
 
+	$simple_update = (($update) ? " AND item_unseen = 1 " : '');
+		
+
+	if($update && $_SESSION['loadtime'])
+		$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ";
+	if($load)
+		$simple_update = '';
+
+
 	if(($update) && (! $load)) {
 		if ($mid) {
 			$r = q("SELECT parent AS item_id from item where mid like '%s' and uid = %d AND item_restrict = 0
-				AND (item_flags &  %d) > 0 AND item_unseen = 1 $sql_extra limit 1",
+				AND (item_flags &  %d) > 0 $simple_update $sql_extra limit 1",
 				dbesc($mid . '%'),
 				intval($a->profile['profile_uid']),
 				intval(ITEM_WALL)
@@ -163,7 +177,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			$r = q("SELECT distinct parent AS `item_id`, created from item
 				left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
 				WHERE uid = %d AND item_restrict = 0
-				AND (item_flags &  %d) > 0 AND item_unseen = 1
+				AND (item_flags &  %d) > 0 $simple_update
 				AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra
 				ORDER BY created DESC",
@@ -252,6 +266,9 @@ function channel_content(&$a, $update = 0, $load = false) {
 	} else {
 		$items = array();
 	}
+
+
+
 
 
 	if((! $update) && (! $load)) {

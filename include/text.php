@@ -2370,8 +2370,7 @@ function linkify_tags($a, &$body, $uid) {
 			if($fullnametagged)
 				continue;
 
-			// @FIXME which $profile_uid? It's not set anywhere.
-			$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : $profile_uid , $tag); 
+			$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : $a->profile_uid , $tag); 
 			$results[] = array('success' => $success, 'access_tag' => $access_tag);
 			if($success['replaced']) $tagged[] = $tag;
 		}

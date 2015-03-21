@@ -7,6 +7,7 @@ require_once('include/conversation.php');
 function home_init(&$a) {
 
 	$ret = array();
+
 	call_hooks('home_init',$ret);
 
 	$splash = ((argc() > 1 && argv(1) === 'splash') ? true : false);
@@ -34,6 +35,10 @@ function home_init(&$a) {
 function home_content(&$a, $update = 0, $load = false) {
 
 	$o = '';
+
+
+	if($load)
+		$_SESSION['loadtime'] = datetime_convert();
 
 	if(x($_SESSION,'theme'))
 		unset($_SESSION['theme']);
@@ -192,8 +197,6 @@ function home_content(&$a, $update = 0, $load = false) {
 
 				if($load) {
 
-					$_SESSION['loadtime'] = datetime_convert();
-
 					// Fetch a page full of parent items for this page
 
 					$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
@@ -208,7 +211,17 @@ function home_content(&$a, $update = 0, $load = false) {
 
 
 				}
+				elseif($update) {
 
+					$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
+						left join abook on item.author_xchan = abook.abook_xchan
+						WHERE true $uids AND item.item_restrict = 0
+						AND item.parent = item.id $simple_update
+						and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+						$sql_extra3 $sql_extra $sql_nets",
+						intval(ABOOK_FLAG_BLOCKED)
+					);
+				}
 				// Then fetch all the children of the parents that are on this page
 				$parents_str = '';
 				$update_unseen = '';

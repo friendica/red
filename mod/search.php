@@ -14,6 +14,10 @@ function search_content(&$a,$update = 0, $load = false) {
 		return;
 		}
 	}
+
+	if($load)
+		$_SESSION['loadtime'] = datetime_convert();
+
 	nav_set_selected('search');
 
 	require_once("include/bbcode.php");
