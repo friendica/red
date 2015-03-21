@@ -1,33 +1,50 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/enotify.php
+ *
+ * @brief File with functions and a class for email notifications.
+ */
 
+/**
+ * @brief
+ *
+ * @param array $params an assoziative array with:
+ *  * \e string \b from_xchan sender xchan hash
+ *  * \e string \b to_xchan recipient xchan hash
+ *  * \e array \b item an assoziative array
+ *  * \e int \b type one of the NOTIFY_* constants from boot.php
+ *  * \e string \b link
+ *  * \e string \b parent_mid
+ *  * \e string \b otype
+ *  * \e string \b verb
+ *  * \e string \b activity
+ */
 function notification($params) {
 
 	logger('notification: entry', LOGGER_DEBUG);
 
 	// throw a small amount of entropy into the system to breakup duplicates arriving at the same precise instant.
-	usleep(mt_rand(0,10000));
-	
+	usleep(mt_rand(0, 10000));
 
 	$a = get_app();
 
 
-	if($params['from_xchan']) {
+	if ($params['from_xchan']) {
 		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
 			dbesc($params['from_xchan'])
 		);
 	}
-	if($params['to_xchan']) {
+	if ($params['to_xchan']) {
 		$y = q("select channel.*, account.* from channel left join account on channel_account_id = account_id
 			where channel_hash = '%s' and not (channel_pageflags & %d)>0 limit 1",
 			dbesc($params['to_xchan']),
 			intval(PAGE_REMOVED)
 		);
 	}
-	if($x & $y) {
+	if ($x & $y) {
 		$sender = $x[0];
 		$recip = $y[0];
-	}
-	else {
+	} else {
 		logger('notification: no sender or recipient.');
 		logger('sender: ' . $params['from_xchan']);
 		logger('recip: ' . $params['to_xchan']);
@@ -55,10 +72,10 @@ function notification($params) {
 
 	$additional_mail_header = "";
 
-	if(array_key_exists('item',$params)) {
+	if (array_key_exists('item', $params)) {
 		require_once('include/conversation.php');
 		// if it's a normal item...
-		if(array_key_exists('verb',$params['item'])) {
+		if (array_key_exists('verb', $params['item'])) {
 			// localize_item() alters the original item so make a copy first
 			$i = $params['item'];
 			logger('calling localize');
@@ -66,13 +83,11 @@ function notification($params) {
 			$title = $i['title'];
 			$body = $i['body'];
 			$private = (($i['item_private']) || ($i['item_flags'] & ITEM_OBSCURED));
-		}
-		else {
+		} else {
 			$title = $params['item']['title'];
 			$body = $params['item']['body'];
 		}
-	}
-	else {
+	} else {
 		$title = $body = '';
 	}
 
@@ -80,7 +95,7 @@ function notification($params) {
 	// e.g. "your post", "David's photo", etc.
 	$possess_desc = t('%s <!item_type!>');
 
-	if($params['type'] == NOTIFY_MAIL) {
+	if ($params['type'] == NOTIFY_MAIL) {
 		logger('notification: mail');
 		$subject = 	sprintf( t('[Red:Notify] New mail received at %s'),$sitename);
 
@@ -92,28 +107,27 @@ function notification($params) {
 		$itemlink = $siteurl . '/mail/' . $params['item']['id'];
 	}
 
-	if($params['type'] == NOTIFY_COMMENT) {
+	if ($params['type'] == NOTIFY_COMMENT) {
 //		logger("notification: params = " . print_r($params, true), LOGGER_DEBUG);
 
 		$itemlink =  $params['link'];
 
-
 		// ignore like/unlike activity on posts - they probably require a sepearate notification preference
 
-		if(array_key_exists('item',$params) && (! visible_activity($params['item'])))
+		if (array_key_exists('item',$params) && (! visible_activity($params['item'])))
 			return;
 
 		$parent_mid = $params['parent_mid'];
 
 		// Check to see if there was already a notify for this post.
 		// If so don't create a second notification
-		
+
 		$p = null;
 		$p = q("select id from notify where link = '%s' and uid = %d limit 1",
 			dbesc($params['link']),
 			intval($recip['channel_id'])
 		);
-		if($p) {
+		if ($p) {
 			logger('notification: comment already notified');
 			pop_lang();
 			return;
@@ -182,26 +196,26 @@ function notification($params) {
 		$subject = sprintf( t('[Red:Notify] %s posted to your profile wall') , $sender['xchan_name']);
 
 		$preamble = sprintf( t('%1$s, %2$s posted to your profile wall at %3$s') , $recip['channel_name'], $sender['xchan_name'], $sitename);
-		
+
 		$epreamble = sprintf( t('%1$s, %2$s posted to [zrl=%3$s]your wall[/zrl]') ,
 			$recip['channel_name'], 
 			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
 			$params['link']); 
-		
+
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
 		$itemlink =  $params['link'];
 	}
 
-	if($params['type'] == NOTIFY_TAGSELF) {
+	if ($params['type'] == NOTIFY_TAGSELF) {
 
 		$p = null;
 		$p = q("select id from notify where link = '%s' and uid = %d limit 1",
 			dbesc($params['link']),
 			intval($recip['channel_id'])
 		);
-		if($p) {
+		if ($p) {
 			logger('enotify: tag: already notified about this post');
 			pop_lang();
 			return;
@@ -220,8 +234,7 @@ function notification($params) {
 		$itemlink =  $params['link'];
 	}
 
-	if($params['type'] == NOTIFY_POKE) {
-
+	if ($params['type'] == NOTIFY_POKE) {
 		$subject =	sprintf( t('[Red:Notify] %1$s poked you') , $sender['xchan_name']);
 		$preamble = sprintf( t('%1$s, %2$s poked you at %3$s') , $recip['channel_name'], $sender['xchan_name'], $sitename);
 		$epreamble = sprintf( t('%1$s, %2$s [zrl=%2$s]poked you[/zrl].') ,
@@ -239,7 +252,7 @@ function notification($params) {
 		$itemlink =  $params['link'];
 	}
 
-	if($params['type'] == NOTIFY_TAGSHARE) {
+	if ($params['type'] == NOTIFY_TAGSHARE) {
 		$subject =	sprintf( t('[Red:Notify] %s tagged your post') , $sender['xchan_name']);
 		$preamble = sprintf( t('%1$s, %2$s tagged your post at %3$s') , $recip['channel_name'],$sender['xchan_name'], $sitename);
 		$epreamble = sprintf( t('%1$s, %2$s tagged [zrl=%3$s]your post[/zrl]') ,
@@ -253,7 +266,7 @@ function notification($params) {
 		$itemlink =  $params['link'];
 	}
 
-	if($params['type'] == NOTIFY_INTRO) {
+	if ($params['type'] == NOTIFY_INTRO) {
 		$subject = sprintf( t('[Red:Notify] Introduction received'));
 		$preamble = sprintf( t('%1$s, you\'ve received an new connection request from \'%2$s\' at %3$s'), $recip['channel_name'], $sender['xchan_name'], $sitename); 
 		$epreamble = sprintf( t('%1$s, you\'ve received [zrl=%2$s]a new connection request[/zrl] from %3$s.'),
@@ -268,7 +281,7 @@ function notification($params) {
 		$itemlink =  $params['link'];
 	}
 
-	if($params['type'] == NOTIFY_SUGGEST) {
+	if ($params['type'] == NOTIFY_SUGGEST) {
 		$subject = sprintf( t('[Red:Notify] Friend suggestion received'));
 		$preamble = sprintf( t('%1$s, you\'ve received a friend suggestion from \'%2$s\' at %3$s'), $recip['channel_name'], $sender['xchan_name'], $sitename); 
 		$epreamble = sprintf( t('%1$s, you\'ve received [zrl=%2$s]a friend suggestion[/zrl] for %3$s from %4$s.'),
@@ -276,7 +289,7 @@ function notification($params) {
 			$itemlink,
 			'[zrl=' . $params['item']['url'] . ']' . $params['item']['name'] . '[/zrl]',
 			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]'); 
-									
+
 		$body = t('Name:') . ' ' . $params['item']['name'] . "\n";
 		$body .= t('Photo:') . ' ' . $params['item']['photo'] . "\n";
 		$body .= sprintf( t('You may visit their profile at %s'),$params['item']['url']);
@@ -287,27 +300,27 @@ function notification($params) {
 		$itemlink =  $params['link'];
 	}
 
-	if($params['type'] == NOTIFY_CONFIRM) {
-
+	if ($params['type'] == NOTIFY_CONFIRM) {
+		// ?
 	}
 
-	if($params['type'] == NOTIFY_SYSTEM) {
-		
+	if ($params['type'] == NOTIFY_SYSTEM) {
+		// ?
 	}
 
 	$h = array(
-		'params'    => $params, 
+		'params'    => $params,
 		'subject'   => $subject,
-		'preamble'  => $preamble, 
-		'epreamble' => $epreamble, 
-		'body'      => $body, 
+		'preamble'  => $preamble,
+		'epreamble' => $epreamble,
+		'body'      => $body,
 		'sitelink'  => $sitelink,
 		'tsitelink' => $tsitelink,
 		'hsitelink' => $hsitelink,
 		'itemlink'  => $itemlink
 	);
-		
-	call_hooks('enotify',$h);
+
+	call_hooks('enotify', $h);
 
 	$subject   = $h['subject'];
 	$preamble  = $h['preamble'];
@@ -319,16 +332,16 @@ function notification($params) {
 	$itemlink  = $h['itemlink']; 
 
 
-	require_once('include/html2bbcode.php');	
+	require_once('include/html2bbcode.php');
 
 	do {
 		$dups = false;
 		$hash = random_string();
-        $r = q("SELECT `id` FROM `notify` WHERE `hash` = '%s' LIMIT 1",
+		$r = q("SELECT `id` FROM `notify` WHERE `hash` = '%s' LIMIT 1",
 			dbesc($hash));
-		if(count($r))
+		if (count($r))
 			$dups = true;
-	} while($dups == true);
+	} while ($dups === true);
 
 
 	$datarray = array();
@@ -348,10 +361,10 @@ function notification($params) {
  	$datarray['abort']  = false;
 
 	$datarray['item'] = $params['item'];
- 
+
 	call_hooks('enotify_store', $datarray);
 
-	if($datarray['abort']) {
+	if ($datarray['abort']) {
 		pop_lang();
 		return;
 	}
@@ -365,8 +378,8 @@ function notification($params) {
 	// So easiest solution to hide them from Notices is to mark them as seen right away.
 	// Another option would be to not add them to the DB, and change how emails are handled (probably would be better that way)
 	$always_show_in_notices = get_pconfig($recip['channel_id'],'system','always_show_in_notices');
-	if(!$always_show_in_notices) {
-		if(($params['type'] == NOTIFY_WALL) || ($params['type'] == NOTIFY_MAIL) || ($params['type'] == NOTIFY_INTRO)) {
+	if (!$always_show_in_notices) {
+		if (($params['type'] == NOTIFY_WALL) || ($params['type'] == NOTIFY_MAIL) || ($params['type'] == NOTIFY_INTRO)) {
 			$seen = 1;
 		}
 	}
@@ -392,9 +405,9 @@ function notification($params) {
 		dbesc($hash),
 		intval($recip['channel_id'])
 	);
-	if($r)
+	if ($r) {
 		$notify_id = $r[0]['id'];
-	else {
+	} else {
 		logger('notification not found.');
 		pop_lang();
 		return;
@@ -405,7 +418,7 @@ function notification($params) {
 
 	// wretched hack, but we don't want to duplicate all the preamble variations and we also don't want to screw up a translation
 
-	if(($a->language === 'en' || (! $a->language)) && strpos($msg,', '))
+	if (($a->language === 'en' || (! $a->language)) && strpos($msg,', '))
 		$msg = substr($msg,strpos($msg,', ')+1);	
 
 	$r = q("update notify set msg = '%s' where id = %d and uid = %d",
@@ -413,12 +426,11 @@ function notification($params) {
 		intval($notify_id),
 		intval($datarray['uid'])
 	);
-		
 
 	// send email notification if notification preferences permit
 
 	require_once('bbcode.php');
-	if((intval($recip['channel_notifyflags']) & intval($params['type'])) || $params['type'] == NOTIFY_SYSTEM) {
+	if ((intval($recip['channel_notifyflags']) & intval($params['type'])) || $params['type'] == NOTIFY_SYSTEM) {
 
 		logger('notification: sending notification email');
 
@@ -428,8 +440,6 @@ function notification($params) {
 			pop_lang();
 			return;
 		}
-
-
 
 		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r", "\\n"), array( "", "\n"), $body))),ENT_QUOTES,'UTF-8'));
 
@@ -449,7 +459,6 @@ function notification($params) {
 
 		unset($_SESSION['zid_override']);
 		unset($_SESSION['zrl_override']);
-
 
 		$datarray = array();
 		$datarray['banner']       = $banner;
@@ -485,13 +494,13 @@ function notification($params) {
 
 		$private_activity = false;
 
-		if(! $datarray['email_secure']) {
-			switch($params['type']) {
+		if (! $datarray['email_secure']) {
+			switch ($params['type']) {
 				case NOTIFY_WALL:
 				case NOTIFY_TAGSELF:
 				case NOTIFY_POKE:
 				case NOTIFY_COMMENT:
-					if(! $private)
+					if (! $private)
 						break;
 					$private_activity = true;
 				case NOTIFY_MAIL:
@@ -503,11 +512,12 @@ function notification($params) {
 			}
 		}
 
-		if($private_activity 
-			&& intval(get_pconfig($datarray['uid'],'system','ignore_private_notifications'))) {
+		if ($private_activity
+			&& intval(get_pconfig($datarray['uid'], 'system', 'ignore_private_notifications'))) {
+
 			pop_lang();
 			return;
-		}		
+		}
 
 		// load the template for private message notifications
 		$tpl = get_markup_template('email_notify_html.tpl');
@@ -525,13 +535,13 @@ function notification($params) {
 			'$hitemlink'    => $datarray['hitemlink'],
 			'$thanks'       => $datarray['thanks'],
 			'$site_admin'   => $datarray['site_admin'],
-			'$title'		=> $datarray['title'],
-			'$htmlversion'	=> $datarray['htmlversion'],	
+			'$title'        => $datarray['title'],
+			'$htmlversion'  => $datarray['htmlversion'],
 		));
-		
+
 		// load the template for private message notifications
 		$tpl = get_markup_template('email_notify_text.tpl');
-		$email_text_body = replace_macros($tpl,array(
+		$email_text_body = replace_macros($tpl, array(
 			'$banner'       => $datarray['banner'],
 			'$product'      => $datarray['product'],
 			'$preamble'     => $datarray['preamble'],
@@ -545,8 +555,8 @@ function notification($params) {
 			'$titemlink'    => $datarray['titemlink'],
 			'$thanks'       => $datarray['thanks'],
 			'$site_admin'   => $datarray['site_admin'],
-			'$title'		=> $datarray['title'],
-			'$textversion'	=> $datarray['textversion'],	
+			'$title'        => $datarray['title'],
+			'$textversion'  => $datarray['textversion'],
 		));
 
 //		logger('text: ' . $email_text_body);
@@ -570,41 +580,48 @@ function notification($params) {
 }
 
 
+/**
+ * @brief A class for sending email notifications.
+ *
+ * @fixme Class names start mostly with capital letter to distinguish them easier.
+ */
 class enotify {
 	/**
-	 * Send a multipart/alternative message with Text and HTML versions
+	 * @brief Send a multipart/alternative message with Text and HTML versions.
 	 *
-	 * @param fromName			name of the sender
-	 * @param fromEmail			email fo the sender
-	 * @param replyTo			replyTo address to direct responses
-	 * @param toEmail			destination email address
-	 * @param messageSubject	subject of the message
-	 * @param htmlVersion		html version of the message
-	 * @param textVersion		text only version of the message
-	 * @param additionalMailHeader	additions to the smtp mail header
+	 * @param array $params an assoziative array with:
+	 *  * \e string \b fromName        name of the sender
+	 *  * \e string \b fromEmail       email of the sender
+	 *  * \e string \b replyTo         replyTo address to direct responses
+	 *  * \e string \b toEmail         destination email address
+	 *  * \e string \b messageSubject  subject of the message
+	 *  * \e string \b htmlVersion     html version of the message
+	 *  * \e string \b textVersion     text only version of the message
+	 *  * \e string \b additionalMailHeader  additions to the smtp mail header
 	 */
 	static public function send($params) {
 
 		$fromName = email_header_encode(html_entity_decode($params['fromName'],ENT_QUOTES,'UTF-8'),'UTF-8'); 
 		$messageSubject = email_header_encode(html_entity_decode($params['messageSubject'],ENT_QUOTES,'UTF-8'),'UTF-8');
-		
+
 		// generate a mime boundary
-		$mimeBoundary   =rand(0,9)."-"
-				.rand(10000000000,9999999999)."-"
-				.rand(10000000000,9999999999)."=:"
-				.rand(10000,99999);
+		$mimeBoundary = rand(0, 9) . "-"
+				.rand(10000000000, 9999999999) . "-"
+				.rand(10000000000, 9999999999) . "=:"
+				.rand(10000, 99999);
 
 		// generate a multipart/alternative message header
 		$messageHeader =
 			$params['additionalMailHeader'] .
-			"From: $fromName <{$params['fromEmail']}>\n" . 
+			"From: $fromName <{$params['fromEmail']}>\n" .
 			"Reply-To: $fromName <{$params['replyTo']}>\n" .
 			"MIME-Version: 1.0\n" .
 			"Content-Type: multipart/alternative; boundary=\"{$mimeBoundary}\"";
 
 		// assemble the final multipart message body with the text and html types included
-		$textBody	=	chunk_split(base64_encode($params['textVersion']));
-		$htmlBody	=	chunk_split(base64_encode($params['htmlVersion']));
+		$textBody = chunk_split(base64_encode($params['textVersion']));
+		$htmlBody = chunk_split(base64_encode($params['htmlVersion']));
+
 		$multipartMessageBody =
 			"--" . $mimeBoundary . "\n" .					// plain text section
 			"Content-Type: text/plain; charset=UTF-8\n" .
@@ -618,12 +635,11 @@ class enotify {
 
 		// send the message
 		$res = mail(
-			$params['toEmail'],	 							// send to address
+			$params['toEmail'],								// send to address
 			$messageSubject,								// subject
-			$multipartMessageBody,	 						// message body
+			$multipartMessageBody,							// message body
 			$messageHeader									// message headers
 		);
 		logger("notification: enotify::send returns " . $res, LOGGER_DEBUG);
 	}
 }
-

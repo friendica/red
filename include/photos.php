@@ -1,10 +1,21 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/photos.php
+ * @brief Functions related to photo handling.
+ */
 
 require_once('include/permissions.php');
 require_once('include/items.php');
 require_once('include/photo/photo_driver.php');
 
-
+/**
+ * @brief
+ *
+ * @param array $channel
+ * @param array $observer
+ * @param array $args
+ * @return array
+ */
 function photo_upload($channel, $observer, $args) {
 
 	$ret = array('success' => false);
@@ -18,12 +29,12 @@ function photo_upload($channel, $observer, $args) {
 
 	call_hooks('photo_upload_begin', $args);
 
-	/**
+	/*
 	 * Determine the album to use
 	 */
 
-	$album       = $args['album'];
-	$newalbum    = $args['newalbum'];
+	$album    = $args['album'];
+	$newalbum = $args['newalbum'];
 
 	logger('photo_upload: album= ' . $album . ' newalbum= ' . $newalbum , LOGGER_DEBUG);
 
@@ -44,8 +55,7 @@ function photo_upload($channel, $observer, $args) {
 	$str_group_deny    = perms2str(((is_array($args['group_deny']))    ? $args['group_deny']    : explode(',',$args['group_deny'])));
 	$str_contact_deny  = perms2str(((is_array($args['contact_deny']))  ? $args['contact_deny']  : explode(',',$args['contact_deny'])));
 
-
-	if($args['data']) {
+	if ($args['data']) {
 
 		// allow an import from a binary string representing the image.
 		// This bypasses the upload step and max size limit checking
@@ -56,23 +66,21 @@ function photo_upload($channel, $observer, $args) {
 		// this is going to be deleted if it exists
 		$src = '/tmp/deletemenow';
 		$type = $args['type'];
-	}
-	else {
+	} else {
 		$f = array('src' => '', 'filename' => '', 'filesize' => 0, 'type' => '');
 
 		call_hooks('photo_upload_file',$f);
 
-		if(x($f,'src') && x($f,'filesize')) {
+		if (x($f,'src') && x($f,'filesize')) {
 			$src      = $f['src'];
 			$filename = $f['filename'];
 			$filesize = $f['filesize'];
 			$type     = $f['type'];
-		}
-		else {
-			$src        = $_FILES['userfile']['tmp_name'];
-			$filename   = basename($_FILES['userfile']['name']);
-			$filesize   = intval($_FILES['userfile']['size']);
-			$type       = $_FILES['userfile']['type'];
+		} else {
+			$src      = $_FILES['userfile']['tmp_name'];
+			$filename = basename($_FILES['userfile']['name']);
+			$filesize = intval($_FILES['userfile']['size']);
+			$type     = $_FILES['userfile']['type'];
 		}
 
 		if (! $type) 
@@ -82,14 +90,14 @@ function photo_upload($channel, $observer, $args) {
 
 		$maximagesize = get_config('system','maximagesize');
 
-		if(($maximagesize) && ($filesize > $maximagesize)) {
+		if (($maximagesize) && ($filesize > $maximagesize)) {
 			$ret['message'] =  sprintf ( t('Image exceeds website size limit of %lu bytes'), $maximagesize);
 			@unlink($src);
 			call_hooks('photo_upload_end',$ret);
 			return $ret;
 		}
 
-		if(! $filesize) {
+		if (! $filesize) {
 			$ret['message'] = t('Image file is empty.');
 			@unlink($src);
 			call_hooks('photo_post_end',$ret);
@@ -101,14 +109,13 @@ function photo_upload($channel, $observer, $args) {
 		$imagedata = @file_get_contents($src);
 	}
 
-
 	$r = q("select sum(size) as total from photo where aid = %d and scale = 0 ",
 		intval($account_id)
 	);
 
 	$limit = service_class_fetch($channel_id,'photo_upload_limit');
 
-	if(($r) && ($limit !== false) && (($r[0]['total'] + strlen($imagedata)) > $limit)) {
+	if (($r) && ($limit !== false) && (($r[0]['total'] + strlen($imagedata)) > $limit)) {
 		$ret['message'] = upgrade_message();
 		@unlink($src);
 		call_hooks('photo_post_end',$ret);
@@ -117,7 +124,7 @@ function photo_upload($channel, $observer, $args) {
 
 	$ph = photo_factory($imagedata, $type);
 
-	if(! $ph->is_valid()) {
+	if (! $ph->is_valid()) {
 		$ret['message'] = t('Unable to process image');
 		logger('photo_upload: unable to process image');
 		@unlink($src);
@@ -127,13 +134,12 @@ function photo_upload($channel, $observer, $args) {
 
 	$exif = $ph->orient($src);
 
-
 	@unlink($src);
 
 	$max_length = get_config('system','max_image_length');
-	if(! $max_length)
+	if (! $max_length)
 		$max_length = MAX_IMAGE_LENGTH;
-	if($max_length > 0)
+	if ($max_length > 0)
 		$ph->scaleImage($max_length);
 
 	$width  = $ph->getWidth();
@@ -144,7 +150,7 @@ function photo_upload($channel, $observer, $args) {
 	$photo_hash = (($args['resource_id']) ? $args['resource_id'] : photo_new_resource());
 
 	$visitor = '';
-	if($channel['channel_hash'] !== $observer['xchan_hash'])
+	if ($channel['channel_hash'] !== $observer['xchan_hash'])
 		$visitor = $observer['xchan_hash'];
 
 	$errors = false;
@@ -162,7 +168,6 @@ function photo_upload($channel, $observer, $args) {
 		$p['title'] = $args['title'];
 	if($args['description'])
 		$p['description'] = $args['description'];
-
 
 	$r1 = $ph->save($p);
 	if(! $r1)
@@ -214,8 +219,6 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 
-
-
 	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
 	$item_restrict = (($visible) ? ITEM_VISIBLE : ITEM_HIDDEN);
 	$title = '';
@@ -263,10 +266,9 @@ function photo_upload($channel, $observer, $args) {
 			$tag = '[zmg]';
 	}
 
-
-	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-				. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
-				. '[/zrl]';
+	$arr['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
+			. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
+			. '[/zrl]';
 
 	$result = item_store($arr);
 	$item_id = $result['item_id'];
@@ -304,7 +306,7 @@ function photos_albums_list($channel, $observer) {
 	if(! perm_is_allowed($channel_id, $observer_xchan, 'view_photos'))
 		return false;
 
-	// FIXME - create a permissions SQL which works on arbitrary observers and channels, regardless of login or web status
+	/** @FIXME create a permissions SQL which works on arbitrary observers and channels, regardless of login or web status */
 
 	$sql_extra = permissions_sql($channel_id);
 
@@ -327,7 +329,8 @@ function photos_albums_list($channel, $observer) {
 				'total' => $album['total'], 
 				'url' => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album['album']), 
 				'urlencode' => urlencode($album['album']),
-				'bin2hex' => bin2hex($album['album']));
+				'bin2hex' => bin2hex($album['album'])
+			);
 			$ret['albums'][] = $entry;
 		}
 	}
@@ -360,11 +363,19 @@ function photos_album_widget($channelx,$observer,$albums = null) {
 				? t('Upload New Photos') : '')
 		));
 	}
+
 	return $o;
 }
 
-
-function photos_list_photos($channel,$observer,$album = '') {
+/**
+ * @brief
+ *
+ * @param array $channel
+ * @param array $observer
+ * @param string $album default empty
+ * @return boolean|array
+ */
+function photos_list_photos($channel, $observer, $album = '') {
 
 	$channel_id     = $channel['channel_id'];
 	$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
@@ -384,7 +395,7 @@ function photos_list_photos($channel,$observer,$album = '') {
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)
 	);
-	
+
 	if($r) {
 		for($x = 0; $x < count($r); $x ++) {
 			$r[$x]['src'] = z_root() . '/photo/' . $r[$x]['resource_id'] . '-' . $r[$x]['scale'];
@@ -416,6 +427,7 @@ function photos_album_exists($channel_id, $album) {
  * @brief Renames a photo album in a channel.
  *
  * @todo Do we need to check if new album name already exists?
+ *
  * @param int $channel_id id of the channel
  * @param string $oldname The name of the album to rename
  * @param string $newname The new name of the album
@@ -429,25 +441,31 @@ function photos_album_rename($channel_id, $oldname, $newname) {
 	);
 }
 
+/**
+ * @brief
+ *
+ * @param int $channel_id
+ * @param string $album
+ * @param string $remote_xchan
+ * @return string|boolean
+ */
+function photos_album_get_db_idstr($channel_id, $album, $remote_xchan = '') {
 
-function photos_album_get_db_idstr($channel_id,$album,$remote_xchan = '') {
-
-	if($remote_xchan) {
+	if ($remote_xchan) {
 		$r = q("SELECT distinct resource_id as from photo where xchan = '%s' and uid = %d and album = '%s' ",
 			dbesc($remote_xchan),
 			intval($channel_id),
 			dbesc($album)
 		);
-	}
-	else {
+	} else {
 		$r = q("SELECT distinct resource_id  from photo where uid = %d and album = '%s' ",
 			intval($channel_id),
 			dbesc($album)
 		);
 	}
-	if($r) {
+	if ($r) {
 		$arr = array();
-		foreach($r as $rr) {
+		foreach ($r as $rr) {
 			$arr[] = "'" . dbesc($rr['resource_id']) . "'" ;
 		}
 		$str = implode(',',$arr);
@@ -457,6 +475,15 @@ function photos_album_get_db_idstr($channel_id,$album,$remote_xchan = '') {
 	return false;
 }
 
+/**
+ * @brief Creates a new photo item.
+ *
+ * @param array $channel
+ * @param string $creator_hash
+ * @param array $photo
+ * @param boolean $visible default false
+ * @return int item_id
+ */
 function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 
 	// Create item container
@@ -506,7 +533,6 @@ function getGps($exifCoord, $hemi) {
     $flip = ($hemi == 'W' or $hemi == 'S') ? -1 : 1;
 
     return floatval($flip * ($degrees + ($minutes / 60) + ($seconds / 3600)));
-
 }
 
 function gps2Num($coordPart) {
@@ -521,4 +547,3 @@ function gps2Num($coordPart) {
 
     return floatval($parts[0]) / floatval($parts[1]);
 }
-

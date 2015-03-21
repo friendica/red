@@ -1,33 +1,39 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/network.php
+ */
 
-
-
+/**
+ * @brief Returns path to CA file.
+ *
+ * @return string
+ */
 function get_capath() {
 	return appdirpath() . '/library/cacert.pem';
 }
 
 /**
- * @function z_fetch_url
+ * @brief fetches an URL.
+ *
  * @param string $url
  *    URL to fetch
- * @param boolean $binary = false
+ * @param boolean $binary default false
  *    TRUE if asked to return binary results (file download)
- * @param int $redirects = 0
+ * @param int $redirects default 0
  *    internal use, recursion counter
- * @param array $opts (optional parameters)
- *    'accept_content' => supply Accept: header with 'accept_content' as the value
- *    'timeout' => int seconds, default system config value or 60 seconds
- *    'http_auth' => username:password
- *    'novalidate' => do not validate SSL certs, default is to validate using our CA list
- *    'nobody' => only return the header
- *    
- * @returns array
- *    'return_code' => HTTP return code or 0 if timeout or failure
- *    'success' => boolean true (if HTTP 2xx result) or false
- *    'header' => HTTP headers
- *    'body' => fetched content
+ * @param array $opts (optional parameters) assoziative array with:
+ *  * \b accept_content => supply Accept: header with 'accept_content' as the value
+ *  * \b timeout => int seconds, default system config value or 60 seconds
+ *  * \b http_auth => username:password
+ *  * \b novalidate => do not validate SSL certs, default is to validate using our CA list
+ *  * \b nobody => only return the header
+ *
+ * @return array an assoziative array with:
+ *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
+ *  * \e boolean \b success => boolean true (if HTTP 2xx result) or false
+ *  * \e string \b header => HTTP headers
+ *  * \e string \b body => fetched content
  */
-
 function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
@@ -129,14 +135,15 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	if(x($opts,'debug')) {
 		$ret['debug'] = $curl_info;
 	}
-	
+
 	@curl_close($ch);
 	return($ret);
 }
 
 
 /**
- * @function z_post_url
+ * @brief
+ *
  * @param string $url
  *    URL to post
  * @param mixed $params
@@ -151,17 +158,15 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
  *    'timeout' => int seconds, default system config value or 60 seconds
  *    'http_auth' => username:password
  *    'novalidate' => do not validate SSL certs, default is to validate using our CA list
- *    
- * @returns array
- *    'return_code' => HTTP return code or 0 if timeout or failure
- *    'success' => boolean true (if HTTP 2xx result) or false
- *    'header' => HTTP headers
- *    'body' => fetched content
+ * @return array an assoziative array with:
+ *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
+ *  * \e boolean \b success => boolean true (if HTTP 2xx result) or false
+ *  * \e string \b header => HTTP headers
+ *  * \e string \b body => content
+ *  * \e string \b debug => from curl_info()
  */
-
-
 function z_post_url($url,$params, $redirects = 0, $opts = array()) {
-	
+
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
 
 	$ch = curl_init($url);
@@ -257,24 +262,35 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 		logger('z_post_url: debug: ' . print_r($curl_info,true), LOGGER_DATA);
 	}
 
-	$ret['body'] = substr($s,strlen($header));
+	$ret['body'] = substr($s, strlen($header));
 	$ret['header'] = $header;
 
 	if(x($opts,'debug')) {
 		$ret['debug'] = $curl_info;
 	}
 
-
 	curl_close($ch);
 	return($ret);
 }
 
+/**
+ * @brief Like z_post_url() but with an application/json HTTP header.
+ *
+ * Add a "Content-Type: application/json" HTTP-header to $opts and call z_post_url().
+ *
+ * @see z_post_url()
+ *
+ * @param string $url
+ * @param array $params
+ * @param number $redirects default 0
+ * @param array $opts (optional) curl options
+ * @return z_post_url()
+ */
+function z_post_url_json($url, $params, $redirects = 0, $opts = array()) {
 
-function z_post_url_json($url,$params,$redirects = 0, $opts = array()) {
+	$opts = array_merge($opts, array('headers' => array('Content-Type: application/json')));
 
-	$opts = array_merge($opts,array('headers' => array('Content-Type: application/json')));
 	return z_post_url($url,json_encode($params),$redirects,$opts);
-
 }
 
 
@@ -305,22 +321,19 @@ function xml_status($st, $message = '') {
 }
 
 /**
- * @function http_status_exit
- * 
- * Send HTTP status header and exit
+ * @brief Send HTTP status header and exit.
+ *
  * @param int $val
  *    integer HTTP status result value
  * @param string $msg
  *    optional message
  * @returns (does not return, process is terminated)
  */
+function http_status_exit($val, $msg = '') {
 
-function http_status_exit($val,$msg = '') {
-
-	$err = '';
-	if($val >= 400)
+	if ($val >= 400)
 		$msg = (($msg) ? $msg : 'Error');
-	if($val >= 200 && $val < 300)
+	if ($val >= 200 && $val < 300)
 		$msg = (($msg) ? $msg : 'OK');
 
 	logger('http_status_exit ' . $val . ' ' . $msg);	

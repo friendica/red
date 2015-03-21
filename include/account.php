@@ -1,4 +1,8 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/account.php
+ * @brief Somme account related functions.
+ */
 
 require_once('include/config.php');
 require_once('include/network.php');
@@ -43,15 +47,14 @@ function check_account_email($email) {
 function check_account_password($password) {
 	$result = array('error' => false, 'message' => '');
 
-	// The only validation we perform by default is pure Javascript to 
+	// The only validation we perform by default is pure Javascript to
 	// check minimum length and that both entered passwords match.
-	// Use hooked functions to perform complexity requirement checks. 
+	// Use hooked functions to perform complexity requirement checks.
 
 	$arr = array('password' => $password, 'result' => $result);
 	call_hooks('check_account_password', $arr);
 
 	return $arr['result'];
-
 }
 
 function check_account_invite($invite_code) {
@@ -75,7 +78,6 @@ function check_account_invite($invite_code) {
 	call_hooks('check_account_invite', $arr);
 
 	return $arr['result'];
-
 }
 
 function check_account_admin($arr) {
@@ -109,7 +111,7 @@ function create_account($arr) {
 	$flags       = ((x($arr,'account_flags')) ? intval($arr['account_flags'])      : ACCOUNT_OK);
 	$roles       = ((x($arr,'account_roles')) ? intval($arr['account_roles'])      : 0 );
 	$expires     = ((x($arr,'expires'))       ? intval($arr['expires'])            : NULL_DATE);
-	
+
 	$default_service_class = get_config('system','default_service_class');
 
 	if($default_service_class === false)
@@ -132,16 +134,16 @@ function create_account($arr) {
 	// allow the admin_email account to be admin, but only if it's the first account.
 
 	$c = account_total();
-	if(($c === 0) && (check_account_admin($arr)))
+	if (($c === 0) && (check_account_admin($arr)))
 		$roles |= ACCOUNT_ROLE_ADMIN;
 
-    // Ensure that there is a host keypair.
+	// Ensure that there is a host keypair.
 
-    if((! get_config('system','pubkey')) && (! get_config('system','prvkey'))) {
-        $hostkey = new_keypair(4096);
-        set_config('system','pubkey',$hostkey['pubkey']);
-        set_config('system','prvkey',$hostkey['prvkey']);
-    }
+	if ((! get_config('system', 'pubkey')) && (! get_config('system', 'prvkey'))) {
+		$hostkey = new_keypair(4096);
+		set_config('system', 'pubkey', $hostkey['pubkey']);
+		set_config('system', 'prvkey', $hostkey['prvkey']);
+	}
 
 	$invite_result = check_account_invite($invite_code);
 	if($invite_result['error']) {
@@ -180,7 +182,6 @@ function create_account($arr) {
 		dbesc($roles),
 		dbesc($expires),
 		dbesc($default_service_class)
-
 	);
 	if(! $r) {
 		logger('create_account: DB INSERT failed.');
@@ -195,7 +196,7 @@ function create_account($arr) {
 	if($r && count($r)) {
 		$result['account'] = $r[0];
 	}
-	else {	
+	else {
 		logger('create_account: could not retrieve newly created account');
 	}
 
@@ -215,8 +216,8 @@ function create_account($arr) {
 	$result['success']  = true;
 	$result['email']    = $email;
 	$result['password'] = $password;
-	return $result;
 
+	return $result;
 }
 
 
@@ -255,7 +256,6 @@ function verify_email_address($arr) {
 		logger('send_reg_approval_email: failed to ' . $admin['email'] . 'account_id: ' . $arr['account']['account_id']);
 
 	return $res;
-
 }
 
 
@@ -291,7 +291,6 @@ function send_reg_approval_email($arr) {
 	$ip = $_SERVER['REMOTE_ADDR'];
 
 	$details = (($ip) ? $ip . ' [' . gethostbyaddr($ip) . ']' : '[unknown or stealth IP]');
-
 
 	$delivered = 0;
 
@@ -346,10 +345,13 @@ function send_verification_email($email,$password) {
 	return($res ? true : false);
 }
 
-
+/**
+ * @brief Allows a user registration.
+ *
+ * @param string $hash
+ * @return array|boolean
+ */
 function user_allow($hash) {
-
-	$a = get_app();
 
 	$ret = array('success' => false);
 
@@ -363,7 +365,7 @@ function user_allow($hash) {
 	$account = q("SELECT * FROM account WHERE account_id = %d LIMIT 1",
 		intval($register[0]['uid'])
 	);
-	
+
 	if(! $account)
 		return $ret;
 
@@ -381,7 +383,7 @@ function user_allow($hash) {
 		intval(ACCOUNT_PENDING),
 		intval($register[0]['uid'])
 	);
-	
+
 	push_lang($register[0]['language']);
 
 	$email_tpl = get_intltext_template("register_open_eml.tpl");
@@ -402,18 +404,23 @@ function user_allow($hash) {
 
 	pop_lang();
 
-	if($res) {
+	if ($res) {
 		info( t('Account approved.') . EOL );
 		return true;
-	}	
-
+	}
 }
 
 
-// This does not have to go through user_remove() and save the nickname
-// permanently against re-registration, as the person was not yet
-// allowed to have friends on this system
-
+/**
+ * @brief Denies a user registration.
+ *
+ * This does not have to go through user_remove() and save the nickname
+ * permanently against re-registration, as the person was not yet
+ * allowed to have friends on this system
+ *
+ * @param string $hash
+ * @return boolean
+ */
 function user_deny($hash) {
 
 	$register = q("SELECT * FROM register WHERE hash = '%s' LIMIT 1",
@@ -426,7 +433,7 @@ function user_deny($hash) {
 	$account = q("SELECT account_id, account_email FROM account WHERE account_id = %d LIMIT 1",
 		intval($register[0]['uid'])
 	);
-	
+
 	if(! $account)
 		return false;
 
@@ -438,14 +445,13 @@ function user_deny($hash) {
 		dbesc($register[0]['id'])
 	);
 	notice( sprintf(t('Registration revoked for %s'), $account[0]['account_email']) . EOL);
+
 	return true;
-	
+
 }
 
 
 function user_approve($hash) {
-
-	$a = get_app();
 
 	$ret = array('success' => false);
 
@@ -459,7 +465,7 @@ function user_approve($hash) {
 	$account = q("SELECT * FROM account WHERE account_id = %d LIMIT 1",
 		intval($register[0]['uid'])
 	);
-	
+
 	if(! $account)
 		return $ret;
 
@@ -482,21 +488,16 @@ function user_approve($hash) {
 		intval(ACCOUNT_UNVERIFIED),
 		intval($register[0]['uid'])
 	);
-	
+
 	info( t('Account verified. Please login.') . EOL );
 
 	return true;
-
 }
 
 
-
-
-
-
 /**
- * @function downgrade_accounts()
- *    Checks for accounts that have past their expiration date.
+ * @brief Checks for accounts that have past their expiration date.
+ *
  * If the account has a service class which is not the site default, 
  * the service class is reset to the site default and expiration reset to never.
  * If the account has no service class it is expired and subsequently disabled.
@@ -506,8 +507,6 @@ function user_approve($hash) {
  * not the job of this function, but this can be implemented by plugin if desired. 
  * Default behaviour is to stop allowing additional resources to be consumed. 
  */
- 
-
 function downgrade_accounts() {
 
 	$r = q("select * from account where not ( account_flags & %d )>0 
@@ -604,7 +603,7 @@ function service_class_allows($uid, $property, $usage = false) {
  *
  * @param int $aid The account_id to check
  * @param string $property The service class property to check for
- * @param int|boolean $usage, (optional) The value to check against
+ * @param int|boolean $usage (optional) The value to check against
  * @return boolean
  */
 function account_service_class_allows($aid, $property, $usage = false) {
