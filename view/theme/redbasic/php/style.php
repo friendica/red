@@ -36,7 +36,6 @@ if(! $a->install) {
 		$converse_width=get_pconfig($uid,"redbasic","converse_width");
 		$converse_center=get_pconfig($uid,"redbasic","converse_center");
 		$nav_min_opacity=get_pconfig($uid,'redbasic','nav_min_opacity');
-		$sloppy_photos=get_pconfig($uid,'redbasic','sloppy_photos');
 		$top_photo=get_pconfig($uid,'redbasic','top_photo');
 		$reply_photo=get_pconfig($uid,'redbasic','reply_photo');
 
@@ -59,15 +58,23 @@ if(! $a->install) {
 			$schemefile = 'view/theme/redbasic/schema/' . $schema . '.php';
 			require_once ($schemefile);
 		}
+		if(file_exists('view/theme/redbasic/schema/' . $schema . '.css')) {
+			$schemecss = file_get_contents('view/theme/redbasic/schema/' . $schema . '.css');
+		}
+
 	}
-		// If we haven't got a schema, load the default.  We shouldn't touch this - we
-		// should leave it for admins to define for themselves.
-			if (! $schema) {
-			      if(file_exists('view/theme/redbasic/schema/default.php')) {
-				    $schemefile = 'view/theme/redbasic/schema/default.php';
-				    require_once ($schemefile);
-				    }
-			}
+
+	// If we haven't got a schema, load the default.  We shouldn't touch this - we
+	// should leave it for admins to define for themselves.
+	if (! $schema) {
+		if(file_exists('view/theme/redbasic/schema/default.php')) {
+			$schemefile = 'view/theme/redbasic/schema/default.php';
+			require_once ($schemefile);
+		}
+		if(file_exists('view/theme/redbasic/schema/default.css')) {
+			$schemecss = file_get_contents('view/theme/redbasic/schema/default.css');
+		}
+	}
 		
 		
 //Set some defaults - we have to do this after pulling owner settings, and we have to check for each setting
@@ -145,8 +152,6 @@ if(! $a->install) {
 		$selected_active_colour = "#444";
 	if (! $selected_active_deco)
 		$selected_active_deco = "none";
-	if (! $widget_brdrcolour)
-		$widget_brdrcolour = "rgba(238,238,238,0.8)";
 	if (! $blockquote_colour)
 		$blockquote_colour = "#4d4d4d";
 	if (! $blockquote_bgcolour)
@@ -169,16 +174,6 @@ if(! $a->install) {
 		$notif_itemcolour = "#000";
 	if (! $notif_itemhovercolour)
 		$notif_itemhovercolour = "#000";
-	if (! $editbuttons_bgcolour)
-		$editbuttons_bgcolour = "transparent";
-	if (! $editbuttons_bordercolour)
-		$editbuttons_bordercolour = "#ccc";
-	if (! $editbuttons_bordercolourhover)
-		$editbuttons_bordercolourhover = "#adadad";
-	if (! $editbuttons_colour)
-		$editbuttons_colour = "#333";
-	if (! $editbuttons_bghover)
-		$editbuttons_bghover = "#ebebeb";
 	if (! $dropdown_bgcolour)
 		$dropdown_bgcolour = "#FFF";
 	if (! $dropdown_textcolour)
@@ -221,79 +216,22 @@ if(! $a->install) {
 		$notifyseen_linkhover = "#333";
 	if (! $notify_topmargin)
 		$notify_topmargin = "1px";
-	if (! $input_bgsubmit)
-		$input_bgsubmit = "#F0F0F0";
-	if (! $input_linksubmit)
-		$input_linksubmit = "#0080FF";
-	if (! $input_border)
-		$input_border = "#ccc";
-	if (! $input_colourhover)
-		$input_colourhover = "#333";
-	if (! $input_decohover)
-		$input_decohover = "none";
+
+
 	if (! $radius)
 		$radius = "4";
 	if (! $shadow)
 		$shadow = "0";
 	if(! $active_colour)
 		$active_colour = "#fff";
-	if (! $converse_width) {
-		$converse_width = "1024px";
-	}
-	if (! $acl_bgcolour)
-		$acl_bgcolour = "#fff";
-	if (! $acl_bordercolour)
-		$acl_bordercolour = "#ccc";
-	if (! $aclbutton_linkcolour)
-		$aclbutton_linkcolour = "";
-	if (! $abookself_bgcolour)
-		$abookself_bgcolour = "#ffdddd";
+	if (! $converse_width)
+		$converse_width = "1024";
 	if(! $top_photo)
 		$top_photo = '48px';
 	if(! $comment_indent)
 		$comment_indent = '0px';
 	if(! $reply_photo)
 		$reply_photo = '32px';
-	if(! $infomess_bgcolour)
-		$infomess_bgcolour = "#F0F0F0";
-	if(! $alert_txtcolour)
-      $alert_txtcolour = "#31708F";	
-	if(! $alert_bgcolour)
-      $alert_bgcolour = "#D9EDF7";
-   if(! $alert_bordercol)
-      $alert_bordercol = "#BCE8F1";
-   if(! $alert_gradientcol)
-      $alert_gradientcol = "#B9DEF0";		
-	if(! $advperm_bgcolour)
-      $advperm_bgcolour = "#F5F5F5";
-   if(! $advperm_bordercol)
-      $advperm_bordercol = "#E3E3E3";
-   if(! $advperm_gradientcol)
-      $advperm_gradientcol = "#E8E8E8";
-   if(! $cal_bgcolour)
-		$cal_bgcolour = "#FCF8E3";
-   if(! $chat_txtbgcol)
-		$chat_txtbgcol = "#EEE";
-   if(! $fancybox_bgcolour)
-      $fancybox_bgcolour = "#FFFFFF";
-	if (!$comment_padding)
-		$comment_padding="0px";	
-	if (!$comment_border_left)
-		$comment_border_left="3px solid";
-	if (!$comment_border_right)
-		$comment_border_right="0px solid";	
-	if (!$comment_border_top)
-		$comment_border_top="0px solid";		
-	if (!$comment_border_bottom)
-		$comment_border_bottom="0px solid";
-	if (!$admintable_hoverbgcol)
-		$admintable_hoverbgcol="#BBC7D7";
-	if (!$dirpopup_txtcol)
-		$dirpopup_txtcol="";
-	if (!$dirpopup_linkcol)
-		$dirpopup_linkcol="";
-	if (!$abook_changebg)
-		$abook_changebg="orange";
 
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
@@ -308,7 +246,12 @@ if(! $a->install) {
 	if(file_exists('view/theme/redbasic/css/style.css')) {
 		$x = file_get_contents('view/theme/redbasic/css/style.css');
 
-$body_width = (231 + $converse_width) . 'px'; // aside is 231px + converse width; have to find a way for calculation with 'px', cannot handle '%'
+
+// left aside is 231px + converse width
+$main_width = (231 + intval($converse_width));
+
+// prevent main_width smaller than 768px
+$main_width = (($main_width < 768) ? 768 : $main_width) . 'px';
 
 $options = array (
 '$nav_bg' => $nav_bg,
@@ -346,7 +289,6 @@ $options = array (
 '$selected_active_colour' => $selected_active_colour,
 '$selected_active_deco' => $selected_active_deco,
 '$body_font_size' => $body_font_size,
-'$widget_brdrcolour' => $widget_brdrcolour,
 '$blockquote_colour' => $blockquote_colour,
 '$blockquote_bgcolour' => $blockquote_bgcolour,
 '$blockquote_bordercolour' => $blockquote_bordercolour,
@@ -359,11 +301,6 @@ $options = array (
 '$pre_txtcolour' => $pre_txtcolour,
 '$notif_itemcolour' => $notif_itemcolour,
 '$notif_itemhovercolour' => $notif_itemhovercolour,
-'$editbuttons_bgcolour' => $editbuttons_bgcolour,
-'$editbuttons_bordercolour' => $editbuttons_bordercolour,
-'$editbuttons_bordercolourhover' => $editbuttons_bordercolourhover,
-'$editbuttons_colour' => $editbuttons_colour,
-'$editbuttons_bghover' => $editbuttons_bghover,
 '$dropdown_bgcolour' => $dropdown_bgcolour,
 '$dropdown_textcolour' => $dropdown_textcolour,
 '$dropdown_txtcolhover' => $dropdown_txtcolhover,
@@ -385,60 +322,30 @@ $options = array (
 '$notifyseen_bghover' => $notifyseen_bghover,
 '$notifyseen_linkhover' => $notifyseen_linkhover,
 '$notify_topmargin' => $notify_topmargin,
-'$input_bgsubmit' => $input_bgsubmit,
-'$input_linksubmit' => $input_linksubmit,
-'$input_border' => $input_border,
-'$input_colourhover' => $input_colourhover,
-'$input_decohover' => $input_decohover,
 '$radius' => $radius,
 '$shadow' => $shadow,
 '$active_colour' => $active_colour,
 '$converse_width' => $converse_width,
-'$acl_bgcolour' => $acl_bgcolour,
-'$acl_bordercolour' => $acl_bordercolour,
-'$aclbutton_linkcolour' => $aclbutton_linkcolour,
-'$abookself_bgcolour' => $abookself_bgcolour,
 '$nav_float_min_opacity' => $nav_float_min_opacity,
 '$nav_percent_min_opacity' => $nav_percent_min_opacity,
 '$top_photo' => $top_photo,
 '$reply_photo' => $reply_photo,
-'$infomess_bgcolour' => $infomess_bgcolour,
-'$alert_txtcolour' => $alert_txtcolour,
-'$alert_bgcolour' => $alert_bgcolour,
-'$alert_bordercol' => $alert_bordercol,
-'$alert_gradientcol' => $alert_gradientcol,
-'$advperm_bgcolour' => $advperm_bgcolour,
-'$advperm_bordercol' => $advperm_bordercol,
-'$advperm_gradientcol' => $advperm_gradientcol,
-'$cal_bgcolour' => $cal_bgcolour,
-'$chat_txtbgcol' => $chat_txtbgcol,
-'$fancybox_bgcolour' => $fancybox_bgcolour,
 '$pmenu_top' => $pmenu_top,
 '$pmenu_reply' => $pmenu_reply,
-'$wwtop' => $wwtop,
 '$comment_indent' => $comment_indent,
-'$body_width' => $body_width,
-'$comment_padding' => $comment_padding,
-'$comment_border_left' => $comment_border_left,
-'$comment_border_right' => $comment_border_right,
-'$comment_border_top' => $comment_border_top,
-'$comment_border_bottom' => $comment_border_bottom,
-'$admintable_hoverbgcol' => $admintable_hoverbgcol,
-'$dirpopup_txtcol' => $dirpopup_txtcol,
-'$dirpopup_linkcol' => $dirpopup_linkcol,
-'$abook_changebg' => $abook_changebg,
+'$main_width' => $main_width,
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    
 }
 
-if($sloppy_photos && file_exists('view/theme/redbasic/css/sloppy_photos.css')) {
-	echo file_get_contents('view/theme/redbasic/css/sloppy_photos.css');
-} 
 if($narrow_navbar && file_exists('view/theme/redbasic/css/narrow_navbar.css')) {
 	echo file_get_contents('view/theme/redbasic/css/narrow_navbar.css');
 } 
 if($converse_center && file_exists('view/theme/redbasic/css/converse_center.css')) {
-	$x = file_get_contents('view/theme/redbasic/css/converse_center.css');
 	echo str_replace(array_keys($options), array_values($options), $x);
-} 
+}
+
+if($schemecss) {
+	echo $schemecss;
+}

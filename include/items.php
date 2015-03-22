@@ -1945,7 +1945,7 @@ function item_store($arr,$allow_exec = false) {
 
 
 	$arr['title'] = ((array_key_exists('title',$arr) && strlen($arr['title']))  ? trim($arr['title']) : '');
-	$arr['body']  = ((array_key_exists('body',$arr) && strlen($arr['body']))    ? $arr['body']  : '');
+	$arr['body']  = ((array_key_exists('body',$arr) && strlen($arr['body']))    ? trim($arr['body'])  : '');
 
 	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : '');
 	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
@@ -2086,6 +2086,16 @@ function item_store($arr,$allow_exec = false) {
 		);
 
 		if($r) {
+
+			// in case item_store was killed before the parent's parent attribute got set,
+			// set it now. This happens with some regularity on Dreamhost. This will keep
+			// us from getting notifications for threads that exist but which we can't see.
+
+			if(($r[0]['mid'] === $r[0]['parent_mid']) && (! intval($r[0]['parent']))) {
+				q("update item set parent = id where id = %d",
+					intval($r[0]['id'])
+				);
+			}
 
 			if(comments_are_now_closed($r[0])) {
 				logger('item_store: comments closed');
@@ -2450,7 +2460,7 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['item_private']  = ((array_key_exists('item_private',$arr)) ? intval($arr['item_private']) : $orig[0]['item_private']);
 
 	$arr['title'] = ((array_key_exists('title',$arr) && strlen($arr['title']))  ? trim($arr['title']) : '');
-	$arr['body']  = ((array_key_exists('body',$arr) && strlen($arr['body']))    ? $arr['body']  : '');
+	$arr['body']  = ((array_key_exists('body',$arr) && strlen($arr['body']))    ? trim($arr['body'])  : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : $orig[0]['attach']);
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : $orig[0]['app']);
 //	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : $orig[0]['item_restrict'] );
@@ -3073,7 +3083,16 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 	if((! $private) && $new_public_policy)
 		$private = 1;
 
-	$flag_bits = $item['item_flags'] | ITEM_WALL|ITEM_ORIGIN;
+	$flag_bits = $item['item_flags'] | ITEM_WALL;
+
+	// The message didn't necessarily originate on this site, (we'll honour it if it did),
+	// but the parent post of this thread will be reset as a local post, as it is the top of 
+	// this delivery chain and is coming from this site, regardless of where the original
+	// originated.
+
+	if(! $parent)
+		$flag_bits = $flag_bits | ITEM_ORIGIN;
+
 
 	// unset the nocomment bit if it's there. 
 
@@ -3135,6 +3154,8 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 		dbesc($body),
 		intval($item_id)
 	);
+
+
 
 	if($r)
 		proc_run('php','include/notifier.php','tgroup',$item_id);
@@ -4787,4 +4808,19 @@ function set_linkified_perms($linkified, &$str_contact_allow, &$str_group_allow,
 			}
 		}
 	}
+}
+
+
+/*
+ * We can't trust ITEM_ORIGIN to tell us if this is a local comment 
+ * which needs to be relayed, because it was misconfigured at one point for several
+ * months and set for some remote items (in alternate delivery chains). This could
+ * cause looping, so use this hackish but accurate method. 
+ */
+
+
+function comment_local_origin($item) {
+	if(stripos($item['mid'],get_app()->get_hostname()) && ($item['parent'] != $item['id']))
+		return true;
+	return false;		
 }

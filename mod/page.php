@@ -92,6 +92,7 @@ function page_init(&$a) {
 		if($l) {
 			require_once('include/comanche.php');
 			comanche_parser(get_app(),$l[0]['body']);
+			get_app()->pdl = $l[0]['body'];
 		}
 	}
 

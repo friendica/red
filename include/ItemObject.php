@@ -672,7 +672,7 @@ class Item extends BaseObject {
 			'$edquote' => t('Quote'),
 			'$edcode' => t('Code'),
 			'$edimg' => t('Image'),
-			'$edurl' => t('Link'),
+			'$edurl' => t('Insert Link'),
 			'$edvideo' => t('Video'),
 			'$preview' => t('Preview'), // ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
 			'$indent' => $indent,

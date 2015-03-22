@@ -19,6 +19,9 @@ function settings_init(&$a) {
 	if(! local_channel())
 		return;
 
+	if($_SESSION['delegate'])
+		return;
+
 	$a->profile_uid = local_channel();
 
 	// default is channel settings in the absence of other arguments
@@ -39,12 +42,12 @@ function settings_post(&$a) {
 	if(! local_channel())
 		return;
 
+	if($_SESSION['delegate'])
+		return;
+
 	$channel = $a->get_channel();
 
 	 logger('mod_settings: ' . print_r($_REQUEST,true));
-
-	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
-		return;
 
 
 	if((argc() > 1) && (argv(1) === 'oauth') && x($_POST,'remove')){
@@ -117,6 +120,7 @@ function settings_post(&$a) {
 
 		if($_POST['dspr-submit']) {
 			set_pconfig(local_channel(),'system','diaspora_public_comments',intval($_POST['dspr_pubcomment']));
+			set_pconfig(local_channel(),'system','prevent_tag_hijacking',intval($_POST['dspr_hijack']));
 			info( t('Diaspora Policy Settings updated.') . EOL);
 		}
 
@@ -184,7 +188,7 @@ function settings_post(&$a) {
 		set_pconfig(local_channel(),'system','user_scalable',$user_scalable);
 		set_pconfig(local_channel(),'system','update_interval', $browser_update);
 		set_pconfig(local_channel(),'system','itemspage', $itemspage);
-		set_pconfig(local_channel(),'system','no_smilies',$nosmile);
+		set_pconfig(local_channel(),'system','no_smilies',1-intval($nosmile));
 		set_pconfig(local_channel(),'system','title_tosource',$title_tosource);
 		set_pconfig(local_channel(),'system','channel_list_mode', $channel_list_mode);
 		set_pconfig(local_channel(),'system','network_list_mode', $network_list_mode);
@@ -549,14 +553,14 @@ function settings_post(&$a) {
 }
 		
 
-if(! function_exists('settings_content')) {
+
 function settings_content(&$a) {
 
 	$o = '';
 	nav_set_selected('settings');
 
 
-	if(! local_channel()) {
+	if((! local_channel()) || ($_SESSION['delegate'])) {
 		notice( t('Permission denied.') . EOL );
 		return login();
 	}
@@ -566,12 +570,7 @@ function settings_content(&$a) {
 	if($channel)
 		head_set_icon($channel['xchan_photo_s']);
 
-//	if(x($_SESSION,'submanage') && intval($_SESSION['submanage'])) {
-//		notice( t('Permission denied.') . EOL );
-//		return;
-//	}
-	
-
+	$yes_no = array(t('No'),t('Yes'));
 		
 	if((argc() > 1) && (argv(1) === 'oauth')) {
 		
@@ -666,6 +665,9 @@ function settings_content(&$a) {
 			$pubcomments = get_pconfig(local_channel(),'system','diaspora_public_comments');
 			if($pubcomments === false)
 				$pubcomments = 1;
+			$hijacking = get_pconfig(local_channel(),'system','prevent_tag_hijacking');
+
+
 		}
 
 		call_hooks('feature_settings', $settings_addons);
@@ -673,12 +675,13 @@ function settings_content(&$a) {
 		$tpl = get_markup_template("settings_addons.tpl");
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_featured"),
-			'$title'	=> t('Feature Settings'),
+			'$title'	=> t('Feature/Addon Settings'),
 			'$diaspora_enabled' => $diaspora_enabled,
-			'$pubcomments' => $pubcomments,
+			'$dsprdesc' => t('Settings for the built-in Diaspora emulator'), 
+			'$pubcomments' => array('dspr_pubcomment', t('Allow any Diaspora member to comment on your public posts'), $pubcomments, '', $yes_no),
 			'$dsprtitle' => t('Diaspora Policy Settings'),
-			'$dsprhelp' => t('Allow any Diaspora member to comment on your public posts.'),
-			'$dsprsubmit' => t('Submit Diaspora Policy Settings'),
+			'$hijacking' => array('dspr_hijack', t('Prevent your hashtags from being redirected to other sites'), $hijacking, '', $yes_no),
+			'$dsprsubmit' => t('Submit'),
 			'$settings_addons' => $settings_addons
 		));
 		return $o;
@@ -702,14 +705,12 @@ function settings_content(&$a) {
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_account"),
 			'$title'	=> t('Account Settings'),
-			'$h_pass' 	=> t('Password Settings'),
-			'$password1'=> array('npassword', t('New Password:'), '', ''),
-			'$password2'=> array('confirm', t('Confirm:'), '', t('Leave password fields blank unless changing')),
+			'$password1'=> array('npassword', t('Enter New Password:'), '', ''),
+			'$password2'=> array('confirm', t('Confirm New Password:'), '', t('Leave password fields blank unless changing')),
 			'$submit' 	=> t('Submit'),
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
 			'$removeme' => t('Remove Account'),
-			'$removeaccount' => t('Remove this account from this server including all its channels'),
-			'$permanent' => t('Warning: This action is permanent and cannot be reversed.'),
+			'$removeaccount' => t('Remove this account including all its channels'),
 			'$account_settings' => $account_settings
 		));
 		return $o;
@@ -843,18 +844,18 @@ function settings_content(&$a) {
 			'$baseurl' => $a->get_baseurl(true),
 			'$uid' => local_channel(),
 		
-			'$theme'	=> array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview'),
-			'$mobile_theme'	=> array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, ''),
-			'$user_scalable' => array('user_scalable', t("Enable user zoom on mobile devices"), $user_scalable, ''),
+			'$theme'	=> (($themes) ? array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview') : false),
+			'$mobile_theme'	=> (($mobile_themes) ? array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, '') : false),
+			'$user_scalable' => array('user_scalable', t("Enable user zoom on mobile devices"), $user_scalable, '', $yes_no),
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
-			'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, ''),
-			'$title_tosource'	=> array('title_tosource', t("Link post titles to source"), $title_tosource, ''),		
+			'$nosmile'	=> array('nosmile', t("Show emoticons (smilies) as images"), 1-intval($nosmile), '', $yes_no),
+			'$title_tosource'	=> array('title_tosource', t("Link post titles to source"), $title_tosource, '', $yes_no),
 			'$layout_editor' => t('System Page Layout Editor - (advanced)'),
 			'$theme_config' => $theme_config,
 			'$expert' => feature_enabled(local_channel(),'expert'),
-			'$channel_list_mode' => array('channel_list_mode', t('Use blog/list mode on channel page'), get_pconfig(local_channel(),'system','channel_list_mode'), t('(comments displayed separately)')),
-			'$network_list_mode' => array('network_list_mode', t('Use blog/list mode on matrix page'), get_pconfig(local_channel(),'system','network_list_mode'), t('(comments displayed separately)')),
+			'$channel_list_mode' => array('channel_list_mode', t('Use blog/list mode on channel page'), get_pconfig(local_channel(),'system','channel_list_mode'), t('(comments displayed separately)'), $yes_no),
+			'$network_list_mode' => array('network_list_mode', t('Use blog/list mode on matrix page'), get_pconfig(local_channel(),'system','network_list_mode'), t('(comments displayed separately)'), $yes_no),
 			'$channel_divmore_height' => array('channel_divmore_height', t('Channel page max height of content (in pixels)'), ((get_pconfig(local_channel(),'system','channel_divmore_height')) ? get_pconfig(local_channel(),'system','channel_divmore_height') : 400), t('click to expand content exceeding this height')),
 			'$network_divmore_height' => array('network_divmore_height', t('Matrix page max height of content (in pixels)'), ((get_pconfig(local_channel(),'system','network_divmore_height')) ? get_pconfig(local_channel(),'system','network_divmore_height') : 400) , t('click to expand content exceeding this height')),
 
@@ -971,12 +972,12 @@ function settings_content(&$a) {
 		}
 		else {
 			$profile_in_dir = replace_macros($opt_tpl,array(
-				'$field' 	=> array('profile_in_directory', t('Publish your default profile in the network directory'), $profile['publish'], '', array(t('No'),t('Yes'))),
+				'$field' 	=> array('profile_in_directory', t('Publish your default profile in the network directory'), $profile['publish'], '', $yes_no),
 			));
 		}
 
 		$suggestme = replace_macros($opt_tpl,array(
-				'$field' 	=> array('suggestme',  t('Allow us to suggest you as a potential friend to new members?'), $suggestme, '', array(t('No'),t('Yes'))),
+				'$field' 	=> array('suggestme',  t('Allow us to suggest you as a potential friend to new members?'), $suggestme, '', $yes_no),
 
 		));
 
@@ -1045,15 +1046,15 @@ function settings_content(&$a) {
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
 			'$timezone' => array('timezone_select' , t('Your Timezone:'), $timezone, '', get_timezones()),
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, t('Geographical location to display on your posts')),
-			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_channel(),'system','use_browser_location')) ? 1 : ''), ''),
+			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_channel(),'system','use_browser_location')) ? 1 : ''), '', $yes_no),
 		
-			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel frequently or regularly publishes adult content. (Please tag any adult material and/or nudity with #NSFW)')),
+			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel frequently or regularly publishes adult content. (Please tag any adult material and/or nudity with #NSFW)'), $yes_no),
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
 			'$permissions_set' => $permissions_set,
 			'$perms_set_msg' => t('Your permissions are already configured. Click to view/adjust'),
 
-			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online')),
+			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online'), $yes_no),
 
 			'$lbl_pmacro' => t('Simple Privacy Settings:'),
 			'$pmacro3'    => t('Very Public - <em>extremely permissive (should be used with caution)</em>'),
@@ -1061,7 +1062,7 @@ function settings_content(&$a) {
 			'$pmacro1'    => t('Private - <em>default private, never open or public</em>'),
 			'$pmacro0'    => t('Blocked - <em>default blocked to/from everybody</em>'),
 			'$permiss_arr' => $permiss,
-			'$blocktags' => array('blocktags',t('Allow others to tag your posts'), 1-$blocktags, t('Often used by the community to retro-actively flag inappropriate content'),array(t('No'),t('Yes'))),
+			'$blocktags' => array('blocktags',t('Allow others to tag your posts'), 1-$blocktags, t('Often used by the community to retro-actively flag inappropriate content'), $yes_no),
 
 			'$lbl_p2macro' => t('Advanced Privacy Settings'),
 
@@ -1083,34 +1084,34 @@ function settings_content(&$a) {
 		
 			'$h_not' 	=> t('Notification Settings'),
 			'$activity_options' => t('By default post a status message when:'),
-			'$post_newfriend' => array('post_newfriend',  t('accepting a friend request'), $post_newfriend, ''),
-			'$post_joingroup' => array('post_joingroup',  t('joining a forum/community'), $post_joingroup, ''),
-			'$post_profilechange' => array('post_profilechange',  t('making an <em>interesting</em> profile change'), $post_profilechange, ''),
+			'$post_newfriend' => array('post_newfriend',  t('accepting a friend request'), $post_newfriend, '', $yes_no),
+			'$post_joingroup' => array('post_joingroup',  t('joining a forum/community'), $post_joingroup, '', $yes_no),
+			'$post_profilechange' => array('post_profilechange',  t('making an <em>interesting</em> profile change'), $post_profilechange, '', $yes_no),
 			'$lbl_not' 	=> t('Send a notification email when:'),
-			'$notify1'	=> array('notify1', t('You receive a connection request'), ($notify & NOTIFY_INTRO), NOTIFY_INTRO, ''),
-			'$notify2'	=> array('notify2', t('Your connections are confirmed'), ($notify & NOTIFY_CONFIRM), NOTIFY_CONFIRM, ''),
-			'$notify3'	=> array('notify3', t('Someone writes on your profile wall'), ($notify & NOTIFY_WALL), NOTIFY_WALL, ''),
-			'$notify4'	=> array('notify4', t('Someone writes a followup comment'), ($notify & NOTIFY_COMMENT), NOTIFY_COMMENT, ''),
-			'$notify5'	=> array('notify5', t('You receive a private message'), ($notify & NOTIFY_MAIL), NOTIFY_MAIL, ''),
-			'$notify6'  => array('notify6', t('You receive a friend suggestion'), ($notify & NOTIFY_SUGGEST), NOTIFY_SUGGEST, ''),		
-			'$notify7'  => array('notify7', t('You are tagged in a post'), ($notify & NOTIFY_TAGSELF), NOTIFY_TAGSELF, ''),		
-			'$notify8'  => array('notify8', t('You are poked/prodded/etc. in a post'), ($notify & NOTIFY_POKE), NOTIFY_POKE, ''),		
+			'$notify1'	=> array('notify1', t('You receive a connection request'), ($notify & NOTIFY_INTRO), NOTIFY_INTRO, '', $yes_no),
+			'$notify2'	=> array('notify2', t('Your connections are confirmed'), ($notify & NOTIFY_CONFIRM), NOTIFY_CONFIRM, '', $yes_no),
+			'$notify3'	=> array('notify3', t('Someone writes on your profile wall'), ($notify & NOTIFY_WALL), NOTIFY_WALL, '', $yes_no),
+			'$notify4'	=> array('notify4', t('Someone writes a followup comment'), ($notify & NOTIFY_COMMENT), NOTIFY_COMMENT, '', $yes_no),
+			'$notify5'	=> array('notify5', t('You receive a private message'), ($notify & NOTIFY_MAIL), NOTIFY_MAIL, '', $yes_no),
+			'$notify6'  => array('notify6', t('You receive a friend suggestion'), ($notify & NOTIFY_SUGGEST), NOTIFY_SUGGEST, '', $yes_no),
+			'$notify7'  => array('notify7', t('You are tagged in a post'), ($notify & NOTIFY_TAGSELF), NOTIFY_TAGSELF, '', $yes_no),
+			'$notify8'  => array('notify8', t('You are poked/prodded/etc. in a post'), ($notify & NOTIFY_POKE), NOTIFY_POKE, '', $yes_no),
 		
 
 			'$lbl_vnot' 	=> t('Show visual notifications including:'),
 
-			'$vnotify1'	=> array('vnotify1', t('Unseen matrix activity'), ($vnotify & VNOTIFY_NETWORK), VNOTIFY_NETWORK, ''),
-			'$vnotify2'	=> array('vnotify2', t('Unseen channel activity'), ($vnotify & VNOTIFY_CHANNEL), VNOTIFY_CHANNEL, ''),
-			'$vnotify3'	=> array('vnotify3', t('Unseen private messages'), ($vnotify & VNOTIFY_MAIL), VNOTIFY_MAIL, t('Recommended')),
-			'$vnotify4'	=> array('vnotify4', t('Upcoming events'), ($vnotify & VNOTIFY_EVENT), VNOTIFY_EVENT, ''),
-			'$vnotify5'	=> array('vnotify5', t('Events today'), ($vnotify & VNOTIFY_EVENTTODAY), VNOTIFY_EVENTTODAY, ''),
-			'$vnotify6'  => array('vnotify6', t('Upcoming birthdays'), ($vnotify & VNOTIFY_BIRTHDAY), VNOTIFY_BIRTHDAY, t('Not available in all themes')),
-			'$vnotify7'  => array('vnotify7', t('System (personal) notifications'), ($vnotify & VNOTIFY_SYSTEM), VNOTIFY_SYSTEM, ''),		
-			'$vnotify8'  => array('vnotify8', t('System info messages'), ($vnotify & VNOTIFY_INFO), VNOTIFY_INFO, t('Recommended')),		
-			'$vnotify9'  => array('vnotify9', t('System critical alerts'), ($vnotify & VNOTIFY_ALERT), VNOTIFY_ALERT, t('Recommended')),		
-			'$vnotify10'  => array('vnotify10', t('New connections'), ($vnotify & VNOTIFY_INTRO), VNOTIFY_INTRO, t('Recommended')),		
-			'$vnotify11'  => array('vnotify11', t('System Registrations'), ($vnotify & VNOTIFY_REGISTER), VNOTIFY_REGISTER, ''),		
-			'$always_show_in_notices'  => array('always_show_in_notices', t('Also show new wall posts, private messages and connections under Notices'), $always_show_in_notices, 1, ''),		
+			'$vnotify1'	=> array('vnotify1', t('Unseen matrix activity'), ($vnotify & VNOTIFY_NETWORK), VNOTIFY_NETWORK, '', $yes_no),
+			'$vnotify2'	=> array('vnotify2', t('Unseen channel activity'), ($vnotify & VNOTIFY_CHANNEL), VNOTIFY_CHANNEL, '', $yes_no),
+			'$vnotify3'	=> array('vnotify3', t('Unseen private messages'), ($vnotify & VNOTIFY_MAIL), VNOTIFY_MAIL, t('Recommended'), $yes_no),
+			'$vnotify4'	=> array('vnotify4', t('Upcoming events'), ($vnotify & VNOTIFY_EVENT), VNOTIFY_EVENT, '', $yes_no),
+			'$vnotify5'	=> array('vnotify5', t('Events today'), ($vnotify & VNOTIFY_EVENTTODAY), VNOTIFY_EVENTTODAY, '', $yes_no),
+			'$vnotify6'  => array('vnotify6', t('Upcoming birthdays'), ($vnotify & VNOTIFY_BIRTHDAY), VNOTIFY_BIRTHDAY, t('Not available in all themes'), $yes_no),
+			'$vnotify7'  => array('vnotify7', t('System (personal) notifications'), ($vnotify & VNOTIFY_SYSTEM), VNOTIFY_SYSTEM, '', $yes_no),
+			'$vnotify8'  => array('vnotify8', t('System info messages'), ($vnotify & VNOTIFY_INFO), VNOTIFY_INFO, t('Recommended'), $yes_no),
+			'$vnotify9'  => array('vnotify9', t('System critical alerts'), ($vnotify & VNOTIFY_ALERT), VNOTIFY_ALERT, t('Recommended'), $yes_no),
+			'$vnotify10'  => array('vnotify10', t('New connections'), ($vnotify & VNOTIFY_INTRO), VNOTIFY_INTRO, t('Recommended'), $yes_no),
+			'$vnotify11'  => array('vnotify11', t('System Registrations'), ($vnotify & VNOTIFY_REGISTER), VNOTIFY_REGISTER, '', $yes_no),
+			'$always_show_in_notices'  => array('always_show_in_notices', t('Also show new wall posts, private messages and connections under Notices'), $always_show_in_notices, 1, '', $yes_no),
 
 			'$evdays' => array('evdays', t('Notify me of events this many days in advance'), $evdays, t('Must be greater than 0')),			
 
@@ -1122,8 +1123,8 @@ function settings_content(&$a) {
 			'$lbl_misc' => t('Miscellaneous Settings'),
 			'$menus' => $menu,
 			'$menu_desc' => t('Personal menu to display in your channel pages'),
-			'$removeme' => t('Remove this channel'),
-			'$permanent' => t('Warning: This action is permanent and cannot be reversed.'),		
+			'$removeme' => t('Remove Channel'),
+			'$removechannel' => t('Remove this channel.'),
 		));
 
 		call_hooks('settings_form',$o);
@@ -1132,5 +1133,5 @@ function settings_content(&$a) {
 
 		return $o;
 	}
-}}
+}
 

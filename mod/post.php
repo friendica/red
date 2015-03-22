@@ -30,6 +30,7 @@ function post_init(&$a) {
  ** dest => the desired destination URL (urlencoded)
  ** sec  => a random string which is also stored on $mysite for use during the verification phase. 
  ** version => the zot revision
+ ** delegate => optional urlencoded webbie of a local channel to invoke delegation rights for
  *
  * When this packet is received, an "auth-check" zot message is sent to $mysite.
  * (e.g. if $_GET['auth'] is foobar@podunk.edu, a zot packet is sent to the podunk.edu zot endpoint, which is typically /post)
@@ -88,10 +89,12 @@ function post_init(&$a) {
 		$ret = array('success' => false, 'message' => '');
 
 		logger('mod_zot: auth request received.');
-		$address = $_REQUEST['auth'];
-		$desturl = $_REQUEST['dest'];
-		$sec     = $_REQUEST['sec'];
-		$version = $_REQUEST['version'];
+		$address  = $_REQUEST['auth'];
+		$desturl  = $_REQUEST['dest'];
+		$sec      = $_REQUEST['sec'];
+		$version  = $_REQUEST['version'];
+		$delegate = $_REQUEST['delegate'];
+
 		$test    = ((x($_REQUEST,'test')) ? intval($_REQUEST['test']) : 0);
 
 		// They are authenticating ultimately to the site and not to a particular channel.
@@ -158,6 +161,8 @@ function post_init(&$a) {
 		// Also check that they are coming from the same site as they authenticated with originally.
 
 		$already_authed = ((($remote) && ($x[0]['hubloc_hash'] == $remote) && ($x[0]['hubloc_url'] === $_SESSION['remote_hub'])) ? true : false); 
+		if($delegate && $delegate !== $_SESSION['delegate_channel'])
+			$already_authed = false;
 
 		$j = array();
 
@@ -235,6 +240,8 @@ function post_init(&$a) {
 				}
 				goaway($desturl);
 			}
+			
+
 			// log them in
 
 			if($test) {
@@ -243,16 +250,38 @@ function post_init(&$a) {
 				json_return_and_die($ret);
 			}
 
+			$delegation_success = false;
+			if($delegate) {
+				$r = q("select * from channel left join xchan on channel_hash = xchan_hash where xchan_addr = '%s' limit 1",
+					dbesc($delegate)
+				);
+				if($r && intval($r[0]['channel_id'])) {
+					$allowed = perm_is_allowed($r[0]['channel_id'],$x[0]['xchan_hash'],'delegate');
+					if($allowed) {
+						$_SESSION['delegate_channel'] = $r[0]['channel_id'];
+						$_SESSION['delegate'] = $x[0]['xchan_hash'];
+						$_SESSION['account_id'] = intval($r[0]['channel_account_id']);
+						require_once('include/security.php');
+						change_channel($r[0]['channel_id']);
+						$delegation_success = true;
+					}
+				}
+			}
+			
+
+
 
 			$_SESSION['authenticated'] = 1;
-			$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
-			$_SESSION['my_url'] = $x[0]['xchan_url'];
-			$_SESSION['my_address'] = $address;
-			$_SESSION['remote_service_class'] = $remote_service_class;
-			$_SESSION['remote_level'] = $remote_level;
-			$_SESSION['remote_hub'] = $remote_hub;
-			$_SESSION['DNT'] = $DNT;
-			
+			if(! $delegation_success) {
+				$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
+				$_SESSION['my_url'] = $x[0]['xchan_url'];
+				$_SESSION['my_address'] = $address;
+				$_SESSION['remote_service_class'] = $remote_service_class;
+				$_SESSION['remote_level'] = $remote_level;
+				$_SESSION['remote_hub'] = $remote_hub;
+				$_SESSION['DNT'] = $DNT;
+			}
+
 			$arr = array('xchan' => $x[0], 'url' => $desturl, 'session' => $_SESSION);
 			call_hooks('magic_auth_success',$arr);
 			$a->set_observer($x[0]);

@@ -38,6 +38,7 @@ function term_query($table,$s,$type = TERM_UNKNOWN) {
 function store_item_tag($uid,$iid,$otype,$type,$term,$url = '') {
 	if(! $term) 
 		return false;
+
 	$r = q("select * from term 
 		where uid = %d and oid = %d and otype = %d and type = %d 
 		and term = '%s' and url = '%s' ",
@@ -50,6 +51,7 @@ function store_item_tag($uid,$iid,$otype,$type,$term,$url = '') {
 	);
 	if($r)
 		return false;
+
 	$r = q("insert into term (uid, oid, otype, type, term, url)
 		values( %d, %d, %d, %d, '%s', '%s') ",
 		intval($uid),
@@ -59,9 +61,11 @@ function store_item_tag($uid,$iid,$otype,$type,$term,$url = '') {
 		dbesc($term),
 		dbesc($url)
 	);
+
 	return $r;
 }
-		
+
+
 function get_terms_oftype($arr,$type) {
 	$ret = array();
 	if(! (is_array($arr) && count($arr)))
@@ -74,6 +78,7 @@ function get_terms_oftype($arr,$type) {
 		foreach($arr as $x)
 			if($x['type'] == $t)
 				$ret[] = $x;
+
 	return $ret;
 }
 
@@ -99,7 +104,7 @@ function format_term_for_display($term) {
 function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $restrict = 0, $type = TERM_HASHTAG) {
 
 	require_once('include/security.php');
-	
+
 	if(! perm_is_allowed($uid,get_observer_hash(),'view_stream'))
 		return array();
 
@@ -112,6 +117,7 @@ function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $restrict = 0, $
 	if($authors) {
 		if(! is_array($authors))
 			$authors = array($authors);
+
 		stringify_array_elms($authors,true);
 		$sql_options .= " and author_xchan in (" . implode(',',$authors) . ") "; 
 	}
@@ -131,8 +137,8 @@ function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $restrict = 0, $
 
 	if(! $r)
 		return array();
-  
-  	// Find minimum and maximum log-count.
+
+	// Find minimum and maximum log-count.
 	$tags = array();
 	$min = 1e9;
 	$max = -1e9;
@@ -152,22 +158,23 @@ function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $restrict = 0, $
 	$range = max(.01, $max - $min) * 1.0001;
 
 	for($x = 0; $x < count($tags); $x ++) {
-		$tags[$x][2] = 1 + floor(5 * ($tags[$x][1] - $min) / $range);
+		$tags[$x][2] = 1 + floor(9 * ($tags[$x][1] - $min) / $range);
 	}
 
 	return $tags;
 }
 
+
 function tags_sort($a,$b) {
-   if(strtolower($a[0]) == strtolower($b[0]))
-	 return 0;
-   return((strtolower($a[0]) < strtolower($b[0])) ? -1 : 1);
+	if(strtolower($a[0]) == strtolower($b[0]))
+		return 0;
+
+	return((strtolower($a[0]) < strtolower($b[0])) ? -1 : 1);
 }
 
 
 function dir_tagadelic($count = 0) {
 
-	$sql_options = '';
 	$count = intval($count);
 
 	// Fetch tags
@@ -178,8 +185,8 @@ function dir_tagadelic($count = 0) {
 
 	if(! $r)
 		return array();
-  
-  	// Find minimum and maximum log-count.
+
+	// Find minimum and maximum log-count.
 	$tags = array();
 	$min = 1e9;
 	$max = -1e9;
@@ -199,7 +206,7 @@ function dir_tagadelic($count = 0) {
 	$range = max(.01, $max - $min) * 1.0001;
 
 	for($x = 0; $x < count($tags); $x ++) {
-		$tags[$x][2] = 1 + floor(5 * ($tags[$x][1] - $min) / $range);
+		$tags[$x][2] = 1 + floor(9 * ($tags[$x][1] - $min) / $range);
 	}
 
 	return $tags;
@@ -207,65 +214,66 @@ function dir_tagadelic($count = 0) {
 
 
 function tagblock($link,$uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$type = TERM_HASHTAG) {
-  $o = '';
-  $tab = 0;
-  $r = tagadelic($uid,$count,$authors,$flags,$restrict,$type);
+	$o = '';
 
-  if($r) {
-	$o = '<div class="tagblock widget"><h3>' . t('Tags') . '</h3><div class="tags" align="center">';
-	foreach($r as $rr) { 
-	  $o .= '<span class="tag'.$rr[2].'">#</span><a href="'.$link .'/' . '?f=&tag=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
+	$r = tagadelic($uid,$count,$authors,$flags,$restrict,$type);
+
+	if($r) {
+		$o = '<div class="tagblock widget"><h3>' . t('Tags') . '</h3><div class="tags" align="center">';
+		foreach($r as $rr) { 
+		  $o .= '<span class="tag'.$rr[2].'">#</span><a href="'.$link .'/' . '?f=&tag=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
+		}
+		$o .= '</div></div>';
 	}
-	$o .= '</div></div>';
-  }
+
 	return $o;
 }
 
+
 function wtagblock($uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$type = TERM_HASHTAG) {
-  $o = '';
-  $tab = 0;
-  $r = tagadelic($uid,$count,$authors,$flags,$restrict,$type);
+	$o = '';
 
-  if($r) {
-	$c = q("select channel_address from channel where channel_id = %d limit 1",
-		intval($uid)
-	);
+	$r = tagadelic($uid,$count,$authors,$flags,$restrict,$type);
 
-	$o = '<div class="tagblock widget"><h3>' . t('Tags') . '</h3><div class="tags" align="center">';
-	foreach($r as $rr) { 
-	  $o .= '<span class="tag' . $rr[2] . '">#</span><a href="channel/' . $c[0]['channel_address'] . '?f=&tag=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
+	if($r) {
+		$c = q("select channel_address from channel where channel_id = %d limit 1",
+			intval($uid)
+		);
+	
+		$o = '<div class="tagblock widget"><h3>' . t('Tags') . '</h3><div class="tags" align="center">';
+		foreach($r as $rr) { 
+		  $o .= '<span class="tag' . $rr[2] . '">#</span><a href="channel/' . $c[0]['channel_address'] . '?f=&tag=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
+		}
+		$o .= '</div></div>';
 	}
-	$o .= '</div></div>';
-  }
+
 	return $o;
 }
 
 
 function catblock($uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$type = TERM_CATEGORY) {
-  $o = '';
-  $tab = 0;
+	$o = '';
 
-  $r = tagadelic($uid,$count,$authors,$flags,$restrict,$type);
+	$r = tagadelic($uid,$count,$authors,$flags,$restrict,$type);
 
-  if($r) {
-	$c = q("select channel_address from channel where channel_id = %d limit 1",
-		intval($uid)
-	);
-
-	$o = '<div class="tagblock widget"><h3>' . t('Categories') . '</h3><div class="tags" align="center">';
-	foreach($r as $rr) { 
-	  $o .= '<a href="channel/' . $c[0]['channel_address']. '?f=&cat=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
+	if($r) {
+		$c = q("select channel_address from channel where channel_id = %d limit 1",
+			intval($uid)
+		);
+	
+		$o = '<div class="tagblock widget"><h3>' . t('Categories') . '</h3><div class="tags" align="center">';
+		foreach($r as $rr) { 
+			$o .= '<a href="channel/' . $c[0]['channel_address']. '?f=&cat=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
+		}
+		$o .= '</div></div>';
 	}
-	$o .= '</div></div>';
-  }
+
 	return $o;
 }
 
 
-
 function dir_tagblock($link,$r) {
 	$o = '';
-	$tab = 0;
 
 	if(! $r)
 		$r = get_app()->data['directory_keywords'];
@@ -277,11 +285,9 @@ function dir_tagblock($link,$r) {
 		}
 		$o .= '</div></div>';
 	}
+
 	return $o;
 }
-
-
-
 
 
 
@@ -291,8 +297,6 @@ function dir_tagblock($link,$r) {
 	 * FIXME: There is no accounting for verb gender for languages where this is significant. We may eventually
 	 * require obj_verbs() to provide full conjugations and specify which form to use in the $_REQUEST params to this module.
 	 */
-
-
 
 function obj_verbs() {
 	$verbs = array(
@@ -304,26 +308,27 @@ function obj_verbs() {
 
 	$arr = array('verbs' => $verbs);
 	call_hooks('obj_verbs', $arr);
+
 	return	$arr['verbs'];
 }
 
 
 function obj_verb_selector($current = '') {
 	$verbs = obj_verbs();
-	$o .= '<select class="obj-verb-selector" name="verb" >';
+	$o = '<select class="obj-verb-selector" name="verb">';
 	foreach($verbs as $k => $v) {
 		$selected = (($k == $current) ? ' selected="selected" ' : '');
 		$o .= '<option value="' . urlencode($k) . '"' . $selected . '>' . $v[1] . '</option>';
 	}
 	$o .= '</select>';
-	return $o;
 
+	return $o;
 }
 
 function get_things($profile_hash,$uid) {
 
 	$sql_extra = (($profile_hash) ? " and obj_page = '" . $profile_hash . "' " : '');
-	
+
 	$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and uid = %d and obj_type = %d $sql_extra order by obj_verb, term",
 		intval($uid),
 		intval(TERM_OBJ_THING)
@@ -379,11 +384,11 @@ function get_things($profile_hash,$uid) {
 
 			for($x = 0; $x < count($l); $x ++) 
 				$l[$x]['xchan_url'] = zid($l[$x]['xchan_url']);
-					
+
 			if(! $things[$rr['obj_verb']])
 				$things[$rr['obj_verb']] = array();
-			$things[$rr['obj_verb']][] = array('term' => $rr['term'],'url' => $rr['url'],'img' => $rr['imgurl'], 'profile' => $rr['profile_name'],'term_hash' => $rr['term_hash'], 'likes' => $l,'like_count' => count($l),'like_label' => tt('Like','Likes',count($l),'noun'));
 
+			$things[$rr['obj_verb']][] = array('term' => $rr['term'],'url' => $rr['url'],'img' => $rr['imgurl'], 'profile' => $rr['profile_name'],'term_hash' => $rr['term_hash'], 'likes' => $l,'like_count' => count($l),'like_label' => tt('Like','Likes',count($l),'noun'));
 		} 
 		$sorted_things = array();
 		if($things) {
@@ -395,6 +400,6 @@ function get_things($profile_hash,$uid) {
 		}
 	}
 //logger('things: ' . print_r($sorted_things,true));
-	return $sorted_things;
 
+	return $sorted_things;
 }

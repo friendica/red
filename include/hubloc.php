@@ -170,7 +170,17 @@ function hubloc_change_primary($hubloc) {
 	return true;
 
 }
-	
+
+// We use the post url to distinguish between http and https hublocs. 
+// The https might be alive, and the http dead.
+
+function hubloc_mark_as_down($posturl) {
+	$r = q("update hubloc set hubloc_status = ( hubloc_status | %d ) where hubloc_callback = '%s'",
+		intval(HUBLOC_OFFLINE),
+		dbesc($posturl)
+	);
+}
+
 
 function xchan_store($arr) {
 

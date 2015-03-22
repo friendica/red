@@ -1,0 +1,11 @@
+.comment .wall-item-body {
+	padding-left: 42px;
+}
+
+.wall-item-content-wrapper.comment {
+	border-width: 0px 1px 1px 1px;
+}
+
+.hide-comments-outer {
+	border-width: 1px 1px 1px 1px;
+}

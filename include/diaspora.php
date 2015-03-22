@@ -709,13 +709,19 @@ function diaspora_request($importer,$xml) {
 				
 	$their_perms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT|PERMS_R_STORAGE|PERMS_R_PAGES;
 
+
+	$closeness = get_pconfig($importer['channel_id'],'system','new_abook_closeness');
+	if($closeness === false)
+		$closeness = 80;
+
+
 	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_my_perms, abook_their_perms, abook_closeness, abook_rating, abook_created, abook_updated, abook_connected, abook_dob, abook_flags) values ( %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', %d )",
 		intval($importer['channel_account_id']),
 		intval($importer['channel_id']),
 		dbesc($ret['xchan_hash']),
 		intval($default_perms),
 		intval($their_perms),
-		intval(99),
+		intval($closeness),
 		intval(0),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
@@ -799,11 +805,6 @@ function diaspora_post($importer,$xml,$msg) {
 	}
 
 
-	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream'))) {
-		logger('diaspora_post: Ignoring this author.');
-		return 202;
-	}
-
 	$search_guid = ((strlen($guid) == 64) ? $guid . '%' : $guid);
 
 	$r = q("SELECT id FROM item WHERE uid = %d AND mid like '%s' LIMIT 1",
@@ -844,8 +845,9 @@ function diaspora_post($importer,$xml,$msg) {
 	// Look for tags and linkify them
 	$results = linkify_tags(get_app(), $body, $importer['channel_id']);
 
+	$datarray['term'] = array();
+
 	if($results) {
-		$datarray['term'] = array();
 		foreach($results as $result) {
 			$success = $result['success'];
 			if($success['replaced']) {
@@ -859,6 +861,37 @@ function diaspora_post($importer,$xml,$msg) {
 			}
 		}
 	}
+
+	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $mtch[2],
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+	$cnt = preg_match_all('/@\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			// don't include plustags in the term
+			$term = ((substr($mtch[2],-1,1) === '+') ? substr($mtch[2],0,-1) : $mtch[2]);
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $term,
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+
+
 
 	$plink = service_plink($contact,$guid);
 
@@ -882,6 +915,15 @@ function diaspora_post($importer,$xml,$msg) {
 
 	$datarray['item_flags'] = ITEM_THREAD_TOP;
 	$datarray['item_unseen'] = 1;
+
+
+	$tgroup = tgroup_check($importer['channel_id'],$datarray);
+
+	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) && (! $tgroup)) {
+		logger('diaspora_post: Ignoring this author.');
+		return 202;
+	}
+
 
 	$result = item_store($datarray);
 	return;
@@ -948,11 +990,6 @@ function diaspora_reshare($importer,$xml,$msg) {
 	$contact = diaspora_get_contact_by_handle($importer['channel_id'],$diaspora_handle);
 	if(! $contact)
 		return;
-
-	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream'))) {
-		logger('diaspora_reshare: Ignoring this author: ' . $diaspora_handle . ' ' . print_r($xml,true));
-		return 202;
-	}
 
 	$search_guid = ((strlen($guid) == 64) ? $guid . '%' : $guid);
 	$r = q("SELECT id FROM item WHERE uid = %d AND mid like '%s' LIMIT 1",
@@ -1027,8 +1064,9 @@ function diaspora_reshare($importer,$xml,$msg) {
 	// Look for tags and linkify them
 	$results = linkify_tags(get_app(), $body, $importer['channel_id']);
 
+	$datarray['term'] = array();
+
 	if($results) {
-		$datarray['term'] = array();
 		foreach($results as $result) {
 			$success = $result['success'];
 			if($success['replaced']) {
@@ -1042,6 +1080,38 @@ function diaspora_reshare($importer,$xml,$msg) {
 			}
 		}
 	}
+
+	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $mtch[2],
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+	$cnt = preg_match_all('/@\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			// don't include plustags in the term
+			$term = ((substr($mtch[2],-1,1) === '+') ? substr($mtch[2],0,-1) : $mtch[2]);
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $term,
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+
+
+
 
 	$newbody = "[share author='" . urlencode($orig_author_name) 
 		. "' profile='" . $orig_author_link 
@@ -1064,6 +1134,15 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 	$datarray['body'] = $newbody;
 	$datarray['app']  = 'Diaspora';
+
+
+
+	$tgroup = tgroup_check($importer['channel_id'],$datarray);
+
+	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) && (! $tgroup)) {
+		logger('diaspora_post: Ignoring this author.');
+		return 202;
+	}
 
 
 	$result = item_store($datarray);
@@ -1223,15 +1302,6 @@ function diaspora_comment($importer,$xml,$msg) {
 	if(intval($parent_item['item_private']))
 		$pubcomment = 0;	
 
-	// So basically if something arrives at the sys channel it's by definition public and we allow it.
-	// If $pubcomment and the parent was public, we allow it.
-	// In all other cases, honour the permissions for this Diaspora connection
-
-	if((! $importer['system']) && (! $pubcomment) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments'))) {
-		logger('diaspora_comment: Ignoring this author.');
-		return 202;
-	}
-
 	$search_guid = $guid;
 	if(strlen($guid) == 64)
 		$search_guid = $guid . '%';
@@ -1281,6 +1351,12 @@ function diaspora_comment($importer,$xml,$msg) {
 		// our post, so he/she must be a contact of ours and his/her public key
 		// should be in $msg['key']
 
+		if($importer['system']) {
+			// don't relay to the sys channel
+			logger('diaspora_comment: relay to sys channel blocked.');
+			return;
+		}
+
 		$author_signature = base64_decode($author_signature);
 
 		if(! rsa_verify($signed_data,$author_signature,$key,'sha256')) {
@@ -1323,8 +1399,9 @@ function diaspora_comment($importer,$xml,$msg) {
 	// Look for tags and linkify them
 	$results = linkify_tags(get_app(), $body, $importer['channel_id']);
 
+	$datarray['term'] = array();
+
 	if($results) {
-		$datarray['term'] = array();
 		foreach($results as $result) {
 			$success = $result['success'];
 			if($success['replaced']) {
@@ -1336,6 +1413,34 @@ function diaspora_comment($importer,$xml,$msg) {
 					'url'   => $success['url']
 				);
 			}
+		}
+	}
+
+	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $mtch[2],
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+	$cnt = preg_match_all('/@\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			// don't include plustags in the term
+			$term = ((substr($mtch[2],-1,1) === '+') ? substr($mtch[2],0,-1) : $mtch[2]);
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $term,
+				'url'   => $mtch[1]
+			);
 		}
 	}
 
@@ -1369,6 +1474,22 @@ function diaspora_comment($importer,$xml,$msg) {
 			'signed_text' => $signed_data, 'signature' => base64_encode($author_signature));
 		$datarray['diaspora_meta'] = json_encode(crypto_encapsulate(json_encode($x),$key));
 	}
+
+
+
+	// So basically if something arrives at the sys channel it's by definition public and we allow it.
+	// If $pubcomment and the parent was public, we allow it.
+	// In all other cases, honour the permissions for this Diaspora connection
+
+	$tgroup = tgroup_check($importer['channel_id'],$datarray);
+
+	if((! $importer['system']) && (! $pubcomment) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments')) && (! $tgroup)) {
+		logger('diaspora_comment: Ignoring this author.');
+		return 202;
+	}
+
+
+
 
 	$result = item_store($datarray);
 

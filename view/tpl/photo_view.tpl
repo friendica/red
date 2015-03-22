@@ -7,6 +7,11 @@
 			{{if $tools}}
 			<a class="btn btn-default btn-xs" title="{{$tools.profile.1}}" href="{{$tools.profile.0}}"><i class="icon-user"></i></a>
 			{{/if}}
+			{{if $map}}
+			<div class="btn-group btn-group">
+				<i class="icon-globe btn btn-default btn-xs" title="{{$map_text}}" onclick="var pos = $('#photo-map').css('position'); if(pos === 'absolute') { $('#photo-map').css( { position: 'relative', left: 'auto', top: 'auto' }); } else { $('#photo-map').css( { position: 'absolute', left: '-9999px', top: '-9999px' }); }" ></i>
+			</div>
+			{{/if}}
 
 			<div class="btn-group btn-group dropdown">
 				{{if $edit}}
@@ -30,6 +35,9 @@
 
 		<div class="clear"></div>
 
+	</div>
+	<div id="photo-map">
+	{{$map}}
 	</div>
 	<div id="photo-edit" class="section-content-tools-wrapper">
 		<form action="photos/{{$edit.nickname}}/{{$edit.resource_id}}" method="post" id="photo_edit_form">

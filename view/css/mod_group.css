@@ -2,7 +2,7 @@
 #group-new-submit-wrapper {
 	margin-top: 30px;
 }
-
+/*
 #group-edit-form > label {
 	float: left;
 	width: 300px;
@@ -16,7 +16,7 @@
 #group-edit-form .field {
 	clear: both;
 }
-
+*/
 #group-edit-submit-wrapper input {
 	clear: both;
 	width: 100px;
@@ -25,7 +25,7 @@
 #group-edit-select-end {
 	clear: both;
 }
-
+/*
 #group-edit-name-label {
 	float: left;
 	width: 175px;
@@ -44,7 +44,7 @@
 
 
 }
-
+*/
 
 #group_members_select_label {
 	display: block;

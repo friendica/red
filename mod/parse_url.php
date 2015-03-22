@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/oembed.php');
 
 /* To-Do
 https://developers.google.com/+/plugins/snippet/
@@ -252,6 +253,42 @@ function parse_url_content(&$a) {
 
 	logger('parse_url: ' . $url);
 
+	$result = z_fetch_url($url,false,0,array('novalidate' => true, 'nobody' => true));
+	if($result['success']) {
+		$hdrs=array();
+		$h = explode("\n",$result['header']);
+		foreach ($h as $l) {
+			list($k,$v) = array_map("trim", explode(":", trim($l), 2));
+			$hdrs[$k] = $v;
+		}
+		if (array_key_exists('Content-Type', $hdrs))
+			$type = $hdrs['Content-Type'];
+		if($type) {
+			$zrl = is_matrix_url($url);
+			if(stripos($type,'image/') !== false) {
+				if($zrl)
+					echo $br . '[zmg]' . $url . '[/zmg]' . $br;
+				else
+					echo $br . '[img]' . $url . '[/img]' . $br;
+				killme();
+			}
+			if(stripos($type,'video/') !== false) {
+				if($zrl)
+					echo $br . '[zvideo]' . $url . '[/zvideo]' . $br;
+				else
+					echo $br . '[video]' . $url . '[/video]' . $br;
+				killme();
+			}
+			if(stripos($type,'audio/') !== false) {
+				if($zrl)
+					echo $br . '[zaudio]' . $url . '[/zaudio]' . $br;
+				else
+					echo $br . '[audio]' . $url . '[/audio]' . $br;
+				killme();
+			}
+		}
+	}
+
 	$template = $br . '#^[url=%s]%s[/url]%s' . $br;
 
 	$arr = array('url' => $url, 'text' => '');
@@ -263,6 +300,11 @@ function parse_url_content(&$a) {
 		killme();
 	}
 
+	$x = oembed_process($url);
+	if($x) {
+		echo $x;
+		killme();
+	}
 
 	if($url && $title && $text) {
 

@@ -464,9 +464,15 @@ function zot_refresh($them,$channel = null, $force = false) {
 				// Keep original perms to check if we need to notify them
 				$previous_perms = get_all_perms($channel['channel_id'],$x['hash']);
 
-				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_flags ) values ( %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
+
+				$closeness = get_pconfig($channel['channel_id'],'system','new_abook_closeness');
+				if($closeness === false)
+					$closeness = 80;
+
+				$y = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_flags ) values ( %d, %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),
+					intval($closeness),
 					dbesc($x['hash']),
 					intval($their_perms),
 					intval($default_perms),
@@ -984,6 +990,14 @@ function zot_process_response($hub,$arr,$outq) {
 		logger('zot_process_response: headers: ' . print_r($arr['header'],true), LOGGER_DATA);
 	}
 
+	// update the timestamp for this site
+
+	$r = q("update site set site_update = '%s' where site_url = '%s'",
+		dbesc(datetime_convert()),
+		dbesc(dirname($hub))
+	);
+
+
 	// synchronous message types are handled immediately
 	// async messages remain in the queue until processed.
 
@@ -1270,12 +1284,13 @@ function zot_import($arr, $sender_url) {
 
 
 // A public message with no listed recipients can be delivered to anybody who
-// has PERMS_NETWORK for that type of post, or PERMS_SITE and is one the same
+// has PERMS_NETWORK for that type of post, PERMS_AUTHED (in-network senders are 
+// by definition authenticated) or PERMS_SITE and is one the same
 // site, or PERMS_SPECIFIC and the sender is a contact who is granted 
 // permissions via their connection permissions in the address book.
 // Here we take a given message and construct a list of hashes of everybody
-// on the site that we should deliver to.  
-
+// on the site that we should try and deliver to.  
+// Some of these will be rejected, but this gives us a place to start.
 
 function public_recips($msg) {
 
@@ -1294,11 +1309,31 @@ function public_recips($msg) {
 			$check_mentions = true;
 		}
 		else {
+
+			// This doesn't look like it works so I have to explain what happened. These are my
+			// notes (below) from when I got this section of code working. You would think that
+			// we only have to find those with the requisite stream or comment permissions,
+			// depending on whether this is a top-level post or a comment - but you would be wrong.
+ 
+			// ... so public_recips and allowed_public_recips is working so much better
+			// than before, but was still not quite right. We seem to be getting all the right 
+			// results for top-level posts now, but comments aren't getting through on channels 
+			// for which we've allowed them to send us their stream, but not comment on our posts.
+			// The reason is we were seeing if they could comment - and we only need to do that if 
+			// we own the post. If they own the post, we only need to check if they can send us their stream.
+
 			// if this is a comment and it wasn't sent by the post owner, check to see who is allowing them to comment.
-			// We should have one specific recipient and this step shouldn't be needed unless somebody stuffed up their software.
-			// We may need this step to protect us from bad guys intentionally stuffing up their software.  
-			// If it is sent by the post owner, we don't need to do this. We only need to see who is receiving the 
-			// owner's stream (which was already set above) - as they control the comment permissions
+			// We should have one specific recipient and this step shouldn't be needed unless somebody stuffed up 
+			// their software. We may need this step to protect us from bad guys intentionally stuffing up their software.
+			// If it is sent by the post owner, we don't need to do this. We only need to see who is receiving the
+			// owner's stream (which was already set above) - as they control the comment permissions, not us.
+
+			// Note that by doing this we introduce another bug because some public forums have channel_w_stream 
+			// permissions set to themselves only. We also need in this function to add these public forums to the
+			// public recipient list based on if they are tagged or not and have tag permissions. This is complicated 
+			// by the fact that this activity doesn't have the public forum tag. It's the parent activity that 
+			// contains the tag. we'll solve that further below.
+
 			if($msg['notify']['sender']['guid_sig'] != $msg['message']['owner']['guid_sig']) {
 				$col = 'channel_w_comment';
 				$field = PERMS_W_COMMENT;
@@ -1313,21 +1348,38 @@ function public_recips($msg) {
 	if(! $col)
 		return NULL;
 
-	
+	$col = dbesc($col);
+
+	// First find those channels who are accepting posts from anybody, or at least
+	// something greater than just their connections.
+
 	if($msg['notify']['sender']['url'] === z_root())
-		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )>0  or ( " . $col . " & " . PERMS_SITE . " )>0 or ( " . $col . " & " . PERMS_PUBLIC . ")>0 or ( " . $col . " & " . PERMS_AUTHED . ")>0) ";
+		$sql = " where (( " . $col . " & " . intval(PERMS_NETWORK) . " ) > 0  
+					or (  " . $col . " & " . intval(PERMS_SITE) . " ) > 0 
+					or (  " . $col . " & " . intval(PERMS_PUBLIC) . ") > 0 
+					or (  " . $col . " & " . intval(PERMS_AUTHED)  . ") > 0 ) ";
 	else
-		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )>0  or ( "  . $col . " & " . PERMS_PUBLIC . ")>0 or ( "  . $col . " & " . PERMS_AUTHED . ")>0) ";
+		$sql = " where (( " . $col . " & " . intval(PERMS_NETWORK) . " ) > 0  
+					or (  " . $col . " & " . intval(PERMS_PUBLIC) . ") > 0 
+					or (  " . $col . " & " . intval(PERMS_AUTHED) . ") > 0 ) ";
 
 
-	$r = q("select channel_hash as hash from channel $sql or channel_hash = '%s' ",
+	$r = q("select channel_hash as hash from channel $sql or channel_hash = '%s' 
+		and ( channel_pageflags & " . intval(PAGE_REMOVED) . " ) = 0 ",
 		dbesc($msg['notify']['sender']['hash'])
 	);
 
 	if(! $r)
 		$r = array();
 
-	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & " . PAGE_REMOVED . " )>0 and (( " . $col . " & " . PERMS_SPECIFIC . " )>0  and ( abook_my_perms & " . $field . " )>0) OR ( " . $col . " & " . PERMS_PENDING . " )>0 OR (( " . $col . " & " . PERMS_CONTACTS . " )>0 and not ( abook_flags & " . ABOOK_FLAG_PENDING . " )>0) ",
+	// Now we have to get a bit dirty. Find every channel that has the sender in their connections (abook)
+	// and is allowing this sender at least at a high level.
+
+	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id 
+		where abook_xchan = '%s' and ( channel_pageflags & " . intval(PAGE_REMOVED) . " ) = 0 
+		and (( " . $col . " & " . intval(PERMS_SPECIFIC) . " ) > 0  and ( abook_my_perms & " . intval($field) . " ) > 0 ) 
+		OR   ( " . $col . " & " . intval(PERMS_PENDING) . " ) > 0 
+		OR  (( " . $col . " & " . intval(PERMS_CONTACTS) . " ) > 0 and ( abook_flags & " . intval(ABOOK_FLAG_PENDING) . " ) = 0 ) ",
 		dbesc($msg['notify']['sender']['hash'])
 	); 
 
@@ -1347,20 +1399,53 @@ function public_recips($msg) {
 	// look for any public mentions on this site
 	// They will get filtered by tgroup_check() so we don't need to check permissions now
 
-	if($check_mentions && $msg['message']['tags']) {
-		if(is_array($msg['message']['tags']) && $msg['message']['tags']) {
-			foreach($msg['message']['tags'] as $tag) {
-				if(($tag['type'] === 'mention') && (strpos($tag['url'],z_root()) !== false)) {
-					$address = basename($tag['url']);
-					if($address) {
-						$z = q("select channel_hash as hash from channel where channel_address = '%s' limit 1",
-							dbesc($address)
-						);
-						if($z)
-							$r = array_merge($r,$z);
+	if($check_mentions) {
+		// It's a top level post. Look at the tags. See if any of them are mentions and are on this hub.
+		if($msg['message']['tags']) {
+			if(is_array($msg['message']['tags']) && $msg['message']['tags']) {
+				foreach($msg['message']['tags'] as $tag) {
+					if(($tag['type'] === 'mention') && (strpos($tag['url'],z_root()) !== false)) {
+						$address = basename($tag['url']);
+						if($address) {
+							$z = q("select channel_hash as hash from channel where channel_address = '%s' limit 1",
+								dbesc($address)
+							);
+							if($z)
+								$r = array_merge($r,$z);
+						}
 					}
 				}
 			}
+		}
+	}
+	else {
+		// This is a comment. We need to find any parent with ITEM_UPLINK set. But in fact, let's just return
+		// everybody that stored a copy of the parent. This way we know we're covered. We'll check the 
+		// comment permissions when we deliver them.
+
+		if($msg['message']['message_top']) {
+			$z = q("select owner_xchan as hash from item where parent_mid = '%s' ",
+				dbesc($msg['message']['message_top']),
+				intval(ITEM_UPLINK)
+			);
+			if($z)
+				$r = array_merge($r,$z); 
+		}
+	}
+
+	// There are probably a lot of duplicates in $r at this point. We need to filter those out.
+	// It's a bit of work since it's a multi-dimensional array
+
+	if($r) {
+		$uniq = array();
+		
+		foreach($r as $rr) {
+			if(! in_array($rr['hash'],$uniq))
+				$uniq[] = $rr['hash'];
+		}
+		$r = array();
+		foreach($uniq as $rr) {
+			$r[] = array('hash' => $rr);
 		}
 	}
 
@@ -1373,8 +1458,15 @@ function public_recips($msg) {
 
 function allowed_public_recips($msg) {
 
-
 	logger('allowed_public_recips: ' . print_r($msg,true),LOGGER_DATA);
+
+	if(array_key_exists('public_scope',$msg['message']))
+		$scope = $msg['message']['public_scope'];
+
+	// Mail won't have a public scope.
+	// in fact, it's doubtful mail will ever get here since it almost universally
+	// has a recipient, but in fact we don't require this, so it's technically 
+	// possible to send mail to anybody that's listening.  
 
 	$recips = public_recips($msg);
 
@@ -1383,11 +1475,6 @@ function allowed_public_recips($msg) {
 
 	if($msg['message']['type'] === 'mail')
 		return $recips;
-
-	if(array_key_exists('public_scope',$msg['message']))
-		$scope = $msg['message']['public_scope'];
-
-	$hash = make_xchan_hash($msg['notify']['sender']['guid'],$msg['notify']['sender']['guid_sig']);
 
 	if($scope === 'public' || $scope === 'network: red' || $scope === 'authenticated')
 		return $recips;
@@ -1399,19 +1486,23 @@ function allowed_public_recips($msg) {
 			return array();
 	}
 
+	$hash = make_xchan_hash($msg['notify']['sender']['guid'],$msg['notify']['sender']['guid_sig']);
+
 	if($scope === 'self') {
 		foreach($recips as $r)
 			if($r['hash'] === $hash)
 				return array('hash' => $hash);
 	}
 
-	if($scope === 'contacts') {
+	// note: we shouldn't ever see $scope === 'specific' in this function, but handle it anyway
+
+	if($scope === 'contacts' || $scope === 'any connections' || $scope === 'specific') {
 		$condensed_recips = array();
 		foreach($recips as $rr)
 			$condensed_recips[] = $rr['hash'];
 
 		$results = array();
-		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & %d )>0 ",
+		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & %d ) > 0 ",
 			dbesc($hash),
 			intval(PAGE_REMOVED)
 		);
@@ -1422,6 +1513,7 @@ function allowed_public_recips($msg) {
 		}
 		return $results;
 	}
+
 
 	return array();
 }
@@ -1455,8 +1547,11 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 
 		$channel = $r[0];
 
-		// allow public postings to the sys channel regardless of permissions
-		if(($channel['channel_pageflags'] & PAGE_SYSTEM) && (! $arr['item_private'])) {
+		// allow public postings to the sys channel regardless of permissions, but not
+		// for comments travelling upstream. Wait and catch them on the way down.
+		// They may have been blocked by the owner. 
+
+		if(($channel['channel_pageflags'] & PAGE_SYSTEM) && (! $arr['item_private']) && (! $relay)) {
 			$local_public = true;
 
 			$r = q("select xchan_flags from xchan where xchan_hash = '%s' limit 1",
@@ -1626,6 +1721,13 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 		else {
 			$arr['aid'] = $channel['channel_account_id'];
 			$arr['uid'] = $channel['channel_id'];
+
+			// if it's a sourced post, call the post_local hooks as if it were
+			// posted locally so that crosspost connectors will be triggered.
+
+			if(check_item_source($arr['uid'],$arr))
+				call_hooks('post_local',$arr);
+
 			$item_result = item_store($arr);
 			$item_id = 0;
 			if($item_result['success']) {
@@ -1770,7 +1872,23 @@ function delete_imported_item($sender,$item,$uid,$relay) {
 			logger('delete_imported_item: item was already deleted');
 			if(! $relay)
 				return false;
+
+			// This is a bit hackish, but may have to suffice until the notification/delivery loop is optimised
+			// a bit further. We're going to strip the ITEM_ORIGIN on this item if it's a comment, because
+			// it was already deleted, and we're already relaying, and this ensures that no other process or 
+			// code path downstream can relay it again (causing a loop). Since it's already gone it's not coming
+			// back, and we aren't going to (or shouldn't at any rate) delete it again in the future - so losing
+			// this information from the metadata should have no other discernible impact. 
+			
+			if(($r[0]['id'] != $r[0]['parent']) && ($r[0]['item_flags'] & ITEM_ORIGIN)) {
+				$x = q("update item set item_flags = %d where id = %d and uid = %d",
+					intval($r[0]['item_flags'] ^ ITEM_ORIGIN),
+					intval($r[0]['id']),
+					intval($r[0]['uid'])
+				);
+			}
 		} 
+
 		
 		require_once('include/items.php');
 
@@ -1935,7 +2053,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 	$ret = array();
 
 	if($arr['locations']) {
-
+		
 		$xisting = q("select hubloc_id, hubloc_url, hubloc_sitekey from hubloc where hubloc_hash = '%s'",
 			dbesc($sender['hash'])
 		);
@@ -1999,19 +2117,21 @@ function sync_locations($sender,$arr,$absolute = false) {
 				// update connection timestamp if this is the site we're talking to
 				// This only happens when called from import_xchan
 
+				$current_site = false;
+
 				if(array_key_exists('site',$arr) && $location['url'] == $arr['site']['url']) {
 					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
+					$current_site = true;
 				}
 				
-				// if it's marked offline/dead, bring it back
-				// Should we do this? It's basically saying that the channel knows better than
-				// the directory server if the site is alive.
+				// If it is the site we're currently talking to, and it's marked offline,
+				// either we have some bad information - or the thing came back to life.
 
-				if($r[0]['hubloc_status'] & HUBLOC_OFFLINE) {
+				if(($current_site) && ($r[0]['hubloc_status'] & HUBLOC_OFFLINE)) {
 					q("update hubloc set hubloc_status = (hubloc_status & ~%d) where hubloc_id = %d",
 						intval(HUBLOC_OFFLINE),
 						intval($r[0]['hubloc_id'])
@@ -2244,10 +2364,11 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 		dbesc($hash)
 	);
 	
-	$age = intval($arr['xprof_age']);
-	if($age > 150) 
-		$age = 150;
-		
+	if($arr['xprof_age'] > 150) 
+		$arr['xprof_age'] = 150;
+	if($arr['xprof_age'] < 0)
+		$arr['xprof_age'] = 0;
+	
 	if($r) {
 		$update = false;
 		foreach($r[0] as $k => $v) {
@@ -2276,7 +2397,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 				where xprof_hash = '%s'",
 				dbesc($arr['xprof_desc']),
 				dbesc($arr['xprof_dob']),
-				$age,
+				intval($arr['xprof_age']),
 				dbesc($arr['xprof_gender']),
 				dbesc($arr['xprof_marital']),
 				dbesc($arr['xprof_sexual']),
@@ -2299,7 +2420,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 			dbesc($arr['xprof_hash']),
 			dbesc($arr['xprof_desc']),
 			dbesc($arr['xprof_dob']),
-			$age,
+			intval($arr['xprof_age']),
 			dbesc($arr['xprof_gender']),
 			dbesc($arr['xprof_marital']),
 			dbesc($arr['xprof_sexual']),
@@ -2415,6 +2536,9 @@ function import_site($arr,$pubkey) {
 	if($arr['directory_mode'] == 'standalone')
 		$site_directory = DIRECTORY_MODE_STANDALONE;
 
+
+
+
 	$register_policy = 0;
 	if($arr['register_policy'] == 'closed')
 		$register_policy = REGISTER_CLOSED;
@@ -2452,6 +2576,17 @@ function import_site($arr,$pubkey) {
 	$site_location = htmlspecialchars($arr['location'],ENT_COMPAT,'UTF-8',false);
 	$site_realm = htmlspecialchars($arr['realm'],ENT_COMPAT,'UTF-8',false);
 
+	// You can have one and only one primary directory per realm. 
+	// Downgrade any others claiming to be primary. As they have
+	// flubbed up this badly already, don't let them be directory servers at all. 
+
+	if(($site_directory === DIRECTORY_MODE_PRIMARY) 
+		&& ($site_realm === get_directory_realm()) 
+		&& ($arr['url'] != get_directory_primary())) {
+		$site_directory = DIRECTORY_MODE_NORMAL;
+	} 
+
+
 	if($exists) {
 		if(($siterecord['site_flags'] != $site_directory)
 			|| ($siterecord['site_access'] != $access_policy)
@@ -2480,6 +2615,13 @@ function import_site($arr,$pubkey) {
 			if(! $r) {
 				logger('import_site: update failed. ' . print_r($arr,true));
 			}
+		}
+		else {
+			// update the timestamp to indicate we communicated with this site
+			q("update site set site_update = '%s' where site_url = '%s'",
+				dbesc(datetime_convert()),
+				dbesc($url)
+			);
 		}
 	}
 	else {
@@ -2793,6 +2935,9 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
+						if($k == 'abook_dob')
+							$v = dbescdate($v);
+							
 						$r = dbq("UPDATE abook set " . dbesc($k) . " = '" . dbesc($v) 
 						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']));
 					}

@@ -5,6 +5,10 @@ function display_content(&$a, $update = 0, $load = false) {
 
 //	logger("mod-display: update = $update load = $load");
 
+	if($load)
+		$_SESSION['loadtime'] = datetime_convert();
+
+
 	if(intval(get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 		notice( t('Public access denied.') . EOL);
 		return;
@@ -103,6 +107,15 @@ function display_content(&$a, $update = 0, $load = false) {
 		 	return '';
 		}
 	}
+
+
+	$simple_update = (($update) ? " AND item_unseen = 1 " : '');
+		
+	if($update && $_SESSION['loadtime'])
+		$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ";
+	if($load)
+		$simple_update = '';
+
 
 
 	if((! $update) && (! $load)) {
@@ -228,6 +241,9 @@ function display_content(&$a, $update = 0, $load = false) {
 		$o .= conversation($a, $items, 'display', $update, 'client');
 	} else {
 		$o .= conversation($a, $items, 'display', $update, 'traditional');
+		if ($items[0]['title'])
+			$a->page['title'] = $items[0]['title'] . " - " . $a->page['title'];
+
 	}
 
 	if($updateable) {

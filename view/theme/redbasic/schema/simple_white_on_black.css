@@ -1,0 +1,118 @@
+.vcard {
+	border-bottom: 1px solid #000;
+}
+
+#contact-block {
+	border-bottom: 1px solid #000;
+}
+
+.widget {
+	border-bottom: 1px solid #000;
+}
+
+.abook-pending-contact, .abook-permschange {
+	background: #000;
+}
+
+
+#cboxContent a {
+	color: #000;
+}
+
+#cboxContent {
+	color: #000;
+}
+
+#adminpage table tr:hover {
+    background-color: #000;
+}
+
+#colorbox {
+	border: 0px solid #000;
+	background-color: #000;
+}
+
+.chat-item-text {
+	background-color: #000;
+}
+
+.fc-state-highlight {
+    background: none repeat scroll 0% 0% #000 !important;
+}
+
+.well {
+	background-color: #000;
+	border: 1px solid #fff;
+	background-image: linear-gradient(to bottom, #000 0px, #000 100%);
+}
+
+.alert-info {
+	color: #fff;
+	background-color:#000;
+	border-color: #fff;
+	background-image: linear-gradient(to bottom, #000 0px, #000 100%);
+}
+
+.abook-self {
+	background-color: #000;
+}
+
+.acl-button-show,
+.acl-button-hide {
+	color: #fff;
+}
+
+#acl-showall {
+	color: #fff;
+}
+
+#acl-list {
+	border: 1px solid #000;
+}
+
+.acl-list-item {
+	border: 1px solid #000;
+}
+
+.modal-content {
+    background-color: #000;
+}
+
+.btn-default {
+    	background-color: #000;
+    	border-color: #fff;
+	color: #eee;
+    	text-shadow: none;
+    	box-shadow: none;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
+	background-color: #000;
+	border-color: #fff;
+	color: #fff;
+	text-decoration: underline;
+}
+
+.btn-default.btn-sm:hover, .btn-default.btn-sm:focus, .btn-default.btn-sm:active .btn-default.btn-sm.active {
+    	text-decoration: none;
+}
+
+.pager_first,
+.pager_last,
+.pager_prev,
+.pager_next,
+.pager-prev,
+.pager-next,
+.pager_n { 
+	border: 1px solid #fff;
+	background: #000;
+}
+
+input {
+	border: 1px solid #fff;
+}
+
+input[type="submit"] {
+	background-color: #000;
+	color: #fff;
+}

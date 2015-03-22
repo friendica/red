@@ -44,6 +44,7 @@ function get_features() {
 			array('webpages',            t('Web Pages'),              t('Provide managed web pages on your channel'),false),
 			array('private_notes',       t('Private Notes'),          t('Enables a tool to store notes and reminders'),false),
 			array('nav_channel_select',  t('Navigation Channel Select'), t('Change channels directly from within the navigation dropdown menu'),false),
+			array('photo_location',       t('Photo Location'),          t('If location data is available on uploaded photos, link this to a map.'),false),
 
 
 			//FIXME - needs a description, but how the hell do we explain this to normals?

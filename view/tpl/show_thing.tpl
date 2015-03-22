@@ -7,7 +7,7 @@
 {{if $canedit}}
 <div class="thing-edit-links">
 <a href="thing/edit/{{$thing.term_hash}}" title="{{$edit}}" class="btn btn-default" ><i class="icon-pencil thing-edit-icon"></i></a>
-<a href="thing/drop/{{$thing.term_hash}}" onclick="return confirmDelete();" title="{{$delete}}" class="btn btn-default" ><i class="icon-remove drop-icons"></i></a>
+<a href="thing/drop/{{$thing.term_hash}}" onclick="return confirmDelete();" title="{{$delete}}" class="btn btn-default" ><i class="icon-trash drop-icons"></i></a>
 </div>
 <div class="thing-edit-links-end"></div>
 {{/if}}

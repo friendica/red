@@ -24,7 +24,6 @@
 function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
 	$dba = null;
 
-
 	$dbtype = intval($dbtype);
 
 	if($dbtype == DBTYPE_POSTGRES) {
@@ -59,7 +58,7 @@ abstract class dba_driver {
 	const INSTALL_SCRIPT='install/schema_mysql.sql';
 	const NULL_DATE = '0000-00-00 00:00:00';
 	const UTC_NOW = 'UTC_TIMESTAMP()';
-	
+
 	protected $debug = 0;
 	protected $db;
 	public  $connected = false;
@@ -121,11 +120,11 @@ abstract class dba_driver {
 	function get_null_date() {
 		return static::NULL_DATE;
 	}
-	
+
 	function get_install_script() {
 		return static::INSTALL_SCRIPT;
 	}
-	
+
 	function utcnow() {
 		return static::UTC_NOW;
 	}
@@ -145,6 +144,7 @@ abstract class dba_driver {
 				return false;
 			}
 		}
+
 		return true;
 	}
 
@@ -166,19 +166,19 @@ abstract class dba_driver {
 	function quote_interval($txt) {
 		return $txt;
 	}
-	
+
 	function optimize_table($table) {
 		q('OPTIMIZE TABLE '.$table);
 	}
-	
+
 	function concat($fld, $sep) {
 		return 'GROUP_CONCAT(DISTINCT '.$fld.' SEPARATOR \''.$sep.'\')';
 	}
-	
+
 	function escapebin($str) {
 		return $this->escape($str);
 	}
-	
+
 	function unescapebin($str) {
 		return $str;
 	}
@@ -193,6 +193,7 @@ function printable($s) {
 	$s = str_replace("\x00",'.',$s);
 	if(x($_SERVER,'SERVER_NAME'))
 		$s = escape_tags($s);
+
 	return $s;
 }
 
@@ -252,7 +253,7 @@ function db_quoteinterval($txt) {
 
 function dbesc_identifier($str) {
 	global $db;
-	return $db->escape_identifier($txt);
+	return $db->escape_identifier($str);
 }
 
 function db_utcnow() {
@@ -349,6 +350,7 @@ function dbesc_array_cb(&$item, $key) {
 			$item = '0001-01-01 00:00:00';
 		else if($item == '0001-01-01 00:00:00' && ACTIVE_DBTYPE == DBTYPE_MYSQL)
 			$item = '0000-00-00 00:00:00';
+
 		$item = dbesc($item);
 	}
 }
@@ -382,8 +384,7 @@ function db_getfunc($f) {
 	$f = strtolower($f);
 	if(isset($lookup[$f]) && isset($lookup[$f][ACTIVE_DBTYPE]))
 		return $lookup[$f][ACTIVE_DBTYPE];
-		
+
 	logger('Unable to abstract DB function "'. $f . '" for dbtype ' . ACTIVE_DBTYPE, LOGGER_DEBUG);
 	return $f;
 }
-

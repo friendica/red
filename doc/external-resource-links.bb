@@ -15,5 +15,6 @@
 [*][url=https://addons.mozilla.org/en-US/firefox/addon/redshare/]Redshare for Firefox[/url]
 [*][url=https://github.com/cvogeley/red-for-android]Red for Android[/url]
 [*][url=https://github.com/zzottel/feed2red]feed2red.pl (posts Atom/RSS feeds to channel)[/url]
+[*][url=https://github.com/friendica/wptored]WordPress gateway (combine with wppost addon for full features)[/url]
 
 #include doc/macros/main_footer.bb;

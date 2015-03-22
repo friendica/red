@@ -100,10 +100,14 @@ function notifier_run($argv, $argc){
 		// Get the recipient	
 		$r = q("select abook.*, hubloc.* from abook 
 			left join hubloc on hubloc_hash = abook_xchan
-			where abook_id = %d and not ( abook_flags & %d )>0 limit 1",
+			where abook_id = %d and not ( abook_flags & %d ) > 0 
+			and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0 limit 1",
 			intval($item_id),
-			intval(ABOOK_FLAG_SELF)
+			intval(ABOOK_FLAG_SELF),
+			intval(HUBLOC_FLAGS_DELETED),
+			intval(HUBLOC_OFFLINE)
 		);
+
 		if($r) {
 			// Get the sender
 			$s = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_id = %d limit 1",
@@ -116,8 +120,11 @@ function notifier_run($argv, $argc){
 				}
 				else {
 					// send a refresh message to each hub they have registered here	
-					$h = q("select * from hubloc where hubloc_hash = '%s'",
-						dbesc($r[0]['hubloc_hash'])
+					$h = q("select * from hubloc where hubloc_hash = '%s' 
+						and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0",
+						dbesc($r[0]['hubloc_hash']),
+						intval(HUBLOC_FLAGS_DELETED),
+						intval(HUBLOC_OFFLINE)
 					);
 					if($h) {
 						foreach($h as $hh) {
@@ -128,17 +135,31 @@ function notifier_run($argv, $argc){
 							));
 							if($data) {
 								$result = zot_zot($hh['hubloc_callback'],$data);
-// zot_queue_item is not yet written
-//							if(! $result['success'])
-//								zot_queue_item();
 
+								// if immediate delivery failed, stick it in the queue to try again later.
+
+								if(! $result['success']) {
+									$hash = random_string();
+									q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) 
+										values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
+                						dbesc($hash),
+										intval($s[0]['channel_account_id']),
+										intval($s[0]['channel_id']),
+										dbesc('zot'),
+										dbesc($hh['hubloc_callback']),
+										intval(1),
+										dbesc(datetime_convert()),
+										dbesc(datetime_convert()),
+										dbesc($data),
+										dbesc('')
+									);
+								}
 							}
 						}	
 					}
 				}
 			}
 		}
-
 		return;
 	}	
 
@@ -315,9 +336,12 @@ function notifier_run($argv, $argc){
 		$r = fetch_post_tags($r);
 		
 		$target_item = $r[0];
+		$deleted_item = false;
 
-		if($target_item['item_restrict'] & ITEM_DELETED)
+		if($target_item['item_restrict'] & ITEM_DELETED) {
 			logger('notifier: target item ITEM_DELETED', LOGGER_DEBUG);
+			$deleted_item = true;
+		}
 
 		$unforwardable = ITEM_UNPUBLISHED|ITEM_DELAYED_PUBLISH|ITEM_WEBPAGE|ITEM_BUILDBLOCK|ITEM_PDL;
 		if($target_item['item_restrict'] & $unforwardable) {
@@ -363,7 +387,19 @@ function notifier_run($argv, $argc){
 
 		$encoded_item = encode_item($target_item);
 		
-		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN)) ? true : false);
+		// Send comments to the owner to re-deliver to everybody in the conversation
+		// We only do this if the item in question originated on this site. This prevents looping.
+		// To clarify, a site accepting a new comment is responsible for sending it to the owner for relay.
+		// Relaying should never be initiated on a post that arrived from elsewhere.  
+
+		// We should normally be able to rely on ITEM_ORIGIN, but start_delivery_chain() incorrectly set this
+		// flag on comments for an extended period. So we'll also call comment_local_origin() which looks at
+		// the hostname in the message_id and provides a second (fallback) opinion. 
+
+		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN) && comment_local_origin($target_item)) 
+			? true 
+			: false
+		);
 
 		$uplink = false;
 
@@ -475,6 +511,9 @@ function notifier_run($argv, $argc){
 	// Let's reduce this to a set of hubs.
 
 	logger('notifier: hub choice: ' . intval($relay_to_owner) . ' ' . intval($private) . ' ' . $cmd, LOGGER_DEBUG);
+
+	// FIXME: I think we need to remove the private bit or this clause will never execute. Needs more coffee to think it through.
+	// We may in fact have to send it to clones in case the one we pick recently died. 
 
 	if($relay_to_owner && (! $private) && ($cmd !== 'relay')) {
 

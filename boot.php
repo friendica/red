@@ -49,7 +49,7 @@ define ( 'RED_PLATFORM',            'redmatrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1137  );
+define ( 'DB_UPDATE_VERSION',       1139  );
 
 /**
  * Constant with a HTML line break.
@@ -654,7 +654,7 @@ class App {
 	public  $profile_uid = 0;              // If applicable, the channel_id of the "page owner"
 	public  $poi        = null;            // "person of interest", generally a referenced connection
 	public  $layout     = array();         // Comanche parsed template
-
+	public  $pdl        = null;
 	private $perms      = null;            // observer permissions
 	private $widgets    = array();         // widgets for this page
 	//private $widgetlist = null;            // widget ordering and inclusion directives
@@ -1553,7 +1553,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		'$form_id'      => $form_id,
 		'$lname'        => array('username', t('Email') , '', ''),
 		'$lpassword'    => array('password', t('Password'), '', ''),
-		'$remember'     => array('remember', t('Remember me'), '', ''),
+		'$remember'     => array('remember', t('Remember me'), '', '',array(t('No'),t('Yes'))),
 		'$hiddens'      => $hiddens,
 		'$register'     => $reg,
 		'$lostpass'     => t('Forgot your password?'),
@@ -1668,14 +1668,17 @@ function notice($s) {
 	$a = get_app();
 	if(! x($_SESSION, 'sysmsg')) $_SESSION['sysmsg'] = array();
 
+	// ignore duplicated error messages which haven't yet been displayed 
+	// - typically seen as multiple 'permission denied' messages 
+	// as a result of auto-reloading a protected page with &JS=1
+
+	if(in_array($s,$_SESSION['sysmsg']))
+		return;
+
 	if($a->interactive) {
-		// shameless plug, permission is denied and they have no identity.
-		// There's a fairly good chance that they've not got zot.
-		if((stristr($s, t('permission denied'))) && (! get_observer_hash())) {
-			$s .= '<br><a href="http://getzot.com">' . t('Got Zot?') . '</a>';
-		}
 		$_SESSION['sysmsg'][] = $s;
 	}
+
 }
 
 /**
@@ -1880,6 +1883,9 @@ function current_theme_url($installing = false) {
 function is_site_admin() {
 	$a = get_app();
 
+	if($_SESSION['delegate'])
+		return false;
+
 	if((intval($_SESSION['authenticated']))
 		&& (is_array($a->account))
 		&& ($a->account['account_roles'] & ACCOUNT_ROLE_ADMIN))
@@ -2047,10 +2053,23 @@ function load_pdl(&$a) {
 		if((! $s) && (($p = theme_include($n)) != ''))
 			$s = @file_get_contents($p);
 
-		if($s)
+		if($s) {
 			comanche_parser($a, $s);
+			$a->pdl = $s;
+		}
 	}
 }
+
+
+function exec_pdl(&$a) {
+	require_once('include/comanche.php');
+
+	if($a->pdl) {
+		comanche_parser($a, $a->pdl,1);
+	}
+}
+
+
 
 /**
  * @brief build the page.
@@ -2060,6 +2079,9 @@ function load_pdl(&$a) {
  * @param App &$a global application object
  */
 function construct_page(&$a) {
+
+
+	exec_pdl($a);
 
 	$comanche = ((count($a->layout)) ? true : false);
 
@@ -2074,6 +2096,7 @@ function construct_page(&$a) {
 	}
 
 	if($comanche) {
+
 		if($a->layout['nav']) {
 			$a->page['nav'] = get_custom_nav($a, $a->layout['nav']);
 		}
@@ -2123,6 +2146,7 @@ function construct_page(&$a) {
 		$arr = array('module' => $a->module, 'layout' => $a->layout);
 		call_hooks('construct_page', $arr);
 		$a->layout = $arr['layout'];
+
 
 		foreach($a->layout as $k => $v) {
 			if((strpos($k, 'region_') === 0) && strlen($v)) {
@@ -2262,4 +2286,81 @@ function z_get_temp_dir() {
 	if(! $temp_dir)
 		$temp_dir = sys_get_temp_dir();
 	return $upload_dir;
+}
+
+function z_check_cert() {
+	$a = get_app();
+	if(strpos(z_root(),'https://') !== false) {
+		$x = z_fetch_url(z_root() . '/siteinfo/json');
+		if(! $x['success']) {
+			$recurse = 0;
+			$y = z_fetch_url(z_root() . '/siteinfo/json',false,$recurse,array('novalidate' => true));
+			if($y['success'])
+				cert_bad_email();
+		}
+	}
+} 
+
+
+
+function cert_bad_email() {
+
+	$a = get_app();
+
+	$email_tpl = get_intltext_template("cert_bad_eml.tpl");
+	$email_msg = replace_macros($email_tpl, array(
+		'$sitename' => $a->config['system']['sitename'],
+		'$siteurl' =>  $a->get_baseurl(),
+		'$error' => t('Website SSL certificate is not valid. Please correct.')
+	));
+
+	$subject = email_header_encode(sprintf(t('[red] Website SSL error for %s'), $a->get_hostname()));
+	mail($a->config['system']['admin_email'], $subject, $email_msg,
+		'From: Administrator' . '@' . $a->get_hostname() . "\n"
+		. 'Content-type: text/plain; charset=UTF-8' . "\n"
+		. 'Content-transfer-encoding: 8bit' );
+
+}
+
+
+// send warnings every 3-5 days if cron is not running.
+
+
+function check_cron_broken() {
+
+	$t = get_config('system','lastpollcheck');
+	if(! $t) {
+		// never checked before. Start the timer.
+		set_config('system','lastpollcheck',datetime_convert());
+		return;
+	}
+	if($t > datetime_convert('UTC','UTC','now - 3 days')) {
+		// Wait for 3 days before we do anything so as not to swamp the admin with messages
+		return;
+	}
+
+	$d = get_config('system','lastpoll');
+	if(($d) && ($d > datetime_convert('UTC','UTC','now - 3 days'))) {
+		// Scheduled tasks have run successfully in the last 3 days.
+		set_config('system','lastpollcheck',datetime_convert());
+		return;
+	}
+
+	$a = get_app();
+
+	$email_tpl = get_intltext_template("cron_bad_eml.tpl");
+	$email_msg = replace_macros($email_tpl, array(
+		'$sitename' => $a->config['system']['sitename'],
+		'$siteurl' =>  $a->get_baseurl(),
+		'$error' => t('Cron/Scheduled tasks not running.'),
+		'$lastdate' => (($d)? $d : t('never'))
+	));
+
+	$subject = email_header_encode(sprintf(t('[red] Cron tasks not running on %s'), $a->get_hostname()));
+	mail($a->config['system']['admin_email'], $subject, $email_msg,
+		'From: Administrator' . '@' . $a->get_hostname() . "\n"
+		. 'Content-type: text/plain; charset=UTF-8' . "\n"
+		. 'Content-transfer-encoding: 8bit' );
+	set_config('system','lastpollcheck',datetime_convert());
+	return;
 }

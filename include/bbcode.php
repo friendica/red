@@ -469,10 +469,10 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// Perform URL Search
 
-	$urlchars = '[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]';
+	$urlchars = '[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,\@]';
 
 	if (strpos($Text,'http') !== false) {
-		$Text = preg_replace("/([^\]\='".'"'."]|^)(https?\:\/\/$urlchars+)/ism", '$1<a href="$2" >$2</a>', $Text);
+		$Text = preg_replace("/([^\]\='".'"'."\/]|^|\#\^)(https?\:\/\/$urlchars+)/ism", '$1<a href="$2" >$2</a>', $Text);
 	}
 
 	if (strpos($Text,'[/qr]') !== false) {
@@ -756,10 +756,16 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// html5 video and audio
 	if (strpos($Text,'[/video]') !== false) {	
-		$Text = preg_replace_callback("/\[video\](.*?\.(ogg|ogv|oga|ogm|webm|mp4))\[\/video\]/ism", 'tryzrlvideo', $Text);
+		$Text = preg_replace_callback("/\[video\](.*?\.(ogg|ogv|oga|ogm|webm|mp4|mpeg|mpg))\[\/video\]/ism", 'tryzrlvideo', $Text);
 	}
 	if (strpos($Text,'[/audio]') !== false) {		
 		$Text = preg_replace_callback("/\[audio\](.*?\.(ogg|ogv|oga|ogm|webm|mp4|mp3|opus))\[\/audio\]/ism", 'tryzrlaudio', $Text);
+	}
+	if (strpos($Text,'[/zvideo]') !== false) {	
+		$Text = preg_replace_callback("/\[zvideo\](.*?\.(ogg|ogv|oga|ogm|webm|mp4|mpeg|mpg))\[\/zvideo\]/ism", 'tryzrlvideo', $Text);
+	}
+	if (strpos($Text,'[/zaudio]') !== false) {		
+		$Text = preg_replace_callback("/\[zaudio\](.*?\.(ogg|ogv|oga|ogm|webm|mp4|mp3|opus))\[\/zaudio\]/ism", 'tryzrlaudio', $Text);
 	}
 
 	// Try to Oembed
@@ -771,6 +777,13 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		if (strpos($Text,'[/audio]') !== false) {
 			$Text = preg_replace_callback("/\[audio\](.*?)\[\/audio\]/ism", 'tryoembed', $Text);
 		}
+
+		if (strpos($Text,'[/zvideo]') !== false) {			
+			$Text = preg_replace_callback("/\[zvideo\](.*?)\[\/zvideo\]/ism", 'tryoembed', $Text);
+		}
+		if (strpos($Text,'[/zaudio]') !== false) {
+			$Text = preg_replace_callback("/\[zaudio\](.*?)\[\/zaudio\]/ism", 'tryoembed', $Text);
+		}
 	}
 
 	// if video couldn't be embedded, link to it instead.
@@ -779,6 +792,13 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	}
 	if (strpos($Text,'[/audio]') !== false) {
 		$Text = preg_replace("/\[audio\](.*?)\[\/audio\]/", '<a href="$1">$1</a>', $Text);
+	}
+
+	if (strpos($Text,'[/zvideo]') !== false) {
+		$Text = preg_replace("/\[zvideo\](.*?)\[\/zvideo\]/", '<a class="zid" href="$1">$1</a>', $Text);
+	}
+	if (strpos($Text,'[/zaudio]') !== false) {
+		$Text = preg_replace("/\[zaudio\](.*?)\[\/zaudio\]/", '<a class="zid" href="$1">$1</a>', $Text);
 	}
 
 
@@ -864,7 +884,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	// fix any escaped ampersands that may have been converted into links
 	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 
-	$Text = preg_replace("/\<(.*?)(src|href)=\"[^hfm#](.*?)\>/ism",'<$1$2="">',$Text);
+	$Text = preg_replace("/\<(.*?)(src|href)=\"[^zhfm#](.*?)\>/ism",'<$1$2="">',$Text);
 
 	$Text = bb_replace_images($Text,$saved_images);
 

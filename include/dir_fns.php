@@ -48,7 +48,7 @@ function check_upstream_directory() {
 	if($directory) {
 		$h = parse_url($directory);
 		if($h) {
-			$x = zot_finger('sys@' . $h['host']);
+			$x = zot_finger('[system]@' . $h['host']);
 			if($x['success']) {
 				$j = json_decode($x['body'],true);
 				if(array_key_exists('site',$j) && array_key_exists('directory_mode',$j['site'])) {
@@ -65,6 +65,35 @@ function check_upstream_directory() {
 	return;
 }
 
+function get_globaldir_setting($observer) {
+
+	if($observer)
+		$globaldir = get_xconfig($observer,'directory','globaldir');
+	else
+		$globaldir = ((array_key_exists('globaldir',$_SESSION)) ? intval($_SESSION['globaldir']) : false);
+
+	if($globaldir === false)
+		$globaldir = get_config('directory','globaldir');
+
+	return $globaldir;
+}
+
+function get_safemode_setting($observer) {
+
+	if ($observer)
+		$safe_mode = get_xconfig($observer,'directory','safe_mode');
+	else
+		$safe_mode = ((array_key_exists('safemode',$_SESSION)) ? intval($_SESSION['safemode']) : false);
+
+	if($safe_mode === false)
+		$safe_mode = get_config('directory','safe_mode');
+
+	if($safe_mode === false)
+		$safe_mode = 1;
+
+	return $safe_mode;
+}
+
 /**
  * @function dir_sort_links()
  * Called by the directory_sort widget
@@ -74,10 +103,17 @@ function check_upstream_directory() {
 	
 function dir_sort_links() {
 
-	// Build urls without order and pubforums so it's easy to tack on the changed value
+	$safe_mode = 1;
+
+	$observer = get_observer_hash();
+
+	$safe_mode = get_safemode_setting($observer);
+	$globaldir = get_globaldir_setting($observer);
+
+ 	// Build urls without order and pubforums so it's easy to tack on the changed value
 	// Probably there's an easier way to do this
 
-	$current_order = (($_REQUEST['order']) ? $_REQUEST['order'] : 'normal');
+	$current_order = (($_REQUEST['order']) ? $_REQUEST['order'] : 'date');
 	$url = 'directory?f=';
 
 	$tmp = array_merge($_GET,$_POST);
@@ -88,6 +124,8 @@ function dir_sort_links() {
 
 	$tmp = array_merge($_GET,$_POST);
 	unset($tmp['pubforums']);
+	unset($tmp['global']);
+	unset($tmp['safe']);
 	unset($tmp['q']);
 	unset($tmp['f']);
 	$forumsurl = $url . http_build_query($tmp);
@@ -98,34 +136,18 @@ function dir_sort_links() {
 		'$reverse' => t('Reverse Alphabetic'),
 		'$date' => t('Newest to Oldest'),
 		'$reversedate' => t('Oldest to Newest'),
-		'$pubforums' => t('Public Forums Only'),
-		'$pubforumsonly' => x($_REQUEST,'pubforums') ? $_REQUEST['pubforums'] : '',
 		'$sort' => t('Sort'),
 		'$selected_sort' => $current_order,
 		'$sorturl' => $sorturl,
 		'$forumsurl' => $forumsurl,
+		'$safemode' => array('safemode', t('Safe Mode'),$safe_mode,'','',' onchange=\'window.location.href="' . $forumsurl . '&safe="+(this.checked ? 1 : 0)\''), 
 
+		'$pubforums' => array('pubforums', t('Public Forums Only'),(x($_REQUEST,'pubforums') ? $_REQUEST['pubforums'] : ''),'','',' onchange=\'window.location.href="' . $forumsurl . '&pubforums="+(this.checked ? 1 : 0)\''), 
+		'$globaldir' => array('globaldir', t('This Website Only'), 1-intval($globaldir),'','',' onchange=\'window.location.href="' . $forumsurl . '&global="+(this.checked ? 0 : 1)\''),
 	));
 	return $o;
 }
 
-function dir_safe_mode() {
-	$observer = get_observer_hash();
-	if (! $observer)
-		return;
-	if ($observer)
-		$safe_mode = get_xconfig($observer,'directory','safe_mode');		
-	if($safe_mode === '0')
-		$toggle = t('Enable Safe Search');
-	else
-		$toggle = t('Disable Safe Search');
-	$o = replace_macros(get_markup_template('safesearch.tpl'), array(
-		'$safemode' => t('Safe Mode'),
-		'$toggle' => $toggle,
-	));
-
-	return $o;
-}
 
 /**
  * @function sync_directories($mode)
@@ -166,20 +188,23 @@ function sync_directories($dirmode) {
 	// FIXME - what to do if we're in a different realm?
 
 	if((! $r) && (z_root() != DIRECTORY_FALLBACK_MASTER)) {
-		$r = array(
+		$r = array();
+		$r[] = array(
 			'site_url' => DIRECTORY_FALLBACK_MASTER,
 			'site_flags' => DIRECTORY_MODE_PRIMARY,
 			'site_update' => NULL_DATE, 
 			'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch',
-			'site_realm' => DIRECTORY_REALM
+			'site_realm' => DIRECTORY_REALM,
+			'site_valid' => 1
 		);
-		$x = q("insert into site ( site_url, site_flags, site_update, site_directory, site_realm )
+		$x = q("insert into site ( site_url, site_flags, site_update, site_directory, site_realm, site_valid )
 			values ( '%s', %d', '%s', '%s', '%s' ) ",
 			dbesc($r[0]['site_url']),
 			intval($r[0]['site_flags']),
 			dbesc($r[0]['site_update']),
 			dbesc($r[0]['site_directory']),
-			dbesc($r[0]['site_realm'])
+			dbesc($r[0]['site_realm']),
+			intval($r[0]['site_valid'])
 		);
 
 		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s'",
@@ -201,8 +226,11 @@ function sync_directories($dirmode) {
 		// It will take about a month for a new directory to obtain the full current repertoire of channels.
 		// FIXME - go back and pick up earlier ratings if this is a new directory server. These do not get refreshed.
 
+		$token = get_config('system','realm_token');
+
+
 		$syncdate = (($rr['site_sync'] === NULL_DATE) ? datetime_convert('UTC','UTC','now - 2 days') : $rr['site_sync']);
-		$x = z_fetch_url($rr['site_directory'] . '?f=&sync=' . urlencode($syncdate));
+		$x = z_fetch_url($rr['site_directory'] . '?f=&sync=' . urlencode($syncdate) . (($token) ? '&t=' . $token : ''));
 
 		if(! $x['success'])
 			continue;

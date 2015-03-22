@@ -9,7 +9,7 @@ function bookmark_add($channel,$sender,$taxonomy,$private,$opts = null) {
 	$ischat = false;
 
 	if(is_array($opts)) {
-		$menu_id = ((x($opts,'menu_id')) ? intval($opt['menu_id']) : 0);
+		$menu_id = ((x($opts,'menu_id')) ? intval($opts['menu_id']) : 0);
 		$menu_name = ((x($opts,'menu_name')) ? escape_tags($opts['menu_name']) : '');
 		$ischat = ((x($opts,'ischat')) ? intval($opts['ischat']) : 0);
 	}

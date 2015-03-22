@@ -523,9 +523,7 @@ function downgrade_accounts() {
 
 	$basic = get_config('system','default_service_class');
 
-
 	foreach($r as $rr) {
-
 		if(($basic) && ($rr['account_service_class']) && ($rr['account_service_class'] != $basic)) {
 			$x = q("UPDATE account set account_service_class = '%s', account_expires = '%s'
 				where account_id = %d",
@@ -550,74 +548,98 @@ function downgrade_accounts() {
 }
 
 
+/**
+ * @brief Check service_class restrictions.
+ *
+ * If there are no service_classes defined, everything is allowed.
+ * If $usage is supplied, we check against a maximum count and return true if
+ * the current usage is less than the subscriber plan allows. Otherwise we
+ * return boolean true or false if the property is allowed (or not) in this
+ * subscriber plan. An unset property for this service plan means the property
+ * is allowed, so it is only necessary to provide negative properties for each
+ * plan, or what the subscriber is not allowed to do.
+ *
+ * Like account_service_class_allows() but queries directly by account rather
+ * than channel. Service classes are set for accounts, so we look up the
+ * account for the channel and fetch the service class restrictions of the
+ * account.
+ *
+ * @see account_service_class_allows() if you have a channel_id already
+ * @see service_class_fetch()
+ *
+ * @param int $uid The channel_id to check
+ * @param string $property The service class property to check for
+ * @param string|boolean $usage (optional) The value to check against
+ * @return boolean
+ */
+function service_class_allows($uid, $property, $usage = false) {
+	$limit = service_class_fetch($uid, $property);
 
-// check service_class restrictions. If there are no service_classes defined, everything is allowed.
-// if $usage is supplied, we check against a maximum count and return true if the current usage is 
-// less than the subscriber plan allows. Otherwise we return boolean true or false if the property
-// is allowed (or not) in this subscriber plan. An unset property for this service plan means 
-// the property is allowed, so it is only necessary to provide negative properties for each plan, 
-// or what the subscriber is not allowed to do. 
+	if($limit === false)
+		return true; // No service class set => everything is allowed
 
-
-function service_class_allows($uid,$property,$usage = false) {
-	$a = get_app();
-	if($uid == local_channel()) {
-		$service_class = $a->account['account_service_class'];
-	}
-	else {
-		$r = q("select account_service_class as service_class 
-				from channel c, account a 
-				where c.channel_account_id=a.account_id and c.channel_id= %d limit 1",
-			intval($uid)
-		);
-		if($r !== false and count($r)) {
-			$service_class = $r[0]['service_class'];
-		}
-	}
-	if(! x($service_class))
-		return true; // everything is allowed
-
-	$arr = get_config('service_class',$service_class);
-	if(! is_array($arr) || (! count($arr)))
-		return true;
-
-	if($usage === false)
-		return ((x($arr[$property])) ? (bool) $arr[$property] : true);
-	else {
-		if(! array_key_exists($property,$arr))
-			return true;
-		return (((intval($usage)) < intval($arr[$property])) ? true : false);
+	if($usage === false) {
+		// We use negative values for not allowed properties in a subscriber plan
+		return ((x($limit)) ? (bool) $limit : true);
+	} else {
+		return (((intval($usage)) < intval($limit)) ? true : false);
 	}
 }
 
-// like service_class_allows but queries by account rather than channel
-function account_service_class_allows($aid,$property,$usage = false) {
-	$a = get_app();
-	$r = q("select account_service_class as service_class from account where account_id = %d limit 1",
-		intval($aid)
-	);
-	if($r !== false and count($r)) {
-		$service_class = $r[0]['service_class'];
-	}
+/**
+ * @brief Check service class restrictions by account.
+ *
+ * If there are no service_classes defined, everything is allowed.
+ * If $usage is supplied, we check against a maximum count and return true if
+ * the current usage is less than the subscriber plan allows. Otherwise we
+ * return boolean true or false if the property is allowed (or not) in this
+ * subscriber plan. An unset property for this service plan means the property
+ * is allowed, so it is only necessary to provide negative properties for each
+ * plan, or what the subscriber is not allowed to do.
+ *
+ * Like service_class_allows() but queries directly by account rather than channel.
+ *
+ * @see service_class_allows() if you have a channel_id instead of an account_id
+ * @see account_service_class_fetch()
+ *
+ * @param int $aid The account_id to check
+ * @param string $property The service class property to check for
+ * @param int|boolean $usage, (optional) The value to check against
+ * @return boolean
+ */
+function account_service_class_allows($aid, $property, $usage = false) {
 
-	if(! x($service_class))
-		return true; // everything is allowed
+	$limit = account_service_class_fetch($aid, $property);
 
-	$arr = get_config('service_class',$service_class);
-	if(! is_array($arr) || (! count($arr)))
-		return true;
+	if($limit === false)
+		return true; // No service class is set => everything is allowed
 
-	if($usage === false)
-		return ((x($arr[$property])) ? (bool) $arr[$property] : true);
-	else {
-		if(! array_key_exists($property,$arr))
-			return true;
-		return (((intval($usage)) < intval($arr[$property])) ? true : false);
+	if($usage === false) {
+		// We use negative values for not allowed properties in a subscriber plan
+		return ((x($limit)) ? (bool) $limit : true);
+	} else {
+		return (((intval($usage)) < intval($limit)) ? true : false);
 	}
 }
 
-
-function service_class_fetch($uid,$property) {
+/**
+ * @brief Queries a service class value for a channel and property.
+ *
+ * Service classes are set for accounts, so look up the account for this channel
+ * and fetch the service classe of the account.
+ *
+ * If no service class is available it returns false and everything should be
+ * allowed.
+ *
+ * @see account_service_class_fetch()
+ *
+ * @param int $uid The channel_id to query
+ * @param string $property The service property name to check for
+ * @return boolean|int
+ *
+ * @todo Should we merge this with account_service_class_fetch()?
+ */
+function service_class_fetch($uid, $property) {
 	$a = get_app();
 	if($uid == local_channel()) {
 		$service_class = $a->account['account_service_class'];
@@ -635,17 +657,27 @@ function service_class_fetch($uid,$property) {
 	if(! x($service_class))
 		return false; // everything is allowed
 
-	$arr = get_config('service_class',$service_class);
+	$arr = get_config('service_class', $service_class);
 
 	if(! is_array($arr) || (! count($arr)))
 		return false;
 
-	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
+	return((array_key_exists($property, $arr)) ? $arr[$property] : false);
 }
 
-// like service_class_fetch but queries by account rather than channel
-
-function account_service_class_fetch($aid,$property) {
+/**
+ * @brief Queries a service class value for an account and property.
+ *
+ * Like service_class_fetch() but queries by account rather than channel.
+ *
+ * @see service_class_fetch() if you have channel_id.
+ * @see account_service_class_allows()
+ *
+ * @param int $aid The account_id to query
+ * @param string $property The service property name to check for
+ * @return boolean|int
+ */
+function account_service_class_fetch($aid, $property) {
 
 	$r = q("select account_service_class as service_class from account where account_id = %d limit 1",
 		intval($aid)
@@ -657,17 +689,17 @@ function account_service_class_fetch($aid,$property) {
 	if(! x($service_class))
 		return false; // everything is allowed
 
-	$arr = get_config('service_class',$service_class);
+	$arr = get_config('service_class', $service_class);
 
 	if(! is_array($arr) || (! count($arr)))
 		return false;
 
-	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
+	return((array_key_exists($property, $arr)) ? $arr[$property] : false);
 }
 
 
 function upgrade_link($bbcode = false) {
-	$l = get_config('service_class','upgrade_link');
+	$l = get_config('service_class', 'upgrade_link');
 	if(! $l)
 		return '';
 	if($bbcode)

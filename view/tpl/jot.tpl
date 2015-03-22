@@ -1,5 +1,5 @@
-<div id="profile-jot-wrapper" >
-	<form id="profile-jot-form" action="{{$action}}" method="post" >
+<div id="profile-jot-wrapper">
+	<form id="profile-jot-form" action="{{$action}}" method="post">
 		<input type="hidden" name="type" value="{{$ptyp}}" />
 		<input type="hidden" name="profile_uid" value="{{$profile_uid}}" />
 		<input type="hidden" name="return" value="{{$return_path}}" />
@@ -16,47 +16,57 @@
 		{{$mimeselect}}
 		{{$layoutselect}}
 		{{if $id_select}}
-			<div class="channel-id-select-div">
+		<div class="channel-id-select-div">
 			<span class="channel-id-select-desc">{{$id_seltext}}</span> {{$id_select}}
-			</div>
+		</div>
 		{{/if}}
-		<div id="jot-title-wrap"  class="jothidden" style="display:none">
-			<input name="title" id="jot-title" type="text" placeholder="{{$placeholdertitle}}" value="{{$title}}">
+		<div id="jot-title-wrap" class="jothidden" style="display:none">
+			<input name="title" id="jot-title" type="text" placeholder="{{$placeholdertitle}}" tabindex=1 value="{{$title}}">
 		</div>
 		{{if $catsenabled}}
-		<div id="jot-category-wrap"  class="jothidden" style="display:none">
-			<input name="category" id="jot-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" data-role="tagsinput"/>
+		<div id="jot-category-wrap" class="jothidden" style="display:none">
+			<input name="category" id="jot-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" data-role="tagsinput">
 		</div>
 		{{/if}}
 		{{if $webpage}}
 		<div id="jot-pagetitle-wrap" class="jothidden" style="display:none">
-			<input name="pagetitle" id="jot-pagetitle" type="text" placeholder="{{$placeholdpagetitle}}" value="{{$pagetitle}}"  />
+			<input name="pagetitle" id="jot-pagetitle" type="text" placeholder="{{$placeholdpagetitle}}" value="{{$pagetitle}}">
 		</div>
 		{{/if}}
 		<div id="jot-text-wrap">
-			<textarea class="profile-jot-text" id="profile-jot-text" name="body" placeholder="{{$share}}">{{$content}}</textarea>
+			<textarea class="profile-jot-text" id="profile-jot-text" name="body" tabindex=2 placeholder="{{$share}}">{{$content}}</textarea>
 		</div>
 		<div id="profile-jot-submit-wrapper" class="jothidden">
 			<div id="profile-jot-submit-left" class="btn-toolbar pull-left">
-				{{if $visitor}}
-				<div class='btn-group'>
-					<button id="wall-image-upload" class="btn btn-default btn-sm" title="{{$upload}}" >
-						<i class="icon-camera jot-icons"></i>
+				<div class="btn-group">
+					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b'); return false;">
+						<i class="icon-bold jot-icons"></i>
 					</button>
+					<button id="main-editor-italic" class="btn btn-default btn-sm" title="{{$italic}}" onclick="inserteditortag('i'); return false;">
+						<i class="icon-italic jot-icons"></i>
+					</button>
+					<button id="main-editor-underline" class="btn btn-default btn-sm" title="{{$underline}}" onclick="inserteditortag('u'); return false;">
+						<i class="icon-underline jot-icons"></i>
+					</button>
+					<button id="main-editor-quote" class="btn btn-default btn-sm" title="{{$quote}}" onclick="inserteditortag('quote'); return false;">
+						<i class="icon-quote-left jot-icons"></i>
+					</button>
+					<button id="main-editor-code" class="btn btn-default btn-sm" title="{{$code}}" onclick="inserteditortag('code'); return false;">
+						<i class="icon-terminal jot-icons"></i>
+					</button>
+				</div>
+				{{if $visitor}}
+				<div class="btn-group hidden-xs">
+					{{if $writefiles}}
 					<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
 						<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
 					</button>
+					{{/if}}
 					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
 						<i id="profile-link" class="icon-link jot-icons"></i>
 					</button>
-					<button id="profile-video-wrapper" class="btn btn-default btn-sm" title="{{$video}}" onclick="jotVideoURL();return false;">
-						<i id="profile-video" class="icon-facetime-video jot-icons"></i>
-					</button>
-					<button id="profile-audio-wrapper" class="btn btn-default btn-sm" title="{{$audio}}" onclick="jotAudioURL();return false;">
-						<i id="profile-audio" class="icon-volume-up jot-icons"></i>
-					</button>
 				</div>
-				<div class='btn-group'>
+				<div class="btn-group hidden-xs hidden-sm">
 					<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
 						<i id="profile-location" class="icon-globe jot-icons"></i>
 					</button>
@@ -66,7 +76,7 @@
 					</button>
 					{{/if}}
 				{{else}}
-				<div class='btn-group'>
+				<div class="btn-group hidden-xs">
 				{{/if}}
 				{{if $feature_expire}}
 					<button id="profile-expire-wrapper" class="btn btn-default btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
@@ -84,6 +94,35 @@
 					</button>
 				{{/if}}
 				</div>
+				<div class="btn-group visible-xs visible-sm">
+					<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+						<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
+					</button>
+					<ul class="dropdown-menu dropdown-menu-right" role="menu">
+						<li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li>
+						{{if $visitor}}
+						<li class="divider visible-xs"></li>
+						{{if $writefiles}}<li class="visible-xs"><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li>{{/if}}
+						<li class="visible-xs"><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>
+						<!--li class="visible-xs"><a href="#" onclick="jotVideoURL(); return false;"><i class="icon-facetime-video"></i>&nbsp;{{$video}}</a></li-->
+						<!--li class="visible-xs"><a href="#" onclick="jotAudioURL(); return false;"><i class="icon-volume-up"></i>&nbsp;{{$audio}}</a></li-->
+						{{/if}}
+						<li class="divider visible-xs"></li>
+						<li class="visible-xs visible-sm"><a href="#" onclick="jotGetLocation(); return false;"><i class="icon-globe"></i>&nbsp;{{$setloc}}</a></li>
+						{{if $noloc}}
+						<li class="visible-xs visible-sm"><a href="#" onclick="jotClearLocation(); return false;"><i class="icon-circle-blank"></i>&nbsp;{{$noloc}}</a></li>
+						{{/if}}
+						{{if $feature_expire}}
+						<li class="visible-xs visible-sm"><a href="#" onclick="jotGetExpiry(); return false;"><i class="icon-eraser"></i>&nbsp;{{$expires}}</a></li>
+						{{/if}}
+						{{if $feature_encrypt}}
+						<li class="visible-xs visible-sm"><a href="#" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"><i class="icon-key"></i>&nbsp;{{$encrypt}}</a></li>
+						{{/if}}
+						{{if $feature_voting}}
+						<li class="visible-xs visible-sm"><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="icon-check-empty"></i>&nbsp;{{$voting}}</a></li>
+						{{/if}}
+					</ul>
+				</div>
 			</div>
 			<div id="profile-rotator-wrapper">
 				<div id="profile-rotator"></div>
@@ -91,15 +130,15 @@
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				{{if $showacl}}
 				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
-					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons">{{$bang}}</i>
+					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>{{if $bang}}&nbsp;<i class="icon-exclamation jot-icons"></i>{{/if}}
 				</button>
 				{{/if}}
 				{{if $preview}}
-				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
+				<button class="btn btn-default btn-sm hidden-xs" onclick="preview_post();return false;" title="{{$preview}}">
 					<i class="icon-eye-open jot-icons" ></i>
 				</button>
 				{{/if}}
-				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="button-submit" >{{$share}}</button>
+				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" tabindex=3 name="button-submit" >{{$share}}</button>
 			</div>
 			<div id="profile-jot-perms-end"></div>
 			<div id="profile-jot-plugin-wrapper">
@@ -133,17 +172,17 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <script type="text/javascript">
-  $(function() {
-    $('#datetimepicker1').datetimepicker({
-      language: 'us',
-      icons: {
-					time: "icon-time",
-					date: "icon-calendar",
-					up: "icon-arrow-up",
-					down: "icon-arrow-down"
-				}
-    });
-  });
+	$(function() {
+		$('#datetimepicker1').datetimepicker({
+			language: 'us',
+			icons: {
+				time: "icon-time",
+				date: "icon-calendar",
+				up: "icon-arrow-up",
+				down: "icon-arrow-down"
+			}
+		});
+	});
 </script>
 
 {{if $content}}

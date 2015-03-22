@@ -76,8 +76,8 @@ function ratenotif_run($argv, $argc){
 		if($j && $j['success'] && is_array($j['directories'])) {
 
 			foreach($j['directories'] as $h) {
-//				if($h == z_root())
-//					continue;
+				if($h == z_root())
+					continue;
 
 				$hash = random_string();
 				$n = zot_build_packet($channel,'notify',null,null,$hash);
@@ -94,21 +94,21 @@ function ratenotif_run($argv, $argc){
 					dbesc($n),
 					dbesc(json_encode($encoded_item))
 				);
-			}
-			$deliver[] = $hash;
 
-			if(count($deliver) >= $deliveries_per_process) {
-				proc_run('php','include/deliver.php',$deliver);
-				$deliver = array();
-				if($interval)
-					@time_sleep_until(microtime(true) + (float) $interval);
-			}
+				$deliver[] = $hash;
 
+				if(count($deliver) >= $deliveries_per_process) {
+					proc_run('php','include/deliver.php',$deliver);
+					$deliver = array();
+					if($interval)
+						@time_sleep_until(microtime(true) + (float) $interval);
+				}
+			}
 
 			// catch any stragglers
 
 			if(count($deliver)) {
-			proc_run('php','include/deliver.php',$deliver);
+				proc_run('php','include/deliver.php',$deliver);
 			}
 		}
 	}

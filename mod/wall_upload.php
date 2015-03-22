@@ -32,8 +32,7 @@ function wall_upload_post(&$a) {
 
 	$observer = $a->get_observer();
 
-	$args = array( 'source' => 'editor', 'album' => t('Wall Photos'), 
-			'not_visible' => 1, 'contact_allow' => array($channel['channel_hash']));
+	$args = array( 'source' => 'editor', 'visible' => 0, 'contact_allow' => array($channel['channel_hash']));
 
  	$ret = photo_upload($channel,$observer,$args);
 

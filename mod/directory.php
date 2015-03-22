@@ -14,6 +14,31 @@ function directory_init(&$a) {
 			dbesc($_GET['ignore'])
 		);
 	}
+
+	$observer = get_observer_hash();
+	$global_changed = false;
+	$safe_changed = false;
+
+	if(array_key_exists('global',$_REQUEST)) {
+		$globaldir = intval($_REQUEST['global']);
+		$global_changed = true;
+	}
+	if($global_changed) {
+		$_SESSION['globaldir'] = $globaldir;
+		if($observer)
+			set_xconfig($observer,'directory','globaldir',$globaldir);
+	} 		
+
+	if(array_key_exists('safe',$_REQUEST)) {
+		$safemode = intval($_REQUEST['safe']);
+		$safe_changed = true;
+	}
+	if($safe_changed) {
+		$_SESSION['safemode'] = $safemode;
+		if($observer)
+			set_xconfig($observer,'directory','safe_mode',$safemode);
+	} 		
+
 }
 
 function directory_content(&$a) {
@@ -23,24 +48,16 @@ function directory_content(&$a) {
 		return;
 	}
 
-	$safe_mode = 1;
-
 	$observer = get_observer_hash();
-	
-	if($observer) {
-		$safe_mode = get_xconfig($observer,'directory','safe_mode');
-	}
-	if($safe_mode === false)
-		$safe_mode = 1;
-	else
-		$safe_mode = intval($safe_mode);
 
-	if(x($_REQUEST,'safe'))
-		$safe_mode = (intval($_REQUEST['safe']));
+	$globaldir = get_globaldir_setting($observer);
+	$safe_mode = get_safemode_setting($observer);
 
 	$pubforums = null;
 	if(array_key_exists('pubforums',$_REQUEST))
 		$pubforums = intval($_REQUEST['pubforums']);
+	if(! $pubforums)
+		$pubforums = null;
 
 	$o = '';
 	nav_set_selected('directory');
@@ -92,6 +109,9 @@ function directory_content(&$a) {
 		$url = $directory['url'] . '/dirsearch';
 	}
 
+	$token = get_config('system','realm_token');
+
+
 	logger('mod_directory: URL = ' . $url, LOGGER_DEBUG);
 
 	$contacts = array();
@@ -106,15 +126,19 @@ function directory_content(&$a) {
 		}
 	}
 
-
-
 	if($url) {
 		// We might want to make the tagadelic count (&kw=) configurable or turn it off completely.
 
 		$numtags = get_config('system','directorytags');
 
-		$kw = ((intval($numtags)) ? $numtags : 24);
+		$kw = ((intval($numtags)) ? $numtags : 50);
 		$query = $url . '?f=&kw=' . $kw . (($safe_mode != 1) ? '&safe=' . $safe_mode : '');
+
+		if($token)
+			$query .= '&t=' . $token;
+
+		if(! $globaldir)
+			$query .= '&hub=' . get_app()->get_hostname();
 
 		if($search)
 			$query .= '&name=' . urlencode($search) . '&keywords=' . urlencode($search);
@@ -127,15 +151,10 @@ function directory_content(&$a) {
 		if(! is_null($pubforums))
 			$query .= '&pubforums=' . intval($pubforums);
 
-		if(! is_null($pubforums))
-			$query .= '&pubforums=' . intval($pubforums);
-
-		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : 'normal');
+		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : 'date');
 
 		if($sort_order)
 			$query .= '&order=' . urlencode($sort_order);
-
-
 			
 		if($a->pager['page'] != 1)
 			$query .= '&p=' . $a->pager['page'];

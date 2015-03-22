@@ -227,10 +227,16 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		);		
 	}
 	else {
-		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_flags, abook_their_perms, abook_my_perms, abook_created, abook_updated )
-			values( %d, %d, '%s', %d, %d, %d, '%s', '%s' ) ",
+
+		$closeness = get_pconfig($uid,'system','new_abook_closeness');
+		if($closeness === false)
+			$closeness = 80;
+
+		$r = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_flags, abook_their_perms, abook_my_perms, abook_created, abook_updated )
+			values( %d, %d, %d, '%s', %d, %d, %d, '%s', '%s' ) ",
 			intval($aid),
 			intval($uid),
+			intval($closeness),
 			dbesc($xchan_hash),
 			intval(($is_http) ? ABOOK_FLAG_FEED : 0),
 			intval(($is_http) ? $their_perms|PERMS_R_STREAM|PERMS_A_REPUBLISH : $their_perms),

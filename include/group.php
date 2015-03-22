@@ -254,7 +254,7 @@ function group_side($every="connections",$each="group",$edit = false, $group_id 
 		'text' 	=> t('All Channels'),
 		'id' => 0,
 		'selected' => (($group_id == 0) ? 'group-selected' : ''),
-		'href' 	=> $every,
+		'href' 	=> $every . (($every === 'network') ? '?f=&gid=0' : ''),
 	);
 
 

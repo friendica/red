@@ -19,6 +19,7 @@ function get_capath() {
  *    'timeout' => int seconds, default system config value or 60 seconds
  *    'http_auth' => username:password
  *    'novalidate' => do not validate SSL certs, default is to validate using our CA list
+ *    'nobody' => only return the header
  *    
  * @returns array
  *    'return_code' => HTTP return code or 0 if timeout or failure
@@ -30,8 +31,6 @@ function get_capath() {
 function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
-
-	$a = get_app();
 
 	$ch = @curl_init($url);
 	if(($redirects > 8) || (! $ch)) 
@@ -51,6 +50,9 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	if(x($opts,'headers'))
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
 
+	if(x($opts,'nobody'))
+		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
+
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
 	}
@@ -66,7 +68,6 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
-
 
 	$prx = get_config('system','proxy');
 	if(strlen($prx)) {
@@ -109,7 +110,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		$url_parsed = @parse_url($newurl);
 		if (isset($url_parsed)) {
 			@curl_close($ch);
-			return z_fetch_url($newurl,$binary,$redirects++,$opts);
+			return z_fetch_url($newurl,$binary,++$redirects,$opts);
 		}
 	}
 
@@ -182,6 +183,9 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	if(x($opts,'headers'))
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
 
+	if(x($opts,'nobody'))
+		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
+
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
 	}
@@ -239,7 +243,7 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 			if($http_code == 303) {
 				return z_fetch_url($newurl,false,$redirects++,$opts);
 			} else {
-				return z_post_url($newurl,$params,$redirects++,$opts);
+				return z_post_url($newurl,$params,++$redirects,$opts);
 			}
 		}
 	}
@@ -511,6 +515,7 @@ function allowed_email($email) {
 
 function avatar_img($email) {
 
+	$avatar = array();
 	$a = get_app();
 
 	$avatar['size'] = 175;
@@ -520,10 +525,11 @@ function avatar_img($email) {
 
 	call_hooks('avatar_lookup', $avatar);
 
-	if(! $avatar['success'])
+	if (! $avatar['success'])
 		$avatar['url'] = $a->get_baseurl() . '/' . get_default_profile_photo();
 
 	logger('Avatar: ' . $avatar['email'] . ' ' . $avatar['url'], LOGGER_DEBUG);
+
 	return $avatar['url'];
 }
 

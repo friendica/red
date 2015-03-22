@@ -110,8 +110,6 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 
 
 
-
-
 function purify_html($s) {
 	require_once('library/HTMLPurifier.auto.php');
 	require_once('include/html2bbcode.php');
@@ -360,8 +358,6 @@ function paginate(&$a) {
 
 function alt_pager(&$a, $i, $more = '', $less = '') {
 
-	$o = '';
-
 	if(! $more)
 		$more = t('older');
 	if(! $less)
@@ -370,10 +366,10 @@ function alt_pager(&$a, $i, $more = '', $less = '') {
 	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
-	$pagenum = $a->pager['page'];
+	//$pagenum = $a->pager['page'];
 	$url = $a->get_baseurl() . '/' . $stripped;
 
-	return replace_macros(get_markup_template('alt_pager.tpl'),array(
+	return replace_macros(get_markup_template('alt_pager.tpl'), array(
 		'$has_less' => (($a->pager['page'] > 1) ? true : false),
 		'$has_more' => (($i > 0 && $i >= $a->pager['itemspage']) ? true : false),
 		'$less' => $less,
@@ -600,6 +596,7 @@ function activity_match($haystack,$needle) {
 
 function get_tags($s) {
 	$ret = array();
+	$match = array();
 
 	// ignore anything in a code block
 
@@ -739,7 +736,7 @@ function contact_block() {
 
 	if((! is_array($a->profile)) || ($a->profile['hide_friends']))
 		return $o;
-	$r = q("SELECT COUNT(abook_id) AS total FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d and not ( abook_flags & %d )>0 and not (xchan_flags & %d)>0",
+	$r = q("SELECT COUNT(abook_id) AS total FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d and ( abook_flags & %d ) = 0 and ( xchan_flags & %d ) = 0",
 			intval($a->profile['uid']),
 			intval($abook_flags),
 			intval($xchan_flags)
@@ -751,12 +748,10 @@ function contact_block() {
 		$contacts = t('No connections');
 		$micropro = null;
 	} else {
-		if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
-			$randfunc = 'RANDOM()';
-		} else {
-			$randfunc = 'RAND()';
-		}
-		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND not ( abook_flags & %d)>0 and not (xchan_flags & %d )>0 ORDER BY $randfunc LIMIT %d",
+
+		$randfunc = db_getfunc('RAND');
+
+		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND ( abook_flags & %d ) = 0 and ( xchan_flags & %d ) = 0 ORDER BY $randfunc LIMIT %d",
 				intval($a->profile['uid']),
 				intval($abook_flags|ABOOK_FLAG_ARCHIVED),
 				intval($xchan_flags),
@@ -873,8 +868,8 @@ function valid_email($x){
  */
 
 
-function linkify($s) {
-	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\@\~\#\'\%\$\!\+]*)/", ' <a href="$1" >$1</a>', $s);
+function linkify($s,$me = false) {
+	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\@\~\#\'\%\$\!\+\,\@]*)/", (($me) ? ' <a href="$1" rel="me" >$1</a>' : ' <a href="$1" >$1</a>'), $s);
 	$s = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$s);
 	return($s);
 }
@@ -1061,7 +1056,6 @@ function list_smilies() {
  *
  */
 function smilies($s, $sample = false) {
-	$a = get_app();
 
 	if(intval(get_config('system','no_smilies')) 
 		|| (local_channel() && intval(get_pconfig(local_channel(),'system','no_smilies'))))
@@ -2111,6 +2105,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 
 	$replaced = false;
 	$r = null;
+	$match = array();
 
 	$termtype = ((strpos($tag,'#') === 0)   ? TERM_HASHTAG : TERM_UNKNOWN);
 	$termtype = ((strpos($tag,'@') === 0)   ? TERM_MENTION : $termtype);
@@ -2354,7 +2349,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 function linkify_tags($a, &$body, $uid) {
 	$str_tags = '';
 	$tagged = array();
-	$result = array();
+	$results = array();
 
 	$tags = get_tags($body);
 
@@ -2375,18 +2370,22 @@ function linkify_tags($a, &$body, $uid) {
 			if($fullnametagged)
 				continue;
 
-			$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : $profile_uid , $tag); 
+			$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : $a->profile_uid , $tag); 
 			$results[] = array('success' => $success, 'access_tag' => $access_tag);
 			if($success['replaced']) $tagged[] = $tag;
 		}
 	}
+
 	return $results;
 }
 
 /**
- * @brief returns icon name for use with e.g. font-awesome based on mime-type
+ * @brief returns icon name for use with e.g. font-awesome based on mime-type.
  *
- * @param string $type
+ * These are the the font-awesome names of version 3.2.1. The newer font-awesome
+ * 4 has different names.
+ *
+ * @param string $type mime type
  * @return string
  */
 function getIconFromType($type) {
@@ -2439,10 +2438,10 @@ function getIconFromType($type) {
  * @brief Returns a human readable formatted string for filesizes.
  *
  * @param int $size filesize in bytes
- * @return string
+ * @return string human readable formatted filesize
  */
 function userReadableSize($size) {
-	$ret = "";
+	$ret = '';
 	if (is_numeric($size)) {
 		$incr = 0;
 		$k = 1024;
@@ -2451,7 +2450,8 @@ function userReadableSize($size) {
 			$incr++;
 			$size = round($size / $k, 2);
 		}
-		$ret = $size . " " . $unit[$incr];
+		$ret = $size . ' ' . $unit[$incr];
 	}
+
 	return $ret;
 }

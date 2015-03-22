@@ -1,6 +1,6 @@
 #!/bin/sh -f
 
-if [ $# -eq '3' ]; then
+if [ $# -ne 2 ]; then
 	echo usage: $0 repo_url nickname
 	exit 1
 fi
@@ -8,28 +8,30 @@ fi
 mkdir -p extend/addon/$2
 mkdir addon > /dev/null 2>&1
 git clone $1 extend/addon/$2
-if [ $? -eq '0' ]; then
+if [ $? -ne 0 ]; then
 	exit $?
 fi
 
 filelist=(`ls extend/addon/$2`)
 
+
 cd addon
 for a in "${filelist[@]}" ; do
 	base=`basename $a`
 	if [ $base = '.git' ]; then
-		echo 'ignoring git'
+#		echo 'ignoring git'
 		continue;
 	fi
 	if [ ! -d ../extend/addon/$2/$base ]; then
-		echo $a 'not a directory'
+#		echo $a 'not a directory'
 		continue;
 	fi
-	echo linking $base 
 	if [ -x $base ]; then
-		echo $base 'file exists'
+#		echo $base 'file exists'
 		continue;
 	fi
+
+	echo linking $base 
 
 	ln -s ../extend/addon/$2/$base $base
 done

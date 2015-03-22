@@ -24,6 +24,7 @@
  */
 function get_browser_language() {
 	$langs = array();
+	$lang_parse = array();
 
 	if (x($_SERVER,'HTTP_ACCEPT_LANGUAGE')) {
 		// break up string into pieces (languages and q factors)
@@ -33,7 +34,7 @@ function get_browser_language() {
 		if (count($lang_parse[1])) {
 			// create a list like "en" => 0.8
 			$langs = array_combine($lang_parse[1], $lang_parse[4]);
-		
+
 			// set default to 1 for any without q factor
 			foreach ($langs as $lang => $val) {
 				if ($val === '') $langs[$lang] = 1;
@@ -144,16 +145,16 @@ function load_translation_table($lang, $install = false) {
 /**
  * @brief translate string if translation exists.
  *
- * @param $s string that should get translated
- * @param $ctx optional context to appear in po file
+ * @param string $s string that should get translated
+ * @param string $ctx optional context to appear in po file
  * @return translated string if exists, otherwise return $s
  *
  */
-function t($s,$ctx = '') {
+function t($s, $ctx = '') {
 	global $a;
 
-	$cs = $ctx?"__ctx:".$ctx."__ ".$s:$s;
-	if(x($a->strings,$cs)) {
+	$cs = $ctx ? '__ctx:' . $ctx . '__ ' . $s : $s;
+	if(x($a->strings, $cs)) {
 		$t = $a->strings[$cs];
 		return is_array($t) ? $t[0] : $t;
 	}
@@ -218,7 +219,7 @@ function detect_language($s) {
 	// strip off bbcode
 	$naked_body = preg_replace('/\[(.+?)\]/', '', $naked_body);
 	if(mb_strlen($naked_body) < intval($min_length)) {
-		logger('detect language: string length less than ' . intval($min_length), LOGGER_DATA);
+		logger('string length less than ' . intval($min_length), LOGGER_DATA);
 		return '';
 	}
 

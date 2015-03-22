@@ -1,13 +1,12 @@
+/**
+ * JavaScript used by mod/settings
+ */
 
-var ispublic = aStr['everybody'] ;
+// is this used anywhere?
+var ispublic = aStr.everybody;
 
 $(document).ready(function() {
-	$('form').areYouSure(); // Warn user about unsaved settings
-
-	$("a#settings-default-perms-menu").colorbox({ 
-		'inline' : true, 
-		'transition' : 'elastic' 
-	});
+	$('form').areYouSure({'addRemoveFieldsMarksDirty':true}); // Warn user about unsaved settings
 
 	$("#id_permissions_role").change(function() {
 		var role = $("#id_permissions_role").val();
@@ -24,13 +23,11 @@ $(document).ready(function() {
 			$('#jot-perms-icon').removeClass('icon-unlock').addClass('icon-lock');
 			$('#jot-public').hide();
 		});
-		if(selstr == null) { 
+		if(selstr === null) {
 			$('#jot-perms-icon').removeClass('icon-lock').addClass('icon-unlock');
 			$('#jot-public').show();
 		}
-
 	}).trigger('change');
-
 });
 
 /**
@@ -137,7 +134,5 @@ function channel_privacy_macro(n) {
 		$('#id_profile_in_directory_onoff .on').removeClass('hidden');
 		$('#id_profile_in_directory_onoff .off').addClass('hidden');
 		$('#id_profile_in_directory').val(1);
-
 	}
-
 }

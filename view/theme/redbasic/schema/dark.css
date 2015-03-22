@@ -1,0 +1,117 @@
+.vcard {
+	border-bottom: 1px solid #333;
+}
+
+#contact-block {
+	border-bottom: 1px solid #333;
+}
+
+.widget {
+	border-bottom: 1px solid #333;
+}
+
+.abook-pending-contact, .abook-permschange {
+	background: #402900;
+}
+
+#cboxContent a {
+	color: #000;
+}
+
+#cboxContent {
+	color: #111;
+}
+
+#adminpage table tr:hover {
+    background-color: #222;
+}
+
+#colorbox {
+	border: 0px solid #1E1E1E;
+	background-color: #1E1E1E;
+}
+
+.chat-item-text {
+	background-color: #222;
+}
+
+.fc-state-highlight {
+    background: none repeat scroll 0% 0% #333 !important;
+}
+
+.well {
+	background-color: #1E1E1E;
+	border: 1px solid #222;
+	background-image: linear-gradient(to bottom, #1E1E1E 0px, #1E1E1E 100%);
+}
+
+.alert-info {
+	color: #CCC;
+	background-color:#333;
+	border-color: #444;
+	background-image: linear-gradient(to bottom, #333 0px, #333 100%);
+}
+
+.abook-self {
+	background-color: #251111;
+}
+
+.acl-button-show,
+.acl-button-hide {
+	color: #fff;
+}
+
+#acl-showall {
+	color: #fff;
+}
+
+#acl-list {
+	border: 1px solid #333;
+}
+
+.acl-list-item {
+	border: 1px solid #333;
+}
+
+.modal-content {
+    background-color: #111;
+}
+
+.btn-default {
+	background-color: #1e1e1e;
+	border-color: #222;
+	color: #ccc;
+	text-shadow: none;
+	box-shadow: none;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
+	background-color: #222;
+	border-color: #222;
+	color: #fff;
+	text-decoration: underline;
+}
+
+.btn-default.btn-sm:hover, .btn-default.btn-sm:focus, .btn-default.btn-sm:active .btn-default.btn-sm.active {
+	text-decoration: none;
+}
+
+.pager_first,
+.pager_last,
+.pager_prev,
+.pager_next,
+.pager-prev,
+.pager-next,
+.pager_n {
+	border: 1px solid #222;
+	background: #1e1e1e;
+}
+
+input {
+	border: 1px solid #222;
+}
+
+input[type="submit"] {
+	background-color: #333;
+	color: #fff;
+}

@@ -42,10 +42,16 @@ site for the first time, please use the SSL ("https://") URL if SSL is
 available. This will avoid problems later. The installation routine will not
 allow you to use a non browser-valid certificate.
 
-This restriction is incorporated because public posts from you may for example
-contain references to images on your own hub. If your certificate is not known
-by the internet browser of users they get a warning message complaining about
-the invalid certificate. 
+This restriction is incorporated because public posts from you may contain 
+references to images on your own hub. Other members viewing their stream on
+other hubs will get warnings if your certificate is not trusted by their web
+browser. This will confuse many people because this is a decentralised network
+and they will get the warning about your hub while viewing their own hub and may 
+think their own hub has an issue. These warnings are very technical and scary to 
+some folks, many of whom will not know how to proceed except to follow the browser
+advice. This is disruptive to the community. That said, we recognise the issues
+surrounding the current certificate infrastructure and agree there are many
+problems, but that doesn't change the requirement. 
 
 Free "browser-valid" certificates are available from providers such as StartSSL. 
 
@@ -57,9 +63,11 @@ use SSL, your webserver must not listen on port 443 at all.
 
 1. Requirements
     - Apache with mod-rewrite enabled and "AllowOverride All" so you can use a 
-    local .htaccess file
+    local .htaccess file. Some folks have successfully used nginx and lighttpd.
+	Example config scripts are available for these platforms in doc/install.
+	Apache and nginx have the most support. 
 
-    - PHP 5.3+. The later the better. 
+    - PHP 5.4 or later. The later the better. 
 
     - PHP *command line* access with register_argc_argv set to true in the 
     php.ini file - and with no hosting provider restrictions on the use of 
@@ -70,7 +78,7 @@ use SSL, your webserver must not listen on port 443 at all.
 
     - some form of email server or email gateway such that PHP mail() works
 
-    - Mysql 5.x or MariaDB
+    - Mysql 5.x or MariaDB or postgres database server.
     
     - ability to schedule jobs with cron.
 
@@ -121,11 +129,11 @@ use SSL, your webserver must not listen on port 443 at all.
 
             util/add_addon_repo https://github.com/friendica/red-addons.git matrix
 
-    - For keeping the addon tree updated, you should be on your addon tree and 
-    issue a git pull
+    - For keeping the addon tree updated, you should be on your top level website 
+		directory and issue an update command for that repository.
 
-            cd mywebsite/extend/addon/matrix
-            git pull
+            cd mywebsite
+            util/update_addon_repo matrix
 
 
 3. Create an empty database and note the access details (hostname, username, 
@@ -146,8 +154,8 @@ website.
         If not, edit htconfig.php and change system settings. Rename 
     to .htconfig.php
 	-  Database is populated.
-        If not, import the contents of "database.sql" with phpmyadmin 
-        or mysql command line
+        If not, import the contents of "install/schema_xxxxx.sql" with phpmyadmin 
+        or mysql command line (replace 'xxxxx' with your DB type).
 
 7. At this point visit your website again, and register your personal account. 
 Registration errors should all be recoverable automatically. 

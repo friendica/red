@@ -29,6 +29,7 @@ CREATE TABLE "abook" (
   create index  "abook_dob" on abook  ("abook_dob");
   create index  "abook_connected" on abook  ("abook_connected");
   create index  "abook_rating" on abook  ("abook_rating");
+  create index  "abook_channel_closeness" on abook ("abook_channel", "abook_closeness");
 
 CREATE TABLE "account" (
   "account_id" serial  NOT NULL,
@@ -528,7 +529,7 @@ CREATE TABLE "item" (
   "item_restrict" bigint NOT NULL DEFAULT '0',
   "item_flags" bigint NOT NULL DEFAULT '0',
   "item_private" numeric(4) NOT NULL DEFAULT '0',
-  "item_unseen" smallint(1) NOT NULL DEFAULT '0',
+  "item_unseen" smallint NOT NULL DEFAULT '0',
   "item_search_vector" tsvector,
   PRIMARY KEY ("id")
 );
@@ -725,6 +726,7 @@ CREATE TABLE "outq" (
   "outq_updated" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "outq_notify" text NOT NULL,
   "outq_msg" text NOT NULL,
+  "outq_priority" smallint NOT NULL DEFAULT '0',
   PRIMARY KEY ("outq_hash")
 );
 create index "outq_account" on outq ("outq_account");
@@ -734,6 +736,7 @@ create index "outq_created" on outq ("outq_created");
 create index "outq_updated" on outq ("outq_updated");
 create index "outq_async" on outq ("outq_async");
 create index "outq_delivered" on outq ("outq_delivered");
+create index "outq_priority" on outq ("outq_priority");
 
 CREATE TABLE "pconfig" (
   "id" serial NOT NULL,
@@ -959,6 +962,7 @@ CREATE TABLE "site" (
   "site_sellpage" text NOT NULL DEFAULT '',
   "site_location" text NOT NULL DEFAULT '',
   "site_realm" text NOT NULL DEFAULT '',
+  "site_valid" smallint NOT NULL DEFAULT '0',
   PRIMARY KEY ("site_url")
 );
 create index "site_flags" on site ("site_flags");
@@ -968,6 +972,7 @@ create index "site_register" on site ("site_register");
 create index "site_access" on site ("site_access");
 create index "site_sellpage" on site ("site_sellpage");
 create index "site_realm" on site ("site_realm");
+create index "site_valid" on site ("site_valid");
 
 CREATE TABLE "source" (
   "src_id" serial  NOT NULL,
@@ -1161,7 +1166,7 @@ CREATE TABLE "xperm" (
   "xp_client" varchar( 20 ) NOT NULL DEFAULT '',
   "xp_channel" bigint NOT NULL DEFAULT '0',
   "xp_perm" varchar( 64 ) NOT NULL DEFAULT '',
-  PRIMARY_KEY ("xp_id")
+  PRIMARY KEY ("xp_id")
 );
 create index "xp_client" on xperm ("xp_client");
 create index "xp_channel" on xperm ("xp_channel");

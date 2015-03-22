@@ -4,7 +4,7 @@
 <meta name="generator" content="{{$generator}}" />
 
 <!--[if IE]>
-<script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<script src="{{$baseurl}}/library/html5.js"></script>
 <![endif]-->
 
 {{$head_css}}

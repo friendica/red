@@ -20,6 +20,7 @@ function js_strings() {
 		'$rating_val'  => t('Rating'),
 		'$rating_text' => t('Describe (optional)'),
 		'$submit'      => t('Submit'),
+		'$linkurl'     => t('Please enter a link URL'),
 
 		'$t01' => ((t('timeago.prefixAgo') != 'timeago.prefixAgo') ? t('timeago.prefixAgo') : ''),
 		'$t02' => ((t('timeago.prefixFromNow') != 'timeago.prefixFromNow') ? t('timeago.prefixFromNow') : ''),

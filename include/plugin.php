@@ -38,7 +38,7 @@ function uninstall_plugin($plugin) {
 		return false;
 
 	logger("Addons: uninstalling " . $plugin);
-	$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
+	//$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
 	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
 	if(function_exists($plugin . '_uninstall')) {
 		$func = $plugin . '_uninstall';
@@ -68,7 +68,7 @@ function install_plugin($plugin) {
 		$func();
 	}
 
-	$plugin_admin = (function_exists($plugin . "_plugin_admin") ? 1 : 0);
+	$plugin_admin = (function_exists($plugin . '_plugin_admin') ? 1 : 0);
 
 	$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
 		dbesc($plugin),
@@ -91,7 +91,7 @@ function load_plugin($plugin) {
 		return false;
 
 	logger("Addons: loading " . $plugin, LOGGER_DEBUG);
-	$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
+	//$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
 	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
 	if(function_exists($plugin . '_load')) {
 		$func = $plugin . '_load';
@@ -120,6 +120,7 @@ function plugin_is_installed($name) {
 	);
 	if($r)
 		return true;
+
 	return false;
 }
 
@@ -189,7 +190,7 @@ function register_hook($hook, $file, $function, $priority = 0) {
 	if(count($r))
 		return true;
 
-	$r = q("INSERT INTO `hook` (`hook`, `file`, `function`, `priority`) VALUES ( '%s', '%s', '%s', '%s' ) ",
+	$r = q("INSERT INTO `hook` (`hook`, `file`, `function`, `priority`) VALUES ( '%s', '%s', '%s', '%s' )",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function),
@@ -228,11 +229,13 @@ function load_hooks() {
 	$a = get_app();
 //	if(! is_array($a->hooks))
 		$a->hooks = array();
+
 	$r = q("SELECT * FROM hook WHERE true ORDER BY priority DESC");
 	if($r) {
 		foreach($r as $rr) {
 			if(! array_key_exists($rr['hook'],$a->hooks))
 				$a->hooks[$rr['hook']] = array();
+
 			$a->hooks[$rr['hook']][] = array($rr['file'],$rr['function']);
 		}
 	}
@@ -256,32 +259,41 @@ function load_hooks() {
  *     name of hook to attach callback
  * @param string $fn;
  *     function name of callback handler
- *
  */ 
-function insert_hook($hook,$fn) {
+function insert_hook($hook, $fn) {
 	$a = get_app();
 	if(! is_array($a->hooks))
 		$a->hooks = array();
-	if(! array_key_exists($hook,$a->hooks))
+
+	if(! array_key_exists($hook, $a->hooks))
 		$a->hooks[$hook] = array();
-	$a->hooks[$hook][] = array('',$fn);
+
+	$a->hooks[$hook][] = array('', $fn);
 }
 
-
+/**
+ * @brief Calls a hook.
+ *
+ * Use this function when you want to be able to allow a hook to manipulate
+ * the provided data.
+ *
+ * @param string $name of the hook to call
+ * @param string|array &$data to transmit to the callback handler
+ */
 function call_hooks($name, &$data = null) {
 	$a = get_app();
 
-	if((is_array($a->hooks)) && (array_key_exists($name,$a->hooks))) {
+	if((is_array($a->hooks)) && (array_key_exists($name, $a->hooks))) {
 		foreach($a->hooks[$name] as $hook) {
 			if($hook[0])
 				@include_once($hook[0]);
+
 			if(function_exists($hook[1])) {
 				$func = $hook[1];
-				$func($a,$data);
-			}
-			else {
+				$func($a, $data);
+			} else {
 				// remove orphan hooks
-				q("delete from hook where hook = '%s' and file = '$s' and function = '%s' limit 1",
+				q("DELETE FROM hook WHERE hook = '%s' AND file = '%s' AND function = '%s'",
 					dbesc($name),
 					dbesc($hook[0]),
 					dbesc($hook[1])
@@ -308,16 +320,18 @@ function call_hooks($name, &$data = null) {
  * @return array with the plugin information
  */
 function get_plugin_info($plugin){
-	$info = Array(
+	$m = array();
+	$info = array(
 		'name' => $plugin,
-		'description' => "",
+		'description' => '',
 		'author' => array(),
-		'version' => "",
-		'compat' => ""
+		'version' => '',
+		'compat' => ''
 	);
 
-	if (!is_file("addon/$plugin/$plugin.php")) return $info;
-	
+	if (!is_file("addon/$plugin/$plugin.php"))
+		return $info;
+
 	$f = file_get_contents("addon/$plugin/$plugin.php");
 	$r = preg_match("|/\*.*\*/|msU", $f, $m);
 
@@ -328,7 +342,7 @@ function get_plugin_info($plugin){
 			if ($l != ""){
 				list($k, $v) = array_map("trim", explode(":", $l, 2));
 				$k = strtolower($k);
-				if ($k == "author"){
+				if ($k == 'author'){
 					$r = preg_match("|([^<]+)<([^>]+)>|", $v, $m);
 					if ($r) {
 						$info['author'][] = array('name' => $m[1], 'link' => $m[2]);
@@ -343,6 +357,7 @@ function get_plugin_info($plugin){
 			}
 		}
 	}
+
 	return $info;
 }
 
@@ -363,13 +378,14 @@ function get_plugin_info($plugin){
  * @return array
  */
 function get_theme_info($theme){
-	$info=Array(
+	$m = array();
+	$info = array(
 		'name' => $theme,
-		'description' => "",
+		'description' => '',
 		'author' => array(),
-		'version' => "",
-		'compat' => "",
-		'credits' => "",
+		'version' => '',
+		'compat' => '',
+		'credits' => '',
 		'maintainer' => array(),
 		'experimental' => false,
 		'unsupported' => false
@@ -377,10 +393,12 @@ function get_theme_info($theme){
 
 	if(file_exists("view/theme/$theme/experimental"))
 		$info['experimental'] = true;
+
 	if(file_exists("view/theme/$theme/unsupported"))
 		$info['unsupported'] = true;
 
-	if (!is_file("view/theme/$theme/php/theme.php")) return $info;
+	if (!is_file("view/theme/$theme/php/theme.php"))
+		return $info;
 
 	$f = file_get_contents("view/theme/$theme/php/theme.php");
 	$r = preg_match("|/\*.*\*/|msU", $f, $m);
@@ -392,7 +410,7 @@ function get_theme_info($theme){
 			if ($l != ""){
 				list($k, $v) = array_map("trim", explode(":", $l, 2));
 				$k = strtolower($k);
-				if ($k == "author"){
+				if ($k == 'author'){
 					$r = preg_match("|([^<]+)<([^>]+)>|", $v, $m);
 					if ($r) {
 						$info['author'][] = array('name' => $m[1], 'link' => $m[2]);
@@ -400,7 +418,7 @@ function get_theme_info($theme){
 						$info['author'][] = array('name' => $v);
 					}
 				}
-				elseif ($k == "maintainer"){
+				elseif ($k == 'maintainer'){
 					$r = preg_match("|([^<]+)<([^>]+)>|", $v, $m);
 					if ($r) {
 						$info['maintainer'][] = array('name' => $m[1], 'link' => $m[2]);
@@ -415,10 +433,18 @@ function get_theme_info($theme){
 			}
 		}
 	}
+
 	return $info;
 }
 
-
+/**
+ * @brief Returns the theme's screenshot.
+ *
+ * The screenshot is expected as view/theme/$theme/img/screenshot.[png|jpg].
+ *
+ * @param sring $theme The name of the theme
+ * @return string
+ */
 function get_theme_screenshot($theme) {
 	$a = get_app();
 	$exts = array('.png', '.jpg');
@@ -426,6 +452,7 @@ function get_theme_screenshot($theme) {
 		if(file_exists('view/theme/' . $theme . '/img/screenshot' . $ext))
 			return($a->get_baseurl() . '/view/theme/' . $theme . '/img/screenshot' . $ext);
 	}
+
 	return($a->get_baseurl() . '/images/blank.png');
 }
 
@@ -458,7 +485,7 @@ function head_get_css() {
 }
 
 function format_css_if_exists($source) {
-	if(strpos($source[0],'/') !== false)
+	if(strpos($source[0], '/') !== false)
 		$path = $source[0];
 	else
 		$path = theme_include($source[0]);

@@ -1,6 +1,6 @@
 <script language="javascript" type="text/javascript">
 
-var editor=false;
+var editor = false;
 var textlen = 0;
 var plaintext = '{{$editselect}}';
 
@@ -22,7 +22,7 @@ function initEditor(cb){
 			$(".jothidden").show();
 			if (typeof cb!="undefined") cb();
 			return;
-		}	
+		}
 		tinyMCE.init({
 			theme : "advanced",
 			mode : "specific_textareas",
@@ -74,8 +74,7 @@ function initEditor(cb){
 					}
 					else {
 						$('#profile-jot-desc').html('&nbsp;');
-					}	 
-
+					}
 				});
 
 				ed.onInit.add(function(ed) {
@@ -89,7 +88,6 @@ function initEditor(cb){
 		});
 
 		editor = true;
-
 	} else {
 		if (typeof cb!="undefined") cb();
 	}
@@ -100,22 +98,19 @@ function enableOnUser(){
 	$(this).val("");
 	initEditor();
 }
-
 </script>
 <script type="text/javascript" src="{{$baseurl}}/view/js/ajaxupload.js" ></script>
 <script>
 	var ispublic = '{{$ispublic}}';
 
 	$(document).ready(function() {
-		
 		/* enable tinymce on focus and click */
 		$("#profile-jot-text").focus(enableOnUser);
 		$("#profile-jot-text").click(enableOnUser);
 		var upload_title = $('#wall-image-upload').attr('title');
 		var attach_title = $('#wall-file-upload').attr('title');
-
-		var uploader = new window.AjaxUpload(
-			'wall-image-upload',
+		try {
+			var uploader = new window.AjaxUpload('wall-image-upload',
 			{ action: '{{$baseurl}}/wall_upload/{{$nickname}}',
 				name: 'userfile',
 				title: upload_title,
@@ -124,11 +119,26 @@ function enableOnUser(){
 					addeditortext(response);
 					$('#jot-media').val($('#jot-media').val() + response);
 					$('#profile-rotator').spin(false);
-				}				 
-			}
-		);
-		var file_uploader = new window.AjaxUpload(
-			'wall-file-upload',
+				}
+			});
+		} catch (e) {
+		}
+		try {
+			var uploader_sub = new window.AjaxUpload('wall-image-upload-sub',
+			{ action: '{{$baseurl}}/wall_upload/{{$nickname}}',
+				name: 'userfile',
+				title: upload_title,
+				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
+				onComplete: function(file,response) {
+					addeditortext(response);
+					$('#jot-media').val($('#jot-media').val() + response);
+					$('#profile-rotator').spin(false);
+				}
+			});
+		} catch(e) {
+		}
+		try {
+			var file_uploader = new window.AjaxUpload('wall-file-upload',
 			{ action: '{{$baseurl}}/wall_attach/{{$nickname}}',
 				name: 'userfile',
 				title: attach_title,
@@ -137,11 +147,24 @@ function enableOnUser(){
 					addeditortext(response);
 					$('#jot-media').val($('#jot-media').val() + response);
 					$('#profile-rotator').spin(false);
-				}				 
-			}
-		);
-
-
+				}
+			});
+		} catch(e) {
+		}
+		try {
+			var file_uploader_sub = new window.AjaxUpload('wall-file-upload-sub',
+			{ action: '{{$baseurl}}/wall_attach/{{$nickname}}',
+				name: 'userfile',
+				title: attach_title,
+				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
+				onComplete: function(file,response) {
+					addeditortext(response);
+					$('#jot-media').val($('#jot-media').val() + response);
+					$('#profile-rotator').spin(false);
+				}
+			});
+		} catch(e) {
+		}
 	});
 
 	function deleteCheckedItems() {
@@ -155,7 +178,7 @@ function enableOnUser(){
 				else {
 					checkedstr = $(this).val();
 				}
-			}	
+			}
 		});
 		$.post('item', { dropitems: checkedstr }, function(data) {
 			window.location.reload();
@@ -199,14 +222,12 @@ function enableOnUser(){
 		//reply = prompt("{{$expirewhen}}", $('#jot-expire').val());
 		$('#expiryModal').modal();
 		$('#expiry-modal-OKButton').on('click', function() {
-    	reply=$('#expiration-date').val();
-    	if(reply && reply.length) {
-			$('#jot-expire').val(reply);
-			$('#expiryModal').modal('hide');
-		}
-})
-		
-		
+			reply=$('#expiration-date').val();
+			if(reply && reply.length) {
+				$('#jot-expire').val(reply);
+				$('#expiryModal').modal('hide');
+			}
+		})
 	}
 
 	function jotShare(id) {
@@ -220,7 +241,6 @@ function enableOnUser(){
 				$('#like-rotator-' + id).spin(false);
 				$(window).scrollTop(0);
 			});
-
 		});
 	}
 
@@ -265,9 +285,9 @@ function enableOnUser(){
 	}
 
 	function itemFiler(id) {
-		
+
 		var bordercolor = $("input").css("border-color");
-		
+
 		$.get('filer/', function(data){
 			$.colorbox({html:data});
 			$("#id_term").keypress(function(){
@@ -276,7 +296,7 @@ function enableOnUser(){
 			$("#select_term").change(function(){
 				$("#id_term").css("border-color",bordercolor);
 			})
-			
+
 			$("#filer_save").click(function(e){
 				e.preventDefault();
 				reply = $("#id_term").val();
@@ -312,11 +332,11 @@ function enableOnUser(){
 	function toggleVoting() {
 		if($('#jot-consensus').val() > 0) {
 			$('#jot-consensus').val(0);
-			$('#profile-voting').removeClass('icon-check').addClass('icon-check-empty');
+			$('#profile-voting, #profile-voting-sub').removeClass('icon-check').addClass('icon-check-empty');
 		}
 		else {
 			$('#jot-consensus').val(1);
-			$('#profile-voting').removeClass('icon-check-empty').addClass('icon-check');
+			$('#profile-voting, #profile-voting-sub').removeClass('icon-check-empty').addClass('icon-check');
 		}
 	}
 
@@ -324,8 +344,6 @@ function enableOnUser(){
 		$('#jot-coord').val('');
 		$('#profile-nolocation-wrapper').attr('disabled', true);
 	}
-
-
 
 	{{$geotag}}
 
@@ -335,16 +353,15 @@ function enableOnUser(){
 $( document ).on( "click", ".wall-item-delete-link,.page-delete-link,.layout-delete-link,.block-delete-link", function(e) {
 	var link = $(this).attr("href"); // "get" the intended link in a var
 
-    if (typeof(eval($.fn.modal)) === 'function'){
-        e.preventDefault();
-  		bootbox.confirm("<h4>{{$confirmdelete}}</h4>",function(result) {
-    				if (result) {
-      				document.location.href = link;}
-      				});}
-    else { 
-    	return confirm("{{$confirmdelete}}");
-    }			
-    });
+	if (typeof(eval($.fn.modal)) === 'function'){
+		e.preventDefault();
+		bootbox.confirm("<h4>{{$confirmdelete}}</h4>",function(result) {
+			if (result) {
+				document.location.href = link;
+			}
+		});
+	} else {
+		return confirm("{{$confirmdelete}}");
+	}
+});
 </script>
-
-

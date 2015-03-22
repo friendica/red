@@ -15,23 +15,22 @@ require_once('include/widgets.php');
 // page layout from the given description
 
 
-function pdl_selector($uid,$current="") {
-
+function pdl_selector($uid, $current="") {
 	$o = '';
 
 	$sql_extra = item_permissions_sql($uid);
 
-	$r = q("select item_id.*, mid from item_id left join item on iid = item.id where item_id.uid = %d and item_id.uid = item.uid and service = 'PDL' order by sid asc",
-		intval($owner)
+	$r = q("select item_id.*, mid from item_id left join item on iid = item.id where item_id.uid = %d and item_id.uid = item.uid and service = 'PDL' $sql_extra order by sid asc",
+		intval($uid)
 	);
 
 	$arr = array('channel_id' => $uid, 'current' => $current, 'entries' => $r);
 	call_hooks('pdl_selector',$arr);
 
 	$entries = $arr['entries'];
-	$current = $arr['current'];		
- 
-	$o .= "<select name=\"pdl_select\" id=\"pdl_select\" size=\"1\" >";
+	$current = $arr['current'];
+
+	$o .= '<select name="pdl_select" id="pdl_select" size="1">';
 	$entries[] = array('title' => t('Default'), 'mid' => '');
 	foreach($entries as $selection) {
 		$selected = (($selection == $current) ? ' selected="selected" ' : '');
@@ -40,56 +39,61 @@ function pdl_selector($uid,$current="") {
 
 	$o .= '</select>';
 	return $o;
-}	
+}
 
 
 
-function comanche_parser(&$a,$s) {
+function comanche_parser(&$a, $s, $pass = 0) {
+	$matches = array();
 
 	$cnt = preg_match_all("/\[comment\](.*?)\[\/comment\]/ism", $s, $matches, PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
-			$s = str_replace($mtch[0],'',$s);
+			$s = str_replace($mtch[0], '', $s);
 		}
 	}
 
-	$cnt = preg_match("/\[layout\](.*?)\[\/layout\]/ism", $s, $matches);
-	if($cnt)
-		$a->page['template'] = trim($matches[1]);
+	if($pass == 0) {
+		$cnt = preg_match("/\[layout\](.*?)\[\/layout\]/ism", $s, $matches);
+		if($cnt)
+			$a->page['template'] = trim($matches[1]);
 
-	$cnt = preg_match("/\[template=(.*?)\](.*?)\[\/template\]/ism", $s, $matches);
-	if($cnt) {
-		$a->page['template'] = trim($matches[2]);
-		$a->page['template_style'] = trim($matches[2]) . '_' . $matches[1]; 
-	}
-
-	$cnt = preg_match("/\[template\](.*?)\[\/template\]/ism", $s, $matches);
-	if($cnt) {
-		$a->page['template'] = trim($matches[1]);
-	}
-
-	$cnt = preg_match("/\[theme=(.*?)\](.*?)\[\/theme\]/ism", $s, $matches);
-	if($cnt) {
-		$a->layout['schema'] = trim($matches[1]);
-		$a->layout['theme'] = trim($matches[2]);
-	}
-
-	$cnt = preg_match("/\[theme\](.*?)\[\/theme\]/ism", $s, $matches);
-	if($cnt)
-		$a->layout['theme'] = trim($matches[1]);
-
-	$cnt = preg_match_all("/\[region=(.*?)\](.*?)\[\/region\]/ism", $s, $matches, PREG_SET_ORDER);
-	if($cnt) {
-		foreach($matches as $mtch) {
-			$a->layout['region_' . $mtch[1]] = comanche_region($a,$mtch[2]);
+		$cnt = preg_match("/\[template=(.*?)\](.*?)\[\/template\]/ism", $s, $matches);
+		if($cnt) {
+			$a->page['template'] = trim($matches[2]);
+			$a->page['template_style'] = trim($matches[2]) . '_' . $matches[1]; 
 		}
-	}
 
-	$cnt = preg_match_all("/\[webpage\](.*?)\[\/webpage\]/ism", $s, $matches, PREG_SET_ORDER);
-	if($cnt) {
-		// only the last webpage definition is used if there is more than one
-		foreach($matches as $mtch) {
-			$a->layout['webpage'] = comanche_webpage($a,$mtch[1]);
+		$cnt = preg_match("/\[template\](.*?)\[\/template\]/ism", $s, $matches);
+		if($cnt) {
+			$a->page['template'] = trim($matches[1]);
+		}
+
+		$cnt = preg_match("/\[theme=(.*?)\](.*?)\[\/theme\]/ism", $s, $matches);
+		if($cnt) {
+			$a->layout['schema'] = trim($matches[1]);
+			$a->layout['theme'] = trim($matches[2]);
+		}
+
+		$cnt = preg_match("/\[theme\](.*?)\[\/theme\]/ism", $s, $matches);
+		if($cnt)
+			$a->layout['theme'] = trim($matches[1]);
+
+	}
+	else {
+		$cnt = preg_match_all("/\[region=(.*?)\](.*?)\[\/region\]/ism", $s, $matches, PREG_SET_ORDER);
+		if($cnt) {
+			foreach($matches as $mtch) {
+				$a->layout['region_' . $mtch[1]] = comanche_region($a,$mtch[2]);
+			}
+		}
+
+		$cnt = preg_match_all("/\[webpage\](.*?)\[\/webpage\]/ism", $s, $matches, PREG_SET_ORDER);
+		if($cnt) {
+			// only the last webpage definition is used if there is more than one
+			foreach($matches as $mtch) {
+				$a->layout['webpage'] = comanche_webpage($a,$mtch[1]);
+			}
 		}
 	}
 
@@ -99,14 +103,14 @@ function comanche_parser(&$a,$s) {
 function comanche_menu($name,$class = '') {
 	$channel_id = comanche_get_channel_id();
 	if($channel_id) {
-		$m = menu_fetch($name,$channel_id,get_observer_hash());
-		return menu_render($m,$class);
+		$m = menu_fetch($name,$channel_id, get_observer_hash());
+		return menu_render($m, $class);
 	}
 }
 
 function comanche_replace_region($match) {
 	$a = get_app();
-	if(array_key_exists($match[1],$a->page)) {
+	if(array_key_exists($match[1], $a->page)) {
 		return $a->page[$match[1]];
 	}
 }
@@ -121,15 +125,15 @@ function comanche_get_channel_id() {
 	$channel_id = ((is_array(get_app()->profile)) ? get_app()->profile['profile_uid'] : 0);
 	if((! $channel_id) && (local_channel()))
 		$channel_id = local_channel();
+
 	return $channel_id;
 }
 
 function comanche_block($name) {
-
+	$o = '';
 	$channel_id = comanche_get_channel_id();
-	
+
 	if($channel_id) {
-		$o = '';
 		$r = q("select * from item inner join item_id on iid = item.id and item_id.uid = item.uid and item.uid = %d and service = 'BUILDBLOCK' and sid = '%s' limit 1",
 			intval($channel_id),
 			dbesc($name)
@@ -138,11 +142,12 @@ function comanche_block($name) {
 			$o = '<div class="widget bblock">';
 			if($r[0]['title'])
 				$o .= '<h3>' . $r[0]['title'] . '</h3>';
-			$o .= prepare_text($r[0]['body'],$r[0]['mimetype']);
-			$o .= '</div>';
 
+			$o .= prepare_text($r[0]['body'], $r[0]['mimetype']);
+			$o .= '</div>';
 		}
 	}
+
 	return $o;
 }
 
@@ -154,8 +159,9 @@ function comanche_block($name) {
 // of what template and webpage options we might desire. 
 
 function comanche_webpage(&$a,$s) {
-
 	$ret = array();
+	$matches = array();
+
 	$cnt = preg_match_all("/\[authored\](.*?)\[\/authored\]/ism", $s, $matches, PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
@@ -170,9 +176,10 @@ function comanche_webpage(&$a,$s) {
 // the global app environment, or config storage until we implement argument passing
 
 
-function comanche_widget($name,$text) {
-	$a = get_app();
+function comanche_widget($name, $text) {
 	$vars = array();
+	$matches = array();
+
 	$cnt = preg_match_all("/\[var=(.*?)\](.*?)\[\/var\]/ism", $text, $matches, PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
@@ -186,12 +193,13 @@ function comanche_widget($name,$text) {
 }
 
 
-function comanche_region(&$a,$s) {
+function comanche_region(&$a, $s) {
+	$matches = array();
 
 	$cnt = preg_match_all("/\[menu\](.*?)\[\/menu\]/ism", $s, $matches, PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
-			$s = str_replace($mtch[0],comanche_menu(trim($mtch[1])),$s);
+			$s = str_replace($mtch[0], comanche_menu(trim($mtch[1])), $s);
 		}
 	}
 
@@ -244,7 +252,3 @@ function register_page_template($arr) {
 	get_app()->page_layouts[$arr['template']] = array($arr['variant']);
 	return;
 }
-
-
-
-

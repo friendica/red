@@ -23,4 +23,16 @@
 
 <div class="channels-end all"></div>
 
+{{if $delegates}}
+<hr />
+<h3>{{$delegate_header}}</h3>
+<div id="delegated-channels">
+{{foreach $delegates as $chn}}
+{{include file="channel.tpl" channel=$chn}}
+{{/foreach}} 
+</div>
+
+<div class="channels-end all"></div>
+{{/if}}
+
 </div>

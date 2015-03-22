@@ -21,7 +21,7 @@
  * @copyright Copyright (c) 2010, Mewp
  * @license http://www.opensource.org/licenses/mit-license.php MIT
  */
-ini_set('error_log','log');
+//ini_set('error_log','log');
 abstract class LightOpenIDProvider
 {
     # URL-s to XRDS and server location.

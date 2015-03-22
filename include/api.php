@@ -663,8 +663,8 @@ require_once('include/items.php');
         $a->argv[1] = $user_info['screen_name'];
 		
 		$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
-		require_once('mod/wall_upload.php');
-		$posted = wall_upload_post($a);
+		require_once('mod/wall_attach.php');
+		$posted = wall_attach_post($a);
                 
 		//now that we have the img url in bbcode we can add it to the status and insert the wall item.
 		$_REQUEST['body']=$txt."\n\n".$posted;

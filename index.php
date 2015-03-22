@@ -240,6 +240,9 @@ if(strlen($a->module)) {
 		$a->page['content'] = replace_macros($tpl, array(
 			'$message' =>  t('Page not found.' )
 		));
+		// pretend this is a module so it will initialise the theme. 
+		$a->module = '404';
+		$a->module_loaded = true;
 	}
 }
 
@@ -392,6 +395,9 @@ if(stristr( implode("",$_SESSION['sysmsg']), t('Permission denied'))) {
 
 
 call_hooks('page_end', $a->page['content']);
+
+if(! $a->install)
+	check_cron_broken();
 
 construct_page($a);
 
