@@ -158,12 +158,10 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	$simple_update = (($update) ? " AND item_unseen = 1 " : '');
 		
-
 	if($update && $_SESSION['loadtime'])
-		$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ";
+		$simple_update = " AND ( item_unseen = 1 or item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ) ";
 	if($load)
 		$simple_update = '';
-
 
 	if(($update) && (! $load)) {
 		if ($mid) {
@@ -185,6 +183,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 				intval(ITEM_WALL),
 				intval(ABOOK_FLAG_BLOCKED)
 			);
+			$_SESSION['loadtime'] = datetime_convert();
 		}
 
 	}

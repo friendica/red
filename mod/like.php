@@ -303,7 +303,7 @@ function like_content(&$a) {
 			$multi_undo = 1;
 		}
 
-		$r = q("SELECT id FROM item WHERE verb in ( $verbs ) AND item_restrict = 0 
+		$r = q("SELECT id, parent, uid FROM item WHERE verb in ( $verbs ) AND item_restrict = 0 
 			AND author_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') and uid = %d ",
 			dbesc($observer['xchan_hash']),
 			intval($item_id),
@@ -316,6 +316,12 @@ function like_content(&$a) {
 			require_once('include/items.php');
 			foreach($r as $rr) {
 				drop_item($rr['id'],false,DROPITEM_PHASE1);
+				// set the changed timestamp on the parent so we'll see the update without a page reload
+				$z = q("update item set changed = '%s' where id = %d and uid = %d",
+					dbesc(datetime_convert()),
+					intval($rr['parent']),
+					intval($rr['uid'])
+				);
 			}
 
 			if($interactive)

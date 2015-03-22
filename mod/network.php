@@ -396,7 +396,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	// which are both ITEM_UNSEEN and have "changed" since that time. Cross fingers...
 
 	if($update && $_SESSION['loadtime'])
-		$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ";
+		$simple_update = " AND ( item_unseen = 1 or item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ) ";
 	if($load)
 		$simple_update = '';
 
@@ -445,7 +445,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		}
 		else {
 			if(! $firehose) {
-				// update
+				// this is an update
 				$r = q("SELECT item.parent AS item_id FROM item
 					left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
 					WHERE true $uids AND item.item_restrict = 0 $simple_update
@@ -453,6 +453,7 @@ function network_content(&$a, $update = 0, $load = false) {
 					$sql_extra3 $sql_extra $sql_nets ",
 					intval(ABOOK_FLAG_BLOCKED)
 				);
+				$_SESSION['loadtime'] = datetime_convert();
 			}
 		}
 

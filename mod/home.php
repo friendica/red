@@ -185,7 +185,7 @@ function home_content(&$a, $update = 0, $load = false) {
 			$simple_update = (($update) ? " and item.item_unseen = 1 " : '');
 
 			if($update && $_SESSION['loadtime'])
-				$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ";
+				$simple_update = " AND ( item_unseen = 1 or item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ) ";
 			if($load)
 				$simple_update = '';
 
@@ -221,6 +221,7 @@ function home_content(&$a, $update = 0, $load = false) {
 						$sql_extra3 $sql_extra $sql_nets",
 						intval(ABOOK_FLAG_BLOCKED)
 					);
+					$_SESSION['loadtime'] = datetime_convert();
 				}
 				// Then fetch all the children of the parents that are on this page
 				$parents_str = '';
