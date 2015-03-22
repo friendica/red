@@ -1,4 +1,8 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/bb2diaspora.php
+ * @brief Some functions for BB conversions for Diaspora protocol.
+ */
 
 require_once("include/oembed.php");
 require_once("include/event.php");
@@ -107,14 +111,19 @@ function diaspora_mention_callback($matches) {
 }
 
 
-
-// we don't want to support a bbcode specific markdown interpreter
-// and the markdown library we have is pretty good, but provides HTML output.
-// So we'll use that to convert to HTML, then convert the HTML back to bbcode,
-// and then clean up a few Diaspora specific constructs.
-
-function diaspora2bb($s,$use_zrl = false) {
-
+/**
+ * @brief
+ *
+ * We don't want to support a bbcode specific markdown interpreter
+ * and the markdown library we have is pretty good, but provides HTML output.
+ * So we'll use that to convert to HTML, then convert the HTML back to bbcode,
+ * and then clean up a few Diaspora specific constructs.
+ *
+ * @param string $s
+ * @param boolean $use_zrl default false
+ * @return string
+ */
+function diaspora2bb($s, $use_zrl = false) {
 
 	$s = str_replace("&#xD;","\r",$s);
 	$s = str_replace("&#xD;\n&gt;","",$s);
@@ -150,7 +159,6 @@ function diaspora2bb($s,$use_zrl = false) {
 	}
 	else {
 		$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1[url=$2$3]$2$3[/url]',$s);
-
 	}
 
 	//$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)(vimeo|youtu|www\.youtube|soundcloud)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1[url=$2$3$4]$2$3$4[/url]',$s);
@@ -217,18 +225,33 @@ function diaspora_ol($s) {
 //////////////////////
 // Non-Markdownify versions of "diaspora_ol" and "diaspora_ul"
 //////////////////////
+/**
+ * @brief
+ *
+ * Replace "[\\*]" followed by any number (including zero) of
+ * spaces by "* " to match Diaspora's list format.
+ *
+ * @param string $s
+ * @return string
+ */
 function diaspora_ul($s) {
-	// Replace "[\\*]" followed by any number (including zero) of
-	// spaces by "* " to match Diaspora's list format
 	return preg_replace("/\[\\\\\*\]( *)/", "* ", $s[1]);
 }
 
+/**
+ * @brief
+ *
+ * A hack: Diaspora will create a properly-numbered ordered list even
+ * if you use '1.' for each element of the list, like:
+ * \code
+ * 1. First element
+ * 1. Second element
+ * 1. Third element
+ * \endcode
+ * @param string $s
+ * @return string
+ */
 function diaspora_ol($s) {
-	// A hack: Diaspora will create a properly-numbered ordered list even
-	// if you use '1.' for each element of the list, like:
-	// 1. First element
-	// 1. Second element
-	// 1. Third element
 	return preg_replace("/\[\\\\\*\]( *)/", "1. ", $s[1]);
 }
 
@@ -240,8 +263,8 @@ function bb2dmention_callback($match) {
 
 	if($r)
 		return '@{' . $match[3] . ' ; ' . $r[0]['xchan_addr'] . '}';
-	return '@' . $match[3];
 
+	return '@' . $match[3];
 }
 
 
@@ -272,14 +295,15 @@ function bb2diaspora_itemwallwall(&$item) {
 	}
 
 	// $item['author'] might cause a surprise further down the line if it wasn't expected to be here.
- 
-	if(! $author_exists)
-		$unset($item['author']);
 
+	if(! $author_exists)
+		unset($item['author']);
 }
 
 
-function bb2diaspora_itembody($item,$force_update = false) {
+function bb2diaspora_itembody($item, $force_update = false) {
+
+	$matches = array();
 
 	if(($item['diaspora_meta']) && (! $force_update)) {
 		$diaspora_meta = json_decode($item['diaspora_meta'],true);
@@ -344,8 +368,8 @@ function bb2diaspora_itembody($item,$force_update = false) {
 		$body = "## " . $title . "\n\n" . $body;
 
 	if($item['attach']) {
-		$cnt = preg_match_all('/href=\"(.*?)\"(.*?)title=\"(.*?)\"/ism',$item['attach'],$matches,PREG_SET_ORDER);
-		if(cnt) {
+		$cnt = preg_match_all('/href=\"(.*?)\"(.*?)title=\"(.*?)\"/ism', $item['attach'], $matches, PREG_SET_ORDER);
+		if($cnt) {
 			$body .= "\n" . t('Attachments:') . "\n";
 			foreach($matches as $mtch) {
 				$body .= '[' . $mtch[3] . '](' . $mtch[1] . ')' . "\n";
@@ -356,7 +380,6 @@ function bb2diaspora_itembody($item,$force_update = false) {
 //	logger('bb2diaspora_itembody : ' . $body, LOGGER_DATA);
 
 	return html_entity_decode($body);
-
 }
 
 function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
@@ -365,7 +388,7 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 	// The bbcode parser now handles youtube-links (and the other stuff) correctly.
 	// Additionally the html code is now fixed so that lists are now working.
 
-	/**
+	/*
 	 * Transform #tags, strip off the [url] and replace spaces with underscore
 	 */
 	$Text = preg_replace_callback('/#\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/[(zu)]rl\]/i', create_function('$match',
@@ -451,5 +474,6 @@ function format_event_diaspora($ev) {
 			. "\n";
 
 	$o .= "\n";
+
 	return $o;
 }

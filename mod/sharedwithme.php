@@ -12,33 +12,9 @@ function sharedwithme_content(&$a) {
 
 	$is_owner = (local_channel() && (local_channel() == $channel['channel_id']));
 
-	//maintenance - see if a file got dropped and remove it systemwide - this should possibly go to include/poller
-	$x = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND uid = %d",
-		dbesc(ACTIVITY_UPDATE),
-		dbesc(ACTIVITY_OBJ_FILE),
-		intval(local_channel())
-	);
-
-	if($x) {
-
-		foreach($x as $xx) {
-
-			$object = json_decode($xx['object'],true);
-
-			$d_mid = $object['d_mid'];
-			$u_mid = $xx['mid'];
-
-			$y = q("DELETE FROM item WHERE obj_type = '%s' AND (verb = '%s' AND mid = '%s') OR (verb = '%s' AND mid = '%s')",
-				dbesc(ACTIVITY_OBJ_FILE),
-				dbesc(ACTIVITY_POST),
-				dbesc($d_mid),
-				dbesc(ACTIVITY_UPDATE),
-				dbesc($u_mid)
-			);
-
-		}
-
-	}
+	//check for updated items and remove them
+	require_once('include/sharedwithme.php');
+	apply_updates();
 
 	//drop single file - localuser
 	if((argc() > 2) && (argv(2) === 'drop')) {

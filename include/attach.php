@@ -1078,7 +1078,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		$arr['deny_cid']      = perms2str($u_arr_deny_cid);
 		$arr['deny_gid']      = perms2str($u_arr_deny_gid);
 		$arr['item_restrict']  = ITEM_HIDDEN;
-		$arr['item_private']  = 0;
+		$arr['item_private']  = $private;
 		$arr['verb']          = ACTIVITY_UPDATE;
 		$arr['obj_type']      = $objtype;
 		$arr['object']        = $u_jsonobject;
