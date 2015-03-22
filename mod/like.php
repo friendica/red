@@ -303,7 +303,6 @@ function like_content(&$a) {
 			$multi_undo = 1;
 		}
 
-
 		$r = q("SELECT id FROM item WHERE verb in ( $verbs ) AND item_restrict = 0 
 			AND author_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') and uid = %d ",
 			dbesc($observer['xchan_hash']),
@@ -316,10 +315,12 @@ function like_content(&$a) {
 			// already liked it. Drop that item.
 			require_once('include/items.php');
 			foreach($r as $rr) {
-				drop_item($rr['id'],true,DROPITEM_PHASE1);
+				drop_item($rr['id'],false,DROPITEM_PHASE1);
 			}
+
 			if($interactive)
 				return;
+
 			if(! $multi_undo)
 				killme();
 		}
