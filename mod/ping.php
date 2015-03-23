@@ -274,7 +274,7 @@ function ping_init(&$a) {
 
 		$r = q("SELECT * FROM item
 			WHERE item_restrict = 0 and item_unseen = 1 and uid = %d
-			and author_xchan != '%s' ORDER BY created DESC",
+			and author_xchan != '%s' ORDER BY created DESC limit 300",
 			intval(local_channel()),
 			dbesc($ob_hash)
 		);
@@ -295,7 +295,7 @@ function ping_init(&$a) {
 	if(argc() > 1 && (argv(1) === 'intros')) {
 		$result = array();
 
-		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or (xchan_flags & %d) > 0) ORDER BY abook_created DESC",
+		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or (xchan_flags & %d) > 0) ORDER BY abook_created DESC LIMIT 50",
 			intval(local_channel()),
 			intval(ABOOK_FLAG_PENDING),
 			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
@@ -327,7 +327,7 @@ function ping_init(&$a) {
 
 		$r = q("SELECT * FROM event left join xchan on event_xchan = xchan_hash
 			WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
-			ORDER BY `start` DESC ",
+			ORDER BY `start` DESC LIMIT 1000",
 			intval(local_channel()),
 			dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + ' . intval($evdays) . ' days')),
 			dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))

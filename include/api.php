@@ -622,10 +622,14 @@ require_once('include/items.php');
 
 
 	function api_red_xchan(&$a,$type) {
+		logger('api_xchan');
+
 		if(api_user() === false)
 			return false;
+		logger('api_xchan');
 		require_once('include/hubloc.php');
-		if($_SERVER['request_method'] === 'POST') {
+
+		if($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$r = xchan_store($_REQUEST);
 		}
 		$r = xchan_fetch($_REQUEST);
