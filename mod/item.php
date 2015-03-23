@@ -35,6 +35,23 @@ function item_post(&$a) {
 	$channel = null;
 	$observer = null;
 
+
+	/**
+	 * Is this a reply to something?
+	 */
+
+	$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : 0);
+	$parent_mid = ((x($_REQUEST,'parent_mid')) ? trim($_REQUEST['parent_mid']) : '');
+
+	$remote_xchan = ((x($_REQUEST,'remote_xchan')) ? trim($_REQUEST['remote_xchan']) : false);
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($remote_xchan)
+	);
+	if($r)
+		$remote_observer = $r[0];
+	else 
+		$remote_xchan = $remote_observer = false;
+
 	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
 	require_once('include/identity.php');
 	$sys = get_sys_channel();
@@ -115,13 +132,6 @@ function item_post(&$a) {
 
 
 	$item_flags = $item_restrict = 0;
-
-	/**
-	 * Is this a reply to something?
-	 */
-
-	$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : 0);
-	$parent_mid = ((x($_REQUEST,'parent_mid')) ? trim($_REQUEST['parent_mid']) : '');
 
 	$route = '';
 	$parent_item = null;
@@ -274,6 +284,9 @@ function item_post(&$a) {
 
 	$walltowall = false;
 	$walltowall_comment = false;
+
+	if($remote_xchan)
+		$observer = $remote_observer;
 
 	if($observer) {
 		logger('mod_item: post accepted from ' . $observer['xchan_name'] . ' for ' . $owner_xchan['xchan_name'], LOGGER_DEBUG);

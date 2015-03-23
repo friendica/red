@@ -256,12 +256,12 @@ function xchan_fetch($arr) {
 	if(! $key)
 		return false;
 
-	$r = q("select * from xchan where $key = '$v'");
+	$r = q("select * from xchan where $key = '$v' limit 1");
 	if(! $r)
 		return false;
 
 	$ret = array();
-	foreach($r as $k => $v) {
+	foreach($r[0] as $k => $v) {
 		if($k === 'xchan_addr')
 			$ret['address'] = $v;
 		else

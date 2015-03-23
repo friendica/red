@@ -727,6 +727,16 @@ require_once('include/items.php');
 		else
 			$_REQUEST['parent_mid'] = $parent;
 
+		if($_REQUEST['namespace'] && $parent) {
+			$x = q("select iid from item_id where service = '%s' and sid = '%s' limit 1",
+				dbesc($_REQUEST['namespace']),
+				dbesc($parent)
+			);
+			if($x) {
+				$_REQUEST['parent'] = $x[0]['iid'];
+			}
+		}
+
 		if(requestdata('lat') && requestdata('long'))
 			$_REQUEST['coord'] = sprintf("%s %s",requestdata('lat'),requestdata('long'));
 
