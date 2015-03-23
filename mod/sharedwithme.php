@@ -82,7 +82,7 @@ function sharedwithme_content(&$a) {
 		//remove trailing ,
 		$ids = rtrim($ids, ",");
 
-		q("UPDATE item SET item_unseen = 0 WHERE id in ( $ids ) AND uid = %d",
+		q("UPDATE item SET item_unseen = 0 WHERE id IN ( $ids ) AND uid = %d",
 			intval(local_channel())
 		);
 
