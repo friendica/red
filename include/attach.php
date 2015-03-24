@@ -976,6 +976,18 @@ function pipe_streams($in, $out) {
 	return $size;
 }
 
+/**
+ * @brief Activity for files
+ *
+ * @param $channel_id
+ * @param $object
+ * @param $allow_cid
+ * @param $allow_gid
+ * @param $deny_cid
+ * @param $deny_gid
+ * @param $verb
+ * @param $no_activity
+ */
 function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $verb, $no_activity) {
 
 	require_once('include/items.php');
@@ -1030,7 +1042,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	$jsonobject = json_encode($object);
 
 	//check if item for this object exists
-	$y = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND resource_id = '%s' AND uid = %d LIMIT 1",
+	$y = q("SELECT mid FROM item WHERE verb = '%s' AND obj_type = '%s' AND resource_id = '%s' AND uid = %d LIMIT 1",
 		dbesc(ACTIVITY_POST),
 		dbesc($objtype),
 		dbesc($object['hash']),
@@ -1143,6 +1155,13 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 }
 
+/**
+ * @brief Create file activity object
+ *
+ * @param $channel_id
+ * @param $hash
+ * @param $cloudpath
+ */
 function get_file_activity_object($channel_id, $hash, $cloudpath) {
 
 	$x = q("SELECT creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
@@ -1184,6 +1203,15 @@ function get_file_activity_object($channel_id, $hash, $cloudpath) {
 
 }
 
+/**
+ * @brief Returns array of channels which have recursive permission for a file
+ *
+ * @param $arr_allow_cid
+ * @param $arr_allow_gid
+ * @param $arr_deny_cid
+ * @param $arr_deny_gid
+ * @param $folder_hash
+ */
 function recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny_cid, $arr_deny_gid, $folder_hash) {
 
 	$ret = array();
@@ -1295,6 +1323,12 @@ function recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny
 	return $ret;
 }
 
+
+/**
+ * @brief Returns members of a group
+ *
+ * @param $group_id
+ */
 function in_group($group_id) {
 	$group_members = array();
 
