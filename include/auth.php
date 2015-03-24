@@ -29,7 +29,8 @@ function nuke_session() {
 	unset($_SESSION['mobile_theme']);
 	unset($_SESSION['show_mobile']);
 	unset($_SESSION['page_flags']);
-	unset($_SESSION['submanage']);
+	unset($_SESSION['delegate']);
+	unset($_SESSION['delegate_channel']);
 	unset($_SESSION['my_url']);
 	unset($_SESSION['my_address']);
 	unset($_SESSION['addr']);
