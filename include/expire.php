@@ -53,7 +53,9 @@ function expire_run($argv, $argc){
 				continue;
 
 			// if the site expiration is non-zero and less than person expiration, use that
-			logger('Expire: ' . $rr['channel_address'] . ' interval: ' . $rr['channel_expire_days'], LOGGER_DEBUG);
+			logger('Expire: ' . $rr['channel_address'] . ' interval: ' . ((intval($site_expire) && intval($site_expire) < intval($rr['channel_expire_days'])) 
+				? $site_expire 
+				: $rr['channel_expire_days']), LOGGER_DEBUG);
 			item_expire($rr['channel_id'],
 				((intval($site_expire) && intval($site_expire) < intval($rr['channel_expire_days'])) 
 				? $site_expire 
