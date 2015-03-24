@@ -843,7 +843,7 @@ function diaspora_post($importer,$xml,$msg) {
 
 	
 	// Look for tags and linkify them
-	$results = linkify_tags(get_app(), $body, $importer['channel_id']);
+	$results = linkify_tags(get_app(), $body, $importer['channel_id'], true);
 
 	$datarray['term'] = array();
 
@@ -1062,7 +1062,7 @@ function diaspora_reshare($importer,$xml,$msg) {
 	$datarray = array();
 
 	// Look for tags and linkify them
-	$results = linkify_tags(get_app(), $body, $importer['channel_id']);
+	$results = linkify_tags(get_app(), $body, $importer['channel_id'], true);
 
 	$datarray['term'] = array();
 
@@ -1397,7 +1397,7 @@ function diaspora_comment($importer,$xml,$msg) {
 	$datarray = array();
 
 	// Look for tags and linkify them
-	$results = linkify_tags(get_app(), $body, $importer['channel_id']);
+	$results = linkify_tags(get_app(), $body, $importer['channel_id'], true);
 
 	$datarray['term'] = array();
 
