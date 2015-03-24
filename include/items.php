@@ -4366,12 +4366,11 @@ function zot_feed($uid,$observer_xchan,$arr) {
 		$sql_extra = item_permissions_sql($uid);
 	}
 
+	$limit = " LIMIT 100 ";
+
 	if($mindate != NULL_DATE) {
 		$sql_extra .= " and ( created > '$mindate' or edited > '$mindate' ) ";
-		$limit = "";
 	}
-	else
-		$limit = " limit 0, 50 ";
 
 	if($message_id) {
 		$sql_extra .= " and mid = '" . dbesc($message_id) . "' ";
@@ -4382,20 +4381,20 @@ function zot_feed($uid,$observer_xchan,$arr) {
 
 	if(is_sys_channel($uid)) {
 		require_once('include/security.php');
-		$r = q("SELECT distinct parent, created from item
+		$r = q("SELECT parent from item
 			WHERE uid != %d
-			and uid in (" . stream_perms_api_uids(PERMS_PUBLIC) . ") AND item_restrict = 0 
-			AND (item_flags &  %d)>0 
-			and item_private = 0 $sql_extra ORDER BY created ASC $limit",
+			AND item_private = 0 AND item_restrict = 0 AND uid in (" . stream_perms_api_uids(PERMS_PUBLIC,10,1) . ") 
+			AND (item_flags &  %d) > 0 
+			$sql_extra GROUP BY parent ORDER BY created ASC $limit",
 			intval($uid),
 			intval(ITEM_WALL)
 		);
 	}
 	else {
-		$r = q("SELECT distinct parent, created from item
+		$r = q("SELECT parent from item
 			WHERE uid = %d AND item_restrict = 0
-			AND (item_flags &  %d)>0 
-			$sql_extra ORDER BY created ASC $limit",
+			AND (item_flags &  %d) > 0 
+			$sql_extra GROUP BY parent ORDER BY created ASC $limit",
 			intval($uid),
 			intval(ITEM_WALL)
 		);

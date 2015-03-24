@@ -9,7 +9,7 @@ function zotfeed_init(&$a) {
 
 	$mindate = (($_REQUEST['mindate']) ? datetime_convert('UTC','UTC',$_REQUEST['mindate']) : '');
 	if(! $mindate)
-		$mindate = datetime_convert('UTC','UTC', 'now - 1 month');
+		$mindate = datetime_convert('UTC','UTC', 'now - 4 days');
 
 	if(get_config('system','block_public') && (! get_account_id()) && (! remote_channel())) {
 		$result['message'] = 'Public access denied';
@@ -21,7 +21,7 @@ function zotfeed_init(&$a) {
 
 	$channel_address = ((argc() > 1) ? argv(1) : '');
 	if($channel_address) {
-		$r = q("select channel_id, channel_name from channel where channel_address = '%s' and not (channel_pageflags & %d)>0 limit 1",
+		$r = q("select channel_id, channel_name from channel where channel_address = '%s' and not (channel_pageflags & %d) > 0 limit 1",
 			dbesc(argv(1)),
 			intval(PAGE_REMOVED)
 		);
@@ -30,6 +30,7 @@ function zotfeed_init(&$a) {
 		$x = get_sys_channel();
 		if($x)
 			$r = array($x);
+		$mindate = datetime_convert('UTC','UTC', 'now - 2 days');
 	}
 	if(! $r) {
 		$result['message'] = 'Channel not found.';

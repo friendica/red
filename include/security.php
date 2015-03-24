@@ -396,13 +396,15 @@ function init_groups_visitor($contact_id) {
 // will likely be too expensive. 
 // Returns a string list of comma separated channel_ids suitable for direct inclusion in a SQL query
 
-function stream_perms_api_uids($perms = NULL ) {
+function stream_perms_api_uids($perms = NULL, $limit = 0, $rand = 0 ) {
 	$perms = is_null($perms) ? (PERMS_SITE|PERMS_NETWORK|PERMS_PUBLIC) : $perms;
 
 	$ret = array();
+	$limit_sql = (($limit) ? " LIMIT " . intval($limit) . " " : '');
+	$random_sql = (($rand) ? " ORDER BY " . db_getfunc('RAND') . " " : '');
 	if(local_channel())
 		$ret[] = local_channel();
-	$r = q("select channel_id from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0",
+	$r = q("select channel_id from channel where channel_r_stream > 0 and ( channel_r_stream & %d )>0 and ( channel_pageflags & %d ) = 0 $random_sql $limit_sql ",
 		intval($perms),
 		intval(PAGE_ADULT|PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
 	);

@@ -1855,9 +1855,13 @@ function check_webbie($arr) {
 
 function ids_to_querystr($arr,$idx = 'id') {
 	$t = array();
-	foreach($arr as $x)
-		$t[] = $x[$idx];
-
+	if($arr) {
+		foreach($arr as $x) {
+			if(! in_array($x[$idx],$t)) {
+				$t[] = $x[$idx];
+			}
+		}
+	}
 	return(implode(',', $t));
 }
 
