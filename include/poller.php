@@ -41,6 +41,12 @@ function poller_run($argv, $argc){
 	// run queue delivery process in the background
 
 	proc_run('php',"include/queue.php");
+
+
+	// maintenance for mod sharedwithme - check for updated items and remove them
+
+	require_once('include/sharedwithme.php');
+	apply_updates();
 	
 
 	// expire any expired mail
