@@ -249,9 +249,7 @@ function create_identity($arr) {
 		}
 	}
 
-
-	$expire = get_config('system', 'default_expire_days');
-	$expire = (($expire===false)? '0': $expire);
+	$expire = 0;
 
 	$r = q("insert into channel ( channel_account_id, channel_primary, 
 		channel_name, channel_address, channel_guid, channel_guid_sig,
