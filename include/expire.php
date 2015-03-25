@@ -38,6 +38,9 @@ function expire_run($argv, $argc){
 	logger('expire: start', LOGGER_DEBUG);
 	
 	$site_expire = get_config('system', 'default_expire_days');
+
+	logger('site_expire: ' . $site_expire);
+
 	if(intval($site_expire)) {
 		$r = q("SELECT channel_id, channel_address, channel_pageflags, channel_expire_days from channel where true");
 	}
@@ -52,15 +55,18 @@ function expire_run($argv, $argc){
 			if($rr['channel_pageflags'] & PAGE_SYSTEM)
 				continue;
 
+			if(intval($site_expire) && (intval($site_expire) < intval($rr['channel_expire_days'])) ||
+				intval($rr['channel_expire_days'] == 0)) {
+				$expire_days = $site_expire;
+			}
+			else {
+				$expire_days = $rr['channel_expire_days'];
+			}
+
+
 			// if the site expiration is non-zero and less than person expiration, use that
-			logger('Expire: ' . $rr['channel_address'] . ' interval: ' . ((intval($site_expire) && intval($site_expire) < intval($rr['channel_expire_days'])) 
-				? $site_expire 
-				: $rr['channel_expire_days']), LOGGER_DEBUG);
-			item_expire($rr['channel_id'],
-				((intval($site_expire) && intval($site_expire) < intval($rr['channel_expire_days'])) 
-				? $site_expire 
-				: $rr['channel_expire_days'])
-			);
+			logger('Expire: ' . $rr['channel_address'] . ' interval: ' . $expire_days, LOGGER_DEBUG);
+			item_expire($rr['channel_id'], $expire_days);
 		}
 	}
 
@@ -74,8 +80,18 @@ function expire_run($argv, $argc){
 		$expire_days = get_config('system','sys_expire_days');
 		if($expire_days === false)
 			$expire_days = 30;
+
+		if(intval($site_expire) && (intval($site_expire) < intval($expire_days))) {
+			$expire_days = $site_expire;
+		}
+
+		logger('Expire: sys interval: ' . $expire_days, LOGGER_DEBUG);
+
 		if($expire_days)
-			item_expire($x['channel_id'],(($site_expire && $site_expire < $expire_days) ? $site_expire : $expire_days));
+			item_expire($x['channel_id'],$expire_days);
+
+		logger('Expire: sys: done', LOGGER_DEBUG);
+
 	}
 
 	return;

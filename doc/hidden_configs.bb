@@ -89,8 +89,11 @@ This document assumes you're an administrator.
         There also exist CLI utilities for performing this operation, which you
         may prefer, especially if you're a large site.
     [b]system > default_expire_days[/b]
-        When creating a new channel, set the default expiration of connections
+        set the default expiration of connections' (matrix/network)
         posts to this number of days.
+	[b]system > expire_limit
+		Don't expire any more than this number of posts per channel per
+		expiration run to keep from exhausting memory. Default 5000.
     [b]system > dlogfile[/b]
         Logfile to use for logging development errors.  Exactly the same as
         logger otherwise.  This isn't magic, and requires your own logging

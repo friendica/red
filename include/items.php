@@ -3922,6 +3922,10 @@ function item_expire($uid,$days) {
 
 	$expire_network_only = 1;
 
+	$expire_limit = get_config('system','expire_limit');
+	if(! intval($expire_limit))
+		$expire_limit = 5000;
+
 	$sql_extra = ((intval($expire_network_only)) ? " AND not (item_flags & " . intval(ITEM_WALL) . ") > 0 " : "");
 
 	$r = q("SELECT * FROM `item` 
@@ -3930,7 +3934,7 @@ function item_expire($uid,$days) {
 		AND `id` = `parent` 
 		$sql_extra
 		AND NOT ( item_flags & %d )>0
-		AND (item_restrict = 0 ) ",
+		AND (item_restrict = 0 ) LIMIT $expire_limit ",
 		intval($uid),
 		db_utcnow(), db_quoteinterval(intval($days).' DAY'),
 		intval(ITEM_RETAINED)
