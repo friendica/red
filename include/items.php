@@ -3926,15 +3926,15 @@ function item_expire($uid,$days) {
 	if(! intval($expire_limit))
 		$expire_limit = 5000;
 
-	$sql_extra = ((intval($expire_network_only)) ? " AND not (item_flags & " . intval(ITEM_WALL) . ") > 0 " : "");
+	$sql_extra = ((intval($expire_network_only)) ? " AND (item_flags & " . intval(ITEM_WALL) . ") = 0 " : "");
 
 	$r = q("SELECT * FROM `item` 
 		WHERE `uid` = %d 
 		AND `created` < %s - INTERVAL %s 
 		AND `id` = `parent` 
 		$sql_extra
-		AND NOT ( item_flags & %d )>0
-		AND (item_restrict = 0 ) LIMIT $expire_limit ",
+		AND ( item_flags & %d ) = 0
+		AND ( item_restrict = 0 ) LIMIT $expire_limit ",
 		intval($uid),
 		db_utcnow(), db_quoteinterval(intval($days).' DAY'),
 		intval(ITEM_RETAINED)

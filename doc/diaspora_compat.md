@@ -11,6 +11,9 @@ Access control only works on posts and comments. Diaspora members will get permi
 
 Edited posts will not be delivered. Diaspora members will see the original post/comment without edits. There is no mechanism in the protocol to update an existing post. We cannot delete it and submit another invisibly because the message-id will change and we need to keep the same message-id on our own network. The only workaround is to delete the post/comment and do it over. We may eventually provide a way to delete the out of date copy only from Diaspora and keep it intact on networks that can handle edits. 
 
+Some comments from external services will not deliver to Diaspora, as they have no Diaspora service discovery. Currently this applies to comments from WordPress blogs which are imported into your stream; but will extend to most any service that has no Diaspora discover mechanism. 
+
+
 Nomadic identity will not work with Diaspora. We will eventually provide an **option** which will allow you to "start sharing" from all of your clones when you make the first connection. The Diaspora person does not have to accept this, but it will allow your communications to continue if they accept this connection. Without this option, if you go to another server from where you made the connection originally or you make the connection before creating the clone, you will need to make friends with them again from the new location. 
 
 Post expiration is not supported on Diaspora. We will provide you an option to not send expiring posts to that network. In the future this may be provided with a remote delete request. 

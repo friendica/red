@@ -41,12 +41,7 @@ function expire_run($argv, $argc){
 
 	logger('site_expire: ' . $site_expire);
 
-	if(intval($site_expire)) {
-		$r = q("SELECT channel_id, channel_address, channel_pageflags, channel_expire_days from channel where true");
-	}
-	else {
-		$r = q("SELECT channel_id, channel_address, channel_pageflags, channel_expire_days from channel where channel_expire_days != 0");
-	}
+	$r = q("SELECT channel_id, channel_address, channel_pageflags, channel_expire_days from channel where true");
 
 	if($r) {
 		foreach($r as $rr) {
@@ -55,16 +50,23 @@ function expire_run($argv, $argc){
 			if($rr['channel_pageflags'] & PAGE_SYSTEM)
 				continue;
 
-			if(intval($site_expire) && (intval($site_expire) < intval($rr['channel_expire_days'])) ||
+			// service class default (if non-zero) over-rides the site default
+
+			$service_class_expire = service_class_fetch($rr['channel_id'],'expire_days');
+			if(intval($service_class_expire))
+				$channel_expire = $service_class_expire;
+			else
+				$channel_expire = $site_expire;
+
+			if(intval($channel_expire) && (intval($channel_expire) < intval($rr['channel_expire_days'])) ||
 				intval($rr['channel_expire_days'] == 0)) {
-				$expire_days = $site_expire;
+				$expire_days = $channel_expire;
 			}
 			else {
 				$expire_days = $rr['channel_expire_days'];
 			}
 
-
-			// if the site expiration is non-zero and less than person expiration, use that
+			// if the site or service class expiration is non-zero and less than person expiration, use that
 			logger('Expire: ' . $rr['channel_address'] . ' interval: ' . $expire_days, LOGGER_DEBUG);
 			item_expire($rr['channel_id'], $expire_days);
 		}
