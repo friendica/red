@@ -79,6 +79,14 @@ function comanche_parser(&$a, $s, $pass = 0) {
 		if($cnt)
 			$a->layout['theme'] = trim($matches[1]);
 
+		$cnt = preg_match_all("/\[webpage\](.*?)\[\/webpage\]/ism", $s, $matches, PREG_SET_ORDER);
+		if($cnt) {
+			// only the last webpage definition is used if there is more than one
+			foreach($matches as $mtch) {
+				$a->layout['webpage'] = comanche_webpage($a,$mtch[1]);
+			}
+		}
+
 	}
 	else {
 		$cnt = preg_match_all("/\[region=(.*?)\](.*?)\[\/region\]/ism", $s, $matches, PREG_SET_ORDER);
@@ -88,13 +96,6 @@ function comanche_parser(&$a, $s, $pass = 0) {
 			}
 		}
 
-		$cnt = preg_match_all("/\[webpage\](.*?)\[\/webpage\]/ism", $s, $matches, PREG_SET_ORDER);
-		if($cnt) {
-			// only the last webpage definition is used if there is more than one
-			foreach($matches as $mtch) {
-				$a->layout['webpage'] = comanche_webpage($a,$mtch[1]);
-			}
-		}
 	}
 
 }
