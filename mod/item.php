@@ -1071,37 +1071,37 @@ function fix_attached_file_permissions($channel,$observer_hash,$body,
 
 function item_check_service_class($channel_id,$iswebpage) {
 	$ret = array('success' => false, $message => '');
+
 	if ($iswebpage) {
-		$r = q("select count(i.id)  as total from item i 
-			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
-			and i.parent=i.id and (i.item_restrict & %d)>0 and not (i.item_restrict & %d)>0 and i.uid= %d ",
+		$r = q("select count(id) as total from item where parent = id 
+			and ( item_restrict & %d ) > 0 and ( item_restrict & %d ) = 0 and uid = %d ",
 			intval(ITEM_WEBPAGE),
 			intval(ITEM_DELETED),
-		intval($channel_id)
-	);
+			intval($channel_id)
+		);
 	}
 	else {
-		$r = q("select count(i.id)  as total from item i 
-			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
-			and i.parent=i.id and (i.item_restrict=0) and i.uid= %d ",
-		intval($channel_id)
-	);
+		$r = q("select count(id) as total from item where parent = id and item_restrict = 0 and uid = %d ",
+			intval($channel_id)
+		);
 	}
-	if(! ($r && count($r))) {
-		$ret['message'] = t('Unable to obtain identity information from database');
+
+	if(! $r) {
+		$ret['message'] = t('Unable to obtain post information from database.');
 		return $ret;
 	} 
+
 	if (!$iswebpage) {
-	if(! service_class_allows($channel_id,'total_items',$r[0]['total'])) {
-		$result['message'] .= upgrade_message().sprintf(t("You have reached your limit of %1$.0f top level posts."),$r[0]['total']);
-		return $result;
-	}
+		if(! service_class_allows($channel_id,'total_items',$r[0]['total'])) {
+			$result['message'] .= upgrade_message() . sprintf( t('You have reached your limit of %1$.0f top level posts.'),$r[0]['total']);
+			return $result;
+		}
 	}
 	else {
-	if(! service_class_allows($channel_id,'total_pages',$r[0]['total'])) {
-		$result['message'] .= upgrade_message().sprintf(t("You have reached your limit of %1$.0f webpages."),$r[0]['total']);
-		return $result;
-	}	
+		if(! service_class_allows($channel_id,'total_pages',$r[0]['total'])) {
+			$result['message'] .= upgrade_message() . sprintf( t('You have reached your limit of %1$.0f webpages.'),$r[0]['total']);
+			return $result;
+		}	
 	}
 
 	$ret['success'] = true;
