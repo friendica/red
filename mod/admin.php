@@ -477,7 +477,7 @@ function admin_page_site(&$a) {
 		'$delivery_interval'			=> array('delivery_interval', t("Delivery interval"), (x(get_config('system','delivery_interval'))?get_config('system','delivery_interval'):2), t("Delay background delivery processes by this many seconds to reduce system load. Recommend: 4-5 for shared hosts, 2-3 for virtual private servers. 0-1 for large dedicated servers.")),
 		'$poll_interval'			=> array('poll_interval', t("Poll interval"), (x(get_config('system','poll_interval'))?get_config('system','poll_interval'):2), t("Delay background polling processes by this many seconds to reduce system load. If 0, use delivery interval.")),
 		'$maxloadavg'			=> array('maxloadavg', t("Maximum Load Average"), ((intval(get_config('system','maxloadavg')) > 0)?get_config('system','maxloadavg'):50), t("Maximum system load before delivery and poll processes are deferred - default 50.")),
-		'$default_expire_days' => array('default_expire_days', t('Expiration period in days for imported content'), intval(get_config('system','default_expire_days')), t('0 for no expiration of imported content')),
+		'$default_expire_days' => array('default_expire_days', t('Expiration period in days for imported (matrix/network) content'), intval(get_config('system','default_expire_days')), t('0 for no expiration of imported content')),
 		'$form_security_token' => get_form_security_token("admin_site"),
 	));
 
