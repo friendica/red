@@ -16,10 +16,7 @@
 		$nav_icon_colour = "#111";
 	if (! $nav_active_icon_colour)
 		$nav_active_icon_colour = "#000";
-	if (! $navmenu_bgchover)
-		$navmenu_bgchover = "#F5F5F5";
-	if (! $navmenu_bgimage)
-		$navmenu_bgimage = "background-image: none;";
+
 	if (! $navtabs_borderc)
 		$navtabs_borderc = "#000";
 	if (! $navtabs_fontcolour)
@@ -114,20 +111,3 @@
 		$dropdown_bordercol = "#fff";
 	if (! $preview_backgroundimg)
 		$preview_backgroundimg = "gray_and_white_diagonal_stripes_background_seamless.gif";
-	if (! $notify_bgcolour)
-		$notify_bgcolour = "#fff";
-	if (! $notify_linkcolour)
-		$notify_linkcolour = "#000";	
-	if (! $notify_bghover)
-		$notify_bghover = "#fff";
-	if (! $notify_topmargin)
-		$notify_topmargin = "-1px";
-	if (! $notifyseen_bgcolour)
-		$notifyseen_bgcolour = "#fff";
-	if (! $notifyseen_linkcolour)
-		$notifyseen_linkcolour = "#fff";
-	if (! $notifyseen_bghover)
-		$notifyseen_bghover = "#fff";
-	if (! $notifyseen_linkhover)
-		$notifyseen_linkhover = "#000";
-

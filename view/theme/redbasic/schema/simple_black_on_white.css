@@ -115,3 +115,38 @@ input[type="submit"] {
 	background-color: #fff;
 	color: #000;
 }
+
+.notify-seen a {
+	background: #fff;
+	color: #fff !important;
+}
+
+.notify-seen a:hover {
+	background: #fff;
+	color: #000 !important;
+}
+
+nav .dropdown-menu>li>a{
+	color: #000;
+}
+
+nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
+	color: #000;
+	background-color: #F5F5F5;
+	background-image: none;
+}
+
+
+nav .dropdown-menu .divider{
+	background-color: #F5F5F5;
+}
+
+nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
+	color: #000;
+	background-color: #F5F5F5;
+	background-image: none;
+}
+
+nav .dropdown-menu {
+	background-color: #fff;
+}

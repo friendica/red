@@ -1347,13 +1347,7 @@ header {
 }
 
 .notify-seen a {
-	background: $notifyseen_bgcolour;
-	color: $notifyseen_linkcolour !important;
-}
-
-.notify-seen a:hover {
-	background: $notifyseen_bghover;
-	color: $notifyseen_linkhover !important;
+	background: #ddd;
 }
 
 #page-spinner {
@@ -1866,21 +1860,6 @@ nav .dropdown-menu {
 	border-top-left-radius: 0px;
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
-	background-color: $notify_bgcolour;
-}
-
-nav .dropdown-menu .divider{
-	background-color: $navmenu_bgchover;
-}
-
-nav .dropdown-menu>li>a{
-	color: $notify_linkcolour;
-}
-
-nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
-	color: $notify_linkcolour;
-	background-color: $navmenu_bgchover;
-	$navmenu_bgimage
 }
 
 #usermenu-caret {
