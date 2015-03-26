@@ -88,9 +88,6 @@ This document assumes you're an administrator.
         are running, but also keeps things a bit faster while it's not.  
         There also exist CLI utilities for performing this operation, which you
         may prefer, especially if you're a large site.
-    [b]system > default_expire_days[/b]
-        set the default expiration of connections' (matrix/network)
-        posts to this number of days.
 	[b]system > expire_limit
 		Don't expire any more than this number of posts per channel per
 		expiration run to keep from exhausting memory. Default 5000.
@@ -110,7 +107,7 @@ This document assumes you're an administrator.
     [b]system > auto_follow[/b]
         Make the first channel of an account auto-follow channels listed here - comma separated list of webbies (member@hub addresses).
     [b]system > admin_email[/b]
-        Specifies the administrators email for this site.  This is initially set during install.
+        Specifies the administrator's email for this site.  This is initially set during install.
     [b]system > cron_hour[/b]
         Specify an hour in which to run cron_daily.  By default with no config, this will run at midnight UTC.
     [b]system > minimum_feedcheck_minutes[/b]
@@ -120,7 +117,7 @@ This document assumes you're an administrator.
     [b]system > ignore_imagick[/b]
         Ignore imagick and use GD, even if imagick is installed on the server. Prevents some issues with PNG files in older versions of imagick.
     [b]system > no_age_restriction[/b]
-        Do not restric registration to people over the age of 13
+        Do not restrict registration to people over the age of 13. This carries legal responsibilities in many countries to require that age be provided and to block all personal information from minors, so please check your local laws before changing.  
     [b]system > override_poll_lockfile[/b]
         Ignore the lock file in the poller process to allow more than one process to run at a time.
     [b]system > projecthome[/b]
