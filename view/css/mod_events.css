@@ -8,10 +8,16 @@
     float: left;
 }
 
-#event-summary, #start_text, #finish_text {
-    width: 300px;
+#event-summary, #start_text {
+	width: 98%;
     float: left;
 }
+
+#finish_text {
+	width: 100%;
+    float: left;
+}
+
 
 #event-category-wrap {
 	margin-top: 15px;
@@ -19,7 +25,7 @@
 
 .event-cats {
 	margin-top: 15px;
-    width: 400px;
+    width: 100%;
 }
 
 
