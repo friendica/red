@@ -9,7 +9,7 @@
 }
 
 #event-summary, #start_text {
-	width: 98%;
+	width: 95%;
     float: left;
 }
 
@@ -31,6 +31,7 @@
 
 .required {
     float: left;
+	cursor: default;
 }
 
 #event-datetime-break {
