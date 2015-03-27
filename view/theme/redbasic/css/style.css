@@ -493,10 +493,6 @@ footer {
 	font-size: 0.7em;
 }
 
-#colorbox {
-	padding: 5px;
-}
-
 .app-name {
 	overflow: none;
 }
@@ -962,10 +958,20 @@ nav .acpopup {
 	background: none repeat scroll 0% 0% #FCF8E3 !important;
 }
 
+#cboxOverlay {
+	z-index: 1050;
+}
+
 #colorbox {
+	z-index: 1051;
+}
+
+#cboxContent {
+	padding: 3px;
 	border: 0px solid #fff;
+	border-radius: $radiuspx;
 	background-color: #fff;
-	z-index: 9;
+	z-index: 1052;
 }
 
 .settings-block {
