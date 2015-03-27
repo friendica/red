@@ -166,6 +166,7 @@ CREATE TABLE "channel" (
   "channel_notifyflags" bigint  NOT NULL DEFAULT '65535',
   "channel_pageflags" bigint  NOT NULL DEFAULT '0',
   "channel_dirdate" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "channel_lastpost" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "channel_deleted" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "channel_max_anon_mail" bigint  NOT NULL DEFAULT '10',
   "channel_max_friend_req" bigint  NOT NULL DEFAULT '10',
@@ -231,6 +232,7 @@ create index "channel_deleted" on channel ("channel_deleted");
 create index "channel_a_republish" on channel ("channel_a_republish");
 create index "channel_w_like" on channel ("channel_w_like");
 create index "channel_dirdate" on channel ("channel_dirdate");
+create index "channel_lastpost" on channel ("channel_lastpost");
 CREATE TABLE "chat" (
   "chat_id" serial  NOT NULL,
   "chat_room" bigint  NOT NULL DEFAULT '0',

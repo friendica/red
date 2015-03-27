@@ -219,6 +219,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_notifyflags` int(10) unsigned NOT NULL DEFAULT '65535',
   `channel_pageflags` int(10) unsigned NOT NULL DEFAULT '0',
   `channel_dirdate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `channel_lastpost` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `channel_deleted` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `channel_max_anon_mail` int(10) unsigned NOT NULL DEFAULT '10',
   `channel_max_friend_req` int(10) unsigned NOT NULL DEFAULT '10',
@@ -282,6 +283,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_deleted` (`channel_deleted`),
   KEY `channel_a_republish` (`channel_a_republish`),
   KEY `channel_dirdate` (`channel_dirdate`),
+  KEY `channel_lastpost` (`channel_lastpost`),
   KEY `channel_w_like` (`channel_w_like`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

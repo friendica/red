@@ -860,6 +860,13 @@ function item_post(&$a) {
 					'otype'        => 'item'
 				));
 			}
+
+			if($uid && $uid == $profile_uid && (! $datarray['item_restrict'])) {
+				q("update channel set channel_lastpost = '%s' where channel_id = %d",
+					dbesc(datetime_convert()),
+					intval($uid)
+				);
+			}
 		}
 
 		// photo comments turn the corresponding item visible to the profile wall

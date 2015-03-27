@@ -24,7 +24,6 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]service classes - account overview page showing resources consumed by channel. With special consideration this page can also be accessed at a meta level by the site admin to drill down on problematic accounts/channels.[/li]
 [li]Events module - fix permissions on events, and provide JS translation support for the calendar overview; integrate with calDAV[/li]
 [li]Uploads - integrate #^[url=https://github.com/blueimp/jQuery-File-Upload]https://github.com/blueimp/jQuery-File-Upload[/url][/li]
-[li]We could probably improve even more on the infamous sys_channel query by carrying a column in the channel DB for the timestamp of the last post; so we don't have to randomly select channels from which to find public content and quite possibly randomly select a bunch that are inactive. This would also be a huge win for the statistics queries which could look at the same exact field and not have to count hundreds of thousands of things.[/li]
 [li]Import/export - include events, things, etc.[/li]
 [li]Import channel from Diaspora/Friendica[/li]
 [li]MediaGoblin photo "crosspost" connector[/li]
