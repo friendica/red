@@ -616,12 +616,20 @@ function updateConvItems(mode,data) {
 
 function collapseHeight() {
 	$(".wall-item-body, .contact-info").each(function() {
-		if($(this).height() > divmore_height + 10) {
+		var orgHeight = $(this).height();
+		if(orgHeight > divmore_height + 10) {
 			if(! $(this).hasClass('divmore')) {
 				$(this).readmore({
 					collapsedHeight: divmore_height, 
 					moreLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowmore + '</a>',
-					lessLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowless + '</a>'
+					lessLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowless + '</a>',
+					beforeToggle: function(trigger, element, expanded) {
+						if(expanded) {
+							if((($(element).offset().top + divmore_height) - $(window).scrollTop()) < 65 ) {
+								$('html, body').animate( { scrollTop: $(window).scrollTop() - (orgHeight - divmore_height) }, {duration: 100 } );
+							}
+						}
+					}
 				});
 				$(this).addClass('divmore');
 			}
@@ -666,8 +674,10 @@ function liveUpdate() {
 		else
 			update_mode = 'append';
 	}
-	else
+	else {
 		update_mode = 'update';
+		var orgHeight = $("#region_2").height();
+	}
 
 	$.get(update_url, function(data) {
 		page_load = false;
@@ -675,6 +685,10 @@ function liveUpdate() {
 		updateConvItems(update_mode,data);
 		$("#page-spinner").spin(false);
 		$("#profile-jot-text-loading").spin(false);
+
+		if(update_mode === 'update') {
+			$(window).scrollTop($(window).scrollTop() + $("#region_2").height() - orgHeight);
+		}
 
 		in_progress = false;
 

@@ -96,10 +96,6 @@ if(! $a->install) {
 		$nav_icon_colour = "#999";
 	if (! $nav_active_icon_colour)
 		$nav_active_icon_colour = "#fff";
-	if (! $navmenu_bgchover)
-		$navmenu_bgchover = "#f5f5f5";
-	if (! $navmenu_bgimage)
-		$navmenu_bgimage = "";
 	if (! $navtabs_borderc)
 		$navtabs_borderc = "rgba(204,204,204,0.8)";
 	if (! $navtabs_fontcolour)
@@ -200,23 +196,6 @@ if(! $a->install) {
 		$acpopup_tgbl_bgcolour = "#ddddff";
 	if (! $acpopup_hovercolour)
 		$acpopup_hovercolour = "#000";
-	if (! $notify_bgcolour)
-		$notify_bgcolour = "#fff";
-	if (! $notify_linkcolour)
-		$notify_linkcolour = "#333";	
-	if (! $notify_bghover)
-		$notify_bghover = "#e7e7e7";
-	if (! $notifyseen_bgcolour)
-		$notifyseen_bgcolour = "#ddd";
-	if (! $notifyseen_linkcolour)
-		$notifyseen_linkcolour = "#333";
-	if (! $notifyseen_bghover)
-		$notifyseen_bghover = "#e7e7e7";
-	if (! $notifyseen_linkhover)
-		$notifyseen_linkhover = "#333";
-	if (! $notify_topmargin)
-		$notify_topmargin = "1px";
-
 
 	if (! $radius)
 		$radius = "4";
@@ -262,8 +241,6 @@ $options = array (
 '$nav_bd' => $nav_bd,
 '$nav_icon_colour' => $nav_icon_colour,
 '$nav_active_icon_colour' => $nav_active_icon_colour,
-'$navmenu_bgchover' => $navmenu_bgchover,
-'$navmenu_bgimage' => $navmenu_bgimage,
 '$navtabs_borderc' => $navtabs_borderc,
 '$navtabs_fontcolour' => $navtabs_fontcolour,
 '$navtabs_bgcolour' => $navtabs_bgcolour,
@@ -314,14 +291,6 @@ $options = array (
 '$acpopup_bordercolour' => $acpopup_bordercolour,
 '$acpopup_tgbl_bgcolour' => $acpopup_tgbl_bgcolour,
 '$acpopup_hovercolour' => $acpopup_hovercolour,
-'$notify_bgcolour' => $notify_bgcolour,
-'$notify_linkcolour' => $notify_linkcolour,
-'$notify_bghover' => $notify_bghover,
-'$notifyseen_bgcolour' => $notifyseen_bgcolour,
-'$notifyseen_linkcolour' => $notifyseen_linkcolour,
-'$notifyseen_bghover' => $notifyseen_bghover,
-'$notifyseen_linkhover' => $notifyseen_linkhover,
-'$notify_topmargin' => $notify_topmargin,
 '$radius' => $radius,
 '$shadow' => $shadow,
 '$active_colour' => $active_colour,

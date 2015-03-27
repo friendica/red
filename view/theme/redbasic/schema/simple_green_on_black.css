@@ -115,3 +115,38 @@ input[type="submit"] {
 	background-color: #000;
 	color: #50f148;
 }
+
+.notify-seen a {
+	background: #000;
+	color: #000 !important;
+}
+
+.notify-seen a:hover {
+	background: #000;
+	color: #50f148 !important;
+}
+
+nav .dropdown-menu>li>a{
+	color: #50f148;
+}
+
+nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
+	color: #50f148;
+	background-color: #143D12;
+	background-image: none;
+}
+
+
+nav .dropdown-menu .divider{
+	background-color: #143D12;
+}
+
+nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
+	color: #50f148;
+	background-color: #143D12;
+	background-image: none;
+}
+
+nav .dropdown-menu {
+	background-color: #000;
+}
