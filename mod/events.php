@@ -548,10 +548,12 @@ function events_content(&$a) {
 		if(! x($orig_event))
 			$sh_checked = '';
 		else
-			$sh_checked = (($orig_event['allow_cid'] === '<' . $channel['channel_hash'] . '>' && (! $orig_event['allow_gid']) && (! $orig_event['deny_cid']) && (! $orig_event['deny_gid'])) ? '' : ' checked="checked" ' );
+			$sh_checked = ((($orig_event['allow_cid'] === '<' . $channel['channel_hash'] . '>' || (! $orig_event['allow_cid'])) && (! $orig_event['allow_gid']) && (! $orig_event['deny_cid']) && (! $orig_event['deny_gid'])) ? '' : ' checked="checked" ' );
 
 		if($orig_event['event_xchan'])
 			$sh_checked .= ' disabled="disabled" ';
+
+
 
 
 		$sdt = ((x($orig_event)) ? $orig_event['start'] : 'now');

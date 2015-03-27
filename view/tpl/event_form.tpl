@@ -27,7 +27,7 @@
 
    <div class='field checkbox'>
    <label class="mainlabel" for='id_nofinish'>{{$n_text}}</label>
-   <div><input type="checkbox" name='nofinish' id='id_nofinish' value="1" {{$n_checked}} onclick="showHideFinishDate(); return true;" >
+   <div class="pull-right"><input type="checkbox" name='nofinish' id='id_nofinish' value="1" {{$n_checked}} onclick="showHideFinishDate(); return true;" >
 	<label class="switchlabel" for='id_nofinish'> <span class="onoffswitch-inner" data-on='' data-off='' ></span>
 	<span class="onoffswitch-switch"></span> </label></div><span class='field_help'></span>
     </div>
@@ -157,7 +157,7 @@
 
    <div class='field checkbox'>
    <label class="mainlabel" for='id_share'>{{$sh_text}}</label>
-   <div><input type="checkbox" name='share' id='id_share' value="1" {{$sh_checked}} >
+   <div class="pull-right"><input type="checkbox" name='share' id='id_share' value="1" {{$sh_checked}} >
 	<label class="switchlabel" for='id_share'> <span class="onoffswitch-inner" data-on='' data-off='' ></span>
 	<span class="onoffswitch-switch"></span> </label></div><span class='field_help'></span>
     </div>

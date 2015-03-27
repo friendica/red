@@ -1158,6 +1158,8 @@ function status_editor($a, $x, $popup = false) {
 		$preview = '';
 
 	$defexpire = ((($z = get_pconfig($x['profile_uid'], 'system', 'default_post_expire')) && (! $webpage)) ? $z : '');
+	if($defexpire)
+		$defexpire = datetime_convert('UTC',date_default_timezone_get(),$defexpire,'Y-m-d H:i');
 
 	$cipher = get_pconfig($x['profile_uid'], 'system', 'default_cipher');
 	if(! $cipher)

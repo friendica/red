@@ -175,6 +175,8 @@ function timesel($format, $h, $m, $id='timepicker') {
  *  set maximum date from picker with id $maxfrom (none by default)
  */
 function datetimesel($format, $min, $max, $default, $id = 'datetimepicker', $pickdate = true, $picktime = true, $minfrom = '', $maxfrom = '',$required = false) {
+
+
 	// Once browser support is better this could probably be replaced with native HTML5 date picker
 	$o = '';
 
