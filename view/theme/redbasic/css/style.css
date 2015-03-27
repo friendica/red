@@ -2214,15 +2214,19 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 }
 
 /* Modified original CSS to match input in Redbasic */
-.bootstrap-tagsinput {
+.jothidden .bootstrap-tagsinput {
 	border-color:#fff;
 	background-color: #fff;
 	box-shadow: none;
 	display: inline-block;
 	border-radius: $radiuspx;
 	cursor: text;
-	padding: 0 6px;
-	width: 70% !important;
+	padding: 0px 8px;
+	width: 100%;
+}
+
+.bootstrap-tagsinput .label {
+	font-size: 100%;
 }
 
 .jothidden .bootstrap-tagsinput:hover, .jothidden .bootstrap-tagsinput:focus {
@@ -2304,9 +2308,6 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 .field.checkbox > div > input:checked + label .onoffswitch-switch {
     right: 0px;
     background-color: #337AB7;
-}
-.label-info {
-	background-color: #337AB7;
 }
 
 .channels_ckbx, .pending_ckbx, .users_ckbx {

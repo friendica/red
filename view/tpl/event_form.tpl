@@ -49,7 +49,7 @@
 
 {{if $catsenabled}}
 <div id="event-category-wrap">
-	<input name="category" id="event-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" class="event-cats" style="display: block;" data-role="tagsinput"  />
+	<input name="category" id="event-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" class="event-cats" style="display: block;" data-role="cat-tagsinput"  />
 </div>
 {{/if}}
 

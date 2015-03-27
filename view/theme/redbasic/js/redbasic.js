@@ -34,6 +34,10 @@ $(document).ready(function() {
 	if($('#tabs-collapse-1').length === 0) {
 		$('#expand-tabs').hide();
 	}
+
+	$("input[data-role=cat-tagsinput]").tagsinput({
+		tagClass: 'label label-primary'
+	});
 });
 
 $(document).ready(function(){

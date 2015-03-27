@@ -25,7 +25,10 @@
 
 .event-cats {
 	margin-top: 15px;
-    width: 100%;
+}
+
+.bootstrap-tagsinput {
+	width: 100%;
 }
 
 
