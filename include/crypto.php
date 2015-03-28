@@ -300,7 +300,6 @@ function salmon_key($pubkey) {
 // used in Friendica 'RINO'. This function is messy and should be retired. 
  
 
-if(! function_exists('aes_decrypt')) {
 function aes_decrypt($val,$ky)
 {
     $key="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
@@ -310,10 +309,10 @@ function aes_decrypt($val,$ky)
     $enc = MCRYPT_RIJNDAEL_128;
     $dec = @mcrypt_decrypt($enc, $key, $val, $mode, @mcrypt_create_iv( @mcrypt_get_iv_size($enc, $mode), MCRYPT_DEV_URANDOM ) );
     return rtrim($dec,(( ord(substr($dec,strlen($dec)-1,1))>=0 and ord(substr($dec, strlen($dec)-1,1))<=16)? chr(ord( substr($dec,strlen($dec)-1,1))):null));
-}}
+}
 
 
-if(! function_exists('aes_encrypt')) {
+
 function aes_encrypt($val,$ky)
 {
     $key="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
@@ -323,6 +322,14 @@ function aes_encrypt($val,$ky)
     $enc=MCRYPT_RIJNDAEL_128;
     $val=str_pad($val, (16*(floor(strlen($val) / 16)+(strlen($val) % 16==0?2:1))), chr(16-(strlen($val) % 16)));
     return mcrypt_encrypt($enc, $key, $val, $mode, mcrypt_create_iv( mcrypt_get_iv_size($enc, $mode), MCRYPT_DEV_URANDOM));
-}} 
+}
 
+function z_obscure($s) {
+	return json_encode(crypto_encapsulate($s,get_config('system','pubkey')));
+}
 
+function z_unobscure($s) {
+	if(strpos($s,"{\"") !== 0)
+		return $s;
+	return crypto_unencapsulate(json_decode($s,true),get_config('system','prvkey'));
+}
