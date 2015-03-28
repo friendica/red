@@ -10,8 +10,7 @@
 		<input type="hidden" name="coord" id="jot-coord" value="" />
 		<input type="hidden" name="post_id" value="{{$post_id}}" />
 		<input type="hidden" name="webpage" value="{{$webpage}}" />
-		<input type="hidden" name="preview" id="jot-preview" value="0" />
-		<input type="hidden" id="jot-consensus" name="consensus" value="{{if $consensus}}{{$consensus}}{{else}}0{{/if}}" />
+		<input type="hidden" name="preview" id="jot-preview" value="0" />		<input type="hidden" id="jot-consensus" name="consensus" value="{{if $consensus}}{{$consensus}}{{else}}0{{/if}}" />
 		{{if $showacl}}{{$acl}}{{/if}}
 		{{$mimeselect}}
 		{{$layoutselect}}
@@ -25,7 +24,7 @@
 		</div>
 		{{if $catsenabled}}
 		<div id="jot-category-wrap" class="jothidden" style="display:none">
-			<input name="category" id="jot-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" data-role="tagsinput">
+			<input name="category" id="jot-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" data-role="cat-tagsinput">
 		</div>
 		{{/if}}
 		{{if $webpage}}

@@ -275,7 +275,7 @@ $(function() {
 	});
 
 	/* setup field_richtext */
-	setupFieldRichtext();
+	//setupFieldRichtext();
 
 
 	/* Turn elements with one of our special rel tags into popup menus */
@@ -1060,9 +1060,9 @@ function fcFileBrowser (field_name, url, type, win) {
 	return false;
 }
 
-function setupFieldRichtext(){
-	return;
 /*
+function setupFieldRichtext(){
+
 	tinyMCE.init({
 		theme : "advanced",
 		mode : "specific_textareas",
@@ -1086,9 +1086,9 @@ function setupFieldRichtext(){
 		theme_advanced_path : false,
 		file_browser_callback : "fcFileBrowser",
 	});
-*/
-}
 
+}
+*/
 
 /**
  * sprintf in javascript
