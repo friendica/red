@@ -1239,8 +1239,9 @@ function absurl($path) {
 
 function os_mkdir($path, $mode = 0777, $recursive = false) {
 	$oldumask = @umask(0);
-	@mkdir($path, $mode, $recursive);
-	@umask($oldumask); 
+	$result = @mkdir($path, $mode, $recursive);
+	@umask($oldumask);
+	return $result; 
 }
 
 /**

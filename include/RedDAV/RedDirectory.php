@@ -49,6 +49,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @param RedBasicAuth &$auth_plugin
 	 */
 	public function __construct($ext_path, &$auth_plugin) {
+//		$ext_path = urldecode($ext_path);
 		//logger('directory ' . $ext_path, LOGGER_DATA);
 		$this->ext_path = $ext_path;
 		// remove "/cloud" from the beginning of the path

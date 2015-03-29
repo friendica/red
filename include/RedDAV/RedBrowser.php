@@ -95,6 +95,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 			'{DAV:}getlastmodified',
 			), 1);
 
+
 		$parent = $this->server->tree->getNodeForPath($path);
 
 		$parentpath = array();
@@ -166,6 +167,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 			$lastmodified = ((isset($file[200]['{DAV:}getlastmodified'])) ? $file[200]['{DAV:}getlastmodified']->getTime()->format('Y-m-d H:i:s') : '');
 
 			$fullPath = DAV\URLUtil::encodePath('/' . trim($this->server->getBaseUri() . ($path ? $path . '/' : '') . $name, '/'));
+
 
 			$displayName = isset($file[200]['{DAV:}displayname']) ? $file[200]['{DAV:}displayname'] : $name;
 

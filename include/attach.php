@@ -706,7 +706,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 			);
 		}
 		else {
-			logger('attach_mkdir: ' . mkdir . ' ' . $path . 'failed.');
+			logger('attach_mkdir: ' . mkdir . ' ' . $path . ' failed.');
 			$ret['message'] = t('mkdir failed.');
 		}
 	}
