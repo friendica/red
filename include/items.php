@@ -4395,7 +4395,7 @@ function zot_feed($uid,$observer_xchan,$arr) {
 			WHERE uid != %d
 			AND item_private = 0 AND item_restrict = 0 AND uid in (" . stream_perms_api_uids(PERMS_PUBLIC,10,1) . ") 
 			AND (item_flags &  %d) > 0 
-			$sql_extra GROUP BY parent, created ORDER BY created ASC $limit",
+			$sql_extra GROUP BY parent ORDER BY created ASC $limit",
 			intval($uid),
 			intval(ITEM_WALL)
 		);
@@ -4404,7 +4404,7 @@ function zot_feed($uid,$observer_xchan,$arr) {
 		$r = q("SELECT parent, created from item
 			WHERE uid = %d AND item_restrict = 0
 			AND (item_flags &  %d) > 0 
-			$sql_extra GROUP BY parent, created ORDER BY created ASC $limit",
+			$sql_extra GROUP BY parent ORDER BY created ASC $limit",
 			intval($uid),
 			intval(ITEM_WALL)
 		);
