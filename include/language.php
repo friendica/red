@@ -1,8 +1,8 @@
 <?php
 /**
- * @file
+ * @file include/language.php
  *
- * @brief translation support
+ * @brief Translation support.
  *
  * This file contains functions to work with translations and other
  * language related tasks.
@@ -26,7 +26,7 @@ function get_browser_language() {
 	$langs = array();
 	$lang_parse = array();
 
-	if (x($_SERVER,'HTTP_ACCEPT_LANGUAGE')) {
+	if (x($_SERVER, 'HTTP_ACCEPT_LANGUAGE')) {
 		// break up string into pieces (languages and q factors)
 		preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', 
 			$_SERVER['HTTP_ACCEPT_LANGUAGE'], $lang_parse);
@@ -110,9 +110,12 @@ function pop_lang() {
 	$a->language = $a->langsave;
 }
 
-
-// load string translation table for alternate language
-
+/**
+ * @brief Load string translation table for alternate language.
+ *
+ * @param string $lang language code in 2-letter ISO 639-1 (en, de, fr) format
+ * @param boolean $install (optional) default false
+ */
 function load_translation_table($lang, $install = false) {
 	global $a;
 
@@ -139,14 +142,13 @@ function load_translation_table($lang, $install = false) {
 	if(file_exists("view/local-$lang/strings.php")) {
 		include("view/local-$lang/strings.php");
 	}
-
 }
 
 /**
- * @brief translate string if translation exists.
+ * @brief Translate string if translation exists.
  *
  * @param string $s string that should get translated
- * @param string $ctx optional context to appear in po file
+ * @param string $ctx (optional) context to appear in po file
  * @return translated string if exists, otherwise return $s
  *
  */
@@ -154,37 +156,53 @@ function t($s, $ctx = '') {
 	global $a;
 
 	$cs = $ctx ? '__ctx:' . $ctx . '__ ' . $s : $s;
-	if(x($a->strings, $cs)) {
+	if (x($a->strings, $cs)) {
 		$t = $a->strings[$cs];
+
 		return is_array($t) ? $t[0] : $t;
 	}
+
 	return $s;
 }
 
-
+/**
+ * @brief
+ *
+ * @param string $singular
+ * @param string $plural
+ * @param int $count
+ * @param string $ctx
+ * @return string
+ */
 function tt($singular, $plural, $count, $ctx = ''){
 	$a = get_app();
 
-	$cs = $ctx?"__ctx:".$ctx."__ ".$singular:$singular;
-	if(x($a->strings,$cs)) {
+	$cs = $ctx ? "__ctx:" . $ctx . "__ " . $singular : $singular;
+	if (x($a->strings,$cs)) {
 		$t = $a->strings[$cs];
 		$f = 'string_plural_select_' . str_replace('-', '_', $a->language);
-		if(! function_exists($f))
+		if (! function_exists($f))
 			$f = 'string_plural_select_default';
+
 		$k = $f($count);
+
 		return is_array($t) ? $t[$k] : $t;
 	}
-	
-	if ($count != 1){
+
+	if ($count != 1) {
 		return $plural;
 	} else {
 		return $singular;
 	}
 }
 
-// provide a fallback which will not collide with 
-// a function defined in any language file 
-
+/**
+ * @brief Provide a fallback which will not collide with a function defined in
+ * any language file.
+ *
+ * @param int $n
+ * @return boolean
+ */
 function string_plural_select_default($n) {
 	return ($n != 1);
 }
@@ -200,25 +218,25 @@ function string_plural_select_default($n) {
  * returned through config['system']['language_detect_min_confidence'].
  *
  * @see http://pear.php.net/package/Text_LanguageDetect
- * @param s A string to examine
+ * @param string $s A string to examine
  * @return Language code in 2-letter ISO 639-1 (en, de, fr) format
  */
 function detect_language($s) {
 	require_once('Text/LanguageDetect.php');
 
 	$min_length = get_config('system', 'language_detect_min_length');
-	if($min_length === false)
+	if ($min_length === false)
 		$min_length = LANGUAGE_DETECT_MIN_LENGTH;
 
 	$min_confidence = get_config('system', 'language_detect_min_confidence');
-	if($min_confidence === false)
+	if ($min_confidence === false)
 		$min_confidence = LANGUAGE_DETECT_MIN_CONFIDENCE;
 
 	// embedded apps have long base64 strings which will trip up the detector.
 	$naked_body = preg_replace('/\[app\](.*?)\[\/app\]/','',$s);
 	// strip off bbcode
 	$naked_body = preg_replace('/\[(.+?)\]/', '', $naked_body);
-	if(mb_strlen($naked_body) < intval($min_length)) {
+	if (mb_strlen($naked_body) < intval($min_length)) {
 		logger('string length less than ' . intval($min_length), LOGGER_DATA);
 		return '';
 	}
@@ -233,11 +251,11 @@ function detect_language($s) {
 		logger('detect language exception: ' . $e->getMessage(), LOGGER_DATA);
 	}
 
-	if((! $lng) || (! (x($lng,'language')))) {
+	if ((! $lng) || (! (x($lng,'language')))) {
 		return '';
 	}
 
-	if($lng['confidence'] < (float) $min_confidence) {
+	if ($lng['confidence'] < (float) $min_confidence) {
 		logger('detect language: confidence less than ' . (float) $min_confidence, LOGGER_DATA);
 		return '';
 	}
@@ -251,38 +269,37 @@ function detect_language($s) {
  * By default we use the localized language name. You can switch the result
  * to any language with the optional 2nd parameter $l.
  *
- * $s and $l should be in 2-letter ISO 639-1 format
+ * $s and $l should be in 2-letter ISO 639-1 format.
  *
  * If nothing could be looked up it returns $s.
  *
- * @param $s Language code to look up
- * @param $l (optional) In which language to return the name
+ * @param string $s Language code to look up
+ * @param string $l (optional) In which language to return the name
  * @return string with the language name, or $s if unrecognized
+ *
+ * @todo include CommerceGuys\Intl through composer like SabreDAV.
  */
 require_once(__DIR__ . '/../library/intl/vendor/autoload.php');
 use CommerceGuys\Intl\Language\LanguageRepository;
 function get_language_name($s, $l = null) {
 	// get() expects the second part to be in upper case
-	if(strpos($s,'-') !== false) $s = substr($s,0,2) . strtoupper(substr($s,2));
-	if($l !== null && strpos($l,'-') !== false) $l = substr($l,0,2) . strtoupper(substr($l,2));
+	if (strpos($s, '-') !== false) $s = substr($s, 0, 2) . strtoupper(substr($s, 2));
+	if ($l !== null && strpos($l, '-') !== false) $l = substr($l, 0, 2) . strtoupper(substr($l, 2));
 
 	$languageRepository = new LanguageRepository;
 
 	// Sometimes intl doesn't like the second part at all ...
 	try {
 		$language = $languageRepository->get($s, $l);
-	}
-	catch(CommerceGuys\Intl\Exception\UnknownLanguageException $e) {
-		$s = substr($s,0,2);
-		if($l !== null) $l = substr($s,0,2);
+	} catch(CommerceGuys\Intl\Exception\UnknownLanguageException $e) {
+		$s = substr($s, 0, 2);
+		if($l !== null) $l = substr($s, 0, 2);
 		try {
 			$language = $languageRepository->get($s, $l);
-		}
-		catch(CommerceGuys\Intl\Exception\UnknownLanguageException $e) {
+		} catch (CommerceGuys\Intl\Exception\UnknownLanguageException $e) {
 			return $s; // Give up
 		}
-	} 
+	}
 
 	return $language->getName();
 }
-

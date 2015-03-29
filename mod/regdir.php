@@ -1,18 +1,17 @@
 <?php
 
-
 /**
- * With args, register a directory server for this realm
- * With no args, return a JSON array of directory servers for this realm
-
- * FIXME: Not yet implemented: Some realms may require authentication to join their realm.
- * The RED_GLOBAL realm does not require authentication.  
+ * With args, register a directory server for this realm.
+ * With no args, return a JSON array of directory servers for this realm.
+ *
+ * @FIXME Not yet implemented: Some realms may require authentication to join their realm.
+ * The RED_GLOBAL realm does not require authentication.
  * We would then need a flag in the site table to indicate that they've been
  * validated by the PRIMARY directory for that realm. Sites claiming to be PRIMARY
- * but are not the realm PRIMARY will be marked invalid. 
+ * but are not the realm PRIMARY will be marked invalid.
+ * 
+ * @param App &$a
  */
-
-
 function regdir_init(&$a) {
 
 	$result = array('success' => false);
@@ -31,8 +30,7 @@ function regdir_init(&$a) {
 
 	if($realm === DIRECTORY_REALM) {
 		$valid = 1;
-	}
-	else {
+	} else {
 		$token = get_config('system','realm_token');
 		if($token && $access_token != $token) {
 			$result['message'] = 'This realm requires an access token';
@@ -40,19 +38,19 @@ function regdir_init(&$a) {
 		}
 		$valid = 1;
 	}
-	
+
 	$dirmode = intval(get_config('system','directory_mode'));
 
-	if($dirmode == DIRECTORY_MODE_NORMAL) {
+	if ($dirmode == DIRECTORY_MODE_NORMAL) {
 		$ret['message'] = t('This site is not a directory server');
 		json_return_and_die($ret);
 	}
 
 	$m = null;
-	if($url) {
+	if ($url) {
 		$m = parse_url($url);
 
-		if((! $m) || (! @dns_get_record($m['host'], DNS_A + DNS_CNAME + DNS_PTR)) || (! filter_var($m['host'], FILTER_VALIDATE_IP) )) {
+		if ((! $m) || (! @dns_get_record($m['host'], DNS_A + DNS_CNAME + DNS_PTR)) || (! filter_var($m['host'], FILTER_VALIDATE_IP) )) {
 			$result['message'] = 'unparseable url';
 			json_return_and_die($result);
 		}
@@ -75,31 +73,28 @@ function regdir_init(&$a) {
 		);
 
 		json_return_and_die($result);
-	}
-	else {
+	} else {
 
 		// We can put this in the sql without the condition after 31 april 2015 assuming
 		// most directory servers will have updated by then
 		// This just makes sure it happens if I forget
 
 		$sql_extra = ((datetime_convert() > datetime_convert('UTC','UTC','2015-04-31')) ? ' and site_valid = 1 ' : '' );
-		if($dirmode == DIRECTORY_MODE_STANDALONE) {
+		if ($dirmode == DIRECTORY_MODE_STANDALONE) {
 			$r = array(array('site_url' => z_root()));
-		}
-		else {
+		} else {
 			$r = q("select site_url from site where site_flags in ( 1, 2 ) and site_realm = '%s' $sql_extra ",
 				dbesc(get_directory_realm())
 			);
 		}
-		if($r) {
+		if ($r) {
 			$result['success'] = true;
 			$result['directories'] = array();
-			foreach($r as $rr)
+			foreach ($r as $rr)
 				$result['directories'][] = $rr['site_url'];
+
 			json_return_and_die($result);
 		}
 	}
 	json_return_and_die($result);
-		
-
-}			
+}

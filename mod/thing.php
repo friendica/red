@@ -1,4 +1,8 @@
-<?php /** @file */
+<?php
+/**
+ * @file mod/thing.php
+ * @brief
+ */
 
 require_once('include/items.php');
 require_once('include/contact_selectors.php');
@@ -8,9 +12,6 @@ function thing_init(&$a) {
 
 	if(! local_channel())
 		return;
-
-
-
 
 	$account_id = $a->get_account();
 	$channel    = $a->get_channel();
@@ -26,19 +27,18 @@ function thing_init(&$a) {
 
 	$hash = random_string();
 
-
 	$verbs = obj_verbs();
 
-	/** 
+	/**
 	 * verbs: [0] = first person singular, e.g. "I want", [1] = 3rd person singular, e.g. "Bill wants" 
 	 * We use the first person form when creating an activity, but the third person for use in activities
-	 * FIXME: There is no accounting for verb gender for languages where this is significant. We may eventually
+	 * @FIXME There is no accounting for verb gender for languages where this is significant. We may eventually
 	 * require obj_verbs() to provide full conjugations and specify which form to use in the $_REQUEST params to this module.
 	 */
 
 	$translated_verb = $verbs[$verb][1];
 
-	/** 
+	/*
 	 * The site administrator can do things that normals cannot.
 	 * This is restricted because it will likely cause
 	 * an activitystreams protocol violation and the activity might
@@ -50,22 +50,20 @@ function thing_init(&$a) {
 	if(! $translated_verb) {
 		if(is_site_admin())
 			$translated_verb = $verb;
-	} 
-	
-	/**
+	}
+
+	/*
 	 * Things, objects: We do not provide definite (a, an) or indefinite (the) articles or singular/plural designators
 	 * That needs to be specified in your thing. e.g. Mike has "a carrot", Greg wants "balls", Bob likes "the Boston Red Sox".  
 	 */
 
-	/**
+	/*
 	 * Future work on this module might produce more complex activities with targets, e.g. Phillip likes Karen's moustache
 	 * and to describe other non-thing objects like channels, such as Karl wants Susan - where Susan represents a channel profile.
 	 */
  
 	if((! $name) || (! $translated_verb))
 		return;
-
-
 
 	if($term_hash) {
 		$t = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_type = %d and term_hash = '%s' limit 1",
@@ -115,7 +113,6 @@ function thing_init(&$a) {
 		$local_photo_type = $arr[3];
 	}
 
-
 	$r = q("select * from term where uid = %d and otype = %d and type = %d and term = '%s' limit 1",
 		intval(local_channel()),
 		intval(TERM_OBJ_THING),
@@ -159,13 +156,11 @@ function thing_init(&$a) {
 
 	info( t('Thing added'));
 
-
 	if($activity) {
 		$arr = array();
 		$links = array(array('rel' => 'alternate','type' => 'text/html', 'href' => $term['url']));
 		if($local_photo)
 			$links[] = array('rel' => 'photo', 'type' => $local_photo_type, 'href' => $local_photo);
-
 
 		$objtype = ACTIVITY_OBJ_THING;
 
@@ -182,9 +177,8 @@ function thing_init(&$a) {
 		$arr['owner_xchan']  = $channel['channel_hash'];
 		$arr['author_xchan'] = $channel['channel_hash'];
 
-
 		$arr['item_flags'] = ITEM_ORIGIN|ITEM_WALL|ITEM_THREAD_TOP;
-	
+
 		$ulink = '[zrl=' . $channel['xchan_url'] . ']' . $channel['channel_name'] . '[/zrl]';
 		$plink = '[zrl=' . $term['url'] . ']' . $term['term'] . '[/zrl]';
 
@@ -212,14 +206,14 @@ function thing_init(&$a) {
 			else
 				$arr['allow_cid'] = '<' . get_observer_hash() . '>';
 		}
-	
+
 		$ret = post_activity_item($arr);
 	}
 }
 
 
 function thing_content(&$a) {
-	
+
 	if(argc() == 2) {
 
 		$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_type = %d and term_hash = '%s' limit 1",
@@ -249,11 +243,9 @@ function thing_content(&$a) {
 	}
 
 	$thing_hash = '';
-	
 
 	if(argc() == 3 && argv(1) === 'edit') {
 		$thing_hash = argv(2);
-
 
 		$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_type = %d and term_hash = '%s' limit 1",
 			intval(TERM_OBJ_THING),
@@ -264,7 +256,6 @@ function thing_content(&$a) {
 			notice( t('Permission denied.') . EOL);
 			return '';
 		}
-
 
 		$o .= replace_macros(get_markup_template('thing_edit.tpl'),array(
 			'$thing_hdr' => t('Edit Thing'),
@@ -300,7 +291,6 @@ function thing_content(&$a) {
 			return '';
 		}
 
-
 		$x = q("delete from obj where obj_obj = '%s' and obj_type = %d and obj_channel = %d",
 			dbesc($thing_hash),
 			intval(TERM_OBJ_THING),
@@ -310,6 +300,7 @@ function thing_content(&$a) {
 			dbesc($thing_hash),
 			intval(local_channel())
 		);
+
 		return $o;
 	}
 
@@ -328,6 +319,4 @@ function thing_content(&$a) {
 	));
 
 	return $o;
-
-
 }

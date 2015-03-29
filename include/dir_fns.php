@@ -1,14 +1,23 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/dir_fns.php
+ */
 
 require_once('include/permissions.php');
 
+/**
+ * @brief
+ *
+ * @param int $dirmode
+ * @return array
+ */
 function find_upstream_directory($dirmode) {
 	global $DIRECTORY_FALLBACK_SERVERS;
 
 	$preferred = get_config('system','directory_server');
-	if(! $preferred) {
+	if (! $preferred) {
 
-		/**
+		/*
 		 * No directory has yet been set. For most sites, pick one at random
 		 * from our list of directory servers. However, if we're a directory
 		 * server ourself, point at the local instance
@@ -18,41 +27,40 @@ function find_upstream_directory($dirmode) {
 		 */
 
 		$dirmode = intval(get_config('system','directory_mode'));
-		if($dirmode == DIRECTORY_MODE_NORMAL) {
+		if ($dirmode == DIRECTORY_MODE_NORMAL) {
 			$toss = mt_rand(0,count($DIRECTORY_FALLBACK_SERVERS));
 			$preferred = $DIRECTORY_FALLBACK_SERVERS[$toss];
 			set_config('system','directory_server',$preferred);
-		}
-		else{
+		} else{
 			set_config('system','directory_server',z_root());
 		}
 	}
+
 	return array('url' => $preferred);
 }
 
+/**
+ * Directories may come and go over time. We will need to check that our
+ * directory server is still valid occasionally, and reset to something that
+ * is if our directory has gone offline for any reason
+ */
 function check_upstream_directory() {
 
-	/**
-	* Directories may come and go over time.  We will need to check that our 
-	* directory server is still valid occasionally, and reset to something that
-	* is if our directory has gone offline for any reason
-	*/
-
-	$directory = get_config('system','directory_server');
+	$directory = get_config('system', 'directory_server');
 
 	// it's possible there is no directory server configured and the local hub is being used.
 	// If so, default to preserving the absence of a specific server setting.
 
-	$isadir = true; 
+	$isadir = true;
 
-	if($directory) {
+	if ($directory) {
 		$h = parse_url($directory);
-		if($h) {
+		if ($h) {
 			$x = zot_finger('[system]@' . $h['host']);
-			if($x['success']) {
-				$j = json_decode($x['body'],true);
-				if(array_key_exists('site',$j) && array_key_exists('directory_mode',$j['site'])) {
-					if($j['site']['directory_mode'] === 'normal') {
+			if ($x['success']) {
+				$j = json_decode($x['body'], true);
+				if (array_key_exists('site', $j) && array_key_exists('directory_mode', $j['site'])) {
+					if ($j['site']['directory_mode'] === 'normal') {
 						$isadir = false;
 					}
 				}
@@ -60,9 +68,8 @@ function check_upstream_directory() {
 		}
 	}
 
-	if(! $isadir)
-		set_config('system','directory_server','');
-	return;
+	if (! $isadir)
+		set_config('system', 'directory_server', '');
 }
 
 function get_globaldir_setting($observer) {
@@ -95,12 +102,8 @@ function get_safemode_setting($observer) {
 }
 
 /**
- * @function dir_sort_links()
- * Called by the directory_sort widget
+ * @brief Called by the directory_sort widget.
  */
-
-
-	
 function dir_sort_links() {
 
 	$safe_mode = 1;
@@ -110,7 +113,7 @@ function dir_sort_links() {
 	$safe_mode = get_safemode_setting($observer);
 	$globaldir = get_globaldir_setting($observer);
 
- 	// Build urls without order and pubforums so it's easy to tack on the changed value
+	// Build urls without order and pubforums so it's easy to tack on the changed value
 	// Probably there's an easier way to do this
 
 	$current_order = (($_REQUEST['order']) ? $_REQUEST['order'] : 'date');
@@ -145,38 +148,34 @@ function dir_sort_links() {
 		'$pubforums' => array('pubforums', t('Public Forums Only'),(x($_REQUEST,'pubforums') ? $_REQUEST['pubforums'] : ''),'','',' onchange=\'window.location.href="' . $forumsurl . '&pubforums="+(this.checked ? 1 : 0)\''), 
 		'$globaldir' => array('globaldir', t('This Website Only'), 1-intval($globaldir),'','',' onchange=\'window.location.href="' . $forumsurl . '&global="+(this.checked ? 0 : 1)\''),
 	));
+
 	return $o;
 }
 
-
 /**
- * @function sync_directories($mode)
- * 
- * @param int $mode;
+ * @brief Checks the directory mode of this hub.
  *
  * Checks the directory mode of this hub to see if it is some form of directory server. If it is,
  * get the directory realm of this hub. Fetch a list of all other directory servers in this realm and request
  * a directory sync packet. This will contain both directory updates and new ratings. Store these all in the DB. 
  * In the case of updates, we will query each of them asynchronously from a poller task. Ratings are stored 
- * directly if the rater's signature matches.  
+ * directly if the rater's signature matches.
  *
+ * @param int $dirmode;
  */
-
-
 function sync_directories($dirmode) {
 
-	if($dirmode == DIRECTORY_MODE_STANDALONE || $dirmode == DIRECTORY_MODE_NORMAL)
+	if ($dirmode == DIRECTORY_MODE_STANDALONE || $dirmode == DIRECTORY_MODE_NORMAL)
 		return;
 
 	$realm = get_directory_realm();
-	if($realm == DIRECTORY_REALM) {
+	if ($realm == DIRECTORY_REALM) {
 		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s' and ( site_realm = '%s' or site_realm = '') ",
 			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
 			dbesc(z_root()),
 			dbesc($realm)
 		);
-	}
-	else {
+	} else {
 		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s' and site_realm like '%s' ",
 			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
 			dbesc(z_root()),
@@ -185,9 +184,9 @@ function sync_directories($dirmode) {
 	}
 
 	// If there are no directory servers, setup the fallback master
-	// FIXME - what to do if we're in a different realm?
+	/** @FIXME What to do if we're in a different realm? */
 
-	if((! $r) && (z_root() != DIRECTORY_FALLBACK_MASTER)) {
+	if ((! $r) && (z_root() != DIRECTORY_FALLBACK_MASTER)) {
 		$r = array();
 		$r[] = array(
 			'site_url' => DIRECTORY_FALLBACK_MASTER,
@@ -211,32 +210,30 @@ function sync_directories($dirmode) {
 			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
 			dbesc(z_root())
 		);
-
-	} 
-	if(! $r)
+	}
+	if (! $r)
 		return;
 
-	foreach($r as $rr) {
-		if(! $rr['site_directory'])
+	foreach ($r as $rr) {
+		if (! $rr['site_directory'])
 			continue;
 
 		logger('sync directories: ' . $rr['site_directory']);
 
 		// for brand new directory servers, only load the last couple of days.
 		// It will take about a month for a new directory to obtain the full current repertoire of channels.
-		// FIXME - go back and pick up earlier ratings if this is a new directory server. These do not get refreshed.
+		/** @FIXME Go back and pick up earlier ratings if this is a new directory server. These do not get refreshed. */
 
 		$token = get_config('system','realm_token');
-
 
 		$syncdate = (($rr['site_sync'] === NULL_DATE) ? datetime_convert('UTC','UTC','now - 2 days') : $rr['site_sync']);
 		$x = z_fetch_url($rr['site_directory'] . '?f=&sync=' . urlencode($syncdate) . (($token) ? '&t=' . $token : ''));
 
-		if(! $x['success'])
+		if (! $x['success'])
 			continue;
 
 		$j = json_decode($x['body'],true);
-		if(!($j['transactions']) || ($j['ratings']))
+		if (!($j['transactions']) || ($j['ratings']))
 			continue;
 
 		q("update site set site_sync = '%s' where site_url = '%s'",
@@ -246,17 +243,18 @@ function sync_directories($dirmode) {
 
 		logger('sync_directories: ' . $rr['site_url'] . ': ' . print_r($j,true), LOGGER_DATA);
 
-		if(is_array($j['transactions']) && count($j['transactions'])) {
-			foreach($j['transactions'] as $t) {
+		if (is_array($j['transactions']) && count($j['transactions'])) {
+			foreach ($j['transactions'] as $t) {
 				$r = q("select * from updates where ud_guid = '%s' limit 1",
 					dbesc($t['transaction_id'])
 				);
 				if($r)
 					continue;
+
 				$ud_flags = 0;
-				if(is_array($t['flags']) && in_array('deleted',$t['flags']))
+				if (is_array($t['flags']) && in_array('deleted',$t['flags']))
 					$ud_flags |= UPDATE_FLAGS_DELETED;
-				if(is_array($t['flags']) && in_array('forced',$t['flags']))
+				if (is_array($t['flags']) && in_array('forced',$t['flags']))
 					$ud_flags |= UPDATE_FLAGS_FORCED;
 
 				$z = q("insert into updates ( ud_hash, ud_guid, ud_date, ud_flags, ud_addr )
@@ -269,42 +267,41 @@ function sync_directories($dirmode) {
 				);
 			}
 		}
-		if(is_array($j['ratings']) && count($j['ratings'])) {
-			foreach($j['ratings'] as $rr) {		
+		if (is_array($j['ratings']) && count($j['ratings'])) {
+			foreach ($j['ratings'] as $rr) {
 				$x = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1",
 					dbesc($rr['channel']),
 					dbesc($rr['target'])
 				);
-				if($x && $x[0]['xlink_updated'] >= $rr['edited'])
+				if ($x && $x[0]['xlink_updated'] >= $rr['edited'])
 					continue;
 
 				// Ratings are signed by the rater. We need to verify before we can accept it.
-				// TODO - queue or defer if the xchan is not yet present on our site
+				/** @TODO Queue or defer if the xchan is not yet present on our site */
 
 				$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
 					dbesc($rr['channel'])
 				);
-				if(! $y) {
+				if (! $y) {
 					logger('key unavailable on this site for ' . $rr['channel']);
 					continue;
 				}
-				if(! rsa_verify($rr['target'] . '.' . $rr['rating'] . '.' . $rr['rating_text'], base64url_decode($rr['signature']),$y[0]['xchan_pubkey'])) {
-			        logger('failed to verify rating');
+				if (! rsa_verify($rr['target'] . '.' . $rr['rating'] . '.' . $rr['rating_text'], base64url_decode($rr['signature']),$y[0]['xchan_pubkey'])) {
+					logger('failed to verify rating');
 					continue;
 				}
 
-				if($x) {
+				if ($x) {
 					$z = q("update xlink set xlink_rating = %d, xlink_rating_text = '%s', xlink_sig = '%s', xlink_updated = '%s' where xlink_id = %d",
 						intval($rr['rating']),
 						dbesc($rr['rating_text']),
 						dbesc($rr['signature']),
 						dbesc(datetime_convert()),
 						intval($x[0]['xlink_id'])
-	        		);
-			        logger('rating updated');
-    			}
-    			else {
-        			$z = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_sig, xlink_updated, xlink_static ) values( '%s', '%s', %d, '%s', '%s', '%s', 1 ) ",
+					);
+					logger('rating updated');
+				} else {
+					$z = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_sig, xlink_updated, xlink_static ) values( '%s', '%s', %d, '%s', '%s', '%s', 1 ) ",
 						dbesc($rr['channel']),
 						dbesc($rr['target']),
 						intval($rr['rating']),
@@ -321,50 +318,51 @@ function sync_directories($dirmode) {
 
 
 /**
- * $function update_directory_entry($ud)
+ * @brief
  *
- * @param array $ud; // Entry from update table
- * Given an update record, probe the channel, grab a zot-info packet and refresh/sync the data  
+ * Given an update record, probe the channel, grab a zot-info packet and refresh/sync the data.
  *
- * Ignore updating records marked as deleted
+ * Ignore updating records marked as deleted.
  *
- * If successful, 
- *   sets ud_last in the DB to the current datetime for this reddress/webbie
+ * If successful, sets ud_last in the DB to the current datetime for this
+ * reddress/webbie.
+ *
+ * @param array $ud Entry from update table
  */
-
 function update_directory_entry($ud) {
 
 	logger('update_directory_entry: ' . print_r($ud,true), LOGGER_DATA);
 
-	if($ud['ud_addr'] && (! ($ud['ud_flags'] & UPDATE_FLAGS_DELETED))) {
+	if ($ud['ud_addr'] && (! ($ud['ud_flags'] & UPDATE_FLAGS_DELETED))) {
 		$success = false;
-		$x = zot_finger($ud['ud_addr'],'');
-		if($x['success']) {
-			$j = json_decode($x['body'],true);
-			if($j)
+		$x = zot_finger($ud['ud_addr'], '');
+		if ($x['success']) {
+			$j = json_decode($x['body'], true);
+			if ($j)
 				$success = true;
-			$y = import_xchan($j,0,$ud);
+
+			$y = import_xchan($j, 0, $ud);
 		}
-		if(! $success) {
-			$r = q("update updates set ud_last = '%s' where ud_addr = '%s'",
+		if (! $success) {
+			q("update updates set ud_last = '%s' where ud_addr = '%s'",
 				dbesc(datetime_convert()),
 				dbesc($ud['ud_addr'])
 			);
 		}
 	}
-
 }
 
 
 /**
- * @function local_dir_update($uid,$force)
- *     push local channel updates to a local directory server
- *  This is called from include/directory.php if a profile is to be pushed
- *  to the directory and the local hub in this case is any kind of directory server. 
+ * @brief Push local channel updates to a local directory server.
  *
+ * This is called from include/directory.php if a profile is to be pushed to the
+ * directory and the local hub in this case is any kind of directory server.
+ *
+ * @param int $uid
+ * @param boolean $force
  */
-
-function local_dir_update($uid,$force) {
+function local_dir_update($uid, $force) {
 
 	logger('local_dir_update: uid: ' . $uid, LOGGER_DEBUG);
 
@@ -375,12 +373,12 @@ function local_dir_update($uid,$force) {
 	$profile = array();
 	$profile['encoding'] = 'zot';
 
-	if($p) {
+	if ($p) {
 		$hash = $p[0]['channel_hash'];
 
 		$profile['description'] = $p[0]['pdesc'];
 		$profile['birthday']    = $p[0]['dob'];
-		if($age = age($p[0]['dob'],$p[0]['channel_timezone'],''))  
+		if ($age = age($p[0]['dob'],$p[0]['channel_timezone'],''))  
 			$profile['age'] = $age;
 
 		$profile['gender']      = $p[0]['gender'];
@@ -394,14 +392,15 @@ function local_dir_update($uid,$force) {
 		$profile['homepage']    = $p[0]['homepage'];
 		$profile['hometown']    = $p[0]['hometown'];
 
-		if($p[0]['keywords']) {
+		if ($p[0]['keywords']) {
 			$tags = array();
-			$k = explode(' ',$p[0]['keywords']);
-			if($k)
-				foreach($k as $kk)
-					if(trim($kk))
+			$k = explode(' ', $p[0]['keywords']);
+			if ($k)
+				foreach ($k as $kk)
+					if (trim($kk))
 						$tags[] = trim($kk);
-			if($tags)
+
+			if ($tags)
 				$profile['keywords'] = $tags;
 		}
 
@@ -414,26 +413,23 @@ function local_dir_update($uid,$force) {
 		);
 
 		// Be careful - XCHAN_FLAGS_HIDDEN should evaluate to 1
-		if(($r[0]['xchan_flags'] & XCHAN_FLAGS_HIDDEN) != $hidden)
+		if (($r[0]['xchan_flags'] & XCHAN_FLAGS_HIDDEN) != $hidden)
 			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_HIDDEN;
 		else
 			$new_flags = $r[0]['xchan_flags'];
-		
-		if($new_flags != $r[0]['xchan_flags']) {			
 
+		if ($new_flags != $r[0]['xchan_flags']) {
 			$r = q("update xchan set xchan_flags = %d  where xchan_hash = '%s'",
 				intval($new_flags),
 				dbesc($p[0]['channel_hash'])
 			);
-
 		}
 
 		$address = $p[0]['channel_address'] . '@' . get_app()->get_hostname();
 
-		if(perm_is_allowed($uid,'','view_profile')) {
-			import_directory_profile($hash,$profile,$address,0);
-		}
-		else {
+		if (perm_is_allowed($uid, '', 'view_profile')) {
+			import_directory_profile($hash, $profile, $address, 0);
+		} else {
 			// they may have made it private
 			$r = q("delete from xprof where xprof_hash = '%s'",
 				dbesc($hash)
@@ -445,7 +441,5 @@ function local_dir_update($uid,$force) {
 	}
 
 	$ud_hash = random_string() . '@' . get_app()->get_hostname();
-	update_modtime($hash,$ud_hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),(($force) ? UPDATE_FLAGS_FORCED : UPDATE_FLAGS_UPDATED));
-
+	update_modtime($hash, $ud_hash, $p[0]['channel_address'] . '@' . get_app()->get_hostname(),(($force) ? UPDATE_FLAGS_FORCED : UPDATE_FLAGS_UPDATED));
 }
-	

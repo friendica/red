@@ -1,14 +1,23 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/directory.php
+ * @brief executes directory_run()
+ */
 
 require_once('boot.php');
 require_once('include/zot.php');
 require_once('include/cli_startup.php');
 require_once('include/dir_fns.php');
 
-
+/**
+ * @brief
+ *
+ * @param array $argv
+ * @param array $argc
+ */
 function directory_run($argv, $argc){
 
-	cli_startup();		 
+	cli_startup();
 
 	if($argc < 2)
 		return;
@@ -36,7 +45,6 @@ function directory_run($argv, $argc){
 		return;
 
 	$channel = $x[0];
-
 
 	if($dirmode != DIRECTORY_MODE_NORMAL) {
 
@@ -70,8 +78,9 @@ function directory_run($argv, $argc){
 
 	if(! $z['success']) {
 
-		// FIXME - we aren't updating channel_dirdate if we have to queue
-		// the directory packet. That means we'll try again on the next poll run.
+		/** @FIXME we aren't updating channel_dirdate if we have to queue
+		 * the directory packet. That means we'll try again on the next poll run.
+		 */
 
 		$hash = random_string();
 		q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) 
@@ -87,8 +96,7 @@ function directory_run($argv, $argc){
 			dbesc($packet),
 			dbesc('')
 		);
-	}
-	else {
+	} else {
 		q("update channel set channel_dirdate = '%s' where channel_id = %d",
 			dbesc(datetime_convert()),
 			intval($channel['channel_id'])
@@ -101,7 +109,7 @@ function directory_run($argv, $argc){
 
 }
 
-if (array_search(__file__,get_included_files())===0){
-  directory_run($argv,$argc);
-  killme();
+if (array_search(__file__, get_included_files()) === 0) {
+	directory_run($argv, $argc);
+	killme();
 }
