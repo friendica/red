@@ -3,8 +3,7 @@
  * @file include/config.php
  * @brief Arbitrary configuration storage.
  *
- * Note:
- * Please do not store booleans - convert to 0/1 integer values
+ * @note Please do not store booleans - convert to 0/1 integer values.
  * The get_?config() functions return boolean false for keys that are unset,
  * and this could lead to subtle bugs.
  *
@@ -18,19 +17,20 @@
  * - <b>pconfig</b> is used for channel specific configurations and takes a
  * <i>channel_id</i> as identifier. It stores for example which features are
  * enabled per channel. The storage is of size MEDIUMTEXT.
- * @code $var = get_pconfig(local_channel(), 'category', 'key');@endcode
+ * @code{.php} $var = get_pconfig(local_channel(), 'category', 'key');@endcode
  * - <b>xconfig</b> is the same as pconfig, except that it uses <i>xchan</i> as
  * an identifier. This is for example for people who do not have a local account.
  * The storage is of size MEDIUMTEXT.
- * @code $observer = $a->get_observer_hash();
+ * @code{.php}
+ * $observer = $a->get_observer_hash();
  * if ($observer) {
  *     $var = get_xconfig($observer, 'category', 'key');
  * }@endcode
  *
  * - get_config() and set_config() can also be done through the command line tool
- * @ref util/config
+ * @ref util/config.md "util/config"
  * - get_pconfig() and set_pconfig() can also be done through the command line tool
- * @ref util/pconfig and takes a channel_id as first argument. 
+ * @ref util/pconfig.md "util/pconfig" and takes a channel_id as first argument. 
  *
  */
 
@@ -123,7 +123,7 @@ function get_config_from_storage($family, $key) {
  *
  * Stores a config value ($value) in the category ($family) under the key ($key).
  *
- * Please do not store booleans - convert to 0/1 integer values!
+ * @note Please do not store booleans - convert to 0/1 integer values!
  *
  * @param string $family
  *  The category of the configuration value
@@ -272,14 +272,16 @@ function get_pconfig($uid, $family, $key, $instore = false) {
  * Stores a config value ($value) in the category ($family) under the key ($key)
  * for the channel_id $uid.
  *
- * Please do not store booleans - convert to 0/1 integer values!
+ * @note Please do not store booleans - convert to 0/1 integer values!
  *
  * @param string $uid
  *  The channel_id
  * @param string $family
  *  The category of the configuration value
  * @param string $key
- *  The configuration key to query
+ *  The configuration key to set
+ * @param string $value
+ *  The value to store
  * @return mixed Stored $value or false
  */
 function set_pconfig($uid, $family, $key, $value) {
@@ -315,6 +317,7 @@ function set_pconfig($uid, $family, $key, $value) {
 		);
 		if($ret)
 			return $value;
+
 		return $ret;
 	}
 
@@ -339,6 +342,7 @@ function set_pconfig($uid, $family, $key, $value) {
 
 	if($ret)
 		return $value;
+
 	return $ret;
 }
 
@@ -360,13 +364,14 @@ function del_pconfig($uid, $family, $key) {
 	global $a;
 	$ret = false;
 
-	if(x($a->config[$uid][$family], $key))
+	if (x($a->config[$uid][$family], $key))
 		unset($a->config[$uid][$family][$key]);
 		$ret = q("DELETE FROM pconfig WHERE uid = %d AND cat = '%s' AND k = '%s'",
 		intval($uid),
 		dbesc($family),
 		dbesc($key)
 	);
+
 	return $ret;
 }
 
@@ -448,7 +453,7 @@ function get_xconfig($xchan, $family, $key) {
  * Stores a config value ($value) in the category ($family) under the key ($key)
  * for the observer's $xchan hash.
  *
- * Please do not store booleans - convert to 0/1 integer values!
+ * @note Please do not store booleans - convert to 0/1 integer values!
  *
  * @param string $xchan
  *  The observer's hash
@@ -456,6 +461,8 @@ function get_xconfig($xchan, $family, $key) {
  *  The category of the configuration value
  * @param string $key
  *  The configuration key to set
+ * @param string $value
+ *  The value to store
  * @return mixed Stored $value or false
  */
 function set_xconfig($xchan, $family, $key, $value) {

@@ -7,13 +7,12 @@
 
 require_once("include/smarty.php");
 
+
 /**
  * @brief unloads an addon.
  *
  * @param string $plugin name of the addon
- * @return void
  */
-
 function unload_plugin($plugin){
 	logger("Addons: unloading " . $plugin, LOGGER_DEBUG);
 
@@ -28,9 +27,8 @@ function unload_plugin($plugin){
  * @brief uninstalls an addon.
  *
  * @param string $plugin name of the addon
- * @return bool
+ * @return boolean
  */
-
 function uninstall_plugin($plugin) {
 	unload_plugin($plugin);
 
@@ -70,7 +68,7 @@ function install_plugin($plugin) {
 
 	$plugin_admin = (function_exists($plugin . '_plugin_admin') ? 1 : 0);
 
-	$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
+	q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
 		dbesc($plugin),
 		intval($t),
 		$plugin_admin
@@ -196,6 +194,7 @@ function register_hook($hook, $file, $function, $priority = 0) {
 		dbesc($function),
 		dbesc($priority)
 	);
+
 	return $r;
 }
 
@@ -206,7 +205,7 @@ function register_hook($hook, $file, $function, $priority = 0) {
  * @param string $hook the name of the hook
  * @param string $file the name of the file that hooks into
  * @param string $function the name of the function that the hook called
- * @return mixed
+ * @return array
  */
 function unregister_hook($hook, $file, $function) {
 	$r = q("DELETE FROM hook WHERE hook = '%s' AND `file` = '%s' AND `function` = '%s'",
@@ -214,6 +213,7 @@ function unregister_hook($hook, $file, $function) {
 		dbesc($file),
 		dbesc($function)
 	);
+
 	return $r;
 }
 
@@ -243,8 +243,7 @@ function load_hooks() {
 }
 
 /**
- *
- * @function insert_hook($hook,$fn)
+ * @brief Inserts a hook into a page request.
  *
  * Insert a short-lived hook into the running page request. 
  * Hooks are normally persistent so that they can be called 
@@ -255,9 +254,9 @@ function load_hooks() {
  * which will not persist beyond the life of this page request
  * or the current process. 
  *
- * @param string $hook;
+ * @param string $hook
  *     name of hook to attach callback
- * @param string $fn;
+ * @param string $fn
  *     function name of callback handler
  */ 
 function insert_hook($hook, $fn) {
@@ -305,9 +304,10 @@ function call_hooks($name, &$data = null) {
 
 
 /**
- * @brief parse plugin comment in search of plugin infos.
+ * @brief Parse plugin comment in search of plugin infos.
  *
  * like
+ * \code
  *   * Name: Plugin
  *   * Description: A plugin which plugs in
  *   * Version: 1.2.3
@@ -315,7 +315,7 @@ function call_hooks($name, &$data = null) {
  *   * Author: Jane <email>
  *   * Compat: Red [(version)], Friendica [(version)]
  *   *
- *
+ *\endcode
  * @param string $plugin the name of the plugin
  * @return array with the plugin information
  */
@@ -363,9 +363,10 @@ function get_plugin_info($plugin){
 
 
 /**
- * @brief parse theme comment in search of theme infos.
+ * @brief Parse theme comment in search of theme infos.
  *
  * like
+ * \code
  *   * Name: My Theme
  *   * Description: My Cool Theme
  *   * Version: 1.2.3
@@ -373,7 +374,7 @@ function get_plugin_info($plugin){
  *   * Maintainer: Jane <profile url>
  *   * Compat: Friendica [(version)], Red [(version)]
  *   *
- *
+ * \endcode
  * @param string $theme the name of the theme
  * @return array
  */
@@ -456,13 +457,11 @@ function get_theme_screenshot($theme) {
 	return($a->get_baseurl() . '/images/blank.png');
 }
 
-
 /**
- * @brief add CSS to <head>
+ * @brief add CSS to \<head\>
  *
  * @param string $src
  * @param string $media change media attribute (default to 'screen')
- * @return void
  */
 function head_add_css($src, $media = 'screen') {
 	get_app()->css_sources[] = array($src, $media);
@@ -471,21 +470,23 @@ function head_add_css($src, $media = 'screen') {
 function head_remove_css($src, $media = 'screen') {
 	$a = get_app();
 	$index = array_search(array($src, $media), $a->css_sources);
-	if($index !== false)
+	if ($index !== false)
 		unset($a->css_sources[$index]);
 }
 
 function head_get_css() {
 	$str = '';
 	$sources = get_app()->css_sources;
-	if(count($sources)) 
-		foreach($sources as $source)
+	if (count($sources)) {
+		foreach ($sources as $source)
 			$str .= format_css_if_exists($source);
+	}
+
 	return $str;
 }
 
 function format_css_if_exists($source) {
-	if(strpos($source[0], '/') !== false)
+	if (strpos($source[0], '/') !== false)
 		$path = $source[0];
 	else
 		$path = theme_include($source[0]);
@@ -592,6 +593,7 @@ function theme_include($file, $root = '') {
 		if(file_exists($p))
 			return $p;
 	}
+
 	return '';
 }
 

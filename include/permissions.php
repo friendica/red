@@ -1,6 +1,6 @@
 <?php
 /**
- * @file incldue/permissions.php
+ * @file include/permissions.php
  *
  * This file conntains functions to check and work with permissions.
  */
@@ -445,21 +445,21 @@ function site_default_perms() {
 
 
 /**
- * @function get_role_perms($role)
- * @param string $role
- * 
- *   Given a string for the channel role ('social','forum', etc)
+ * @brief Return an array of all permissions for this role.
+ *
+ * Given a string for the channel role ('social','forum', etc)
  * return an array of all permission fields pre-filled for this role.
  * This includes the channel permission scope indicators (anything beginning with 'channel_') as well as
- *    perms_auto:   true or false to create auto-permissions for this channel
- *    perms_follow: The permissions to apply when initiating a connection request to another channel
- *    perms_accept: The permissions to apply when accepting a connection request from another channel (not automatic)
- *    default_collection: true or false to make the default ACL include the channel's default collection 
- *    directory_publish: true or false to publish this channel in the directory
+ *  * perms_auto:   true or false to create auto-permissions for this channel
+ *  * perms_follow: The permissions to apply when initiating a connection request to another channel
+ *  * perms_accept: The permissions to apply when accepting a connection request from another channel (not automatic)
+ *  * default_collection: true or false to make the default ACL include the channel's default collection 
+ *  * directory_publish: true or false to publish this channel in the directory
  * Any attributes may be extended (new roles defined) and modified (specific permissions altered) by plugins
  *
+ * @param string $role
+ * @return array
  */
-
 function get_role_perms($role) {
 
 	$ret = array();
@@ -800,9 +800,8 @@ function get_role_perms($role) {
 }
 
 /**
- * @brief Returns a list or roles, grouped by type
+ * @brief Returns a list or roles, grouped by type.
  *
- * @param string $current The current role
  * @return string Returns an array of roles, grouped by type
  */
 function get_roles() {
@@ -811,7 +810,8 @@ function get_roles() {
 		t('Community Forum') => array('forum' => t('Mostly Public'), 'forum_restricted' => t('Restricted'), 'forum_private' => t('Private')),
 		t('Feed Republish') => array('feed' => t('Mostly Public'), 'feed_restricted' => t('Restricted')),
 		t('Special Purpose') => array('soapbox' => t('Celebrity/Soapbox'), 'repository' => t('Group Repository')),
-		t('Other') => array('custom' => t('Custom/Expert Mode')));
+		t('Other') => array('custom' => t('Custom/Expert Mode'))
+	);
 
 	return $roles;
 }

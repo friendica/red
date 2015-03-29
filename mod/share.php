@@ -13,7 +13,6 @@ function share_init(&$a) {
 	if(! (local_channel() || remote_channel()))
 		killme();
 
-
 	$r = q("SELECT * from item left join xchan on author_xchan = xchan_hash WHERE id = %d  LIMIT 1",
 		intval($post_id)
 	);
@@ -30,13 +29,12 @@ function share_init(&$a) {
 	if(! $r)
 		killme();
 
-	// FIXME - we only share bbcode
+	/** @FIXME we only share bbcode */
 
 	if($r[0]['mimetype'] !== 'text/bbcode')
 		killme();
 
-	// FIXME - eventually we want to post remotely via rpost
-	// on your home site.
+	/** @FIXME eventually we want to post remotely via rpost on your home site */
 	// When that works remove this next bit:
 
 	if(! local_channel())
@@ -64,20 +62,20 @@ function share_init(&$a) {
 		echo $o;
 		killme();
 	}
-	
+
 	$observer = $a->get_observer();
 	$parsed = $observer['xchan_url'];
 	if($parsed) {
 		$post_url = $parsed['scheme'] . ':' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : '')
 			. '/rpost';
-		// FIXME - we were probably called from JS
-		// so we don't know the return page.
-		// in fact we won't be able to load the remote page.
-		// we might need an iframe
+
+		/**
+		 * @FIXME we were probably called from JS so we don't know the return page.
+		 * In fact we won't be able to load the remote page.
+		 * we might need an iframe
+		 */
 
 		$x = z_post_url($post_url, array('f' => '', 'body' => $o ));
 		killme();
 	}
-	
-
 }

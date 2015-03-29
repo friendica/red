@@ -52,13 +52,11 @@ define ( 'ZOT_REVISION',            1     );
 define ( 'DB_UPDATE_VERSION',       1140  );
 
 /**
- * Constant with a HTML line break.
+ * @brief Constant with a HTML line break.
  *
  * Contains a HTML line break (br) element and a real carriage return with line
  * feed for the source.
  * This can be used in HTML and JavaScript where needed a line break.
- *
- * @var string
  */
 define ( 'EOL',                    '<br>' . "\r\n"        );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z'       );
@@ -707,8 +705,6 @@ class App {
 	 *
 	 * Mostly unimplemented yet. Only options 'template_engine' and
 	 * beyond are used.
-	 *
-	 * @var array
 	 */
 	private $theme = array(
 		'sourcename' => '',
@@ -721,15 +717,11 @@ class App {
 	);
 
 	/**
-	 * array of registered template engines ('name'=>'class name')
-	 *
-	 * @var array
+	 * @brief An array of registered template engines ('name'=>'class name')
 	 */
 	public $template_engines = array();
 	/**
-	 * array of instanced template engines ('name'=>'instance')
-	 *
-	 * @var array
+	 * @brief An array of instanced template engines ('name'=>'instance')
 	 */
 	public $template_engine_instance = array();
 
@@ -806,9 +798,7 @@ class App {
 		if(substr($this->cmd, 0, 1) === '~')
 			$this->cmd = 'channel/' . substr($this->cmd, 1);
 
-
-		/**
-		 *
+		/*
 		 * Break the URL path into C style argc/argv style arguments for our
 		 * modules. Given "http://example.com/module/arg1/arg2", $this->argc
 		 * will be 3 (integer) and $this->argv will contain:
@@ -816,25 +806,22 @@ class App {
 		 *   [1] => 'arg1'
 		 *   [2] => 'arg2'
 		 *
-		 *
 		 * There will always be one argument. If provided a naked domain
 		 * URL, $this->argv[0] is set to "home".
-		 *
 		 */
 
-		$this->argv = explode('/',$this->cmd);
+		$this->argv = explode('/', $this->cmd);
 		$this->argc = count($this->argv);
-		if((array_key_exists('0',$this->argv)) && strlen($this->argv[0])) {
+		if ((array_key_exists('0', $this->argv)) && strlen($this->argv[0])) {
 			$this->module = str_replace(".", "_", $this->argv[0]);
 			$this->module = str_replace("-", "_", $this->module);
-		}
-		else {
+		} else {
 			$this->argc = 1;
 			$this->argv = array('home');
 			$this->module = 'home';
 		}
 
-		/**
+		/*
 		 * See if there is any page number information, and initialise
 		 * pagination
 		 */
@@ -846,7 +833,7 @@ class App {
 			$this->pager['start'] = 0;
 		$this->pager['total'] = 0;
 
-		/**
+		/*
 		 * Detect mobile devices
 		 */
 
@@ -858,7 +845,7 @@ class App {
 
 		BaseObject::set_app($this);
 
-		/**
+		/*
 		 * register template engines
 		 */
 		$dc = get_declared_classes();
@@ -2029,7 +2016,7 @@ function curPageURL() {
  * @return mixed
  */
 function get_custom_nav(&$a, $navname) {
-	if(! $navname)
+	if (! $navname)
 		return $a->page['nav'];
 	// load custom nav menu by name here
 }
@@ -2045,7 +2032,7 @@ function get_custom_nav(&$a, $navname) {
 function load_pdl(&$a) {
 	require_once('include/comanche.php');
 
-	if(! count($a->layout)) {
+	if (! count($a->layout)) {
 		$n = 'mod_' . $a->module . '.pdl' ;
 		$u = comanche_get_channel_id();
 		if($u)
@@ -2071,7 +2058,6 @@ function exec_pdl(&$a) {
 }
 
 
-
 /**
  * @brief build the page.
  *
@@ -2081,7 +2067,6 @@ function exec_pdl(&$a) {
  */
 function construct_page(&$a) {
 
-
 	exec_pdl($a);
 
 	$comanche = ((count($a->layout)) ? true : false);
@@ -2090,28 +2075,27 @@ function construct_page(&$a) {
 
 	$installing = false;
 
-	if($a->module == 'setup') {
+	if ($a->module == 'setup') {
 		$installing = true;
 	} else {
 		nav($a);
 	}
 
-	if($comanche) {
-
-		if($a->layout['nav']) {
+	if ($comanche) {
+		if ($a->layout['nav']) {
 			$a->page['nav'] = get_custom_nav($a, $a->layout['nav']);
 		}
 	}
 
-	if(($p = theme_include(current_theme() . '.js')) != '')
+	if (($p = theme_include(current_theme() . '.js')) != '')
 		head_add_js($p);
 
-	if(($p = theme_include('mod_' . $a->module . '.php')) != '')
+	if (($p = theme_include('mod_' . $a->module . '.php')) != '')
 		require_once($p);
 
 	require_once('include/js_strings.php');
 
-	if(x($a->page, 'template_style'))
+	if (x($a->page, 'template_style'))
 		head_add_css($a->page['template_style'] . '.css');
 	else
 		head_add_css(((x($a->page, 'template')) ? $a->page['template'] : 'default' ) . '.css');
@@ -2147,7 +2131,6 @@ function construct_page(&$a) {
 		$arr = array('module' => $a->module, 'layout' => $a->layout);
 		call_hooks('construct_page', $arr);
 		$a->layout = $arr['layout'];
-
 
 		foreach($a->layout as $k => $v) {
 			if((strpos($k, 'region_') === 0) && strlen($v)) {
@@ -2250,11 +2233,11 @@ function get_directory_realm() {
  */
 function get_directory_primary() {
 
-   $dirmode = intval(get_config('system','directory_mode'));
+	$dirmode = intval(get_config('system','directory_mode'));
 
-    if($dirmode == DIRECTORY_MODE_STANDALONE || $dirmode == DIRECTORY_MODE_PRIMARY) {
+	if($dirmode == DIRECTORY_MODE_STANDALONE || $dirmode == DIRECTORY_MODE_PRIMARY) {
 		return z_root();
-    }
+	}
 
 	if($x = get_config('system', 'directory_primary'))
 		return $x;
@@ -2263,13 +2246,11 @@ function get_directory_primary() {
 }
 
 
-
 /**
- * @brief return relative date of last completed poller execution
+ * @brief return relative date of last completed poller execution.
  */
-
 function get_poller_runtime() {
-	$t = get_config('system','lastpoll');
+	$t = get_config('system', 'lastpoll');
 	return relative_date($t);
 }
 
@@ -2303,7 +2284,12 @@ function z_check_cert() {
 } 
 
 
-
+/**
+ * @brief Send email to admin if server has an invalid certificate.
+ *
+ * If a RedMatrix hub is available over https it must have a publicly valid
+ * certificate.
+ */
 function cert_bad_email() {
 
 	$a = get_app();
@@ -2320,13 +2306,12 @@ function cert_bad_email() {
 		'From: Administrator' . '@' . $a->get_hostname() . "\n"
 		. 'Content-type: text/plain; charset=UTF-8' . "\n"
 		. 'Content-transfer-encoding: 8bit' );
-
 }
 
 
-// send warnings every 3-5 days if cron is not running.
-
-
+/**
+ * @brief Send warnings every 3-5 days if cron is not running.
+ */
 function check_cron_broken() {
 
 	$t = get_config('system','lastpollcheck');

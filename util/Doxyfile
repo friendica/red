@@ -1,4 +1,4 @@
-INPUT = index.php boot.php mod/ include/ setup/ util/ view/
+INPUT = README.md index.php boot.php mod/ include/ util/ view/ version.inc
 RECURSIVE = YES
 PROJECT_NAME = "The RedMatrix"
 PROJECT_LOGO = images/rm-64.png
@@ -12,9 +12,12 @@ GENERATE_LATEX = NO
 EXTRACT_ALL = YES
 EXTRACT_PRIVATE = YES
 GENERATE_TODOLIST = YES
-USE_MDFILE_AS_MAINPAGE = README
+USE_MDFILE_AS_MAINPAGE = README.md
 REFERENCED_BY_RELATION = YES
 GENERATE_TREEVIEW = YES
 HTML_FOOTER = util/Doxygen.footer
 ALIASES += "license=@par License:\n"
 ALIASES += "fixme=\xrefitem fixme \"Fixme\" \"Fixme List\""
+ALIASES += "FIXME=\fixme"
+ALIASES += "TODO=\todo"
+ALIASES += "BUG=\bug"

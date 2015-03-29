@@ -1,6 +1,14 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/event.php
+ */
 
-
+/**
+ * @brief Returns an event as HTML
+ *
+ * @param array $ev
+ * @return string
+ */
 function format_event_html($ev) {
 
 	require_once('include/bbcode.php');
@@ -12,13 +20,12 @@ function format_event_html($ev) {
 
 	$o = '<div class="vevent">' . "\r\n";
 
-
 	$o .= '<p class="summary event-summary">' . bbcode($ev['summary']) .  '</p>' . "\r\n";
 
 	$o .= '<p class="description event-description">' . bbcode($ev['description']) .  '</p>' . "\r\n";
 
 	$o .= '<p class="event-start">' . t('Starts:') . ' <abbr class="dtstart" title="'
-		. datetime_convert('UTC','UTC',$ev['start'], (($ev['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
+		. datetime_convert('UTC', 'UTC', $ev['start'], (($ev['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
 		. '" >' 
 		. (($ev['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), 
 			$ev['start'] , $bd_format ))
@@ -38,13 +45,13 @@ function format_event_html($ev) {
 
 	if(strlen($ev['location']))
 		$o .= '<p class="event-location"> ' . t('Location:') . ' <span class="location">' 
-			. bbcode($ev['location']) 
+			. bbcode($ev['location'])
 			. '</span></p>' . "\r\n";
 
 	$o .= '</div>' . "\r\n";
+
 	return $o;
 }
-
 
 
 function ical_wrapper($ev) {
@@ -56,7 +63,7 @@ function ical_wrapper($ev) {
 	$o .= "\nVERSION:2.0";
 	$o .= "\nMETHOD:PUBLISH";
 	$o .= "\nPRODID:-//" . get_config('system','sitename') . "//" . RED_PLATFORM . "//" . strtoupper(get_app()->language). "\n";
-	if(array_key_exists('start',$ev))
+	if(array_key_exists('start', $ev))
 		$o .= format_event_ical($ev);
 	else {
 		foreach($ev as $e) {
@@ -84,13 +91,15 @@ function format_event_ical($ev) {
 	if($ev['description']) 
 		$o .= "\nDESCRIPTION:" . format_ical_text($ev['description']);
 	$o .= "\nEND:VEVENT\n";
+
 	return $o;
 }
 
-function format_ical_text($s) {
 
+function format_ical_text($s) {
 	require_once('include/bbcode.php');
 	require_once('include/html2plain.php');
+
 	return(wordwrap(html2plain(bbcode($s)),72,"\n ",true));
 }
 
@@ -117,16 +126,16 @@ function format_event_bbcode($ev) {
 	if($ev['adjust'])
 		$o .= '[event-adjust]' . $ev['adjust'] . '[/event-adjust]';
 
-
 	return $o;
-
 }
+
 
 function bbtovcal($s) {
 	$o = '';
 	$ev = bbtoevent($s);
 	if($ev['description'])
 		$o = format_event_html($ev);
+
 	return $o;
 }
 
@@ -154,27 +163,41 @@ function bbtoevent($s) {
 	if(preg_match("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",$s,$match))
 		$ev['adjust'] = $match[1];
 	$ev['nofinish'] = (((x($ev, 'start') && $ev['start']) && (!x($ev, 'finish') || !$ev['finish'])) ? 1 : 0);
-	return $ev;
 
+	return $ev;
 }
 
-
+/**
+ * @brief Sorts the given array of events by date.
+ *
+ * @see ev_compare()
+ * @param array $arr
+ * @return sorted array
+ */
 function sort_by_date($arr) {
-	if(is_array($arr))
-		usort($arr,'ev_compare');
+	if (is_array($arr))
+		usort($arr, 'ev_compare');
+
 	return $arr;
 }
 
-
-function ev_compare($a,$b) {
+/**
+ * @brief Compare function for events.
+ *
+ * @see sort_by_date()
+ * @param array $a
+ * @param array $b
+ * @return number return values like strcmp()
+ */
+function ev_compare($a, $b) {
 
 	$date_a = (($a['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$a['start']) : $a['start']);
 	$date_b = (($b['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$b['start']) : $b['start']);
 
-	if($date_a === $date_b)
-		return strcasecmp($a['description'],$b['description']);
-	
-	return strcmp($date_a,$date_b);
+	if ($date_a === $date_b)
+		return strcasecmp($a['description'], $b['description']);
+
+	return strcmp($date_a, $date_b);
 }
 
 
@@ -182,10 +205,8 @@ function event_store_event($arr) {
 
 	$arr['created']     = (($arr['created'])     ? $arr['created']     : datetime_convert());
 	$arr['edited']      = (($arr['edited'])      ? $arr['edited']      : datetime_convert());
-	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );	
+	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );
 	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
-
-
 
 	// Existing event being modified
 
@@ -206,7 +227,6 @@ function event_store_event($arr) {
 			);
 		}
 
-
 		if(! $r)
 			return false;
 
@@ -216,7 +236,7 @@ function event_store_event($arr) {
 		}
 
 		$hash = $r[0]['event_hash'];
-		
+
 		// The event changed. Update it.
 
 		$r = q("UPDATE `event` SET
@@ -251,13 +271,11 @@ function event_store_event($arr) {
 			intval($r[0]['id']),
 			intval($arr['uid'])
 		);
-	}
-	else {
+	} else {
 
-		// New event. Store it. 
+		// New event. Store it.
 
 		$hash = random_string();
-
 
 		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
 			adjust,nofinish,allow_cid,allow_gid,deny_cid,deny_gid)
@@ -280,7 +298,6 @@ function event_store_event($arr) {
 			dbesc($arr['allow_gid']),
 			dbesc($arr['deny_cid']),
 			dbesc($arr['deny_gid'])
-
 		);
 	}
 
@@ -292,7 +309,6 @@ function event_store_event($arr) {
 		return $r[0];
 
 	return false;
-
 }
 
 function event_addtocal($item_id, $uid) {
@@ -339,21 +355,20 @@ function event_addtocal($item_id, $uid) {
 				intval($item['id']),
 				intval($channel['channel_id'])
 			);
+
 			return true;
 		}
 	}
+
 	return false;
 }
 
 
-
-function event_store_item($arr,$event) {
+function event_store_item($arr, $event) {
 
 	require_once('include/datetime.php');
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
-
-	$a = get_app();
 
 	$item = null;
 
@@ -370,28 +385,28 @@ function event_store_item($arr,$event) {
 
 	$item_arr = array();
 	$prefix = '';
-	$birthday = false;
+//	$birthday = false;
 
 	if($event['type'] === 'birthday') {
 		$prefix =  t('This event has been added to your calendar.');
-		$birthday = true;
+//		$birthday = true;
 
 		// The event is created on your own site by the system, but appears to belong 
 		// to the birthday person. It also isn't propagated - so we need to prevent
 		// folks from trying to comment on it. If you're looking at this and trying to 
 		// fix it, you'll need to completely change the way birthday events are created
-		// and send them out from the source. This has its own issues. 
+		// and send them out from the source. This has its own issues.
 
 		$item_arr['comment_policy'] = 'none';
 	}
 
 	$r = q("SELECT * FROM item left join xchan on author_xchan = xchan_hash WHERE resource_id = '%s' AND resource_type = 'event' and uid = %d LIMIT 1",
-        dbesc($event['event_hash']),
+		dbesc($event['event_hash']),
 		intval($arr['uid'])
 	);
 
 	if($r) {
-		$obj = json_encode(array(
+		$object = json_encode(array(
 			'type'    => ACTIVITY_OBJ_EVENT,
 			'id'      => z_root() . '/event/' . $r[0]['resource_id'],
 			'title'   => $arr['summary'],
@@ -424,8 +439,7 @@ function event_store_item($arr,$event) {
 			intval($arr['uid'])
 		);
 
-
-		$s = q("delete from term where oid = %d and otype = %d",
+		q("delete from term where oid = %d and otype = %d",
 			intval($r[0]['id']),
 			intval(TERM_OBJ_POST)
 		);
@@ -442,21 +456,19 @@ function event_store_item($arr,$event) {
 					dbesc($t['url'])
 				);
 			}
-		}	
+		}
 
 		$item_id = $r[0]['id'];
 		call_hooks('event_updated', $event['id']);
+
 		return $item_id;
-	}
-	else {
+	} else {
 
 		$z = q("select * from channel where channel_id = %d limit 1",
 			intval($arr['uid'])
 		);
 
-
 		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
-				
 
 		if($item) {
 			$item_arr['id'] = $item['id'];
@@ -469,8 +481,7 @@ function event_store_item($arr,$event) {
 				$item_flags |= ITEM_WALL;
 				$item_flags |= ITEM_ORIGIN;
 			}
-			$item_arr['item_flags']    = $item_flags;
-
+			$item_arr['item_flags'] = $item_flags;
 		}
 
 		if(! $arr['mid'])
@@ -482,7 +493,6 @@ function event_store_item($arr,$event) {
 		$item_arr['mid']           = $arr['mid'];
 		$item_arr['parent_mid']    = $arr['mid'];
 
-
 		$item_arr['owner_xchan']   = (($wall) ? $z[0]['channel_hash'] : $arr['event_xchan']);
 		$item_arr['author_xchan']  = $arr['event_xchan'];
 		$item_arr['title']         = $arr['summary'];
@@ -493,9 +503,8 @@ function event_store_item($arr,$event) {
 		$item_arr['item_private']  = $private;
 		$item_arr['verb']          = ACTIVITY_POST;
 
-
-		if(array_key_exists('term',$arr))
-			$item_arr['term'] = $arr['term']; 
+		if(array_key_exists('term', $arr))
+			$item_arr['term'] = $arr['term'];
 
 		$item_arr['resource_type'] = 'event';
 		$item_arr['resource_id']   = $event['event_hash'];
@@ -512,15 +521,13 @@ function event_store_item($arr,$event) {
 		else
 			$item_arr['plink'] = z_root() . '/display/' . $item_arr['mid'];
 
-
 		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
 				dbesc($arr['event_xchan'])
 		);
 		if($x) {
-
 			$item_arr['object'] = json_encode(array(
 				'type'    => ACTIVITY_OBJ_EVENT,
-				'id'      => z_root() . '/event/' . $hash,
+				'id'      => z_root() . '/event/' . $event['event_hash'],
 				'title'   => $arr['summary'],
 				'content' => format_event_bbcode($arr),
 				'author'  => array(
@@ -539,7 +546,7 @@ function event_store_item($arr,$event) {
 
 		$item_id = $res['item_id'];
 
-		call_hooks("event_created", $event['id']);
+		call_hooks('event_created', $event['id']);
 
 		return $item_id;
 	}

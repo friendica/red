@@ -1044,7 +1044,6 @@ function builtin_activity_puller($item, &$conv_responses) {
 			return;
 		}
 	}
-
 }
 
 
@@ -1053,7 +1052,7 @@ function builtin_activity_puller($item, &$conv_responses) {
  *
  * @param int $cnt number of people who like/dislike the item
  * @param array $arr array of pre-linked names of likers/dislikers
- * @param string $typ eone of 'like, 'dislike'
+ * @param string $type one of 'like, 'dislike'
  * @param int $id item id
  * @return string formatted text
  */
@@ -1145,7 +1144,6 @@ function status_editor($a, $x, $popup = false) {
 		'$whereareu' => t('Where are you right now?'),
 		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM')
 	));
-
 
 	$tpl = get_markup_template('jot.tpl');
 
@@ -1461,8 +1459,8 @@ function network_tabs() {
 
 	if ($no_active=='active' && x($_GET,'order')) {
 		switch($_GET['order']){
-		 case 'post': $postord_active = 'active'; $no_active=''; break;
-		 case 'comment' : $all_active = 'active'; $no_active=''; break;
+			case 'post': $postord_active = 'active'; $no_active=''; break;
+			case 'comment' : $all_active = 'active'; $no_active=''; break;
 		}
 	}
 

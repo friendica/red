@@ -1,45 +1,51 @@
 <?php
+/**
+ * @file mod/id.php
+ * @brief OpenID implementation
+ */
 
-	require 'library/openid/provider/provider.php';
-
-
-
-	$attrMap = array(
-        'namePerson/first'       => t('First Name'),
-        'namePerson/last'        => t('Last Name'),
-        'namePerson/friendly'    => t('Nickname'),
-		'namePerson'             => t('Full Name'),
-		'contact/internet/email' => t('Email'),
-		'contact/email'          => t('Email'),
-		'media/image/aspect11'   => t('Profile Photo'),
-		'media/image'            => t('Profile Photo'),
-		'media/image/default'    => t('Profile Photo'),
-		'media/image/16x16'      => t('Profile Photo 16px'),
-		'media/image/32x32'      => t('Profile Photo 32px'),
-		'media/image/48x48'      => t('Profile Photo 48px'),
-		'media/image/64x64'      => t('Profile Photo 64px'),
-		'media/image/80x80'      => t('Profile Photo 80px'),
-		'media/image/128x128'    => t('Profile Photo 128px'),
-		'timezone'               => t('Timezone'),
-		'contact/web/default'    => t('Homepage URL'),
-		'language/pref'          => t('Language'),
-		'birthDate/birthYear'    => t('Birth Year'),
-		'birthDate/birthMonth'   => t('Birth Month'),
-		'birthDate/birthday'     => t('Birth Day'),
-		'birthDate'              => t('Birthdate'),
-		'gender'                 => t('Gender'),
-	);
+require 'library/openid/provider/provider.php';
 
 
+$attrMap = array(
+	'namePerson/first'       => t('First Name'),
+	'namePerson/last'        => t('Last Name'),
+	'namePerson/friendly'    => t('Nickname'),
+	'namePerson'             => t('Full Name'),
+	'contact/internet/email' => t('Email'),
+	'contact/email'          => t('Email'),
+	'media/image/aspect11'   => t('Profile Photo'),
+	'media/image'            => t('Profile Photo'),
+	'media/image/default'    => t('Profile Photo'),
+	'media/image/16x16'      => t('Profile Photo 16px'),
+	'media/image/32x32'      => t('Profile Photo 32px'),
+	'media/image/48x48'      => t('Profile Photo 48px'),
+	'media/image/64x64'      => t('Profile Photo 64px'),
+	'media/image/80x80'      => t('Profile Photo 80px'),
+	'media/image/128x128'    => t('Profile Photo 128px'),
+	'timezone'               => t('Timezone'),
+	'contact/web/default'    => t('Homepage URL'),
+	'language/pref'          => t('Language'),
+	'birthDate/birthYear'    => t('Birth Year'),
+	'birthDate/birthMonth'   => t('Birth Month'),
+	'birthDate/birthday'     => t('Birth Day'),
+	'birthDate'              => t('Birthdate'),
+	'gender'                 => t('Gender'),
+);
 
+
+/**
+ * @brief Entrypoint for the OpenID implementation.
+ *
+ * @param App &$a
+ */
 function id_init(&$a) {
 
-	logger('id: ' . print_r($_REQUEST,true));
+	logger('id: ' . print_r($_REQUEST, true));
 
-
-	if(argc() > 1)
+	if(argc() > 1) {
 		$which = argv(1);
-	else {
+	} else {
 		$a->error = 404;
 		return;
 	}
@@ -48,41 +54,45 @@ function id_init(&$a) {
 	$channel = $a->get_channel();
 	profile_load($a,$which,$profile);
 
-
-
 	$op = new MysqlProvider;
 	$op->server();
-
 }
 
-
-function getUserData($handle=null) {
-	if(! local_channel()) {
+/**
+ * @brief Returns user data needed for OpenID.
+ *
+ * If no $handle is provided we will use local_channel() by default.
+ *
+ * @param string $handle (default null)
+ * @return boolean|array
+ */
+function getUserData($handle = null) {
+	if (! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		get_app()->page['content'] =  login();
+
 		return false;
 	}
 
 //	logger('handle: ' . $handle);
 
-	if($handle) {
+	if ($handle) {
 		$r = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_address = '%s' limit 1",
 			dbesc($handle)
 		);
-	}
-	else {
+	} else {
 		$r = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_id = %d",
 			intval(local_channel())
 		);
 	}
 
-	if(! r)
+	if (! r)
 		return false;
 
 	$x = q("select * from account where account_id = %d limit 1", 
 		intval($r[0]['channel_account_id'])
 	);
-	if($x)
+	if ($x)
 		$r[0]['email'] = $x[0]['account_email'];
 
 	$p = q("select * from profile where is_default = 1 and uid = %d limit 1",
@@ -90,11 +100,11 @@ function getUserData($handle=null) {
 	);
 
 	$gender = '';
-	if($p[0]['gender'] == t('Male'))
+	if ($p[0]['gender'] == t('Male'))
 		$gender = 'M';
-	if($p[0]['gender'] == t('Female'))
+	if ($p[0]['gender'] == t('Female'))
 		$gender = 'F';
-		
+
 	$r[0]['firstName'] = ((strpos($r[0]['channel_name'],' ')) ? substr($r[0]['channel_name'],0,strpos($r[0]['channel_name'],' ')) : $r[0]['channel_name']);
 	$r[0]['lastName'] = ((strpos($r[0]['channel_name'],' ')) ? substr($r[0]['channel_name'],strpos($r[0]['channel_name'],' ')+1) : '');
 	$r[0]['namePerson'] = $r[0]['channel_name'];
@@ -113,7 +123,7 @@ function getUserData($handle=null) {
 	$r[0]['birthday'] = ((intval(substr($p[0]['dob'],8,2))) ? intval(substr($p[0]['dob'],8,2)) : '');
 	$r[0]['birthdate'] = (($r[0]['birthyear'] && $r[0]['birthmonth'] && $r[0]['birthday']) ? $p[0]['dob'] : '');
 	$r[0]['gender'] = $gender;
-	
+
 	return $r[0];
 
 /*
@@ -144,20 +154,20 @@ function getUserData($handle=null) {
 }
 
 
-
-
-class MysqlProvider extends LightOpenIDProvider
-{
-
+/**
+ * @brief MySQL provider for OpenID implementation.
+ *
+ */
+class MysqlProvider extends LightOpenIDProvider {
 
 	// See http://openid.net/specs/openid-attribute-properties-list-1_0-01.html
 	// This list contains a few variations of these attributes to maintain 
 	// compatibility with legacy clients
 
-    private $attrFieldMap = array(
-        'namePerson/first'       => 'firstName',
-        'namePerson/last'        => 'lastName',
-        'namePerson/friendly'    => 'channel_address',
+	private $attrFieldMap = array(
+		'namePerson/first'       => 'firstName',
+		'namePerson/last'        => 'lastName',
+		'namePerson/friendly'    => 'channel_address',
 		'namePerson'             => 'namePerson',
 		'contact/internet/email' => 'email',
 		'contact/email'          => 'email',
@@ -178,11 +188,9 @@ class MysqlProvider extends LightOpenIDProvider
 		'birthDate/birthday'     => 'birthday',
 		'birthDate'              => 'birthdate',
 		'gender'                 => 'gender',
-        );
-  
-  
-    function setup($identity, $realm, $assoc_handle, $attributes)
-    {
+	);
+
+	function setup($identity, $realm, $assoc_handle, $attributes) {
 		global $attrMap;
 
 //		logger('identity: ' . $identity);
@@ -190,10 +198,10 @@ class MysqlProvider extends LightOpenIDProvider
 //		logger('assoc_handle: ' . $assoc_handle);
 //		logger('attributes: ' . print_r($attributes,true));
 
-        $data = getUserData($assoc_handle);
+		$data = getUserData($assoc_handle);
 
 
-// FIXME this needs to be a template with localised strings
+/** @FIXME this needs to be a template with localised strings */
 
         $o .= '<form action="" method="post">'
            . '<input type="hidden" name="openid.assoc_handle" value="' . $assoc_handle . '">'
@@ -203,7 +211,7 @@ class MysqlProvider extends LightOpenIDProvider
         if($attributes['required'] || $attributes['optional']) {
             $o .= " It also requests following information (required fields marked with *):"
                . '<ul>';
-            
+
             foreach($attributes['required'] as $attr) {
                 if(isset($this->attrMap[$attr])) {
                     $o .= '<li>'
@@ -211,7 +219,7 @@ class MysqlProvider extends LightOpenIDProvider
                        . $this->attrMap[$attr] . ' <span class="required">*</span></li>';
                 }
             }
-            
+
             foreach($attributes['optional'] as $attr) {
                 if(isset($this->attrMap[$attr])) {
                     $o .= '<li>'
@@ -228,27 +236,23 @@ class MysqlProvider extends LightOpenIDProvider
            . '</form>';
 
 		get_app()->page['content'] .= $o;
+	}
 
-    }
-    
-    function checkid($realm, &$attributes)
-    {
+	function checkid($realm, &$attributes) {
 
 		logger('checkid: ' . $realm);
-
 		logger('checkid attrs: ' . print_r($attributes,true));
 
+		if(isset($_POST['cancel'])) {
+			$this->cancel();
+		}
 
-        if(isset($_POST['cancel'])) {
-            $this->cancel();
-        }
-        
-        $data = getUserData();
-        if(! $data) {
-            return false;
-        }
+		$data = getUserData();
+		if(! $data) {
+			return false;
+		}
 
-		$q = get_pconfig(local_channel(),'openid',$realm);
+		$q = get_pconfig(local_channel(), 'openid', $realm);
 
 		$attrs = array();
 		if($q) {
@@ -265,57 +269,42 @@ class MysqlProvider extends LightOpenIDProvider
                 $attributes[$attr] = $data[$this->attrFieldMap[$attr]];
             }
         }
-        
-        if(isset($_POST['always'])) {
-			set_pconfig(local_channel(),'openid',$realm,array_keys($attributes));
-        }
-  
-		return z_root() . '/id/' . $data['channel_address'];      
-    }
-    
-    function assoc_handle()
-    {
-	logger('assoc_handle');
-		$channel = get_app()->get_channel();
-		return z_root() . '/channel/' . $channel['channel_address']; 
 
-    }
-    
-    function setAssoc($handle, $data)
-    {
+		if(isset($_POST['always'])) {
+			set_pconfig(local_channel(),'openid',$realm,array_keys($attributes));
+		}
+
+		return z_root() . '/id/' . $data['channel_address'];
+	}
+
+	function assoc_handle() {
+		logger('assoc_handle');
+		$channel = get_app()->get_channel();
+
+		return z_root() . '/channel/' . $channel['channel_address']; 
+	}
+
+	function setAssoc($handle, $data) {
 		logger('setAssoc');
 		$channel = channelx_by_nick(basename($handle));
 		if($channel)
 			set_pconfig($channel['channel_id'],'openid','associate',$data);
-    }
-    
-    function getAssoc($handle)
-    {
+	}
+
+	function getAssoc($handle) {
 		logger('getAssoc: ' . $handle);
 
 		$channel = channelx_by_nick(basename($handle));
 		if($channel)
-			return get_pconfig($channel['channel_id'],'openid','associate');
+			return get_pconfig($channel['channel_id'], 'openid', 'associate');
+
 		return false;
-    }
-    
-    function delAssoc($handle)
-    {
+	}
+
+	function delAssoc($handle) {
 		logger('delAssoc');
 		$channel = channelx_by_nick(basename($handle));
 		if($channel)
-			return del_pconfig($channel['channel_id'],'openid','associate');
-    }
-    
+			return del_pconfig($channel['channel_id'], 'openid', 'associate');
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
