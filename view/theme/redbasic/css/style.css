@@ -346,6 +346,7 @@ footer {
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
 	border-radius: $radiuspx;
+	word-wrap: break-word;
 }
 
 .vcard dl  {
