@@ -46,9 +46,6 @@ function get_features() {
 			array('nav_channel_select',  t('Navigation Channel Select'), t('Change channels directly from within the navigation dropdown menu'),false),
 			array('photo_location',       t('Photo Location'),          t('If location data is available on uploaded photos, link this to a map.'),false),
 
-
-			//FIXME - needs a description, but how the hell do we explain this to normals?
-			array('sendzid',		t('Extended Identity Sharing'),	t('Share your identity with all websites on the internet. When disabled, identity is only shared with sites in the matrix.'),false),
 			array('expert',       t('Expert Mode'),                 t('Enable Expert Mode to provide advanced configuration options'),false),
 			array('premium_channel', t('Premium Channel'), t('Allows you to set restrictions and terms on those that connect with your channel'),false),
 		),
@@ -62,7 +59,7 @@ function get_features() {
 			array('channel_sources', t('Channel Sources'),          t('Automatically import channel content from other channels or feeds'),false),
 			array('content_encrypt', t('Even More Encryption'),          t('Allow optional encryption of content end-to-end with a shared secret key'),false),
 			array('consensus_tools', t('Enable voting tools'),      t('Provide a class of post which others can vote on'),false),
-			array('adult_photo_flagging', t('Flag Adult Photos'),   t('Provide photo edit option to hide adult photos from default album view'),false), 
+
 		),
 
 		// Network Tools
