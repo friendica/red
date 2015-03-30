@@ -698,6 +698,57 @@ function diaspora_request($importer,$xml) {
 		return;
 	}
 
+
+//FIXME
+/*
+	if(feature_enabled($channel['channel_id'],'premium_channel')) {
+		$myaddr = $importer['channel_address'] . '@' .  get_app()->get_hostname();
+		$cnv = random_string();
+		$mid = random_string();
+
+		$msg = t('You have started sharing with a Redmatrix premium channel.');
+		$msg .= t('Redmatrix premium channels are not available for sharing with Diaspora members. This sharing request has been blocked.') . "\r";
+		$msg .= t('Please do not reply to this message, as this channel is not sharing with you and any reply will not be seen by the recipient.') . "\r";
+
+		$created = datetime_convert('UTC','UTC',$item['created'],'Y-m-d H:i:s \U\T\C');
+		$signed_text =  $mid . ';' . $cnv . ';' . $msg .  ';'
+        . $created . ';' . $myaddr . ';' . $cnv;
+
+		$sig = base64_encode(rsa_sign($signed_text,$importer['channel_prvkey'],'sha256'));
+
+		$conv = array(
+			'guid' => xmlify($cnv),
+			'subject' => xmlify(t('Sharing request failed.')),
+			'created_at' => xmlify($created),
+			'diaspora_handle' => xmlify($myaddr),
+			'participant_handles' => xmlify($myaddr . ';' . $sender_handle)
+		);
+
+		$msg = array(
+			'guid' => xmlify($mid),
+			'parent_guid' => xmlify($cnv),
+			'parent_author_signature' => xmlify($sig),
+			'author_signature' => xmlify($sig),
+			'text' => xmlify($msg),
+			'created_at' => xmlify($created),
+			'diaspora_handle' => xmlify($myaddr),
+			'conversation_guid' => xmlify($cnv)
+		);
+
+		$conv['messages'] = array($msg);
+		$tpl = get_markup_template('diaspora_conversation.tpl');
+		$xmsg = replace_macros($tpl, array('$conv' => $conv));
+
+		$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($xmsg,$importer,$ret,$importer['channel_prvkey'],$ret['xchan_pubkey'],false)));
+
+		diaspora_transmit($importer,$ret,$slap,false);
+		return;
+	}
+
+*/
+// End FIXME
+
+
 	$role = get_pconfig($channel['channel_id'],'system','permissions_role');
 	if($role) {
 		$x = get_role_perms($role);
