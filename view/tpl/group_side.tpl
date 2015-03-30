@@ -15,10 +15,9 @@
 				<a{{if $group.selected}} class="group-selected"{{/if}} href="{{$group.href}}">{{$group.text}}</a>
 			</li>
 			{{/foreach}}
-			<li>
-				<a href="group/new">{{$createtext}}</a>
-			</li>
 		</ul>
+		<a href="group/new" class="btn btn-default" title="{{$createtext}}" ><i class="icon-plus"></i></a>
+
 	</div>
 </div>
 
