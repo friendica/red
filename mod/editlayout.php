@@ -170,7 +170,7 @@ function editlayout_content(&$a) {
 		'$acl'                 => '', 
 		'$bang'                => '',
 		'$profile_uid'         => (intval($owner)),
-		'$preview'             => true, // ((feature_enabled($uid,'preview')) ? t('Preview') : ''),
+		'$preview'             => t('Preview'),
 		'$jotplugins'          => $jotplugins,
 		'$sourceapp'           => t($a->sourcename),
 		'$defexpire'           => '',
