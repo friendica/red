@@ -324,7 +324,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 	if($conv) {
-		$sql_extra .= sprintf(" AND parent IN (SELECT distinct(parent) from item where ( author_xchan like '%s' or ( item_flags & %d ) > 0)) ",
+		$sql_extra .= sprintf(" AND parent IN (SELECT distinct(parent) from item where ( author_xchan like '%s' or ( item_flags & %d ) > 0) and item_restrict = 0 ) ",
 			dbesc(protect_sprintf($channel['channel_hash'])),
 			intval(ITEM_MENTIONSME)
 		);
