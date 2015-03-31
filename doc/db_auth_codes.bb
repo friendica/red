@@ -1,3 +1,6 @@
+
+OAuth2 authorisation register - currently implemented but unused
+
 [table]
 [tr][th]Field[/th][th]Description[/th][th]Type[/th][th]Null[/th][th]Key[/th][th]Default[/th][th]Extra
 [/th][/tr]
