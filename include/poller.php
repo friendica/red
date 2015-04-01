@@ -174,7 +174,7 @@ function poller_run($argv, $argc){
 			);
 
 			$dirmode = intval(get_config('system','directory_mode'));
-			if($dirmode === DIRECTORY_MODE_SECONDARY) {
+			if($dirmode === DIRECTORY_MODE_SECONDARY || $dirmode === DIRECTORY_MODE_PRIMARY) {
 				logger('regdir: ' . print_r(z_fetch_url(get_directory_primary() . '/regdir?f=&url=' . urlencode(z_root()) . '&realm=' . urlencode(get_directory_realm())),true));
 			}
 

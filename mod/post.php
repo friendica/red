@@ -622,7 +622,7 @@ function post_post(&$a) {
 			dbesc($data['callback'])
 		);
 		if($r) {
-			logger('mod_zot: succesful pickup message received from ' . $data['callback'] . ' ' . count($r) . ' message(s) picked up', LOGGER_DEBUG);
+			logger('mod_zot: successful pickup message received from ' . $data['callback'] . ' ' . count($r) . ' message(s) picked up', LOGGER_DEBUG);
 
 			$ret['success'] = true;
 			$ret['pickup'] = array();
@@ -919,6 +919,10 @@ function post_post(&$a) {
 	}
 
 	if ($msgtype === 'notify') {
+
+		logger('notify received from ' . $hub['hubloc_url']);
+
+
 		$async = get_config('system','queued_fetch');
 
 		if ($async) {

@@ -50,7 +50,8 @@ function regdir_init(&$a) {
 	if ($url) {
 		$m = parse_url($url);
 
-		if ((! $m) || (! @dns_get_record($m['host'], DNS_A + DNS_CNAME + DNS_PTR)) || (! filter_var($m['host'], FILTER_VALIDATE_IP) )) {
+		if ((! $m) || ((! @dns_get_record($m['host'], DNS_A + DNS_CNAME + DNS_PTR)) && (! filter_var($m['host'], FILTER_VALIDATE_IP) ))) {
+
 			$result['message'] = 'unparseable url';
 			json_return_and_die($result);
 		}
@@ -62,10 +63,12 @@ function regdir_init(&$a) {
 				$x = import_xchan($j);
 				if($x['success']) {
 					$result['success'] = true;
-					json_return_and_die($result);
 				}
 			}
 		}
+
+		if(! $result['success'])
+			$valid = 0;
 
 		q("update site set site_valid = %d where site_url = '%s' limit 1",
 			intval($valid),
@@ -75,11 +78,11 @@ function regdir_init(&$a) {
 		json_return_and_die($result);
 	} else {
 
-		// We can put this in the sql without the condition after 31 april 2015 assuming
+		// We can put this in the sql without the condition after 31 august 2015 assuming
 		// most directory servers will have updated by then
 		// This just makes sure it happens if I forget
 
-		$sql_extra = ((datetime_convert() > datetime_convert('UTC','UTC','2015-04-31')) ? ' and site_valid = 1 ' : '' );
+		$sql_extra = ((datetime_convert() > datetime_convert('UTC','UTC','2015-08-31')) ? ' and site_valid = 1 ' : '' );
 		if ($dirmode == DIRECTORY_MODE_STANDALONE) {
 			$r = array(array('site_url' => z_root()));
 		} else {
