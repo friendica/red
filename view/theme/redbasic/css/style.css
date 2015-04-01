@@ -785,7 +785,7 @@ a.rateme, div.rateme {
 	height: 20px;
 	margin: 15px;
 	padding: 0px 5px 0px 5px;
-	border-radius: 10px;
+	border-radius: $radiuspx;
 	border-color: $nav_bd;
 	background-color: $search_background;
     	transition: background-color 300ms ease 0s;
