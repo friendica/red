@@ -88,6 +88,20 @@ function home_content(&$a, $update = 0, $load = false) {
 		if($r) {
 			xchan_query($r);
 			$r = fetch_post_tags($r,true);
+
+			if($r[0]['layout_mid']) {
+				$l = q("select body from item where mid = '%s' and uid = %d limit 1",
+					dbesc($r[0]['layout_mid']),
+					intval($u[0]['channel_id'])
+				);
+
+				if($l) {
+					require_once('include/comanche.php');
+					comanche_parser($a,$l[0]['body']);
+					$a->pdl = $l[0]['body'];
+				}
+			}
+
 			$a->profile = array('profile_uid' => $u[0]['channel_id']);
 			$a->profile_uid = $u[0]['channel_id'];
 			$o .= prepare_page($r[0]);

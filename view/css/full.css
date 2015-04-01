@@ -9,4 +9,5 @@ header #banner {
 section {
 	display: block;
 	min-height: 112px;	
+	margin: 50px 10px;
 }
