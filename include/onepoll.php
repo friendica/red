@@ -125,7 +125,7 @@ function onepoll_run($argv, $argc){
 
 		if(($x) && ($x['success'])) {
 			$total = 0;
-			logger('onepoll: feed update ' . $contact['xchan_name']);
+			logger('onepoll: feed update ' . $contact['xchan_name'] . ' ' . $feedurl);
 
 			$j = json_decode($x['body'],true);
 			if($j['success'] && $j['messages']) {
