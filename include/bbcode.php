@@ -668,6 +668,17 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 			"<br /><strong class=".'"spoiler"'.">" . $t_wrote . "</strong><blockquote class=".'"spoiler"'.">$2</blockquote>",
 			$Text);
 
+
+	$endlessloop = 0;
+	while ((strpos($Text, "[/open]")!== false)  and (strpos($Text, "[open=") !== false) and (++$endlessloop < 20)) {
+		$rnd = mt_rand();
+		$Text = preg_replace("/\[open=(.*?)\](.*?)\[\/open\]/ism",
+			"<br /><div onclick=\"openClose('opendiv-" . $rnd . "');return false;\" class=\"fakelink\">$1</div><div id=\"opendiv-" . $rnd . "\" style=\"display: none;\">$2</div>",
+			$Text);
+	}
+
+
+
 	// Declare the format for [quote] layout
 	$QuoteLayout = '<blockquote>$1</blockquote>';
 
