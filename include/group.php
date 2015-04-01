@@ -297,7 +297,7 @@ function group_side($every="connections",$each="group",$edit = false, $group_id 
 	$o = replace_macros($tpl, array(
 		'$title'		=> t('Collections'),
 		'$edittext'     => t('Edit collection'),
-		'$createtext' 	=> t('New collection'),
+		'$createtext' 	=> t('Add new collection'),
 		'$ungrouped'    => (($every === 'contacts') ? t('Channels not in any collection') : ''),
 		'$groups'		=> $groups,
 		'$add'			=> t('add'),
