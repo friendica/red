@@ -1,6 +1,6 @@
 ![the Red Matrix](images/rm.png)
 
-Note: please update your repository pointers to https://github.com/redmatrix/redmatrix .
+Note: please update your repository pointers to https://github.com/redmatrix/hubzilla .
 
 One of the traditional problems with independent publishing on the internet has always been the fact that independent publishers often operate as isolated islands within their own website, and spend most of their resources attracting visitors. The rise of corporate providers and social networking services alleviated many of these problems; however centralisation has led to a situation where your content is no longer under your direct control. It is shared fully with corporate advertisers and governments, but ironically you are now often asked to pay money to ensure that your friends can see it. What if you could have advantages of scale and connections that centralisation typically offers whilst maintaining independent control over your own web presence?
 
